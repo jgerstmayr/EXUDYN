@@ -1,0 +1,42 @@
+This "how to" description is based on the instructions given in: https://github.com/MicrosoftDocs/visualstudio-docs/blob/master/docs/python/working-with-c-cpp-python-in-visual-studio.md
+	 
+
+1. check if Visual C++ 2015.3 v140 toolset is activated in VS2017
+	-> run VS2017 installer 
+	-> select modify
+	-> select Individual Components
+	-> scroll to Compilers, build tools, and runtimes
+	-> select Visual C++ 2015.3 v140 toolset (in german: VC++ 2015.3, Version 14.00 (v140) – Toolset für Desktop)
+
+2. create a steup.py file (only neccesary if setup.py has not been created already)
+	-> create a file named setup.py in main\pythonDev 
+	-> copy the setup.py code for pybind11 projects shown in:
+		https://github.com/MicrosoftDocs/visualstudio-docs/blob/master/docs/python/working-with-c-cpp-python-in-visual-studio.md
+	   into your setup.py
+	-> Adapt the module name and the paths to the source files of the python modules as well as the pybind11 path
+
+
+3. open a anaconda comand promp as administrator
+	-> change current working directory to: main\pythonDev (this is the folder that contains setup.py)
+	-> type: pip install . (or alternativly: py -m pip install .)
+
+
+
+
+Instead of opening a anaconda cmd prompt, one could also use a .bat file.
+The following .bat file could be used as template (root and path to setup.py needs to be adopeted for individual user!):
+
+
+@echo off
+
+if not "%1"=="am_admin" (powershell start -verb runas '%0' am_admin & exit /b)
+
+set root=PASTE_THE_PATH_TO_YOUR_ANACONDA_INTALLATION_FOLDER_HERE
+
+call %root%\Scripts\activate.bat %root%
+
+cd PASTE_THE_PATH_TO_SETUP.PY_HERE
+
+pip install .
+
+pause

@@ -1,0 +1,107 @@
+The following installation guideline follows the proposed installation guidline for pybind11's CMake example from https://github.com/pybind/cmake_example
+
+Prerequisites:
+	- C++11 compliant compiler, i.e Visual Studio 2015 or newer on Windows
+	- Visual C++ 2015 redistributable packages
+	- CMake >= 3.1 
+		Install CMake from: https://cmake.org/download/ or open a command prompt as administrator and type pip install cmake
+
+
+1. Install Miniconda according to pybind11 homepage:
+Download the Miniconda Python 3.x installer: Miniconda3-latest-Windows-x86_64.exe. Run it and accept the default options during the installation.
+
+2. Open Anaconda and install spyder
+
+3. go to Anaconda installation folder and open Anaconda Prompt or other command prompt as administrator
+
+   Install the Visual C++ 2015 redistributable packages using:
+ 
+   conda install -c anaconda vs2015_runtime
+
+4: go to folder:
+
+   C:\DATA\uibk\EXUDYN\EXUDYNtests_svn\pybind11Examples>
+
+5. enter: 
+   pip install ./EXUDYNSimpleClassExample
+
+
+
+
+Windows Surface Pro:
+
+1. install Anaconda
+
+2. open Anaconda and install spyder
+
+3. go to Anaconda installation folder and open Anaconda Prompt or other command prompt as administrator (may last long - minutes..)
+
+   Install the Visual C++ 2015 redistributable packages using:
+ 
+   conda install -c anaconda vs2015_runtime
+
+4. install cmake (may last even longer than step 3)
+
+   pip install cmake
+   ==> scroll down and press ENTER?, might be already finished, but not shown
+
+5. go to folder:
+
+   C:\DATA\uibk\EXUDYN\EXUDYNtests_svn\pybind11Examples>
+
+6. enter: 
+
+   pip install ./EXUDYNSimpleClassExample
+
+
+Windows Surface Pro (Python 3.7):
+
+1. install Anaconda (Aconda Navigator 1.9.2, Anaconda version 5.3.1 64bit)
+
+2. Open Sypder (already installed?)
+
+3. go to Anaconda installation folder and open Anaconda Prompt or other command prompt as administrator (may last long - minutes..)
+
+   Install the Visual C++ 2015 redistributable packages using:
+ 
+   conda install -c anaconda vs2015_runtime
+
+4. install cmake (may last even longer than step 3)
+
+   pip install cmake
+   ==> error message "twisted 18.7.0 requires PyHamcrest>=1.9.0, which is not installed." ==> can be ignored?
+   pip install PyHamcrest
+
+5. go to folder:
+
+   C:\DATA\uibk\EXUDYN\EXUDYNtests_svn\pybind11Examples>
+
+6. enter: 
+
+   pip install ./EXUDYNprototype
+
+
+
+
+
+Reasons why module was not found:
+
+1. Module was not successfully installed 
+	-> if this is the case, pybind11 will throw a error message during the creation of your module in command prompt
+	-> the reason for this is, that there is a problem within your C++ source or you did not installed all prerequisites properly
+
+2. Python module was compiled for other python version (python version that you're using to run your script differs from the python version the module was created for)
+	-> you can check this by searching the .pyd of your module e.g. the module named EXUDYNMassPoint
+		1.  search EXUDYNMassPoint -> module should be found as EXUDYNMassPoint.cp36-win_amd64.pyd and should be e.g. in C:\ProgramData\Anaconda3\Lib\site-packages
+		2.  if you found the module, determine the python version it was created for. You can do this by looking at .cp36 of 
+		    EXUDYNMassPoint.cp36-win_amd64.pyd -> cp36 = python 3.6!
+
+3. The .pyd is not in your current path (Solution not tested yet!)
+	-> Add the modules path to python system path. This can either be done by including sys.path.append('/path/to/search') at the beginning of your script or 
+           by setting the environment variable PYTHONPATH to a colon-separated list of directories to search for imported modules
+
+
+
+
+
+

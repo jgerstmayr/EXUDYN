@@ -1,0 +1,12 @@
+
+    1. Click on the project that you want to share.
+    2. Click on the Settings tab (the gear icon on the left).
+    3. Click on the Members subtab.
+    4. Add member, and find the user if it exists on GitLab, or insert email to send an invitation.
+    5. Select access level for the user, the possible levels are:
+			Guest, can see wiki pages, view and create issues.
+			Reporter, can do what the guest can plus view the code.
+			Developer, normal developer access, can develop, but cannot push or merge to procted branches by default.
+			Maintainer, can do everything except managing the project.
+    6. For more info about the user access level refer to gitlab official help.
+    7. (Optional) Set expiration date of the user access.

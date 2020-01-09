@@ -1,0 +1,6 @@
+latex:
+ - be careful with latex commands with inline formulas: \f$ x^2 \f$ and display formulas_ \f[ y+x=2 \f]
+ - 64-bit ghostscript installation: copy gswin64c.exe to gswin32c.exe in ghostscript directory
+ - add ghostscript bin path to environment variables
+ - check according flags in doxygen; graphs might be slow (but parallelized on good CPUs)
+ - set "USE_MATHJAX = NO" in case of \newcommand definitions for latex commands - will not be recognized

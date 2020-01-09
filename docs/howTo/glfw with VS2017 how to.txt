@@ -1,0 +1,44 @@
+How to set up GLFW for VS2017 and python
+This instruction follows the glfw compiling guide: https://www.glfw.org/docs/latest/compile.html
+
+1. Clone glfw repository from GitHub
+	-> repository link: https://github.com/glfw/glfw
+
+2. Download CMake from: https://cmake.org/download/
+
+3. Run Cmake:
+	-> Browse source code, e.g. C:/glfw/glfw
+	-> Choose build directory, e.g. C:/glfw/glfw/bin32
+	-> Press configure (a new window pops up)
+	-> Spezify the generator for this project
+		- choose: Visual Studio 15 2017 (32bit version is required for python in VS2017)
+		- choose: Use default native compilers
+		- Press Finish
+	-> Press Configure
+	-> Press Generate
+		- A VS2017 project is generated in build directory
+		
+4. Open GLFW.sln with VS2017 (This step creates the glfw library file)
+	-> choose Debug or Release mode
+	-> press str+F5
+	-> check if glfw.lib was generated:
+		- to check, go to: build directory/src/Debug/glfw3.lib
+
+5. Settings in Testproject EXUDYN:
+	-> Platformtoolset of test:
+		- C++ -> additional include directories: 
+			-> e.g. C:\pybind11\pythonVSTest\EXUDYNPythonVS\glfw\include
+			-> e.g. C:\pybind11\pythonVSTest\EXUDYNPythonVS\glfw\deps
+			or similar
+		- Linker -> general: Add library directory:
+			-> e.g. C:\pybind11\pythonVSTest\EXUDYNPythonVS\glfw\bin32\src\Debug
+			or similar. This links glfw3.lib to project
+		- Linker -> Input -> Additional Dependencies add:
+			-> opengl32.lib
+			-> glfw3.lib
+
+6. Testcode can be found on the glfw page:
+	- Render a Triangle: https://www.glfw.org/docs/3.0/quick.html
+	
+
+		

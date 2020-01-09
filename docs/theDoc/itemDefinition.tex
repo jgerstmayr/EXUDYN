@@ -1,0 +1,1489 @@
+
+\mysubsection{List of Items}
+The following items are available in \codeName:
+\begin{itemize}
+  \item NodePoint
+  \item NodePoint2D
+  \item NodeRigidBodyEP
+  \item NodeRigidBody2D
+  \item NodePoint2DSlope1
+  \item NodeGenericODE2
+  \item NodeGenericData
+  \item NodePointGround
+  \item ObjectMassPoint
+  \item ObjectMassPoint2D
+  \item ObjectRigidBody
+  \item ObjectRigidBody2D
+  \item ObjectANCFCable2D
+  \item ObjectALEANCFCable2D
+  \item ObjectGround
+  \item ObjectConnectorSpringDamper
+  \item ObjectConnectorCartesianSpringDamper
+  \item ObjectConnectorCoordinateSpringDamper
+  \item ObjectConnectorDistance
+  \item ObjectConnectorCoordinate
+  \item ObjectContactCoordinate
+  \item ObjectContactCircleCable2D
+  \item ObjectContactFrictionCircleCable2D
+  \item ObjectJointSliding2D
+  \item ObjectJointALEMoving2D
+  \item ObjectJointRevolute2D
+  \item ObjectJointPrismatic2D
+  \item MarkerBodyMass
+  \item MarkerBodyPosition
+  \item MarkerBodyRigid
+  \item MarkerNodePosition
+  \item MarkerNodeRigid
+  \item MarkerNodeCoordinate
+  \item MarkerBodyCable2DShape
+  \item MarkerBodyCable2DCoordinates
+  \item LoadForceVector
+  \item LoadTorqueVector
+  \item LoadMassProportional
+  \item LoadCoordinate
+\end{itemize}
+
+%+++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++
+\mysubsection{Nodes}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodePoint}
+A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for second order differential equations.
+ \\
+{\bf Short name} for Python: {\bf Point}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodePoint has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Point'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
+    initialDisplacements &     Vector3D &     3 &     [0.,0.,0.] &     initial displacement coordinate\\ \hline
+    initialVelocities &     Vector3D &     3 &     [0.,0.,0.] &     initial velocity coordinate\\ \hline
+    visualization & VNodePoint & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodePoint has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodePoint2D}
+A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for second order differential equations.
+ \\
+{\bf Short name} for Python: {\bf Point2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodePoint2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Point2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector2D &     2 &     [0.,0.] &     reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
+    initialDisplacements &     Vector2D &     2 &     [0.,0.] &     initial displacement coordinate\\ \hline
+    initialVelocities &     Vector2D &     2 &     [0.,0.] &     initial velocity coordinate\\ \hline
+    visualization & VNodePoint2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodePoint2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeRigidBodyEP}
+A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions); all coordinates lead to second order differential equations; additionally there is one constraint equation for quaternions; The rotation matrix $\Am$, transforming local (body-fixed) 3D positions $\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T$ to global 3D positions $\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T$, \be \pv_{glob} = \Am \pv_{loc}, \ee is defined according to the book of Shabana, same with the transformation matrix $\mathbf{G}$ between time derivatives of Euler parameters and angular velocities.
+ \\
+{\bf Short name} for Python: {\bf Rigid3DEP}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf AngularVelocity}: global 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodeRigidBodyEP has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBodyEP'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector7D &     3 &     [0.,0.,0., 0.,0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialDisplacements &     Vector7D &     3 &     [0.,0.,0., 0.,0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 4 Euler parameters relative to reference coordinates\\ \hline
+    initialVelocities &     Vector7D &     3 &     [0.,0.,0., 0.,0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and 4 Euler parameters\\ \hline
+    visualization & VNodeRigidBodyEP & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeRigidBodyEP has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeRigidBody2D}
+A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi); all coordinates lead to second order differential equations; The rotation matrix $\Am$, transforming local (body-fixed) 3D positions $\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;0]^T$ to global 3D positions $\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T$, \be \pv_{glob} = \Am \pv_{loc}, \ee is defined as \be \Am = \mp{\cos(\varphi)}{-\sin(\varphi)}{\sin(\varphi)}{\cos(\varphi)}.\ee
+ \\
+{\bf Short name} for Python: {\bf Rigid2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodeRigidBody2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBody2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates (x-pos,y-pos and rotation phi) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
+    initialDisplacements &     Vector3D &     3 &     [0.,0.,0.] &     initial displacement coordinates: ux, uy and uphi\\ \hline
+    initialVelocities &     Vector3D &     3 &     [0.,0.,0.] &     initial velocity coordinate: vx, vy, omega\\ \hline
+    visualization & VNodeRigidBody2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeRigidBody2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodePoint2DSlope1}
+A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.
+ \\
+{\bf Short name} for Python: {\bf Point2DS1}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)
+\end{itemize}
+The item NodePoint2DSlope1 has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Point2DSlope1'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector4D &     4 &     [0.,0.,1.,0.] &     reference coordinates (x-pos,y-pos; x-slopex, y-slopex) of node; global position of node without displacement\\ \hline
+    initialDisplacements &     Vector4D &     4 &     [0.,0.,0.,0.] &     initial displacement coordinates: ux, uy and x/y "displacements" of slopex\\ \hline
+    initialVelocities &     Vector4D &     4 &     [0.,0.,0.,0.] &     initial velocity coordinates\\ \hline
+    visualization & VNodePoint2DSlope1 & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodePoint2DSlope1 has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeGenericODE2}
+A node containing a number of ODE2 variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element.
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodeGenericODE2 has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'GenericODE2'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector &      &     [] &     generic reference coordinates of node; must be consistent with numberOfODE2Coordinates\\ \hline
+    initialCoordinates &     Vector &      &     [] &     initial displacement coordinates; must be consistent with numberOfODE2Coordinates\\ \hline
+    initialCoordinates\_t &     Vector &      &     [] &     initial velocity coordinates; must be consistent with numberOfODE2Coordinates\\ \hline
+    numberOfODE2Coordinates &     Index &      &     0 &     number of generic ODE2 coordinates\\ \hline
+    visualization & VNodeGenericODE2 & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeGenericODE2 has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     False &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeGenericData}
+A node containing a number of data (history) variables; use e.g. for contact (active set), friction or plasticity (history variable).
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Coordinates}: data coordinates (history variables) vector of node
+\end{itemize}
+The item NodeGenericData has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'GenericData'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    initialCoordinates &     Vector &      &     [] &     initial data coordinates\\ \hline
+    numberOfDataCoordinates &     Index &      &     0 &     number of generic data coordinates (history variables)\\ \hline
+    visualization & VNodeGenericData & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeGenericData has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     False &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodePointGround}
+A 3D point node fixed to ground. The node can be used as NodePoint, but does not lead to equations. Applied or reaction forces do not have any effect.
+ \\
+{\bf Short name} for Python: {\bf PointGround}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=reference position)
+    \item {\bf Displacement}: zero 3D vector
+    \item {\bf Velocity}: zero 3D vector
+    \item {\bf Coordinates}: vector of length zero
+    \item {\bf Coordinates\_t}: vector of length zero
+\end{itemize}
+The item NodePointGround has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'PointGround'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
+    visualization & VNodePointGround & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodePointGround has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++
+\mysubsection{Objects}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectMassPoint}
+A 3D mass point which is attached to a position-based node. Equations of motion with the displacements $[u_x\;\; u_y\;\; u_z]^T$, the mass $m$ and the residual of all forces $[R_x\;\; R_y\;\; R_z]^T$ are given as \be \vr{m \cdot \ddot u_x}{m \cdot \ddot u_y}{m \cdot \ddot u_z} = \vr{R_x}{R_y}{R_z}.\ee
+ \\
+{\bf Short name} for Python: {\bf MassPoint}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of translated local position
+    \item {\bf Displacement}: global displacement vector of center point
+    \item {\bf Velocity}: global velocity vector of center point
+\end{itemize}
+The item ObjectMassPoint has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'MassPoint'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number for mass point\\ \hline
+    visualization & VObjectMassPoint & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectMassPoint has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectMassPoint2D}
+A 2D mass point which is attached to a position-based 2D node. Equations of motion with the displacements $[u_x\;\; u_y]^T$, the mass $m$ and the residual of all forces $[R_x\;\; R_y]^T$ are given as \be \vp{m \cdot \ddot u_x}{m \cdot \ddot u_y} = \vp{R_x}{R_y}.\ee
+ \\
+{\bf Short name} for Python: {\bf MassPoint2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of translated local position
+    \item {\bf Displacement}: global displacement vector of center point
+    \item {\bf Velocity}: global velocity vector of center point
+\end{itemize}
+The item ObjectMassPoint2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'MassPoint2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number for mass point\\ \hline
+    visualization & VObjectMassPoint2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectMassPoint2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectRigidBody}
+A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements $[u_x\;\; u_y\;\; u_z]^T$ of the center of mass and the rotation parameters (Euler parameters) $\mathbf{q}$, the mass $m$, inertia $\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]$ and the residual of all forces and moments $[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T$ are given as ...
+ \\
+{\bf Short name} for Python: {\bf RigidBody}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of rotated and translated local position
+    \item {\bf Displacement}: global displacement vector of local position
+    \item {\bf Velocity}: global velocity vector of local position
+    \item {\bf AngularVelocity}: angular velocity of body
+    \item {\bf RotationMatrix}: rotation matrix in vector form (stored in row-major order)
+\end{itemize}
+The item ObjectRigidBody has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBody'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
+    physicsInertia &     Vector6D &      &     [0.,0.,0., 0.,0.,0.] &     inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ of rigid body w.r.t. center of mass\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number for rigid body node\\ \hline
+    visualization & VObjectRigidBody & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectRigidBody has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectRigidBody2D}
+A 2D rigid body which is attached to a rigid body 2D node. Equations of motion with the displacements $[u_x\;\; u_y]^T$ of the center of mass and the rotation $\varphi$ (positive rotation around z-axis), the mass $m$, inertia around z-axis $J$ and the residual of all forces and moments $[R_x\;\; R_y\;\; R_\varphi]^T$ are given as \be \vr{m \cdot \ddot u_x}{m \cdot \ddot u_y}{J \varphi} = \vr{R_x}{R_y}{R_\varphi}.\ee
+ \\
+{\bf Short name} for Python: {\bf RigidBody2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of rotated and translated local position
+    \item {\bf Displacement}: global displacement vector of local position
+    \item {\bf Velocity}: global velocity vector of local position
+    \item {\bf Rotation}: scalar rotation angle of body
+    \item {\bf AngularVelocity}: angular velocity of body
+    \item {\bf RotationMatrix}: rotation matrix in vector form (stored in row-major order)
+\end{itemize}
+The item ObjectRigidBody2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBody2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
+    physicsInertia &     UReal &      &     0. &     inertia [SI:kgm$^2$] of rigid body w.r.t. center of mass\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number for 2D rigid body node\\ \hline
+    visualization & VObjectRigidBody2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectRigidBody2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectANCFCable2D}
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1; the element has 8 coordinates and uses cubic polynomials for position interpolation; the Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
+ \\
+{\bf Short name} for Python: {\bf Cable2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of local axis (1) and cross section (2) position
+    \item {\bf Displacement}: global displacement vector of local axis (1) and cross section (2) position
+    \item {\bf Velocity}: global velocity vector of local axis (1) and cross section (2) position
+    \item {\bf Director1}: (axial) slope vector of local axis position
+    \item {\bf Strain}: axial strain (scalar)
+    \item {\bf Curvature}: axial strain (scalar)
+    \item {\bf Force}: (local) section normal force (scalar)
+    \item {\bf Torque}: (local) bending moment (scalar)
+\end{itemize}
+The item ObjectANCFCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ANCFCable2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    physicsLength &     UReal &      &     0. &     reference length $L$ [SI:m] of beam; such that the total volume (e.g. for volume load) gives $\rho A L$\\ \hline
+    physicsMassPerLength &     UReal &      &     0. &     mass $\rho A$ [SI:kg/m$^2$] of beam\\ \hline
+    physicsBendingStiffness &     UReal &      &     0. &     bending stiffness $EI$ [SI:Nm$^2$] of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature\\ \hline
+    physicsAxialStiffness &     UReal &      &     0. &     axial stiffness $EA$ [SI:N] of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain\\ \hline
+    physicsBendingDamping &     UReal &      &     0. &     bending damping $d_{EI}$ [SI:Nm$^2$/s] of beam; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$\\ \hline
+    physicsAxialDamping &     UReal &      &     0. &     axial stiffness $d_{EA}$ [SI:N/s] of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$\\ \hline
+    physicsReferenceAxialStrain &     UReal &      &     0. &     reference axial strain of beam (pre-deformation) $\varepsilon_0$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
+    physicsReferenceCurvature &     UReal &      &     0. &     reference curvature of beam (pre-deformation) $\kappa_0$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
+    nodeNumbers &     Index2 &      &     [MAXINT, MAXINT] &     two node numbers ANCF cable element\\ \hline
+    useReducedOrderIntegration &     Bool &      &     False &     false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
+    visualization & VObjectANCFCable2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectANCFCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawHeight &     float &      &     0. &     if beam is drawn with rectangular shape, this is the drawing height\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGBA color of the object; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectALEANCFCable2D}
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2; the element has 8+1 coordinates and uses cubic polynomials for position interpolation; the element in addition to ANCFCable2D adds an Eulerian axial velocity by the GenericODE2 coordiante
+ \\
+{\bf Short name} for Python: {\bf ALECable2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of local axis (1) and cross section (2) position
+    \item {\bf Displacement}: global displacement vector of local axis (1) and cross section (2) position
+    \item {\bf Velocity}: global velocity vector of local axis (1) and cross section (2) position
+    \item {\bf Director1}: (axial) slope vector of local axis position
+    \item {\bf Strain}: axial strain (scalar)
+    \item {\bf Curvature}: axial strain (scalar)
+    \item {\bf Force}: (local) section normal force (scalar)
+    \item {\bf Torque}: (local) bending moment (scalar)
+\end{itemize}
+The item ObjectALEANCFCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ALEANCFCable2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    physicsLength &     UReal &      &     0. &     reference length $L$ [SI:m] of beam; such that the total volume (e.g. for volume load) gives $\rho A L$\\ \hline
+    physicsMassPerLength &     UReal &      &     0. &     mass $\rho A$ [SI:kg/m$^2$] of beam\\ \hline
+    physicsMovingMassFactor &     UReal &      &     1. &     this factor denotes the amount of $\rho A$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $physicsMovingMassFactor \cdot \rho A$ is the mass per unit length of the fluid\\ \hline
+    physicsBendingStiffness &     UReal &      &     0. &     bending stiffness $EI$ [SI:Nm$^2$] of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature\\ \hline
+    physicsAxialStiffness &     UReal &      &     0. &     axial stiffness $EA$ [SI:N] of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain\\ \hline
+    physicsBendingDamping &     UReal &      &     0. &     bending damping $d_{EI}$ [SI:Nm$^2$/s] of beam; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$\\ \hline
+    physicsAxialDamping &     UReal &      &     0. &     axial stiffness $d_{EA}$ [SI:N/s] of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$\\ \hline
+    physicsReferenceAxialStrain &     UReal &      &     0. &     reference axial strain of beam (pre-deformation) $\varepsilon_0$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
+    physicsReferenceCurvature &     UReal &      &     0. &     reference curvature of beam (pre-deformation) $\kappa_0$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
+    physicsUseCouplingTerms &     bool &      &     True &     true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)\\ \hline
+    nodeNumbers &     Index3 &      &     [MAXINT, MAXINT, MAXINT] &     two node numbers ANCF cable element\\ \hline
+    useReducedOrderIntegration &     Bool &      &     False &     false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
+    visualization & VObjectALEANCFCable2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectALEANCFCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawHeight &     float &      &     0. &     if beam is drawn with rectangular shape, this is the drawing height\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGBA color of the object; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectGround}
+A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action.
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global position vector of rotated and translated local position
+    \item {\bf Displacement}: global displacement vector of local position
+    \item {\bf Velocity}: global velocity vector of local position
+    \item {\bf AngularVelocity}: angular velocity of body
+    \item {\bf RotationMatrix}: rotation matrix in vector form (stored in row-major order)
+\end{itemize}
+The item ObjectGround has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Ground'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     reference position for ground object; local position is added on top of reference position for a ground object\\ \hline
+    visualization & VObjectGround & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectGround has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB node color; if R==-1, use default color\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorSpringDamper}
+An simple spring-damper element with additional force; connects to position-based markers.
+ \\
+{\bf Short name} for Python: {\bf SpringDamper}
+ \\  {\bf Requested marker type} = Marker::Position \\ 
+The item ObjectConnectorSpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ConnectorSpringDamper'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    referenceLength &     UReal &      &     0. &     reference length [SI:m] of spring\\ \hline
+    stiffness &     UReal &      &     0. &     stiffness [SI:N/m] of spring; acts against (length-initialLength)\\ \hline
+    damping &     UReal &      &     0. &     damping [SI:N/(m s)] of damper; acts against d/dt(length)\\ \hline
+    force &     UReal &      &     0. &     added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    springForceUserFunction &     PyFunctionScalar5 &     \tabnewline  &     0 &     A python function which defines the spring force with parameters (deltaL, deltaL$_t$, Real stiffness, Real damping, Real springForce); the parameters are provided to the function using the current values of the SpringDamper object; The python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; Example for python function: def f(u, v, k, d, F0): return k*u + d*v + F0\\ \hline
+    visualization & VObjectConnectorSpringDamper & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorSpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorCartesianSpringDamper}
+An 3D spring-damper element acting accordingly in three directions (x,y,z); connects to position-based markers; represents a penalty-based spherical joint; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be force_x = (m1.position_x - m0.position_x - offset_x)\cdot stiffness_x + (m1.velocity_x - m0.velocity_x)\cdot damping_x, etc. \ee.
+ \\
+{\bf Short name} for Python: {\bf CartesianSpringDamper}
+ \\  {\bf Requested marker type} = Marker::Position \\ 
+The item ObjectConnectorCartesianSpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ConnectorCartesianSpringDamper'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    stiffness &     Vector3D &      &     [0.,0.,0.] &     stiffness [SI:N/m] of springs; act against relative displacements in x, y, and z-direction\\ \hline
+    damping &     Vector3D &      &     [0.,0.,0.] &     damping [SI:N/(m s)] of dampers; act against relative velocities in x, y, and z-direction\\ \hline
+    offset &     Vector3D &      &     [0.,0.,0.] &     offset between two springs\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectConnectorCartesianSpringDamper & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorCartesianSpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorCoordinateSpringDamper}
+A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be f = (m1.coordinate - m0.coordinate - offset)\cdot stiffness + (m1.coordinate_t - m0.coordinate_t)\cdot damping \ee If dry (Coulomb) friction is non-zero, an additional term \be \text{sign}(m1.coordinate_t - m0.coordinate_t)\cdot dryFriction \ee is added to the force $f$.
+ \\
+{\bf Short name} for Python: {\bf CoordinateSpringDamper}
+ \\  {\bf Requested marker type} = Marker::Coordinate \\ 
+The item ObjectConnectorCoordinateSpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ConnectorCoordinateSpringDamper'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    stiffness &     Real &      &     0. &     stiffness [SI:N/m] of spring; acts against relative value of coordinates\\ \hline
+    damping &     Real &      &     0. &     damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates\\ \hline
+    offset &     Real &      &     0. &     offset between two coordinates (reference length of springs), see equation\\ \hline
+    dryFriction &     Real &      &     0. &     dry friction coefficient against relative velocity\\ \hline
+    dryFrictionProportionalZone &     Real &      &     0. &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    springForceUserFunction &     PyFunctionScalar7 &     \tabnewline  &     0 &     A python function which defines the spring force with parameters (deltaL, deltaL$_t$, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone); the parameters are provided to the function using the current values of the SpringDamper object; note that $u=(m1.coordinate - m0.coordinate)$, not including the offset; The python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; Example for python function: def f(u, v, k, d, offset, mu, muProp): return k*u + d*v + F0\\ \hline
+    visualization & VObjectConnectorCoordinateSpringDamper & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorCoordinateSpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorDistance}
+Connector which enforces constant or prescribed distance between two bodies/nodes.
+ \\
+{\bf Short name} for Python: {\bf DistanceConstraint}
+ \\  {\bf Requested marker type} = Marker::Position \\ 
+The item ObjectConnectorDistance has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ConnectorDistance'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    distance &     UReal &      &     0. &     prescribed distance [SI:m] of the used markers\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectConnectorDistance & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorDistance has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = link size; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorCoordinate}
+A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint must fulfill the condition: \be factorValue1*marker[1].value-marker[0].value - offset = 0 \ee
+ \\
+{\bf Short name} for Python: {\bf CoordinateConstraint}
+ \\  {\bf Requested marker type} = Marker::Coordinate \\ 
+The item ObjectConnectorCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ConnectorCoordinate'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    offset &     UReal &      &     0. &     An offset between the two values\\ \hline
+    factorValue1 &     UReal &      &     1. &     An additional factor multiplied with value1 used in algebraic equation\\ \hline
+    velocityLevel &     bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectConnectorCoordinate & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = link size; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectContactCoordinate}
+A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+ \\  {\bf Requested marker type} = Marker::Coordinate \\ 
+The item ObjectContactCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ContactCoordinate'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)\\ \hline
+    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m]; acts only upon penetration\\ \hline
+    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)]; acts only upon penetration\\ \hline
+    offset &     UReal &      &     0. &     offset [SI:m] of contact\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectContactCoordinate & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectContactCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectContactCircleCable2D}
+A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+ \\  {\bf Requested marker type} = Marker::None \\ 
+The item ObjectContactCircleCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ContactCircleCable2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
+    numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
+    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per length of the beam axis; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
+    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per length of the beam axis; acts in contact normal direction only upon penetration\\ \hline
+    circleRadius &     UReal &      &     0. &     radius [SI:m] of contact circle\\ \hline
+    offset &     UReal &      &     0. &     offset [SI:m] of contact, e.g. to include thickness of cable element\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectContactCircleCable2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectContactCircleCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectContactFrictionCircleCable2D}
+A very specialized penalty-based contact/friction condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=1), last friction position]; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+ \\  {\bf Requested marker type} = Marker::None \\ 
+The item ObjectContactFrictionCircleCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ContactFrictionCircleCable2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData with 3 $\times$ nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
+    numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
+    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per length of the beam axis; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
+    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per length of the beam axis; acts in contact normal direction only upon penetration\\ \hline
+    frictionVelocityPenalty &     UReal &      &     0. &     velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area\\ \hline
+    frictionStiffness &     UReal &      &     0. &     CURRENTLY NOT IMPLEMENTED: displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area\\ \hline
+    frictionCoefficient &     UReal &      &     0. &     friction coefficient $\mu$ [SI: 1]; tangential specific friction forces (per length) $f_T$ must fulfill the condition $f_T \le \mu f_N$\\ \hline
+    circleRadius &     UReal &      &     0. &     radius [SI:m] of contact circle\\ \hline
+    offset &     UReal &      &     0. &     offset [SI:m] of contact, e.g. to include thickness of cable element\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectContactFrictionCircleCable2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectContactFrictionCircleCable2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectJointSliding2D}
+A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinates provide [0] the current index in slidingMarkerNumbers, and [1] the local position in the cable element at the beginning of the timestep; the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint and $s$ is the (algebraic) sliding coordinate relative to the value at the beginning at the solution step; the data coordinates are \be \qv_{Data} = [i_{marker} \;\; s_{0}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list and  $s_{0}$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step.
+ \\
+{\bf Short name} for Python: {\bf SlidingJoint2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: position vector of joint given by marker0
+    \item {\bf Velocity}: velocity vector of joint given by marker0
+    \item {\bf SlidingCoordinate}: global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements
+    \item {\bf Force}: joint force vector (3D)
+\end{itemize}
+  {\bf Requested marker type} = Marker::None \\ 
+The item ObjectJointSliding2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'JointSliding2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     marker0: position-marker of mass point or rigid body; marker1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
+    slidingMarkerNumbers &     ArrayIndex &      &     [] &     these markers are used to update marker1, if the sliding position exceeds the current cable"s range; the markers must be sorted such that marker(i) at x=cable.length is equal to marker(i+1) at x=0\\ \hline
+    slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the initial (global) sliding position\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectJointSliding2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectJointSliding2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectJointALEMoving2D}
+A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); the data coordinate [0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate [0] provides the (given) moving coordinate in the cable element; the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y]^T \ee, in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position constraint of the moving joint; the data coordinate is \be \qv_{Data} = [i_{marker}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list.
+ \\
+{\bf Short name} for Python: {\bf ALEMovingJoint2D}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: position vector of joint given by marker0
+    \item {\bf Velocity}: velocity vector of joint given by marker0
+    \item {\bf SlidingCoordinate}: global sliding coordinate along all elements + slidingOffset
+    \item {\bf Coordinates}: provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate
+    \item {\bf Coordinates\_t}: provides one value: [0] ALE sliding velocity
+    \item {\bf Force}: joint force vector (3D)
+\end{itemize}
+  {\bf Requested marker type} = Marker::None \\ 
+The item ObjectJointALEMoving2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'JointALEMoving2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     marker0: position-marker of mass point or rigid body; marker1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
+    slidingMarkerNumbers &     ArrayIndex &      &     [] &     these markers are used to update marker1, if the sliding position exceeds the current cable"s range; the markers must be sorted such that marker(i) at x=cable.length is equal to marker(i+1) at x=0\\ \hline
+    slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...\\ \hline
+    slidingOffset &     Real &      &     0. &     offset [SI:m] used set the sliding position relative to the chosen Eulerian (NodeGenericODE2) coordinate; the following relation is used: $slidingPosition = posALE + slidingOffset$\\ \hline
+    nodeNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     node numbers of: [0] NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active; [1] of the GenericNodeODE2 of the ALE sliding coordinate\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectJointALEMoving2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectJointALEMoving2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectJointRevolute2D}
+A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers
+ \\
+{\bf Short name} for Python: {\bf RevoluteJoint2D}
+ \\  {\bf Requested marker type} = Marker::Position \\ 
+The item ObjectJointRevolute2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'JointRevolute2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectJointRevolute2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectJointRevolute2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectJointPrismatic2D}
+A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as
+ \be (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \ee 
+ \be (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\ee
+ The lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
+ \\
+{\bf Short name} for Python: {\bf PrismaticJoint2D}
+ \\  {\bf Requested marker type} = (Marker::Type)(Marker::Position + Marker::Orientation) \\ 
+The item ObjectJointPrismatic2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'JointPrismatic2D'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    axisMarker0 &     Vector3D &      &     [1.,0.,0.] &     direction of prismatic axis, given as a 3D vector in Marker0 frame\\ \hline
+    normalMarker1 &     Vector3D &      &     [0.,1.,0.] &     direction of normal to prismatic axis, given as a 3D vector in Marker1 frame\\ \hline
+    constrainRotation &     bool &      &     True &     flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectJointPrismatic2D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectJointPrismatic2D has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++
+\mysubsection{Markers}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerBodyMass}
+A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).
+ \\The item MarkerBodyMass has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'BodyMass'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    visualization & VMarkerBodyMass & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerBodyMass has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerBodyPosition}
+A position body-marker attached to local position (x,y,z) of the body.
+ \\The item MarkerBodyPosition has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'BodyPosition'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local body position of marker; e.g. local (body-fixed) position where force is applied to\\ \hline
+    bodyFixed &     Bool &      &     False &     if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates\\ \hline
+    visualization & VMarkerBodyPosition & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerBodyPosition has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerBodyRigid}
+A rigid-body (position+orientation) body-marker attached to local position (x,y,z) of the body.
+ \\The item MarkerBodyRigid has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'BodyRigid'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local body position of marker; e.g. local (body-fixed) position where force is applied to\\ \hline
+    bodyFixed &     Bool &      &     False &     if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates\\ \hline
+    visualization & VMarkerBodyRigid & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerBodyRigid has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerNodePosition}
+A node-Marker attached to a position-based node.
+ \\The item MarkerNodePosition has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'NodePosition'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    visualization & VMarkerNodePosition & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerNodePosition has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerNodeRigid}
+A rigid-body (position+orientation) node-marker attached to a rigid-body node.
+ \\The item MarkerNodeRigid has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'NodeRigid'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    visualization & VMarkerNodeRigid & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerNodeRigid has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerNodeCoordinate}
+A node-Marker attached to a ODE2 coordinate of a node; for other coordinates (ODE1,...) other markers need to be defined.
+ \\The item MarkerNodeCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'NodeCoordinate'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    coordinate &     Index &      &     MAXINT &     coordinate of node to which marker is attached to\\ \hline
+    visualization & VMarkerNodeCoordinate & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerNodeCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerBodyCable2DShape}
+A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.
+ \\The item MarkerBodyCable2DShape has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'BodyCable2DShape'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    numberOfSegments &     Index &      &     3 &     number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element\\ \hline
+    visualization & VMarkerBodyCable2DShape & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerBodyCable2DShape has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerBodyCable2DCoordinates}
+A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.
+ \\The item MarkerBodyCable2DCoordinates has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'BodyCable2DCoordinates'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    visualization & VMarkerBodyCable2DCoordinates & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerBodyCable2DCoordinates has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++
+\mysubsection{Loads}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{LoadForceVector}
+Load with (3D) force vector; attached to position-based marker.
+ \\
+{\bf Short name} for Python: {\bf Force}
+ \\  {\bf Requested marker type} = Marker::Position \\ 
+The item LoadForceVector has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ForceVector'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     load"s unique name\\ \hline
+    markerNumber &     Index &      &     MAXINT &     marker"s number to which load is applied\\ \hline
+    loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N]\\ \hline
+    loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
+    visualization & VLoadForceVector & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VLoadForceVector has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{LoadTorqueVector}
+Load with (3D) torque vector; attached to rigidbody-based marker.
+ \\
+{\bf Short name} for Python: {\bf Torque}
+ \\  {\bf Requested marker type} = Marker::Orientation \\ 
+The item LoadTorqueVector has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'TorqueVector'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     load"s unique name\\ \hline
+    markerNumber &     Index &      &     MAXINT &     marker"s number to which load is applied\\ \hline
+    loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N]\\ \hline
+    loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
+    visualization & VLoadTorqueVector & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VLoadTorqueVector has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{LoadMassProportional}
+Load attached to BodyMass-based marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).
+ \\
+{\bf Short name} for Python: {\bf Gravity}
+ \\  {\bf Requested marker type} = Marker::BodyMass \\ 
+The item LoadMassProportional has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'MassProportional'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     load"s unique name\\ \hline
+    markerNumber &     Index &      &     MAXINT &     marker"s number to which load is applied\\ \hline
+    loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N/kg = m/s$^2$] \\ \hline
+    loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
+    visualization & VLoadMassProportional & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VLoadMassProportional has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{LoadCoordinate}
+Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.
+ \\  {\bf Requested marker type} = Marker::Coordinate \\ 
+The item LoadCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Coordinate'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     load"s unique name\\ \hline
+    markerNumber &     Index &      &     MAXINT &     marker"s number to which load is applied\\ \hline
+    load &     Real &      &     0. &     scalar load [SI:N]\\ \hline
+    loadUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent load with parameters (Real t, Real load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, load): return load*np.sin(t*10*2*3.1415)\\ \hline
+    visualization & VLoadCoordinate & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VLoadCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}

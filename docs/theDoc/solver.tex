@@ -1,0 +1,176 @@
+%solver
+
+\mysubsection{Jacobian computation}
+
+The computation of the global jacobian matrix is time consuming for the static solver or implicit time integration.
+The equations are split into \SON, \FON and \AEN parts. From this structure, in the general non-symmetric case, 3 $\times$ 3 submatrices result for the jacobian.
+Every submatrix of the jacobian has a certain meaning and needs to be computed individually.
+Specifically, in implicit time integration the \SON $\times$ \SON term includes the (tangent) stiffness matrix and the mass matrix.
+
+For efficient computation purpose, the elements provide a list of flags, which determine the dependencies as well as available (analytical) functions to compute the local (object) jacobian:
+\bi
+  \item ODE2\_ODE2 $\ldots$ derivative of ODE2 equations with respect to ODE2 variables
+  \item ODE2\_ODE2\_t $\ldots$ derivative of ODE2 equations with respect to ODE2\_t (velocity) variables
+  \item ODE1\_ODE1 $\ldots$ derivative of ODE1 equations with respect to ODE1 variables (NOT YET AVAILABLE)
+  \item AE\_ODE2 $\ldots$ derivative of AE (algebraic) equations with respect to ODE2 variables
+  \item AE\_ODE2\_t $\ldots$ derivative of AE (algebraic) equations with respect to ODE2\_t (velocity) variables (NOT YET AVAILABLE)
+  \item AE\_ODE1 $\ldots$ derivative of AE (algebraic) equations with respect to ODE1 variables (NOT YET AVAILABLE)
+  \item AE\_AE $\ldots$ derivative of AE (algebraic) equations with respect to AE variables
+\ei
+If one of these flags is set (binary; e.g.ODE2\_ODE2 + ODE2\_ODE2\_t), then the according local jacobian is computed and assembled into the global jacobian in the static or implicit dynamic solver.
+
+Jacobians can also be supplied in analytical (function) form, which is indicated by an additional flag with the same name but an additional term '\_function', e.g.\ 'ODE2\_ODE2\_function' indicates that the derivative of ODE2 equations with respect to its ODE2 coordinates is provided in an analytical form (this is the tangent stiffness matrix).
+
+Two {\bf object} functions are used to compute the local jacobians:
+\bi
+  \item \texttt{\bf ComputeJacobianODE2\_ODE2(Matrix\& jacobian, Matrix\& jacobian\_ODE2\_t)}: computes the \texttt{ODE2\_ODE2} and \texttt{ODE2\_ODE2\_t} jacobians
+	\item \texttt{\bf ComputeJacobianAE(Matrix\& jacobian, Matrix\& jacobian\_AE)}: computes the \texttt{AE\_ODE2} and \texttt{AE\_AE} jacobians of the object ITSELF
+\ei
+Two {\bf connector} functions are used to compute the local jacobians, using \texttt{MarkerData}:
+\bi
+  \item \texttt{\bf ComputeJacobianODE2\_ODE2(Matrix\& jacobian, Matrix\& jacobian\_ODE2\_t, const MarkerDataStructure\& markerData)}: computes the \texttt{ODE2\_ODE2} and \texttt{ODE2\_ODE2\_t} jacobians of the connector; e.g.\ for spring-damper
+	\item \texttt{\bf ComputeJacobianAE(Matrix\& jacobian, Matrix\& jacobian\_AE, const MarkerDataStructure\& markerData)}: computes the \texttt{AE\_ODE2} and \texttt{AE\_AE} jacobians of the connector; e.g.\ for coordinate constraint
+\ei
+
+The system jacobian has the structure (\SO = ODE2, \FO = ODE1, $\AE$ = AE; $\bar \fv_\SO$ = according system residual including dynamic (mass matrix) terms in time integration; $\gv_\AE$ = algebraic equations):
+\be
+  \bigmr
+  {\frac{\partial \bar \fv_\SO}{\partial \qv_\SO}} {0} {\left(\frac{\partial \gv_\AE}{\partial \qv_\SO}\right)^T}
+  {0} {\frac{\partial \fv_\FO}{\partial \qv_\FO}} {\left(\frac{\partial \gv_\AE}{\partial \qv_\FO}\right)^T}
+	{\frac{\partial \gv_\AE}{\partial \qv_\SO}} {\frac{\partial \gv_\AE}{\partial \qv_\FO}} {\frac{\partial \gv_\AE}{\partial \qv_\AE}}
+\ee
+
+Two system jacobian functions are currently available:
+\bi
+  \item \texttt{\bf JacobianODE2RHS(temp, newton, factorODE2, factorODE2\_t, jacobian\_ODE2, jacobian\_ODE2\_t)}: compute analytical/numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2\_t coordinates; if analytical/functional version of jacobian is available and Newton flag 'useNumericalDifferentiation'=false, then the according jacobian is computed by its according function; results are 2 jacobians; the factors 'factor\_ODE2' and 'factor\_ODE2\_t' are used to scale the two jacobians; if a factor is zero, the according jacobian is not computed.
+	\item \texttt{\bf JacobianAE(temp, newton, jacobian, factorODE2, velocityLevel, fillIntoSystemMatrix)}: 
+		compute constraint jacobian of AE with respect to ODE2 ('fillIntoSystemMatrix'=true: also w.r.t. [ODE1] and AE) coordinates $\ra$ direct computation given by access functions; 'factorODE2' is used to scale the ODE2-part of the jacobian (to avoid postmultiplication); velocityLevel = true: velocityLevel constraints are used, if available; 'fillIntoSystemMatrix'=true: fill in both $\frac{\partial \bar \fv_\AE}{\partial \qv_\SO}$, $\frac{\partial \bar \fv_\AE}{\partial \qv_\SO}^T$ AND $\frac{\partial \bar \fv_\AE}{\partial \qv_\AE}$ at according locations into system matrix; 'fillIntoSystemMatrix'=false: (this is a temporary/WORKAROUND function):
+\ei
+The system jacobian functions compute the local jacobians either by means of a provided function or numerically, using the 'NumericalDifferentiation' settings of 'Newton'.
+
+\mysubsection{Implicit trapezoidal rule solver}
+
+This solver represents a class of solvers, which are based on the implicit trapezoidal rule. This integration includes the start value and the end value of a time step for the interpolation, thus being a trapezoidal integration rule. In some specializations, e.g. the Newmark method, the interpolation might only depend on the start value or the end value.
+
+Most important representations of this rule:
+\bi
+  \item Trapezoidal rule ($=$ Newmark with $\beta = \frac 1 4$ and $\gamma = \frac 1 2$) 
+	\item Newmark method
+	\item Generalized-$\alpha$ method ($=$ generalized Newmark method with additional parameters
+\ei
+
+\mysubsection{Representation of coordinates and equations of motion}
+
+Nomenclature:
+\bi
+	\item '\SO' $\ldots$ second order equations (usually of a mechanical system)
+	\item '\FO' $\ldots$ first order equations (e.g.\ of a controller, fluid, etc.)
+	\item '$\AE$' $\ldots$ algebraic equations (usually of joints)
+	%
+  \item $\Mm$ $\ldots$ mass matrix
+  \item $\qv_\SO$ $\ldots$ 'displacement' coordinates of ODE2 equations
+  \item $\dot \qv_\SO$ $\ldots$ 'velocity' coordinates of ODE2 equations
+  \item $\ddot \qv_\SO$ $\ldots$ 'acceleration' coordinates of ODE2 equations
+	%
+  \item $\qv_\FO$ $\ldots$ coordinates of ODE1 equations
+  \item $\dot \qv_\FO$ $\ldots$ 'velocity' coordinates of ODE1 equations
+  \item $\qv_\AE$ $\ldots$ Lagrange multipliers
+  \item $\fv_\SO$ $\ldots$ right-hand-side of ODE2 equations (except for action of joint reaction forces)
+  \item $\fv_\FO$ $\ldots$ right-hand-side of ODE1 equations
+	%
+  \item $\gv$ $\ldots$ algebraic equations
+  \item $\Km$ $\ldots$ (tangent) stiffness matrix
+  \item $\Dm$ $\ldots$ damping/gyroscopic matrix
+	\item $h$ $\ldots$ step size of time integration method
+\ei
+
+The equations of motion in \codeName\ are represented as 
+\bea \label{eq_Newmark}
+  \Mm \ddot \qv_\SO + \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \qv_\AE & = &\fv_\SO(\qv_\SO, \dot \qv_\SO, t) \\
+  \dot \qv_\FO + \frac{\partial \gv}{\partial \qv_\FO^\mathrm{T}} \qv_\AE & = &\fv_\FO(\qv_\FO, t) \\
+	\gv(\qv_\SO, \dot \qv_\SO, \qv_\FO, \qv_\AE, t) &=& 0
+\eea
+Note that the term $\frac{\partial \gv}{\partial \qv_\FO} \qv_\AE$ is not yet implemented, such that algebraic equations may not yet depend on \FON coordinates.
+
+It is important to note, that for linear mechanical systems, $\fv_\SO$ becomes
+\be
+  \fv^{lin}_\SO = \fv^a - \Km \qv_\SO - \Dm \dot \qv_\FO
+\ee
+in which $\fv^a$ represents applied forces and $\Km$ and $\Dm$ become part of the system Jacobian for time integration.
+
+\mysubsection{Newmark method}
+The Newmark method obtains two parameters $\beta$ and $\gamma$. 
+The main ideas are 
+\bi
+	\item Interpolate the displacements and the velocities linearly using the accelerations of the beginning of the time step (subindex '0') and the end of the time step (subindex 'T').
+	\item Solve the system equations at the end of the time step for the unknown accelerations as well as for \FON\ and \AEN\  coordinates.
+\ei
+
+% ++++++++++++++++++++++++++++
+% System equations for Newmark
+\newcommand{\acc}{\av}
+\newcommand{\vel}{\vv}
+We abbreviate the unknown accelerations by $\ddot \qv = \acc$ and the unknown velocities $\dot \qv = \vel$. 
+Thus, the equations at the end of the time step read (bring all terms to LHS):
+\bea \label{eq_Nemark_acc}
+  \fv^\mathrm{Newmark}_\SO &=& \Mm \acc^T_\SO + \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \qv^T_\AE - \fv_\SO(\qv^T_\SO, \dot \qv^T_\SO, t) = 0\\
+  \fv^\mathrm{Newmark}_\FO &=& \vel^T_\FO + \frac{\partial \gv}{\partial \qv_\FO^\mathrm{T}} \qv^T_\AE - \fv_\FO(\qv^T_\FO, t) = 0\\
+	\fv^\mathrm{Newmark}_\AE &=& \gv(\qv^T_\SO, \dot \qv^T_\SO, \qv^T_\FO, \qv^T_\AE, t) = 0
+\eea
+%
+%
+Within \eq{eq_Nemark_acc}, the \SON\ displacements and velocities and for \FON\ coordinates are given by
+\bea \label{eq_Newmark_interpolation}
+		   \qv^T_\SO & = &      \qv^0_\SO + h \dot \qv^0_\SO + h^2 (\frac 1 2 -\beta) \acc^0_\SO + h^2 \beta \acc^T_\SO \nonumber\\	
+	\dot \qv^T_\SO & = & \dot \qv^0_\SO + h (1-\gamma) \acc^0_\SO + h\gamma \acc^T_\SO \nonumber\\
+			 \qv^T_\FO & = & \qv^0_\FO + h (1-\gamma) \vel^0_\FO + h\gamma \vel^T_\FO
+\eea
+%
+The unknowns for the Newton method are
+\be \label{eq_Newton_unknowns}
+  \qv^\mathrm{Newton} = \vr{\acc^T_\SO}{\vel^T_\FO}{\qv^T_\AE}
+\ee
+For the Newton method, we need to compute an update for the unknowns \eq{eq_Newton_unknowns}, using the known residual $\rv_{i-1}$ and the inverse of the Jacobian $\Jm_{i-1}$ of step $i-1$,
+\be
+  \qv^\mathrm{Newton}_{i} = \qv^\mathrm{Newton}_{i-1} - \Jm^{-1}\left( \qv^\mathrm{Newton}_{i-1}\right) \rv\left( \qv^\mathrm{Newton}_{i-1}\right)
+%  \qv^\mathrm{Newton}_{i} = \qv^\mathrm{Newton}_{i-1} - \Jm^{-1}_{i-1} \Rm\left(\acc^T_{\SO,i-1},\,\vel^T_{\FO,i-1},\,\qv^T_{\AE,i-1} \right)
+\ee
+
+% +++++++++++++++++++++
+% Jacobians for Newmark
+The Jacobian has the following $3 \times 3$ structure,
+\be
+  \Jm = \mr{\Jm_{\SO\SO}}{\Jm_{\SO\FO}}{\Jm_{\SO\AE}}
+           {\Jm_{\FO\SO}}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
+           {\Jm_{\AE\SO}}  {\Jm_{\AE\FO}}  {\Jm_{\AE\AE}}
+\ee
+Note that currently, all terms related to '$\FO$' are not implemented. The other terms are only evaluated in the specific jacobian computation, if according flags are set in GetAvailableJacobian(). 
+Otherwise, the constraint needs to be implemented as object which can employ all kinds of coordinates, which do not depend on coordinates of markers.
+
+The available Jacobians need to be rewritten in terms of the Newton unkowns \eqref{eq_Newton_unknowns}, and thus read
+\bea
+  \Jm_{\SO\SO}&=&\frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \acc_\SO^\mathrm{T}} 
+							 = \frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \qv_\SO^\mathrm{T}} \frac{\qv_\SO}{\acc_\SO^\mathrm{T}} 
+							   + \frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \dot \qv_\SO^\mathrm{T}} \frac{\dot \qv_\SO}{\acc_\SO^\mathrm{T}} 
+							 = h^2 \beta \Km + h \gamma \Dm
+							 \nonumber \\
+	\Jm_{\SO\AE}&=&\frac{\partial \fv^\mathrm{Newmark}_\SO}{\partial \qv_\AE^\mathrm{T}} 
+	             = \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \nonumber \\
+	\Jm_{\AE\SO}&=&\frac{\partial \fv^\mathrm{Newmark}_\AE}{\partial \acc_\SO^\mathrm{T}} 
+	             = \frac{\partial \gv}{\partial \acc_\SO^\mathrm{T}}
+	             = \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} \frac{\qv_\SO}{\acc_\SO^\mathrm{T}} + \frac{\partial \gv}{\partial \dot \qv_\SO^\mathrm{T}} \frac{\dot \qv_\SO}{\acc_\SO^\mathrm{T}}
+							 = h^2 \beta \frac{\partial \gv}{\partial \qv_\SO^\mathrm{T}} 
+							   + h \gamma \frac{\partial \gv}{\partial \dot \qv_\SO^\mathrm{T}}
+							\nonumber \\
+	\Jm_{\AE\AE}&=&\frac{\partial \fv^\mathrm{Newmark}_\AE}{\partial \qv_\AE^\mathrm{T}}
+							 = \frac{\partial \gv}{\partial \qv_\AE^\mathrm{T}}
+\eea
+Note that the derivative $\frac{\qv_\SO}{\acc_\SO^\mathrm{T}}$ follows from the Newmark interpolation \eqref{eq_Newmark_interpolation} using the relation between $\qv^T_\SO$ and $\acc^T_\SO$. The tangent stiffness matrix $\Km$ must also include derivatives of applied forces $\fv^a$, which is currently not implemented.
+Furthermore, the Jacobian is not symmetric, which could be obtained by according scaling.
+
+%
+% +++++++++++++++++++++
+% Newton update formula
+Once an update $\qv^\mathrm{Newton}_{i}$ has been computed, the interpolation formulas \eqref{eq_Newmark_interpolation} need to be evaluated before the next residual and Jacobian can be computed.
+
+

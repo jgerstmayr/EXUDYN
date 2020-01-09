@@ -1,0 +1,785 @@
+
+\mysubsection{Module structure} \label{sec_programStructure}
+This section will show:
+\bi
+  \item Overview of modules
+  \item Conventions: dimension of nodes, objects and vectors
+	\item Coordinates: reference coordinates and displacements
+	\item Nodes, Objects, Markers and Loads
+\ei
+
+\mysubsubsection{Overview of modules}
+Currently, the module structure is simple:
+\bi
+  \item Python parts:
+	\bi
+	  \item \texttt{itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+	  \item \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with EXUDYN
+	\ei
+  \item C++ parts, see \fig{fig_exudyn_overview}:
+	\bi
+	  \item \texttt{exudyn}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+	  \item \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
+	  \item \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+		loads can added to the system, see Section \ref{sec_item_reference_manual};
+		\item \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_systemdata}
+	\ei
+\ei
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto]
+			% Place nodes
+			\node [cloud] (exu) {exudyn};
+			\node [wideblock, below of=exu] (systemContainer) {SystemContainer};
+			\node [wideblock, below of=systemContainer] (system) {MainSystem (e.g. 'mbs')};
+			\node [wideblock, right of=systemContainer,  node distance=6cm] (visualizationSettings) {visualizationSettings};
+			\node [block, below of=system] (systemData) {systemData};
+			\node [wideblock, below of=systemData] (systemStates) {system states (initial, current, ...)};
+			
+			\node [wideblock, dashed, fill=gray!10, right of=system,  node distance=6cm] (anotherSystem) {MainSystem (e.g. 'anotherMbs')};
+			\node [block, dashed, fill=gray!10, below of=anotherSystem] (anotherSystemData) {systemData};
+			\node [wideblock, dashed, fill=gray!10, below of=anotherSystemData] (anotherSystemStates) {system states (initial, current, ...)};
+
+			%\node [cloud, right of=exu] (itemInterface) {itemInterface.py};
+			%\node [cloud, right of=itemInterface] (exudynUtilities) {exudynUtilities.py};
+
+			% Draw edges
+			\path [line] (exu) -- (systemContainer);
+			\path [line] (systemContainer) -- (system);
+			\path [line] (systemContainer) -- (visualizationSettings);
+			\path [line] (system) -- (systemData);
+			\path [line] (systemData) -- (systemStates);
+
+			\path [line, dashed] (systemContainer) -- (anotherSystem);
+			\path [line, dashed] (anotherSystem) -- (anotherSystemData);
+			\path [line, dashed] (anotherSystemData) -- (anotherSystemStates);
+	\end{tikzpicture}
+  \caption{Overview of exudyn module.}
+	\label{fig_systemdata_overview}
+\end{figure}
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto]
+			% Place nodes
+			\node [cloud] (system) {MainSystem ('mbs')};
+			\node [wideblock, below of=system] (systemData) {systemData};
+			\node [wideblock, left of=systemData, node distance=5cm] (systemStates) {system states};
+			\node [wideblock, text width=3cm, below of=systemStates, xshift=-2cm] (current) {current state};
+			\node [wideblock, text width=3cm, below of=current] (initial) {initial state};
+			\node [wideblock, text width=3cm, below of=initial] (reference) {reference state};
+			\node [wideblock, text width=3cm, dashed, fill=gray!10, below of=reference] (otherStates) {other states};
+			
+			\node [wideblock, right of=systemData, node distance=5cm] (ltg) {local to global (LTG) coordinate index lists};
+			
+			\node [wideblock, below of=systemData, xshift=2.4cm] (nodes) {list of nodes};
+			\node [wideblock, below of=nodes] (objects) {list of objects};
+			\node [wideblock, below of=objects] (markers) {list of markers};
+			\node [wideblock, below of=markers] (loads) {list of loads};
+
+			% Draw edges
+			\path [line] (system) -- (systemData);
+			\path [line] (systemData) -- (systemStates);
+			\path [line] (systemStates) |- (current);
+			\path [line] (systemStates) |- (initial);
+			\path [line] (systemStates) |- (reference);
+			\path [line, dashed] (systemStates) |- (otherStates);
+
+			\path [line] (systemData) -- (ltg);
+
+			\path [line] (systemData) |- (nodes);
+			\path [line] (systemData) |- (objects);
+			\path [line] (systemData) |- (markers);
+			\path [line] (systemData) |- (loads);
+
+	\end{tikzpicture}
+  \caption{Overview of systemData, which connects items and states. Note that access to items is provided via functions in \texttt{system}.}
+	\label{fig_systemdata}
+
+\end{figure}
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+\mysubsubsection{Conventions: items, indices, coordinates}
+In this documentation, we will use the term {\bf item} to identify nodes, objects, markers and loads:
+\be
+  \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load} \}
+\ee
+\vspace{12pt}\\
+{\bf Indices: arrays and vector starting with 0:} \vspace{6pt}\\
+As known from Python, all {\bf indices} of arrays, vectors, etc.\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
+%
+\vspace{12pt}\\
+{\bf Dimensionality of objects and vectors:}\vspace{6pt}\\ 
+As a convention, quantities in \codeName\ are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
+For that reason, we denote planar nodes, objects, etc.\ with the suffix '2D', but 3D objects do not get this suffix.
+
+Output and input to objects, markers, loads, etc.\ is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
+As an example, consider a \texttt{NodePoint2D}:
+\bi
+  \item \texttt{referenceCoordinates} is a 2D vector (but could be any dimension in general nodes)
+	\item measuring the current position of \texttt{NodePoint2D} gives a 3D vector
+	\item when attaching a \texttt{MarkerNodePosition} and a \texttt{LoadForceVector}, the force will be still a 3D vector
+\ei
+Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
+
+\mysubsection{Items: Nodes, Objects, Loads, Markers, ...}
+%
+In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [nodeBlock] (node0) {node 0};
+			\node [nodeBlock, below of=node0, node distance=2cm] (node1) {node 1};
+			\node [nodeBlock, below of=node1, node distance=2cm] (node2) {node 2};
+
+			\node [objectBlock, right of=node0] (object0) {object 0 (body)};
+			\node [objectBlock, right of=node1, yshift = -1cm] (object1) {object 1 (body)};
+			
+			\node [markerBlock, right of=object0] (marker0) {marker 0};
+			\node [loadBlock, right of=marker0, node distance=3cm] (load0) {load 0};
+			
+			\node [markerBlock, left of=node2, yshift = -2cm, xshift = 1cm] (marker1) {marker 1};
+			\node [markerBlock, right of=node2, yshift = -2cm] (marker2) {marker 2};
+
+			\node [connectorBlock, below of=node2] (connector) {connector};
+
+
+			\path [arrow] (object0) -- (node0);
+			\path [arrow] (marker0) -- (object0);
+			\path [arrow] (load0) -- (marker0);
+			\path [arrow] (object1) -- (node1);
+			\path [arrow] (object1) -- (node2);
+			\path [arrow] (marker1) |- (node0);
+			\path [arrow] (marker2) -- (object1);
+			\path [arrow] (connector) -- (marker1);
+			\path [arrow] (connector) -- (marker2);
+			%\path [line] (systemData) |- (objects);
+			%\path [line] (systemData) |- (markers);
+			%\path [line] (systemData) |- (loads);
+
+	\end{tikzpicture}
+  \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indices) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load.}
+	\label{fig_items_interaction}
+
+\end{figure}
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\mysubsubsection{Nodes}
+Nodes provide the coordinates (and the degrees of freedom) to the system. They have no mass, stiffness or whatsoever assigned.
+Without nodes, the system has no unknown coordinates.
+Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate -- otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).
+
+\mysubsubsection{Objects}
+Objects are 'computational objects' and they provide equations to your system. Objects additionally often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces.
+
+Objects can be a:
+\bi
+  \item general object (e.g.\ a controller, user defined object, ...; no example yet)
+	\item body: has a mass or mass distribution; markers can be placed on bodies; loads can be applied; constraints can be attached via markers; bodies can be:
+	\bi
+	  \item[--] ground object: has no nodes
+	  \item[--] simple body: has one node (e.g. mass point, rigid body)
+	  \item[--] finite element and more complicated body (e.g. FFRF-object): has more than one node
+	\ei
+	\item connector: uses markers to connect nodes and/or bodies; adds additional terms to system equations either based on stiffness/damping or with constraints (and Lagrange multipliers). Possible connectors:
+	\bi
+		\item[--] algebraic constraint (e.g. constrain two coordinates: $q_1 = q_2$)
+		\item[--] classical joint
+		\item[--] spring-damper or penalty constraint
+	\ei
+\ei
+
+\mysubsubsection{Markers}
+Markers are interfaces between objects/nodes and constraints/loads.
+A constraint (which is also an object) or load cannot act directly on a node or object without a marker.
+As a benefit, the constraint or load does not need to know whether it is applied, e.g., to a node or to a local position of a body.
+
+Typical situations are:
+\bi
+  \item Node -- Marker -- Load
+	\item Node -- Marker -- Constraint (object)
+	\item Body(object) -- Marker -- Load
+	\item Body1 -- Marker1 -- Joint(object) -- Marker2 -- Body2
+\ei
+
+\mysubsubsection{Loads}
+Loads are used to apply forces and torques to the system. The load values are static values. However, you can use Python functionality to modify loads either by linearly increasing them during static computation or by using the 'preStepPyExecute' structure in order to modify loads in every integration step depending on time or on measured quantities (thus, creating a controller).
+
+\mysubsubsection{Reference coordinates and displacements}
+Nodes usually have separated reference and initial quantities. Here, 
+\texttt{referenceCoordinates} are the coordinates for which the system is defined upon creation. Reference coordinates are needed, e.g., for definition of joints and for the reference configuration of finite elements. In many cases it marks the undeformed configuration (e.g., with finite elements), but not, e.g., for \texttt{ObjectConnectorSpringDamper}, which has its own reference length. 
+
+Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
+As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialDisplacements}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
+
+
+\mysubsection{Exudyn Basics} \label{sec_exudynBasics}
+This section will show:
+\bi
+	\item Interaction with the \codeName\ module
+	\item Simulation settings
+	\item Visualization settings
+	\item Generating output and results
+	\item Graphics pipeline
+	\item Generating animations
+\ei
+
+
+\mysubsubsection{Interaction with the \codeName\ module}
+It is important that the \codeName\ module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
+\vspace{12pt}\\
+{\bf Where do objects live?}\vspace{6pt}\\
+%(where do objects live? state machine; graphics interaction)
+Whenever a system container is created with \texttt{SC = exu.SystemContainer()}, the structure \texttt{SC} lives in C++ and will be modified via the python interface.
+Usually, the system container will hold at least one system, usually called \texttt{mbs}.
+Commands such as \texttt{mbs.AddNode(...)} add objects to the system \texttt{mbs}. 
+The system will be prepared for simulation by \texttt{mbs.Assemble()} and can be solved (e.g., using \texttt{SC.TimeIntegrationSolve(...)}) and evaluated hereafter using the results files.
+Using \texttt{mbs.Reset()} will clear the system and allows to set up a new system. Items can be modified (\texttt{ModifyObject(...)}) after first initialization, even during simulation.
+%
+
+\mysubsubsection{Simulation settings}
+The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec_solution_settings} -- \ref{sec_simulation_settings}.
+
+Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
+
+The simulation settings structure is created with 
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+  simulationSettings = exu.SimulationSettings()
+\end{lstlisting}
+%
+Hereafter, values of the structure can be modified, e.g.,
+\begin{lstlisting}[language=Python, firstnumber=1]
+	#10 seconds of simulation time:
+  simulationSettings.timeIntegration.endTime = 10                    
+	#1000 steps for time integration:
+  simulationSettings.timeIntegration.numberOfSteps = 1000            
+	#assigns a new tolerance for Newton's method:
+  simulationSettings.timeIntegration.newton.relativeTolerance = 1e-9 
+	#write some output while the solver is active (SLOWER):
+  simulationSettings.timeIntegration.verboseMode = 2                 
+	#write solution every 0.1 seconds:
+  simulationSettings.solutionSettings.solutionWritePeriod = 0.1      
+	#use sparse matrix storage and solver (package Eigen):
+	simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse 
+\end{lstlisting}
+
+\mysubsubsection{Visualization settings}
+%
+Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
+Details on visualization settings and its substructures are provided in Sections \ref{sec_visualization_general} -- \ref{sec_visualization_settings}.
+
+The visualization settings structure can be accessed in the system container \texttt{SC} (access per reference, no copying!), accessing every value or structure directly, e.g.,
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+  SC.visualizationSettings.nodes.defaultSize = 0.001      #draw nodes very small
+
+  #change openGL parameters; current values can be obtained from SC.GetRenderState()
+  #change zoom factor:
+  SC.visualizationSettings.openGL.initialZoom = 0.2       
+  #set the center point of the scene (can be attached to moving object):
+  SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
+
+  #turn of auto-fit:
+  SC.visualizationSettings.general.autoFitScene = False
+
+  #change smoothness of a cylinder:
+  SC.visualizationSettings.general.cylinderTiling = 100
+	
+	#make round objects flat:
+	SC.visualizationSettings.openGL.shadeModelSmooth = False
+
+	#turn on coloured plot, using y-component of displacements:
+	SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+	SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
+\end{lstlisting}
+
+\mysubsubsection{Solver}
+Both in the static as well as in the dynamic case, the solver runs in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval.
+For the time integration (dynamic solver), \fig{fig_solver_time_integration} shows the basic loops for the solution process. The inner loops are shown in \fig{fig_solver_solve_steps} and\fig{fig_solver_discontinuous_iteration}.
+
+The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [cloud] (solveSystem) {SolveSystem()};
+%			\node [wideblock, below of=init_solver_specific] (initializeSolver) {InitializeSolver()};
+			\node [decision, below of=solveSystem] (decisionInitSolver) {InitializeSolver()?};
+			\node [wideblock, right of=decisionInitSolver, node distance=6cm] (initFailed) {InitializeSolver() failed};
+			\node [wideblock, below of=decisionInitSolver, node distance=2.5cm] (solveSteps) {SolveSteps()};
+			\node [wideblock, below of=solveSteps] (finalizeSolver) {FinalizeSolver()};
+			
+			\path [arrow] (solveSystem) -- (decisionInitSolver);
+			\path [arrow] (decisionInitSolver) -- node [near start] {False}(initFailed);
+			\path [arrow] (decisionInitSolver) -- node [near start] {True}(solveSteps);
+			\path [arrow] (solveSteps) -- (finalizeSolver);
+			\path [arrow] (initFailed) |- (finalizeSolver);
+	\end{tikzpicture}
+  \caption{Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.}
+	\label{fig_solver_time_integration}
+\end{figure}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [cloud] (initializeSolver) {InitializeSolver()};
+			\node [wideblock, text width=5cm, below of=initializeSolver] (preInitializeSolverSpecific) {PreInitializeSolverSpecific()};
+			\node [wideblock, text width=5cm, below of=preInitializeSolverSpecific] (initializeSolverOutput) {InitializeSolverOutput()};
+			\node [decision, aspect=4, text width=6cm, below of=initializeSolverOutput] (initializeSolverPreChecks) {InitializeSolverPreChecks()?};
+			
+			\node [wideblock, text width=6cm, right of=initializeSolverPreChecks, node distance=8cm] (initFailed) {InitializeSolverPreChecks() failed; return False};
+			\node [wideblock, below of=initializeSolverPreChecks, node distance=2.5cm] (initializeSolverData) {InitializeSolverData()};
+			\node [wideblock, text width=6cm, below of=initializeSolverData] (initializeSolverInitialConditions) {InitializeSolverInitialConditions()};
+			\node [wideblock, text width=5cm, below of=initializeSolverInitialConditions] (postInitializeSolverSpecific) {PostInitializeSolverSpecific()};
+			\node [wideblock, below of=postInitializeSolverSpecific] (finished) {return True};
+			
+			\path [arrow] (initializeSolver) -- (preInitializeSolverSpecific);
+			\path [arrow] (preInitializeSolverSpecific) -- (initializeSolverOutput);
+			\path [arrow] (initializeSolverOutput) -- (initializeSolverPreChecks);
+			\path [arrow] (initializeSolverPreChecks) -- node [near start] {False}(initFailed);
+			\path [arrow] (initializeSolverPreChecks) -- node [near start] {True}(initializeSolverData);
+			\path [arrow] (initializeSolverData) -- (initializeSolverInitialConditions);
+			\path [arrow] (initializeSolverInitialConditions) -- (postInitializeSolverSpecific);
+			\path [arrow] (postInitializeSolverSpecific) -- (finished);
+	\end{tikzpicture}
+  \caption{Basic solver flow chart for function InitializeSolver().}
+	\label{fig_solver_time_integration}
+\end{figure}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [cloud] (solveSteps) {SolveSteps()};
+			\node [decision, aspect=4, text width=5cm, below of=solveSteps] (solveStepsLoop) {simulation finished or solver failed/stopped?};
+			
+			\node [wideblock, text width=4cm, right of=solveStepsLoop, node distance=7cm] (solveStepsLoopFinished) {return True if solver reached end time, else return False};
+			\node [wideblock, below of=solveStepsLoop, node distance=2.5cm] (setStartOfStepState) {state.startOfStep = state.current};
+			\node [decision, below of=setStartOfStepState] (stepReduction) {step finished?};
+			\node [wideblock, text width=5cm, left of=stepReduction, node distance=6cm] (finishStep) {increment step counter};
+			\node [wideblock, below of=stepReduction, yshift = -0.5cm] (initializeStep) {update current time\\InitializeStep()};
+			\node [decision, aspect=4, text width=5cm, below of=initializeStep] (discontinuousIteration) {DiscontinuousIteration()?};
+			\node [wideblock, text width=6cm, right of=discontinuousIteration, node distance=8cm] (discontinuousIterationFailed) {perform step reduction (return False if reached min step size)\\state.current = state.startOfStep};
+			\node [wideblock, below of=discontinuousIteration, node distance=2.5cm] (finishDiscIt) {FinishStep(); check increase of step size};
+			
+			\path [arrow] (solveSteps) -- (solveStepsLoop);
+			\path [arrow] (solveStepsLoop) -- node [near start] {no}(setStartOfStepState);
+			\path [arrow] (solveStepsLoop) -- node [near start] {yes}(solveStepsLoopFinished);
+			\path [arrow] (setStartOfStepState) -- (stepReduction);
+			\path [arrow] (stepReduction) -- node [near start] {no}(initializeStep);
+			\path [arrow] (stepReduction) -- node [near start] {yes}(finishStep);
+			\path [arrow] (finishStep) |- (solveStepsLoop);
+			
+			\path [arrow] (initializeStep) -- (discontinuousIteration);
+			\path [arrow] (discontinuousIteration) -- node [near start] {False}(discontinuousIterationFailed);
+			\path [arrow] (discontinuousIteration) -- node [near start] {True}(finishDiscIt);
+			\path [arrow] (solveSteps) -- (solveStepsLoop);
+			\path [arrow] (discontinuousIterationFailed) |- (stepReduction);
+			%\path [arrow] (initializeSolverOutput) -- (initializeSolverPreChecks);
+			%\path [arrow] (initializeSolverPreChecks) -- node [near start] {no}(initFailed);
+			%\path [arrow] (initializeSolverPreChecks) -- node [near start] {yes}(initializeSolverData);
+			%\path [arrow] (initializeSolverData) -- (initializeSolverInitialConditions);
+			%\path [arrow] (initializeSolverInitialConditions) -- (finished);
+	\end{tikzpicture}
+  \caption{Solver flow chart for SolveSteps(), which is the inner loop of the solver.}
+	\label{fig_solver_solve_steps}
+\end{figure}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [cloud] (discontinuousIteration) {DiscontinuousIteration()};
+			\node [decision, aspect=4, text width=5cm, below of=discontinuousIteration] (discontinuousIterationLoop) {disc.\ it.\ converged or disc.it.>=max it.};
+			\node [wideblock, left of=discontinuousIterationLoop, node distance=6cm, xshift=-1cm] (discItTerminate) {return True if successful; False if max it.\ reached};
+			
+			%\node [wideblock, text width=4cm, right of=discontinuousIterationLoop, node distance=7cm] (discontinuousIterationLoopFinished) {return True if converged, else return False};
+			
+			\node [decision, below of=discontinuousIterationLoop, yshift = -0.5cm] (newtonLoop) {Newton() ?};
+			\node [wideblock, left of=newtonLoop, node distance=6cm] (newtonFailed) {return False};
+			\node [wideblock, below of=newtonLoop, yshift = -0.5cm] (postNewtonStep) {disc.it.++\\PostNewtonStep()};
+
+			\node [decision, below of=postNewtonStep] (postNewtonStepError) {disc.\ iter.\ error\\ <= tol ?};
+			\node [wideblock, right of=postNewtonStepError, node distance=6cm] (resetDiscIt) {state.current = state.startOfStep};
+			\node [wideblock, below of=postNewtonStepError, yshift = -0.5cm] (discItSuccessful) {disc.\ iter.\ successful; return True};
+			
+			%compute Residual
+			%check Residual
+			%compute jacobian
+			%steepest decent
+			%check convergence
+			%... end of Newton: set state back to start of step (except for data variables)
+			
+			\path [arrow] (discontinuousIteration) -- (discontinuousIterationLoop);
+			\path [arrow] (discontinuousIterationLoop) -- node [near start] {no}(newtonLoop);
+			\path [arrow] (discontinuousIterationLoop) -- node [near start] {yes}(discItTerminate);
+			
+			%\path [arrow] (discontinuousIterationLoop) -- (newtonLoop);
+			\path [arrow] (newtonLoop) -- node [near start] {failed}(newtonFailed);
+			\path [arrow] (newtonLoop) -- node [near start] {converged}(postNewtonStep);
+
+			\path [arrow] (postNewtonStep) -- (postNewtonStepError);
+			\path [arrow] (postNewtonStepError) -- node [near start] {no}(resetDiscIt);
+			\path [arrow] (postNewtonStepError) -- node [near start] {yes}(discItSuccessful);
+
+			\path [arrow] (resetDiscIt) |- (discontinuousIterationLoop);
+			%\path [arrow] (finishStep) |- (solveStepsLoop);
+			%
+			%\path [arrow] (initializeStep) -- (discontinuousIteration);
+			%\path [arrow] (discontinuousIteration) -- node [near start] {False}(discontinuousIterationFailed);
+			%\path [arrow] (discontinuousIteration) -- node [near start] {True}(finishDiscIt);
+			%\path [arrow] (solveSteps) -- (solveStepsLoop);
+			%\path [arrow] (discontinuousIterationFailed) |- (stepReduction);
+	\end{tikzpicture}
+  \caption{Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, 
+	SolveSteps() will try to reduce the step size.}
+	\label{fig_solver_discontinuous_iteration}
+\end{figure}
+
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+			% Place nodes
+			\node [cloud] (newtonIteration) {Newton()};
+			\node [wideblock, below of=newtonIteration] (initNewton) {state.current = state.startOfStep\\ current.AEcoords = 0};
+			\node [wideblock, below of=initNewton] (residual) {R=ComputeResidual()\\res=|/nCoords|};
+			\node [wideblock, below of=residual] (initResidual) {initRes = res};
+
+			\node [decision, aspect=2.5, text width=4cm, below of=initResidual, yshift = -0.25cm] (newtonLoop) {newtonSuccess?\\newtonFailed?\\newton it.>=max it.?};
+			\node [wideblock, left of=newtonLoop, node distance=6cm, xshift=-1cm] (newtonTerminate) {return True if successful else False};
+			\node [block, right of=newtonLoop, node distance=6cm] (continueNewton) {continue Newton};
+			\node [decision, below of=newtonLoop, yshift = -0.75cm] (jacUpdate) {jacobian requested?};
+
+			\node [wideblock, text width = 5cm, left of=jacUpdate, node distance=7cm] (updateJacobian) {ComputeNewtonJacobian()};
+			\node [decision, text width = 4cm, below of=updateJacobian, yshift = -0.0cm] (factorizeJacobian) {jacobian.Factorize()?};
+			\node [wideblock, below of=factorizeJacobian, yshift = -1.0cm] (jacFactorizeFailed) {return False};
+
+			\node [wideblock, below of=jacUpdate, yshift = -0.5cm] (jacobianSolve) {sol=jacobian.Solve(res)};
+			\node [wideblock, below of=jacobianSolve, text width=4.5cm, yshift = -0.0cm] (newtonUpdate) {ComputeNewtonUpdate() using sol};
+			\node [wideblock, below of=newtonUpdate] (residual2) {R=ComputeResidual()\\res=|/nCoords|};
+
+			%\node [wideblock, below of=residual2] (adaptInitResidual) {initResidual = max(res,initRes)};
+			\node [decision, below of=residual2] (evalTolerances) {res <= absTol or res/initRes <= relTol?};
+			\node [wideblock, left of=evalTolerances, node distance=6cm] (newtonConverged) {newtonSuccess = True};
+			\node [wideblock, below of=evalTolerances, yshift=-1cm] (checkDivergence) {if isNAN(u,v,$\lambda$)\\ $\ra$ restart Newton or stop Newton};
+			\node [wideblock, below of=checkDivergence, yshift=-0.25cm] (checkIterations) {if it > maxModNewtonIt $\ra$ jacUpdate + restart Newton};
+			\node [wideblock, below of=checkIterations, yshift=-0.25cm] (checkIterations2) {if it > maxModNewtonIt+maxModRestartIt $\ra$ full Newton};
+			\node [wideblock, below of=checkIterations2, yshift=-0.cm] (checkContractivity) {contractivity=res/lastRes\\lastRes=res};
+			\node [decision, text width=4.5cm, below of=checkContractivity, yshift=-0.5cm] (restartNewton) {check contractivity, diverged/restart flags};
+			
+			\node [wideblock, below of=restartNewton, yshift=-1.25cm] (restartNewtonIteration) {state.current = state.startOfStep\\ state.AEcoords = 0\\ComputeResidual()};
+
+			%adapt initial residual
+			%!converged: 
+			%  - check divergence
+			%  if modNewton:
+			%    - check max mod newton its reached? yes: compute Jac
+			%    - check contractivity ==> compute Jac / switch to full newton
+
+
+			%\node [decision, below of=postNewtonStep] (postNewtonStepError) {disc.\ iter.\ error\\ <= tol ?};
+			%\node [wideblock, right of=postNewtonStepError, node distance=6cm] (resetDiscIt) {state.current = state.startOfStep};
+			%\node [wideblock, below of=postNewtonStepError, yshift = -0.5cm] (discItSuccessful) {disc.\ iter.\ successful; return True};
+			
+	
+			\path [arrow] (newtonIteration) -- (initNewton);
+			\path [arrow] (initNewton) -- (residual);
+			\path [arrow] (residual) -- (initResidual);
+
+			\path [arrow] (initResidual) -- (newtonLoop);
+			\path [arrow] (newtonLoop) -- node [near start] {no}(jacUpdate);
+			\path [arrow] (newtonLoop) -- node [near start] {yes}(newtonTerminate);
+			%
+			\path [arrow] (jacUpdate) -- node [near start] {no}(jacobianSolve);
+			\path [arrow] (jacUpdate) -- node [near start] {yes}(updateJacobian);
+
+			\path [arrow] (updateJacobian) -- (factorizeJacobian);
+			\path [arrow] (factorizeJacobian) -- node [near start] {failed}(jacFactorizeFailed);
+			\path [arrow] (factorizeJacobian) -- node [near start] {success}(jacobianSolve);
+%
+			\path [arrow] (jacobianSolve) -- (newtonUpdate);
+			\path [arrow] (newtonUpdate) -- (residual2);
+
+			\path [arrow] (residual2) -- (evalTolerances);
+			\path [arrow] (evalTolerances) -- node [near start] {yes}(newtonConverged);
+			\path [arrow] (evalTolerances) -- node [near start] {no}(checkDivergence);
+			\path [arrow] (checkDivergence) -- (checkIterations);
+			\path [arrow] (checkIterations) -- (checkIterations2);
+			\path [arrow] (checkIterations2) -- (checkContractivity);
+			\path [arrow] (checkContractivity) -- (restartNewton);
+			\path [arrow] (restartNewton) -- node [near start] {restart}(restartNewtonIteration);
+			\path [arrow] (restartNewton) -| node [near start] {continue}(continueNewton);
+			\path [arrow] (restartNewtonIteration) -| (continueNewton);
+			
+			\path [arrow] (continueNewton) -- (newtonLoop);
+
+	\end{tikzpicture}
+  \caption{Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for newtonResidualMode = 0.}
+	\label{fig_solver_newton_iteration}
+\end{figure}
+
+
+\mysubsubsection{Generating output and results}
+%
+The solvers provide a number of options in \texttt{solutionSettings} to generate a solution file. As a default, exporting solution to the solution file is activated with a writing period of 0.01 seconds.
+
+Typical output settings are:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+  #create a new simulationSettings structure:
+  simulationSettings = exu.SimulationSettings()
+	
+  #activate writing to solution file:
+  simulationSettings.solutionSettings.writeSolutionToFile = True
+  #write results every 1ms:
+  simulationSettings.solutionSettings.solutionWritePeriod = 0.001
+  
+  #assign new filename to solution file
+  simulationSettings.solutionSettings.coordinatesSolutionFileName= "myOutput.txt"
+
+  #do not export certain coordinates:
+  simulationSettings.solutionSettings.exportDataCoordinates = False
+\end{lstlisting}
+
+
+\mysubsubsection{Graphics pipeline}
+The user cannot interact with the visualization part for now.
+There are basically two loops during simulation, which feed the graphics pipeline.
+The solver runs a loop:
+\bi
+  \item compute new step
+	\item finish computation step; results are in current state
+	\item copy current state to visualization state (thread safe)
+	\item signal graphics pipeline that new visualization data is available
+\ei
+The openGL graphics thread runs the following loop:
+\bi
+  \item render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
+  \item go idle for some milliseconds
+	\item check if openGL rendering needs an update (e.g. due to user interaction)
+	\item[] $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
+	\item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
+\ei
+
+\mysubsubsection{Generating animations}
+%
+In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
+
+Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
+To turn on recording of images during solving, set the following flag to a positive value
+\bi
+  \item \texttt{simulationSettings.solutionSettings.recordImagesInterval = 0.01}
+\ei
+which means, that after every 0.01 seconds of simulation time, an image of the current view is taken and stored in the directory and filename (without filename ending) specified by 
+\bi
+  \item \texttt{SC.visulizationSettings.exportImages.saveImageFileName = 'myFolder/frame'}
+\ei
+By default, a consecutive numbering is generated for the image, e.g., 'frame0000.tga, frame0001.tga,...'. Note that '.tga' files contain raw image data and therefore can become very large.
+
+To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
+In windows, simple DOS batch files can do the job to convert frames given in the local directory to animations, e.g.:
+\plainlststyle
+\lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/convertToVideo.bat}
+After the video has been created, you should delete the single images:
+\plainlststyle
+\lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/deleteTGAimages.bat}
+
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\mysubsection{C++ Code}
+This section covers some information on the C++ code. For more information see the Open source code and use doxygen.
+
+Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.
+
+\mysubsubsection{Focus of the C++ code}
+{\bf Four principles}: 
+\bn
+  \item developer-friendly
+	\item error minimization
+	\item efficiency
+	\item user-friendliness
+\en
+The focus is therefore on:
+\bi
+    \item A developer-friendly basic structure regarding the C++ class library and the possibility to add new components.
+    \item The basic libraries are slim, but extensively tested; only the necessary components are available
+    \item Complete unit tests are added to new program parts during development; for more complex processes, tests are available in Python
+    \item In order to implement the sometimes difficult formulations and algorithms without errors, error avoidance is always prioritized.
+    \item To generate efficient code, classes for parallelization (vectorization and multithreading) are provided. We live the principle that parallelization takes place on multi-core processors with a central main memory, and thus an increase in efficiency through parallelization is only possible with small systems, as long as the program runs largely in the cache of the processor cores. Vectorization is tailored to SIMD commands as they have Intel processors, but could also be extended to GPGPUs in the future.
+    \item The user interface (Python) provides a 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.
+\ei
+
+\mysubsubsection{C++ Code structure}
+The functionality of the code is based on systems (MainSystem/CSystem) representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
+\bi
+	\item CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
+	\item SystemContainer: holds a set of systems; connects to visualization (container)
+	\item node: used to hold coordinates (unknowns)
+	\item (computational) object: leads to equations, using nodes
+	\item marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
+	\item load: acts on an object or node via a marker
+	\item computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
+	\item visualization objects: interface between computational objects and 3D graphics
+	\item main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
+	\item static solver, kinematic solver, time integration
+	\item python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
+	\item interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
+\ei
+
+
+\mysubsubsection{C++ Code: Modules}
+The following internal modules are used, which are represented by directories in \texttt{main/src}:
+\bi
+	\item Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
+	\item Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
+    \item Linalg: Linear algebra with vectors and matrices; separate classes for small vectors (SlimVector), large vectors (Vector and ResizableVector), vectors without copying data (LinkedDataVector), and vectors with constant size (ConstVector)
+	\item Main: mainly contains SystemContainer, System and ObjectFactory
+	\item Objects: contains the implementation part of the autogenerated items
+	\item Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
+	\item pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
+	\item Solver: contains all solvers for solving a CSystem
+	\item System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
+	\item Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
+    \item Utilities: array structures for administrative/managing tasks (indices of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
+\ei
+
+The following main external libraries are linked to Exudyn:
+\bi
+	\item LEST: for testing of internal functions (e.g. linalg)
+	\item GLFW: 3D graphics with openGL; cross-platform capabilities
+	\item Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
+	\item pybind11: linking of C++ to python
+\ei
+
+\mysubsubsection{Code style and conventions}
+%
+This section provides general coding rules and conventions, partly applicable to the C++ and python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
+\bi
+    \item write simple code (no complicated structures or uncommon coding)
+    \item write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
+    \item put a header in every file, according to Doxygen format
+    \item put a comment to every (global) function, member function, data member, template parameter
+    \item ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) {i += 1;}
+    \item use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
+    \item use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
+    \item USE 4-spaces-tab
+    \item use C++11 standards when appropriate, but not exhaustively
+    \item ONE class ONE file rule (except for some collectors of single implementation functions)
+    \item add complete unit test to every function (every file has link to LEST library)
+    \item avoid large classes (>30 member functions; > 15 data members)
+    \item split up god classes (>60 member functions)
+    \item mark changed code with your name and date
+    \item REPLACE tabs by spaces: Extras->Options->C/C++->Tabstopps: tab stopp size = 4 (=standard) +  KEEP SPACES=YES
+\ei
+
+\mysubsubsection{Notation conventions}
+%
+The following notation conventions are applied ({\bf no exceptions!}):
+\bi
+		\item use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., $f = M*q_tt + K*q$, GBar, ...
+		\item use UpperCamelCase for functions, classes, structs, ...
+		\item Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
+		\item '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
+		\item use American English troughout: Visualization, etc.
+		\item for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
+		\item do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
+		\item for functions use \texttt{ODEComputeCoords()}, for variables avoid 'ODE' at beginning: use nODE or write odeCoords
+		\item do not use '\_' within variable or function names; exception: derivatives, release\_assert
+		\item use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
+		\item examples for variable names: secondOrderSize, massMatrix, mThetaTheta
+		\item examples for function/class names: \texttt{SecondOrderSize}, \texttt{EvaluateMassMatrix}, \texttt{Position(const Vector3D\& localPosition)}
+		\item use the Get/Set...() convention if data is retrieved from a class (Get) or something is set in a class (Set); Use \texttt{const T\& Get()/T\& Get} if direct access to variables is needed; Use Get/Set for pybind11
+		\item example Get/Set: \texttt{Real* GetDataPointer()}, \texttt{Vector::SetAll(Real)}, \texttt{GetTransposed()}, \texttt{SetRotationalParameters(...)}, \texttt{SetColor(...)}, ...
+		\item use 'Real' instead of double or float: for compatibility, also for AVX with SP/DP
+		\item use 'Index' for array/vector size and index instead of size\_t or int
+		\item item: object, node, marker, load: anything handled within the computational/visualization systems
+\ei
+
+\mysubsubsection{No-abbreviations-rule}
+%
+The code uses a {\bf minimum set of abbreviations}; however, the following abbreviation rules are used throughout:
+In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (5-line member functions).
+
+Exceptions to the NO-ABBREVIATIONS-RULE:
+\bi
+    \item ODE ... ordinary differential equations;
+    \item ODE2 ... marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
+    \item ODE1 ... marks parts related to first order differential equations (ES, EvalF in HOTINT)
+    \item AE ... algebraic equations (IS, EvalG in HOTINT); write 'AEcoordinates' for 'algebraicEquationsCoordinates'
+    \item 'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
+    \item min, max ... minimum and maximum
+    \item write time derivatives with underscore: \_t, \_tt; example: Position\_t, Position\_tt, ...
+    \item write space-wise derivatives ith underscore: \_x, \_xx, \_y, ...
+    \item if a scalar, write coordinate derivative with underscore: \_q, \_v (derivative w.r.t. velocity coordinates)
+    \item for components, elements or entries of vectors, arrays, matrices: use 'item' throughout
+    \item '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
+\ei
+
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\mysubsection{Changes}
+
+The following list covers changes in the python interface and functionality:
+\bi
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.2xx $\ra$ Version 0.1.2yy}
+	%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+	%\bi
+	  %\item {\bf xxxx}: 
+	%\ei
+	%\item[] Changes in the python interface:
+	%\bi \ttfamily
+	  %\item $\ra$ 
+	%\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.244 $\ra$ Version 0.1.245}
+	\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+	\bi
+	  \item {\bf Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
+	\ei
+	\item[] Changes in the python interface (new functions / interface to call the old solvers):
+	\bi \ttfamily
+	  \item SC.SolveStaticOldSolver(...)
+	  \item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 	\item {\bf Version 0.1.243 $\ra$ Version 0.1.244}
+	\item[] Changes in the python interface:
+	\bi \ttfamily
+	  \item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.238 $\ra$ Version 0.1.240}
+	\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+	\bi
+	  \item {\bf generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
+		\item {\bf time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
+	\ei
+	\item[] Changes in the python interface:
+	\bi \ttfamily
+	  \item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
+		\item ADDED: simulationSettings.timeIntegration.verboseModeFile
+		\item ADDED: simulationSettings.staticSolver.verboseModeFile
+	\ei
+\ei

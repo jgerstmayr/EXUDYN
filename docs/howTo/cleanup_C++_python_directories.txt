@@ -1,0 +1,19 @@
++++++++++++++++++++++++++++++++++
+2019-11-22, author: Johannes Gerstmayr
+
+this document shows, how to cleanup C++ and python directories
+
+delete:
+- .vs files
+- doxygen/latex and html directories
+- Release directory (bin; obj/bin)
+- Debug directory (bin; obj/bin)
+- pythonDev/coordinatesSolution.txt and other output files (usually >10MB)
+- __pycache__ directories (in pythonDev and subfolders)
+- docs: .log, .aux, .toc, etc.
+
+whole repository (without .git) should have a size of approx. 50MB in the end (2019-11-22: 45,6MB, 730 files and 92 folders)
+
+
+
+

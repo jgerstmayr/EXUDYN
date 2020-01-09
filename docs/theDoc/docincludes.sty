@@ -1,0 +1,145 @@
+%++++++++++++++++++++++++++++++++++++++++++++++++
+%practical definitions for latex
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{docincludes}
+
+%common abbreviations:
+\newcommand{\ba}{\begin{array}{c}} %==>Mechatronische Systeme
+\newcommand{\ea}{\end{array}}
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+
+\newcommand{\bi}{\begin{itemize} \itemsep -2pt}
+\newcommand{\ei}{\end{itemize}}
+
+\newcommand{\bn}{\begin{enumerate} \itemsep -2pt}
+\newcommand{\en}{\end{enumerate}}
+
+%vector/matrix: (3D)
+\newcommand{\vr}[3]{\left[\!\! \begin{array}{c} { #1}\vspace{0.1cm} \\ { #2}\vspace{0.1cm} \\ { #3} \end{array} \!\!\right]}
+\newcommand{\mr}[9]{\left[\!\! \begin{array}{ccc} #1 & #2 & #3 \vspace{0.1cm}\\ #4 & #5 & #6 \vspace{0.1cm}\\ #7 & #8 & #9  \end{array} \!\!\right]}
+\newcommand{\vsix}[6]{\left[\!\! \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} \!\!\right]}
+\newcommand{\vsixb}[6]{\begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} }
+
+\newcommand{\vsixs}[6]{ \begin{array}{c} { #1} \\ { #2} \\ { #3} \\ { #4} \\ { #5} \\ { #6} \end{array} }
+
+%vector/matrix: (2D)
+\newcommand{\vp}[2]{\left[\!\! \begin{array}{c} { #1} \vspace{0.1cm}\\ { #2} \end{array} \!\!\right]}
+\renewcommand{\mp}[4]{\left[\!\! \begin{array}{cc} #1 & #2 \vspace{0.1cm}\\ #3 & #4 \end{array} \!\!\right]}
+
+%use following commands for unique german/english
+\newcommand{\eq}[1]{Eq.\ (\ref{#1})}
+\newcommand{\eqs}[1]{Eqs.\ (\ref{#1})}
+\newcommand{\eqq}[1]{(\ref{#1})}
+\newcommand{\fig}[1]{Fig.\ \ref{#1}}
+\newcommand{\mytab}[1]{Tab.\ \ref{#1}}
+
+\newcommand{\ra}{\rightarrow}
+
+
+%Vektoren mit v nachgestellt
+\newcommand{\av}{\mathbf{a}}
+\newcommand{\bv}{\mathbf{b}}
+\newcommand{\cv}{\mathbf{c}}
+\newcommand{\ev}{\mathbf{e}}
+\newcommand{\fv}{\mathbf{f}}
+\newcommand{\gv}{\mathbf{g}}
+\newcommand{\kv}{\mathbf{k}}
+\newcommand{\nv}{\mathbf{n}}
+\newcommand{\mv}{\mathbf{m}}
+\newcommand{\pv}{\mathbf{p}}
+\newcommand{\qv}{\mathbf{q}}
+\newcommand{\rv}{\mathbf{r}}
+\newcommand{\sv}{\mathbf{s}}
+\newcommand{\tv}{\mathbf{t}}
+\newcommand{\uv}{\mathbf{u}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\wv}{\mathbf{w}}
+\newcommand{\xv}{\mathbf{x}}
+\newcommand{\yv}{\mathbf{y}}
+\newcommand{\zv}{\mathbf{z}}
+\newcommand{\Fv}{\mathbf{F}}
+\newcommand{\Mv}{\mathbf{M}}
+
+%Matrizen mit m nachgestellt
+\newcommand{\Am}{\mathbf{A}}
+\newcommand{\Bm}{\mathbf{B}}
+\newcommand{\Cm}{\mathbf{C}}
+\newcommand{\Dm}{\mathbf{D}}
+\newcommand{\Em}{\mathbf{E}}
+\newcommand{\Gm}{\mathbf{G}}
+\newcommand{\Hm}{\mathbf{H}}
+\renewcommand{\Im}{\mathbf{I}}
+\newcommand{\Jm}{\mathbf{J}}
+\newcommand{\Km}{\mathbf{K}}
+\newcommand{\Lm}{\mathbf{L}}
+\newcommand{\Mm}{\mathbf{M}}
+\newcommand{\Nm}{\mathbf{N}}
+\newcommand{\Qm}{\mathbf{Q}}
+\newcommand{\Pm}{\mathbf{P}}
+\newcommand{\Rm}{\mathbf{R}}
+\newcommand{\Sm}{\mathbf{S}}
+\newcommand{\Tm}{\mathbf{T}}
+\newcommand{\Um}{\mathbf{U}}
+\newcommand{\Vm}{\mathbf{V}}
+\newcommand{\Wm}{\mathbf{W}}
+\newcommand{\Xm}{\mathbf{X}}
+
+\newcommand{\Rot}{\mathbf{T}}
+\newcommand{\dd}{\mathrm{d}}
+
+\newcommand{\co}{\mathrm{c}}
+\newcommand{\si}{\mathrm{s}}
+
+
+\newcommand{\Null}{\mathbf{0}}
+
+%griechische Buchstaben immer mit 't' vorgestellt
+\newcommand{\ttheta}{\mbox{\boldmath $\theta$ \unboldmath}\!\!}
+\newcommand{\tomega}{\mbox{\boldmath $\omega$ \unboldmath}\!\!}
+\newcommand{\tpsi}{\mbox{\boldmath $\psi$ \unboldmath}\!\!}
+\newcommand{\talpha}{\mbox{\boldmath $\alpha$ \unboldmath}\!\!}
+\newcommand{\tbeta}{\mbox{\boldmath $\beta$ \unboldmath}\!\!}
+\newcommand{\tgamma}{\mbox{\boldmath $\gamma$ \unboldmath}\!\!}
+\newcommand{\tlambda}{\mbox{\boldmath $\lambda$ \unboldmath}\!\!}
+
+\newcommand{\vareps}{\varepsilon}
+
+%left index:
+%\newcommand{\LU}[2]{{^{#1}#2}\,}
+\newcommand{\LU}[2]{\prescript{#1}{}{#2}\,}
+\newcommand{\LUR}[3]{\prescript{#1}{}{#2}_{#3}\,}
+\newcommand{\LURU}[4]{\prescript{#1}{}{#2}_{#3}^{#4}\,}
+\newcommand{\LLdot}[3]{\prescript{}{#1}{\dot{#2}}_{#3}\,}
+
+\renewcommand{\vr}[3]{\left[\!\! \begin{array}{c} { #1}\vspace{0.04cm} \\ { #2}\vspace{0.04cm} \\ { #3} \end{array} \!\!\right]}
+\renewcommand{\mr}[9]{\left[\!\! \begin{array}{ccc} #1 & #2 & #3 \vspace{0.04cm}\\ #4 & #5 & #6 \vspace{0.04cm}\\ #7 & #8 & #9  \end{array} \!\!\right]}
+
+%vector/matrix: (2D)
+\renewcommand{\vp}[2]{\left[\!\! \begin{array}{c} { #1} \vspace{0.04cm}\\ { #2} \end{array} \!\!\right]}
+\renewcommand{\mp}[4]{\left[\!\! \begin{array}{cc} #1 & #2 \vspace{0.04cm}\\ #3 & #4 \end{array} \!\!\right]}
+
+\newcommand{\vfour}[4]{\left[\!\! \begin{array}{c} { #1}\vspace{0.04cm} \\ { #2}\vspace{0.04cm} \\ { #3}\vspace{0.04cm} \\ { #4} \end{array} \!\!\right]}
+
+\newcommand{\mfour}[4]{\left[\!\! \begin{array}{cccc} #1 \vspace{0.04cm}\\ #2 \vspace{0.04cm}\\ #3 \vspace{0.04cm}\\ #4 \end{array} \!\!\right]}
+
+\newcommand{\mysection}[1]{\chapter{#1}}
+\newcommand{\mysubsection}[1]{\section{#1}}
+\newcommand{\mysubsubsection}[1]{\subsection{#1}}
+
+\newcommand{\codeName}{EXUDYN}
+
+\newcommand{\SO}{2}
+\newcommand{\FO}{1}
+\renewcommand{\AE}{\lambda}
+
+\newcommand{\SON}{$2^\mathrm{nd}$ order differential equations}
+\newcommand{\FON}{$1^\mathrm{st}$ order differential equations}
+\newcommand{\AEN}{algebraic equations}
+
+
+\endinput %for .sty files

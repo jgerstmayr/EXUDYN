@@ -1,0 +1,6 @@
+Powershell commands to create video from images:
+
+./ffmpeg.exe -r 25 -start_number 0 -i frame%05d.tga -c:v libx264 -vf "fps=25,format=yuv420p" animation.mp4
+
+convert frame rate:
+./ffmpeg -i input.mkv -r 16 -filter:v "setpts=0.25*PTS" output.mkv

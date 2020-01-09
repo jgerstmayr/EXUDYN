@@ -1,0 +1,1 @@
+for detailed information on installation see docs/theDoc/theDoc.pdf

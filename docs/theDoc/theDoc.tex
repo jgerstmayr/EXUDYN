@@ -1,0 +1,341 @@
+\documentclass[11pt,a4paper]{book} %print
+%\documentclass[12pt,a5paper,landscape]{book} %slides
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\usepackage{amsmath}
+\usepackage{pxfonts} 
+%\usepackage{xcolor} %for colors
+%\usepackage{floatrow} %?
+\usepackage{graphicx} %\includegraphics
+
+\usepackage{import}
+\usepackage{hyperref}
+\usepackage{longtable} %for tables in reference manual
+
+\usepackage[latin1]{inputenc} %Achtung, dies ist die File-Encodierung (wird meist als ANSI angezeigt) und sollte nicht auf UTF-8 stehen (in Notepad++ umstellen!)
+\usepackage[T1]{fontenc}
+
+%\input{docincludes}
+\usepackage{docincludes}
+\usepackage{xcolor}
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%environment for flowcharts:
+%\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+% Define block styles
+\tikzstyle{decision} = [diamond, aspect=2, draw, fill=orange!30, 
+    text width=8em, text badly centered, node distance=2.5cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=3em]
+\tikzstyle{wideblock} = [rectangle, draw, fill=blue!20,
+    text width=10em, text centered, rounded corners, minimum height=3em]
+\tikzstyle{arrow} = [draw, -latex,  line width=1pt]
+\tikzstyle{line} = [draw,  line width=1pt]
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=5cm,
+    minimum height=2em]
+\tikzstyle{nodeBlock} = [draw, ellipse,fill=green!20, node distance=4cm,
+    minimum height=2em]
+\tikzstyle{objectBlock} = [draw, ellipse,fill=blue!20, node distance=4cm,
+    minimum height=2em]
+\tikzstyle{connectorBlock} = [draw, ellipse,fill=red!20, node distance=4cm,
+    minimum height=2em]
+\tikzstyle{markerBlock} = [draw, ellipse,fill=gray!20, node distance=4cm,
+    minimum height=2em]
+\tikzstyle{loadBlock} = [draw, ellipse,fill=orange!30, node distance=4cm,
+    minimum height=2em]
+%END: environment for flowcharts
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% include python codes:
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{9} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{9}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblack}{rgb}{0,0,0}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0.4}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{commentgreen}{rgb}{0.5,0.6,0.5}
+
+\usepackage{listings}
+
+% Python style for highlighting example codes:
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={AddNode, AddObject, AddMarker, AddLoad, SystemContainer, AddSystem, Assemble, SimulationSettings,
+TimeIntegrationSolve,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+commentstyle=\color{commentgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false,           % 
+%numbers=left,										 %show line numbers
+breaklines=true,									 %automatically breaks lines
+numberstyle=\ttm    						% line number style
+}}
+%plain listing style:
+\newcommand\plainlststyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttm,
+emphstyle=\ttm,    % Custom highlighting style
+stringstyle=\color{deepblack},
+commentstyle=\color{deepblack},
+frame=tb,                         % Any extra options here
+showstringspaces=false,           % 
+numbers=none,										 %show line numbers
+breaklines=true,									 %automatically breaks lines
+numberstyle=\ttm    						% line number style
+}}
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+
+\definecolor{steelblue}{HTML}{307BD0}
+
+\newcommand{\bigmr}[9]{\left[\!\! \begin{array}{ccc} \displaystyle #1 & \displaystyle #2 & \displaystyle #3 \vspace{0.3cm}\\ \displaystyle #4 & \displaystyle #5 & \displaystyle #6 \vspace{0.3cm}\\ \displaystyle #7 & \displaystyle #8 & \displaystyle #9  \end{array} \!\!\right]}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%page setup:
+\renewcommand{\baselinestretch}{1.2} %larger linespace
+
+\topmargin-1.3cm \headheight0cm \headsep1cm \topskip1cm \leftmargini0.5cm \textwidth17cm \textheight24.5cm \footskip1cm   \oddsidemargin-0.5cm \evensidemargin-0.5cm %adjust page size
+
+\newcommand{\tabnewline}{\newline}
+
+%+++++++++++++++++++++++++++++++++++++++
+\begin{document}
+\pagenumbering{roman} 
+\setcounter{page}{0}
+\pagestyle{empty}
+
+\headsep3cm 
+\begin{center}
+%{\Large {\it Python based Multibody System Dynamics Simulation}}\vspace{1cm}\\
+%{\Large {\it fleXible multibody system DYNAmics Parallelized with Python interface}}\vspace{1cm}\\
+{\Large {\it Flexible Multibody Dynamics Systems with Python and C++}}\vspace{1cm}\\
+{\Huge {\bf \codeName}} \vspace{0.5cm}\\
+%{\small (flEXible mUltibody DYNamics )} \vspace{1cm}\\
+{\small (flexible multibody dynamics )} \vspace{1cm}\\
+{\Large \it User documentation} \vspace{1cm}\\
+%\vspace{6cm}
+\vspace{1cm}
+\includegraphics[height=12cm]{intro1.png}\\
+\vspace{0.5cm}
+{\tiny \input{version}}\\
+\vspace{1.5cm}
+University of Innsbruck, Department of Mechatronics, \today,\vspace{0.25cm}\\
+Johannes Gerstmayr\vspace{2cm}
+\end{center}
+
+\newpage
+
+\pagestyle{plain}
+\headsep0.7cm 
+%\headsep1cm 
+%\chapter*{Contents}
+%
+\tableofcontents
+
+
+%%++++++++++++++++++++++++++++++++++++++++++++++
+\clearpage
+\pagenumbering{arabic} 
+\setcounter{page}{0}
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysection{Getting Started}
+\input{gettingStarted}
+
+\mysection{Overview on \codeName }
+\input{introduction}
+
+\mysection{Tutorial}
+\input{tutorial}
+
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+\mysection{Python-C++ command interface}
+This section lists the basic interface functions which can be used to set up a \codeName\ model in Python.
+
+To import the module, just include the \codeName\ module in Python (for compatibility with examples and other users, we recommend to use the 'exu' abbreviation throughout):
+\bi
+  \item[] \texttt{import exudyn as exu}
+\ei
+The exudyn module will usually hold one SystemContainer, which is a class that is initialized by assigning a system container to a variable, usually denoted as 'SC':
+\bi
+  \item[] \texttt{SC = exu.SystemContainer()}
+\ei
+Furthermore, there are a couple of commands available directly in the \codeName\ module, given in the following subsections.
+Regarding the {\bf (basic) module access}, functions are related to the '\texttt{exudyn = exu}' module, see these examples:
+\begin{lstlisting}[language=Python, firstnumber=14]
+  import exudyn as exu
+  SC = exu.SystemContainer()
+  exu.InfoStat() 
+  exu.Go()
+  nInvalid = exu.InvalidIndex()
+\end{lstlisting} \vspace{12pt}
+%
+Understanding the usage of functions for python object '\texttt{SystemContainer}' provided by \codeName, the following examples might help:
+\begin{lstlisting}[language=Python, firstnumber=14]
+  import exudyn as exu
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  nSys = SC.NumberOfSystems()
+  print(nSys)
+  SC.Reset()
+\end{lstlisting} \vspace{12pt}
+%
+Understanding the usage of functions for the '\texttt{MainSystem}' provided by \texttt{SystemContainer}, the following examples might help:
+\begin{lstlisting}[language=Python, firstnumber=14]
+  import exudyn as exu
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  mbs.Reset()
+  mbs.WaitForUserToContinue() 
+\end{lstlisting} \vspace{12pt}
+%
+
+\input{manual_interfaces}
+
+
+\mysection{Objects, nodes, markers and loads reference manual} \label{sec_item_reference_manual}
+This section includes the reference manual for all objects (bodies/constraints), nodes, markers and loads.
+
+\input{itemDefinition}
+
+\mysubsection{GraphicsData}
+Some items may include a 'graphicsData' structure. GraphicsData contains a list of graphicsData items, i.e.\ graphicsData = [graphicsItem1, graphicsItem2, ...]. Every single graphicsItem may be defined as one of the following structures using a specific 'type':
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{3cm} | p{2cm} | p{3cm} | p{7.5cm} |} 
+	\hline
+  \bf Name & \bf type & \bf default value & \bf description \\ \hline
+%
+%LINE
+	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'Line': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it draws a polygonal line between all specified points}}\\ \hline
+  color & list & [0,0,0,1] & list of 4 floats to define RGB-color and transparency\\ \hline
+  data & list &  mandatory & list of float triples of x,y,z coordinates of the line floats to define RGB-color and transparency; Example: data=[0,0,0, 1,0,0, 1,1,0, 0,1,0, 0,0,0] ... draws a rectangle with side length 1\\ \hline
+%
+%CIRCLE
+	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'Circle': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it draws a circle with center point, normal (defines plane of circle) and radius}}\\ \hline
+  color & list & [0,0,0,1] & list of 4 floats to define RGB-color and transparency\\ \hline
+  radius & float & mandatory & radius\\ \hline
+  position & list & mandatory & list of float triples of x,y,z coordinates of center point of the circle\\ \hline
+  normal & list & [0,0,1] & list of float triples of x,y,z coordinates of normal to the plane of the circle; the default value gives a circle in the ($x,y$)-plane\\ \hline
+%TEXT
+	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'Text': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it places the given text at position}}\\ \hline
+  color & list & [0,0,0,1] & list of 4 floats to define RGB-color and transparency\\ \hline
+  text & string & mandatory & text to be displayed\\ \hline
+  position & list & mandatory & list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g.\ position=[20,10,0] \\ \hline
+%TRIANGLELIST
+	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'TriangleList': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it draws a flat triangle mesh for given points and connectivity}}\\ \hline
+  points & list & mandatory & list [x0,y0,z0, x1,y1,z1, ...] containing $n \times 3$ floats (grouped x0,y0,z0, x1,y1,z1, ...) to define x,y,z coordinates of points, $n$ being the number of points (=vertices)\\ \hline
+  colors & list & empty & list [R0,G0,B0,A0, R1,G2,B1,A1, ...] containing $n \times 4$ floats to define RGB-color and transparency A, where $n$ must be according to number of points; if field 'colors' does not exist, default colors will be used\\ \hline
+  normals & list & empty & list [n0x,n0y,n0z, ...] containing $n \times 3$ floats to define normal direction of triangles per point, where $n$ must be according to number of points; if field 'normals' does not exist, default normals [0,0,0] will be used\\ \hline
+  triangles & list &  mandatory & list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ floats to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $\le$ points.size()\\ \hline
+\end{longtable}
+%
+Examples of \texttt{GraphicsData} can be found in the Python examples and in \texttt{exudynUtilities.py}.
+%
+\end{center}
+
+
+\mysection{\codeName\ Settings}
+This section includes the reference manual for settings which are available in the python interface, e.g.\ simulation settings, visualization settings, and others.
+
+\input{interfaces}
+
+\mysection{3D Graphics Visualization}
+
+The 3D graphics visualization window is kept simple, but useful to see the animated results of the multibody system.
+
+\mysubsection{Mouse input}
+The following table includes the mouse functions. 
+
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4cm} | p{4cm} | p{8cm} |} 
+	\hline
+  \bf Button & action & \bf remarks \\ \hline
+  \bf left mouse button & move model & keep left mouse button pressed to move the model in the current x/y plane\\ \hline
+  \bf right mouse button & rotate model & keep right mouse button pressed to rotate model around current current $X_1$/$X_2$ axes\\ \hline
+  \bf mouse wheel & zoom & use mouse wheel to zoom (on touch screens 'pinch-to-zoom' might work as well) \\ \hline
+  \end{longtable}
+\end{center}
+
+
+\mysubsection{Keyboard input}
+The following table includes the keyboard shortcuts available in the window. 
+
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4cm} | p{4cm} | p{8cm} |} 
+	\hline
+  \bf Key(s) & action & \bf remarks \\ \hline
+  \bf 1,2,3,4 or 5 & visualization update & the entered digit controls the visualization update, which can be changed from 1=1 update per 20ms to 5=1 update per 100s\\ \hline
+  \bf '.' or KEYPAD '+' & zoom in & zoom one step into scene \\ \hline
+  \bf ',' or KEYPAD '-' & zoom out & zoom one step out of scene \\ \hline
+	%
+  \bf 0 or KEYPAD '0'& reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
+  \bf A & zoom all & set zoom such that the whole scene is visible \\ \hline
+  \bf CURSOR UP, DOWN, ... & move scene& use coursor keys to move the scene up, down, left, and right \\ \hline
+	%
+  \bf C & show/hide connectors & pressing this key switches the visibility of connectors \\ \hline
+  \bf CTRL+C & show/hide connector numbers & pressing this key switches the visibility of connector numbers \\ \hline
+  %
+	\bf B & show/hide bodies & pressing this key switches the visibility of bodies \\ \hline
+  \bf CTRL+B & show/hide body numbers & pressing this key switches the visibility of body numbers \\ \hline
+  %
+	\bf L & show/hide loads & pressing this key switches the visibility of loads \\ \hline
+  \bf CTRL+L & show/hide load numbers & pressing this key switches the visibility of load numbers \\ \hline
+  %
+	\bf M & show/hide markers & pressing this key switches the visibility of markers \\ \hline
+  \bf CTRL+M & show/hide marker numbers & pressing this key switches the visibility of marker numbers \\ \hline
+  %
+	\bf N & show/hide nodes & pressing this key switches the visibility of nodes \\ \hline
+  \bf CTRL+N & show/hide node numbers & pressing this key switches the visibility of node numbers \\ \hline
+  %
+	\bf Q & stop simulation & simulation is stopped and cannot be recovered \\ \hline
+  \bf ESCAPE & close render window & stops the simulation and closes the render window \\ \hline
+  \bf SPACE & continue simulation & if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'\\ \hline
+  \end{longtable}
+\end{center}
+
+
+\mysection{Solver}
+\input{solver}
+
+
+
+\clearpage
+
+\mysection{References} 
+coming soon!
+
+\mysection{License} 
+
+%\verbatiminput{././LICENSE.txt}
+%\input{../../licenseEXUDYN.txt}
+%\lstinputlisting{..\..\LICENSE.txt}
+\plainlststyle
+\lstinputlisting[breaklines=true, basicstyle=\ttm]{../../LICENSE.txt}
+\end{document}
+
+

@@ -1,0 +1,146 @@
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%\mysection{Getting Started}
+The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
+as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver').
+
+\mysubsection{Getting started}
+This section will show:
+\bn
+	\item What is \codeName ?
+	\item Goals of \codeName
+	\item Who is developing \codeName ?
+	\item How to install \codeName\ 
+	\item How to link \codeName\ and Python
+	\item Run a simple example in Spyder
+\en
+%
+\mysubsubsection{What is \codeName}
+\codeName\ is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
+It is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components.
+\vspace{6pt}\\
+%
+\mysubsubsection{Goals of \codeName}
+After the first development phase (planned in Q4/2021), it will
+\bi
+  \item be a small multibody library, which can be easily linked to other projects,
+	\item allow to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
+	\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$ (planned: Q4 2020),
+	\item use multi-threaded parallel computing techniques (planned: Q4 2020),
+	\item be accessible safe and at a wide range via the Python interface,
+	\item allow to add user defined objects in C++,
+	\item allow to add user defined objects in Python (planned: 2021),
+	\item allow to add user defined solvers in Python (planned:Q2 2020).
+\ei
+%
+\mysubsubsection{Who is developing \codeName ?}
+\codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
+In the first phase most of the core code has been (and still is) written by Johannes Gerstmayr, implementing ideas of earlier developments of HOTINT. 15 years of development led to a lot of lessions learned.
+
+Some specific codes regarding pybind interface and parallelization have been written by Stefan Holzinger, who also supports the upload to GitLab.
+Important discussions with researchers from the community where important for the design and development of \codeName , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who influenced the design of the code. During a Comet-K2 cooperation project, several discussions with the TMECH/LCM group in Linz influenced the code development.
+
+The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' will support the further development of the code.
+%
+\mysubsubsection{How to install \codeName} ?
+\codeName\ is still under intensive development of core modules.
+There are several ways to using it, but you cannot install \codeName\ as compared to other programs and apps.
+\vspace{6pt}\\
+{\bf Ways to use \codeName }:
+\bi
+	\item Windows / Microsoft Visual Studio 17 and above:
+	\bi
+		\item get the files from git
+		\item put them into a local directory (recommended: \texttt{C:\\DATA\textbackslash\textbackslash cpp\textbackslash\textbackslash EXUDYN\_git})
+		\item start \texttt{main\_sln.sln} with Visual Studio
+		\item compile the code and run \texttt{main\textbackslash\textbackslash pythonDev\textbackslash\textbackslash pytest.py} example code
+		\item adapt \texttt{pytest.py} for your applications
+		\item extend the C++ source code
+		\item link it to your own code
+	\ei
+	\item Linux, etc.: not fully supported yet; however, all libraries are Linux-compatible and thus should run with minimum adaptation efforts
+\ei
+
+\mysubsubsection{How to link \codeName\ and Python?}
+
+In order to run \codeName , you need an appropriate Python installation.
+We recommend to use
+\bi
+  \item Anaconda, 32bit, Python 3.6.5
+	\item Spyder 3.2.8 (Python 3.6.5 32 bits)	
+\ei
+If you plan to use 64bit and newer Python versions, we recommend to use VS2019 to compile your code, which offers Python 3.7 compatibility.
+However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 {\bf both} in the exudyn module and in Spyder).
+
+The simplest way to start is, to copy the files (and possibly further files that are needed)
+\bi
+  \item \texttt{exudynUtilities.py}
+  \item \texttt{itemInterface.py}
+  \item \texttt{exudyn.pyd}
+\ei
+to your working directory and directly import the modules as descriped in tutorials and examples.
+The second way ({\bf recommended}) is to use Python's \texttt{sys} module to link to your \texttt{WorkingRelease} directory, for example:\vspace{6pt}\\
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+  import sys
+  sys.path.append('C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease')
+\end{lstlisting}
+In the future, there will also be a possibility to install the module using pip commands -- we are happy, if somebody could do this!
+
+\mysubsubsection{Run a simple example in Spyder}
+After performing the steps of the previous section, this section shows a simplistic model which helps you to check if \codeName\ runs on your computer.
+
+In order to start, run the python interpreter Spyder.
+For the following example, either 
+\bi
+	\item open Spyder and copy the example provided in Listing \ref{lst:firstexample} into a new file, or
+	\item open \texttt{myFirstExample.py} from your \texttt{WorkingRelease} directory
+\ei
+Hereafter, press the play button or \texttt{F5} in Spyder.
+%\lstinputlisting[language=Python]{../../main/bin/WorkingRelease/myFirstExample.py}
+\pythonexternal[language=Python, frame=single, float, label=lst:firstexample, caption=My first example]{../../main/bin/WorkingRelease/myFirstExample.py}
+
+If successful, the IPython Console of Spyder will print something like:
+\plainlststyle
+{\ttfamily \footnotesize
+\begin{lstlisting}
+  runfile('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease/myFirstExample.py', 
+	  wdir='C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
+  Assemble nodes:
+  Set initial system coordinates (for ODE2, ODE1 and Data coordinates) ...
+  Time integration finished after 0.0011442 seconds.
+\end{lstlisting}
+}
+
+If you check your current directory (where \texttt{myFirstExample.py} lies), you will find a new file \texttt{coordinatesSolution.txt}, which contains the results of your computation (with default values for time integration).
+The beginning and end of the file should look like: \vspace{6pt}\\
+{\ttfamily \footnotesize
+\begin{lstlisting}[breaklines=true]
+  #Exudyn generalized alpha solver solution file
+  #simulation started=2019-11-14,20:35:12
+  #columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations, AE coordinates, ODE2 velocities
+  #number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [2,0,0,0]
+  #number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [2,2,2,0,0,0,0]
+  #total columns exported  (excl. time) = 6
+  #number of time steps (planned) = 100
+  #
+  0,0,0,0,0,0.0001,0
+  0.02,2e-08,0,2e-06,0,0.0001,0
+  0.03,4.5e-08,0,3e-06,0,0.0001,0
+  0.04,8e-08,0,4e-06,0,0.0001,0
+  0.05,1.25e-07,0,5e-06,0,0.0001,0
+
+  ...
+
+  0.96,4.608e-05,0,9.6e-05,0,0.0001,0
+  0.97,4.7045e-05,0,9.7e-05,0,0.0001,0
+  0.98,4.802e-05,0,9.8e-05,0,0.0001,0
+  0.99,4.9005e-05,0,9.9e-05,0,0.0001,0
+  1,5e-05,0,0.0001,0,0.0001,0
+  #simulation finished=2019-11-14,20:35:12
+  #Solver Info: errorOccurred=0,converged=1,solutionDiverged=0,total time steps=100,total Newton iterations=100,total Newton jacobians=100
+\end{lstlisting}
+}
+
+Within this file, the first column shows the simulation time and the following columns provide solution of coordinates, their derivatives and Lagrange multipliers on system level. As expected, the $x$-coordinate of the point mass has constant acceleration $a=f/m=0.001/10=0.0001$, the velocity grows up to $0.0001$ after 1 second and the point mass moves $0.00005$ along the $x$-axis.
+

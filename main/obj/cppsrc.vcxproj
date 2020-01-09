@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseFast|Win32">
+      <Configuration>ReleaseFast</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseFast|x64">
+      <Configuration>ReleaseFast</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{D5187A72-DC28-419F-A3E9-24E5204AC07F}</ProjectGuid>
+    <RootNamespace>cppsrc</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <TargetName>exudyn</TargetName>
+    <TargetExt>.pyd</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <TargetName>exudyn</TargetName>
+    <TargetExt>.pyd</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <TargetName>exudyn</TargetName>
+    <TargetExt>.pyd</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include;$(SolutionDir)\include\pybind11;C:\Program Files %28x86%29\Microsoft Visual Studio\Shared\Python36_86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_MYDEBUG</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions>/Zc:twoPhase-</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs32;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_86\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <EnableParallelCodeGeneration>
+      </EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include;$(SolutionDir)\include\pybind11;C:\Program Files %28x86%29\Microsoft Visual Studio\Shared\Python36_86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <BrowseInformation>true</BrowseInformation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions>/Zc:twoPhase-</AdditionalOptions>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs32;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_86\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include;$(SolutionDir)\include\pybind11;C:\Program Files %28x86%29\Microsoft Visual Studio\Shared\Python36_86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <BrowseInformation>true</BrowseInformation>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;__FAST_EXUDYN_LINALG</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalOptions>/Zc:twoPhase-</AdditionalOptions>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs32;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_86\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFast|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_86\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Graphics\GlfwClient.cpp" />
+    <ClCompile Include="..\src\Graphics\VisualizationSystem.cpp" />
+    <ClCompile Include="..\src\Graphics\VisualizationSystemContainer.cpp" />
+    <ClCompile Include="..\src\Graphics\VisualizationSystemData.cpp" />
+    <ClCompile Include="..\src\Linalg\LinearSolver.cpp" />
+    <ClCompile Include="..\src\Linalg\Matrix.cpp" />
+    <ClCompile Include="..\src\Linalg\Vector.cpp" />
+    <ClCompile Include="..\src\Main\CSystem.cpp" />
+    <ClCompile Include="..\src\Main\MainObjectFactory.cpp" />
+    <ClCompile Include="..\src\Main\MainSystem.cpp" />
+    <ClCompile Include="..\src\Main\Stdoutput.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerBodyCable2DCoordinates.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerBodyCable2DShape.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerBodyMass.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerBodyPosition.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerBodyRigid.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerNodeCoordinate.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerNodePosition.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerNodeRigid.cpp" />
+    <ClCompile Include="..\src\Objects\CNodeGenericData.cpp" />
+    <ClCompile Include="..\src\Objects\CNodeGenericODE2.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePoint.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePoint2D.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePoint2DSlope1.cpp" />
+    <ClCompile Include="..\src\Objects\CNodePointGround.cpp" />
+    <ClCompile Include="..\src\Objects\CNodeRigidBody.cpp" />
+    <ClCompile Include="..\src\Objects\CNodeRigidBody2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectALEANCFCable2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectANCFCable2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectConnectorCartesianSpringDamper.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinate.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinateSpringDamper.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectConnectorDistance.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectConnectorSpringDamper.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectContactCircleCable2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectContactCoordinate.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectContactFrictionCircleCable2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectGround.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectJointALEMoving2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectJointPrismatic2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectJointRevolute2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectJointSliding2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectMassPoint.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectMassPoint2D.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectRigidBody.cpp" />
+    <ClCompile Include="..\src\Objects\CObjectRigidBody2D.cpp" />
+    <ClCompile Include="..\src\Objects\VisuNodePoint.cpp" />
+    <ClCompile Include="..\src\Pymodules\PybindModule.cpp" />
+    <ClCompile Include="..\src\Solver\CSolver.cpp" />
+    <ClCompile Include="..\src\Solver\CSolverBase.cpp" />
+    <ClCompile Include="..\src\Solver\CSolverImplicitSecondOrder.cpp" />
+    <ClCompile Include="..\src\Solver\CSolverStatic.cpp" />
+    <ClCompile Include="..\src\Solver\MainSolver.cpp" />
+    <ClCompile Include="..\src\Solver\MainSolverBase.cpp" />
+    <ClCompile Include="..\src\Solver\StaticSolver.cpp" />
+    <ClCompile Include="..\src\solver\TimeIntegrationSolver.cpp" />
+    <ClCompile Include="..\src\System\CLoad.cpp" />
+    <ClCompile Include="..\src\System\CNode.cpp" />
+    <ClCompile Include="..\src\System\CObjectBody.cpp" />
+    <ClCompile Include="..\src\System\MainNode.cpp" />
+    <ClCompile Include="..\src\System\MainObject.cpp" />
+    <ClCompile Include="..\src\tests\UnitTestBase.cpp" />
+    <ClCompile Include="..\src\Utilities\BasicFunctions.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Autogenerated\CLoadCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\CLoadForceVector.h" />
+    <ClInclude Include="..\src\Autogenerated\CLoadMassProportional.h" />
+    <ClInclude Include="..\src\Autogenerated\CLoadTorqueVector.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyCable2DCoordinates.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyMass.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyPosition.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyRigid.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodeCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodePosition.h" />
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodeRigid.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodeGenericData.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodeGenericODE2.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePoint.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePoint2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePoint2DSlope1.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodePointGround.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodeRigidBody2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyEP.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectALEANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCartesianSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinateSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorDistance.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectContactCircleCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectContactCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectContactFrictionCircleCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectGround.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectJointALEMoving2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectJointPrismatic2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectJointSliding2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectMassPoint.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectMassPoint2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectRigidBody.h" />
+    <ClInclude Include="..\src\Autogenerated\CObjectRigidBody2D.h" />
+    <ClInclude Include="..\src\Autogenerated\CSolverStructures.h" />
+    <ClInclude Include="..\src\Autogenerated\MainLoadCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\MainLoadForceVector.h" />
+    <ClInclude Include="..\src\Autogenerated\MainLoadMassProportional.h" />
+    <ClInclude Include="..\src\Autogenerated\MainLoadTorqueVector.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyCable2DCoordinates.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyMass.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyPosition.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyRigid.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodePosition.h" />
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeRigid.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodeGenericData.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodeGenericODE2.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePoint.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePoint2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePoint2DSlope1.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodePointGround.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBody2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyEP.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectALEANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCartesianSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinateSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorDistance.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectContactCircleCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectContactCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectContactFrictionCircleCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectGround.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointALEMoving2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointPrismatic2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointRevolute2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointSliding2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectMassPoint.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectMassPoint2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectRigidBody.h" />
+    <ClInclude Include="..\src\Autogenerated\MainObjectRigidBody2D.h" />
+    <ClInclude Include="..\src\Autogenerated\MainSolver.h" />
+    <ClInclude Include="..\src\Autogenerated\pybind_manual_classes.h" />
+    <ClInclude Include="..\src\Autogenerated\Pybind_modules.h" />
+    <ClInclude Include="..\src\autogenerated\SimulationSettings.h" />
+    <ClInclude Include="..\src\autogenerated\SystemContainer.h" />
+    <ClInclude Include="..\src\Autogenerated\versionCpp.h" />
+    <ClInclude Include="..\src\Autogenerated\VisualizationSettings.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuLoadCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuLoadForceVector.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuLoadMassProportional.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuLoadTorqueVector.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyCable2DCoordinates.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyMass.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyPosition.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyRigid.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodePosition.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeRigid.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodeGenericData.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodeGenericODE2.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePoint.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePoint2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePoint2DSlope1.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodePointGround.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBody2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyEP.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectALEANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectANCFCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCartesianSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinateSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorDistance.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorSpringDamper.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectContactCircleCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectContactCoordinate.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectContactFrictionCircleCable2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectGround.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointALEMoving2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointPrismatic2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointRevolute2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointSliding2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectMassPoint.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectMassPoint2D.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectRigidBody.h" />
+    <ClInclude Include="..\src\Autogenerated\VisuObjectRigidBody2D.h" />
+    <ClInclude Include="..\src\Graphics\GlfwClient.h" />
+    <ClInclude Include="..\src\Graphics\GlfwClientText.h" />
+    <ClInclude Include="..\src\Graphics\GraphicsData.h" />
+    <ClInclude Include="..\src\Graphics\VisualizationSystem.h" />
+    <ClInclude Include="..\src\Graphics\VisualizationSystemContainer.h" />
+    <ClInclude Include="..\src\Graphics\VisualizationSystemContainerBase.h" />
+    <ClInclude Include="..\src\Graphics\VisualizationSystemData.h" />
+    <ClInclude Include="..\src\Graphics\VisuNode.h" />
+    <ClInclude Include="..\src\Linalg\BasicLinalg.h" />
+    <ClInclude Include="..\src\Linalg\ConstSizeMatrix.h" />
+    <ClInclude Include="..\src\linalg\ConstSizeVector.h" />
+    <ClInclude Include="..\src\Linalg\Geometry.h" />
+    <ClInclude Include="..\src\Linalg\LinearSolver.h" />
+    <ClInclude Include="..\src\linalg\LinkedDataVector.h" />
+    <ClInclude Include="..\src\linalg\Matrix.h" />
+    <ClInclude Include="..\src\Linalg\ResizableMatrix.h" />
+    <ClInclude Include="..\src\linalg\ResizableVector.h" />
+    <ClInclude Include="..\src\linalg\SlimVector.h" />
+    <ClInclude Include="..\src\Linalg\Use_avx.h" />
+    <ClInclude Include="..\src\linalg\Vector.h" />
+    <ClInclude Include="..\src\Main\CData.h" />
+    <ClInclude Include="..\src\Main\CSystem.h" />
+    <ClInclude Include="..\src\Main\CSystemData.h" />
+    <ClInclude Include="..\src\Main\CSystemState.h" />
+    <ClInclude Include="..\src\Main\MainObjectFactory.h" />
+    <ClInclude Include="..\src\Main\MainSystem.h" />
+    <ClInclude Include="..\src\Main\MainSystemContainer.h" />
+    <ClInclude Include="..\src\Main\MainSystemData.h" />
+    <ClInclude Include="..\src\Main\MarkerData.h" />
+    <ClInclude Include="..\src\Main\OutputVariable.h" />
+    <ClInclude Include="..\src\Main\Stdoutput.h" />
+    <ClInclude Include="..\src\Objects\CObjectANCFCable2DBase.h" />
+    <ClInclude Include="..\src\Pymodules\PybindTests.h" />
+    <ClInclude Include="..\src\Pymodules\PybindUtilities.h" />
+    <ClInclude Include="..\src\Solver\CSolver.h" />
+    <ClInclude Include="..\src\Solver\CSolverBase.h" />
+    <ClInclude Include="..\src\Solver\CSolverImplicitSecondOrder.h" />
+    <ClInclude Include="..\src\Solver\CSolverStatic.h" />
+    <ClInclude Include="..\src\Solver\MainSolverBase.h" />
+    <ClInclude Include="..\src\solver\TimeIntegrationSolver.h" />
+    <ClInclude Include="..\src\system\BaseObject.h" />
+    <ClInclude Include="..\src\System\CLoad.h" />
+    <ClInclude Include="..\src\System\CMarker.h" />
+    <ClInclude Include="..\src\system\CMaterial.h" />
+    <ClInclude Include="..\src\system\CNode.h" />
+    <ClInclude Include="..\src\system\CObject.h" />
+    <ClInclude Include="..\src\System\CObjectBody.h" />
+    <ClInclude Include="..\src\System\CObjectConnector.h" />
+    <ClInclude Include="..\src\System\MainLoad.h" />
+    <ClInclude Include="..\src\System\MainMarker.h" />
+    <ClInclude Include="..\src\System\MainMaterial.h" />
+    <ClInclude Include="..\src\System\MainNode.h" />
+    <ClInclude Include="..\src\System\MainObject.h" />
+    <ClInclude Include="..\src\System\MainObjectFactory.h" />
+    <ClInclude Include="..\src\tests\AllArrayUnitTests.h" />
+    <ClInclude Include="..\src\tests\AllMatrixUnitTests.h" />
+    <ClInclude Include="..\src\tests\AllVectorUnitTests.h" />
+    <ClInclude Include="..\src\tests\TemplatedVectorArrayUnitTests.h" />
+    <ClInclude Include="..\src\tests\UnitTestBase.h" />
+    <ClInclude Include="..\src\utilities\BasicDefinitions.h" />
+    <ClInclude Include="..\src\utilities\BasicFunctions.h" />
+    <ClInclude Include="..\src\utilities\BasicTraits.h" />
+    <ClInclude Include="..\src\utilities\ObjectContainer.h" />
+    <ClInclude Include="..\src\utilities\ReleaseAssert.h" />
+    <ClInclude Include="..\src\utilities\ResizableArray.h" />
+    <ClInclude Include="..\src\Utilities\RigidBodyMath.h" />
+    <ClInclude Include="..\src\utilities\SlimArray.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

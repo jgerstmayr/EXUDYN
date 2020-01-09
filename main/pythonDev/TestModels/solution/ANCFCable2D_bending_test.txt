@@ -1,0 +1,12 @@
+#Exudyn nonlinear static solver static solver solution file
+#simulation started=2020-01-09,16:25:51
+#columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations, AE coordinates, ODE2 velocities
+#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [8,0,3,0]
+#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [8,0,0,0,0,3,0]
+#total columns exported  (excl. time) = 11
+#number of load steps (planned) = 1
+#
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+1,2.560802665e-18,-5.361518309e-18,0.01139199129,5.746659843e-22,-0.3622447299,-0.9941447587,-0.4887731676,-0.8516388325,0,0,0,0,0,0,0,0,5.649985551e-17,1293750,2094979.888
+#simulation finished=2020-01-09,16:25:51
+#Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationsFailed=0,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=1,total Newton iterations=16,total Newton jacobians=16
