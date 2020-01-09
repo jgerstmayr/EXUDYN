@@ -16,13 +16,13 @@ Currently, the module structure is simple:
 	  \item \texttt{itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
 	  \item \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with EXUDYN
 	\ei
-  \item C++ parts, see \fig{fig_exudyn_overview}:
+  \item C++ parts, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
 	\bi
 	  \item \texttt{exudyn}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
 	  \item \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
 	  \item \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
 		loads can added to the system, see Section \ref{sec_item_reference_manual};
-		\item \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_systemdata}
+		\item \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
 	\ei
 \ei
 %
@@ -57,7 +57,7 @@ Currently, the module structure is simple:
 			\path [line, dashed] (anotherSystemData) -- (anotherSystemStates);
 	\end{tikzpicture}
   \caption{Overview of exudyn module.}
-	\label{fig_systemdata_overview}
+	\label{fig_exudyn_overview}
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -98,7 +98,7 @@ Currently, the module structure is simple:
 
 	\end{tikzpicture}
   \caption{Overview of systemData, which connects items and states. Note that access to items is provided via functions in \texttt{system}.}
-	\label{fig_systemdata}
+	\label{fig_system_overview}
 
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -127,7 +127,7 @@ As an example, consider a \texttt{NodePoint2D}:
 \ei
 Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
 
-\mysubsection{Items: Nodes, Objects, Loads, Markers, ...}
+\mysubsection{Items: Nodes, Objects, Loads, Markers, ...} \label{sec_items}
 %
 In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
 
@@ -246,7 +246,7 @@ Using \texttt{mbs.Reset()} will clear the system and allows to set up a new syst
 %
 
 \mysubsubsection{Simulation settings}
-The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec_solution_settings} -- \ref{sec_simulation_settings}.
+The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec_SolutionSettings} -- \ref{sec_SimulationSettings}.
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -275,7 +275,7 @@ Hereafter, values of the structure can be modified, e.g.,
 \mysubsubsection{Visualization settings}
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
-Details on visualization settings and its substructures are provided in Sections \ref{sec_visualization_general} -- \ref{sec_visualization_settings}.
+Details on visualization settings and its substructures are provided in Sections \ref{sec_VSettingsGeneral} -- \ref{sec_VisualizationSettings}.
 
 The visualization settings structure can be accessed in the system container \texttt{SC} (access per reference, no copying!), accessing every value or structure directly, e.g.,
 \pythonstyle
@@ -305,8 +305,10 @@ The visualization settings structure can be accessed in the system container \te
 \mysubsubsection{Solver}
 Both in the static as well as in the dynamic case, the solver runs in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval.
 For the time integration (dynamic solver), \fig{fig_solver_time_integration} shows the basic loops for the solution process. The inner loops are shown in \fig{fig_solver_solve_steps} and\fig{fig_solver_discontinuous_iteration}.
-
 The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.
+
+Settings for the solver substructures, like timer, output, iterations, etc.\, are described in Sections \ref{sec_CSolverTimer} -- \ref{sec_SolverOutputData}.
+The description of interfaces for solvers starts in Section \ref{sec_MainSolverStatic}.
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
@@ -356,7 +358,7 @@ The static solver behaves very similar, while no velocities or accelerations nee
 			\path [arrow] (postInitializeSolverSpecific) -- (finished);
 	\end{tikzpicture}
   \caption{Basic solver flow chart for function InitializeSolver().}
-	\label{fig_solver_time_integration}
+	\label{fig_solver_initialize_solver}
 \end{figure}
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

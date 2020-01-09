@@ -149,7 +149,7 @@ mbs.AddLoad(LoadCoordinate(markerNumber=mRigid1CoordinateTheta, load = M)) #torq
 #++++++++++++++++++++++++++++++++
 #assemble, adjust settings and start time integration
 mbs.Assemble()
-
+#exudynTestGlobals.useGraphics = True
 if exudynTestGlobals.useGraphics: 
     exu.StartRenderer()
     #mbs.WaitForUserToContinue()

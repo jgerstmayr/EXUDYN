@@ -36,7 +36,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         
     dateStr = str(now.year) + '-' + monthZero + str(now.month) + '-' + dayZero + str(now.day)
     
-    sLatex = parseInfo['latexText'].replace('\\n','\n') #this is the string for latex documentation
+    sLatex = parseInfo['latexText'] #.replace('\\n','\n') #this is the string for latex documentation
     #************************************
     #header
     s='' #generate a string for the output file
@@ -76,7 +76,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         descriptionStr = parseInfo['classDescription']
         if descriptionStr[-1] != '.': descriptionStr += '. '
         
-        sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
+        sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '} \label{sec_' + parseInfo['class'].replace(' ','_') + '}\n'
         sLatex += Str2Latex(descriptionStr) + '\\\\ \n'
         sLatex += '%\n'
         sLatex += parseInfo['class'] + ' has the following items:\n'
@@ -97,19 +97,23 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 paramDescriptionStr = parameter['parameterDescription']
                 if len(defaultValueStr) > 18:
                     paramDescriptionStr = '\\tabnewline ' + paramDescriptionStr
-                sLatex += '    ' + Str2Latex(parameter['pythonName']) + ' & '
-                sLatex += '    ' + Str2Latex(parameter['type']) + ' & '
+                pythonName = Str2Latex(parameter['pythonName']) 
+                typeName = Str2Latex(parameter['type'])
+                
+                if len(pythonName)>28: 
+                    typeName = '\\tabnewline ' + typeName
+                sLatex += '    ' + pythonName + ' & '                
+                sLatex += '    ' + typeName + ' & '
                 sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
                 sLatex += '    ' + sString+Str2Latex(defaultValueStr, True)+sString + ' & '
                 sLatex += '    ' + paramDescriptionStr + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
                 #write latex doc:
-                sLatex += '    ' + Str2Latex(parameter['pythonName']) + ' & '
-                sLatex += '    ' + Str2Latex(parameter['type']) + ' & '
-                sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
+                functionName = Str2Latex(parameter['pythonName'])
                 argStr = parameter['args']
                 if (argStr != ''):
+                    functionName += '(...)'
                     argSplit = argStr.split(',') #split into list of args
                     argStr = ''
                     argSep = '' #no comma for first time
@@ -118,6 +122,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         argName = Str2Latex(argName)
                         argStr += argSep + argName
                         argSep = ', '
+                else: 
+                    functionName += '()'
+
+                functionType = Str2Latex(parameter['type'])
+                if (len(functionName)>28): 
+                    functionType = '\\tabnewline ' + functionType
+
+                sLatex += '    ' + functionName + ' & '
+                sLatex += '    ' + functionType + ' & '
+                sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
+
                 sLatex += '    ' + argStr + ' & '
                 sLatex += '    ' + Str2Latex(parameter['parameterDescription']) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
                 
@@ -488,7 +503,7 @@ try: #still close file if crashes
                         parameterList.append(d) #append parameter dictionary to list
                     elif (pureline.find('=') != -1): #definition
     #                    pureline = pureline.replace(' ','') #eliminate spaces and EOL
-                        info = pureline.split('=')
+                        info = pureline.split('=', maxsplit = 1)
                         #print("info =", info)
                         if (len(info) == 2):
                             defName = info[0].replace(' ','')
@@ -497,6 +512,9 @@ try: #still close file if crashes
                             RHS = RHS.strip('"')
                             if (defName != 'classDescription' and defName != 'latexText' and defName != 'addConstructor'):
                                 RHS = RHS.replace(' ','')
+                            if (defName == 'classDescription' or defName == 'latexText'):
+                                RHS = RHS.replace('\\n','\n') #enable line breaks!
+                                
                             if (defName in parseInfo):
                                 parseInfo[defName] = RHS
                                 #print(parseinfo)

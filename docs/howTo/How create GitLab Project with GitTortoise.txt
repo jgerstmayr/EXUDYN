@@ -1,11 +1,15 @@
 1. download and install TortoiseGit from: https://tortoisegit.org/download/
 
+the following stepy are practically the same for Gitlab and GitHub:
 2. Create Putty-Key (key is needed to create a secure conection bewtween your computer and GitLab):
 	- go to: start/alle programme/TortoiseGit/ and start PuTTYgen
 	- click on generate and move your mouse arbitrarly under the loading bar until the bar has fully loaded
 	- (not mandatory) enter the password you want to use in the field: Key passphrase and confirm it in the field Confirm passphrase
+	- use RSA type of key (standard setting; this is SSH2-RSA)
 	- click on: save private key and save the key in a propper folder
 	- (*) copy the content under "Public key for pasting into OpenSSH authorized_keys file:"
+	- the key starts with 'ssh-rsa ...'
+	- do not copy the content from the saved file; it has the wrong format
 
 2. Open a browser and go to your Gitlab account
 	- go to account settings (or just settings)
@@ -18,7 +22,7 @@
 	- enter your email address and a name into the User info settings in order to get an email for your commits and click ok
 
 4. Create a Repository:
-	- go to the folder which should be your master repository
+	- go to the folder which should be your master repository (do NOT click on 'make it bare')
 	- right click on it an click on "Git create repository here..." and proceed
 	- again right click on the folder and click on: "Git Commit -> "master"..."
 		- choose the files (the files in your folder) you want to commit and add a commit Message
@@ -31,7 +35,8 @@
 		- click on: Create project
 		- copy the SSH URL:
 			- copy the code below line "Create a new repository"; 
-				-> the line to copy should be something similar to: git@gitlab.com:stehol01/YOURPROJECTNAME.git		                    
+				-> the line to copy should be something similar to: git@gitlab.com:username/YOURPROJECTNAME.git
+				-> github: the line to copy should be something similar to: git@github.com:jgerstmayr/EXUDYN.git
 	- right click on your folder (the previously created repository)
 	- got to TortoiseGit and click on: Push
 	- click on: Manage

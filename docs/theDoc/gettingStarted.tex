@@ -8,30 +8,21 @@ as well as a couple of sections containing references to the available Python in
 This section will show:
 \bn
 	\item What is \codeName ?
-	\item Goals of \codeName
 	\item Who is developing \codeName ?
 	\item How to install \codeName\ 
 	\item How to link \codeName\ and Python
+	\item Goals of \codeName
 	\item Run a simple example in Spyder
+	\item FAQ -- Frequently asked questions
 \en
 %
-\mysubsubsection{What is \codeName}
+\mysubsubsection{What is \codeName ?}
 \codeName\ is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
 It is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components.
+
+The formulation is mostly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
+For details on the interaction of nodes, objects, markers and loads see Section \ref{sec_items}.
 \vspace{6pt}\\
-%
-\mysubsubsection{Goals of \codeName}
-After the first development phase (planned in Q4/2021), it will
-\bi
-  \item be a small multibody library, which can be easily linked to other projects,
-	\item allow to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
-	\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$ (planned: Q4 2020),
-	\item use multi-threaded parallel computing techniques (planned: Q4 2020),
-	\item be accessible safe and at a wide range via the Python interface,
-	\item allow to add user defined objects in C++,
-	\item allow to add user defined objects in Python (planned: 2021),
-	\item allow to add user defined solvers in Python (planned:Q2 2020).
-\ei
 %
 \mysubsubsection{Who is developing \codeName ?}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
@@ -42,7 +33,9 @@ Important discussions with researchers from the community where important for th
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' will support the further development of the code.
 %
-\mysubsubsection{How to install \codeName} ?
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{How to install \codeName ?}
 \codeName\ is still under intensive development of core modules.
 There are several ways to using it, but you cannot install \codeName\ as compared to other programs and apps.
 \vspace{6pt}\\
@@ -58,9 +51,11 @@ There are several ways to using it, but you cannot install \codeName\ as compare
 		\item extend the C++ source code
 		\item link it to your own code
 	\ei
-	\item Linux, etc.: not fully supported yet; however, all libraries are Linux-compatible and thus should run with minimum adaptation efforts
+	\item Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
 \ei
-
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{How to link \codeName\ and Python?}
 
 In order to run \codeName , you need an appropriate Python installation.
@@ -78,7 +73,7 @@ The simplest way to start is, to copy the files (and possibly further files that
   \item \texttt{itemInterface.py}
   \item \texttt{exudyn.pyd}
 \ei
-to your working directory and directly import the modules as descriped in tutorials and examples.
+to your working directory and directly import the modules as described in tutorials and examples.
 The second way ({\bf recommended}) is to use Python's \texttt{sys} module to link to your \texttt{WorkingRelease} directory, for example:\vspace{6pt}\\
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
@@ -86,7 +81,24 @@ The second way ({\bf recommended}) is to use Python's \texttt{sys} module to lin
   sys.path.append('C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease')
 \end{lstlisting}
 In the future, there will also be a possibility to install the module using pip commands -- we are happy, if somebody could do this!
-
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Goals of \codeName}
+After the first development phase (planned in Q4/2021), it will
+\bi
+  \item be a small multibody library, which can be easily linked to other projects,
+	\item allow to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
+	\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$ (planned: Q4 2020),
+	\item use multi-threaded parallel computing techniques (planned: Q4 2020),
+	\item be accessible safe and at a wide range via the Python interface,
+	\item allow to add user defined objects in C++,
+	\item allow to add user defined objects in Python (planned: 2021),
+	\item allow to add user defined solvers in Python (finished: Q1 2020).
+\ei
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Run a simple example in Spyder}
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if \codeName\ runs on your computer.
 
@@ -143,4 +155,22 @@ The beginning and end of the file should look like: \vspace{6pt}\\
 }
 
 Within this file, the first column shows the simulation time and the following columns provide solution of coordinates, their derivatives and Lagrange multipliers on system level. As expected, the $x$-coordinate of the point mass has constant acceleration $a=f/m=0.001/10=0.0001$, the velocity grows up to $0.0001$ after 1 second and the point mass moves $0.00005$ along the $x$-axis.
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{FAQ -- Frequently asked questions}
+
+\bn
+  \item Where do I find the '.exe' file?
+	\bi
+	\item[$\ra$] \codeName\ is only available via the python interface as exudyn.pyd library, which is located in folder: \texttt{main/bin/WorkingRelease}. This means that you need to run python (best: Spyder) and import the \codeName\ module.
+	\ei
+	%
+  \item What is the difference between MarkerBodyPosition and MarkerBodyRigid?
+	\bi
+	\item[$\ra$] Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
+	\ei
+	%
+\en
+
 
