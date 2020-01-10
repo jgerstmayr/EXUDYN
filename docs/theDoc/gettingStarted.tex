@@ -4,6 +4,16 @@
 The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
 as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver').
 
+\codeName\ is hosted on GitHub:
+\bi
+ \item web: \texttt{https://github.com/jgerstmayr/EXUDYN/wiki}
+\ei
+For any comments, requests, issues, bug reports, send an email to: 
+\bi
+  \item email: \texttt{reply.exudyn@gmail.com}
+\ei
+Thanks for your contribution!
+
 \mysubsection{Getting started}
 This section will show:
 \bn
@@ -35,28 +45,8 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{How to install \codeName ?}
-\codeName\ is still under intensive development of core modules.
-There are several ways to using it, but you cannot install \codeName\ as compared to other programs and apps.
-\vspace{6pt}\\
-{\bf Ways to use \codeName }:
-\bi
-	\item Windows / Microsoft Visual Studio 17 and above:
-	\bi
-		\item get the files from git
-		\item put them into a local directory (recommended: \texttt{C:\\DATA\textbackslash\textbackslash cpp\textbackslash\textbackslash EXUDYN\_git})
-		\item start \texttt{main\_sln.sln} with Visual Studio
-		\item compile the code and run \texttt{main\textbackslash\textbackslash pythonDev\textbackslash\textbackslash pytest.py} example code
-		\item adapt \texttt{pytest.py} for your applications
-		\item extend the C++ source code
-		\item link it to your own code
-	\ei
-	\item Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
-\ei
-%
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{How to link \codeName\ and Python?}
+\mysubsubsection{How to link \codeName\ with Python (recommended for beginners)?}
 
 In order to run \codeName , you need an appropriate Python installation.
 We recommend to use
@@ -81,6 +71,28 @@ The second way ({\bf recommended}) is to use Python's \texttt{sys} module to lin
   sys.path.append('C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease')
 \end{lstlisting}
 In the future, there will also be a possibility to install the module using pip commands -- we are happy, if somebody could do this!
+%
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{How to install \codeName\ and using the C++ code (advanced)?}
+\codeName\ is still under intensive development of core modules.
+There are several ways to using the code, but you {\bf cannot} install \codeName\ as compared to other executable programs and apps.
+\vspace{6pt}\\
+%{\bf Ways to use \codeName }:
+In order to make full usage of the C++ code and extending it, you can use:
+\bi
+	\item Windows / Microsoft Visual Studio 17 and above:
+	\bi
+		\item get the files from git
+		\item put them into a local directory (recommended: \texttt{C:/DATA/cpp/EXUDYN\_git})
+		\item start \texttt{main\_sln.sln} with Visual Studio
+		\item compile the code and run \texttt{main/pythonDev/pytest.py} example code
+		\item adapt \texttt{pytest.py} for your applications
+		\item extend the C++ source code
+		\item link it to your own code
+		\item NOTE: on some systems, you might need to replace '$/$' with '$\backslash$'
+	\ei
+	\item Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
+\ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
