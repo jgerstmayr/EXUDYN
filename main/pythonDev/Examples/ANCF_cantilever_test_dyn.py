@@ -91,7 +91,7 @@ print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-s = "mbs.SetObjectParameter(" + str(ccy) + ", 'offset', 0.1*np.sin(2*np.pi*20*mbs.systemData.GetCurrentTime()))\n"
+s = "mbs.SetObjectParameter(" + str(ccy) + ", 'offset', 0.1*np.sin(2*np.pi*20*mbs.systemData.GetTime()))\n"
 print(s)
 simulationSettings.timeIntegration.preStepPyExecute = s
 
