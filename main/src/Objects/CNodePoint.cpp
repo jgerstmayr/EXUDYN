@@ -36,8 +36,7 @@ Vector3D CNodePoint::GetPosition(ConfigurationType configuration) const
 
 Vector3D CNodePoint::GetVelocity(ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CNodePoint::GetVelocity: not implemented");
-	return Vector3D(GetCurrentCoordinateVector_t());
+	return Vector3D(GetCoordinateVector_t(configuration));
 }
 
 ////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

@@ -38,8 +38,7 @@ Vector3D CNodePoint2D::GetPosition(ConfigurationType configuration) const
 
 Vector3D CNodePoint2D::GetVelocity(ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CNodePoint2D::GetVelocity: not implemented");
-	LinkedDataVector u2D_t = GetCurrentCoordinateVector_t();
+	LinkedDataVector u2D_t = GetCoordinateVector_t(configuration);
 	return Vector3D({ u2D_t[0], u2D_t[1], 0. });
 }
 

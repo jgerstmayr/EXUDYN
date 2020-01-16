@@ -56,7 +56,7 @@
 //		catch (const std::bad_alloc& e) {
 //			std::cout << "Allocation failed: " << e.what() << '\n';
 //			std::cout << "requested memory = " << (8. * numberOfRowsInit*numberOfColumnsInit) / pow(2, 20) << " MB, rows = " << numberOfRowsInit << ", columns = " << numberOfColumnsInit << "\n";
-//			release_assert(0 && "MatrixBase<T>::AllocateMemory");
+//			CHECKandTHROWstring("MatrixBase<T>::AllocateMemory");
 //			return false; //no success
 //		}
 //#ifdef __EXUDYN_RUNTIME_CHECKS__
@@ -91,7 +91,8 @@ bool MatrixBase<T>::Invert()
 {
 	if (numberOfRows*numberOfColumns == 0) return true; //no need to invert; but this is no error!
 
-	release_assert(numberOfColumns == numberOfRows && data != NULL);
+	//throw std::exception("MatrixBase::Invert(): only valid for quadratic matrices");
+	CHECKandTHROW(numberOfColumns == numberOfRows && data != NULL, "MatrixBase::Invert(): only valid for quadratic matrices");
 
 	static ResizableMatrix m; //memory allocation only once, if size does not change; not THREAD safe!
 
@@ -164,9 +165,9 @@ bool MatrixBase<T>::Invert()
 template<typename T>
 bool MatrixBase<T>::Solve(const VectorBase<T>& rhs, VectorBase<T>& q)
 {
-	release_assert(0 && "Matrix::Solve needs to be tested!\n");
+	CHECKandTHROWstring("Matrix::Solve needs to be tested!\n");
 	return false;
-	/*		release_assert(rhs.NumberOfItems() == numberOfRows && numberOfColumns == numberOfRows && numberOfColumns*numberOfRows != 0 && data != NULL);
+	/*		CHECKandTHROWcond(rhs.NumberOfItems() == numberOfRows && numberOfColumns == numberOfRows && numberOfColumns*numberOfRows != 0 && data != NULL);
 			static ResizableMatrix m; //memory allocated only once; not THREAD safe!
 			static ResizableVector f;
 

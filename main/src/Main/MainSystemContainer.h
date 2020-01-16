@@ -44,6 +44,8 @@ public:
 	//! this function waits for the stop flag in the render engine;
 	bool WaitForRenderEngineStopFlag() { return visualizationSystems.WaitForRenderEngineStopFlag(); }
 
+	void PyZoomAll() { visualizationSystems.zoomAllRequest = true; }
+
 	void RedrawAndSaveImage() { visualizationSystems.RedrawAndSaveImage(); }
 
 	//! return current render state to a dictionary; can be used afterwards for initilization of modelview matrix

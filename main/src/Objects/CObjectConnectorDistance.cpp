@@ -30,8 +30,8 @@ void CObjectConnectorDistance::ComputeAlgebraicEquations(Vector& algebraicEquati
 		}
 		else
 		{
-			release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable 
-				&& "CObjectConnectorDistance::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
+				"CObjectConnectorDistance::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
 			Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 			Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);

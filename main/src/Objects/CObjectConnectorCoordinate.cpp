@@ -28,7 +28,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 		}
 		else
 		{
-			release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable &&
+			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 				"CObjectConnectorCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
 			algebraicEquations.SetNumberOfItems(1);

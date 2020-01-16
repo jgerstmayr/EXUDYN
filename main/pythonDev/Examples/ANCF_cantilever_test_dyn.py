@@ -79,8 +79,8 @@ else: #treat n elements
     ccy=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF1]))
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF2]))
 
-    mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=nLast)) #force
-    nl=mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f*0.01, 0])) #will be changed in load steps
+    #mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=nLast)) #force
+    #nl=mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f*0.01, 0])) #will be changed in load steps
 
 
 
@@ -123,7 +123,7 @@ SC.visualizationSettings.bodies.showNumbers = False
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
-simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
+simulationSettings.solutionSettings.solutionInformation = "nonlinear beam oscillations"
 
 exu.StartRenderer()
 SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)

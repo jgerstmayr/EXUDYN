@@ -52,11 +52,11 @@ public:
 
 	//don't do the following; use casting!
 	////! get (read) matrix as dense exudyn Matrix; this function should be used rarly, as it disables the compatibility to other matrix formats
-	//virtual const Matrix& GetMatrixEXUdense() const { release_assert(0 && "GeneralMatrix::GetMatrixEXUdense const: invalid call"); return EXUmath::unitMatrix3D; }
+	//virtual const Matrix& GetMatrixEXUdense() const { CHECKandTHROWstring("GeneralMatrix::GetMatrixEXUdense const: invalid call"); return EXUmath::unitMatrix3D; }
 	////! get (write) matrix as dense exudyn Matrix; also in this case, solvability may be lost; 
 	////! this function should be used rarly, as it disables the compatibility to other matrix formats
 	////! however, we never know what else is done with the matrix afterwards ...
-	//virtual Matrix& GetMatrixEXUdense() { release_assert(0 && "GeneralMatrix::GetMatrixEXUdense const: invalid call"); return EXUmath::unitMatrix3D; }
+	//virtual Matrix& GetMatrixEXUdense() { CHECKandTHROWstring("GeneralMatrix::GetMatrixEXUdense const: invalid call"); return EXUmath::unitMatrix3D; }
 
 	//helper functions for matrix:
 	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit) = 0;
@@ -192,7 +192,7 @@ public:
 	//! add possibly smaller matrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0)
 	{
-		release_assert((GetSystemMatrixType() == submatrix.GetSystemMatrixType()) && "GeneralMatrixEXUdense::AddSubmatrix: invalid SystemMatrixType!");
+		CHECKandTHROW((GetSystemMatrixType() == submatrix.GetSystemMatrixType()), "GeneralMatrixEXUdense::AddSubmatrix: invalid SystemMatrixType!");
 		SetMatrixIsFactorized(false);
 		const GeneralMatrixEXUdense& m = (const GeneralMatrixEXUdense&)submatrix;
 		matrix.AddSubmatrix(m.GetMatrixEXUdense(), rowOffset, columnOffset);
@@ -379,7 +379,7 @@ public:
 //	{
 //		os << (GeneralMatrixEigenSparse&)matrix;
 //	}
-//	else { release_assert(0 && "friend std::ostream& operator<<(std::ostream& os, const GeneralMatrix& matrix)"); }
+//	else { CHECKandTHROWstring("friend std::ostream& operator<<(std::ostream& os, const GeneralMatrix& matrix)"); }
 //
 //	return os;
 //}
@@ -388,7 +388,7 @@ public:
 class GeneralMatrixEigenSparse : public GeneralMatrixEXUdense
 {
 public:
-	GeneralMatrixEigenSparse() { release_assert("GeneralMatrixEigenSparse:: called when Eigen was deactivated!"); }
+	GeneralMatrixEigenSparse() { CHECKandTHROWstring("GeneralMatrixEigenSparse:: called when Eigen was deactivated!"); }
 
 	//! information on storage type
 	virtual LinearSolverType GetSystemMatrixType() const { return LinearSolverType::EigenSparse; };

@@ -32,6 +32,7 @@ public:
 	virtual void UpdateGraphicsDataNow() = 0;	//! renderer signals to update the graphics data, e.g. if settings have changed
 	virtual void SaveImageFinished() = 0;		//! renderer signals that frame has been grabed and saved
 	virtual bool SaveImageRequest() = 0;		//! signal renderer that a frame shall be recorded
+	virtual bool GetAndResetZoomAllRequest() = 0;//! get zoom all request and reset to false
 	virtual std::string GetComputationMessage() = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual ~VisualizationSystemContainerBase() {}
 

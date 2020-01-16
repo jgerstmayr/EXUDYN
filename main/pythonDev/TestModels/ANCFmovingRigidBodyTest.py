@@ -232,6 +232,7 @@ if solveDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.3
+    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
     #simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
 
     simulationSettings.timeIntegration.verboseMode = 1
@@ -249,7 +250,7 @@ if exudynTestGlobals.useGraphics:
 ncables = len(suspensionCableNodeList)
 sol2 = mbs.systemData.GetODE2Coordinates(); 
 u2 = sol2[int(ncables/4)*4+1]; #y-displacement of node in first quater of rope
-print('deflection =',u2)       #2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
-u2 -= (-0.06446627843202835)
+print('deflection =',u2)       #2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
+u2 -= (-0.06446627698121662)
 exudynTestGlobals.testError = u + u2
 

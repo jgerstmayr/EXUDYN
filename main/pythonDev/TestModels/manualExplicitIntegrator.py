@@ -12,6 +12,7 @@
 import sys
 sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 from itemInterface import *
 
@@ -55,8 +56,9 @@ cableList=[]
 
 
 nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
-nElements = 16 #2020-01-03: now works even with 64 elements if relTol=1e-5; did not work with 16 elements (2019-12-07)
+nElements = 4 #for tests use nElements = 4
 lElem = L / nElements
+nLast = 0
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
     elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A*0.1, nodeNumbers=[nc0+i,nc0+i+1], useReducedOrderIntegration=True))
@@ -99,17 +101,19 @@ simulationSettings.staticSolver.verboseModeFile = 2
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6 #1e-5 works for 64 elements
 simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
     
-exu.StartRenderer()
+if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+    exu.StartRenderer()
 
 simulationSettings.staticSolver.numberOfLoadSteps = 10
 simulationSettings.staticSolver.adaptiveStep = True
 
 import numpy as np
 
+testRefVal = 0
 #compute eigenvalues manually:
-calcEig = False
+calcEig = True
 if calcEig:
-    #from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+    from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
 
     staticSolver = exu.MainSolverStatic()
     #staticSolver.SolveSystem(mbs, simulationSettings)
@@ -131,7 +135,11 @@ if calcEig:
 
     [eigvals, eigvecs] = eigh(K2, m) #this gives omega^2 ... squared eigen frequencies (rad/s)
     ev = np.sort(a=abs(eigvals))
-    print("ev =",ev)
+    #print("ev =",ev)
+    if (len(ev) >= 7):
+        f6 = np.sqrt(abs(ev[6]))/(2*np.pi)
+        print("ev=", f6)
+        testRefVal += f6 #first bending eigenmode
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -155,10 +163,8 @@ def UserFunctionNewton(mainSolver, mainSys, sims):
 
     dynamicSolver.ComputeMassMatrix(mbs)
     M = dynamicSolver.GetSystemMassMatrix()
-    #a = solve(M,Fode2) #acceleration
     a = np.linalg.solve(M,Fode2) #acceleration
 
-    #a = 10*np.ones(nODE2)
     h = dynamicSolver.it.currentStepSize
 
     u0 = mainSys.systemData.GetODE2Coordinates()
@@ -171,8 +177,8 @@ def UserFunctionNewton(mainSolver, mainSys, sims):
 
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-simulationSettings.timeIntegration.numberOfSteps = 50000 #1000 steps for test suite/error
-simulationSettings.timeIntegration.endTime = 0.5              #1s for test suite / error
+simulationSettings.timeIntegration.numberOfSteps = 5000 #1000 steps for test suite/error
+simulationSettings.timeIntegration.endTime = 0.05              #1s for test suite / error
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
@@ -183,9 +189,13 @@ dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewton)
 dynamicSolver.SolveSystem(mbs, simulationSettings)
 #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
+uy=mbs.GetNodeOutput(nLast,exu.OutputVariableType.Position)[1] #y-coordinate of tip
+print("uy=", uy)
+exudynTestGlobals.testError = testRefVal + uy - (2.280183538481952-0.2204849087896498) #2020-01-16: 2.280183538481952-0.2204849087896498
 
-SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer() #safely close rendering window!
+if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() #safely close rendering window!
 
 
 

@@ -102,9 +102,9 @@ public: //
 	const ResizableArray<CObject*>& GetCObjects() const { return cObjects; }
 
 	//! Write (Reference) access to:container for computational objects
-	CObjectBody& GetCObjectBody(Index objectIndex) { release_assert(((Index)cObjects[objectIndex]->GetType() & (Index)CObjectType::Body) != 0); return *(CObjectBody*)(cObjects[objectIndex]); }
+	CObjectBody& GetCObjectBody(Index objectIndex) { CHECKandTHROW(((Index)cObjects[objectIndex]->GetType() & (Index)CObjectType::Body) != 0,"SystemData::GetObjectBody(...): object is not a body"); return *(CObjectBody*)(cObjects[objectIndex]); }
 	//! Read (Reference) access to:container for computational objects
-	const CObjectBody& GetCObjectBody(Index objectIndex) const { release_assert(((Index)cObjects[objectIndex]->GetType() & (Index)CObjectType::Body) != 0); return *(CObjectBody*)(cObjects[objectIndex]); }
+	const CObjectBody& GetCObjectBody(Index objectIndex) const { CHECKandTHROW(((Index)cObjects[objectIndex]->GetType() & (Index)CObjectType::Body) != 0, "SystemData::GetObjectBody(...) const: object is not a body"); return *(CObjectBody*)(cObjects[objectIndex]); }
 
 	//! Write (Reference) access to:container for computational nodes
 	ResizableArray<CNode*>& GetCNodes() { return cNodes; }

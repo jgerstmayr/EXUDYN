@@ -143,7 +143,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 			}
 			else
 			{
-				release_assert(0 && "CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not implemented");
+				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not implemented");
 
 			}
 		}
@@ -219,7 +219,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 
 void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const
 {
-	//release_assert(0 && "CObjectJointSliding2D::ComputeJacobianAE");
+	//CHECKandTHROWstring("CObjectJointSliding2D::ComputeJacobianAE");
 
 	const Index ns = 4; //number of ANCF shape functions
 	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();

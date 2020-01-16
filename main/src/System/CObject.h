@@ -132,7 +132,7 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	
 	//! distinguish between different body types for management in CSystem
-	virtual CObjectType GetType() const { release_assert(0 && "ERROR: illegal call to CObject::GetType"); return CObjectType::None; }
+	virtual CObjectType GetType() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetType"); return CObjectType::None; }
 
 	//! Return true, if object will be computed (used to deactivate objects/contacts without computational overhead)
 	virtual bool IsActive() const { return true; }
@@ -151,12 +151,12 @@ public:
 	//! local to global node number transformation
 	virtual Index GetNodeNumber(Index localIndex) const
 	{
-		release_assert(0 && "ERROR: illegal call to CObject::GetNodeNumber");
+		CHECKandTHROWstring("ERROR: illegal call to CObject::GetNodeNumber");
 		return EXUstd::InvalidIndex;
 	}
 	//! number of nodes
 	virtual Index GetNumberOfNodes() const { return 0; }
-	//before: {	release_assert(0 && "ERROR: illegal call to CObject::GetNumberOfNodes"); return EXUstd::InvalidIndex;	}
+	//before: {	CHECKandTHROWstring("ERROR: illegal call to CObject::GetNumberOfNodes"); return EXUstd::InvalidIndex;	}
 
 	//access to CNode
 	virtual CNode*& GetCNode(Index localIndex);
@@ -168,7 +168,7 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
-    virtual void ComputeODE2RHS(Vector& ode2Rhs) const { release_assert(0 && "ERROR: illegal call to CObject::ComputeODE2RHS"); }
+    virtual void ComputeODE2RHS(Vector& ode2Rhs) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2RHS"); }
 
     //! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs', which has dimension GetODE1Size(); q are the system coordinates
     //virtual void ComputeODE1RHS(Vector& ode1Rhs, const Vector& q) {}
@@ -176,30 +176,30 @@ public:
     //virtual void ComputeODE1RHS_q(Matrix& ode2Rhs, const Vector& q) {}
 
     //! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates
-    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { release_assert(0 && "ERROR: illegal call to CObject::ComputeAlgebraicEquations"); }
+    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeAlgebraicEquations"); }
 
 	//! return the available jacobian types (can be combined with 2^i enum flags); default: no jacobians ==> computed numerically
 	virtual JacobianType::Type GetAvailableJacobians() const { return JacobianType::None; }
 
     //! compute derivative of right-hand-side (RHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
-    virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { release_assert(0 && "ERROR: illegal call to CObject::ComputeODE2RHSJacobian"); }
+    virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2RHSJacobian"); }
 
     //! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates
-    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const { release_assert(0 && "ERROR: illegal call to CObject::ComputeJacobianAE"); }
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ACCESS FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! get available access function types for forces and constraints (action of lagrange multipliers)
-    virtual AccessFunctionType GetAccessFunctionTypes() const { release_assert(0 && "ERROR: illegal call to CObject::GetAccessFunctionTypes"); return AccessFunctionType::None; }
+    virtual AccessFunctionType GetAccessFunctionTypes() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetAccessFunctionTypes"); return AccessFunctionType::None; }
 	//! get available output variable types for constraints and for sensors
-	virtual OutputVariableType GetOutputVariableTypes() const { release_assert(0 && "ERROR: illegal call to CObject::GetOutputVariableTypes"); return OutputVariableType::None; }
+	virtual OutputVariableType GetOutputVariableTypes() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetOutputVariableTypes"); return OutputVariableType::None; }
 
 	//! get access function 'accessType' in (matrix) value
-	virtual void GetAccessFunction(AccessFunctionType accessType, Matrix& value) const { release_assert(0 && "ERROR: illegal call to CObject::GetAccessFunction"); }
+	virtual void GetAccessFunction(AccessFunctionType accessType, Matrix& value) const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetAccessFunction"); }
 	//! get output variable 'variableType' in (vector) value
-	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value) const { release_assert(0 && "ERROR: illegal call to CObject::GetOutputVariable"); } //configuration not needed in general objects!
+	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetOutputVariable"); } //configuration not needed in general objects!
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // OTHER FUNCTIONS

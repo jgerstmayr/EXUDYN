@@ -120,7 +120,7 @@ public:
 	//! add vector v to *this vector (for each component); both vectors must have same size
 	ResizableVectorBase& operator+=(const ResizableVectorBase& v)
 	{
-		release_assert((this->NumberOfItems() == v.NumberOfItems()) && "ResizableVectorBase::operator+=: incompatible size of vectors");
+		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorBase::operator+=: incompatible size of vectors");
 		Index cnt = 0;
 		for (auto item : v) {
 			(*this)[cnt++] += item;
@@ -131,7 +131,7 @@ public:
 	//! substract vector v from *this vector (for each component); both vectors must have same size
 	ResizableVectorBase& operator-=(const ResizableVectorBase& v)
 	{
-		release_assert((this->NumberOfItems() == v.NumberOfItems()) && "ResizableVectorBase::operator-=: incompatible size of vectors");
+		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorBase::operator-=: incompatible size of vectors");
 		Index cnt = 0;
 		for (auto item : v) {
 			(*this)[cnt++] -= item;

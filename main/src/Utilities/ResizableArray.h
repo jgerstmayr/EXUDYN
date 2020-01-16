@@ -169,14 +169,14 @@ public:
 	//! read access to last item at numberOfItems-1
 	const T& Last() const
 	{
-		release_assert(numberOfItems && "ERROR: ResizableArray<T>::Last const, numberOfItems == 0");
+		CHECKandTHROW(numberOfItems, "ERROR: ResizableArray<T>::Last const, numberOfItems == 0");
 		return data[numberOfItems - 1];
 	}
 
 	//! write access to last item at numberOfItems-1
 	T& Last()
 	{
-		release_assert(numberOfItems && "ERROR: ResizableArray<T>::Last, numberOfItems == 0");
+		CHECKandTHROW(numberOfItems, "ERROR: ResizableArray<T>::Last, numberOfItems == 0");
 		return data[numberOfItems - 1];
 	}
 
@@ -212,7 +212,7 @@ public:
    //!random write access operator; will increase size of array if necessary (possible non-initialized data!).
 	T& operator[] (Index i)
 	{
-		release_assert(i >= 0 && "ResizableArray<T>::operator[], i < 0");
+		CHECKandTHROW(i >= 0, "ResizableArray<T>::operator[], i < 0");
 
 		//! @todo use SetNumberOfItems in T& operator[] (Index i)
 		if (i >= maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(i + 1); }
@@ -223,8 +223,8 @@ public:
 	//! random read access operator; read access only to elements in range[0,numberOfItems].
 	const T& operator[] (Index i) const
 	{
-		release_assert((i >= 0) && "ResizableArray<T>::const operator[], i < 0");
-		release_assert((i < numberOfItems) && "ResizableArray<T>::const operator[], i >= numberOfItems"); //read access to non-initialized data makes no sense!
+		CHECKandTHROW((i >= 0), "ResizableArray<T>::const operator[], i < 0");
+		CHECKandTHROW((i < numberOfItems), "ResizableArray<T>::const operator[], i >= numberOfItems"); //read access to non-initialized data makes no sense!
 
 		return data[i];
 	}
@@ -255,7 +255,7 @@ public:
     //! comparison operator, component-wise compare; returns true, if all components are equal; not virtual, because derived class has different arguments
     bool operator== (const ResizableArray<T>& array) const
     {
-        release_assert((NumberOfItems() == array.NumberOfItems()) && "ResizableArray::operator==: incompatible size of arrays");
+		CHECKandTHROW((NumberOfItems() == array.NumberOfItems()), "ResizableArray::operator==: incompatible size of arrays");
         Index cnt = 0;
         for (auto item : array)
         {
@@ -274,16 +274,16 @@ public:
     //! const (read) access of item with index 'i' 
      const T& GetItem(Index index) const
     {
-        release_assert((index >= 0) && "ERROR: ResizableArray const T& GetItem: index < 0");
-        release_assert((index < numberOfItems) && "ERROR: ResizableArray const T& GetItem: index >= dataSize");
+		CHECKandTHROW((index >= 0), "ERROR: ResizableArray const T& GetItem: index < 0");
+		CHECKandTHROW((index < numberOfItems), "ERROR: ResizableArray const T& GetItem: index >= dataSize");
         return data[index];
     }
 
     //! by reference (write) access of item with index 'i'; DOES NOT AUTOMATICALLY ENLARGE ARRAY (compatibility with SlimArray<>)
      T& GetItem(Index index)
     {
-        release_assert((index >= 0) && "ERROR: ResizableArray T& GetItem: index < 0");
-        release_assert((index < numberOfItems) && "ERROR: ResizableArray T& GetItem: index >= dataSize");
+		CHECKandTHROW((index >= 0), "ERROR: ResizableArray T& GetItem: index < 0");
+		CHECKandTHROW((index < numberOfItems), "ERROR: ResizableArray T& GetItem: index >= dataSize");
         return data[index];
     }
 
@@ -336,8 +336,8 @@ public:
     //! insert item at position; moves items previously at position and items>position backwards; increases numberOfItems by one; insert at data[numberOfItems] allowed!
      void Insert(Index position, const T& item)
     {
-        release_assert((position >= 0) && "ERROR: ResizableArray const T& Insert: position < 0");
-        release_assert((position <= numberOfItems) && "ERROR: ResizableArray const T& Insert: position > numberOfItems");
+		CHECKandTHROW((position >= 0), "ERROR: ResizableArray const T& Insert: position < 0");
+		CHECKandTHROW((position <= numberOfItems), "ERROR: ResizableArray const T& Insert: position > numberOfItems");
 
         numberOfItems++;
         EnlargeMaxNumberOfItemsTo(numberOfItems);
@@ -386,8 +386,8 @@ void ResizableArray<T>::CopyFrom(const ResizableArray<T>& array, Index beginPosi
 {
     if (endPosition == EXUstd::InvalidIndex) { endPosition = array.numberOfItems; }
 
-    release_assert(beginPosition >= 0 && "ResizableArray<T>::CopyFrom, beginPosition < 0");
-    release_assert(endPosition <= array.NumberOfItems() && "ResizableArray<T>::CopyFrom, endPosition > numberOfItems");
+	CHECKandTHROW(beginPosition >= 0, "ResizableArray<T>::CopyFrom, beginPosition < 0");
+	CHECKandTHROW(endPosition <= array.NumberOfItems(), "ResizableArray<T>::CopyFrom, endPosition > numberOfItems");
 
     if (array.numberOfItems == 0) { numberOfItems = 0; return; }
 

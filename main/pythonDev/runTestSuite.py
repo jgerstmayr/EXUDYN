@@ -37,7 +37,10 @@ testFileList = ['TestModels/fourBarMechanismTest.py',
                 'TestModels/sliderCrankFloatingTest.py',
                 'TestModels/ANCFmovingRigidBodyTest.py',
                 'TestModels/ANCFcontactFrictionTest.py',
-                'TestModels/ACNFslidingAndALEjointTest.py']
+                'TestModels/ACNFslidingAndALEjointTest.py',
+                'TestModels/scissorPrismaticRevolute2D.py',
+                'TestModels/manualExplicitIntegrator.py',
+                'TestModels/PARTS_ATEs_moving.py']
 
 
 
@@ -51,12 +54,14 @@ timeStart= -time.time()
 
 testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
 rv = RunAllModelUnitTests(mbs, testInterface)
+SC.Reset()
 
 cnt = 0
 for file in testFileList:
     print('\n\n******************************************')
     print('  START EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
     print('******************************************')
+    SC.Reset()
     exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
     exec(open(file).read(), globals())
     if abs(exudynTestGlobals.testError) < 3e-14:
@@ -87,6 +92,7 @@ print('time elapsed =',round(timeStart,3),'seconds')
 #10+7 tests: 2019-12-16: 4.49 seconds on i9
 #10+7 tests: 2019-12-17: 3.94 / 3.87 seconds on i9
 #10+8 tests: 2019-12-18: 5.96 / 6.06 seconds on i9
+#10+11tests: 2020-01-6:  6.96 on i9
 
 
 if rv == True:

@@ -34,7 +34,8 @@ void CObjectRigidBody2D::ComputeODE2RHS(Vector& ode2Rhs) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectRigidBody2D::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + 
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);// +(Index)AccessFunctionType::Rotv1v2v3_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -45,7 +46,7 @@ void CObjectRigidBody2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
 		//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
-		Real phi = GetCNode(0)->GetCurrentCoordinate(2);
+		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
 		//delete: Real phi = ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinate(2);
 		Real dAvxdphi = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   //d(Av)x/dphi
 		Real dAvydphi = cos(phi) * localPosition[0] - sin(phi) * localPosition[1];   //d(Av)x/dphi
@@ -58,6 +59,20 @@ void CObjectRigidBody2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 		value.SetMatrix(3, 3, {0.,0.,0., 0.,0.,0., 0.,0.,1.  }); //the 3D torque vector (only z-component) acts on the 3rd coordinate phi_t
 		break;
 	}
+	//NEEDED? very inefficient!
+	//case AccessFunctionType::Rotv1v2v3_q: //for triads attached to bodies
+	//{
+	//	//this function provides derivatives of the rotation matrix w.r.t. all 3 unit vectors (v1=[1,0,0], ...): Jac = [d(A*v1)/dq, d(A*v2)/dq, d(A*v3)/dq ]
+	//	Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+
+	//	Real s = sin(phi);
+	//	Real c = cos(phi);
+	//	Vector2D Av1({ -s, c });
+	//	Vector2D Av2({ -c, -s });
+
+	//	value.SetMatrix(3, 3*3, { 0.,0.,Av1[0], 0.,0.,Av2[0], 0.,0.,0.,   0.,0.,Av2[1], 0.,0.,Av2[1], 0.,0.,0.,   0.,0.,0., 0.,0.,0., 0.,0.,0. }); //this jacobian includes the 3 H-matrices needed for constraints
+	//	break;
+	//}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
 		value.SetMatrix(3, 3, { parameters.physicsMass,0.,0., 0.,parameters.physicsMass,0., 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on three coordinates (x,y,phi)
@@ -100,8 +115,6 @@ Vector3D CObjectRigidBody2D::GetPosition(const Vector3D& localPosition, Configur
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectRigidBody2D::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	//not necessary any more?: release_assert(configuration == ConfigurationType::Current && "CObjectRigidBody2D::GetVelocity");
-
 	// \dot R + A * \localOmega x \localPosition
 	return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration) + 
 		((CNodeODE2*)GetCNode(0))->GetRotationMatrix(configuration) * 
@@ -111,7 +124,6 @@ Vector3D CObjectRigidBody2D::GetVelocity(const Vector3D& localPosition, Configur
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectRigidBody2D::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	//not necessary any more?: release_assert(configuration == ConfigurationType::Current && "CObjectRigidBody2D::GetDisplacement");
 	return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
 

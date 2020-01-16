@@ -81,18 +81,12 @@ Vector3D CObjectMassPoint::GetPosition(const Vector3D& localPosition, Configurat
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectMassPoint::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CObjectMassPoint::GetVelocity");
-	
-	//return SlimVector<3>(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(), 0); //copy first 3 entries of coords
 	return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration);
 }
 
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectMassPoint::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CObjectMassPoint::GetDisplacement");
-	//LinkedDataVector currentCoordinates = GetCNode(0)->GetCoordinateVector(configuration);
-	//return SlimVector<3>(currentCoordinates, 0); //copy first 3 entries of coords
 	return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
 

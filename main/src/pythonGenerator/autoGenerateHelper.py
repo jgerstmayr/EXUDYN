@@ -65,11 +65,12 @@ def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into
             s = s.replace('EXUmath::Matrix3DFToStdArray33','')
             s = s.replace('(','[')
             s = s.replace(')',']')
-            s = s.replace('f','')
+            #s = s.replace('.f','')
             s = s.replace('{','')
             s = s.replace('}','')
         
-        s = s.replace('f','')
+        if s.find("'") == -1: #don't do that for strings!
+            s = s.replace('f','')
 
     #s = s.replace('\\','\\\\') #leads to double \\ in latex
     s = s.replace('_','\_')

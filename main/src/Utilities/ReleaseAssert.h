@@ -22,10 +22,24 @@
 //#define __FAST_EXUDYN_LINALG //use this to avoid any range checks in linalg; TEST: with __FAST_EXUDYN_LINALG: 2.3s time integration of contact problem, without: 2.9s
 
 #ifndef __FAST_EXUDYN_LINALG
-//uncomment the following line in releases!
-#define __ASSERT_IN_RELEASE_MODE__ //slows down release, but faster than debug mode (for debugging large scale problems)
-#define __EXUDYN_RUNTIME_CHECKS__  //performs several runtime checks, which slows down performance in release or debug mode
+	#define __ASSERT_IN_RELEASE_MODE__ //slows down release, but faster than debug mode (for debugging large scale problems)
+	#define __EXUDYN_RUNTIME_CHECKS__  //performs several runtime checks, which slows down performance in release or debug mode
+
+	//!check if _checkExpression is true; if no, trow std::exception(_exceptionMessage); _exceptionMessage will be a const char*, e.g. "VectorBase::operator[]: invalid index"
+	//!linalg matrix/vector access functions, memory allocation, array classes and solvers will throw exceptions if the errors are not recoverable
+	//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, no checks are performed
+	#define CHECKandTHROW(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw std::exception(_exceptionMessage))
+	#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw std::exception("unexpected EXUDYN internal error"))
+	//always throw:
+	#define CHECKandTHROWstring(_exceptionMessage) (throw std::exception(_exceptionMessage))
+#else
+	//no checks in __FAST_EXUDYN_LINALG mode
+	#define CHECKandTHROW(_checkExpression,_exceptionMessage)
+	#define CHECKandTHROWcond(_checkExpression)
+	#define CHECKandTHROWstring(_exceptionMessage)
 #endif
+
+//#define CHECKandTHROW(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : {throw std::exception(_exceptionMessage);}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //a specific flag _MYDEBUG is used as the common _NDEBUG flag does not work in Visual Studio
@@ -45,14 +59,17 @@
 #ifndef  __ASSERT_IN_RELEASE_MODE__
 
 	#ifndef _MYDEBUG //otherwise, assert(...) does something in release mode ...
+		//use CHECKandTHROW instead!!!
 		#define release_assert(_Expression) 
 	#else
-		#define release_assert(_Expression) (assert(_Expression))
+		//use CHECKandTHROW instead!!!
+#define release_assert(_Expression) (assert(_Expression))
 	#endif
 #else  /*__ASSERT_IN_RELEASE_MODE__*/
 
 	#ifdef _MYDEBUG
 	//DEBUG:
+		//use CHECKandTHROW instead!!!
 		#define release_assert(_Expression) (assert(_Expression))
 	#else  
 	//RELEASE:
@@ -68,9 +85,11 @@
 			#endif
 
 
+			//use CHECKandTHROW instead!!!
 			#define release_assert(_Expression) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), __LINE__), 0) )
 
 		#else
+			//use CHECKandTHROW instead!!!
 			#define release_assert(_Expression) 
 		#endif // _WIN32
 

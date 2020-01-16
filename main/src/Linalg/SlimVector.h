@@ -71,8 +71,8 @@ public:
 	SlimVectorBase(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11
 	//SlimVector(const T(&listOfItems)[dataSize]) //immediate check of initializer_list size, but would allow to cast to std::vector<> ==> dangerous!!! //pass by value as a standard in C++11
 	{
-		//not needed in C++14 and above; release_assert(dataSize == listOfReals.size() && "ERROR: SlimVector::constructor, initializer_list.size() must match template dataSize");
-		release_assert(dataSize == listOfItems.size() && "ERROR: SlimVector::constructor, initializer_list.size() must match template dataSize");
+		//not needed in C++14 and above; 
+		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimVector::constructor, initializer_list.size() must match template dataSize");
 		//static_assert supported by C++14 (supports listOfReals.size() as constexpr)
 		
         Index cnt = 0;
@@ -86,8 +86,8 @@ public:
     //! copies 'dataSize' items, independently of vector size (might cause memory access error)
 	SlimVectorBase(const VectorBase<T>& vector, Index startPositionVector) //remove default argument for startPositionVector in order to avoid unwanted casting from Vector
     {
-        release_assert(startPositionVector >= 0 && "ERROR: SlimVector(const VectorBase<T>&, Index), startPositionVector < 0");
-        release_assert(dataSize + startPositionVector <= vector.NumberOfItems() && "ERROR:  SlimVector(const VectorBase<T>&, Index), dataSize mismatch with initializer_list");
+		CHECKandTHROW(startPositionVector >= 0, "ERROR: SlimVector(const VectorBase<T>&, Index), startPositionVector < 0");
+		CHECKandTHROW(dataSize + startPositionVector <= vector.NumberOfItems(), "ERROR:  SlimVector(const VectorBase<T>&, Index), dataSize mismatch with initializer_list");
 
         Index cnt = startPositionVector;
         for (auto& item : *this) {
@@ -99,7 +99,7 @@ public:
 	//! constructor with std::vector
 	SlimVectorBase(const std::vector<T> vector)
 	{
-		release_assert(vector.size() == dataSize && "ERROR: SlimVector(const std::vector<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVector(const std::vector<T> vector), dataSize mismatch");
 
 		//better?: std::copy(vector.begin(), vector.end(), this->begin());
 		Index cnt = 0;
@@ -110,7 +110,7 @@ public:
 
 	SlimVectorBase(const std::array<T, dataSize> vector)
 	{
-		release_assert(vector.size() == dataSize && "ERROR: SlimVector(const std::array<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVector(const std::array<T> vector), dataSize mismatch");
 
 		//better?: std::copy(vector.begin(), vector.end(), this->begin());
 		Index cnt = 0;
@@ -142,7 +142,7 @@ public:
 	//! set vector to data given by initializer list
 	void SetVector(std::initializer_list<T> listOfItems)
 	{
-		release_assert(dataSize == listOfItems.size() && "ERROR: SlimVector::SetVector, initializer_list.size() must match template dataSize");
+		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimVector::SetVector, initializer_list.size() must match template dataSize");
 
 		Index cnt = 0;
 		for (auto val : listOfItems) {
@@ -154,14 +154,14 @@ public:
 	//! for compatibility with Vector and ConstVector
 	void SetNumberOfItems(Index numberOfItems)
 	{
-		release_assert(numberOfItems == dataSize && "SlimVectorBase<T, >::SetNumberOfItems size mismatch");
+		CHECKandTHROW(numberOfItems == dataSize, "SlimVectorBase<T, >::SetNumberOfItems size mismatch");
 	}
 
 	//! copy from other vector and perform type conversion (e.g. for graphics)
 	template<class TVector>
 	void CopyFrom(const TVector& vector)
 	{
-		release_assert(vector.NumberOfItems() == dataSize && "SlimVectorBase<T, >::CopyFrom(TVector) size mismatch");
+		CHECKandTHROW(vector.NumberOfItems() == dataSize, "SlimVectorBase<T, >::CopyFrom(TVector) size mismatch");
 		Index cnt = 0;
 		for (auto val : vector) {
 			(*this)[cnt++] = (T)val;
@@ -173,8 +173,8 @@ public:
     //! reference (write) access-operator.
     T& operator[](Index item)
     {
-        release_assert((item >= 0) && "ERROR: SlimVector T& operator[]: item < 0");
-        release_assert((item < dataSize) && "ERROR: SlimVector T& operator[]: item >= dataSize");
+		CHECKandTHROW((item >= 0), "ERROR: SlimVector T& operator[]: item < 0");
+		CHECKandTHROW((item < dataSize), "ERROR: SlimVector T& operator[]: item >= dataSize");
 
         return data[item];
     };
@@ -182,8 +182,8 @@ public:
     //! const (read) access-operator
     const T& operator[](Index item) const
     {
-        release_assert((item >= 0) && "ERROR: SlimVector T operator[] const: item < 0");
-        release_assert((item < dataSize) && "ERROR: SlimVector T operator[] const: item >= dataSize");
+		CHECKandTHROW((item >= 0), "ERROR: SlimVector T operator[] const: item < 0");
+		CHECKandTHROW((item < dataSize), "ERROR: SlimVector T operator[] const: item >= dataSize");
 
         return data[item];
     };
@@ -392,7 +392,7 @@ public:
     void Normalize()
     {
         T norm = GetL2Norm();
-        release_assert(norm != 0. && "SlimVector::Normalized() called with GetL2Norm() == 0.");
+		CHECKandTHROW(norm != 0., "SlimVector::Normalized() called with GetL2Norm() == 0.");
 
         for (auto &item : *this) { item /= norm; }
     }
@@ -500,23 +500,23 @@ typedef std::array<StdVector3D, 3> StdMatrix3D;
 
 //does not work with static assert in VS2017
 template<> inline SlimVectorBase<Real, 1>::SlimVectorBase(std::initializer_list<Real> listOfReals) {
-	release_assert(1 == listOfReals.size() && "ERROR: SlimVectorBase<T, 1>::constructor, initializer_list.size() must match template dataSize");
+	CHECKandTHROW(1 == listOfReals.size(), "ERROR: SlimVectorBase<T, 1>::constructor, initializer_list.size() must match template dataSize");
 	data[0] = listOfReals.begin()[0];
 };
 template<> inline SlimVectorBase<Real, 2>::SlimVectorBase(std::initializer_list<Real> listOfReals) {
-	release_assert(2 == listOfReals.size() && "ERROR: SlimVectorBase<T, 2>::constructor, initializer_list.size() must match template dataSize");
+	CHECKandTHROW(2 == listOfReals.size(), "ERROR: SlimVectorBase<T, 2>::constructor, initializer_list.size() must match template dataSize");
 	data[0] = listOfReals.begin()[0]; 
 	data[1] = listOfReals.begin()[1];
 };
 template<> inline SlimVectorBase<Real, 3>::SlimVectorBase(std::initializer_list<Real> listOfReals) {
-    release_assert(3 == listOfReals.size() && "ERROR: SlimVectorBase<T, 3>::constructor, initializer_list.size() must match template dataSize");
+	CHECKandTHROW(3 == listOfReals.size(), "ERROR: SlimVectorBase<T, 3>::constructor, initializer_list.size() must match template dataSize");
     data[0] = listOfReals.begin()[0]; 
 	data[1] = listOfReals.begin()[1]; 
 	data[2] = listOfReals.begin()[2];
     //approx. 3 times faster than in for-loop!
 };
 template<> inline SlimVectorBase<Real, 4>::SlimVectorBase(std::initializer_list<Real> listOfReals) {
-	release_assert(4 == listOfReals.size() && "ERROR: SlimVectorBase<T, 4>::constructor, initializer_list.size() must match template dataSize");
+	CHECKandTHROW(4 == listOfReals.size(), "ERROR: SlimVectorBase<T, 4>::constructor, initializer_list.size() must match template dataSize");
 	data[0] = listOfReals.begin()[0];
 	data[1] = listOfReals.begin()[1];
 	data[2] = listOfReals.begin()[2];

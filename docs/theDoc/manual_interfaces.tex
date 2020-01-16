@@ -39,6 +39,7 @@ The SystemContainer is the top level of structures in \codeName. The container h
   Reset() & delete all systems and reset SystemContainer (including graphics)\\ \hline 
   NumberOfSystems() & obtain number of systems available in system container\\ \hline 
   WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
+  RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
   GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     SC = exu.SystemContainer()\tabnewline

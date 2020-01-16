@@ -168,7 +168,7 @@ protected: //functions cannot be called from outside
     //! call to LinkedDataVectorBase::AllocateMemory is not called, but for safety add assertion
     virtual void AllocateMemory(Index numberOfRealsInit) override
     {
-        release_assert(0 && "ERROR: call to LinkedDataVectorBase::AllocateMemory(...) forbidden");
+        CHECKandTHROWstring("ERROR: call to LinkedDataVectorBase::AllocateMemory(...) forbidden");
     }
 
     //! LinkedDataVectorBase must not delete[] data; function called because of VectorBase<T> destructor 
@@ -181,10 +181,10 @@ protected: //functions cannot be called from outside
     }
 
     //! CopyFrom makes no sense in case of LinkedDataVectorBase; disabled
-    void CopyFrom(const VectorBase<T>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems) { release_assert(0 && "LinkedDataVectorBase::CopyFrom"); }
+    void CopyFrom(const VectorBase<T>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems) { CHECKandTHROWstring("LinkedDataVectorBase::CopyFrom"); }
 
     //! Append makes no sense in case of LinkedDataVectorBase; disabled
-    VectorBase<T> Append(const VectorBase<T>& vector) const {release_assert(0 && "LinkedDataVectorBase::Append"); return vector;}
+    VectorBase<T> Append(const VectorBase<T>& vector) const {CHECKandTHROWstring("LinkedDataVectorBase::Append"); return vector;}
 };
 
 typedef LinkedDataVectorBase<Real> LinkedDataVector;

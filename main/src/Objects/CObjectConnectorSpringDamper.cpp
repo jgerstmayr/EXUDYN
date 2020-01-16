@@ -59,7 +59,7 @@ void ComputeConnectorProperties(const MarkerDataStructure& markerData, const COb
 void CObjectConnectorSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
 {
 	//relative position, spring length and inverse spring length
-	release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable && 
+	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 		"CObjectConnectorSpringDamper::ComputeODE2RHS: marker do not provide velocityLevel information");
 
 	//link separate vectors to result (ode2Rhs) vector
@@ -95,7 +95,7 @@ void CObjectConnectorSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, const MarkerD
 
 void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	release_assert(0 && "ERROR: illegal call to CObjectConnectorSpringDamper::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorSpringDamper::ComputeODE2RHSJacobian");
 }
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

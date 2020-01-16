@@ -176,7 +176,7 @@ protected:
 	{
 		this->numberOfRows = 0;
 		this->numberOfColumns = 0;
-		release_assert("ConstSizeMatrixBase::Init(): should never be called");
+		CHECKandTHROWstring("ConstSizeMatrixBase::Init(): should never be called");
 	};
 
     //! Set new size of matrix; for external access, use 'SetNumberOfRowsAndColumns' to modify size of matrix
@@ -310,7 +310,7 @@ public:
 	}
 
 	//{
-	//	release_assert(0 && "ConstSizeVector<dataSize2> operator*: default opertor invalid");
+	//	CHECKandTHROWstring("ConstSizeVector<dataSize2> operator*: default opertor invalid");
 	//	return ConstSizeVector<dataSize2>();
 	//}
 

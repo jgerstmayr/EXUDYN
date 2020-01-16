@@ -370,7 +370,7 @@ Vector3D CObjectALEANCFCable2D::GetVelocity(const Vector3D& localPosition, Confi
 
 py::object MainObjectALEANCFCable2D::CallFunction(STDstring functionName, py::dict args) const
 {
-	release_assert(0 && "Call to MainObjectALEANCFCable2D::CallFunction illegal");
+	CHECKandTHROWstring("Call to MainObjectALEANCFCable2D::CallFunction illegal");
 	//return MainObjectANCFCable2D::CallFunction(functionName, args);
 
 	return py::int_(0);

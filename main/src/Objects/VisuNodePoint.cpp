@@ -660,7 +660,7 @@ void VisualizationObjectConnectorCartesianSpringDamper::UpdateGraphics(const Vis
 	Vector3D p0, p1, vN, vRel;
 	const Index numberOfPoints = 12;
 
-	if (!cItem->GetParameters().activeConnector) //does not work in visualization ...
+	if (cItem->GetParameters().activeConnector) //does not work in visualization ...
 	{
 		//draw 3 orthogonal springs
 		p0 = pos[0]; p1 = pos[0] + Vector3D({ v0[0],0,0 });		//x-direction
@@ -1006,7 +1006,7 @@ void VisualizationMarkerBodyPosition::UpdateGraphics(const VisualizationSettings
 	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor);
 	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyMass::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -1025,7 +1025,7 @@ void VisualizationMarkerBodyMass::UpdateGraphics(const VisualizationSettings& vi
 	radius /= sqrt(2.f);
 	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor); //bodymass-marker has double circle
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyRigid::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -1048,7 +1048,7 @@ void VisualizationMarkerBodyRigid::UpdateGraphics(const VisualizationSettings& v
 	vSystem->graphicsData.AddLine(pos + Vector3D({  radius,  radius, 0. }), pos + Vector3D({-radius, radius, 0. }), currentColor, currentColor);
 	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius,  radius, 0. }), pos + Vector3D({-radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyCable2DShape::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -1069,7 +1069,7 @@ void VisualizationMarkerBodyCable2DShape::UpdateGraphics(const VisualizationSett
 	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor);
 	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyCable2DCoordinates::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -1090,7 +1090,7 @@ void VisualizationMarkerBodyCable2DCoordinates::UpdateGraphics(const Visualizati
 	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor);
 	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 void VisualizationMarkerNodePosition::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -1110,7 +1110,7 @@ void VisualizationMarkerNodePosition::UpdateGraphics(const VisualizationSettings
 	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor);
 	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 void VisualizationMarkerNodeRigid::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -1132,7 +1132,7 @@ void VisualizationMarkerNodeRigid::UpdateGraphics(const VisualizationSettings& v
 	vSystem->graphicsData.AddLine(pos + Vector3D({ radius,  radius, 0. }), pos + Vector3D({ -radius, radius, 0. }), currentColor, currentColor);
 	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius,  radius, 0. }), pos + Vector3D({ -radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { DrawItemNumber(pos, vSystem, itemNumber, "M", currentColor); }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -25,7 +25,7 @@ SolutionSettings has the following items:
     exportAlgebraicCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]\\ \hline
     exportDataCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates\\ \hline
     coordinatesSolutionFileName &     String &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time\\ \hline
-    solverInformationFileName &     String &      &     'solverInormation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile\\ \hline
+    solverInformationFileName &     String &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile\\ \hline
     solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...)\\ \hline
     outputPrecision &     Index &      &     10 &     precision for floating point numbers written to solution files\\ \hline
     recordImagesInterval &     Real &      &     -1. &     record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages\\ \hline
@@ -302,7 +302,7 @@ VSettingsExportImages has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     saveImageTimeOut &     Index &      &     5000 &     timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
-    saveImageFileName &     String &      &     'images/rame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!\\ \hline
+    saveImageFileName &     String &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!\\ \hline
     saveImageFileCounter &     Index &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
     saveImageSingleFile &     bool &      &     False &     true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName\\ \hline
 	  \end{longtable}

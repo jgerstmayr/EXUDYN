@@ -72,7 +72,7 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<9> Vector2SkewMatrixTemplate(const TVector& v)
 	{
-		release_assert(v.NumberOfItems() == 3 && "Vector2SkewMatrixTemplate: vector must contain 3 items!");
+		CHECKandTHROW(v.NumberOfItems() == 3, "Vector2SkewMatrixTemplate: vector must contain 3 items!");
 		return ConstSizeMatrix<9>(3, 3, { 0.,  -v[2], v[1],
 										  v[2],    0,-v[0],
 										 -v[1], v[0],    0 });

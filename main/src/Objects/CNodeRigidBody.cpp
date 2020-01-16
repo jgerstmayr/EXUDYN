@@ -74,8 +74,6 @@ Vector3D CNodeRigidBodyEP::GetPosition(ConfigurationType configuration) const
 
 Vector3D CNodeRigidBodyEP::GetVelocity(ConfigurationType configuration) const
 {
-	//release_assert(configuration == ConfigurationType::Current && "CNodeRigidBodyEP::GetVelocity: not implemented");
-
 	LinkedDataVector u3D_t = GetCoordinateVector_t(configuration);
 	return Vector3D({ u3D_t[0], u3D_t[1], u3D_t[2] });
 }

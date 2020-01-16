@@ -68,7 +68,7 @@ public:
      //template<class TDerivedClass>
     ObjectContainer(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11
     {
-        release_assert(0 && "ObjectContainer: generic constructor with initializer_list is forbidden");
+        CHECKandTHROWstring("ObjectContainer: generic constructor with initializer_list is forbidden");
         //! @todo erase assert in constructor ObjectContainer(std::initializer_list<T> listOfItems) 
 
         data.EnlargeMaxNumberOfItemsTo(listOfItems.size());

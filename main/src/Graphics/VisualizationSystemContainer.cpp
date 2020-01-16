@@ -78,6 +78,11 @@ bool VisualizationSystemContainer::DetachRenderEngine()
 //! OpenGL renderer sends message that graphics shall be updated ==> update graphics data
 void VisualizationSystemContainer::UpdateGraphicsData()
 {
+	if (zoomAllRequest)
+	{
+		zoomAllRequest = false; //this is not fully thread safe, but should not happen very often ==> user needs to zoom manually then ...
+		UpdateMaximumSceneCoordinates();
+	}
 	if (updateGraphicsDataNow) { updateGraphicsDataNowInternal = true; updateGraphicsDataNow = false; } //enables immediate new set of updateGraphicsDataNow
 	if (saveImage) { saveImageOpenGL = true; } //as graphics are updated now, the saveImageOpenGL flag can be set
 
@@ -176,16 +181,7 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 	rendererState.modelRotation[9] = settings.openGL.initialModelRotation[2][1];
 	rendererState.modelRotation[10] = settings.openGL.initialModelRotation[2][2];
 	rendererState.modelRotation[15] = 1.;
-	//rendererState.modelRotation[0] = settings.openGL.initialModelRotation(0, 0);
-	//rendererState.modelRotation[1] = settings.openGL.initialModelRotation(0, 1);
-	//rendererState.modelRotation[2] = settings.openGL.initialModelRotation(0, 2);
-	//rendererState.modelRotation[4] = settings.openGL.initialModelRotation(1, 0);
-	//rendererState.modelRotation[5] = settings.openGL.initialModelRotation(1, 1);
-	//rendererState.modelRotation[6] = settings.openGL.initialModelRotation(1, 2);
-	//rendererState.modelRotation[8] = settings.openGL.initialModelRotation(2, 0);
-	//rendererState.modelRotation[9] = settings.openGL.initialModelRotation(2, 1);
-	//rendererState.modelRotation[10] = settings.openGL.initialModelRotation(2, 2);
-	//rendererState.modelRotation[15] = 1.;
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	if (settings.general.autoFitScene)
@@ -195,7 +191,7 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 		Vector3D pmin({ 1e30,1e30,1e30 });
 		for (auto visSystem : visualizationSystems)
 		{
-			//! @todo extend VisualizationSystemContainer::UpdateMaximumSceneCoordinates for objects, markers and loads
+			//! @todo extend VisualizationSystemContainer::UpdateMaximumSceneCoordinates for objects, markers and loads; maybe better to first draw all and zoom to full region?
 			for (auto item : visSystem->systemData->GetCNodes())
 			{
 				//if ((item->GetType() == CNodeType::Point) || (item->GetType() == CNodeType::RigidBody))

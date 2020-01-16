@@ -57,6 +57,13 @@ def VMult(v0, v1):
         r += v0[i]*v1[i]
     return r
 
+#multiplication vectors with scalar: result = s*v
+def ScalarMult(scalar, v):
+    res=[0]*len(v)
+    for i in range(len(v)):
+        res[i] += scalar*v[i]
+    return res
+
 # compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); if vector0 == [0,0,0], then any normal basis is returned
 def ComputeOrthonormalBasis(vector0):
 
@@ -103,7 +110,9 @@ def Normalize(vector):
 color4steelblue = [0.4,0.4,0.9,1.]
 color4lightred = [0.9,0.4,0.4,1.]
 color4lightgreen = [0.3,0.9,0.3,1.]
+color4darkgrey = [0.25,0.25,0.25,1.]
 color4grey = [0.5,0.5,0.5,1.]
+color4lightgrey = [0.75,0.75,0.75,1.]
 
 #************************************************
 #generate graphics dictionary data for rectangle

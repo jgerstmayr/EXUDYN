@@ -28,14 +28,15 @@ protected:
 public:
 
 	//! access function to parameters; must be overwritten
-	virtual Real GetLength() const { release_assert(0); return 0; }
+	virtual Real GetLength() const { CHECKandTHROWcond(false); return 0; }
 
 	//! access function to parameters; must be overwritten
-	virtual Real GetMassPerLength() const { release_assert(0); return 0; }
+	virtual Real GetMassPerLength() const { CHECKandTHROWcond(false); return 0; }
 
 	//! access function to parameters; must be overwritten
 	virtual void GetMaterialParameters(Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping,
-		Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature) const {release_assert(0); }
+		Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature) const {
+		CHECKandTHROWcond(false); }
 
 	//! access to parameters.useReducedOrderIntegration of derived class
 	virtual bool UseReducedOrderIntegration() const { return false; }

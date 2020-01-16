@@ -55,7 +55,7 @@ public:
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; data is not initialized; if allocatedSizeInit is valid==>allocate spezific size of Matrix
 	ResizableMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit)
 	{
-		release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) &&
+		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0),
 			"ResizableMatrix::ResizableMatrix(Index, Index): invalid parameters");
 
 		Init();
@@ -65,7 +65,7 @@ public:
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize items with 'initializationValue'
 	ResizableMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, T initializationValue)
 	{
-		release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) &&
+		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0),
 			"ResizableMatrix::ResizableMatrix(Index, Index, T): invalid parameters");
 
 		Init();
@@ -79,8 +79,8 @@ public:
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize data with initializer list
 	ResizableMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfReals)
 	{
-		release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&
-			numberOfRowsInit*numberOfColumnsInit == listOfReals.size()) &&
+		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&
+			numberOfRowsInit*numberOfColumnsInit == listOfReals.size()),
 			"ResizableMatrix::ResizableMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 
 		Init();
@@ -172,7 +172,7 @@ public:
 	//! add matrix to *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	ResizableMatrixBase& operator+= (const ResizableMatrixBase& matrix)
 	{
-		release_assert((this->NumberOfRows() == matrix.NumberOfRows() && this->NumberOfColumns() == matrix.NumberOfColumns()) && "Matrix::operator+=: incompatible number of rows and/or columns");
+		CHECKandTHROW((this->NumberOfRows() == matrix.NumberOfRows() && this->NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator+=: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (auto item : matrix) { this->data[cnt++] += item; }
 		return *this;
@@ -181,7 +181,7 @@ public:
 	//! add matrix from *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	ResizableMatrixBase<T>& operator-= (const ResizableMatrixBase<T>& matrix)
 	{
-		release_assert((this->NumberOfRows() == matrix.NumberOfRows() && this->NumberOfColumns() == matrix.NumberOfColumns()) && "Matrix::operator-=: incompatible number of rows and/or columns");
+		CHECKandTHROW((this->NumberOfRows() == matrix.NumberOfRows() && this->NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator-=: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (auto item : matrix) { this->data[cnt++] -= item; }
 		return *this;

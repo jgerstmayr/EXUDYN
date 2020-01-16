@@ -30,7 +30,7 @@ void CObjectJointRevolute2D::ComputeAlgebraicEquations(Vector& algebraicEquation
 		}
 		else
 		{
-			release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable && "CObjectJointRevolute2D::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointRevolute2D::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 			Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
 
 			algebraicEquations.SetNumberOfItems(2);

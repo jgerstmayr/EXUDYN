@@ -68,7 +68,7 @@ public:
 	SlimArray(std::initializer_list<T> listOfItems) //not compatible with static_assert //pass by value as a standard in C++11
 	//SlimArray(const T(&listOfItems)[dataSize]) //pass by value as a standard in C++11
     {
-		release_assert(dataSize == listOfItems.size() && "ERROR: SlimArray::constructor, dataSize mismatch with initializer_list");
+		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimArray::constructor, dataSize mismatch with initializer_list");
 		//static_assert supported by C++14 (supports listOfItems.size() as constexpr)
 
         Index cnt = 0;
@@ -81,8 +81,8 @@ public:
     //! copies 'dataSize' items, independently of array size (might cause memory access error)
     SlimArray(const ResizableArray<T>& array, Index startPositionArray=0)
     {
-        release_assert(startPositionArray >= 0 && "ERROR: SlimArray::(const ResizableArray<T>&, Index), startPositionArray < 0");
-        release_assert(dataSize + startPositionArray <= array.NumberOfItems() && "ERROR: SlimArray::(const ResizableArray<T>&, Index), dataSize mismatch with initializer_list");
+		CHECKandTHROW(startPositionArray >= 0, "ERROR: SlimArray::(const ResizableArray<T>&, Index), startPositionArray < 0");
+		CHECKandTHROW(dataSize + startPositionArray <= array.NumberOfItems(), "ERROR: SlimArray::(const ResizableArray<T>&, Index), dataSize mismatch with initializer_list");
 
         Index cnt = startPositionArray;
         for (auto &value : *this) {
@@ -92,7 +92,7 @@ public:
 
 	SlimArray(const std::vector<T> vector)
 	{
-		release_assert(vector.size() == dataSize && "ERROR: SlimArray(const std::vector<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimArray(const std::vector<T> vector), dataSize mismatch");
 
 		Index cnt = 0;
 		for (auto& item : *this) {
@@ -102,7 +102,7 @@ public:
 
 	SlimArray(const std::array<T, dataSize> vector)
 	{
-		release_assert(vector.size() == dataSize && "ERROR: SlimArray(const std::array<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimArray(const std::array<T> vector), dataSize mismatch");
 
 		Index cnt = 0;
 		for (auto& item : *this) {
@@ -141,16 +141,16 @@ public:
     //! by reference (write) access-operator.
     T& operator[](Index item)
     {
-        release_assert((item >= 0) && "ERROR: SlimArray T& operator[]: item < 0");
-        release_assert((item < dataSize) && "ERROR: SlimArray T& operator[]: item >= dataSize");
+		CHECKandTHROW((item >= 0), "ERROR: SlimArray T& operator[]: item < 0");
+		CHECKandTHROW((item < dataSize), "ERROR: SlimArray T& operator[]: item >= dataSize");
         return data[item];
     };
 
     //! const (read) access-operator; elements are copied (assumed to be small)
     T operator[](Index item) const
     {
-        release_assert((item >= 0) && "ERROR: SlimArray T operator[] const: item < 0");
-        release_assert((item < dataSize) && "ERROR: SlimArray T operator[] const: item >= dataSize");
+		CHECKandTHROW((item >= 0), "ERROR: SlimArray T operator[] const: item < 0");
+		CHECKandTHROW((item < dataSize), "ERROR: SlimArray T operator[] const: item >= dataSize");
         return data[item];
     };
 
@@ -166,7 +166,6 @@ public:
     //! comparison operator, component-wise compare; returns true, if all components are equal
     bool operator== (const SlimArray<T, dataSize>& array) const
     {
-        //not necessary, checked at compile time: release_assert((NumberOfItems() == array.NumberOfItems()) && "SlimArray::operator==: incompatible size of arrays");
         Index cnt = 0;
         for (auto item : array)
         {
@@ -197,16 +196,16 @@ public:
     //! const (read) access of item with index 'i' 
     const T& GetItem(Index index) const
     {
-        release_assert((index >= 0) && "ERROR: SlimArray const T& GetItem: index < 0");
-        release_assert((index < dataSize) && "ERROR: SlimArray const T& GetItem: index >= dataSize");
+		CHECKandTHROW((index >= 0), "ERROR: SlimArray const T& GetItem: index < 0");
+		CHECKandTHROW((index < dataSize), "ERROR: SlimArray const T& GetItem: index >= dataSize");
         return data[index];
     }
 
     //! by reference (write) access of item with index 'i' 
     T& GetItem(Index index)
     {
-        release_assert((index >= 0) && "ERROR: SlimArray T& GetItem: index < 0");
-        release_assert((index < dataSize) && "ERROR: SlimArray T& GetItem: index >= dataSize");
+		CHECKandTHROW((index >= 0), "ERROR: SlimArray T& GetItem: index < 0");
+		CHECKandTHROW((index < dataSize), "ERROR: SlimArray T& GetItem: index >= dataSize");
         return data[index];
     }
 
@@ -239,7 +238,7 @@ public:
     //! set items according to initializer list: SlimArray<3> ({1.0, 3.14, 5.5});
     void Set(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11
     {
-        release_assert(dataSize == listOfItems.size() && "ERROR: SlimArray::Set(...), dataSize mismatch with initializer_list");
+		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimArray::Set(...), dataSize mismatch with initializer_list");
         //static_assert supported by C++14 (supports listOfItems.size() as constexpr)
 
         Index cnt = 0;

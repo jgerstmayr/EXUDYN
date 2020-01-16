@@ -108,7 +108,7 @@ public: //
 		else if (configurationType == ConfigurationType::StartOfStep) { return &(cSystemData->GetCData().GetStartOfStep()); }
 		else if (configurationType == ConfigurationType::Visualization) { return &(cSystemData->GetCData().GetVisualization()); }
 
-		release_assert(0 && "ERROR: no valid configurationType in MainSystemData::GetCSystemState (const)");
+		CHECKandTHROWstring("ERROR: no valid configurationType in MainSystemData::GetCSystemState (const)");
 		return &(cSystemData->GetCData().GetInitial());
 	}
 
@@ -120,7 +120,7 @@ public: //
 		else if (configurationType == ConfigurationType::StartOfStep) { return &(cSystemData->GetCData().GetStartOfStep()); }
 		else if (configurationType == ConfigurationType::Visualization) { return &(cSystemData->GetCData().GetVisualization()); }
 
-		release_assert(0 && "ERROR: no valid configurationType in MainSystemData::GetCSystemState");
+		CHECKandTHROWstring("ERROR: no valid configurationType in MainSystemData::GetCSystemState");
 		return &(cSystemData->GetCData().GetInitial());
 	}
 

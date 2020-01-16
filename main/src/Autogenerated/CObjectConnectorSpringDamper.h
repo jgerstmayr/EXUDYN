@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-18  22:06:39 (last modfied)
+* @date         2020-01-14  12:54:47 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ public: // AUTO:
     Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against d/dt(length)
     Real force;                                   //!< AUTO: added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    std::function<Real(Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with parameters (deltaL, deltaL\f$_t\f$, Real stiffness, Real damping, Real springForce); the parameters are provided to the function using the current values of the SpringDamper object; The python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; Example for python function: def f(u, v, k, d, F0): return k*u + d*v + F0
+    std::function<Real(Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with parameters (deltaL, deltaL\_t, Real stiffness, Real damping, Real springForce); the parameters are provided to the function using the current values of the SpringDamper object; The python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; Example for python function: def f(u, v, k, d, F0): return k*u + d*v + F0
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorSpringDamperParameters()
     {

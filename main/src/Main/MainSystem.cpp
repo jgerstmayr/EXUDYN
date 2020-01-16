@@ -183,7 +183,8 @@ py::object MainSystem::PyGetNodeOutputVariable(Index nodeNumber, OutputVariableT
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetNodeOutputVariable: invalid access to node number ") + EXUstd::ToString(nodeNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -198,7 +199,8 @@ py::object MainSystem::PyCallNodeFunction(Index nodeNumber, STDstring functionNa
 	else
 	{
 		PyError(STDstring("MainSystem::ModifyObject: invalid access to node number ") + EXUstd::ToString(nodeNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 
 }
@@ -214,7 +216,8 @@ py::object MainSystem::PyGetNodeParameter(Index nodeNumber, const STDstring& par
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetNodeParameter: invalid access to node number ") + EXUstd::ToString(nodeNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -336,7 +339,8 @@ py::object MainSystem::PyCallObjectFunction(Index objectNumber, STDstring functi
 	else
 	{
 		PyError(STDstring("MainSystem::ModifyObject: invalid access to object number ") + EXUstd::ToString(objectNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -362,7 +366,8 @@ py::object MainSystem::PyGetObjectOutputVariable(Index objectNumber, OutputVaria
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetObjectOutputVariable: invalid access to object number ") + EXUstd::ToString(objectNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -381,13 +386,15 @@ py::object MainSystem::PyGetObjectOutputVariableBody(Index objectNumber, OutputV
 		else
 		{
 			PyError(STDstring("MainSystem::PyGetObjectOutputVariableBody: invalid access to object number ") + EXUstd::ToString(objectNumber));
-			return py::object();
+			return py::int_(EXUstd::InvalidIndex);
+			//return py::object();
 		}
 	}
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetOutputVariableBody: invalid localPosition: expected vector with 3 real values"));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -401,7 +408,8 @@ py::object MainSystem::PyGetObjectParameter(Index objectNumber, const STDstring&
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetObjectParameter: invalid access to object number ") + EXUstd::ToString(objectNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -522,7 +530,8 @@ py::object MainSystem::PyGetMarkerParameter(Index markerNumber, const STDstring&
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 
@@ -644,7 +653,8 @@ py::object MainSystem::PyGetLoadParameter(Index loadNumber, const STDstring& par
 	else
 	{
 		PyError(STDstring("MainSystem::PyGetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }
 

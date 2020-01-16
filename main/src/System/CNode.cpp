@@ -45,7 +45,7 @@ CData*& CNode::GetCData()
 
 const Real& CNodeODE2::GetCurrentCoordinate(Index i) const
 {
-	release_assert(i < GetNumberOfODE2Coordinates() && "ERROR: CNodeODE2::GetCurrentCoordinate: index out of range");
+	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate: index out of range");
 
 	return computationalData->currentState.ODE2Coords[globalODE2CoordinateIndex + i];
 	//old, not used?: return computationalData->currentState.ODE2Coords_t[globalODE2CoordinateIndex + i - GetNumberOfODE2Coordinates()];
@@ -53,7 +53,7 @@ const Real& CNodeODE2::GetCurrentCoordinate(Index i) const
 
 const Real& CNodeODE2::GetCurrentCoordinate_t(Index i) const
 {
-	release_assert(i < GetNumberOfODE2Coordinates() && "ERROR: CNodeODE2::GetCurrentCoordinate_t: index out of range");
+	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_t: index out of range");
 
 	return computationalData->currentState.ODE2Coords_t[globalODE2CoordinateIndex + i];
 }

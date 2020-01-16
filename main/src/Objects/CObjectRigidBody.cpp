@@ -235,8 +235,6 @@ Vector3D CObjectRigidBody::GetPosition(const Vector3D& localPosition, Configurat
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectRigidBody::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CObjectRigidBody::GetVelocity");
-
 	// \dot R + A * \localOmega x \localPosition
 	return ((CNodeODE2AE*)GetCNode(0))->GetVelocity(configuration) + 
 		((CNodeODE2AE*)GetCNode(0))->GetRotationMatrix(configuration) * 
@@ -246,7 +244,6 @@ Vector3D CObjectRigidBody::GetVelocity(const Vector3D& localPosition, Configurat
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectRigidBody::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	//release_assert(configuration == ConfigurationType::Current && "CObjectRigidBody::GetDisplacement");
 	return ((CNodeODE2AE*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2AE*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
 

@@ -94,6 +94,7 @@ public: //declared as public for direct access via pybind
 	VisualizationSettings settings;		//!< general settings for visualization
 	RendererState rendererState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	ResizableArray<VisualizationSystem*> visualizationSystems; //! linked to all visualization systems (placed in MainSystem); links need to be kept up-to-date by MainSystem Add/Delete
+	bool zoomAllRequest;				//! used to perform UpdateMaximumSceneCoordinates()
 	bool stopSimulationFlag;			//! used to wait for user to terminate simulation or render engine
 	bool updateGraphicsDataNow;			//! renderer signals to update the graphics data, e.g. if settings have changed; reset to false after UpdateGraphicsData(...) is called
 	std::string computationMessage;		//! message of computation to be shown in renderer window
@@ -105,6 +106,7 @@ private:
 public:
 	VisualizationSystemContainer()
 	{
+		zoomAllRequest = false;
 		saveImage = false;
 		saveImageOpenGL = false;
 		updateGraphicsDataNowInternal = false;
@@ -195,6 +197,13 @@ public:
 	virtual bool SaveImageRequest() override
 	{
 		return (saveImage && saveImageOpenGL);
+	}
+
+	//! get zoom all request and reset to false
+	virtual bool GetAndResetZoomAllRequest()
+	{
+		if (zoomAllRequest) { zoomAllRequest = false; return true; }
+		return false;
 	}
 
 												//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)

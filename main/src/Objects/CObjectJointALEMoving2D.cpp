@@ -151,7 +151,7 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		}
 		else
 		{
-			//release_assert(0 && "CObjectJointALEMoving2D::ComputeAlgebraicEquations: velocityLevel not implemented");
+			//CHECKandTHROWstring("CObjectJointALEMoving2D::ComputeAlgebraicEquations: velocityLevel not implemented");
 			//compute ANCF position:
 			const Index ns = 4;
 			LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)

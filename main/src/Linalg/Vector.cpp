@@ -44,7 +44,7 @@ Index matrix_delete_counts = 0; //global counter of item deallocations; is incre
 template<typename T>
 VectorBase<T> operator+(const VectorBase<T>& v1, const VectorBase<T>& v2)
 {
-	release_assert((v1.NumberOfItems() == v2.NumberOfItems()) && "Vector::operator+: incompatible size of vectors");
+	CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator+: incompatible size of vectors");
 	VectorBase<T> result(v1.NumberOfItems());
 	Index cnt = 0;
 	for (auto &item : result) {
@@ -58,7 +58,7 @@ VectorBase<T> operator+(const VectorBase<T>& v1, const VectorBase<T>& v2)
 template<typename T>
 VectorBase<T> operator-(const VectorBase<T>& v1, const VectorBase<T>& v2)
 {
-	release_assert((v1.NumberOfItems() == v2.NumberOfItems()) && "Vector::operator-: incompatible size of vectors");
+	CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator-: incompatible size of vectors");
 	VectorBase<T> result(v1.NumberOfItems());
 	Index cnt = 0;
 	for (auto &item : result) {

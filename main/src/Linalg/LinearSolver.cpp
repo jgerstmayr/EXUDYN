@@ -102,7 +102,7 @@ void GeneralMatrixEigenSparse::SetMatrix(const Matrix& otherMatrix)
 void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset, Index columnOffset)
 {
 	//only allowed in triplet mode:
-	release_assert(!IsMatrixBuiltFromTriplets() && "GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
 
 	if (factor == 1. && rowOffset == 0 && columnOffset == 0)
 	{
@@ -140,7 +140,7 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset, Index columnOffset)
 {
 	//only allowed in triplet mode:
-	release_assert(!IsMatrixBuiltFromTriplets() && "GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrix(const Matrix&, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, ...): only possible in triplet mode!");
 
 	if (factor == 1. && rowOffset == 0 && columnOffset == 0)
 	{
@@ -177,11 +177,11 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, R
 //! operations must be both in triplet mode!
 void GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset, Index columnOffset)
 {
-	release_assert((GetSystemMatrixType() == submatrix.GetSystemMatrixType()) && "GeneralMatrixEigenSparse::AddSubmatrix: invalid SystemMatrixType!");
-	release_assert(!IsMatrixBuiltFromTriplets() && "GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix&, ...): matrix must be in triplet mode !");
+	CHECKandTHROW((GetSystemMatrixType() == submatrix.GetSystemMatrixType()), "GeneralMatrixEigenSparse::AddSubmatrix: invalid SystemMatrixType!");
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix&, ...): matrix must be in triplet mode !");
 
 	const GeneralMatrixEigenSparse& m = (const GeneralMatrixEigenSparse&)submatrix;
-	release_assert(!m.IsMatrixBuiltFromTriplets() && "GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix&, ...): matrix must be in triplet mode !");
+	CHECKandTHROW(!m.IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix&, ...): matrix must be in triplet mode !");
 
 	SetMatrixIsFactorized(false);
 
@@ -210,7 +210,7 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix& submatrix, Inde
 //! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
 void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec)
 {
-	release_assert(!IsMatrixBuiltFromTriplets() && "GeneralMatrixEigenSparse::AddColumnVector(...): matrix must be in triplet mode !");
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddColumnVector(...): matrix must be in triplet mode !");
 
 	for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
 	{
@@ -237,7 +237,7 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 //! factorize matrix (invert, SparseLU, etc.); 0=success
 Index GeneralMatrixEigenSparse::Factorize()
 {
-	release_assert(IsMatrixBuiltFromTriplets() && "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
+	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
 
 	solver.analyzePattern(matrix);
 	// Compute the numerical factorization 
@@ -320,7 +320,7 @@ void GeneralMatrixEigenSparse::MultMatrixTransposed(const Vector& x, Vector& sol
 //! after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
 void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 {
-	release_assert(IsMatrixIsFactorized() && "GeneralMatrixEigenSparse::Solve( ...): matrix is not factorized!");
+	CHECKandTHROW(IsMatrixIsFactorized(), "GeneralMatrixEigenSparse::Solve( ...): matrix is not factorized!");
 
 	//will only work for Real==double!!! ==> make type check!
 	Real test;

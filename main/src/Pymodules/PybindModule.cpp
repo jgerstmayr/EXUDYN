@@ -260,6 +260,17 @@ void SeeMatrix(py::array_t<Real> pyArray)
 	}
 }
 
+//std::string throw_message;
+void PyThrowTest()
+{
+	//Matrix m(1, 2, { 1,2 });
+	//m.Invert();
+
+	//Vector v({ 1,2,3 });
+	//pout << "print v[2] ...\n";
+	//pout << "v[2]=" << v[2] << "\n";
+}
+
 //py::object ScaleMatrix(py::array pyArray, Real factor)
 //{
 //	Matrix m(2, 3, { 12.5,13,14,  15,16,17 }); //double precision maintained in NumPy array in python
@@ -273,9 +284,11 @@ PYBIND11_MODULE(exudyn, m) {
 
 	//m.def("Print", &PyPrint, "this allows printing via exudyn, which allows to redirect all output to file");
 	
-	m.def("GetVector", &GetVector, "GetVector");
-	m.def("GetMatrix", &GetMatrix, "GetMatrix");
-	m.def("SeeMatrix", &SeeMatrix, "SeeMatrix");
+	//m.def("PyThrowTest", &PyThrowTest, "PyThrowTest");
+
+	//m.def("GetVector", &GetVector, "GetVector");
+	//m.def("GetMatrix", &GetMatrix, "GetMatrix");
+	//m.def("SeeMatrix", &SeeMatrix, "SeeMatrix");
 	//m.def("SetTestFunction2", &PySetTestFunction2, "Set the test function");
 	//m.def("EvaluateTestFunction", &PyEvaluateTestFunction, "Evaluate test function");
 
@@ -293,6 +306,7 @@ PYBIND11_MODULE(exudyn, m) {
 		.value("DisplacementVolumeIntegral_q", AccessFunctionType::DisplacementVolumeIntegral_q)
 		.value("DisplacementMassIntegral_q", AccessFunctionType::DisplacementMassIntegral_q)
 		.value("DisplacementSurfaceNormalIntegral_q", AccessFunctionType::DisplacementSurfaceNormalIntegral_q)
+		//.value("Rotv1v2v3", AccessFunctionType::Rotv1v2v3_q)
 		//.value("EndOfEnumList", AccessFunctionType::EndOfEnumList)
 		.export_values();
 
@@ -359,6 +373,8 @@ PYBIND11_MODULE(exudyn, m) {
 
 		.def("WaitForRenderEngineStopFlag", &MainSystemContainer::WaitForRenderEngineStopFlag, "Wait for user to stop render engine (CTRL+Q)")
 
+		.def("RenderEngineZoomAll", &MainSystemContainer::PyZoomAll, "Send zoom all signal, which will perform zoom all at next redraw request")
+		
 		.def("RedrawAndSaveImage", &MainSystemContainer::RedrawAndSaveImage, "Redraw openGL scene and save image (command waits until process is finished)")
 
 		.def("GetRenderState", &MainSystemContainer::PyGetRenderState, "Get dictionary with current render state (openGL zoom, modelview, etc.)")

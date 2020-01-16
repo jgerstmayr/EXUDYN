@@ -136,10 +136,6 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 
 	if (data.nODE1 != 0) { SysError("Solver cannot solve first order differential equations (ODE1) for now", file.solverFile); }
 
-
-	data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
-	data.systemJacobian->SetNumberOfRowsAndColumns(data.nSys, data.nSys);
-
 	if (data.nSys == 0)
 	{
 		SysError("Solver cannot solve for system size = 0", file.solverFile);
@@ -694,7 +690,7 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 }
 
 ////! compute residual for Newton method (e.g. static or time step)
-//bool CSolverBase::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { release_assert(0 && "CSolverBase::illegal call"); return 0; }
+//bool CSolverBase::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { CHECKandTHROWstring("CSolverBase::illegal call"); return 0; }
 //
 ////! compute jacobian for newton method
 //bool CSolverBase::ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -985,12 +981,15 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 
 	if (stopNewton || !conv.newtonConverged)
 	{
-		if (IsVerboseCheck(1)) { VerboseWrite(1, 
-			"  Newton (time/load step #" + EXUstd::ToString(it.currentStepIndex) + 
-			"): convergence failed after " + EXUstd::ToString(it.newtonSteps) +
-			" iterations; relative error = "    + EXUstd::ToString(conv.residual / initialResidual) + 
-			", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor) +
-			"\n"); }
+		if (IsVerboseCheck(1)) {
+			STDstring str = "  Newton (time/load step #" + EXUstd::ToString(it.currentStepIndex) +
+				"): convergence failed after " + EXUstd::ToString(it.newtonSteps) +
+				" iterations; relative error = " + EXUstd::ToString(conv.residual / initialResidual);
+			if (IsStaticSolver()) {str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor);}
+			else { str += ", time = " + EXUstd::ToString(it.currentTime); }
+			str += "\n";
+			VerboseWrite(1, str);
+		}
 	}
 	else
 	{

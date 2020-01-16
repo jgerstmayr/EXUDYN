@@ -38,29 +38,29 @@ public: //
   virtual CLoad* GetClone() const { return new CLoad(*this); }
   
   //! Write (Reference) access to: marker index (defined in specialized class)
-  virtual void SetMarkerNumber(Index markerNumberInit) { release_assert(0 && "ERROR: illegal call to CLoad::SetMarkerNumber(...)"); }
+  virtual void SetMarkerNumber(Index markerNumberInit) { CHECKandTHROWstring("ERROR: illegal call to CLoad::SetMarkerNumber(...)"); }
   //! Read (Reference) access to: marker index (defined in specialized class)
-  virtual Index GetMarkerNumber() const { release_assert(0 && "ERROR: illegal call to CLoad::GetMarkerNumber() const"); return 0; }
+  virtual Index GetMarkerNumber() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetMarkerNumber() const"); return 0; }
 
   //! determine type of load in order to decide according action in assembly
-  virtual LoadType GetType() const { release_assert(0 && "ERROR: illegal call to CLoad::GetType"); return LoadType::None; }
+  virtual LoadType GetType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetType"); return LoadType::None; }
 
   const static Index VectorSize = 3; //dimensionality of vector loads
   //! determine type of load in order to decide according action in assembly
-  virtual bool IsVector() const { release_assert(0 && "ERROR: illegal call to CLoad::IsVector"); return true; }
+  virtual bool IsVector() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::IsVector"); return true; }
 
   //! Write (Reference) access to: general load vector (e.g. force or torque); used if LoadType::IsVector = 1
-  //DELETE: should not be needed: virtual Vector3D& GetLoadVector() { release_assert(0 && "ERROR: illegal call to CLoad::GetLoadVector"); Vector3D* v = new Vector3D(0.); return *v; }
+  //DELETE: should not be needed: virtual Vector3D& GetLoadVector() { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector"); Vector3D* v = new Vector3D(0.); return *v; }
   //! Read (Reference) access to: general load vector (e.g. force or torque) as a function of time; used if LoadType::IsVector = 1
-  virtual Vector3D GetLoadVector(Real t) const { release_assert(0 && "ERROR: illegal call to CLoad::GetLoadVector(Real t) const"); Vector3D* v = new Vector3D(0.); return *v;
+  virtual Vector3D GetLoadVector(Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector(Real t) const"); Vector3D* v = new Vector3D(0.); return *v;
   }
 
   //! Write (Reference) access to: scalar load value (e.g. object/node coordinate); used if LoadType::IsVector = 0
-  //DELETE: should not be needed: virtual Real& GetLoadValue() { release_assert(0 && "ERROR: illegal call to CLoad::GetLoadValue"); Real* v = new Real(0.); return *v; }
+  //DELETE: should not be needed: virtual Real& GetLoadValue() { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadValue"); Real* v = new Real(0.); return *v; }
   //! Read (Reference) access to: scalar load value (e.g. object/node coordinate) as a function of time; used if LoadType::IsVector = 0
-  virtual Real GetLoadValue(Real t) const { release_assert(0 && "ERROR: illegal call to CLoad::GetLoadValue(Real t) const");  Real* v = new Real(0.); return *v; }
+  virtual Real GetLoadValue(Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadValue(Real t) const");  Real* v = new Real(0.); return *v; }
 
-  virtual Marker::Type GetRequestedMarkerType() const { release_assert(0 && "ERROR: illegal call to CLoad::RequestedMarkerType"); return Marker::None; }
+  virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::RequestedMarkerType"); return Marker::None; }
 
   virtual void Print(std::ostream& os) const
   {

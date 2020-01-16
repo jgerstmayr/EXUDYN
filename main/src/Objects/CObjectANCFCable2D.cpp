@@ -373,7 +373,7 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 			}
 			else
 			{
-				release_assert(0 && "CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!");
+				CHECKandTHROWstring("CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!");
 			}
 			n *= normInv;
 			//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
@@ -535,7 +535,7 @@ Vector3D CObjectANCFCable2DBase::GetPosition(const Vector3D& localPosition, Conf
 			Vector2D n({ -r_x[1], r_x[0] });
 			v += localPosition[1] * n;
 		} else
-		{ release_assert(0 && "CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!"); }
+		{ CHECKandTHROWstring("CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!"); }
 
 	}
 
@@ -546,8 +546,6 @@ Vector3D CObjectANCFCable2DBase::GetPosition(const Vector3D& localPosition, Conf
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectANCFCable2DBase::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	//release_assert(configuration == ConfigurationType::Current && "CObjectANCFCable2D::GetVelocity");
-
 	Real x = localPosition[0]; //only x-coordinate
 	Vector4D SV = ComputeShapeFunctions(x, GetLength());
 
@@ -560,7 +558,6 @@ Vector3D CObjectANCFCable2DBase::GetVelocity(const Vector3D& localPosition, Conf
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectANCFCable2DBase::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	//why was this needed? release_assert(configuration == ConfigurationType::Current && "CObjectANCFCable2D::GetDisplacement");
 	Real x = localPosition[0]; //only x-coordinate
 	Vector4D SV = ComputeShapeFunctions(x, GetLength());
 
@@ -588,7 +585,7 @@ Matrix3D CObjectANCFCable2DBase::GetRotationMatrix(const Vector3D& localPosition
 //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
 Vector3D CObjectANCFCable2DBase::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CObjectANCFCable2D::GetAngularVelocity: call only possible for current configuration");
+	CHECKandTHROW(configuration == ConfigurationType::Current, "CObjectANCFCable2D::GetAngularVelocity: call only possible for current configuration");
 	//return ((CNodeODE2*)GetCNode(0))->GetAngularVelocity(configuration);
 
 	//for details see GetAngularVelocity in Point2DSlope1

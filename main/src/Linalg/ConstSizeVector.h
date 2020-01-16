@@ -235,7 +235,7 @@ protected: //functions cannot be called from outside
     //! call to ConstSizeVectorBase::AllocateMemory leads to run-time error (must not be called)
     void AllocateMemory(Index numberOfRealsInit)
     {
-        release_assert(0 && "ERROR: call to ConstSizeVectorBase::AllocateMemory(...) forbidden");
+        CHECKandTHROWstring("ERROR: call to ConstSizeVectorBase::AllocateMemory(...) forbidden");
         //static_assert(0, "ERROR: call to ConstSizeVectorBase::AllocateMemory(...) forbidden");
     }
 
@@ -245,7 +245,7 @@ protected: //functions cannot be called from outside
     //! append is forbidden for ConstSizeVectorBase, because to many problems with dataSize expected (v1.Append(v2) would crash if v1 does not have length of v1.length+v2.length)
 	VectorBase<T> Append(const VectorBase<T>& vector) const
     {
-        release_assert(0 && "ERROR: Append called for ConstSizeVectorBase");
+        CHECKandTHROWstring("ERROR: Append called for ConstSizeVectorBase");
         return *this;
     }
 

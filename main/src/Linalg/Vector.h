@@ -228,15 +228,15 @@ public:
     //Referencing access-operator, ZERO-based
     T& operator[](Index item)
     {
-        release_assert(/*(item >= 0) && */(item < numberOfItems) && "VectorBase::operator[]: request of invalid item");
-        return data[item];
+		CHECKandTHROW(/*(item >= 0) && */(item < numberOfItems), "VectorBase::operator[]: request of invalid item");
+		return data[item];
     };
 
     //Referencing access-operator, ZERO-based
     const T& operator[](Index item) const
     {
-        release_assert(/*(item >= 0) && */(item < numberOfItems) && "VectorBase::operator[] const: request of invalid item");
-        return data[item];
+		CHECKandTHROW(/*(item >= 0) && */item < numberOfItems, "VectorBase::operator[] const: request of invalid item");
+		return data[item];
     };
 
     //! @brief copy assignment operator; copies the currently used entries (LinkedDataVector; ResizableVector)
@@ -257,7 +257,7 @@ public:
     //! comparison operator, component-wise compare; returns true, if all components are equal
     bool operator==(const VectorBase& v) const
     {
-        release_assert((NumberOfItems() == v.NumberOfItems()) && "VectorBase::operator==: incompatible size of vectors");
+		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator==: incompatible size of vectors");
         Index cnt = 0;
         for (auto item : v)
         {
@@ -269,7 +269,7 @@ public:
     //! add vector v to *this vector (for each component); both vectors must have same size
     VectorBase& operator+=(const VectorBase& v)
     {
-        release_assert((NumberOfItems() == v.NumberOfItems()) && "VectorBase::operator+=: incompatible size of vectors");
+		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=: incompatible size of vectors");
         Index cnt = 0;
         for (auto item : v) {
             (*this)[cnt++] += item;
@@ -280,7 +280,7 @@ public:
     //! substract vector v from *this vector (for each component); both vectors must have same size
     VectorBase& operator-=(const VectorBase& v)
     {
-        release_assert((NumberOfItems() == v.NumberOfItems()) && "VectorBase::operator-=: incompatible size of vectors");
+		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=: incompatible size of vectors");
         Index cnt = 0;
         for (auto item : v) {
             (*this)[cnt++] -= item;
@@ -321,7 +321,7 @@ public:
     //! scalar product, result = v1 * v2 (scalar result)
     friend T operator*(const VectorBase& v1, const VectorBase& v2)
     {
-        release_assert((v1.NumberOfItems() == v2.NumberOfItems()) && "T VectorBase::operator*: incompatible size of vectors");
+		CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "T VectorBase::operator*: incompatible size of vectors");
         T result = 0;
         Index cnt = 0;
         for (auto &item : v1) {
@@ -356,7 +356,7 @@ public:
 	//! add vector scalar * v to *this vector
 	void MultAdd(T scalar, const VectorBase& v)
 	{
-		release_assert((v.NumberOfItems() == NumberOfItems()) && "VectorBase::MultAdd: incompatible size of vectors");
+		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultAdd: incompatible size of vectors");
 		for (Index i = 0; i < NumberOfItems(); i++) 
 		{
 			data[i] += scalar * v[i];
@@ -383,7 +383,7 @@ public:
     void Normalize()
     {
         T norm = GetL2Norm();
-        release_assert(norm != 0. && "VectorBase::Normalized() called with GetL2Norm() == 0.");
+		CHECKandTHROW(norm != 0., "VectorBase::Normalized() called with GetL2Norm() == 0.");
 
         for (auto &item : *this) { item /= norm; }
     }
@@ -391,10 +391,10 @@ public:
     //! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
     void CopyFrom(const VectorBase& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
     {
-        //release_assert((vectorPosition >= 0) && "VectorBase::CopyFrom(...): vectorPosition < 0");
-        //release_assert((thisPosition >= 0) && "VectorBase::CopyFrom(...): thisPosition < 0");
-        release_assert((thisPosition + numberOfCopiedItems <= NumberOfItems()) && "VectorBase::CopyFrom(...): thisPosition index mismatch");
-        release_assert((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()) && "VectorBase::CopyFrom(...): vectorPosition index mismatch");
+        //CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
+        //CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
+		CHECKandTHROW((thisPosition + numberOfCopiedItems <= NumberOfItems()), "VectorBase::CopyFrom(...): thisPosition index mismatch");
+		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "VectorBase::CopyFrom(...): vectorPosition index mismatch");
 
         for (Index i = 0; i < numberOfCopiedItems; i++)
         {
@@ -406,7 +406,6 @@ public:
 	template<class TVector>
 	void CopyFrom(const TVector& vector)
 	{
-		//release_assert(vector.NumberOfItems() == dataSize && "VectorBase<T>::CopyFrom(TVector) size mismatch");
 		SetNumberOfItems(vector.NumberOfItems());
 
 		Index cnt = 0;
@@ -422,7 +421,7 @@ public:
     //! add factor*vector to *this; no memory allocated; might be more efficient than doing this separatly
     void MultiplyAdd(const T& factor, const VectorBase& vector)
     {
-        release_assert((NumberOfItems() == vector.NumberOfItems()) && "VectorBase::MultiplyAdd(): incompatible sizes");
+		CHECKandTHROW((NumberOfItems() == vector.NumberOfItems()), "VectorBase::MultiplyAdd(): incompatible sizes");
 
         Index cnt = 0;
         for (auto &item : *this) {

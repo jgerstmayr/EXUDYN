@@ -181,6 +181,9 @@ sL+=sL1
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
                                 description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
+                                description="Send zoom all signal, which will perform zoom all at next redraw request"); sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
                                 description="Get dictionary with current render state (openGL zoom, modelview, etc.)",
                                 example = "SC = exu.SystemContainer()\\\\d = SC.GetRenderState() \\\\print(d['zoom'])"

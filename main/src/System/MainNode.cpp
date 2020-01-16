@@ -88,6 +88,7 @@ py::object MainNode::GetOutputVariable(OutputVariableType variableType, Configur
 	else
 	{
 		PyError(STDstring("Invalid OutputVariableType in MainNode::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + "'");
-		return py::object();
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
 	}
 }

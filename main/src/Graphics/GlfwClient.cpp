@@ -537,6 +537,7 @@ void GlfwRenderer::RunLoop()
 	while (rendererActive && !glfwWindowShouldClose(window) && !stopRenderer)
 	{
 		basicVisualizationSystemContainer->UpdateGraphicsData();
+		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) { ZoomAll(); ZoomAll();}
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
 		glfwWaitEventsTimeout((double)(visSettings->general.graphicsUpdateInterval)); //wait x seconds for next event

@@ -352,7 +352,7 @@ void CSystem::AssembleCoordinates(const MainSystem& mainSystem)
 			node->SetGlobalDataCoordinateIndex(globalDataIndex); //use current index
 			globalDataIndex += node->GetNumberOfDataCoordinates(); //add counter in order to track number of Data-coordinates
 		}
-		else { release_assert(0 && "CSystem::Assemble(): invalid node type!"); }
+		else { CHECKandTHROWstring("CSystem::Assemble(): invalid node type!"); }
 		node_ind++;
 	}
 
@@ -667,7 +667,7 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				x = mainNode->GetInitialVector(); //size must be compatible and is not checked!
 			}
 		}
-		else { release_assert(0 && "CSystem::AssembleInitializeSystemCoordinates: invalid Node type, not implemented"); }
+		else { CHECKandTHROWstring("CSystem::AssembleInitializeSystemCoordinates: invalid Node type, not implemented"); }
 		nodeIndex++;
 	}
 
@@ -739,7 +739,7 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 
 			//const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
 			//Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-			//if (nMarkers != 2) { release_assert(0 && "CSystem::ComputeODE2RHS(...): Number of connector markers != 2 not implemented"); }
+			//if (nMarkers != 2) { CHECKandTHROWstring("CSystem::ComputeODE2RHS(...): Number of connector markers != 2 not implemented"); }
 
 			//for (Index k = 0; k < 2; k++)
 			//{
@@ -751,7 +751,7 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 
 			connector->ComputeODE2RHS(localODE2Rhs, temp.markerDataStructure);
 		}
-		else { release_assert(0 && "CSystem::ComputeODE2RHS(...): object type not implemented"); return false; }
+		else { CHECKandTHROWstring("CSystem::ComputeODE2RHS(...): object type not implemented"); return false; }
 
 		return true;
 	}
@@ -827,7 +827,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 				}
 				else
 				{
-					release_assert(0 && "ERROR: CSystem::ComputeODE2RHS, marker type not implemented!");
+					CHECKandTHROWstring("ERROR: CSystem::ComputeODE2RHS, marker type not implemented!");
 				}
 			}
 		}
@@ -866,7 +866,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 				//pout << "generalizedLoad=" << temp.generalizedLoad << "\n";
 				//pout << "loadVector1D=" << loadVector1D << "\n";
 			}
-			else { release_assert(0 && "ERROR: CSystem::ComputeODE2RHS, LoadType not implemented!"); }
+			else { CHECKandTHROWstring("ERROR: CSystem::ComputeODE2RHS, LoadType not implemented!"); }
 
 			//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
 			//pout << "genLoad=" << temp.generalizedLoad << "\n";
@@ -925,7 +925,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 
 				//const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 				//Index nMarkers = constraint.GetMarkerNumbers().NumberOfItems();
-				//if (nMarkers != 2) { release_assert(0 && "SolveSystem(...): Number of constraint markers != 2 not implemented"); }
+				//if (nMarkers != 2) { CHECKandTHROWstring("SolveSystem(...): Number of constraint markers != 2 not implemented"); }
 
 				//for (Index k = 0; k < 2; k++)
 				//{
@@ -944,12 +944,12 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 			//for connectors, linked to objects that contain algebraic variables (e.g. Euler-Parameter based rigid bodies)
 			else if ((Index)object.GetType() & (Index)CObjectType::Connector)
 			{
-				release_assert(object.GetAlgebraicEquationsSize() == 0 && "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+				CHECKandTHROW(object.GetAlgebraicEquationsSize() == 0, "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
 				temp.localAE.SetNumberOfItems(0); //no algebraic equations are processed
 			}
-			else { release_assert(0 && "CSystem::ComputeAlgebraicEquations(...): object type not implemented"); }
+			else { CHECKandTHROWstring("CSystem::ComputeAlgebraicEquations(...): object type not implemented"); }
 
-			release_assert(ltg.NumberOfItems() == temp.localAE.NumberOfItems() && "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+			CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
 			//now add RHS to system vector
 			for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
 			{
@@ -965,7 +965,7 @@ void CSystem::ComputeMarkerDataStructure(CObjectConnector* connector, bool compu
 {
 	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
 	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-	if (nMarkers != 2) { release_assert(0 && "CSystem::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
+	if (nMarkers != 2) { CHECKandTHROWstring("CSystem::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
 
 	if ((Index)connector->GetType() & (Index)CObjectType::Constraint)
 	{
@@ -1000,7 +1000,7 @@ Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
 			{
 				//const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
 				//Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-				//if (nMarkers != 2) { release_assert(0 && "CSystem::PostNewtonStep(...): Number of connector markers != 2 not implemented"); }
+				//if (nMarkers != 2) { CHECKandTHROWstring("CSystem::PostNewtonStep(...): Number of connector markers != 2 not implemented"); }
 
 				//for (Index k = 0; k < 2; k++)
 				//{
@@ -1073,7 +1073,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 	if (!numDiff.doSystemWideDifferentiation)
 	{
 		//GeneralMatrixEXUdense mat;
-		//if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { release_assert(0 && "CSystem::NumericalJacobianODE2RHS: illegal LinearSolverType!"); }
+		//if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianODE2RHS: illegal LinearSolverType!"); }
 		//ResizableMatrix& jacobian = jacobianGM.GetMatrixEXUdense();
 		ResizableMatrix& localJacobian = temp.localJacobian;
 
@@ -1130,7 +1130,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 	else
 	{
 		//done in solver jacobian.SetNumberOfRowsAndColumns(nODE2, nODE2);
-		//if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { release_assert(0 && "CSystem::NumericalJacobianODE2RHS: illegal LinearSolverType for full numerical differentiation!"); }
+		//if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianODE2RHS: illegal LinearSolverType for full numerical differentiation!"); }
 		//
 		////ResizableMatrix& jacobian = jacobianGM.GetMatrixEXUdense();
 		//GeneralMatrixEXUdense& jacDense = (GeneralMatrixEXUdense&)jacobianGM;
@@ -1283,7 +1283,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute total jacobian ==> very time consuming ==> change this to local jacobian (use flag in numDiffParameters?)
 
-	if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { release_assert(0 && "CSystem::NumericalJacobianAE: illegal LinearSolverType!"); }
+	if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: illegal LinearSolverType!"); }
 	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianGM).GetMatrixEXUdense();
 
 	f0.SetNumberOfItems(nAE);
@@ -1459,17 +1459,17 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2)
 		{
 			flagAE_ODE2filled = true;
-			release_assert((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_function) && "CSystem::JacobianAE: jacobian AE_ODE2 not implemented");
+			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_function), "CSystem::JacobianAE: jacobian AE_ODE2 not implemented");
 		}
 		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t)
 		{
 			flagAE_ODE2_tFilled = true;
-			release_assert((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t_function) && "CSystem::JacobianAE: jacobian AE_ODE2_t not implemented");
+			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t_function), "CSystem::JacobianAE: jacobian AE_ODE2_t not implemented");
 		}
 		if (constraint.GetAvailableJacobians() & JacobianType::AE_AE)
 		{
 			flagAE_AEfilled = true;
-			release_assert((constraint.GetAvailableJacobians() & JacobianType::AE_AE_function) && "CSystem::JacobianAE: jacobian AE_AE not implemented");
+			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_AE_function), "CSystem::JacobianAE: jacobian AE_AE not implemented");
 		}
 
 		if (flagAE_ODE2filled || flagAE_ODE2_tFilled || flagAE_AEfilled)
@@ -1484,7 +1484,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	}
 	else
 	{
-		release_assert(0 && "CSystem::ComputeObjectJacobianAE(...): object type not implemented");
+		CHECKandTHROWstring("CSystem::ComputeObjectJacobianAE(...): object type not implemented");
 	}
 }
 
@@ -1508,7 +1508,7 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 	}
 	else
 	{
-		if (velocityLevel) { release_assert(0 && "CSystem::JacobianAE_ODE2: velocityLevel=true not implemented"); }
+		if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented"); }
 		//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 		Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 		Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
@@ -1532,16 +1532,15 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 			bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
 			bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
-			if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems()) //omit bodies and ground objects ...
+			if (ltgAE.NumberOfItems()!=0 /*&& ltgODE2.NumberOfItems()!=0*/) //omit bodies and ground objects ...
 			{
 
 				ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
-				//release_assert(ltg.NumberOfItems() == temp.localAE.NumberOfItems() && "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
 
 				//now add local jacobian to system jacobian
 				if (!fillIntoSystemMatrix) //this is either the dC/dq or the dC_t/dq_t matrix for reaction forces ==> does not need factor for time integration and may only be added once (e.g. for non-holonomic constraints such as rolling wheel)
 				{
-					release_assert((factorAE_ODE2 == 1.) && (factorAE_ODE2_t == 1.) && "CSystem::JacobianAE(...): for reaction jacobian, factors must be 1.");
+					CHECKandTHROW((factorAE_ODE2 == 1.) && (factorAE_ODE2_t == 1.), "CSystem::JacobianAE(...): for reaction jacobian, factors must be 1.");
 					if (flagAE_ODE2filled && !objectUsesVelocityLevel)
 					{
 						//for (Index ii = 0; ii < temp.localJacobianAE.NumberOfRows(); ii++)
@@ -1565,7 +1564,7 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 						//}
 						jacobianGM.AddSubmatrix(temp.localJacobianAE_t, 1., ltgAE, ltgODE2);
 					}
-					else { release_assert("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
+					//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag");}
 				}
 				else
 				{
@@ -1617,7 +1616,7 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 						//}
 						jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_t, 1., ltgODE2, ltgAE, 0, nODE2); //this is the dC_t/dq_t^T part, which is independent of index reduction
 					}
-					else { release_assert("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
+					//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
 
 					if (flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
 					{
@@ -1677,8 +1676,8 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 
-	release_assert(reactionForces.NumberOfItems() == nAE && "CSystem::ComputeODE2ProjectedReactionForces: reactionForces size mismatch!");
-	release_assert(ode2ReactionForces.NumberOfItems() == nODE2 && "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
+	CHECKandTHROW(reactionForces.NumberOfItems() == nAE, "CSystem::ComputeODE2ProjectedReactionForces: reactionForces size mismatch!");
+	CHECKandTHROW(ode2ReactionForces.NumberOfItems() == nODE2, "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
 
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
 	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
@@ -1693,26 +1692,32 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
 		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
-		if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems()) //omit bodies and ground objects ...
+		if (ltgAE.NumberOfItems() != 0 && ltgODE2.NumberOfItems() != 0) //omit bodies and ground objects ...; for deactivated constraints, ltgAE!=0 and ltgODE2!=0
 		{
 
 			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
-			//release_assert(ltg.NumberOfItems() == temp.localAE.NumberOfItems() && "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
-
-			if ((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled)
+			
+			if (flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
 			{
-				ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
-
-				//multiply Cq^T * lambda:
-				for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+				if ((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
 				{
-					for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+					ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
+
+					//multiply Cq^T * lambda:
+					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
 					{
-						ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
+						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						{
+							ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
+						}
 					}
 				}
+				//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! CHECKandTHROWstring("CSystem::ComputeODE2ProjectedReactionForces(...): ObjectJacobians inconsistent!");
+					//pout << "object " << j << ": CSystem::ComputeODE2ProjectedReactionForces(...): ObjectJacobians inconsistent\n";
+					//pout << "flagAE_ODE2filled=" << flagAE_ODE2filled << "\n";
+					//pout << "objectUsesVelocityLevel=" << objectUsesVelocityLevel << "\n";
+					//pout << "flagAE_ODE2_tFilled=" << flagAE_ODE2_tFilled << "\n";
 			}
-			else { release_assert("CSystem::ComputeODE2ProjectedReactionForces(...): ObjectJacobians inconsistent!"); }
 
 		}
 	}
@@ -1741,7 +1746,7 @@ void CSystem::ComputeConstraintJacobianDerivative(TemporaryComputationData& temp
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 
-	if (jacobianCqV.GetSystemMatrixType() != LinearSolverType::EXUdense) { release_assert(0 && "CSystem::ComputeConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!"); }
+	if (jacobianCqV.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::ComputeConstraintJacobianDerivative: illegal LinearSolverType, only possible for dense matrix!"); }
 	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianCqV).GetMatrixEXUdense();
 	
 	f0.SetNumberOfItems(nAE);
@@ -1780,7 +1785,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 
-	release_assert(v.NumberOfItems() == nODE2 && "CSystem::ComputeConstraintJacobianTimesVector: v size mismatch!");
+	CHECKandTHROW(v.NumberOfItems() == nODE2, "CSystem::ComputeConstraintJacobianTimesVector: v size mismatch!");
 	result.SetNumberOfItems(nAE);
 	result.SetAll(0.);
 
@@ -1801,8 +1806,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 		{
 
 			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
-			//release_assert(ltg.NumberOfItems() == temp.localAE.NumberOfItems() && "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
-
+			
 			if (flagAE_ODE2filled && !objectUsesVelocityLevel)
 			{
 				ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
@@ -1816,7 +1820,13 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 					}
 				}
 			}
-			else { release_assert("CSystem::ComputeConstraintJacobianTimesVector(...): not implemented for velocity level!"); } //needs different strategies for velocity level constraints!
+			else 
+			{ 
+				STDstring str = "CSystem::ComputeConstraintJacobianTimesVector(...) : not implemented for velocity level, objectNr = ";
+				str += EXUstd::ToString(j);
+				PyWarning(str);
+				//CHECKandTHROWstring("CSystem::ComputeConstraintJacobianTimesVector(...): not implemented for velocity level!"); 
+			} //needs different strategies for velocity level constraints!
 
 		}
 	}

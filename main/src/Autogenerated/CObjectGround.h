@@ -125,8 +125,8 @@ public: // AUTO:
     //! AUTO:  No nodenumber can be returned for ground object!
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        release_assert(0);
-        return 0;
+		CHECKandTHROW(localIndex == 0, "Object::GetNodeNumber(...): invalid localIndex");
+		return 0;
     }
 
     //! AUTO:  number of nodes; needed for every object

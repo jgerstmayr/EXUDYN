@@ -52,7 +52,8 @@ namespace Marker {
 		BodyVolume = 1 << 8,				//!< volume load ==> usually gravity
 		BodyMass = 1 << 9,					//!< volume load ==> usually gravity
 		BodySurfaceNormal = 1 << 10,		//!< for surface pressure (uses scalar load)
-		EndOfEnumList = 1 << 11				//KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+		//Rotv1v2v3 = 1 << 11,				//!< for special joints that need a attached triad; in fact, a marker of orientation type must also provide Rotv1v2v3
+		EndOfEnumList = 1 << 12				//KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 		//available Types are, e.g.
 		//Node: 2+4+16, 2+4+8, 2+16
 		//Body: 1+4+16, 1+4+8, 1+16, 1+4+128, ...
@@ -94,6 +95,7 @@ enum class AccessFunctionType { //determines which connectors/forces can be appl
 	DisplacementVolumeIntegral_q = (Index)Marker::BodyVolume,	//for distributed (body-volume) loads
 	DisplacementMassIntegral_q = (Index)Marker::BodyMass,		//for distributed (body-mass) loads
 	DisplacementSurfaceNormalIntegral_q = (Index)Marker::BodySurfaceNormal, //for surface loads: CAUTION: pressure acts normal to surface!!!
+	//Rotv1v2v3_q = (Index)Marker::Rotv1v2v3,						//for joints, e.g., prismatic or rigid body; in fact, a marker of type orientation must also provide Rotv1v2v3
 	//NOT VALID: EndOfEnumList = (1 << 3) //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
 
@@ -201,7 +203,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //        case OutputVariableType::RotationMatrix: return Index2(3, 3);
 //        case OutputVariableType::AngularVelocity: return Index2(3, 0);
 //        case OutputVariableType::AngularAcceleration: return Index2(3, 0);
-//        default: release_assert(0 && "GetOutputVariableDimension"); return Index2(0, 0);
+//        default: CHECKandTHROWstring("GetOutputVariableDimension"); return Index2(0, 0);
 //    }
 //}
 //
@@ -217,7 +219,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //        case OutputVariableType::RotationMatrix: return OutputVariableUnit::NoUnit;
 //        case OutputVariableType::AngularVelocity: return OutputVariableUnit::RotationsPerTime;
 //        case OutputVariableType::AngularAcceleration: return OutputVariableUnit::RotationsPerTimeSquared;
-//        default: release_assert(0 && "GetOutputVariableUnit"); return OutputVariableUnit::NoUnit;
+//        default: CHECKandTHROWstring("GetOutputVariableUnit"); return OutputVariableUnit::NoUnit;
 //    }
 //};
 
@@ -270,17 +272,17 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
             return AccessFunctionType::AngularVelocity_qt;
         }
         else {
-            release_assert(0 && "GetAccessFunctionType:  Marker::BodyPosition"); return AccessFunctionType::None;
+            CHECKandTHROWstring("GetAccessFunctionType:  Marker::BodyPosition"); return AccessFunctionType::None;
         }
     case Marker::BodyMass:
         if (loadType == LoadType::ForcePerVolume) {
             return AccessFunctionType::DisplacementVolumeIntegral_q;
         }
         else {
-            release_assert(0 && "GetAccessFunctionType:  Marker::ForcePerVolume"); return AccessFunctionType::None;
+            CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerVolume"); return AccessFunctionType::None;
         }
 
-    default: release_assert(0 && "GetAccessFunctionType"); return AccessFunctionType::None;
+    default: CHECKandTHROWstring("GetAccessFunctionType"); return AccessFunctionType::None;
     }
 
 };
@@ -297,7 +299,7 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //			return AccessFunctionType::TranslationalVelocity_qt;
 //		}
 //		else {
-//			release_assert(0 && "GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::None;
+//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::None;
 //		}
 //
 //	case Marker::Orientation:
@@ -305,7 +307,7 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //			return AccessFunctionType::AngularVelocity_qt;
 //		}
 //		else {
-//			release_assert(0 && "GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::None;
+//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::None;
 //		}
 //
 //	case Marker::BodyMass:
@@ -313,10 +315,10 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //			return AccessFunctionType::DisplacementMassIntegral_q;
 //		}
 //		else {
-//			release_assert(0 && "GetAccessFunctionType:  Marker::ForcePerMass"); return AccessFunctionType::None;
+//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerMass"); return AccessFunctionType::None;
 //		}
 //
-//	default: release_assert(0 && "GetAccessFunctionType illegal"); return AccessFunctionType::None;
+//	default: CHECKandTHROWstring("GetAccessFunctionType illegal"); return AccessFunctionType::None;
 //	}
 //};
 
@@ -326,7 +328,7 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //	switch (markerType)
 //	{
 //	case Marker::Position:
-//	default: release_assert(0 && "GetRequestedAccessAndOutputType"); 
+//	default: CHECKandTHROWstring("GetRequestedAccessAndOutputType"); 
 //	}
 //
 //};

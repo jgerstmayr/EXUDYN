@@ -58,7 +58,7 @@ void ComputeConnectorCoordinateSpringDamperProperties(const MarkerDataStructure&
 //  MODEL: f
 void CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
 {
-	release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable &&
+	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 		"CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS: marker do not provide velocityLevel information");
 
 	//link separate vectors to result (ode2Rhs) vector
@@ -72,26 +72,6 @@ void CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, con
 		Real force;
 		ComputeConnectorCoordinateSpringDamperProperties(markerData, parameters, relPos, relVel, force);
 
-		////relative position, spring length and inverse spring length
-		//Real vPos = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
-
-		////unit direction and relative velocity of spring-damper
-		//Real vVel = (markerData.GetMarkerData(1).value_t - markerData.GetMarkerData(0).value_t);
-
-		////compute resulting force vector:
-		//Real force = parameters.stiffness * vPos + parameters.damping * vVel;
-		//if (parameters.dryFriction != 0.)
-		//{
-		//	if (fabs(vVel) < parameters.dryFrictionProportionalZone)
-		//	{
-		//		//as long as vVel < dryFrictionProportionalZone, friction force shall linearly increase
-		//		force += vVel / parameters.dryFrictionProportionalZone * parameters.dryFriction;
-		//	}
-		//	else
-		//	{
-		//		force += parameters.dryFriction*EXUstd::Sgn(vVel); //this should be put into the nonlinear iteration for better Newton convergence ...
-		//	}
-		//}
 
 		Vector1D fVec(force); //convert to vector to allow matrix-multiplication as usual ...
 
@@ -117,7 +97,7 @@ void CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, con
 
 void CObjectConnectorCoordinateSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	release_assert(0 && "ERROR: illegal call to CObjectConnectorCoordinateSpringDamper::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCoordinateSpringDamper::ComputeODE2RHSJacobian");
 }
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

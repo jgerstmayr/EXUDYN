@@ -57,6 +57,9 @@ void CMarkerBodyRigid::ComputeMarkerData(const CSystemData& cSystemData, bool co
 			GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, parameters.localPosition, markerData.positionJacobian);
 		((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
 			GetAccessFunctionBody(AccessFunctionType::AngularVelocity_qt, parameters.localPosition, markerData.rotationJacobian);
+		//needed?
+		//((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
+		//	GetAccessFunctionBody(AccessFunctionType::Rotv1v2v3_q, parameters.localPosition, markerData.jacobian);
 	}
 }
 

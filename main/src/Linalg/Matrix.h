@@ -160,9 +160,10 @@ protected:
 				data = new T[numberOfRowsInit*numberOfColumnsInit];
 			}
 			catch (const std::bad_alloc& e) {
-				std::cout << "Allocation failed: " << e.what() << '\n';
-				std::cout << "requested memory = " << (8. * numberOfRowsInit*numberOfColumnsInit) / pow(2, 20) << " MB, rows = " << numberOfRowsInit << ", columns = " << numberOfColumnsInit << "\n";
-				release_assert(0 && "MatrixBase<T>::AllocateMemory");
+				pout << "Allocation failed: " << e.what() << '\n';
+				pout << "requested memory = " << (8. * numberOfRowsInit*numberOfColumnsInit) / pow(2, 20) << " MB, rows = " << numberOfRowsInit << ", columns = " << numberOfColumnsInit << "\n";
+				
+				CHECKandTHROWstring("MatrixBase::Allocation failed");
 				return false; //no success
 			}
 #ifdef __EXUDYN_RUNTIME_CHECKS__

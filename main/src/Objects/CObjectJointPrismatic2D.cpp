@@ -41,7 +41,7 @@ void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		}
 		else
 		{
-			release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable && "CObjectJointPrismatic2D::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointPrismatic2D::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 			Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
 			Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 			Vector3D omega0 = markerData.GetMarkerData(0).angularVelocityLocal;
@@ -77,8 +77,6 @@ void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 {
 	if (parameters.activeConnector)
 	{
-		//release_assert(parameters.constrainRotation && "CObjectJointPrismatic2D: (constrainRotation == false) is not implemented yet!");
-
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index cols0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(); //equal to rotationJacobian.NumberOfColumns() !
 		Index cols1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns(); //equal to rotationJacobian.NumberOfColumns() !
@@ -92,7 +90,7 @@ void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 
 		const ResizableMatrix& posJac0 = markerData.GetMarkerData(0).positionJacobian;
 		const ResizableMatrix& posJac1 = markerData.GetMarkerData(1).positionJacobian;
-		const ResizableMatrix& rotJac0 = markerData.GetMarkerData(0).rotationJacobian;
+		const ResizableMatrix& rotJac0 = markerData.GetMarkerData(0).rotationJacobian; 
 		const ResizableMatrix& rotJac1 = markerData.GetMarkerData(1).rotationJacobian;
 
 		//algebraicEquations[0] = vPos * A1* ln1; ==> (posJac1-posJac0)*(n1) - vPos*A1*(ln1 x rotJac1)
@@ -111,7 +109,8 @@ void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		for (Index i = 0; i < cols1; i++) //derivatives for marker1
 		{
 			Vector3D vRotJac1({ rotJac1(0,i), rotJac1(1,i), rotJac1(2,i) }); //temporary vector
-			jacobian(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] + vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
+			//jacobian(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] + vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
+			jacobian(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] - vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
 			if (parameters.constrainRotation)
 			{
 				jacobian(1, i + cols0) = -(t0 * (A1*parameters.normalMarker1.CrossProduct(vRotJac1)));

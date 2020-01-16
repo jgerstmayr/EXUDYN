@@ -102,10 +102,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 
                 if len(pythonName)>28: 
                     typeName = '\\tabnewline ' + typeName
+                    
+                if parameter['type'] != 'String':
+                    defaultValueStr = Str2Latex(defaultValueStr, True)
+                    
                 sLatex += '    ' + pythonName + ' & '                
                 sLatex += '    ' + typeName + ' & '
                 sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
-                sLatex += '    ' + sString+Str2Latex(defaultValueStr, True)+sString + ' & '
+                sLatex += '    ' + sString+defaultValueStr+sString + ' & '
                 sLatex += '    ' + paramDescriptionStr + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function

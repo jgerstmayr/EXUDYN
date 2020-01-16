@@ -33,67 +33,67 @@ public: //
 
 	//! determine type of marker in order to decide according action in assembly; to be filled in derived class
 	virtual Marker::Type GetType() const {
-		release_assert(0 && "Invalid call to CMarker::Type");
+		CHECKandTHROWstring("Invalid call to CMarker::Type");
 		return Marker::None;
 	}
 
 	//! if body marker: get object number (otherwise assertion)
 	virtual Index GetObjectNumber() const {
-		release_assert(0 && "Invalid call to CMarker::GetBodyNumber");
+		CHECKandTHROWstring("Invalid call to CMarker::GetBodyNumber");
 		return EXUstd::InvalidIndex;
 	}
 
 	//! if node marker: get node number (otherwise assertion)
 	virtual Index GetNodeNumber() const {
-		release_assert(0 && "Invalid call to CMarker::GetNodeNumber");
+		CHECKandTHROWstring("Invalid call to CMarker::GetNodeNumber");
 		return EXUstd::InvalidIndex;
 	}
 
 	//! if marker is of coordinate type: return coordinate of node or body
 	virtual Index GetCoordinateNumber() const {
-		release_assert(0 && "Invalid call to CMarker::GetCoordinateNumber");
+		CHECKandTHROWstring("Invalid call to CMarker::GetCoordinateNumber");
 		return EXUstd::InvalidIndex;
 	}
 
 	//! compute current position of marker in global frame; some position should always be available for marker (also temperatur ...)
 	virtual void GetPosition(const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "Invalid call to CMarker::GetPosition");
+		CHECKandTHROWstring("Invalid call to CMarker::GetPosition");
 	}
 
 	//! compute current velocity of marker in global frame; this function could be erased from CMarker (CAUTION: derived class CMarkerPosition uses override)
 	virtual void GetVelocity(const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "Invalid call to CMarker::GetVelocity");
+		CHECKandTHROWstring("Invalid call to CMarker::GetVelocity");
 	}
 
 	//! return configuration dependent rotation matrix of node; returns always a 3D Matrix
 	virtual void GetRotationMatrix(const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "Invalid call to CMarker::GetRotationMatrix");
+		CHECKandTHROWstring("Invalid call to CMarker::GetRotationMatrix");
 	}
 
 	//! return configuration dependent angular velocity of node; returns always a 3D Vector
 	virtual void GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "Invalid call to CMarker::GetAngularVelocity");
+		CHECKandTHROWstring("Invalid call to CMarker::GetAngularVelocity");
 	}
 
 	//! return configuration dependent angular velocity of node; returns always a 3D Vector
 	virtual void GetAngularVelocityLocal(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "Invalid call to CMarker::GetAngularVelocity");
+		CHECKandTHROWstring("Invalid call to CMarker::GetAngularVelocity");
 	}
 
 	//should be filled directly into markerdata
 	////! Jacobian of position with respect to all body/node DOF
 	//virtual void GetPositionJacobian(const CSystemData& cSystemData, Matrix& jacobian) const {
-	//	release_assert(0 && "Invalid call to CMarker::GetPositionJacobian");
+	//	CHECKandTHROWstring("Invalid call to CMarker::GetPositionJacobian");
 	//}
 
 	//! compute markerdata: fill in according data, which is used by force or constraint; some computations could be saved, if constraint::GetRequestedMarkerType would be used
 	virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const {
-		release_assert(0 && "Invalid call to CMarker::ComputeMarkerData");
+		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerData");
 	}
 
 	//! dimension, which an according connector would have
 	virtual Index GetDimension() const {
-		release_assert(0 && "Invalid call to CMarker::Dimension");
+		CHECKandTHROWstring("Invalid call to CMarker::Dimension");
 		return EXUstd::InvalidIndex;
 	}
 

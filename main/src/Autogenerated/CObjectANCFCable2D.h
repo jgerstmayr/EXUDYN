@@ -113,7 +113,7 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        release_assert(localIndex <= 1);
+		CHECKandTHROW(localIndex <= 1, "Object::GetNodeNumber(...): invalid localIndex");
         return parameters.nodeNumbers[localIndex];
     }
 

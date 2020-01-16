@@ -28,7 +28,7 @@ the following stepy are practically the same for Gitlab and GitHub:
 		- choose the files (the files in your folder) you want to commit and add a commit Message
 		- click ok
 
-5. Save your repository at GitLab
+5. Save your repository at GitLab/Github
 	- go to your gitlab account
 		- go to Projects and create a new project
 		- add a project name etc and choose your preffered visibility level
@@ -38,7 +38,7 @@ the following stepy are practically the same for Gitlab and GitHub:
 				-> the line to copy should be something similar to: git@gitlab.com:username/YOURPROJECTNAME.git
 				-> github: the line to copy should be something similar to: git@github.com:jgerstmayr/EXUDYN.git
 	- right click on your folder (the previously created repository)
-	- got to TortoiseGit and click on: Push
+	- go to TortoiseGit and click on: Push
 	- click on: Manage
 	- paste the SSH URL in the field "Url"
 	- add your previously created SSH/Putty key

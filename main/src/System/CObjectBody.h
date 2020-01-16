@@ -53,45 +53,45 @@ public:
     // ACCESS FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const { release_assert(0 && "ERROR: illegal call to CObjectBody::GetAccessFunctionBody"); }
+    virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetAccessFunctionBody"); }
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
 									   ConfigurationType configuration, Vector& value) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetOutputVariableBody");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetOutputVariableBody");
 	}
 
     //basic access function position, which are available in every body; used for connectors
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetPosition");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetPosition");
         return Vector3D({ 0., 0., 0. });
     }
 
 	//basic access function velocity, which are available in every body; used for connectors
 	virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetVelocity");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetVelocity");
 		return Vector3D({ 0., 0., 0. });
 	}
 
 	//basic access function displacement, which are available in every body; used for connectors
 	virtual Vector3D GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
 		return Vector3D({ 0., 0., 0. });
     }
 
 	//! basic access function for rotation of node; returns always a 3D Vector; for rigid bodies, the argument localPosition has no effect
 	virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
 		return Matrix3D();
 	}
 
 	//! basic access function for angular velocity of node; returns always a 3D Vector; for rigid bodies, the argument localPosition has no effect
 	virtual Vector3D GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
 		return Vector3D();
 	}
 
 	//! basic access function for angular velocity of node; returns always a 3D Vector; for rigid bodies, the argument localPosition has no effect
 	virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		release_assert(0 && "ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
 		return Vector3D();
 	}
 
@@ -99,6 +99,6 @@ public:
 	// Computation FUNCTIONS
 
 	//! compute object massmatrix to massMatrix ==> only possible for bodies!!!
-	virtual void ComputeMassMatrix(Matrix& massMatrix) const { release_assert(0 && "ERROR: illegal call to CObject::ComputeMassMatrix"); }
+	virtual void ComputeMassMatrix(Matrix& massMatrix) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeMassMatrix"); }
 
 };

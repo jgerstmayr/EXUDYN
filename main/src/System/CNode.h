@@ -73,10 +73,10 @@ public:
 	CData* GetCData() const;
 	CData*& GetCData();
 
-    virtual void SetGlobalODE2CoordinateIndex(Index globalIndex) { release_assert(0 && "CNode::SetGlobalODE2CoordinateIndex(): call illegal"); }
-    virtual void SetGlobalODE1CoordinateIndex(Index globalIndex) { release_assert(0 && "CNode::SetGlobalODE1CoordinateIndex(): call illegal"); }
-	virtual void SetGlobalAECoordinateIndex(Index globalIndex) { release_assert(0 && "CNode::SetGlobalAECoordinateIndex(): call illegal"); }
-	virtual void SetGlobalDataCoordinateIndex(Index globalIndex) { release_assert(0 && "CNode::SetGlobalDataCoordinateIndex(): call illegal"); }
+    virtual void SetGlobalODE2CoordinateIndex(Index globalIndex) { CHECKandTHROWstring("CNode::SetGlobalODE2CoordinateIndex(): call illegal"); }
+    virtual void SetGlobalODE1CoordinateIndex(Index globalIndex) { CHECKandTHROWstring("CNode::SetGlobalODE1CoordinateIndex(): call illegal"); }
+	virtual void SetGlobalAECoordinateIndex(Index globalIndex) { CHECKandTHROWstring("CNode::SetGlobalAECoordinateIndex(): call illegal"); }
+	virtual void SetGlobalDataCoordinateIndex(Index globalIndex) { CHECKandTHROWstring("CNode::SetGlobalDataCoordinateIndex(): call illegal"); }
 
     //! number of state variables; includes position AND velocity coordinates
 	virtual Index GetNumberOfStateCoordinates() const final { return 2 * GetNumberOfODE2Coordinates() + GetNumberOfODE1Coordinates() + GetNumberOfAECoordinates(); }
@@ -88,22 +88,22 @@ public:
 	virtual bool IsGroundNode() const final { return GetNumberOfAccessibleCoordinates() == 0; }
 
 	//! read single coordinate in current configuration
-	virtual const Real& GetCurrentCoordinate(Index i) const {release_assert(0 && "CNode::GetCurrentCoordinate"); return computationalData->GetCurrent().GetTime(); /*dummy variable time...*/}
+	virtual const Real& GetCurrentCoordinate(Index i) const {CHECKandTHROWstring("CNode::GetCurrentCoordinate"); return computationalData->GetCurrent().GetTime(); /*dummy variable time...*/}
 
 	//! read globally stored initial coordinates
-	virtual LinkedDataVector GetInitialCoordinateVector() const {release_assert(0 && "CNode::GetInitialCoordinateVector"); return LinkedDataVector(); }
+	virtual LinkedDataVector GetInitialCoordinateVector() const {CHECKandTHROWstring("CNode::GetInitialCoordinateVector"); return LinkedDataVector(); }
 
     //! read current nodal coordinates out of global coordinate vector
-	virtual LinkedDataVector GetCurrentCoordinateVector() const {release_assert(0 && "CNode::GetCurrentCoordinateVector"); return LinkedDataVector(); }
+	virtual LinkedDataVector GetCurrentCoordinateVector() const {CHECKandTHROWstring("CNode::GetCurrentCoordinateVector"); return LinkedDataVector(); }
 
 	//! read configuration dependent nodal coordinates from global coordinate vector
-	virtual LinkedDataVector GetCoordinateVector(ConfigurationType configuration) const {release_assert(0 && "CNode::GetCoordinateVector"); return LinkedDataVector(); }
+	virtual LinkedDataVector GetCoordinateVector(ConfigurationType configuration) const {CHECKandTHROWstring("CNode::GetCoordinateVector"); return LinkedDataVector(); }
 
 	//!read (internally stored) reference coordinate vector (implemented in specialized class)
-	virtual LinkedDataVector GetReferenceCoordinateVector() const { release_assert(0 && "CNode::GetReferenceCoordinateVector: call illegal");  return LinkedDataVector(); }
+	virtual LinkedDataVector GetReferenceCoordinateVector() const { CHECKandTHROWstring("CNode::GetReferenceCoordinateVector: call illegal");  return LinkedDataVector(); }
 
 	//! read visualization coordinates
-	virtual LinkedDataVector GetVisualizationCoordinateVector() const { release_assert(0 && "CNode::GetReferenceCoordinateVector: call illegal");  return LinkedDataVector(); }
+	virtual LinkedDataVector GetVisualizationCoordinateVector() const { CHECKandTHROWstring("CNode::GetReferenceCoordinateVector: call illegal");  return LinkedDataVector(); }
 
 	virtual Index GetNumberOfODE1Coordinates() const { return 0; }
     virtual Index GetNumberOfODE2Coordinates() const { return 0; }
@@ -111,20 +111,20 @@ public:
 	virtual Index GetNumberOfDataCoordinates() const { return 0; }
 
     virtual Index GetGlobalODE2CoordinateIndex() const {
-        release_assert(0 && "CNode::GetGlobalODE2CoordinateIndex"); return 0; }
+        CHECKandTHROWstring("CNode::GetGlobalODE2CoordinateIndex"); return 0; }
     virtual Index GetGlobalODE1CoordinateIndex() const { 
-        release_assert(0 && "CNode::GetGlobalODE1CoordinateIndex"); return 0; }
+        CHECKandTHROWstring("CNode::GetGlobalODE1CoordinateIndex"); return 0; }
     virtual Index GetGlobalAECoordinateIndex() const { 
-        release_assert(0 && "CNode::GetGlobalAECoordinateIndex"); return 0; }
+        CHECKandTHROWstring("CNode::GetGlobalAECoordinateIndex"); return 0; }
 	virtual Index GetGlobalDataCoordinateIndex() const {
-		release_assert(0 && "CNode::GetGlobalDataCoordinateIndex"); return 0;	}
+		CHECKandTHROWstring("CNode::GetGlobalDataCoordinateIndex"); return 0;	}
 
-	virtual OutputVariableType GetOutputVariableTypes() const { release_assert(0 && "ERROR: illegal call to CNode::GetOutputVariableTypes"); return OutputVariableType::None; }
-	virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const { release_assert(0 && "ERROR: illegal call to CNode::GetOutputVariable"); }
+	virtual OutputVariableType GetOutputVariableTypes() const { CHECKandTHROWstring("ERROR: illegal call to CNode::GetOutputVariableTypes"); return OutputVariableType::None; }
+	virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CNode::GetOutputVariable"); }
 
 
-    virtual CNodeGroup GetNodeGroup() const { release_assert(0 && "CNode::GetNodeGroup"); return CNodeGroup::None; }
-    virtual CNodeType GetType() const { release_assert(0 && "CNode::GetType"); return CNodeType::None; }
+    virtual CNodeGroup GetNodeGroup() const { CHECKandTHROWstring("CNode::GetNodeGroup"); return CNodeGroup::None; }
+    virtual CNodeType GetType() const { CHECKandTHROWstring("CNode::GetType"); return CNodeType::None; }
 
     friend std::ostream& operator<<(std::ostream& os, const CNode& object) {
         object.Print(os);
@@ -190,7 +190,7 @@ public:
             case ConfigurationType::Initial: return GetInitialCoordinateVector();
 			case ConfigurationType::Reference: return GetReferenceCoordinateVector();
 			case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
-			default: release_assert(0 && "CODE2Node::GetCoordinateVector: invalid ConfigurationType"); return LinkedDataVector();
+			default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector: invalid ConfigurationType"); return LinkedDataVector();
         }
     }
 
@@ -202,37 +202,37 @@ public:
 		case ConfigurationType::Initial: return GetInitialCoordinateVector_t();
 		//case ConfigurationType::Reference: return GetReferenceCoordinateVector_t();
 		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_t();
-		default: release_assert(0 && "CODE2Node::GetCoordinateVector_t: invalid ConfigurationType"); return LinkedDataVector();
+		default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector_t: invalid ConfigurationType"); return LinkedDataVector();
 		}
 	}
 
 	//! return configuration-dependent position (for drawing, marker)
-	virtual Vector3D GetPosition(ConfigurationType configuration = ConfigurationType::Current) const { release_assert(0 && "CNodeODE2::GetCurrentPosition: call illegal"); return Vector3D(); }
+	virtual Vector3D GetPosition(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetCurrentPosition: call illegal"); return Vector3D(); }
 	
 	//! return configuration-dependent velocity (for marker)
-	virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const { release_assert(0 && "CNodeODE2::GetCurrentVelocity: call illegal"); return Vector3D(); }
+	virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetCurrentVelocity: call illegal"); return Vector3D(); }
 
 	//! return configuration dependent position of node; returns always a 3D Vector
 	virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const 
-		{ release_assert(0 && "CNodeODE2::GetRotationMatrix: call illegal"); return Matrix3D(); }
+		{ CHECKandTHROWstring("CNodeODE2::GetRotationMatrix: call illegal"); return Matrix3D(); }
 
 	//! return configuration dependent angular velocity of node; returns always a 3D Vector
 	virtual Vector3D GetAngularVelocity(ConfigurationType configuration = ConfigurationType::Current) const
 	{
-		release_assert(0 && "CNodeODE2::GetAngularVelocity: call illegal"); return Vector3D();
+		CHECKandTHROWstring("CNodeODE2::GetAngularVelocity: call illegal"); return Vector3D();
 	}
 
 	//! return configuration dependent local (body fixed) angular velocity of node; returns always a 3D Vector
 	virtual Vector3D GetAngularVelocityLocal(ConfigurationType configuration = ConfigurationType::Current) const
 	{
-		release_assert(0 && "CNodeODE2::GetAngularVelocityLocal: call illegal"); return Vector3D();
+		CHECKandTHROWstring("CNodeODE2::GetAngularVelocityLocal: call illegal"); return Vector3D();
 	}
 
 	//! provide position Jacobian in matrix value (for marker) for current configuration
-	virtual void GetPositionJacobian(Matrix& value) const { release_assert(0 && "CNodeODE2::GetPositionJacobian: call illegal"); }
+	virtual void GetPositionJacobian(Matrix& value) const { CHECKandTHROWstring("CNodeODE2::GetPositionJacobian: call illegal"); }
 
 	//! provide rotation Jacobian in matrix value (for marker) for current configuration
-	virtual void GetRotationJacobian(Matrix& value) const { release_assert(0 && "CNodeODE2::GetRotationJacobian: call illegal"); }
+	virtual void GetRotationJacobian(Matrix& value) const { CHECKandTHROWstring("CNodeODE2::GetRotationJacobian: call illegal"); }
 
 };
 
@@ -305,7 +305,7 @@ public:
 		case ConfigurationType::Current: return GetCurrentCoordinateVector();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector();
 		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
-		default: release_assert(0 && "CODE2Node::GetCoordinateVector: invalid ConfigurationType (Reference not possible)!"); return LinkedDataVector();
+		default: CHECKandTHROWstring("CODE2Node::GetCoordinateVector: invalid ConfigurationType (Reference not possible)!"); return LinkedDataVector();
 		}
 	}
 

@@ -75,15 +75,12 @@ Vector3D CObjectMassPoint2D::GetPosition(const Vector3D& localPosition, Configur
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectMassPoint2D::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CObjectMassPoint2D::GetVelocity");
-	
 	return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration);
 }
 
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectMassPoint2D::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	release_assert(configuration == ConfigurationType::Current && "CObjectMassPoint2D::GetDisplacement");
 	return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
 

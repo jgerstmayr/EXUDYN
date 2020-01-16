@@ -40,7 +40,7 @@ public:
 
 	bool velocityAvailable;		//used for value/value_t, vectorValue/vectorValue_t, position/velocity, ... to determine, if velocities are available
 
-	ResizableMatrix jacobian;	//general jacobian, e.g. for coordinate marker
+	ResizableMatrix jacobian;	//general jacobian, e.g. for coordinate marker; ?d(Rotv123)/dq for rigid bodies?
 
 };
 

@@ -92,8 +92,8 @@ namespace EXUmath {
 	template<class TMatrix, class TVector>
 	inline void RigidBodyTransformation(const TMatrix& rotation, const TVector& positionOffset, const TVector& localPosition, TVector& transformedPosition)
 	{
-		release_assert(rotation.NumberOfRows() == 3 && rotation.NumberOfColumns() == 3 
-			&& positionOffset.NumberOfItems() == 3 && localPosition.NumberOfItems() == 3 && transformedPosition.NumberOfItems() == 3);
+		CHECKandTHROW(rotation.NumberOfRows() == 3 && rotation.NumberOfColumns() == 3 
+			&& positionOffset.NumberOfItems() == 3 && localPosition.NumberOfItems() == 3 && transformedPosition.NumberOfItems() == 3, "RigidBodyTransformation: index mismatch");
 		
 		TVector temp;
 		MultMatrixVectorTemplate<TMatrix, TVector, TVector>(rotation, localPosition, temp);

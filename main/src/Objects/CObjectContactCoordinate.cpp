@@ -53,8 +53,8 @@ Real CObjectContactCoordinate::ComputeGap(const MarkerDataStructure& markerData)
 //  MODEL: f
 void CObjectContactCoordinate::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
 {
-	release_assert(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable
-		&& "CObjectContactCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
+		"CObjectContactCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
 	//gap>0: no contact, gap<0: contact
 	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
@@ -101,7 +101,7 @@ void CObjectContactCoordinate::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataS
 
 void CObjectContactCoordinate::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	release_assert(0 && "ERROR: illegal call to CObjectContactCoordinate::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to CObjectContactCoordinate::ComputeODE2RHSJacobian");
 }
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

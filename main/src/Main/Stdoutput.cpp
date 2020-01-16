@@ -111,7 +111,6 @@ void PyError(std::string error_msg, std::ofstream& file)
 
 	pout << "\nUser ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
 	pout << error_msg << "\n\n";
-	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
 
 	if (file.is_open())
 	{
@@ -120,6 +119,7 @@ void PyError(std::string error_msg, std::ofstream& file)
 		file << "Exudyn: parsing of python file terminated due to python (user) error\n\n";
 		file << "********************************************************************\n\n";
 	}
+	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
@@ -139,7 +139,6 @@ void SysError(std::string error_msg, std::ofstream& file)
 
 	pout << "\nSYSTEM ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
 	pout << error_msg << "\n\n";
-	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to system error");
 
 	if (file.is_open())
 	{
@@ -148,6 +147,7 @@ void SysError(std::string error_msg, std::ofstream& file)
 		file << "Exudyn: parsing of python file terminated due to system error\n\n";
 		file << "********************************************************************\n\n";
 	}
+	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to system error");
 }
 
 //!< prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
