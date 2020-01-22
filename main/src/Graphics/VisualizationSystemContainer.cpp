@@ -24,9 +24,9 @@
 //#include "Graphics/VisualizationSystemContainerBase.h"
 #include "Graphics/VisualizationSystemContainer.h"
 
-#ifdef USE_GLFW_GRAPHICS
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
-#endif
+//#ifdef USE_GLFW_GRAPHICS
+//#endif
 
 bool VisualizationSystemContainer::LinkToRenderEngine()
 {
@@ -145,12 +145,14 @@ void VisualizationSystemContainer::ContinueSimulation()
 //! this function waits for the stop flag in the render engine;
 bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
 {
+#ifdef USE_GLFW_GRAPHICS
+
 	stopSimulationFlag = false; //initialize the flag, if used several times; this is thread safe
 	while (!stopSimulationFlag && glfwRenderer.WindowIsInitialized())
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
-
+#endif
 	for (auto item : visualizationSystems)
 	{
 		item->postProcessData->visualizationIsRunning = false; //signal, that visualization is stopped now
@@ -285,7 +287,7 @@ void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData&
 		}
 
 		Index len = strlen(item.text); 
-		int i = strlen("x");
+		int i = (int)strlen("x");
 		char* temp = new char[len+1]; //needs to be copied, because string is destroyed everytime it is updated! ==> SLOW for large number of texts (node numbers ...)
 		strcpy_s(temp, len + 1, item.text); //item.text will be destroyed upon deletion of BodyGraphicsData!
 		item.text = temp;
@@ -503,7 +505,7 @@ bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsDa
 									if (py::isinstance<py::str>(gData)) //must be a scalar value
 									{
 										std::string gText = (py::str)(gData);
-										int len = gText.size();
+										int len = (int)gText.size();
 										text.text = new char[len + 1]; //will be deleted in destructor of GraphicsData
 										strcpy_s(text.text, len + 1, gText.c_str());
 

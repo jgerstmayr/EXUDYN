@@ -64,8 +64,8 @@ public:
     //! Initialize LinkedDataVectorBase by data given by vector at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items); 
     LinkedDataVectorBase(const VectorBase<T>& vector, Index startPosition, Index numberOfItemsLinked) : VectorBase<T>()
     {
-        release_assert(startPosition >= 0 && "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index), startPosition < 0");
-        release_assert(numberOfItemsLinked + startPosition <= vector.NumberOfItems() && "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index, Index), size mismatch");
+        CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index), startPosition < 0");
+        CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index, Index), size mismatch");
 
         const T* ptr = &vector[startPosition];
 		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
@@ -86,7 +86,7 @@ public:
     //! set vector to values given by initializer list; used to modify data which the LinkedDataVectorBase is linked to
     void SetVector(std::initializer_list<T> listOfReals)
     {
-        release_assert(this->numberOfItems == listOfReals.size() && "ERROR: LinkedDataVectorBase::SetVector(...), initializer_list must have same size as LinkedDataVectorBase");
+        CHECKandTHROW(this->numberOfItems == listOfReals.size(), "ERROR: LinkedDataVectorBase::SetVector(...), initializer_list must have same size as LinkedDataVectorBase");
 
         Index cnt = 0;
         for (auto value : listOfReals) {
@@ -104,8 +104,8 @@ public:
     //! Link this to data given by 'vector' starting at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items); 
     void LinkDataTo(const VectorBase<T>& vector, Index startPosition, Index numberOfItemsLinked)
     {
-        release_assert(startPosition >= 0 && "ERROR: LinkedDataVectorBase::LinkDataTo(const VectorBase<T>&, Index), startPosition < 0");
-        release_assert(numberOfItemsLinked + startPosition <= vector.NumberOfItems() && "ERROR: LinkedDataVectorBase::LinkDataTo(const VectorBase<T>&, Index, Index), size mismatch");
+        CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase::LinkDataTo(const VectorBase<T>&, Index), startPosition < 0");
+        CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase::LinkDataTo(const VectorBase<T>&, Index, Index), size mismatch");
 
         const T* ptr = &vector[startPosition];
 		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
@@ -136,7 +136,7 @@ public:
 		} 
 		else
 		{
-			release_assert(this->numberOfItems == vector.NumberOfItems() && "ERROR: LinkedDataVectorBase::operator=(const LinkedDataVectorBase&), size mismatch");
+			CHECKandTHROW(this->numberOfItems == vector.NumberOfItems(), "ERROR: LinkedDataVectorBase::operator=(const LinkedDataVectorBase&), size mismatch");
 			//do not call SetNumberOfItems, because size already fits and SetNumberOfItems would allocate memory!
 
 			Index cnt = 0;
@@ -153,7 +153,7 @@ public:
     {
         if (this == &vector) { return *this; }
 
-        release_assert(this->numberOfItems == vector.NumberOfItems() && "ERROR: LinkedDataVectorBase::operator=(const LinkedDataVectorBase&), size mismatch");
+        CHECKandTHROW(this->numberOfItems == vector.NumberOfItems(), "ERROR: LinkedDataVectorBase::operator=(const LinkedDataVectorBase&), size mismatch");
 
         //do not call SetNumberOfItems, because size already fits and SetNumberOfItems would allocate memory!
 
@@ -177,7 +177,7 @@ protected: //functions cannot be called from outside
     //! SetNumberOfItems is not called, but for safety add assertion 
     virtual void SetNumberOfItems(Index numberOfItemsInit) override
     {
-        release_assert((this->numberOfItems == numberOfItemsInit) && "ERROR: call to LinkedDataVectorBase::SetNumberOfItems only allowed if sizes match");
+        CHECKandTHROW((this->numberOfItems == numberOfItemsInit), "ERROR: call to LinkedDataVectorBase::SetNumberOfItems only allowed if sizes match");
     }
 
     //! CopyFrom makes no sense in case of LinkedDataVectorBase; disabled

@@ -63,7 +63,7 @@ public:
     {
 		this->data = &constData[0];
 		
-		release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize) &&
+		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize),
             "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index): invalid parameters");
 
         ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -79,7 +79,7 @@ public:
     {
 		this->data = &constData[0];
 		
-		release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize) &&
+		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize),
             "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, T): invalid parameters");
 
         ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -94,8 +94,8 @@ public:
     {
 		this->data = &constData[0];
 		
-		release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&
-                        numberOfRowsInit*numberOfColumnsInit == listOfReals.size()) &&
+		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&
+                        numberOfRowsInit*numberOfColumnsInit == listOfReals.size()),
                        "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, initializer_list): inconsistent size of initializer_list");
 
         ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -111,7 +111,7 @@ public:
     {
 		this->data = &constData[0];
 		
-		release_assert((matrix.numberOfRows*matrix.numberOfColumns <= dataSize) &&
+		CHECKandTHROW((matrix.numberOfRows*matrix.numberOfColumns <= dataSize),
 			"ConstSizeMatrixBase::ConstSizeMatrixBase(const ConstSizeMatrixBase& matrix): dataSize too small");
 		
 		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
@@ -125,7 +125,7 @@ public:
 	{
 		this->data = &constData[0];
 
-		release_assert((matrix.NumberOfRows()*matrix.NumberOfColumns() <= dataSize) &&
+		CHECKandTHROW((matrix.NumberOfRows()*matrix.NumberOfColumns() <= dataSize),
 			"ConstSizeMatrixBase::ConstSizeMatrixBase(const MatrixBase& matrix): dataSize too small");
 
 		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
@@ -140,7 +140,7 @@ public:
 	{
 		this->data = &constData[0];
 
-		release_assert((matrixRows*matrixColumns <= dataSize) &&
+		CHECKandTHROW((matrixRows*matrixColumns <= dataSize),
 			"ConstSizeMatrixBase::ConstSizeMatrixBase(const std::array<std::array<T, matrixColumns>, matrixRows>& matrix): dataSize too small");
 
 		ResizeMatrix(matrixRows, matrixColumns);
@@ -182,7 +182,7 @@ protected:
     //! Set new size of matrix; for external access, use 'SetNumberOfRowsAndColumns' to modify size of matrix
     virtual void ResizeMatrix(Index numberOfRowsInit, Index numberOfColumnsInit) override
     {
-		release_assert((numberOfRowsInit*numberOfColumnsInit <= dataSize) &&
+		CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit <= dataSize),
 			"ConstSizeMatrixBase::ResizeMatrix(Index,Index): dataSize too small");
 		
 		this->numberOfRows = numberOfRowsInit;
@@ -194,9 +194,9 @@ public:
 	//! add two matrices m1 and m2 (for each component); creates new ConstSizeMatrixBase / no memory allocation
 	friend ConstSizeMatrixBase<T,dataSize> operator+ (const ConstSizeMatrixBase& m1, const ConstSizeMatrixBase& m2)
 	{
-		release_assert(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
 			"operator+(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
-		release_assert((m1.NumberOfColumns()*m1.NumberOfRows() <= dataSize) &&
+		CHECKandTHROW((m1.NumberOfColumns()*m1.NumberOfRows() <= dataSize),
 			"ConstSizeMatrixBase::operator+(const ConstSizeMatrixBase&, const ConstSizeMatrixBase&): dataSize too small");
 
 		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfColumns(), m1.NumberOfRows());
@@ -211,9 +211,9 @@ public:
 	//! subtract matrix m2 from m1 (for each component); creates new ConstSizeMatrixBase / no memory allocation
 	friend ConstSizeMatrixBase<T, dataSize> operator- (const ConstSizeMatrixBase& m1, const ConstSizeMatrixBase& m2)
 	{
-		release_assert(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
 			"operator+(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
-		release_assert((m1.NumberOfColumns()*m1.NumberOfRows() <= dataSize) &&
+		CHECKandTHROW((m1.NumberOfColumns()*m1.NumberOfRows() <= dataSize),
 			"ConstSizeMatrixBase::operator+(const ConstSizeMatrixBase&, const ConstSizeMatrixBase&): dataSize too small");
 
 		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfColumns(), m1.NumberOfRows());
@@ -228,9 +228,9 @@ public:
     //! multiply matrix m1*m2 (matrix multiplication); algorithm has order O(n^3); creates new ConstSizeMatrixBase / no memory allocation
     friend ConstSizeMatrixBase<T, dataSize> operator* (const ConstSizeMatrixBase& m1, const ConstSizeMatrixBase& m2)
     {
-        release_assert(m1.NumberOfColumns() == m2.NumberOfRows() &&
+        CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
             "operator*(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
-		release_assert((m1.NumberOfRows()*m2.NumberOfColumns() <= dataSize) &&
+		CHECKandTHROW((m1.NumberOfRows()*m2.NumberOfColumns() <= dataSize),
 			"ConstSizeMatrixBase::operator*(const ConstSizeMatrixBase&, const ConstSizeMatrixBase&): dataSize too small");
 
         ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfRows(), m2.NumberOfColumns());
@@ -269,9 +269,9 @@ public:
 	template<class TVector, Index dataSize2>
 	friend SlimVectorBase<T, dataSize2> operator*(const ConstSizeMatrixBase& matrix, const TVector& vector)
 	{
-		release_assert(matrix.NumberOfColumns() == vector.NumberOfItems() &&
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
 			"operator*(ConstSizeMatrixBase,TVector): Size mismatch");
-		release_assert((matrix.NumberOfRows() <= dataSize) &&
+		CHECKandTHROW((matrix.NumberOfRows() <= dataSize),
 			"operator*(ConstSizeMatrixBase,TVector): dataSize too small");
 
 		SlimVectorBase<T, dataSize2> result(matrix.NumberOfRows());
@@ -290,9 +290,9 @@ public:
 
 	friend SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase& matrix, const SlimVectorBase<T, 3>& vector)
 	{
-		release_assert(matrix.NumberOfColumns() == vector.NumberOfItems() &&
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
 			"operator*(ConstSizeMatrixBase,TVector): Size mismatch");
-		release_assert((matrix.NumberOfRows() <= dataSize) &&
+		CHECKandTHROW((matrix.NumberOfRows() <= dataSize),
 			"operator*(ConstSizeMatrixBase,TVector): dataSize too small");
 
 		SlimVectorBase<T, 3> result; //no initialization for SlimVector
@@ -354,9 +354,9 @@ using ConstSizeMatrixF = ConstSizeMatrixBase<float, dataSize>;
 //
 
 //{
-//	release_assert(matrix.NumberOfColumns() == vector.NumberOfItems() &&
+//	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
 //		"operator*(Matrix,TVector): Size mismatch");
-//	release_assert((matrix.NumberOfRows() <= dataSize) &&
+//	CHECKandTHROW((matrix.NumberOfRows() <= dataSize),
 //		"operator*(Matrix,TVector): dataSize too small");
 //
 //	ConstSizeVector<dataSize> result(matrix.NumberOfRows());

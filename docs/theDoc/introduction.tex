@@ -18,7 +18,7 @@ Currently, the module structure is simple:
 	\ei
   \item C++ parts, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
 	\bi
-	  \item \texttt{exudyn}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+	  \item \texttt{exudyn}\footnote{note that there is a second module, called exudynFast, which does deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases). To check which version you have, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
 	  \item \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
 	  \item \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
 		loads can added to the system, see Section \ref{sec_item_reference_manual};

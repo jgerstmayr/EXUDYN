@@ -6,14 +6,29 @@ COMPATIBILITY:
 1a) Currently tested versions: 
 	- Spyder:3.2.8
 	- Python: 3.6.5 32bits, Qt 5.9.4, PyQt 5.9.2 on Windows
+	- Python 3.6.5 64bits, in VS2017; (last) Anaconda 5.2.0 with Python 3.6: Anaconda3-5.2.0-Windows-x86_64.exe, see link: 
+		https://stackoverflow.com/questions/54801513/how-can-i-download-anaconda-for-python-3-6
+		https://repo.continuum.io/archive/
 1b) Python versions of Exudyn/VS2017 (3.6) and Spyder must be same up to subversion: 3.6.x
 
 1c) Python 32/64 bit compatibility: must be same in Exudyn/VS2017 and in Spyder: 32 bits !!!
 
+1c) VS2017 32/64 bit: when switching, make sure that:
+	- add /bigobj to additional compiler options, as pybind11 generates many sections
+	- 64bit enabled in cppscr configuration
+	- in cppsrc: C/C++: change python includes to 64bit path:
+		$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files %28x86%29\Microsoft Visual Studio\Shared\Python36_64\include;%(AdditionalIncludeDirectories)
+	- in cppsrc: linker:
+		choose libs/libs64 path for glfw3.lib (which can be just downloaded)
+		choose 64bit python libs
+		==> $(SolutionDir)\libs\libs64;C:\Program Files %28x86%29\Microsoft Visual Studio\Shared\Python36_64\libs;%(AdditionalLibraryDirectories)
+	- in cppsrc: copy all other settings from 32bit
+	- in pythonDev: choose python environment with 64bit (same version, e.g. python 3.6)
+
 
 RUNNING Exudyn in SPYDER:
 
-2a) known BUG: running Exudyn in Spyder currently causes problems with the GLFW visualization, which does not close
+2a) running Exudyn in Spyder may cause problems with the GLFW visualization, which does not always close
 	the GLFW window appropriatly; runing Exudyn a second time, causes a crash
     ==> WORKAROUND:
 	1) restart kernel in current console by mouse click on "x" (closing button)

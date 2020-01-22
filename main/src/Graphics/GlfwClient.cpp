@@ -491,11 +491,19 @@ void GlfwRenderer::InitCreateWindow()
 	
 	if (visSettings->openGL.multiSampling == 2 || visSettings->openGL.multiSampling == 4 || visSettings->openGL.multiSampling == 8 || visSettings->openGL.multiSampling == 16) //only 4 is possible right now ... otherwise no multisampling
 	{
-		glfwWindowHint(GLFW_SAMPLES, visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
+		glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
 	}
 
+	if (visSettings->window.alwaysOnTop)
+	{
+		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); //GLFW_FLOATING (default: GLFW_FALSE)  specifies whether the windowed mode window will be floating above other regular windows, also called topmost or always - on - top.This is intended primarily for debugging purposes and cannot be used to implement proper full screen windows.Possible values are GLFW_TRUE and GLFW_FALSE.
+	}
+	//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE); //(default: GLFW_TRUE) specifies whether the windowed mode window will be given input focus when created. Possible values are GLFW_TRUE and GLFW_FALSE.
+	//GLFW_FOCUS_ON_SHOW (default: GLFW_TRUE) specifies whether the window will be given input focus when glfwShowWindow is called. Possible values are GLFW_TRUE and GLFW_FALSE
+	//GLFW_SCALE_TO_MONITOR (default: GLFW_FALSE) specified whether the window content area should be resized based on the monitor content scale of any monitor it is placed on. This includes the initial placement when the window is created. Possible values are GLFW_TRUE and GLFW_FALSE.
+
 	//window = glfwCreateWindow(visSettings->openGLWindowSize[0], visSettings->openGLWindowSize[1], "Exudyn OpenGL window", NULL, NULL);
-	window = glfwCreateWindow(state->currentWindowSize[0], state->currentWindowSize[1], 
+	window = glfwCreateWindow((int)state->currentWindowSize[0], (int)state->currentWindowSize[1], 
 							  "Exudyn OpenGL window", NULL, NULL);
 
 	if (!window)
@@ -516,8 +524,6 @@ void GlfwRenderer::InitCreateWindow()
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetWindowCloseCallback(window, window_close_callback);
 
-	//+++++++++++++++++++++++++++++++++
-
 	glfwSetWindowRefreshCallback(window, Render);
 	glfwMakeContextCurrent(window);
 
@@ -528,6 +534,22 @@ void GlfwRenderer::InitCreateWindow()
 	glEnable(GL_NORMALIZE);
 	//+++++++++++++++++
 
+	//+++++++++++++++++++++++++++++++++
+	//depending on flags, do some changes to window
+	
+	if (visSettings->window.showWindow)
+	{
+		glfwShowWindow(window); //show the window when created ... should by anyway done, but did not work in Spyder so far
+		//glfwFocusWindow(window); //show window and give focus to window; DANGEROUS, if user does not want this; will by anyway done automatically
+	}
+	else
+	{
+		glfwIconifyWindow(window); //iconify window
+	}
+	if (visSettings->window.maximize)
+	{
+		glfwMaximizeWindow(window);
+	}
 	RunLoop();
 }
 
@@ -842,7 +864,7 @@ void GlfwRenderer::SaveImage()
 		if (!visSettings->exportImages.saveImageSingleFile)
 		{
 			char num[100];
-			sprintf(num, "%05d", visSettings->exportImages.saveImageFileCounter);
+			sprintf(num, "%05d", (int)visSettings->exportImages.saveImageFileCounter);
 
 			filename += num;
 			visSettings->exportImages.saveImageFileCounter++; //this changes the settings, because it should always contain the current value for consecutive simulations
@@ -866,7 +888,7 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadBuffer(GL_FRONT);
-	glReadPixels(0, 0, windowWidth, windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
+	glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
 
 	std::ofstream imageFile;
 	imageFile.open(filename, std::ofstream::out | std::ofstream::binary);

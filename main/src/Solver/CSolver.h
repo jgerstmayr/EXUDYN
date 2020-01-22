@@ -52,15 +52,15 @@ namespace EXUstd
 
 		//Eigen::initParallel(); //use this in case, that omp is used in other parts of the code
 
-		int nthreads = simulationSettings.numberOfThreads; //activated /Zc:twoPhase- in compiler options to suppress warning
+		Index nthreads = simulationSettings.numberOfThreads; //activated /Zc:twoPhase- in compiler options to suppress warning
 		if (nthreads < 1 || nthreads > 100) { PyError("simulationSettings.numberOfThreads is out of range(1..100)!"); return; }
 
 		if (nthreads != omp_get_num_threads())
 		{
-			omp_set_num_threads(nthreads);
+			omp_set_num_threads((int)nthreads);
 
 #ifdef USE_EIGEN
-			Eigen::setNbThreads(nthreads); //not used for now, as Eigen SparseLU is not parallelized
+			Eigen::setNbThreads((int)nthreads); //not used for now, as Eigen SparseLU is not parallelized
 #endif
 		}
 	}

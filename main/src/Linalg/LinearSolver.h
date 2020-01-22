@@ -22,15 +22,16 @@
 
 #ifdef USE_EIGEN
 	#define USE_EIGEN_SPARSE_SOLVER
-	#include "Eigen/Sparse"
-	#include "Eigen/Dense"
+	#include "../Eigen/Sparse"
+	#include "../Eigen/Dense"
 	//#include "Eigen/SuperLUSupport"
-	#include "Eigen/SparseLU"
+	#include "../Eigen/SparseLU"
 	//#include <Eigen/Core>
 	#include <omp.h> //for eigen omp support
 	typedef Eigen::Triplet<Real> EigenTriplet;				//! this is a simple (row,col,value) structure for sparse matrix non zero entries
 	typedef std::vector<EigenTriplet> EigenTripletVector;	//! this vector stores (dynamically!) the triplets
 	typedef Eigen::SparseMatrix<Real> EigenSparseMatrix;	//! declares a column-major sparse matrix type of double
+	typedef Eigen::SparseMatrix<Real>::StorageIndex StorageIndex;	//! conversion to Index necessary
 #endif
 
 

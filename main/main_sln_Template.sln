@@ -39,7 +39,6 @@ Global
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x64.ActiveCfg = Release|x64
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x64.Build.0 = Release|x64
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x86.ActiveCfg = Release|Win32
-		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x86.Build.0 = Release|Win32
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseFast|Any CPU.ActiveCfg = ReleaseFast|Win32
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseFast|x64.ActiveCfg = ReleaseFast|x64
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseFast|x86.ActiveCfg = ReleaseFast|Win32

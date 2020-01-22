@@ -115,21 +115,21 @@ public:
                                                                        //! read access to last item at numberOfItems-1
     const T& Last() const
     {
-        release_assert(NumberOfItems() && "ERROR: ObjectContainer<T>::Last() const, NumberOfItems() == 0");
+        CHECKandTHROW(NumberOfItems(), "ERROR: ObjectContainer<T>::Last() const, NumberOfItems() == 0");
         return *(data[NumberOfItems() - 1]);
     }
 
     //! read access to last item at numberOfItems-1
     T& Last()
     {
-        release_assert(NumberOfItems() && "ERROR: ObjectContainer<T>::Last(), NumberOfItems() == 0");
+        CHECKandTHROW(NumberOfItems(), "ERROR: ObjectContainer<T>::Last(), NumberOfItems() == 0");
         return *(data[NumberOfItems() - 1]);
     }
 
     //! read access to last item at numberOfItems-1
     const T* LastPtr()
     {
-        release_assert(NumberOfItems() && "ERROR: ObjectContainer<T>::LastPtr(), NumberOfItems() == 0");
+        CHECKandTHROW(NumberOfItems(), "ERROR: ObjectContainer<T>::LastPtr(), NumberOfItems() == 0");
         return (data[NumberOfItems() - 1]);
     }
 
@@ -152,8 +152,8 @@ public:
     {
         if (endPosition == EXUstd::InvalidIndex) { endPosition = array.NumberOfItems(); }
 
-        release_assert(beginPosition >= 0 && "ObjectContainer<T>::CopyFrom, beginPosition < 0");
-        release_assert(endPosition <= array.NumberOfItems() && "ObjectContainer<T>::CopyFrom, endPosition > numberOfItems");
+        CHECKandTHROW(beginPosition >= 0, "ObjectContainer<T>::CopyFrom, beginPosition < 0");
+        CHECKandTHROW(endPosition <= array.NumberOfItems(), "ObjectContainer<T>::CopyFrom, endPosition > numberOfItems");
 
         Flush(); //delete all existing objects
         if (array.NumberOfItems() == 0) { return; }
@@ -182,8 +182,8 @@ public:
     //!random write access operator; enables access to objects, not to pointers; will NOT increase size of array
     T& operator[] (Index i)
     {
-        release_assert(i >= 0 && "ObjectContainer<T>::operator[], i < 0");
-        release_assert((i < NumberOfItems()) && "ObjectContainer<T>::operator[], i >= numberOfItems"); //read access to non-initialized data makes no sense!
+        CHECKandTHROW(i >= 0, "ObjectContainer<T>::operator[], i < 0");
+        CHECKandTHROW((i < NumberOfItems()), "ObjectContainer<T>::operator[], i >= numberOfItems"); //read access to non-initialized data makes no sense!
 
         return *(data[i]);
     }
@@ -191,8 +191,8 @@ public:
     //! random read access operator; read access only to elements in range[0,numberOfItems].
     const T& operator[] (Index i) const
     {
-        release_assert((i >= 0) && "ObjectContainer<T>::const operator[], i < 0");
-        release_assert((i < NumberOfItems()) && "ObjectContainer<T>::const operator[], i >= NumberOfItems()"); //read access to non-initialized data makes no sense!
+        CHECKandTHROW((i >= 0), "ObjectContainer<T>::const operator[], i < 0");
+        CHECKandTHROW((i < NumberOfItems()), "ObjectContainer<T>::const operator[], i >= NumberOfItems()"); //read access to non-initialized data makes no sense!
 
         return *(data[i]);
     }
@@ -212,7 +212,7 @@ public:
     //! comparison operator, component-wise compare for items T, not T*; returns true, if all components are equal; not virtual, because derived class has different arguments
     bool operator== (const ObjectContainer<T>& array) const
     {
-        release_assert((NumberOfItems() == array.NumberOfItems()) && "ObjectContainer::operator==: incompatible size of arrays");
+        CHECKandTHROW((NumberOfItems() == array.NumberOfItems()), "ObjectContainer::operator==: incompatible size of arrays");
         Index cnt = 0;
         for (T* item : array.data)
         {
@@ -263,8 +263,8 @@ public:
     //! remove (and delete) item at position; move forward all elements in range(position+1,numberOfItems) ; decreases numberOfItems by one; does nothing if position == -1 ==> compatible with GetIndexOfItem(...)
     void Remove(Index position)
     {
-        release_assert(position >= 0 && position < NumberOfItems() && "ObjectContainer::Remove: invalid position");
-        release_assert(data[position] != nullptr && "ObjectContainer::Remove: invalid position pointer"); //should not happen
+        CHECKandTHROW(position >= 0 && position < NumberOfItems(), "ObjectContainer::Remove: invalid position");
+        CHECKandTHROW(data[position] != nullptr, "ObjectContainer::Remove: invalid position pointer"); //should not happen
 
         delete data[position];
         data.Remove(position);
@@ -321,8 +321,8 @@ std::ostream& operator<<(std::ostream& os, const ObjectContainer<T>& array)
 //{
 //    if (endPosition == EXUstd::InvalidIndex) { endPosition = array.NumberOfItems(); }
 //
-//    release_assert(beginPosition >= 0 && "ObjectContainer<Vector>::CopyFrom, beginPosition < 0");
-//    release_assert(endPosition <= array.NumberOfItems() && "ObjectContainer<Vector>::CopyFrom, endPosition > numberOfItems");
+//    CHECKandTHROW(beginPosition >= 0, "ObjectContainer<Vector>::CopyFrom, beginPosition < 0");
+//    CHECKandTHROW(endPosition <= array.NumberOfItems(), "ObjectContainer<Vector>::CopyFrom, endPosition > numberOfItems");
 //
 //    Flush(); //delete all existing objects
 //    if (array.NumberOfItems() == 0) { return; }
@@ -343,8 +343,8 @@ inline void ObjectContainer<Real>::CopyFrom(const ObjectContainer<Real>& array, 
 {
     if (endPosition == EXUstd::InvalidIndex) { endPosition = array.NumberOfItems(); }
 
-    release_assert(beginPosition >= 0 && "ObjectContainer<Real>::CopyFrom, beginPosition < 0");
-    release_assert(endPosition <= array.NumberOfItems() && "ObjectContainer<Real>::CopyFrom, endPosition > numberOfItems");
+    CHECKandTHROW(beginPosition >= 0, "ObjectContainer<Real>::CopyFrom, beginPosition < 0");
+    CHECKandTHROW(endPosition <= array.NumberOfItems(), "ObjectContainer<Real>::CopyFrom, endPosition > numberOfItems");
 
     Flush(); //delete all existing objects
     if (array.NumberOfItems() == 0) { return; }
@@ -398,14 +398,3 @@ inline ObjectContainer<Vector>::ObjectContainer(std::initializer_list<Vector> li
     }
 }
 
-    //ObjectContainer(std::initializer_list<ResizableArray<Real>> listOfItems) //pass by value as a standard in C++11
-    //{
-    //    release_assert(data.GetDataPointer() == nullptr && data.NumberOfItems() == 0 && "ObjectContainer: constructor failed");
-
-    //    data.EnlargeMaxNumberOfItemsTo(listOfItems.size());
-
-    //    Index cnt = 0;
-    //    for (const T& item : listOfItems) {
-    //        data[cnt++] = new ResizableArray<Real>(item);
-    //    }
-    //}

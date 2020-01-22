@@ -57,7 +57,7 @@ cableList=[]        #for cable elements
 nodeList=[]  #for nodes of cable
 nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
 nodeList+=[nc0]
-nElements = 8
+nElements = 8*32
 lElem = L / nElements
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
@@ -154,11 +154,12 @@ simulationSettings.solutionSettings.writeSolutionToFile = True
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
 #simulationSettings.solutionSettings.outputPrecision = 4
 simulationSettings.displayComputationTime = False
-simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.newton.useModifiedNewton = False
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
+simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
-simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
+simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
 simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 1e-5
 simulationSettings.timeIntegration.newton.maxDiscontinuousIterations = 2 #only two for selection of correct sliding cable element
 
@@ -167,13 +168,14 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = useIn
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = useIndex2
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 simulationSettings.displayStatistics = False
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
 SC.visualizationSettings.loads.show = False
 #SC.visualizationSettings.connectors.showNumbers = True
-SC.visualizationSettings.nodes.defaultSize = 0.01
-SC.visualizationSettings.markers.defaultSize = 0.01
+SC.visualizationSettings.nodes.defaultSize = 0.002
+SC.visualizationSettings.markers.defaultSize = 0.002
 SC.visualizationSettings.connectors.defaultSize = 0.01
 SC.visualizationSettings.connectors.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1

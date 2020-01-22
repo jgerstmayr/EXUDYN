@@ -246,6 +246,9 @@ classDescription = "Window and interaction settings for visualization; handle ch
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      renderWindowSize,               , 	             2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
 V,      startupTimeout,                 , 	             ,     Index,        "5000",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
+V,      alwaysOnTop,                    , 	             ,     bool,         false,                  , P,      "true: OpenGL render window will be always on top of all other windows"
+V,      maximize,                       , 	             ,     bool,         false,                  , P,      "true: OpenGL render window will be maximized at startup"
+V,      showWindow,                     , 	             ,     bool,         true,                   , P,      "true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
 V,      keypressRotationStep,           , 	             ,     float,        "5.f",                  , P,      "rotation increment per keypress in degree (full rotation = 360 degree)"
 V,      mouseMoveRotationFactor,        , 	             ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
 V,      keypressTranslationStep,        , 	             ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"

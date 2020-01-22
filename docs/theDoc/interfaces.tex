@@ -221,6 +221,9 @@ VSettingsWindow has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of OpenGL render window in pixel\\ \hline
     startupTimeout &     Index &      &     5000 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
+    alwaysOnTop &     bool &      &     False &     true: OpenGL render window will be always on top of all other windows\\ \hline
+    maximize &     bool &      &     False &     true: OpenGL render window will be maximized at startup\\ \hline
+    showWindow &     bool &      &     True &     true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
     keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
     mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
     keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline

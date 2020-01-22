@@ -48,7 +48,7 @@ const CSolverBase& MainSolverBase::GetCSolver() const
 { 
 	assert(0 && "MainSolverBase: const GetCSolver(): illegal call"); return dummyCSolverBase;
 };
-CSolverBase& MainSolverBase::GetCSolver() { assert(0 && "MainSolverBase: GetCSolver(): illegal call"); return dummyCSolverBase; };
+CSolverBase& MainSolverBase::GetCSolver() { CHECKandTHROWstring("MainSolverBase: GetCSolver(): illegal call"); return dummyCSolverBase; };
 
 
 //! check if MainSolverBase is initialized ==> otherwise raise SysError

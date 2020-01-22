@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -96,7 +96,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,6 +118,9 @@ class VSettingsWindow // AUTO:
 public: // AUTO: 
   Index2 renderWindowSize;                        //!< AUTO: initial size of OpenGL render window in pixel
   Index startupTimeout;                           //!< AUTO: OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
+  bool alwaysOnTop;                               //!< AUTO: true: OpenGL render window will be always on top of all other windows
+  bool maximize;                                  //!< AUTO: true: OpenGL render window will be maximized at startup
+  bool showWindow;                                //!< AUTO: true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)
   float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
   float mouseMoveRotationFactor;                  //!< AUTO: rotation increment per 1 pixel mouse movement in degree
   float keypressTranslationStep;                  //!< AUTO: translation increment per keypress relative to window size
@@ -130,6 +133,9 @@ public: // AUTO:
   {
     renderWindowSize = Index2({1024,768});
     startupTimeout = 5000;
+    alwaysOnTop = false;
+    maximize = false;
+    showWindow = true;
     keypressRotationStep = 5.f;
     mouseMoveRotationFactor = 1.f;
     keypressTranslationStep = 0.1f;
@@ -148,6 +154,9 @@ public: // AUTO:
     os << "VSettingsWindow" << ":\n";
     os << "  renderWindowSize = " << renderWindowSize << "\n";
     os << "  startupTimeout = " << startupTimeout << "\n";
+    os << "  alwaysOnTop = " << alwaysOnTop << "\n";
+    os << "  maximize = " << maximize << "\n";
+    os << "  showWindow = " << showWindow << "\n";
     os << "  keypressRotationStep = " << keypressRotationStep << "\n";
     os << "  mouseMoveRotationFactor = " << mouseMoveRotationFactor << "\n";
     os << "  keypressTranslationStep = " << keypressTranslationStep << "\n";
@@ -170,7 +179,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -322,7 +331,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -394,7 +403,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -457,7 +466,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -528,7 +537,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -582,7 +591,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -657,7 +666,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -731,7 +740,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -799,7 +808,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -873,7 +882,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-15 (last modfied)
+* @date         AUTO: 2020-01-22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

@@ -27,8 +27,14 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 
 //typedef size_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
 //alternatively use: 
+
+#if defined(__x86_64__) || defined(__ppc64__) || defined(_WIN64)
+typedef uint64_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+typedef int64_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
+#else
 typedef uint32_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
 typedef int32_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
+#endif
 
 #include "Main/Stdoutput.h"		//for pout and error/warning messages
 

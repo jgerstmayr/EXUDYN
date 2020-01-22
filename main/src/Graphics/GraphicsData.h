@@ -211,7 +211,7 @@ public:
 		glText.offsetX = offsetX;
 		glText.offsetY = offsetY;
 
-		int len = text.size();
+		int len = (int)text.size();
 		glText.text = new char[len + 1]; //will be deleted in destructor of GraphicsData
 		strcpy_s(glText.text, len + 1, text.c_str());
 

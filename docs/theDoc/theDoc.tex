@@ -174,7 +174,7 @@ Johannes Gerstmayr\vspace{2cm}
 \mysection{Python-C++ command interface}
 This section lists the basic interface functions which can be used to set up a \codeName\ model in Python.
 
-To import the module, just include the \codeName\ module in Python (for compatibility with examples and other users, we recommend to use the 'exu' abbreviation throughout):
+To import the module, just include the \codeName\ module in Python (for compatibility with examples and other users, we recommend to use the 'exu' abbreviation throughout)\footnote{note that there is a second module, called exudynFast, which does deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases). To check which version you have, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}:
 \bi
   \item[] \texttt{import exudyn as exu}
 \ei

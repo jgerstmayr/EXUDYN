@@ -161,8 +161,8 @@ bool PyStartOpenGLRenderer()
 {
 #ifdef USE_GLFW_GRAPHICS
 	return glfwRenderer.SetupRenderer();
-#elif
-	SysError("GLFW_Graphics deactivated");
+#else
+	PyWarning("GLFW_Graphics deactivated");
 	return false;
 #endif
 }
@@ -172,9 +172,8 @@ void PyStopOpenGLRenderer()
 {
 #ifdef USE_GLFW_GRAPHICS
 	glfwRenderer.StopRenderer();
-#elif
-	SysError("GLFW_Graphics deactivated");
-	return false;
+#else
+	PyWarning("GLFW_Graphics deactivated");
 #endif
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -278,9 +277,13 @@ void PyThrowTest()
 //	return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)m.NumberOfRows(), (int)m.NumberOfColumns()}, m.GetDataPointer()); //copy array (could also be referenced!)
 //}
 
-
+#ifdef __FAST_EXUDYN_LINALG
+PYBIND11_MODULE(exudynFast, m) {
+	m.doc() = "EXUDYN binding Python<->C++\n This is the 'fast' version without range/memory/whatsoever checks and uses /fp:fast compiler options!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
+#else
 PYBIND11_MODULE(exudyn, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
+#endif
 
 	//m.def("Print", &PyPrint, "this allows printing via exudyn, which allows to redirect all output to file");
 	

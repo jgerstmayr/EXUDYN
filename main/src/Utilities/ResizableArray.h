@@ -112,6 +112,10 @@ public:
 
 	//! copy constructor; copies data (e.g. Index, Real or SlimVector<3>)
 	ResizableArray(const ResizableArray<T>& array) {
+		//not all cases of CopyFrom will initialize array ==> do it here!
+		data = nullptr;
+		numberOfItems = 0;
+		maxNumberOfItems = 0;
 		CopyFrom(array);
 	}
 

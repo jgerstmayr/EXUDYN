@@ -89,7 +89,7 @@ void GeneralMatrixEigenSparse::SetMatrix(const Matrix& otherMatrix)
 			Real value = otherMatrix(i, j);
 			if (value != 0.)
 			{
-				triplets.push_back(EigenTriplet(i, j, value));
+				triplets.push_back(EigenTriplet((StorageIndex)i, (StorageIndex)j, value));
 			}
 		}
 	}
@@ -113,7 +113,7 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 				Real value = submatrix(i, j);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet(LTGrows[i], LTGcolumns[j], value));
+					triplets.push_back(EigenTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
 				}
 			}
 		}
@@ -127,7 +127,7 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 				Real value = submatrix(i, j);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet(LTGrows[i] + rowOffset, LTGcolumns[j] + columnOffset, factor*value));
+					triplets.push_back(EigenTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
 				}
 			}
 		}
@@ -151,7 +151,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, R
 				Real value = submatrix(j, i);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet(LTGrows[i], LTGcolumns[j], value));
+					triplets.push_back(EigenTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
 				}
 			}
 		}
@@ -165,7 +165,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, R
 				Real value = submatrix(j, i);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet(LTGrows[i] + rowOffset, LTGcolumns[j] + columnOffset, factor*value));
+					triplets.push_back(EigenTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
 				}
 			}
 		}
@@ -191,7 +191,7 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix& submatrix, Inde
 		{
 			if (item.value() != 0.)
 			{
-				triplets.push_back(EigenTriplet(item.row() + rowOffset, item.col() + columnOffset, item.value()));
+				triplets.push_back(EigenTriplet(item.row() + (StorageIndex)rowOffset, item.col() + (StorageIndex)columnOffset, item.value()));
 			}
 		}
 	}
@@ -217,7 +217,7 @@ void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec)
 		Real value = vec[i];
 		if (value != 0.)
 		{
-			triplets.push_back(EigenTriplet(i, column, value));
+			triplets.push_back(EigenTriplet((StorageIndex)i, (StorageIndex)column, value));
 		}
 	}
 }

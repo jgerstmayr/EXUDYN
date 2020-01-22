@@ -59,7 +59,7 @@ public:
     //! @todo: add private constructors Vector(T), Vector(T,T), Vector(int, int) in order to avoid programming errors; same for ConstSizeVectorBase
     ConstSizeVectorBase(Index numberOfItemsInit)
     {
-        release_assert(numberOfItemsInit <= dataSize && "ERROR: call to ConstSizeVectorBase(Index): dataSize mismatch");
+        CHECKandTHROW(numberOfItemsInit <= dataSize, "ERROR: call to ConstSizeVectorBase(Index): dataSize mismatch");
 		this->data = &constData[0];
 		this->numberOfItems = numberOfItemsInit;
 	}
@@ -67,7 +67,7 @@ public:
     //! initialize ConstSizeVectorBase with numberOfItemsInit Reals; assign all data items with 'initializationValue'
     ConstSizeVectorBase(Index numberOfItemsInit, T initializationValue)
     {
-        release_assert(numberOfItemsInit <= dataSize && "ERROR: call to ConstSizeVectorBase(Index): dataSize mismatch");
+        CHECKandTHROW(numberOfItemsInit <= dataSize, "ERROR: call to ConstSizeVectorBase(Index): dataSize mismatch");
 
 		this->data = &constData[0];
 		this->numberOfItems = numberOfItemsInit;
@@ -81,7 +81,7 @@ public:
     //! constructor with initializer list; condition: listOfReals.size() <= dataSize
     ConstSizeVectorBase(std::initializer_list<T> listOfReals) //pass by value as a standard in C++11
     {
-        release_assert(listOfReals.size() <= dataSize && "ERROR: ConstSizeVectorBase::constructor, dataSize mismatch with initializer_list");
+        CHECKandTHROW(listOfReals.size() <= dataSize, "ERROR: ConstSizeVectorBase::constructor, dataSize mismatch with initializer_list");
         //static_assert supported by C++14 (supports listOfReals.size() as constexpr) ==> needs /std:c++17 flag
 
 		this->data = &constData[0];
@@ -109,8 +109,8 @@ public:
     //! copies 'dataSize' items, independently of array size (might cause memory access error)
     ConstSizeVectorBase(const VectorBase<T>& vector, Index startPositionVector)
     {
-        release_assert(startPositionVector >= 0 && "ERROR: ConstSizeVectorBase(const VectorBase<T>&, Index), startPositionVector < 0");
-        release_assert(dataSize + startPositionVector <= vector.NumberOfItems() && "ERROR: ConstSizeVectorBase(const VectorBase<T>&, Index), dataSize mismatch");
+        CHECKandTHROW(startPositionVector >= 0, "ERROR: ConstSizeVectorBase(const VectorBase<T>&, Index), startPositionVector < 0");
+        CHECKandTHROW(dataSize + startPositionVector <= vector.NumberOfItems(), "ERROR: ConstSizeVectorBase(const VectorBase<T>&, Index), dataSize mismatch");
 
 		this->data = &constData[0];
 		this->numberOfItems = dataSize;
@@ -139,7 +139,7 @@ public:
     //! call to ConstSizeVectorBase::SetNumberOfItems leads to run-time error if newNumberOfItems > dataSize; used in SetVector({...}) and in operator=; does not reset data
     virtual void SetNumberOfItems(Index newNumberOfItems) override
     {
-        release_assert(newNumberOfItems <= dataSize && "ERROR: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems > dataSize");
+        CHECKandTHROW(newNumberOfItems <= dataSize, "ERROR: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems > dataSize");
 		this->numberOfItems = newNumberOfItems;
     }
 
@@ -170,8 +170,8 @@ public:
     //! add two vectors, result = v1+v2 (for each component); only operated in range [0,numberOfItems]
     friend ConstSizeVectorBase<T, dataSize> operator+ (const ConstSizeVectorBase<T, dataSize>& v1, const ConstSizeVectorBase<T, dataSize>& v2)
     {
-        release_assert((v1.NumberOfItems() == v2.NumberOfItems()) && "ConstSizeVectorBase::operator+: incompatible size of vectors");
-        release_assert((v1.NumberOfItems() <= dataSize) && "ConstSizeVectorBase::operator+: incompatible size of vectors: dataSize");
+        CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "ConstSizeVectorBase::operator+: incompatible size of vectors");
+        CHECKandTHROW((v1.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator+: incompatible size of vectors: dataSize");
         
         ConstSizeVectorBase<T, dataSize> result(v1.NumberOfItems());
         Index cnt = 0;
@@ -185,8 +185,8 @@ public:
     //! add two vectors, result = v1-v2 (for each component); only operated in range [0,numberOfItems]
     friend ConstSizeVectorBase<T, dataSize> operator- (const ConstSizeVectorBase<T, dataSize>& v1, const ConstSizeVectorBase<T, dataSize>& v2)
     {
-        release_assert((v1.NumberOfItems() == v2.NumberOfItems()) && "ConstSizeVectorBase::operator-: incompatible size of vectors");
-        release_assert((v1.NumberOfItems() <= dataSize) && "ConstSizeVectorBase::operator-: incompatible size of vectors: dataSize");
+        CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "ConstSizeVectorBase::operator-: incompatible size of vectors");
+        CHECKandTHROW((v1.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator-: incompatible size of vectors: dataSize");
         ConstSizeVectorBase<T, dataSize> result(v1.NumberOfItems());
         Index cnt = 0;
         for (auto &item : result) {
@@ -199,7 +199,7 @@ public:
     //! scalar multiply, result = scalar * v (for each component); only operated in range [0,numberOfItems]
     friend ConstSizeVectorBase<T, dataSize> operator* (const ConstSizeVectorBase<T, dataSize>& v, T scalar)
     {
-        release_assert((v.NumberOfItems() <= dataSize) && "ConstSizeVectorBase::operator* (scalar * v): incompatible size of vectors");
+        CHECKandTHROW((v.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator* (scalar * v): incompatible size of vectors");
         ConstSizeVectorBase<T, dataSize> result(v.NumberOfItems());
         Index cnt = 0;
         for (auto &item : result) {
@@ -211,7 +211,7 @@ public:
     //! scalar multiply, result = v * scalar (for each component); only operated in range [0,numberOfItems]
     friend ConstSizeVectorBase<T, dataSize> operator* (T scalar, const ConstSizeVectorBase<T, dataSize>& v)
     {
-        release_assert((v.NumberOfItems() <= dataSize) && "ConstSizeVectorBase::operator* (v * scalar): incompatible size of vectors");
+        CHECKandTHROW((v.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator* (v * scalar): incompatible size of vectors");
         ConstSizeVectorBase<T, dataSize> result(v.NumberOfItems());
         Index cnt = 0;
         for (auto &item : result) {

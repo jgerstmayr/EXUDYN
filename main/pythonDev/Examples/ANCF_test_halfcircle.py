@@ -77,7 +77,7 @@ if mode==0: #treat one element
 
 else: #treat n elements
     nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
-    nElements = 8*4 #works now better 2020-01-02 with h=0.01; does not work with 16 elements (2019-12-07)
+    nElements = 8*32 #2020-01-02: 64 elements; works now better 2020-01-02 with h=0.01; does not work with 16 elements (2019-12-07)
     lElem = L / nElements
     for i in range(nElements):
         nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
@@ -126,6 +126,7 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 simulationSettings.displayStatistics = True
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
@@ -149,11 +150,11 @@ if solveDynamic:
     exu.StopRenderer() #safely close rendering window!
 
 else:
-    simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-9
-    simulationSettings.staticSolver.verboseMode = 1
-
-    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
-    simulationSettings.staticSolver.newton.maxIterations = 15 #50 for bending into circle
+    simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-9*0.25
+#    simulationSettings.staticSolver.verboseMode = 1
+#
+#    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
+    simulationSettings.staticSolver.newton.maxIterations = 50 #for bending into circle
     
     exu.StartRenderer()
 

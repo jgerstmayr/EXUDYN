@@ -74,7 +74,7 @@ public:
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; data is not initialized
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit)
 	{
-		//release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) && "Matrix::Matrix(Index, Index): invalid parameters"); //unsigned int always >= 0
+		//CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) && "Matrix::Matrix(Index, Index): invalid parameters"); //unsigned int always >= 0
 
 		Init();
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -87,7 +87,7 @@ public:
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize items with 'initializationValue'
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, T initializationValue)
 	{
-		//release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) && "Matrix::Matrix(Index, Index, T): invalid parameters"); //unsigned int always >= 0
+		//CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) && "Matrix::Matrix(Index, Index, T): invalid parameters"); //unsigned int always >= 0
 
 		Init();
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -100,8 +100,8 @@ public:
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize data with initializer list
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfReals)
 	{
-		//release_assert((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&  //unsigned int always >= 0
-		release_assert((numberOfRowsInit*numberOfColumnsInit == listOfReals.size()) &&
+		//CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&  //unsigned int always >= 0
+		CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit == listOfReals.size()),
 			"Matrix::Matrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 
 		Init();
@@ -221,8 +221,7 @@ public:
 	//! Set rows and columns sizes (also used in derived classes)
 	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit)
 	{
-		release_assert(/*(numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) &&*/
-			"Matrix::SetNumberOfRowsAndColumns(Index, Index): invalid parameters");
+		/*CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0), "Matrix::SetNumberOfRowsAndColumns(Index, Index): invalid parameters");*/
 		if (numberOfRows != numberOfRowsInit || numberOfColumns != numberOfColumnsInit || data == NULL)
 		{
 			ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -232,8 +231,8 @@ public:
 	//! copy a submatrix from matrix, ranging rows[matrixStartRow,matrixEndRow] and columns[matrixEndColumns]; CopyFrom(m, 0,1,0,1) copy the item m(0,0)
 	void CopyFrom(const MatrixBase& matrix, Index matrixStartRow, Index matrixStartColumn, Index matrixEndRow, Index matrixEndColumn)
 	{
-		release_assert((/*matrixStartRow >= 0 && matrixStartColumn >= 0) &&*/
-			matrixEndRow >= matrixStartRow && matrixEndColumn >= matrixStartColumn) &&
+		CHECKandTHROW((/*matrixStartRow >= 0 && matrixStartColumn >= 0) &&*/
+			matrixEndRow >= matrixStartRow && matrixEndColumn >= matrixStartColumn),
 			"Matrix::CopyFrom(...): invalid parameters");
 		ResizeMatrix(matrixEndRow - matrixStartRow, matrixEndColumn - matrixStartColumn);
 		Index i = 0;
@@ -268,8 +267,8 @@ public:
 	//! set matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize data with initializer list
 	void SetMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfTs)
 	{
-		release_assert((/*numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&*/
-			numberOfRowsInit*numberOfColumnsInit == listOfTs.size()) &&
+		CHECKandTHROW((/*numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&*/
+			numberOfRowsInit*numberOfColumnsInit == listOfTs.size()),
 			"Matrix::SetMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
 
@@ -282,7 +281,7 @@ public:
 	//Set Matrix with components 'value' in the diagonal and zero elsewhere
 	void SetScalarMatrix(Index rowsColumns, T value)
 	{
-		//release_assert(rowsColumns >= 0 && "Matrix::SetScalarMatrix(Index, T): invalid parameters!");
+		//CHECKandTHROW(rowsColumns >= 0 && "Matrix::SetScalarMatrix(Index, T): invalid parameters!");
 		SetNumberOfRowsAndColumns(rowsColumns, rowsColumns); //JG2019-05-13: changed from ResizeMatrix(...)
 
 		for (Index i = 0; i < rowsColumns; i++)
@@ -299,23 +298,23 @@ public:
 	//! const (read) access of item with index 'i'; items run in range[0, numberOfRows*numberOfColumns]
 	const T& GetItem(Index index) const
 	{
-		//release_assert((index >= 0) && "Matrix::GetItem(Index) const: index < 0");
-		release_assert((index < numberOfRows*numberOfColumns) && "Matrix::GetItem(Index) const: index >= numberOfRows*numberOfColumns");
+		//CHECKandTHROW((index >= 0) && "Matrix::GetItem(Index) const: index < 0");
+		CHECKandTHROW((index < numberOfRows*numberOfColumns), "Matrix::GetItem(Index) const: index >= numberOfRows*numberOfColumns");
 		return data[index];
 	}
 
 	//! by reference (write) access of item with index 'i'; does not automatically increase array (compatibility with SlimArray<>)
 	T& GetItem(Index index)
 	{
-		release_assert((index < numberOfRows*numberOfColumns) && "Matrix::GetItem(Index): index >= numberOfRows*numberOfColumns");
+		CHECKandTHROW((index < numberOfRows*numberOfColumns), "Matrix::GetItem(Index): index >= numberOfRows*numberOfColumns");
 		return data[index];
 	}
 
 	//Referencing access-operator on element using row- and column-values
 	T& GetItem(Index row, Index column)
 	{
-		release_assert((row < numberOfRows) && "Matrix::GetItem()(Index, Index): request of invalid row");
-		release_assert((column < numberOfColumns) && "Matrix::GetItem()(Index, Index): request of invalid column");
+		CHECKandTHROW((row < numberOfRows), "Matrix::GetItem()(Index, Index): request of invalid row");
+		CHECKandTHROW((column < numberOfColumns), "Matrix::GetItem()(Index, Index): request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	}
@@ -324,8 +323,8 @@ public:
 	//Referencing constant access-operator on element using row- and column-values, WARNING: ZERO-BASED (DIFFERENT TO HOTINT1)
 	const T& GetItem(Index row, Index column) const
 	{
-		release_assert((row < numberOfRows) && "Matrix::GetItem()(Index, Index) const: request of invalid row");
-		release_assert((column < numberOfColumns) && "Matrix::GetItem()(Index, Index) const: request of invalid column");
+		CHECKandTHROW((row < numberOfRows), "Matrix::GetItem()(Index, Index) const: request of invalid row");
+		CHECKandTHROW((column < numberOfColumns), "Matrix::GetItem()(Index, Index) const: request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	};
@@ -339,14 +338,14 @@ public:
 	//! get pointer to row with Index 'row'; allows matrix access with [row][column] style (column is C-based array and does not include range check/assertion!!!)
 	T* operator[](Index row)
 	{
-		release_assert(/*(row >= 0) && */(row < numberOfRows) && "Matrix::operator[](Index): request of invalid row");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator[](Index): request of invalid row");
 
 		return &(data[row*numberOfColumns]);
 	}
 
 	T* operator[](Index row) const
 	{
-		release_assert(/*(row >= 0) && */(row < numberOfRows) && "Matrix::operator[](Index) const: request of invalid row");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator[](Index) const: request of invalid row");
 
 		return &(data[row*numberOfColumns]);
 	}
@@ -354,8 +353,8 @@ public:
 	//Referencing access-operator on element using row- and column-values
 	T& operator()(Index row, Index column)
 	{
-		release_assert(/*(row >= 0) && */(row < numberOfRows) && "Matrix::operator()(Index, Index): request of invalid row");
-		release_assert(/*(column >= 0) && */(column < numberOfColumns) && "Matrix::operator()(Index, Index): request of invalid column");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator()(Index, Index): request of invalid row");
+		CHECKandTHROW(/*(column >= 0) && */(column < numberOfColumns), "Matrix::operator()(Index, Index): request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	}
@@ -364,8 +363,8 @@ public:
 	//Referencing constant access-operator on element using row- and column-values, WARNING: ZERO-BASED (DIFFERENT TO HOTINT1)
 	const T& operator()(Index row, Index column) const
 	{
-		release_assert(/*(row >= 0) && */(row < numberOfRows) && "Matrix::operator()(Index, Index) const: request of invalid row");
-		release_assert(/*(column >= 0) && */(column < numberOfColumns) && "Matrix::operator()(Index, Index) const: request of invalid column");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator()(Index, Index) const: request of invalid row");
+		CHECKandTHROW(/*(column >= 0) && */(column < numberOfColumns), "Matrix::operator()(Index, Index) const: request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	};
@@ -386,7 +385,7 @@ public:
 	//! comparison operator, component-wise compare; MATRIX DIMENSIONS MUST BE SAME; returns true, if all components are equal
 	bool operator== (const MatrixBase<T>& matrix) const
 	{
-		release_assert((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()) && "Matrix::operator==: incompatible number of rows and/or columns");
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator==: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (const auto item : matrix)
 		{
@@ -398,7 +397,7 @@ public:
 	//! add matrix to *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	MatrixBase<T>& operator+= (const MatrixBase<T>& matrix)
 	{
-		release_assert((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()) && "Matrix::operator+=: incompatible number of rows and/or columns");
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator+=: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (auto item : matrix) { data[cnt++] += item; }
 		return *this;
@@ -407,7 +406,7 @@ public:
 	//! add matrix from *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	MatrixBase<T>& operator-= (const MatrixBase<T>& matrix)
 	{
-		release_assert((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()) && "Matrix::operator-=: incompatible number of rows and/or columns");
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator-=: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (auto item : matrix) { data[cnt++] -= item; }
 		return *this;
@@ -430,7 +429,7 @@ public:
 	//! add two matrices m1 and m2 (for each component); creates new Matrix / memory allocation (MAY BE SLOW)
 	friend MatrixBase<T> operator+ (const MatrixBase<T>& m1, const MatrixBase<T>& m2)
 	{
-		release_assert(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
 			"operator+(Matrix,Matrix): Size mismatch");
 
 		MatrixBase<T> result(m1.NumberOfRows(), m1.NumberOfColumns());
@@ -446,7 +445,7 @@ public:
 	//! subtract matrix m2 from m1 (for each component); creates new Matrix / memory allocation (MAY BE SLOW)
 	friend MatrixBase<T> operator- (const MatrixBase<T>& m1, const MatrixBase<T>& m2)
 	{
-		release_assert(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
 			"operator-(Matrix,Matrix): Size mismatch");
 
 		MatrixBase<T> result(m1.NumberOfRows(), m1.NumberOfColumns());
@@ -462,7 +461,7 @@ public:
 	//! multiply matrix m1*m2 (matrix multiplication); algorithm has order O(n^3); creates new Matrix / memory allocation (MAY BE SLOW)
 	friend MatrixBase<T> operator* (const MatrixBase<T>& m1, const MatrixBase<T>& m2)
 	{
-		release_assert(m1.NumberOfColumns() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
 			"operator*(Matrix,Matrix): Size mismatch");
 
 		MatrixBase<T> result(m1.NumberOfRows(), m2.NumberOfColumns());
@@ -507,7 +506,7 @@ public:
 	//template<class TVector>
 	friend VectorBase<T> operator* (const MatrixBase<T>& matrix, const VectorBase<T> & vector)
 	{
-		release_assert(matrix.NumberOfColumns() == vector.NumberOfItems() &&
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
 			"operator*(Matrix,TVector): Size mismatch");
 
 		VectorBase<T> result(matrix.NumberOfRows());
@@ -567,7 +566,7 @@ public:
 	//! @todo check efficient implementation of tranpose for non-square matrices
 	void TransposeYourself()
 	{
-		release_assert(IsSquare() && "Matrix::GetTransposed: matrix must be square!");
+		CHECKandTHROW(IsSquare(), "Matrix::GetTransposed: matrix must be square!");
 
 		for (Index i = 0; i < numberOfRows; i++) {
 			for (Index j = 0; j < i; j++) { //operates only on lower left triangular matrix
@@ -594,7 +593,7 @@ public:
 	//Adds row factor*'fromRow' to row 'toRow'
 	void AddRowToRowWithFactor(SignedIndex fromRow, SignedIndex toRow, T factor)
 	{
-		release_assert((toRow < (SignedIndex)numberOfRows) && (fromRow < (SignedIndex)numberOfRows));
+		CHECKandTHROW((toRow < (SignedIndex)numberOfRows) && (fromRow < (SignedIndex)numberOfRows), "Matrix::AddRowToRowWithFactor(SignedIndex,SignedIndex, T): invalid toRow");
 
 		SignedIndex j = (fromRow - toRow)*(SignedIndex)numberOfColumns;  //offset
 		SignedIndex end = (toRow+1) * (SignedIndex)numberOfColumns-1;
@@ -607,7 +606,7 @@ public:
 	//Adds row factor*'fromRow' to row 'toRow'; consider only columns 'fromCol' ... 'toCol'
 	void AddRowToRowWithFactor(SignedIndex fromRow, SignedIndex toRow, T factor, SignedIndex fromCol, SignedIndex toCol)
 	{
-		release_assert((toRow < (SignedIndex)numberOfRows)&& (fromRow < (SignedIndex)numberOfRows));
+		CHECKandTHROW((toRow < (SignedIndex)numberOfRows)&& (fromRow < (SignedIndex)numberOfRows), "Matrix::AddRowToRowWithFactor: invalid toRow");
 
 		SignedIndex j = (fromRow - toRow)*(SignedIndex)numberOfColumns; //offset
 		SignedIndex end = toRow* (SignedIndex)numberOfColumns + toCol;
@@ -620,7 +619,7 @@ public:
 	//Multiplies the row 'row' with 'value'
 	void MultiplyRow(Index row, T value)
 	{
-		release_assert(row < numberOfRows && "Matrix::MultiplyRow: invalid row");
+		CHECKandTHROW(row < numberOfRows, "Matrix::MultiplyRow: invalid row");
 
 		for (Index i = row*numberOfColumns; i < (row+1) * numberOfColumns; i++) { data[i] *= value; }
 	}
@@ -629,7 +628,7 @@ public:
 	void SwapRows(Index row1, Index row2)
 	{
 		if (row1 == row2) { return; }
-		release_assert((row1 < numberOfRows) && (row2 < numberOfRows) && "Matrix::SwapRows: invalid row");
+		CHECKandTHROW((row1 < numberOfRows) && (row2 < numberOfRows), "Matrix::SwapRows: invalid row");
 
 		for (Index i = 0; i < numberOfColumns; i++) 
 		{ 
@@ -641,7 +640,7 @@ public:
 	void SwapColumns(Index columns1, Index columns2)
 	{
 		if (columns1 == columns2) { return; }
-		release_assert((columns1 < numberOfColumns) && (columns2 < numberOfColumns) && "Matrix::SwapColumns: invalid column");
+		CHECKandTHROW((columns1 < numberOfColumns) && (columns2 < numberOfColumns), "Matrix::SwapColumns: invalid column");
 
 		for (Index i = 0; i < numberOfRows; i++) 
 		{ 
@@ -667,7 +666,7 @@ public:
 	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
 	void AddSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
 	{
-		release_assert(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns() && "Matrix::AddSubmatrix size mismatch");
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
 
 		for (Index i = 0; i < sm.numberOfRows; i++)
 		{
@@ -682,7 +681,7 @@ public:
 	//! the destination rows and columns of the submatrix (sm) relative to row and column are given in LTGrows and LTGcolumns
 	void AddSubmatrix(const MatrixBase<T>& sm, Real factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
 	{
-		release_assert(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns() && "Matrix::AddSubmatrix(2) size mismatch");
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix(2) size mismatch");
 
 		for (Index i = 0; i < sm.numberOfRows; i++)
 		{
@@ -711,7 +710,7 @@ public:
 	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
 	void SetSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0, Real factor = 1.)
 	{
-		release_assert(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns() && "Matrix::SetSubmatrix size mismatch");
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::SetSubmatrix size mismatch");
 
 		for (Index i = 0; i < sm.numberOfRows; i++)
 		{
@@ -726,7 +725,7 @@ public:
 	MatrixBase<T> GetSubmatrix(Index startRow, Index startColumn,
 		Index numberOfRowsGet, Index numberOfColumnsGet)
 	{
-		release_assert(startRow + numberOfRowsGet <= NumberOfRows() && startColumn + numberOfColumnsGet <= NumberOfColumns() && "Matrix::GetSubmatrix index mismatch");
+		CHECKandTHROW(startRow + numberOfRowsGet <= NumberOfRows() && startColumn + numberOfColumnsGet <= NumberOfColumns(), "Matrix::GetSubmatrix index mismatch");
 
 		MatrixBase<T> sm(numberOfRowsGet, numberOfColumnsGet);
 		for (Index i = startRow; i < startRow + numberOfRowsGet; i++)
@@ -742,7 +741,7 @@ public:
 	//add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
 	void AddTransposedSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
 	{
-		release_assert(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns() && "Matrix::AddSubmatrix size mismatch");
+		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
 
 		for (Index i = 0; i < sm.numberOfColumns; i++)
 		{
@@ -784,7 +783,7 @@ namespace EXUmath {
 	template<class TMatrix, class TVector, class TVectorResult>
 	inline void MultMatrixVectorTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
-		release_assert(matrix.NumberOfColumns() == vector.NumberOfItems() &&
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
 			"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
 
 		result.SetNumberOfItems(matrix.NumberOfRows());
@@ -810,7 +809,7 @@ namespace EXUmath {
 	template<class TMatrix, class TVector, class TVectorResult>
 	inline void MultMatrixTransposedVectorTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
-		release_assert(matrix.NumberOfRows() == vector.NumberOfItems() &&
+		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
 			"Hmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch");
 
 		result.SetNumberOfItems(matrix.NumberOfColumns());
@@ -837,7 +836,7 @@ namespace EXUmath {
 	template<class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixMatrixTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
 	{
-		release_assert(m1.NumberOfColumns() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
 			"MultMatrixMatrixTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
 
 		result.SetNumberOfRowsAndColumns(m1.NumberOfRows(), m2.NumberOfColumns());
@@ -861,7 +860,7 @@ namespace EXUmath {
 	template<class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixTransposedMatrixTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
 	{
-		release_assert(m1.NumberOfRows() == m2.NumberOfRows() &&
+		CHECKandTHROW(m1.NumberOfRows() == m2.NumberOfRows(),
 			"MultMatrixTransposedMatrixTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
 
 		result.SetNumberOfRowsAndColumns(m1.NumberOfColumns(), m2.NumberOfColumns());

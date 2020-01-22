@@ -74,8 +74,14 @@ simulationSettings.solutionSettings.coordinatesSolutionFileName= "coordinatesSol
 
 simulationSettings.displayComputationTime = False
 simulationSettings.displayStatistics = True
+
+
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+#    SC.visualizationSettings.window.alwaysOnTop = True #must be done before exu.StartRenderer() called
+#    SC.visualizationSettings.window.maximize = True
+#    SC.visualizationSettings.window.showWindow = False
     exu.StartRenderer()
+
 
 
 resUy = 0 #add up displacements of selected node

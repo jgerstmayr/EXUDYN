@@ -38,7 +38,7 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 	const Index ns = 4;   //number of shape functions
 
 	Index nPoints = parameters.numberOfSegments + 1;
-	Real nSegments = parameters.numberOfSegments;
+	Real nSegments = (Real)parameters.numberOfSegments;
 
 
 	ConstSizeVector<ns> q0DisplRef;	//coordinates (displacement+reference) node 0

@@ -170,7 +170,7 @@ Within this file, the first column shows the simulation time and the following c
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{FAQ -- Frequently asked questions}
+\mysubsection{FAQ -- Frequently asked questions}
 
 \bn
   \item Where do I find the '.exe' file?
@@ -181,6 +181,10 @@ Within this file, the first column shows the simulation time and the following c
   \item What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 	\bi
 	\item[$\ra$] Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
+	\ei
+  \item Why can't I get the focus of the simulation window on startup (render window hidden)?
+	\bi
+	\item[$\ra$] Starting \codeName\ out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools$\ra$Preferences$\ra$Editor$\ra$Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \texttt{SC.visualizationSettings.window.alwaysOnTop=True} {\bf before} starting the renderer with \texttt{exu.StartRenderer()}
 	\ei
 	%
 \en
