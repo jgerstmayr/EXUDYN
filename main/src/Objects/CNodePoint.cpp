@@ -81,6 +81,9 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	default:
 		SysError("CNodePoint::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}
+	//pout << "Pos=" << GetPosition() << "\n";
+	//pout << "value=" << value << "\n";
+	//pout << "type=" << GetOutputVariableTypeString(variableType) << "\n";
 }
 
 

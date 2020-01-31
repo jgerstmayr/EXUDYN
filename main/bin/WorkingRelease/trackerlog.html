@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 322, 
-Number of resolved issues = 266, 
-EXUDYN version = 0.1.266, 
-last change =  2020-01-22
+Number of issues = 328, 
+Number of resolved issues = 272, 
+EXUDYN version = 0.1.272, 
+last change =  2020-01-27
 
 
 <table style = "width:100%">
@@ -38,6 +38,86 @@ last change =  2020-01-22
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0327</td>
+    <td>visualization options</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> convert system structures to dictionary and back; include type information</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-27</td>
+    <td>2020-03-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0326</td>
+    <td>python single line  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> fix possible threading issues of python single command execute</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-01-27</td>
+    <td>2020-03-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0325</td>
+    <td>key callback        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add key callback function into graphics module to enable interactive settings, etc.; transfer latin letters, SHIFT, CTRL, ALT, 0-9,A-Z,.,SPACE as ASCII code</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-26</td>
+    <td>2020-03-26</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0324</td>
+    <td>visualize sensors   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add visualization to sensors (draw as circle with cross)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-25</td>
+    <td>2020-03-25</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0323</td>
+    <td>invalid index test  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add test which checks that invalidIndex in python (-1) converts to invalidIndex in exudyn (use simple object with node number and check node number after setting object</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-01-24</td>
+    <td>2020-03-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0319</td>
     <td>PyError in C++      </td>
@@ -176,22 +256,6 @@ last change =  2020-01-22
     <td></td>
     <td>2020-01-10</td>
     <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0305</td>
-    <td>consistent shut down</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Perform consistent shut down of exudyn in case of PyError(): stop renderer before raising Py or SysError()</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-12-28</td>
-    <td>2020-02-26</td>
     <td></td>
     <td></td>
     <td></td>
@@ -423,22 +487,6 @@ last change =  2020-01-22
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0255</td>
-    <td>add docu for solvers</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add documentation about flags, formulas, error control, jacobians and about the steps in the solvers</td>
-    <td>DOCU</td>
-    <td></td>
-    <td>2019-08-28</td>
-    <td>2019-10-27</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0252</td>
     <td>PostNewtonStep      </td>
     <td>JG</td>
@@ -471,22 +519,6 @@ last change =  2020-01-22
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0227</td>
-    <td>IntegrityNodeCheck  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add integrity check that correct node type is supplied to object; use an additional function for RequiredNodeType(); use none for special elements or mixed node types --> check needs to be put into element specific checks</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-07-13</td>
-    <td>2019-09-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0225</td>
     <td>SlidingJointRigid   </td>
     <td>JG</td>
@@ -496,22 +528,6 @@ last change =  2020-01-22
     <td></td>
     <td>2019-07-10</td>
     <td>2019-09-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0216</td>
-    <td>Sensors             </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add sensor concept and add simple sensors for postprocessing; e.g. add simple sensors to cSystemData, which are written to prescribed sensor file or global sensor file; sensors have [marker, OutputVariableType, coordinate1, coordinate2=0]</td>
-    <td>NEW FEATURE</td>
-    <td></td>
-    <td>2019-06-29</td>
-    <td>2019-08-28</td>
     <td></td>
     <td></td>
     <td></td>
@@ -919,7 +935,22 @@ last change =  2020-01-22
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
-<<<<<<< HEAD
+    <td>0322</td>
+    <td>node ltg            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add python access function to retrieve node local to global ODE2 and AE coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-22</td>
+    <td>2020-03-22</td>
+    <td>2020-01-25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added reference to starting index in global coordinate vector</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0321</td>
     <td>RenderWindow focus  </td>
     <td>JG</td>
@@ -952,17 +983,6 @@ last change =  2020-01-22
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
-    <td>0316</td>
-    <td>Add try/catch       </td>
-    <td>JG</td>
-    <td>RESOLVED</td>
-    <td> add try/catch to main python interface functions; add in all autogenerated functions</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-10</td>
-    <td>2020-03-10</td>
-    <td>2020-01-22</td>
-=======
     <td>0318</td>
     <td>sparse init acc     </td>
     <td>JG</td>
@@ -973,7 +993,22 @@ last change =  2020-01-22
     <td>2020-01-15</td>
     <td>2020-03-15</td>
     <td>2020-01-21</td>
->>>>>>> d80fa013ec63ba64d5996449facc9d250e490cd1
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0316</td>
+    <td>Add try/catch       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add try/catch to main python interface functions; add in all autogenerated functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-10</td>
+    <td>2020-03-10</td>
+    <td>2020-01-22</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1026,6 +1061,22 @@ last change =  2020-01-22
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0305</td>
+    <td>consistent shut down</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Perform consistent shut down of exudyn in case of PyError(): stop renderer before raising Py or SysError()</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-12-28</td>
+    <td>2020-02-26</td>
+    <td>2020-01-25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>but errors which occur directly in python cannot be catched</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0300</td>
@@ -1588,6 +1639,22 @@ last change =  2020-01-22
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0255</td>
+    <td>add docu for solvers</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add documentation about flags, formulas, error control, jacobians and about the steps in the solvers</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2019-08-28</td>
+    <td>2019-10-27</td>
+    <td>2020-01-25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0254</td>
     <td>CircleContact       </td>
     <td>JG</td>
@@ -1988,6 +2055,22 @@ last change =  2020-01-22
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0227</td>
+    <td>IntegrityNodeCheck  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add integrity check that correct node type is supplied to object; use an additional function for RequiredNodeType(); use none for special elements or mixed node types --> check needs to be put into element specific checks</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-07-13</td>
+    <td>2019-09-11</td>
+    <td>2020-01-25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0226</td>
     <td>SlidingJoint2D      </td>
     <td>JG</td>
@@ -2126,6 +2209,22 @@ last change =  2020-01-22
     <td>2019-06-28</td>
     <td>2019-08-27</td>
     <td>2019-07-23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0216</td>
+    <td>Sensors             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add sensor concept and add simple sensors for postprocessing; e.g. add simple sensors to cSystemData, which are written to prescribed sensor file or global sensor file; sensors have [marker, OutputVariableType, coordinate1, coordinate2=0]</td>
+    <td>NEW FEATURE</td>
+    <td></td>
+    <td>2019-06-29</td>
+    <td>2019-08-28</td>
+    <td>2020-01-25</td>
     <td>JG</td>
     <td></td>
     <td></td>

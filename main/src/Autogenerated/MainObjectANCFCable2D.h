@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-02  14:43:11 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -98,6 +98,12 @@ public: // AUTO:
         return "ANCFCable2D";
     }
 
+    //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
+    virtual Node::Type GetRequestedNodeType() const override
+    {
+        return (Node::Type)(Node::Position2D + Node::Orientation2D + Node::Point2DSlope1);
+    }
+
     //! AUTO:  Call a specific object function ==> automatically generated in future?
     virtual py::object CallFunction(STDstring functionName, py::dict args) const override;
 
@@ -118,10 +124,10 @@ public: // AUTO:
         cObjectANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectANCFCable2D->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<bool>(d["useReducedOrderIntegration"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectANCFCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VdrawHeight")) { visualizationObjectANCFCable2D->GetDrawHeight() = py::cast<float>(d["VdrawHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectANCFCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectANCFCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawHeight")) { visualizationObjectANCFCable2D->GetDrawHeight() = py::cast<float>(d["VdrawHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectANCFCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -172,7 +178,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { cObjectANCFCable2D->GetParameters().physicsLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMassPerLength") == 0) { cObjectANCFCable2D->GetParameters().physicsMassPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsBendingStiffness") == 0) { cObjectANCFCable2D->GetParameters().physicsBendingStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

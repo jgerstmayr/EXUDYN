@@ -92,6 +92,7 @@ public:
 		return *mainSystem;
 	}
 
+	//! delete all MainSystems, detach render engine from main systems and and, delete all VisualizationSystems
 	void Reset()
 	{
 		for (auto item : mainSystems)
@@ -104,7 +105,21 @@ public:
 		mainSystems.Flush();
 		visualizationSystems.DetachRenderEngine();
 		visualizationSystems.Reset();
+	}
 
+	//! return reference to a MainSystem
+	MainSystem& GetMainSystem(Index systemNumber)
+	{
+		if (systemNumber < mainSystems.NumberOfItems())
+		{
+			return *(GetMainSystems()[systemNumber]);
+		}
+		else
+		{
+			PyError(STDstring("GetMainSystem: Cannot access system ") + EXUstd::ToString(systemNumber) +
+				" (number of systems = " + EXUstd::ToString(mainSystems.NumberOfItems()) + "); added and returned a new system");
+			return AddMainSystem();
+		}
 	}
 
 };

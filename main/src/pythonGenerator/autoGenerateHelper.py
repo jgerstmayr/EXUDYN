@@ -85,7 +85,8 @@ def DefaultValue2Python(s): #replace _ and other symbols to fit into latex code
     s = s.replace('true','True') #correct python notation
     s = s.replace('false','False') #correct python notation
 
-    s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; use needs to overwrite!
+    s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
+    s = s.replace('OutputVariableType::None','0')  #none always corresponds to 0
 
     
     

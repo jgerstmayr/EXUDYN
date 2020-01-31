@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-01  23:09:13 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,16 +105,16 @@ public: // AUTO:
     {
         cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness = py::cast<Real>(d["stiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "damping")) { cObjectConnectorCoordinateSpringDamper->GetParameters().damping = py::cast<Real>(d["damping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "offset")) { cObjectConnectorCoordinateSpringDamper->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "dryFriction")) { cObjectConnectorCoordinateSpringDamper->GetParameters().dryFriction = py::cast<Real>(d["dryFriction"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "dryFrictionProportionalZone")) { cObjectConnectorCoordinateSpringDamper->GetParameters().dryFrictionProportionalZone = py::cast<Real>(d["dryFrictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "springForceUserFunction")) { if (HPyUtils::CheckForValidFunction(d["springForceUserFunction"])) { cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<Real(Real,Real,Real,Real,Real,Real,Real)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorCoordinateSpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorCoordinateSpringDamper->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorCoordinateSpringDamper->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "damping")) { cObjectConnectorCoordinateSpringDamper->GetParameters().damping = py::cast<Real>(d["damping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "offset")) { cObjectConnectorCoordinateSpringDamper->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "dryFriction")) { cObjectConnectorCoordinateSpringDamper->GetParameters().dryFriction = py::cast<Real>(d["dryFriction"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "dryFrictionProportionalZone")) { cObjectConnectorCoordinateSpringDamper->GetParameters().dryFrictionProportionalZone = py::cast<Real>(d["dryFrictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springForceUserFunction"])) { cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<Real(Real,Real,Real,Real,Real,Real,Real)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorCoordinateSpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorCoordinateSpringDamper->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorCoordinateSpringDamper->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -161,7 +161,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffness") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().damping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

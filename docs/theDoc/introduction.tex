@@ -127,7 +127,7 @@ As an example, consider a \texttt{NodePoint2D}:
 \ei
 Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
 
-\mysubsection{Items: Nodes, Objects, Loads, Markers, ...} \label{sec_items}
+\mysubsection{Items: Nodes, Objects, Loads, Markers, Sensors, ...} \label{sec_items}
 %
 In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
 
@@ -166,7 +166,7 @@ In this section, the most important part of \codeName\ are provided. An overview
 			%\path [line] (systemData) |- (loads);
 
 	\end{tikzpicture}
-  \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indices) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load.}
+  \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indices) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.}
 	\label{fig_items_interaction}
 
 \end{figure}
@@ -212,6 +212,10 @@ Typical situations are:
 
 \mysubsubsection{Loads}
 Loads are used to apply forces and torques to the system. The load values are static values. However, you can use Python functionality to modify loads either by linearly increasing them during static computation or by using the 'preStepPyExecute' structure in order to modify loads in every integration step depending on time or on measured quantities (thus, creating a controller).
+
+\mysubsubsection{Sensors}
+Sensors are only used to measure output variables (values) in order to simpler generate the requested output quantities.
+They have a very weak influence on the system, because they are only evaluated after certain solver steps as requested by the user.
 
 \mysubsubsection{Reference coordinates and displacements}
 Nodes usually have separated reference and initial quantities. Here, 

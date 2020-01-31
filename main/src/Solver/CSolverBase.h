@@ -102,7 +102,7 @@ public:
 	virtual void PostInitializeSolverSpecific(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { }
 
 	//! initialize output files; called from InitializeSolver()
-	virtual void InitializeSolverOutput(const SimulationSettings& simulationSettings); 
+	virtual void InitializeSolverOutput(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
 	//! initialize dense/sparse computation modes
 	virtual bool InitializeSolverPreChecks(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
@@ -163,6 +163,14 @@ public:
 
 	//! write unique coordinates solution file
 	virtual void WriteCoordinatesToFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! write unique sensor file header, depending on static/dynamic simulation
+	virtual void WriteSensorsFileHeader(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! write unique sensor solution file
+	virtual void WriteSensorsToFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+	
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! compute simulation end time (depends on static or time integration solver)
 	virtual Real GetSimulationEndTime(const SimulationSettings& simulationSettings) const

@@ -45,18 +45,18 @@ public:
 	virtual STDstring& GetName() { return name; }
 	virtual const STDstring& GetName() const { return name; }
 
-	virtual void SetWithDictionary(const py::dict& d) { SysError("Invalid call to MainObject::SetWithDictionary"); }
-	virtual py::dict GetDictionary() const { SysError("Invalid call to MainObject::GetDictionary");  return py::dict(); }
+	virtual void SetWithDictionary(const py::dict& d) { SysError("Illegal call to MainObject::SetWithDictionary"); }
+	virtual py::dict GetDictionary() const { SysError("Illegal call to MainObject::GetDictionary");  return py::dict(); }
 
 	//! Get const pointer to computational base class object
-	virtual CObject* GetCObject() const { SysError("Invalid call to MainObject::GetCObject");  return NULL; }
+	virtual CObject* GetCObject() const { SysError("Illegal call to MainObject::GetCObject");  return NULL; }
 	//! Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-	virtual void SetCObject(CObject* pCObject) { SysError("Invalid call to MainObject::SetCObject"); }
+	virtual void SetCObject(CObject* pCObject) { SysError("Illegal call to MainObject::SetCObject"); }
 
 	//! Get const pointer to visualization base class item
-	virtual VisualizationObject* GetVisualizationObject() const { SysError("Invalid call to MainObject::GetVisualizationObject");  return NULL; }
+	virtual VisualizationObject* GetVisualizationObject() const { SysError("Illegal call to MainObject::GetVisualizationObject");  return NULL; }
 	//! Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-	virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { SysError("Invalid call to MainObject::SetVisualizationObject"); }
+	virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { SysError("Illegal call to MainObject::SetVisualizationObject"); }
 
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
 	virtual py::object GetOutputVariable(OutputVariableType variableType) const;
@@ -64,16 +64,18 @@ public:
 	virtual py::object GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData) const;
 	//! GetOutputVariable for a body with type, local position, configuration (reference, current, ...) and return value; copies values==>slow!
 	virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
-	{ SysError("Invalid call to MainObject::GetOutputVariableBody"); return py::object(); }
+	{ SysError("Illegal call to MainObject::GetOutputVariableBody"); return py::object(); }
 
 	//! Get (read) parameter 'parameterName' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Invalid call to MainObject::GetParameter"); return py::object(); }
+	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Illegal call to MainObject::GetParameter"); return py::object(); }
 	//! Set (write) parameter 'parameterName' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-	virtual void SetParameter(const STDstring& parameterName, const py::object& value) { SysError("Invalid call to MainObject::SetParameter(...)"); }
+	virtual void SetParameter(const STDstring& parameterName, const py::object& value) { SysError("Illegal call to MainObject::SetParameter(...)"); }
 
+	//! provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
+	virtual Node::Type GetRequestedNodeType() const { SysError("Illegal call to MainObject::GetRequestedNodeType"); return Node::None; }
 
 	//! call pybind object function, possibly with arguments
-	virtual py::object CallFunction(STDstring functionName, py::dict args) const { SysError("Invalid call to MainObject::CallFunction"); return py::object();  }
+	virtual py::object CallFunction(STDstring functionName, py::dict args) const { SysError("Illegal call to MainObject::CallFunction"); return py::object();  }
 
 	//! Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail; override by according classes
 	virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const { return true; }
@@ -107,9 +109,9 @@ public:
 	virtual CObjectConnector* GetCObjectConnector() const { return (CObjectConnector*)GetCObject(); }
 
 	//! Get reference to marker numbers (const)
-	virtual const ArrayIndex& GetMarkerNumbers() const { SysError("Invalid call to MainObjectConnector::GetMarkerNumbers");  ArrayIndex* v = new ArrayIndex(); return *v; }
+	virtual const ArrayIndex& GetMarkerNumbers() const { SysError("Illegal call to MainObjectConnector::GetMarkerNumbers");  ArrayIndex* v = new ArrayIndex(); return *v; }
 	//! Set reference to marker numbers
-	virtual void SetMarkerNumbers(const ArrayIndex& markerNumbersInit) { SysError("Invalid call to MainObjectConnector::SetMarkerNumbers"); }
+	virtual void SetMarkerNumbers(const ArrayIndex& markerNumbersInit) { SysError("Illegal call to MainObjectConnector::SetMarkerNumbers"); }
 	//! 
 	//virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const;
 };

@@ -725,8 +725,8 @@ py::object MainObjectANCFCable2D::CallFunction(STDstring functionName, py::dict 
 		Vector3D locPos;
 		STDstring configStr;
 		ConfigurationType configType = ConfigurationType::None;
-		HPyUtils::SetVector3DSafely(args, "localPosition", locPos);
-		HPyUtils::SetStringSafely(args, "configuration", configStr);
+		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
+		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }
 		else if (configStr == "Initial") { configType = ConfigurationType::Initial; }
 		else if (configStr == "Reference") { configType = ConfigurationType::Reference; }
@@ -739,8 +739,8 @@ py::object MainObjectANCFCable2D::CallFunction(STDstring functionName, py::dict 
 		Vector3D locPos;
 		STDstring configStr;
 		ConfigurationType configType = ConfigurationType::None;
-		HPyUtils::SetVector3DSafely(args, "localPosition", locPos);
-		HPyUtils::SetStringSafely(args, "configuration", configStr);
+		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
+		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }
 		else if (configStr == "Initial") { configType = ConfigurationType::Initial; }
 		else if (configStr == "Reference") { configType = ConfigurationType::Reference; }

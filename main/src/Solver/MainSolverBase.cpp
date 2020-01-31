@@ -132,32 +132,32 @@ void MainSolverBase::InitializeCheckInitialized(const MainSystem& mainSystem)
   //! get locally stored / last computed system jacobian of solver
 py::array_t<Real> MainSolverBase::GetSystemJacobian() const
 {
-	return HPyUtils::Matrix2NumPy(this->GetCSolver().data.systemJacobian->GetEXUdenseMatrix());
+	return EPyUtils::Matrix2NumPy(this->GetCSolver().data.systemJacobian->GetEXUdenseMatrix());
 }
 
 //! get locally stored / last computed mass matrix of solver
 py::array_t<Real> MainSolverBase::GetSystemMassMatrix() const
 {
-	return HPyUtils::Matrix2NumPy(this->GetCSolver().data.systemMassMatrix->GetEXUdenseMatrix());
+	return EPyUtils::Matrix2NumPy(this->GetCSolver().data.systemMassMatrix->GetEXUdenseMatrix());
 }
 
 //! get locally stored / last computed system residual
 py::array_t<Real> MainSolverBase::GetSystemResidual() const
 {
-	return HPyUtils::PyVector(this->GetCSolver().data.systemResidual);
+	return EPyUtils::PyVector(this->GetCSolver().data.systemResidual);
 }
 
 //! get locally stored / last computed solution (=increment) of Newton
 py::array_t<Real> MainSolverBase::GetNewtonSolution() const
 {
-	return HPyUtils::PyVector(this->GetCSolver().data.newtonSolution);
+	return EPyUtils::PyVector(this->GetCSolver().data.newtonSolution);
 }
 
 //! set locally stored system jacobian of solver
 void MainSolverBase::SetSystemJacobian(const py::array_t<Real>& systemJacobian)
 {
 	Matrix m;
-	HPyUtils::NumPy2Matrix(systemJacobian, m);
+	EPyUtils::NumPy2Matrix(systemJacobian, m);
 
 	CheckInitializedData(*this);
 	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in CSolver
@@ -170,7 +170,7 @@ void MainSolverBase::SetSystemJacobian(const py::array_t<Real>& systemJacobian)
 void MainSolverBase::SetSystemMassMatrix(const py::array_t<Real>& systemMassMatrix)
 {
 	Matrix m;
-	HPyUtils::NumPy2Matrix(systemMassMatrix, m);
+	EPyUtils::NumPy2Matrix(systemMassMatrix, m);
 
 	CheckInitializedData(*this);
 	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in CSolver

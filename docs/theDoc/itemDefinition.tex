@@ -41,6 +41,7 @@ The following items are available in \codeName:
   \item LoadTorqueVector
   \item LoadMassProportional
   \item LoadCoordinate
+  \item SensorNode
 \end{itemize}
 
 %+++++++++++++++++++++++++++++++
@@ -618,7 +619,7 @@ The item ObjectALEANCFCable2D has the following parameters:
     physicsReferenceAxialStrain &     UReal &      &     0. &     reference axial strain of beam (pre-deformation) $\varepsilon_0$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     physicsReferenceCurvature &     UReal &      &     0. &     reference curvature of beam (pre-deformation) $\kappa_0$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
     physicsUseCouplingTerms &     bool &      &     True &     true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)\\ \hline
-    nodeNumbers &     Index3 &      &     [MAXINT, MAXINT, MAXINT] &     two node numbers ANCF cable element\\ \hline
+    nodeNumbers &     Index3 &      &     [MAXINT, MAXINT, MAXINT] &     two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
     useReducedOrderIntegration &     Bool &      &     False &     false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     visualization & VObjectALEANCFCable2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -1478,6 +1479,40 @@ The item LoadCoordinate has the following parameters:
 	  \end{longtable}
 	\end{center}
 The item VLoadCoordinate has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++
+\mysubsection{Sensors}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{SensorNode}
+A sensor attached to a node. The sensor outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to modify sensor values accordingly.
+ \\The item SensorNode has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Node'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number to which sensor is attached to\\ \hline
+    writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::None &     OutputVariableType for sensor\\ \hline
+    visualization & VSensorNode & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VSensorNode has the following parameters:
 %reference manual TABLE
 \begin{center}
   \footnotesize

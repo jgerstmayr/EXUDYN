@@ -160,9 +160,9 @@ public: //
 	}
 
 	//! initialize output files; called from InitializeSolver()
-	virtual void InitializeSolverOutput(const SimulationSettings& simulationSettings) 
+	virtual void InitializeSolverOutput(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		GetCSolver().InitializeSolverOutput(simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().InitializeSolverOutput(*(mainSystem.cSystem), simulationSettings);
 	}
 
 	//! check if system is solvable; initialize dense/sparse computation modes

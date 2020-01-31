@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-09  23:58:43 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -98,6 +98,12 @@ public: // AUTO:
         return "MassPoint";
     }
 
+    //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
+    virtual Node::Type GetRequestedNodeType() const override
+    {
+        return Node::Position;
+    }
+
     //! AUTO:  Call a specific object function ==> automatically generated in future?
     virtual py::object CallFunction(STDstring functionName, py::dict args) const override;
 
@@ -107,9 +113,9 @@ public: // AUTO:
     {
         cObjectMassPoint->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectMassPoint->GetParameters().nodeNumber = py::cast<Index>(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectMassPoint->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsData(d, "VgraphicsData", visualizationObjectMassPoint->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectMassPoint->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsData(d, "VgraphicsData", visualizationObjectMassPoint->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -141,7 +147,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { cObjectMassPoint->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectMassPoint->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectMassPoint->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-11-12  21:47:28 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -103,14 +103,14 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cObjectConnectorCartesianSpringDamper->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        HPyUtils::SetVector3DSafely(d, "stiffness", cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "damping")) { HPyUtils::SetVector3DSafely(d, "damping", cObjectConnectorCartesianSpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "offset")) { HPyUtils::SetVector3DSafely(d, "offset", cObjectConnectorCartesianSpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorCartesianSpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorCartesianSpringDamper->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorCartesianSpringDamper->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetVector3DSafely(d, "stiffness", cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::SetVector3DSafely(d, "damping", cObjectConnectorCartesianSpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::SetVector3DSafely(d, "offset", cObjectConnectorCartesianSpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorCartesianSpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorCartesianSpringDamper->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorCartesianSpringDamper->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -151,11 +151,11 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCartesianSpringDamper->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("stiffness") == 0) { HPyUtils::SetVector3DSafely(value, cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("damping") == 0) { HPyUtils::SetVector3DSafely(value, cObjectConnectorCartesianSpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { HPyUtils::SetVector3DSafely(value, cObjectConnectorCartesianSpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("stiffness") == 0) { EPyUtils::SetVector3DSafely(value, cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("damping") == 0) { EPyUtils::SetVector3DSafely(value, cObjectConnectorCartesianSpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { EPyUtils::SetVector3DSafely(value, cObjectConnectorCartesianSpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorCartesianSpringDamper->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorCartesianSpringDamper->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

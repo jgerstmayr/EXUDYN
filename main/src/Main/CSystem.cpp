@@ -68,10 +68,11 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	Index itemIndex;
 	bool systemIsInteger = true;
 
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Index numberOfNodes = mainSystem.GetMainSystemData().GetMainNodes().NumberOfItems();
 	Index numberOfObjects = mainSystem.GetMainSystemData().GetMainObjects().NumberOfItems();
 	Index numberOfMarkers = mainSystem.GetMainSystemData().GetMainMarkers().NumberOfItems();
+	Index numberOfLoads = mainSystem.GetMainSystemData().GetMainLoads().NumberOfItems();
 
 	itemIndex = 0;
 	for (MainNode* mainNode : mainSystem.GetMainSystemData().GetMainNodes())
@@ -123,11 +124,13 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	}
 	if (!systemIsInteger) { return false; }
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//check for valid node numbers (objects)
 	//check for valid marker numbers in connectors
 	itemIndex = 0;
 	for (auto* item : mainSystem.GetMainSystemData().GetMainObjects())
 	{
+		//GetRequestedNodeType() must be implemented for all objects with nodes
 		for (Index i = 0; i < item->GetCObject()->GetNumberOfNodes(); i++)
 		{
 			Index itemIndex = item->GetCObject()->GetNodeNumber(i);
@@ -136,6 +139,18 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
 					EXUstd::ToString(i) + " contains invalid (global) node number " + EXUstd::ToString(itemIndex));
 				systemIsInteger = false;
+			}
+			else //check if right nodeTypes are used
+			{
+				CNode* cNode = mainSystem.GetMainSystemData().GetMainNodes()[itemIndex]->GetCNode();
+				if ((item->GetRequestedNodeType() & cNode->GetType()) != item->GetRequestedNodeType())
+				{
+					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
+						EXUstd::ToString(i) + " (global index = " + EXUstd::ToString(itemIndex) + ")" + 
+						" contains invalid node type " + Node::GetTypeString(cNode->GetType()) +
+						" while the requested object type was '" + Node::GetTypeString(item->GetRequestedNodeType()) + "'");
+					systemIsInteger = false;
+				}
 			}
 		}
 
@@ -182,6 +197,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			}
 
 		}
+
 
 		itemIndex++;
 	}
@@ -252,6 +268,91 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 
 	if (!systemIsInteger) { return false; } //avoid crashes due to further checks!
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//check for valid sensors: valid node/object/... numbers and valid OutputVariableTypes
+
+	itemIndex = 0;
+	for (auto* item : mainSystem.GetMainSystemData().GetMainSensors())
+	{
+		if (item->GetCSensor()->GetType() == SensorType::Node)
+		{
+			Index n = item->GetCSensor()->GetNodeNumber();
+			if (!EXUstd::IndexIsInRange(n, 0, numberOfNodes))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n));
+			}
+			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
+					"', type = SensorType::Node: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in node with node number " + EXUstd::ToString(n));
+			}
+		}
+		else if (item->GetCSensor()->GetType() == SensorType::Body)
+		{
+			Index n = item->GetCSensor()->GetObjectNumber();
+			if (!EXUstd::IndexIsInRange(n, 0, numberOfObjects))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object number " + EXUstd::ToString(n));
+			} 
+			else if (mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() != CObjectType::Body)
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
+			}
+			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+					"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
+			}
+		}
+		else if (item->GetCSensor()->GetType() == SensorType::Object)
+		{
+			Index n = item->GetCSensor()->GetObjectNumber();
+			if (!EXUstd::IndexIsInRange(n, 0, numberOfObjects))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Object, contains invalid object number " + EXUstd::ToString(n));
+			}
+			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
+			}
+		}
+		else if (item->GetCSensor()->GetType() == SensorType::Marker)
+		{
+			CHECKandTHROWstring("SensorType::Marker: CheckSystemIntegrity not implemented!");
+			Index n = item->GetCSensor()->GetMarkerNumber();
+			if (!EXUstd::IndexIsInRange(n, 0, numberOfMarkers))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Marker, contains invalid marker number " + EXUstd::ToString(n));
+			}
+			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainMarkers()[n]->GetCMarker()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			//{
+			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//		"', type = SensorType::Marker: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in marker with marker number " + EXUstd::ToString(n));
+			//}
+		}
+		else if (item->GetCSensor()->GetType() == SensorType::Load)
+		{
+			CHECKandTHROWstring("SensorType::Load: CheckSystemIntegrity not implemented!");
+			Index n = item->GetCSensor()->GetLoadNumber();
+			if (!EXUstd::IndexIsInRange(n, 0, numberOfLoads))
+			{
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Load, contains invalid load number " + EXUstd::ToString(n));
+			}
+			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainLoads()[n]->GetCLoad()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			//{
+			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//		"', type = SensorType::Load: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in load with load number " + EXUstd::ToString(n));
+			//}
+		}
+		else
+		{
+			PyWarning("CheckSystemIntegrity: sensor type not implemented");
+		}
+
+		itemIndex++;
+	}
+	if (!systemIsInteger) { return false; } //avoid crashes due to further checks!
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1890,6 +1991,7 @@ void PostProcessData::WaitForUserToContinue()
 		while (simulationPaused && visualizationIsRunning && !stopSimulation)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10)); //give thread time to finish the stop simulation command
+			PyProcessExecuteQueue(); //use time to execute incoming python tasks
 		}
 		simulationPaused = false; //in case that visualization system was closed in the meantime
 		SetVisualizationMessage(str);

@@ -20,7 +20,8 @@
 #include <pybind11/stl_bind.h>
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
-namespace HPyUtils {
+//! Exudyn python utilities namespace
+namespace EPyUtils { 
 
 	//! function to check if a specific item exists (but type is not checked) in the dictionary
 	inline bool DictItemExists(const py::dict& d, const char* itemName)

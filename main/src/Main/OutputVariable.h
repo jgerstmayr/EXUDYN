@@ -74,6 +74,7 @@ namespace Marker {
 		if (var & BodyVolume) { t += "Volume"; } //'Body' already added via (var & Body)
 		if (var & BodyMass) { t += "Mass"; } //'Body' already added via (var & Body)
 		if (var & BodySurfaceNormal) { t += "SurfaceNormal"; } //'Body' already added via (var & Body)
+		if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
 
 		return t;
 	}
@@ -111,6 +112,32 @@ enum class LoadType {
 	SurfacePressure = (Index)Marker::BodySurfaceNormal,	//!< scalar force applied to BodySurface [N/m^2]
     //NOT VALID: EndOfEnumList = 1 << 6 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
+
+
+//! sensor types are used to identify what items are measured
+enum class SensorType {
+	None = 0, //marks that no type is used
+	Node   = 1 << 0, //!< use OutputVariableType
+	Object = 1 << 1, //!< use OutputVariableType
+	Body   = 1 << 2, //!< use OutputVariableType; additionally has localPosition
+	Marker = 1 << 3, //!< NOT implemented yet, needs OutputVariableType in markers!
+	Load   = 1 << 4, //!< measure prescribed loads, in order to track, e.g., user defined loads or controlled loads
+};
+
+//! convert SensorType to a string (used for output, type comparison, ...)
+inline const char* GetSensorTypeString(SensorType var)
+{
+	switch (var)
+	{
+	case SensorType::None: return "None";
+	case SensorType::Node: return "Node";
+	case SensorType::Object: return "Object";
+	case SensorType::Body: return "Body";
+	case SensorType::Marker: return "Marker";
+	case SensorType::Load: return "Load";
+	default: SysError("GetSensorTypeString: invalid variable type");  return "Invalid";
+	}
+}
 
 
 //! OutputVariable used for output data in objects, nodes, loads, ...

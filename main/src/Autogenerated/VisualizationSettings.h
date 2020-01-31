@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -96,7 +96,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -179,7 +179,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -331,7 +331,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -403,7 +403,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -466,7 +466,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -537,7 +537,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -591,7 +591,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -666,7 +666,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -740,7 +740,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -808,7 +808,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -877,12 +877,80 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsSensors
+* @brief        Visualization settings for sensors.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2020-01-30 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#pragma once
+
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsSensors // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the sensors are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the sensor numbers are shown
+  float defaultSize;                              //!< AUTO: global sensor size; if -1.f, node size is relative to maxSceneSize
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for sensors; 4th value is alpha-transparency
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsSensors()
+  {
+    show = true;
+    showNumbers = false;
+    defaultSize = 0.2f;
+    defaultColor = Float4({0.6f,0.6f,0.1f,1.f});
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for sensors; 4th value is alpha-transparency
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for sensors; 4th value is alpha-transparency
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsSensors" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsSensors& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VisualizationSettings
 * @brief        Settings for visualization
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -912,6 +980,7 @@ public: // AUTO:
   VSettingsConnectors connectors;                 //!< AUTO: connector visualization settings
   VSettingsMarkers markers;                       //!< AUTO: marker visualization settings
   VSettingsLoads loads;                           //!< AUTO: load visualization settings
+  VSettingsSensors sensors;                       //!< AUTO: sensor visualization settings
 
 
 public: // AUTO: 
@@ -931,6 +1000,7 @@ public: // AUTO:
     os << "  connectors = " << connectors << "\n";
     os << "  markers = " << markers << "\n";
     os << "  loads = " << loads << "\n";
+    os << "  sensors = " << sensors << "\n";
     os << "\n";
   }
 

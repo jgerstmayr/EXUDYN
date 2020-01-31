@@ -27,6 +27,7 @@
 #include "System/CNode.h"				//includes ReleaseAssert.h, BasicDefinitions.h, ResizeableArray.h, LinkedDataVector.h
 #include "System/CMarker.h"		//needs nodes and bodies
 #include "System/CLoad.h"				//needs markers
+#include "System/CSensor.h"				//needs sensors
 #include "System/CObjectConnector.h"	//includes OutputVariable.h and CObject.h
 
 
@@ -41,6 +42,7 @@ protected: //
 	ResizableArray<CMaterial*> cMaterials;          //!< container for computational materials
 	ResizableArray<CMarker*> cMarkers;              //!< container for computational markers
 	ResizableArray<CLoad*> cLoads;                  //!< container for computational loads
+	ResizableArray<CSensor*> cSensors;               //!< container for computational sensors
 	ObjectContainer<ArrayIndex> localToGlobalODE2;  //!< CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalODE1;  //!< CObject local to global ODE1 (first order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalAE;    //!< CObject local to global AE (algebraic variables) coordinate indices transformation
@@ -70,12 +72,14 @@ public: //
 		for (auto item : cMaterials) { delete item; }
 		for (auto item : cNodes) { delete item; }
 		for (auto item : cObjects) { delete item; }
+		for (auto item : cSensors) { delete item; }
 
 		cLoads.Flush();
 		cMarkers.Flush();
 		cMaterials.Flush();
 		cNodes.Flush();
 		cObjects.Flush();
+		cSensors.Flush();
 
 		numberOfCoordinatesODE2 = 0;
 		numberOfCoordinatesODE1 = 0;
@@ -134,6 +138,11 @@ public: //
 	//! Read (Reference) access to:container for computational loads
 	const ResizableArray<CLoad*>& GetCLoads() const { return cLoads; }
 
+	//! Write (Reference) access to:container for computational sensors
+	ResizableArray<CSensor*>& GetCSensors() { return cSensors; }
+	//! Read (Reference) access to:container for computational sensors
+	const ResizableArray<CSensor*>& GetCSensors() const { return cSensors; }
+
 	//! Write (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2() { return localToGlobalODE2; }
 	//! Read (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
@@ -190,6 +199,7 @@ public: //
 		os << "  cMaterials = " << cMaterials << "\n";
 		os << "  cMarkers = " << cMarkers << "\n";
 		os << "  cLoads = " << cLoads << "\n";
+		os << "  cSensors = " << cSensors << "\n";
 		os << "  localToGlobalODE2 = " << localToGlobalODE2 << "\n";
 		os << "  localToGlobalODE1 = " << localToGlobalODE1 << "\n";
 		os << "  localToGlobalAE = " << localToGlobalAE << "\n";

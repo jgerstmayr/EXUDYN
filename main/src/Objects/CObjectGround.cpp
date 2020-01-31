@@ -110,8 +110,8 @@ py::object MainObjectGround::CallFunction(STDstring functionName, py::dict args)
 		Vector3D locPos;
 		STDstring configStr;
 		ConfigurationType configType = ConfigurationType::None;
-		HPyUtils::SetVector3DSafely(args, "localPosition", locPos);
-		HPyUtils::SetStringSafely(args, "configuration", configStr);
+		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
+		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }
 		else if (configStr == "Initial") { configType = ConfigurationType::Initial; }
 		else if (configStr == "Reference") { configType = ConfigurationType::Reference; }

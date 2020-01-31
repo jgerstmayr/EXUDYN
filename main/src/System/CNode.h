@@ -30,11 +30,54 @@
 
 class CData;
 
-//! nodetype is used to know, which quantities can be measured (position, rotation) and which actions are possible (force, moment)
-enum class CNodeType {
-    None, Point, RigidBody, Temperature, General
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//keep these lists synchronized with PybindModule.cpp lists
+////! nodetype is used to know, which quantities can be measured (position, rotation) and which actions are possible (force, moment)
+//enum class CNodeType {
+//    None, Point, RigidBody, Temperature, General
+//};
+
+//namespace instead of class enum CNodeType ==> allows to write logics easier (e.g. adding Node::Type::Position + Node::Type::Orientation)
+//! node types are used for integrity checks to verify that a node is suitable for an object
+namespace Node {
+	enum Type {
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//keep these lists synchronized with PybindModule.cpp lists
+		None = 0, //marks that no type is used
+		Ground = 1 << 0,					//!< used for ground nodes
+
+		//2D
+		Position2D = 1 << 1,				//!< used for: 2D point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
+		Orientation2D = 1 << 2,				//!< used for: 2D rigid nodes (independent of parameterization); node must provide rotation matrix, dAngularVelocity/dq
+		Point2DSlope1 = 1 << 3,				//!< used for: nodes which provide a position and a slope vector in 1-direction
+		//3D
+		Position = 1 << 4,					//!< used for: point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
+		Orientation = 1 << 5,				//!< used for: rigid nodes (independent of parameterization); node must provide rotation matrix, dAngularVelocity/dq
+		RotationEulerParameters = 1 << 6,	//!< used if orientation is described with euler parameters; maybe put this to extended node types
+		//General
+		GenericODE2 = 1 << 7,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
+		GenericData = 1 << 8				//!< used for node with data coordinates
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//keep these lists synchronized with PybindModule.cpp lists
+	};
+	//! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+	inline STDstring GetTypeString(Type var)
+	{
+		STDstring t; //empty string
+		if (var == Node::None) { t = "None/Undefined"; }
+		if (var & Ground) { t += "Ground"; }
+		if (var & Position2D) { t += "Position2D"; }
+		if (var & Orientation2D) { t += "Orientation2D"; }
+		if (var & Point2DSlope1) { t += "Point2DSlope1"; }
+
+		if (var & Position) { t += "Position"; }
+		if (var & Orientation) { t += "Orientation"; }
+		if (var & RotationEulerParameters) { t += "RotationEulerParameters"; }
+
+		if (var & GenericODE2) { t += "GenericODE2"; }
+		if (var & GenericData) { t += "GenericData"; }
+		if (t.length() == 0) { CHECKandTHROWstring("Node::GetTypeString(...) called for invalid type!"); }
+
+		return t;
+	}
 };
 
 // if nodes should have several groups, use namespace enum and 2^i values
@@ -124,7 +167,7 @@ public:
 
 
     virtual CNodeGroup GetNodeGroup() const { CHECKandTHROWstring("CNode::GetNodeGroup"); return CNodeGroup::None; }
-    virtual CNodeType GetType() const { CHECKandTHROWstring("CNode::GetType"); return CNodeType::None; }
+    virtual Node::Type GetType() const { CHECKandTHROWstring("CNode::GetType"); return Node::None; }
 
     friend std::ostream& operator<<(std::ostream& os, const CNode& object) {
         object.Print(os);

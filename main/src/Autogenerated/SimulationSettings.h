@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,10 +25,13 @@ class SolutionSettings // AUTO:
 {
 public: // AUTO: 
   bool writeSolutionToFile;                       //!< AUTO: flag (true/false), which determines if (global) solution vector is written to file
-  bool appendToFile;                              //!< AUTO: flag (true/false); if true, solution is always appended to file
+  bool appendToFile;                              //!< AUTO: flag (true/false); if true, solution is appended to existing file (otherwise created)
   bool writeFileHeader;                           //!< AUTO: flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)
   bool writeFileFooter;                           //!< AUTO: flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics
-  Real solutionWritePeriod;                       //!< AUTO: time span (period), determines how often the solution is written during a (dynamic) simulation
+  Real solutionWritePeriod;                       //!< AUTO: time span (period), determines how often the solution is written during a simulation
+  bool sensorsAppendToFile;                       //!< AUTO: flag (true/false); if true, sensor output is appended to existing file (otherwise created)
+  bool sensorsWriteFileHeader;                    //!< AUTO: flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)
+  Real sensorsWritePeriod;                        //!< AUTO: time span (period), determines how often the sensor output is written during a simulation
   bool exportVelocities;                          //!< AUTO: solution is written as displacements, velocities[, accelerations] [,algebraicCoordinates] [,DataCoordinates]
   bool exportAccelerations;                       //!< AUTO: solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]
   bool exportAlgebraicCoordinates;                //!< AUTO: solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]
@@ -36,7 +39,7 @@ public: // AUTO:
   std::string coordinatesSolutionFileName;        //!< AUTO: filename and (relative) path of solution file containing all coordinates versus time
   std::string solverInformationFileName;          //!< AUTO: filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile
   std::string solutionInformation;                //!< AUTO: special information added to header of solution file (e.g. parameters and settings, modes, ...)
-  Index outputPrecision;                          //!< AUTO: precision for floating point numbers written to solution files
+  Index outputPrecision;                          //!< AUTO: precision for floating point numbers written to solution and sensor files
   Real recordImagesInterval;                      //!< AUTO: record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages
 
 
@@ -49,6 +52,9 @@ public: // AUTO:
     writeFileHeader = true;
     writeFileFooter = true;
     solutionWritePeriod = 0.01;
+    sensorsAppendToFile = false;
+    sensorsWriteFileHeader = true;
+    sensorsWritePeriod = 0.01;
     exportVelocities = true;
     exportAccelerations = true;
     exportAlgebraicCoordinates = true;
@@ -69,6 +75,9 @@ public: // AUTO:
     os << "  writeFileHeader = " << writeFileHeader << "\n";
     os << "  writeFileFooter = " << writeFileFooter << "\n";
     os << "  solutionWritePeriod = " << solutionWritePeriod << "\n";
+    os << "  sensorsAppendToFile = " << sensorsAppendToFile << "\n";
+    os << "  sensorsWriteFileHeader = " << sensorsWriteFileHeader << "\n";
+    os << "  sensorsWritePeriod = " << sensorsWritePeriod << "\n";
     os << "  exportVelocities = " << exportVelocities << "\n";
     os << "  exportAccelerations = " << exportAccelerations << "\n";
     os << "  exportAlgebraicCoordinates = " << exportAlgebraicCoordinates << "\n";
@@ -96,7 +105,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -159,7 +168,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -266,7 +275,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -335,7 +344,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -413,7 +422,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -501,7 +510,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

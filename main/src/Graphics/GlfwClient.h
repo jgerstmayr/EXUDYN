@@ -96,39 +96,7 @@ public:
 	static bool SetupRenderer();
 
 	//! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
-	static void StopRenderer() 
-	{ 
-		if (window)
-		{
-			stopRenderer = true;
-			glfwSetWindowShouldClose(window, 1);
-			Index timeOut = visSettings->window.startupTimeout / 10;
-
-			Index i = 0;
-			while (i++ < timeOut && rendererActive) //wait 5 seconds for thread to answer
-			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(10));
-			}
-
-			if (rendererActive) { SysError("OpenGL Renderer could not be stopped safely\n"); }
-			//else { pout << "Renderer Stopped\n"; }
-
-			glfwDestroyWindow(window);
-			//not necessary: glfwTerminate(); //test if this helps; should not be needed
-
-			//delete window; //will not work? VS2017 reports warning that destructor will not be called, since window is only a struct
-			window = nullptr; //this is used to identify if window has already been generated
-
-			//after this command, this thread is terminated! ==> nothing will be done any more
-			if (rendererThread.joinable()) //thread is still running from previous call ...
-			{
-				//pout << "join thread ...\n";
-				rendererThread.join();
-				//pout << "thread joined\n";
-				//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
-			}
-		}
-	}
+	static void StopRenderer();
 
 	//! Set all light functions for openGL
 	static void SetGLLights();

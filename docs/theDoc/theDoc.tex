@@ -215,10 +215,12 @@ Understanding the usage of functions for the '\texttt{MainSystem}' provided by \
 \input{manual_interfaces}
 
 
-\mysection{Objects, nodes, markers and loads reference manual} \label{sec_item_reference_manual}
-This section includes the reference manual for all objects (bodies/constraints), nodes, markers and loads.
+\mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec_item_reference_manual}
+This section includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors.
 
 \input{itemDefinition}
+
+\newpage
 
 \mysubsection{GraphicsData}
 Some items may include a 'graphicsData' structure. GraphicsData contains a list of graphicsData items, i.e.\ graphicsData = [graphicsItem1, graphicsItem2, ...]. Every single graphicsItem may be defined as one of the following structures using a specific 'type':
@@ -288,9 +290,9 @@ The following table includes the keyboard shortcuts available in the window.
   \begin{longtable}{| p{4cm} | p{4cm} | p{8cm} |} 
 	\hline
   \bf Key(s) & action & \bf remarks \\ \hline
-  \bf 1,2,3,4 or 5 & visualization update & the entered digit controls the visualization update, which can be changed from 1=1 update per 20ms to 5=1 update per 100s\\ \hline
-  \bf '.' or KEYPAD '+' & zoom in & zoom one step into scene \\ \hline
-  \bf ',' or KEYPAD '-' & zoom out & zoom one step out of scene \\ \hline
+  \bf 1,2,3,4 or 5 & visualization update speed & the entered digit controls the visualization update, which can be changed from 1=1 update per 20ms to 5=1 update per 100s\\ \hline
+  \bf '.' or KEYPAD '+' & zoom in & zoom one step into scene (additionally press CTRL to perform small zoom step)\\ \hline
+  \bf ',' or KEYPAD '-' & zoom out & zoom one step out of scene (additionally press CTRL to perform small zoom step)\\ \hline
 	%
   \bf 0 or KEYPAD '0'& reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
   \bf A & zoom all & set zoom such that the whole scene is visible \\ \hline
@@ -311,7 +313,15 @@ The following table includes the keyboard shortcuts available in the window.
 	\bf N & show/hide nodes & pressing this key switches the visibility of nodes \\ \hline
   \bf CTRL+N & show/hide node numbers & pressing this key switches the visibility of node numbers \\ \hline
   %
+	\bf S & show/hide sensors & pressing this key switches the visibility of sensors \\ \hline
+  \bf CTRL+S & show/hide sensor numbers & pressing this key switches the visibility of sensor numbers \\ \hline
+  %
 	\bf Q & stop simulation & simulation is stopped and cannot be recovered \\ \hline
+	&
+	\bf X & execute command & open dialog to enter a python command (in global python scope) \\ \hline
+	&
+	\bf V & visualization settings & open dialog to modify visualization settings \\ \hline
+	&
   \bf ESCAPE & close render window & stops the simulation and closes the render window \\ \hline
   \bf SPACE & continue simulation & if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'\\ \hline
   \end{longtable}

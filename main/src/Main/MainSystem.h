@@ -124,43 +124,46 @@ public:
 	py::dict PyGetNodeDefaults(STDstring typeName);
 
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CNode GetOutputVariable(...)
-	virtual py::object PyGetNodeOutputVariable(Index nodeNumber, OutputVariableType variableType, ConfigurationType configuration=ConfigurationType::Current) const;
+	virtual py::object PyGetNodeOutputVariable(Index nodeNumber, OutputVariableType variableType, ConfigurationType configuration = ConfigurationType::Current) const;
+
+	//! get index in global ODE2 coordinate vector for first node coordinate
+	virtual Index PyGetNodeODE2Index(Index nodeNumber) const;
 
 	//! call pybind node function, possibly with arguments
 	py::object PyCallNodeFunction(Index nodeNumber, STDstring functionName, py::dict args);
 
 	//! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-	virtual py::object PyGetNodeParameter(Index objectNumber, const STDstring& parameterName) const;
-	//! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-	virtual void PySetNodeParameter(Index objectNumber, const STDstring& parameterName, const py::object& value);
+	virtual py::object PyGetNodeParameter(Index itemNumber, const STDstring& parameterName) const;
+	//! Set (write) parameter 'parameterName' of 'itemNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
+	virtual void PySetNodeParameter(Index itemNumber, const STDstring& parameterName, const py::object& value);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   OBJECTS
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainObject(py::dict d);
 	//! get object's dictionary by name; does not throw a error message
-	Index PyGetObjectNumber(STDstring objectName);
+	Index PyGetObjectNumber(STDstring itemName);
 	//! hook to read object's dictionary
-	py::dict PyGetObject(Index objectNumber);
+	py::dict PyGetObject(Index itemNumber);
 	//! get object's dictionary by name
-	py::dict PyGetObjectByName(STDstring objectName);
+	py::dict PyGetObjectByName(STDstring itemName);
 	//! modify object's dictionary
-	void PyModifyObject(Index objectNumber, py::dict d);
+	void PyModifyObject(Index itemNumber, py::dict d);
 	//! get object's with type 'typeName' default values, which helps for manual writing of python input
 	py::dict PyGetObjectDefaults(STDstring typeName);
 
 	//! call pybind object function, possibly with arguments
-	py::object PyCallObjectFunction(Index objectNumber, STDstring functionName, py::dict args);
+	py::object PyCallObjectFunction(Index itemNumber, STDstring functionName, py::dict args);
 	//! Get specific output variable with variable type; as this will involve MarkerDataStructure for constraints, this call may be slower than other calls
-	py::object PyGetObjectOutputVariable(Index objectNumber, OutputVariableType variableType);
+	py::object PyGetObjectOutputVariable(Index itemNumber, OutputVariableType variableType);
 	//! Get specific output variable with variable type; ONLY for bodies;
-	py::object PyGetObjectOutputVariableBody(Index objectNumber, OutputVariableType variableType,
+	py::object PyGetObjectOutputVariableBody(Index itemNumber, OutputVariableType variableType,
 		const std::vector<Real>& localPosition, ConfigurationType configuration);
 
 	//! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-	virtual py::object PyGetObjectParameter(Index objectNumber, const STDstring& parameterName) const;
+	virtual py::object PyGetObjectParameter(Index itemNumber, const STDstring& parameterName) const;
 	//! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-	virtual void PySetObjectParameter(Index objectNumber, const STDstring& parameterName, const py::object& value);
+	virtual void PySetObjectParameter(Index itemNumber, const STDstring& parameterName, const py::object& value);
 
 
 
@@ -169,40 +172,64 @@ public:
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainMarker(py::dict d);
 	//! get marker's dictionary by name; does not throw a error message
-	Index PyGetMarkerNumber(STDstring objectName);
+	Index PyGetMarkerNumber(STDstring itemName);
 	//! hook to read marker's dictionary
-	py::dict PyGetMarker(Index objectNumber);
+	py::dict PyGetMarker(Index itemNumber);
 	//! get marker's dictionary by name
-	py::dict PyGetMarkerByName(STDstring objectName);
+	py::dict PyGetMarkerByName(STDstring itemName);
 	//! modify marker's dictionary
-	void PyModifyMarker(Index objectNumber, py::dict d);
+	void PyModifyMarker(Index itemNumber, py::dict d);
 	//! get marker's default values, which helps for manual writing of python input
 	py::dict PyGetMarkerDefaults(STDstring typeName);
 
-	//! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-	virtual py::object PyGetMarkerParameter(Index objectNumber, const STDstring& parameterName) const;
-	//! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-	virtual void PySetMarkerParameter(Index objectNumber, const STDstring& parameterName, const py::object& value);
+	//! Get (read) parameter 'parameterName' of 'itemNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
+	virtual py::object PyGetMarkerParameter(Index itemNumber, const STDstring& parameterName) const;
+	//! Set (write) parameter 'parameterName' of 'itemNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
+	virtual void PySetMarkerParameter(Index itemNumber, const STDstring& parameterName, const py::object& value);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   LOAD
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainLoad(py::dict d);
 	//! get load's dictionary by name; does not throw a error message
-	Index PyGetLoadNumber(STDstring objectName);
+	Index PyGetLoadNumber(STDstring itemName);
 	//! hook to read load's dictionary
-	py::dict PyGetLoad(Index objectNumber);
+	py::dict PyGetLoad(Index itemNumber);
 	//! get load's dictionary by name
-	py::dict PyGetLoadByName(STDstring objectName);
+	py::dict PyGetLoadByName(STDstring itemName);
 	//! modify load's dictionary
-	void PyModifyLoad(Index objectNumber, py::dict d);
+	void PyModifyLoad(Index itemNumber, py::dict d);
 	//! get load's default values, which helps for manual writing of python input
 	py::dict PyGetLoadDefaults(STDstring typeName);
 
-	//! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-	virtual py::object PyGetLoadParameter(Index objectNumber, const STDstring& parameterName) const;
-	//! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-	virtual void PySetLoadParameter(Index objectNumber, const STDstring& parameterName, const py::object& value);
+	//! Get (read) parameter 'parameterName' of 'itemNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
+	virtual py::object PyGetLoadParameter(Index itemNumber, const STDstring& parameterName) const;
+	//! Set (write) parameter 'parameterName' of 'itemNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
+	virtual void PySetLoadParameter(Index itemNumber, const STDstring& parameterName, const py::object& value);
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//   SENSOR
+	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
+	Index AddMainSensor(py::dict d);
+	//! get marker's dictionary by name; does not throw a error message
+	Index PyGetSensorNumber(STDstring itemName);
+	//! hook to read marker's dictionary
+	py::dict PyGetSensor(Index itemNumber);
+	//! get marker's dictionary by name
+	py::dict PyGetSensorByName(STDstring itemName);
+	//! modify marker's dictionary
+	void PyModifySensor(Index itemNumber, py::dict d);
+	//! get marker's default values, which helps for manual writing of python input
+	py::dict PyGetSensorDefaults(STDstring typeName);
+	//! get marker's default values, which helps for manual writing of python input
+	py::object PyGetSensorValue(Index itemNumber, ConfigurationType configuration = ConfigurationType::Current);
+
+	//! Get (read) parameter 'parameterName' of 'itemNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
+	virtual py::object PyGetSensorParameter(Index itemNumber, const STDstring& parameterName) const;
+	//! Set (write) parameter 'parameterName' of 'itemNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
+	virtual void PySetSensorParameter(Index itemNumber, const STDstring& parameterName, const py::object& value);
+
+
 };
 
 

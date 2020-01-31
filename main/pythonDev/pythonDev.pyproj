@@ -10,7 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>pythonDev</Name>
     <RootNamespace>pythonDev</RootNamespace>
-    <InterpreterId>Global|PythonCore|3.6</InterpreterId>
+    <InterpreterId>Global|PythonCore|3.6-32</InterpreterId>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>

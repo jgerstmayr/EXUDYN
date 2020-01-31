@@ -198,6 +198,18 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 			}
 		}
 
+		//++++++++++++++++++++++++++++++++++++++++++++++
+		//visualize sensors:
+		if (visualizationSystemContainer.settings.sensors.show)
+		{
+			cnt = 0;
+			for (auto item : vSystemData.GetVisualizationSensors())
+			{
+				if (item->GetShow()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+				cnt++; //synchronize itemNumber with item!!!
+			}
+		}
+
 		graphicsData.ClearLock();
 	}
 	postProcessData->accessState.clear(std::memory_order_release); //computation thread must be interrupted before further update

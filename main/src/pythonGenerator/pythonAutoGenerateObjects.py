@@ -529,17 +529,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if (parameter['cFlags'].find('R') == -1): #'R' means read only!
                     dictListWrite[i]+='        '
                     if parameter['cFlags'].find('O') != -1: #optional ==> means that we have to check first, if it exists in the dictionary
-                        dictListWrite[i]+='if (HPyUtils::DictItemExists(d, "' +  pyName + '")) { '
+                        dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
                     if IsASetSafelyParameter(parameter['type']):
-                        dictListWrite[i]+='HPyUtils::Set' + parameter['type'] + 'Safely(d, "' +  pyName + '", '
+                        dictListWrite[i]+='EPyUtils::Set' + parameter['type'] + 'Safely(d, "' +  pyName + '", '
                         dictListWrite[i]+=destStr + '); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
                         dictListWrite[i]+='PyWriteBodyGraphicsData(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsData*/'
                     else:
                         dictStr = 'd["' + pyName + '"]'
                         if parameter['type'].find('PyFunction') != -1: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
-                            dictListWrite[i]+='if (HPyUtils::CheckForValidFunction(d["'+pyName+'"])) { '
+                            dictListWrite[i]+='if (EPyUtils::CheckForValidFunction(d["'+pyName+'"])) { '
                             dictStr = '(py::function)'+dictStr
 
                         dictListWrite[i]+=destStr + ' = py::cast<' + typeCastStr + '>'
@@ -549,7 +549,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
                     if IsASetSafelyParameter(parameter['type']):
-                        parWrite+='HPyUtils::Set' + parameter['type'] + 'Safely(value, '
+                        parWrite+='EPyUtils::Set' + parameter['type'] + 'Safely(value, '
                         parWrite+=destStr + '); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
                         parWrite+='' #not implemented right now!
@@ -806,7 +806,7 @@ try: #still close file if crashes
                  'addPublicMain':'',    #code added at protected section (e.g. constants or functions)
                  'addIncludesC':'',     #code added at includes section (e.g. special base class)
                  'addIncludesMain':'',     #code added at includes section (e.g. special base class)
-                 'classType':'',        #type of class: Object, Node, Material, Marker, Load
+                 'classType':'',        #type of class: Object, Node, Sensor, Marker, Load, Sensor
                  'outputVariables':'',  #definition of output variables and description given as dictionary "{'OutputVariableType':'description ...', ...}"
                  'classDescription':''} #add a (brief, one line) description of class
     #this defines the columns of the line, which is then filled into this structure
@@ -830,10 +830,10 @@ try: #still close file if crashes
     parameterList = [] #list of dictionaries for parameters
     continueOperation = True #flag to signal that operation shall be terminated
     
-    sLatexGlobal = ['','','','']     #gobal Latex string; 'Node','Object','Marker','Load'
+    sLatexGlobal = ['']*5     #gobal Latex string; 'Node','Object','Marker','Load','Sensor'
     sLatexItemList = '' #Latex string containing list of items
-    sPythonGlobal = ['','','','']  #global python interface class strings; 'Node','Object','Marker','Load'
-    sPythonGlobalNames = ['Node','Object','Marker','Load']  #global python interface class types
+    sPythonGlobal = ['']*5  #global python interface class strings; 'Node','Object','Marker','Load','Sensor'
+    sPythonGlobalNames = ['Node','Object','Marker','Load','Sensor']  #global python interface class types
     
     for line in fileLines:
         if continueOperation:

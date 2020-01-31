@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-11-12  21:47:28 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,6 +95,12 @@ public: // AUTO:
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
 
+    //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
+    virtual Node::Type GetRequestedNodeType() const override
+    {
+        return Node::GenericData;
+    }
+
     //! AUTO:  Get type name of node (without keyword "Object"...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
@@ -112,11 +118,11 @@ public: // AUTO:
         cObjectContactCircleCable2D->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().circleRadius = py::cast<Real>(d["circleRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactCircleCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectContactCircleCable2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactCircleCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactCircleCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectContactCircleCable2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactCircleCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -163,7 +169,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectContactCircleCable2D->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectContactCircleCable2D->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("numberOfContactSegments") == 0) { cObjectContactCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

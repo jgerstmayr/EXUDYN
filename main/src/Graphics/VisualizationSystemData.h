@@ -22,7 +22,11 @@
 
 #include "Utilities/ResizableArray.h"
 
-#include "Graphics/VisuNode.h"
+#include "System/VisualizationNode.h"
+#include "System/VisualizationObject.h"
+#include "System/VisualizationMarker.h"
+#include "System/VisualizationLoad.h"
+#include "System/VisualizationSensor.h"
 
 
 class VisualizationSystemData
@@ -32,6 +36,7 @@ protected:
 	ResizableArray<VisualizationNode*> vNodes;                  //!< container for visualization nodes
 	ResizableArray<VisualizationMarker*> vMarkers;              //!< container for visualization markers
 	ResizableArray<VisualizationLoad*> vLoads;                  //!< container for visualization loads
+	ResizableArray<VisualizationSensor*> vSensors;              //!< container for visualization sensors
 
 public:
 
@@ -57,6 +62,11 @@ public:
 	ResizableArray<VisualizationMarker*>& GetVisualizationMarkers() { return vMarkers; }
 	//! Read (Reference) access to:container for visualization markers
 	const ResizableArray<VisualizationMarker*>& GetVisualizationMarkers() const { return vMarkers; }
+
+	//! Write (Reference) access to:container for visualization sensors
+	ResizableArray<VisualizationSensor*>& GetVisualizationSensors() { return vSensors; }
+	//! Read (Reference) access to:container for visualization sensors
+	const ResizableArray<VisualizationSensor*>& GetVisualizationSensors() const { return vSensors; }
 
 	//! Write (Reference) access to:container for visualization loads
 	ResizableArray<VisualizationLoad*>& GetVisualizationLoads() { return vLoads; }

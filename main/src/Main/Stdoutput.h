@@ -64,6 +64,13 @@ void PyWarning(std::string warning_msg, std::ofstream& file); //!< prints a form
 
 void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber); //!< retrieve current parsed file information from python (for error/warning messages...)
 
+//! put executable string into queue, which is called from other thread
+void PyQueueExecutableString(STDstring str); //call python function and execute string as python code
+
+//! function to be called from main (python) thread, as this thread holds the gil
+void PyProcessExecuteQueue(); //call python function and execute string as python code
+
+
 //********************************
 extern std::ostream pout;  //!< provide a output stream (e.g. for Python); remove the following line if linkage to Python is not needed!
 extern OutputBuffer outputBuffer;  //!< link outputBuffer to change options

@@ -16,18 +16,21 @@ SolutionSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     writeSolutionToFile &     bool &      &     True &     flag (true/false), which determines if (global) solution vector is written to file\\ \hline
-    appendToFile &     bool &      &     False &     flag (true/false); if true, solution is always appended to file\\ \hline
+    appendToFile &     bool &      &     False &     flag (true/false); if true, solution is appended to existing file (otherwise created)\\ \hline
     writeFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)\\ \hline
     writeFileFooter &     bool &      &     True &     flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics\\ \hline
-    solutionWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the solution is written during a (dynamic) simulation\\ \hline
+    solutionWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the solution is written during a simulation\\ \hline
+    sensorsAppendToFile &     bool &      &     False &     flag (true/false); if true, sensor output is appended to existing file (otherwise created)\\ \hline
+    sensorsWriteFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)\\ \hline
+    sensorsWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the sensor output is written during a simulation\\ \hline
     exportVelocities &     bool &      &     True &     solution is written as displacements, velocities[, accelerations] [,algebraicCoordinates] [,DataCoordinates]\\ \hline
     exportAccelerations &     bool &      &     True &     solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]\\ \hline
     exportAlgebraicCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]\\ \hline
     exportDataCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates\\ \hline
-    coordinatesSolutionFileName &     String &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time\\ \hline
-    solverInformationFileName &     String &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile\\ \hline
+    coordinatesSolutionFileName &     FileName &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time\\ \hline
+    solverInformationFileName &     FileName &      &     'solverInormation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile\\ \hline
     solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...)\\ \hline
-    outputPrecision &     Index &      &     10 &     precision for floating point numbers written to solution files\\ \hline
+    outputPrecision &     Index &      &     10 &     precision for floating point numbers written to solution and sensor files\\ \hline
     recordImagesInterval &     Real &      &     -1. &     record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -245,7 +248,7 @@ VSettingsOpenGL has the following items:
     initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True\\ \hline
     initialZoom &     float &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
     initialMaxSceneSize &     float &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
-    initialModelRotation &     StdArray33F &     9 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]\\ \hline
+    initialModelRotation &     StdArray33F &     3x3 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]\\ \hline
     multiSampling &     Index &     1 &     1 &     multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
     lineWidth &     float &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
     lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
@@ -305,7 +308,7 @@ VSettingsExportImages has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     saveImageTimeOut &     Index &      &     5000 &     timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
-    saveImageFileName &     String &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!\\ \hline
+    saveImageFileName &     FileName &      &     'images/rame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!\\ \hline
     saveImageFileCounter &     Index &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
     saveImageSingleFile &     bool &      &     False &     true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName\\ \hline
 	  \end{longtable}
@@ -423,6 +426,24 @@ VSettingsLoads has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsSensors} \label{sec_VSettingsSensors}
+Visualization settings for sensors.\\ 
+%
+VSettingsSensors has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    show &     bool &      &     True &     flag to decide, whether the sensors are shown\\ \hline
+    showNumbers &     bool &      &     False &     flag to decide, whether the sensor numbers are shown\\ \hline
+    defaultSize &     float &      &     0.2 &     global sensor size; if -1.f, node size is relative to maxSceneSize\\ \hline
+    defaultColor &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline default cRGB olor for sensors; 4th value is alpha-transparency\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{VisualizationSettings} \label{sec_VisualizationSettings}
 Settings for visualization. \\ 
 %
@@ -443,6 +464,7 @@ VisualizationSettings has the following items:
     connectors &     VSettingsConnectors &      &      &     connector visualization settings\\ \hline
     markers &     VSettingsMarkers &      &      &     marker visualization settings\\ \hline
     loads &     VSettingsLoads &      &      &     load visualization settings\\ \hline
+    sensors &     VSettingsSensors &      &      &     sensor visualization settings\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -591,7 +613,9 @@ SolverOutputData has the following items:
     verboseModeFile &     Index &      &     0 &     this is a copy of the solvers verboseModeFile used for file\\ \hline
     writeToSolutionFile &     bool &      &     False &     if false, no solution file is generated and no file is written\\ \hline
     writeToSolverFile &     bool &      &     False &     if false, no solver output file is generated and no file is written\\ \hline
+    sensorValuesTemp &     ResizableVector &      &      &     temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor)\\ \hline
     lastSolutionWritten &     Real &      &     0. &     simulation time when last solution has been written\\ \hline
+    lastSensorsWritten &     Real &      &     0. &     simulation time when last sensors have been written\\ \hline
     lastImageRecorded &     Real &      &     0. &     simulation time when last image has been recorded\\ \hline
     cpuStartTime &     Real &      &     0. &     CPU start time of computation (starts counting at computation of initial conditions)\\ \hline
     cpuLastTimePrinted &     Real &      &     0. &     CPU time when output has been printed last time\\ \hline
@@ -628,7 +652,7 @@ MainSolverStatic has the following items:
     IncreaseStepSize(...) &     void &      &     mainSystem, simulationSettings &     increase step size if convergence is good\\ \hline
     InitializeSolver(...) &     bool &      &     mainSystem, simulationSettings &     initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files\\ \hline
     PreInitializeSolverSpecific(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
-    InitializeSolverOutput(...) &     void &      &     simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
+    InitializeSolverOutput(...) &     void &      &     mainSystem, simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
     InitializeSolverPreChecks(...) &     \tabnewline bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
     InitializeSolverData(...) &     void &      &     mainSystem, simulationSettings &     initialize all data,it,conv; called from InitializeSolver()\\ \hline
     InitializeSolverInitialConditions(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
@@ -713,7 +737,7 @@ MainSolverImplicitSecondOrder has the following items:
     IncreaseStepSize(...) &     void &      &     mainSystem, simulationSettings &     increase step size if convergence is good\\ \hline
     InitializeSolver(...) &     bool &      &     mainSystem, simulationSettings &     initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files\\ \hline
     PreInitializeSolverSpecific(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
-    InitializeSolverOutput(...) &     void &      &     simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
+    InitializeSolverOutput(...) &     void &      &     mainSystem, simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
     InitializeSolverPreChecks(...) &     \tabnewline bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
     InitializeSolverData(...) &     void &      &     mainSystem, simulationSettings &     initialize all data,it,conv; called from InitializeSolver()\\ \hline
     InitializeSolverInitialConditions(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline

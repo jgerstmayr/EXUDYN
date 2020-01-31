@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-11-12  21:47:28 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,6 +95,12 @@ public: // AUTO:
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
 
+    //! AUTO:  must be checked in CheckPreAssembleConsistency(...); provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
+    virtual Node::Type GetRequestedNodeType() const override
+    {
+        return Node::None;
+    }
+
     //! AUTO:  Get type name of object (without keyword "Object"...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
@@ -110,11 +116,11 @@ public: // AUTO:
         cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(d["slidingMarkerOffsets"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointALEMoving2D->GetParameters().slidingOffset = py::cast<Real>(d["slidingOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointALEMoving2D->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointALEMoving2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointALEMoving2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectJointALEMoving2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointALEMoving2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointALEMoving2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointALEMoving2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectJointALEMoving2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointALEMoving2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -157,7 +163,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectJointALEMoving2D->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { cObjectJointALEMoving2D->GetParameters().slidingMarkerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

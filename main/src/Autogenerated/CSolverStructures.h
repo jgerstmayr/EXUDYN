@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,7 +122,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -243,7 +243,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -341,7 +341,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -433,7 +433,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -458,7 +458,9 @@ public: // AUTO:
   Index verboseModeFile;                          //!< AUTO: this is a copy of the solvers verboseModeFile used for file
   bool writeToSolutionFile;                       //!< AUTO: if false, no solution file is generated and no file is written
   bool writeToSolverFile;                         //!< AUTO: if false, no solver output file is generated and no file is written
+  ResizableVector sensorValuesTemp;               //!< AUTO: temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor)
   Real lastSolutionWritten;                       //!< AUTO: simulation time when last solution has been written
+  Real lastSensorsWritten;                        //!< AUTO: simulation time when last sensors have been written
   Real lastImageRecorded;                         //!< AUTO: simulation time when last image has been recorded
   Real cpuStartTime;                              //!< AUTO: CPU start time of computation (starts counting at computation of initial conditions)
   Real cpuLastTimePrinted;                        //!< AUTO: CPU time when output has been printed last time
@@ -474,6 +476,7 @@ public: // AUTO:
     writeToSolutionFile = false;
     writeToSolverFile = false;
     lastSolutionWritten = 0.;
+    lastSensorsWritten = 0.;
     lastImageRecorded = 0.;
     cpuStartTime = 0.;
     cpuLastTimePrinted = 0.;
@@ -494,7 +497,9 @@ public: // AUTO:
     os << "  verboseModeFile = " << verboseModeFile << "\n";
     os << "  writeToSolutionFile = " << writeToSolutionFile << "\n";
     os << "  writeToSolverFile = " << writeToSolverFile << "\n";
+    os << "  sensorValuesTemp = " << sensorValuesTemp << "\n";
     os << "  lastSolutionWritten = " << lastSolutionWritten << "\n";
+    os << "  lastSensorsWritten = " << lastSensorsWritten << "\n";
     os << "  lastImageRecorded = " << lastImageRecorded << "\n";
     os << "  cpuStartTime = " << cpuStartTime << "\n";
     os << "  cpuLastTimePrinted = " << cpuLastTimePrinted << "\n";
@@ -512,11 +517,11 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        SolverFileData
-* @brief        Solver internal structure for output files.
+* @brief        Solver internal structure for output files. This structure is not linked to pybind, because std::ofstream is not supported.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-22 (last modfied)
+* @date         AUTO: 2020-01-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -538,6 +543,7 @@ class SolverFileData // AUTO:
 public: // AUTO: 
   std::ofstream solutionFile;                     //!< AUTO: solution file with coordinate data
   std::ofstream solverFile;                       //!< AUTO: file with detailed solver information
+  std::vector<std::ofstream*> sensorFileList;     //!< AUTO: files for sensor output; the ofstream list corresponds exactly to the sensors in the computationalSystem (i.e., sensorFileList[0] is the ofstream for sensor 0, etc.); file lists need to be closed and deleted at end of simulation!
 
 
 public: // AUTO: 

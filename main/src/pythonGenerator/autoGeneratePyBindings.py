@@ -114,7 +114,7 @@ sLenum += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Access functions to EXUDYN
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-[s1,sL1] = DefPyStartClass('','', 'These are the access function to the \\codeName\\ module.'); s+=s1; sL+=sL1
+[s1,sL1] = DefPyStartClass('','', 'These are the access functions to the \\codeName\\ module.'); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs'); s+=s1; sL+=sL1
 
@@ -177,6 +177,10 @@ sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
                                 description="obtain number of systems available in system container"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
+                                description="obtain systems with index from system container",
+                                argList=['systemNumber']); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
                                 description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
@@ -333,6 +337,12 @@ sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for a
                                 argList=['nodeNumber','variableType','configuration'],
                                 defaultArgs=['','','ConfigurationType::Current'],
                                 example = "mbs.GetNodeOutput(nodeNumber=0, variableType='exu.OutputVariable.Displacement')"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeODE2Index', cName='PyGetNodeODE2Index', 
+                                description="get index in the global ODE2 coordinate vector for the first node coordinate of the specified node",
+                                argList=['nodeNumber'],
+                                example = "mbs.GetNodeODE2Index(nodeNumber=0)"
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeParameter', cName='PyGetNodeParameter', 
@@ -525,6 +535,60 @@ sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for
                                 ); s+=s1; sL+=sL1
 
 sL += DefLatexFinishClass()
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#SENSORS
+s += "\n//        SENSORS:\n"
+sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.', subSection=True)
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.GetMainObjectFactory().AddMainSensor(mainSystem, itemDict); }', 
+                                description="add a sensor with sensor definition in dictionary format; returns (global) sensor number of newly added sensor",
+                                argList=['itemDict'],
+                                example="sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)",
+                                isLambdaFunction = True
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.GetMainObjectFactory().AddMainSensorPyClass(mainSystem, pyObject); }', 
+                                description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor",
+                                argList=['pyObject'],
+                                example = "item = mbs.AddSensor(SensorNode(sensorType=exu.SensorType.Node,nodeNumber=0,name='test sensor')) \\\\mbs.AddSensor(item)",
+                                isLambdaFunction = True
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorNumber', cName='PyGetSensorNumber', 
+                                description="get sensor's number by name (string)",
+                                argList=['sensorName'],
+                                example = "n = mbs.GetSensorNumber('test sensor')"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensor', cName='PyGetSensor', 
+                                description="get sensor's dictionary by index",
+                                argList=['sensorNumber'],
+                                example = "sensorDict = mbs.GetSensor(0)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ModifySensor', cName='PyModifySensor', 
+                                description="modify sensor's dictionary by index",
+                                argList=['sensorNumber','sensorDict'],
+                                example = "mbs.ModifySensor(sensorNumber, sensorDict)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorDefaults', cName='PyGetSensorDefaults', 
+                                description="get sensor's default values for a certain sensorType as (dictionary)",
+                                argList=['typeName'],
+                                example = "sensorType = 'Node'\\\\sensorDict = mbs.GetSensorDefaults(sensorType)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorParameter', cName='PyGetSensorParameter', 
+                                description="get sensors's parameter from sensorNumber and parameterName; parameter names can be found for the specific items in the reference manual",
+                                argList=['sensorNumber', 'parameterName']
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetSensorParameter', cName='PySetSensorParameter', 
+                                description="set parameter 'parameterName' of sensor with sensorNumber to value; parameter names can be found for the specific items in the reference manual",
+                                argList=['sensorNumber', 'parameterName', 'value']
+                                ); s+=s1; sL+=sL1
+
+sL += DefLatexFinishClass() #Sensors
 
 #now finalize pybind class, but do nothing on latex side (sL1 ignored)
 [s1,sL1] = DefPyFinishClass('MainSystem'); s+=s1 #; sL+=sL1

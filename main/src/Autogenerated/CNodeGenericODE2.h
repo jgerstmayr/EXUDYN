@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-10-10  10:22:41 (last modfied)
+* @date         2020-01-24  15:37:21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -76,9 +76,9 @@ public: // AUTO:
     }
 
     //! AUTO:  return node type (for node treatment in computation)
-    virtual CNodeType GetType() const override
+    virtual Node::Type GetType() const override
     {
-        return CNodeType::General;
+        return Node::GenericODE2;
     }
 
     //! AUTO:  return configuration dependent position of node; returns always a 3D Vector; this makes no sense for NodeGenericODE2, but necessary for consistency; FUTURE: add "drawable" flag to nodes in order to exclude drawing

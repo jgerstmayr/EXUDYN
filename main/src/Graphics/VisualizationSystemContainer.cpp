@@ -151,6 +151,7 @@ bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
 	while (!stopSimulationFlag && glfwRenderer.WindowIsInitialized())
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		PyProcessExecuteQueue(); //use time to execute incoming python tasks
 	}
 #endif
 	for (auto item : visualizationSystems)

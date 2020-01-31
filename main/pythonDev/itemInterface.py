@@ -1183,3 +1183,30 @@ class LoadCoordinate:
         yield 'loadUserFunction', self.loadUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+#+++++++++++++++++++++++++++++++
+#SENSOR
+class VSensorNode:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorNode:
+    def __init__(self, name = '', nodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+        self.name = name
+        self.nodeNumber = nodeNumber
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.outputVariableType = outputVariableType
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'Node'
+        yield 'name', self.name
+        yield 'nodeNumber', self.nodeNumber
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'outputVariableType', self.outputVariableType
+        yield 'Vshow', dict(self.visualization)["show"]
+

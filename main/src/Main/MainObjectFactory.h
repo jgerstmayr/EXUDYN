@@ -65,5 +65,12 @@ public:
 	//! Add a MainLoad with a python class
 	Index AddMainLoadPyClass(MainSystem& mainSystem, py::object pyObject);
 
+	//! Create a specific sensor with sensorType; returns sensor=Null if no success
+	MainSensor* CreateMainSensor(MainSystem& mainSystem, STDstring sensorType);
+	//! Add a MainSensor (and its according CSensor) to the system container; return index in item list or EXUstd::InvalidIndex if failed
+	Index AddMainSensor(MainSystem& mainSystem, py::dict d);
+	//! Add a MainSensor with a python class
+	Index AddMainSensorPyClass(MainSystem& mainSystem, py::object pyObject);
+
 };
 

@@ -194,6 +194,13 @@ namespace EXUstd {
 		return InvalidIndex;
 	}
 
+	//! template function for boolean types to check whether the requested type (typeRequested) is available (typeAvailable)
+	template<class T>
+	inline bool IsOfType(T typeAvailable, T typeRequested)
+	{
+		return ((Index)typeAvailable & (Index)typeRequested) == (Index)typeRequested;
+	}
+
 	//get current time since program start in seconds; resolution in nanoseconds; due to offset, this function can produce negative values!
 	double GetTimeInSeconds();
 

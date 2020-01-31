@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-11-12  21:47:28 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,9 +124,9 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cNodeGenericData->GetParameters().numberOfDataCoordinates = py::cast<Index>(d["numberOfDataCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "initialCoordinates")) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeGenericData->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeGenericData->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -156,7 +156,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("numberOfDataCoordinates") == 0) { cNodeGenericData->GetParameters().numberOfDataCoordinates = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationNodeGenericData->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

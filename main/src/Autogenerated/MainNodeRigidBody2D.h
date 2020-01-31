@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-11-12  21:47:28 (last modfied)
+* @date         2020-01-28  08:47:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -131,13 +131,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        HPyUtils::SetVector3DSafely(d, "referenceCoordinates", cNodeRigidBody2D->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "initialDisplacements")) { HPyUtils::SetVector3DSafely(d, "initialDisplacements", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "initialVelocities")) { HPyUtils::SetVector3DSafely(d, "initialVelocities", GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/} 
-        HPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
-        if (HPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeRigidBody2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "VdrawSize")) { visualizationNodeRigidBody2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (HPyUtils::DictItemExists(d, "Vcolor")) { visualizationNodeRigidBody2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::SetVector3DSafely(d, "referenceCoordinates", cNodeRigidBody2D->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "initialDisplacements")) { EPyUtils::SetVector3DSafely(d, "initialDisplacements", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::SetVector3DSafely(d, "initialVelocities", GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/} 
+        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeRigidBody2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationNodeRigidBody2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationNodeRigidBody2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -173,10 +173,10 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { HPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { HPyUtils::SetVector3DSafely(value, cNodeRigidBody2D->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialDisplacements") == 0) { HPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialVelocities") == 0) { HPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::SetVector3DSafely(value, cNodeRigidBody2D->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialDisplacements") == 0) { EPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationNodeRigidBody2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationNodeRigidBody2D->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationNodeRigidBody2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

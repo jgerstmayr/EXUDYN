@@ -24,6 +24,7 @@
 #include "System/MainLoad.h"
 #include "System/MainNode.h"
 #include "System/MainObject.h"
+#include "System/MainSensor.h"
 
 #include "Main/OutputVariable.h"
 
@@ -37,6 +38,7 @@ protected: //
 	ResizableArray<MainMaterial*> mainMaterials;    //!< container for main materials
 	ResizableArray<MainNode*> mainNodes;            //!< container for main nodes
 	ResizableArray<MainObject*> mainObjects;        //!< container for main objects
+	ResizableArray<MainSensor*> mainSensors;        //!< container for main sensors
 
 public: //
 
@@ -59,12 +61,14 @@ public: //
 		for (auto item : mainMaterials) { delete item; }
 		for (auto item : mainNodes) { delete item; }
 		for (auto item : mainObjects) { delete item; }
-		
+		for (auto item : mainSensors) { delete item; }
+
 		mainLoads.Flush();
 		mainMarkers.Flush();
 		mainMaterials.Flush();
 		mainNodes.Flush();
 		mainObjects.Flush();
+		mainSensors.Flush();
 	}
 
 	//! Write (Reference) access to:container for main loads
@@ -93,6 +97,11 @@ public: //
 	ResizableArray<MainObject*>& GetMainObjects() { return mainObjects; }
 	//! Read (Reference) access to:container for main objects
 	const ResizableArray<MainObject*>& GetMainObjects() const { return mainObjects; }
+
+	//! Write (Reference) access to:container for main sensors
+	ResizableArray<MainSensor*>& GetMainSensors() { return mainSensors; }
+	//! Read (Reference) access to:container for main sensors
+	const ResizableArray<MainSensor*>& GetMainSensors() const { return mainSensors; }
 
 	//py::object GetVector()
 	//{
@@ -374,6 +383,7 @@ public: //
 		//os << "  mainMaterials = " << mainMaterials << "\n";
 		os << "  mainMarkers = " << mainMarkers << "\n";
 		os << "  mainLoads = " << mainLoads << "\n\n";
+		os << "  mainSensors = " << mainSensors << "\n\n";
 		os << "  LTGODE2 = " << cSystemData->GetLocalToGlobalODE2() << "\n";
 		os << "  LTGODE1 = " << cSystemData->GetLocalToGlobalODE1() << "\n";
 		os << "  LTGAE = " << cSystemData->GetLocalToGlobalAE() << "\n";
@@ -410,6 +420,10 @@ public: //
 		for (auto item : mainLoads) {
 			info += "load" + EXUstd::ToString(cnt++) + ":\n    " + std::string(py::str(item->GetDictionary())) + "\n";
 		}
+		cnt = 0;
+		for (auto item : mainSensors) {
+			info += "sensor" + EXUstd::ToString(cnt++) + ":\n    " + std::string(py::str(item->GetDictionary())) + "\n";
+		}
 
 		return info;
 	}
@@ -422,7 +436,8 @@ public: //
 		info += "  Number of objects = "	+ EXUstd::Num2String(mainObjects.NumberOfItems()) + "\n";
 		//info += "  Number of materials = "+ EXUstd::Num2String(mainMaterials.NumberOfItems()) + "\n";
 		info += "  Number of markers = "	+ EXUstd::Num2String(mainMarkers.NumberOfItems()) + "\n";
-		info += "  Number of loads = "      + EXUstd::Num2String(mainLoads.NumberOfItems()) + "\n";
+		info += "  Number of loads = " + EXUstd::Num2String(mainLoads.NumberOfItems()) + "\n";
+		info += "  Number of sensors = " + EXUstd::Num2String(mainSensors.NumberOfItems()) + "\n";
 
 		info += "  Number of ODE2 coordinates = " + EXUstd::Num2String(GetCSystemData().GetNumberOfCoordinatesODE2()) + "\n";
 		info += "  Number of ODE1 coordinates = " + EXUstd::Num2String(GetCSystemData().GetNumberOfCoordinatesODE1()) + "\n";
@@ -431,13 +446,6 @@ public: //
 
 		return info;
 	}
-
-	////for pybind access
-	//Index NumberOfLoads() const		{ return mainLoads.NumberOfItems();	}
-	//Index NumberOfMarkers() const	{ return mainMarkers.NumberOfItems(); }
-	//Index NumberOfMaterials() const { return mainMaterials.NumberOfItems(); }
-	//Index NumberOfNodes() const		{ return mainNodes.NumberOfItems(); }
-	//Index NumberOfObjects() const	{ return mainObjects.NumberOfItems(); }
 
 };
 

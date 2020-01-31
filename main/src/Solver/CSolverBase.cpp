@@ -38,7 +38,7 @@ bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const Simulatio
 
 	PreInitializeSolverSpecific(computationalSystem, simulationSettings); //do solver specific things
 
-	InitializeSolverOutput(simulationSettings); //first needs to open files
+	InitializeSolverOutput(computationalSystem, simulationSettings); //first needs to open files
 	if (InitializeSolverPreChecks(computationalSystem, simulationSettings))
 	{
 		InitializeSolverData(computationalSystem, simulationSettings);
@@ -51,7 +51,7 @@ bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const Simulatio
 }
 
 //! initialize output files; called from InitializeSolver(); must be done at the very beginning, as otherwise, no information is written!
-void CSolverBase::InitializeSolverOutput(const SimulationSettings& simulationSettings)
+void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 	const StaticSolverSettings& staticSolver = simulationSettings.staticSolver;
@@ -74,7 +74,7 @@ void CSolverBase::InitializeSolverOutput(const SimulationSettings& simulationSet
 	STDstring solutionFileName = solutionSettings.coordinatesSolutionFileName;
 	STDstring solverFileName = solutionSettings.solverInformationFileName;
 
-	//+++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//open solution file
 	output.writeToSolutionFile = solutionSettings.writeSolutionToFile;
 	if (solutionFileName != "" && output.writeToSolutionFile)
@@ -93,7 +93,7 @@ void CSolverBase::InitializeSolverOutput(const SimulationSettings& simulationSet
 	}
 	else { output.writeToSolutionFile = false; }
 
-	//+++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//open solver information file
 	output.writeToSolverFile = false; //default
 	if (output.verboseModeFile > 0 && solverFileName != "")
@@ -112,7 +112,40 @@ void CSolverBase::InitializeSolverOutput(const SimulationSettings& simulationSet
 		}
 	}
 
-	//+++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//open sensor files
+	//for every sensor there is an according enty in sensorFileList (may be Null pointer)
+	//files need to be closed at any exit point!!!
+	for (auto item : computationalSystem.GetSystemData().GetCSensors())
+	{
+		Index cnt = 0;
+		if (item->GetWriteToFileFlag() && item->GetFileName().length() != 0)
+		{
+			std::ofstream* sensorFile = new std::ofstream;
+			file.sensorFileList.push_back(sensorFile);
+			int fileMode = std::ofstream::out;
+			if (solutionSettings.appendToFile) { fileMode = std::ofstream::app; }
+
+			sensorFile->open(item->GetFileName(), fileMode);
+
+			if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
+			{
+				SysError(STDstring("failed to open sensor file '") + solverFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
+				file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
+			}
+			else
+			{
+				sensorFile->precision(solutionSettings.outputPrecision);
+			}
+			cnt++;
+		}
+		else
+		{
+			file.sensorFileList.push_back(nullptr);
+		}
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	if (IsVerboseCheck(1))
 	{
 		VerboseWrite(1, STDstring("+++++++++++++++++++++++++++++++\nEXUDYN V") + EXUstd::ToString(EXUstd::exudynVersion) + " solver: " + GetSolverName() + "\n");
@@ -176,6 +209,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 
 	//do this not earlier than here, because checks need to be done prior to writing the header
 	WriteSolutionFileHeader(computationalSystem, simulationSettings);
+	WriteSensorsFileHeader(computationalSystem, simulationSettings);
 	return true;
 }
 
@@ -289,6 +323,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	//+++++++++++++++++++++++++++++++++++++
 	//timer functions: only work in combination with FinalizeSolver
 	output.lastSolutionWritten = it.startTime;
+	output.lastSensorsWritten = it.startTime;
 	output.lastImageRecorded = it.startTime;
 	output.cpuStartTime = EXUstd::GetTimeInSeconds();
 	output.cpuLastTimePrinted = output.cpuStartTime;
@@ -373,6 +408,19 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 	//final finalize: close files (NO EARLIER!)
 	if (file.solutionFile.is_open()) { file.solutionFile.close(); }
 	if (file.solverFile.is_open()) { file.solverFile.close(); }
+
+	//close sensor files:
+	for (auto* item : file.sensorFileList)
+	{
+		if (item != nullptr)
+		{
+			item->close();
+			delete item;
+			item = nullptr;
+		}
+	}
+	file.sensorFileList.clear();
+	//pout << "sensor list length=" << file.sensorFileList.size() << "\n";
 }
 
 //! main solver part: calls multiple InitializeStep(...)/PerformStep(...); do step reduction if necessary; return true if success, false else
@@ -522,6 +570,7 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 			py::exec(simulationSettings.staticSolver.preStepPyExecute.c_str(), scope);
 		}
 	}
+	PyProcessExecuteQueue(); //execute incoming python tasks if available
 	STOPTIMER(timer.python);
 }
 //! finish static step / time step; write output of results to file
@@ -575,16 +624,26 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 
 	if (output.writeToSolutionFile)
 	{
-		//pout << "endt=" << GetEndTime(simulationSettings) << ", timint.entt=" << simulationSettings.timeIntegration.endTime << "\n";
-		
+
 		//modify lastSolutionWritten to include last step in output file
 		if (fabs(t - it.endTime) <= 1e-10) {
 			output.lastSolutionWritten = it.endTime - it.currentStepSize;
-			//pout << "\n*************** LAST STEP\n\n";
 		}
 
 		STARTTIMER(timer.writeSolution);
 		WriteCoordinatesToFile(computationalSystem, simulationSettings);
+		STOPTIMER(timer.writeSolution);
+	}
+
+	if (computationalSystem.GetSystemData().GetCSensors().NumberOfItems() != 0)
+	{
+		//modify lastSolutionWritten to include last step in output file
+		if (fabs(t - it.endTime) <= 1e-10) {
+			output.lastSensorsWritten = it.endTime - it.currentStepSize;
+		}
+
+		STARTTIMER(timer.writeSolution);
+		WriteSensorsToFile(computationalSystem, simulationSettings);
 		STOPTIMER(timer.writeSolution);
 	}
 
@@ -777,6 +836,8 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	while (!conv.linearSolverFailed && !conv.newtonConverged && 
 		!stopNewton && it.newtonSteps < newton.maxIterations)
 	{
+		if (data.nSys > 200) { PyProcessExecuteQueue(); } //do this task regularly, specifically in large scale systems
+
 		it.newtonSteps++; it.newtonStepsCount++;
 		if (IsVerbose(3)) { Verbose(3, "  Newton: STEP "  + EXUstd::ToString(it.newtonSteps) + ":\n"); }
 		if (IsVerbose(4)) { Verbose(4, "    systemResidual = " + EXUstd::ToString(data.systemResidual) + "\n"); }
@@ -1129,6 +1190,75 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 		solFile << "\n";
 	}
 }
+
+
+//! write unique sensor file header, depending on static/dynamic simulation
+void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	for (auto item : computationalSystem.GetSystemData().GetCSensors())
+	{
+		Index cnt = 0;
+		if (file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
+		{
+			std::ofstream* sFile = file.sensorFileList[cnt];
+			(*sFile) << "#Exudyn " << GetSolverName() << " ";
+			if (IsStaticSolver()) { (*sFile) << "static "; }
+			(*sFile) << "sensor output file\n";
+			STDstring typeStr = GetSensorTypeString(item->GetType());
+
+			(*sFile) << "#measure " << typeStr << " number = " << item->GetTypeDependentIndex() << "\n";
+			(*sFile) << "#OutputVariableType = " << GetOutputVariableTypeString(item->GetOutputVariableType()) << "\n";
+
+			(*sFile) << "#simulation started = " << EXUstd::GetDateTimeString() << "\n";
+			(*sFile) << "#columns contain: time, comma separated sensor values (e.g, x,y,z position coordinates)\n";
+
+			item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Initial);
+
+			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
+			(*sFile) << "#\n";
+		}
+	}
+}
+
+//! write unique sensor solution file
+void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	Real t = computationalSystem.GetSystemData().GetCData().currentState.time;
+	Real startTime = computationalSystem.GetSystemData().GetCData().initialState.time;
+
+	if (t == startTime || (t - output.lastSensorsWritten) >= -1e-10) //1e-10 because of roundoff errors
+	{
+
+		std::ofstream& solFile = file.solutionFile;
+		const SolutionSettings& solutionSettings = simulationSettings.solutionSettings;
+
+		output.lastSensorsWritten += solutionSettings.sensorsWritePeriod;
+		output.lastSensorsWritten = EXUstd::Maximum(output.lastSensorsWritten, t); //never accept smaller values ==> for adaptive solver
+
+		for (auto item : computationalSystem.GetSystemData().GetCSensors())
+		{
+			Index cnt = 0;
+			if (file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
+			{
+				std::ofstream* sFile = file.sensorFileList[cnt];
+
+				(*sFile) << t;
+				
+				item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current);
+
+				for (auto value : output.sensorValuesTemp)
+				{
+					(*sFile) << "," << value;
+				}
+				(*sFile) << "\n";
+			}
+		}
+	}
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 //! return true, if file or console output is at or above the given level

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-05  15:33:22 (last modfied)
+* @date         2020-01-24  23:00:10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
     Real physicsReferenceAxialStrain;             //!< AUTO: reference axial strain of beam (pre-deformation) \f$\varepsilon_0\f$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value
     Real physicsReferenceCurvature;               //!< AUTO: reference curvature of beam (pre-deformation) \f$\kappa_0\f$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value
     bool physicsUseCouplingTerms;                 //!< AUTO: true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)
-    Index3 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element
+    Index3 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element, third node=ALE GenericODE2 node
     bool useReducedOrderIntegration;              //!< AUTO: false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
     //! AUTO: default constructor with parameter initialization
     CObjectALEANCFCable2DParameters()
@@ -131,7 +131,7 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        CHECKandTHROW(localIndex <= 2, "Object::GetNodeNumber(...): invalid localIndex");
+        release_assert(localIndex <= 2);
         return parameters.nodeNumbers[localIndex];
     }
 

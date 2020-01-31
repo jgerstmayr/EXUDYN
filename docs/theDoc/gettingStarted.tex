@@ -173,20 +173,45 @@ Within this file, the first column shows the simulation time and the following c
 \mysubsection{FAQ -- Frequently asked questions}
 
 \bn
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item Where do I find the '.exe' file?
 	\bi
 	\item[$\ra$] \codeName\ is only available via the python interface as exudyn.pyd library, which is located in folder: \texttt{main/bin/WorkingRelease}. This means that you need to run python (best: Spyder) and import the \codeName\ module.
 	\ei
 	%
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item Why does type auto completion does not work for mbs (Main system)?
+	\bi
+	\item[$\ra$] most python environments only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.\\
+	WORKAROUND: type \texttt{mbs=MainSystem()} {\bf before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
+	\ei
+	%
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 	\bi
 	\item[$\ra$] Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
 	\ei
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item Why can't I get the focus of the simulation window on startup (render window hidden)?
 	\bi
 	\item[$\ra$] Starting \codeName\ out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools$\ra$Preferences$\ra$Editor$\ra$Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \texttt{SC.visualizationSettings.window.alwaysOnTop=True} {\bf before} starting the renderer with \texttt{exu.StartRenderer()}
 	\ei
 	%
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item When importing \codeName\ in python (windows) I get the error (or similar):\\
+{\ttfamily \footnotesize
+\begin{lstlisting}[breaklines=true]
+Traceback (most recent call last):
+  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\pytest.py", line 18, in <module>
+    import exudyn as exu
+  ImportError: DLL load failed: %1 is no valid Win32 application.
+\end{lstlisting}}
+	$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be {\bf BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have {\bf BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
 \en
 
 

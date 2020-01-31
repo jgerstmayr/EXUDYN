@@ -16,13 +16,14 @@
 #size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
 #type = Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix
 #defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;
-#cFlags = A...add access functions (e.g. const Real&/Real&), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
+#cFlags = A...add access functions (e.g. const Real&/Real&), S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
 #parameterDescription = description for parameter used in C++ code
 
 # classDescription = "parameters for CSystem"
 # class = System2
 # latexText = ""        #text, which will be added before the class description (e.g., to start a new section)
 # addConstructor = "",   #code added to default constructor
+# addDictionaryAccess #add access function to export/import data to/from dictionary (with type information)
 # linkedClass= "",       #member variable (representing a class) to which this object is linked
 #V|F, pythonName, cplusplusName (or empty if same), size, type, defaultValue,args, cflags, parameterDescription
 # name, 	 	 , 0 	,	String, "empty", , "this is a description,	using	comma"
@@ -38,18 +39,24 @@ latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Simulation
 classDescription = "General settings for exporting the solution (results) of a simulation."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args,cFlags, parameterDescription
 V,  writeSolutionToFile,			,    , bool, 						   true,      ,      P		, "flag (true/false), which determines if (global) solution vector is written to file"
-V,  appendToFile,			        ,  	, bool, 					   false,     ,      P	  , "flag (true/false); if true, solution is always appended to file"
+V,  appendToFile,			        ,  	, bool, 					   false,     ,      P	  , "flag (true/false); if true, solution is appended to existing file (otherwise created)"
 V,  writeFileHeader,			     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)"
 V,  writeFileFooter,			     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics"
-V,  solutionWritePeriod,			,  	, UReal, 						0.01,  		,      P     , "time span (period), determines how often the solution is written during a (dynamic) simulation"
+V,  solutionWritePeriod,			,  	, UReal, 						0.01,  		,      P     , "time span (period), determines how often the solution is written during a simulation"
+#
+V,  sensorsAppendToFile,	     ,    , bool, 						   false,  	,      P     , "flag (true/false); if true, sensor output is appended to existing file (otherwise created)"
+V,  sensorsWriteFileHeader,     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)"
+V,  sensorsWritePeriod,			   ,  	, UReal, 						0.01,  		,      P     , "time span (period), determines how often the sensor output is written during a simulation"
+#
 V,  exportVelocities,			     ,    , bool, 						   true,  		,      P     , "solution is written as displacements, velocities[, accelerations] [,algebraicCoordinates] [,DataCoordinates]"
 V,  exportAccelerations,			,  	, bool, 						true,  		,      P     , "solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]"
 V,  exportAlgebraicCoordinates,	,    , bool, 						   true,  		,      P     , "solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]"
 V,  exportDataCoordinates,	     ,    , bool, 						   true,  		,      P     , "solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates"
-V,  coordinatesSolutionFileName,, 	  , String,                "coordinatesSolution.txt", ,P		, "filename and (relative) path of solution file containing all coordinates versus time"
-V,  solverInformationFileName,  , 	  , String,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile"
+V,  coordinatesSolutionFileName,, 	  , FileName,                "coordinatesSolution.txt", ,P		, "filename and (relative) path of solution file containing all coordinates versus time"
+#
+V,  solverInformationFileName,  , 	  , FileName,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile"
 V,  solutionInformation,	     ,    , String,                "",       ,      P	  , "special information added to header of solution file (e.g. parameters and settings, modes, ...)"
-V,  outputPrecision,            , 	  , Index,                 10,       ,       P		, "precision for floating point numbers written to solution files"
+V,  outputPrecision,            , 	  , Index,                 10,       ,       P		, "precision for floating point numbers written to solution and sensor files"
 V,  recordImagesInterval,       , 	  , Real,                  -1.,      ,       P    ,  "record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages"
 #
 writeFile=SimulationSettings.h
@@ -73,7 +80,7 @@ appendToFile=True
 writePybindIncludes = True
 classDescription = "Settings for Newton method used in static or dynamic simulation."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,  numericalDifferentiation,, , NumericalDifferentiationSettings,      ,,        P		, "numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)"
+V,  numericalDifferentiation,, , NumericalDifferentiationSettings,      ,,        PS		, "numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)"
 V,  useNumericalDifferentiation, ,  	,      bool, 					   false,  , P		, "flag (true/false); false = perform direct computation of jacobian, true = use numerical differentiation for jacobian"
 V,  useNewtonSolver,	       ,  		    ,     bool, 					true,   , P		, "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution"
 V,  relativeTolerance,      ,  		   ,      UReal, 					1e-8,   , P		, "relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)"
@@ -119,7 +126,7 @@ appendToFile=True
 classDescription = "General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha."
 writePybindIncludes = True
 #V|F, pythonName, 		cplusplusName,   size,   type,		defaultValue,args,cFlags, parameterDescription
-V,  newton,              ,     , NewtonSettings,         ,     ,   P,      "parameters for Newton method; used for implicit time integration methods only"
+V,  newton,              ,     , NewtonSettings,         ,     ,   PS,      "parameters for Newton method; used for implicit time integration methods only"
 V,  startTime,				 , 	 	, UReal, 			        0	, 	  ,   P, "start time of time integration (usually set to zero)"
 V,  endTime,				    , 	 	, UReal, 			        1	, 		,  P, "end time of time integration"
 V,  numberOfSteps,		    , 	 	, UInt, 			        100	, 	,	 P, "number of steps in time integration; stepsize is computed from (endTime-startTime)/numberOfSteps"
@@ -128,7 +135,7 @@ V,  minimumStepSize,	    ,  		, UReal, 		           1e-8,   ,  P, "lower limit o
 #
 V,  verboseMode,	      ,  	  , Index, 			        0  ,    ,   P, "0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
 V,  verboseModeFile,	    ,  	  , Index, 			        0  ,    ,   P, "same behaviour as verboseMode, but outputs all solver information to file"
-V,  generalizedAlpha,    ,     , GeneralizedAlphaSettings,  ,   ,   P, "parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)"
+V,  generalizedAlpha,    ,     , GeneralizedAlphaSettings,  ,   ,   PS, "parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)"
 V,  preStepPyExecute,		 , 	 	, String, 			        ""	, 		,   P, "Python code to be executed prior to every step and after last step, e.g. for postprocessing"
 #
 writeFile=SimulationSettings.h
@@ -139,7 +146,7 @@ appendToFile=True
 writePybindIncludes = True
 classDescription = "Settings for static solver linear or nonlinear (Newton)."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,    newton,               ,           ,   NewtonSettings,         ,       ,P   , "parameters for Newton method (e.g. in static solver or time integration)"
+V,    newton,               ,           ,   NewtonSettings,         ,       ,PS   , "parameters for Newton method (e.g. in static solver or time integration)"
 #
 #not needed: V,  useLoadSteps,	         ,  		     ,      bool, 					false,   P		, "flag (true/false); false = 1 load step, true = use predefined (or adaptive) load steps"
 V,  numberOfLoadSteps,      ,  		     ,      Index, 					1,       ,P		, "number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once"
@@ -161,12 +168,13 @@ writeFile=SimulationSettings.h
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = SimulationSettings
 appendToFile=True
+addDictionaryAccess = True
 writePybindIncludes = True
 classDescription = "General Settings for simulation; according settings for solution and solvers are given in subitems of this structure"
 #V|F, pythonName, 		             cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,  timeIntegration,                ,  		        , TimeIntegrationSettings, 	  , , P		, "time integration parameters"
-V,  solutionSettings,				       , 	 	        , SolutionSettings,  	          , , P		, "settings for solution files"
-V,  staticSolver,				         , 	 	        , StaticSolverSettings,  		  , , P	   , "static solver parameters"
+V,  timeIntegration,                ,  		        , TimeIntegrationSettings, 	  , , PS		, "time integration parameters"
+V,  solutionSettings,				       , 	 	        , SolutionSettings,  	          , , PS		, "settings for solution files"
+V,  staticSolver,				         , 	 	        , StaticSolverSettings,  		  , , PS	   , "static solver parameters"
 V,  linearSolverType,				       , 	 	        , LinearSolverType,    "LinearSolverType::EXUdense", , P	   , "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)"
 V,  cleanUpMemory,                  , 	           , bool,                false   , , P		, "true: solvers will free memory at exit (recommended for large systems); false: keep allocated memory for repeated computations to increase performance"
 V,  displayStatistics,              , 	           , bool,                false   , , P		, "display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."
@@ -264,7 +272,7 @@ classDescription = "OpenGL settings for 2D and 2D rendering."
 V,      initialCenterPoint,             , 	             3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True"
 V,      initialZoom,                    , 	             ,     float,        "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
 V,      initialMaxSceneSize,            , 	             ,     float,        "1.f",                  , P,      "initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True"
-V,      initialModelRotation,           , 	             9,    StdArray33F,    "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
+V,      initialModelRotation,           , 	             3x3,    StdArray33F,    "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
 #V,      initialModelRotation,           , 	             9,    Matrix3DF,    "Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f})",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
 # 
 V,      multiSampling,                  , 	             1,    Index,        "1",                    , P,      "multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
@@ -319,7 +327,7 @@ writePybindIncludes = True
 classDescription = "Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      saveImageTimeOut,               , 	             ,     Index,        "5000",                 , P,      "timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
-V,      saveImageFileName,              , 	             ,     String,       "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!"
+V,      saveImageFileName,              , 	             ,     FileName,       "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!"
 V,      saveImageFileCounter,           , 	             ,     Index,        0,                      , P,      "current value of the counter which is used to consecutively save frames (images) with consecutive numbers"
 V,      saveImageSingleFile,            , 	             ,     bool,         false,                  , P,      "true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName"
 #
@@ -357,7 +365,7 @@ V,      show,                       , 	             ,     bool,         true,   
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the body(=object) number is shown"
 V,      defaultSize,                , 	             3,    Float3,       "Float3({1.f,1.f,1.f})",    , P,    "global body size of xyz-cube"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for bodies; 4th value is "
-V,      beams,                      , 	             ,     VSettingsBeams,   ,                       , P,    "visualization settings for beams (e.g. ANCFCable or other beam elements)"
+V,      beams,                      , 	             ,     VSettingsBeams,   ,                       , PS,    "visualization settings for beams (e.g. ANCFCable or other beam elements)"
 #
 writeFile=VisualizationSettings.h
 
@@ -404,24 +412,39 @@ V,      defaultColor,               , 	             4,    Float4,       "Float4(
 #
 writeFile=VisualizationSettings.h
 
+class = VSettingsSensors
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Visualization settings for sensors."
+#V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
+V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the sensors are shown"
+V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the sensor numbers are shown"
+V,      defaultSize,                , 	             ,     float,        "0.2f",                     , P,    "global sensor size; if -1.f, node size is relative to maxSceneSize"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P,    "default cRGB olor for sensors; 4th value is alpha-transparency"
+#
+writeFile=VisualizationSettings.h
+
 
 #Visualization:General,Window(mouse move, zoom),OpenGL,System(Objects,Nodes,...),Text
 class = VisualizationSettings
 appendToFile=True
 writePybindIncludes = True
+addDictionaryAccess = True
 classDescription = "Settings for visualization"
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
-V,      general,                    , 	             ,     VSettingsGeneral,  ,                 , P,      "general visualization settings"
-V,      window,                     , 	             ,     VSettingsWindow,   ,                 , P,      "visualization window and interaction settings"
-V,      openGL,                     , 	             ,     VSettingsOpenGL,   ,                 , P,      "OpenGL rendering settings"
-V,      contour,                    , 	             ,     VSettingsContour,  ,                 , P,      "contour plot visualization settings"
-V,      exportImages,               , 	             ,     VSettingsExportImages,,              , P,      "settings for exporting (saving) images to files in order to create animations"
+V,      general,                    , 	             ,     VSettingsGeneral,  ,                 , PS,      "general visualization settings"
+V,      window,                     , 	             ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
+V,      openGL,                     , 	             ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
+V,      contour,                    , 	             ,     VSettingsContour,  ,                 , PS,      "contour plot visualization settings"
+V,      exportImages,               , 	             ,     VSettingsExportImages,,              , PS,      "settings for exporting (saving) images to files in order to create animations"
 #
-V,      nodes,                      , 	             ,     VSettingsNodes,    ,                 , P,      "node visualization settings"
-V,      bodies,                     , 	             ,     VSettingsBodies,   ,                 , P,      "body visualization settings"
-V,      connectors,                 , 	             ,     VSettingsConnectors,,                , P,      "connector visualization settings"
-V,      markers,                    , 	             ,     VSettingsMarkers,  ,                 , P,      "marker visualization settings"
-V,      loads,                      , 	             ,     VSettingsLoads,    ,                 , P,      "load visualization settings"
+V,      nodes,                      , 	             ,     VSettingsNodes,    ,                 , PS,      "node visualization settings"
+V,      bodies,                     , 	             ,     VSettingsBodies,   ,                 , PS,      "body visualization settings"
+V,      connectors,                 , 	             ,     VSettingsConnectors,,                , PS,      "connector visualization settings"
+V,      markers,                    , 	             ,     VSettingsMarkers,  ,                 , PS,      "marker visualization settings"
+V,      loads,                      , 	             ,     VSettingsLoads,    ,                 , PS,      "load visualization settings"
+V,      sensors,                    , 	             ,     VSettingsSensors,  ,                 , PS,      "sensor visualization settings"
+#done in WriteToPybind function FL,      GetDictionaryWithTypeInformation,  ,        ,     py::dict,          ,                 , DP,      "access function to dictionary of settings hierarchical structure including type information"
 #
 writeFile=VisualizationSettings.h
 
@@ -580,8 +603,10 @@ V,      verboseMode,                , 	             ,     Index,        0,      
 V,      verboseModeFile,            , 	             ,     Index,        0,                      ,   P,    "this is a copy of the solvers verboseModeFile used for file"
 V,      writeToSolutionFile,        , 	             ,     bool,         false,                  ,   P,    "if false, no solution file is generated and no file is written"
 V,      writeToSolverFile,          , 	             ,     bool,         false,                  ,   P,    "if false, no solver output file is generated and no file is written"
+V,      sensorValuesTemp,           , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor)"
 #simulation and CPU time of events:
 V,      lastSolutionWritten,        , 	             ,     Real,         0.,                     ,   P,    "simulation time when last solution has been written"
+V,      lastSensorsWritten,         , 	             ,     Real,         0.,                     ,   P,    "simulation time when last sensors have been written"
 V,      lastImageRecorded,          , 	             ,     Real,         0.,                     ,   P,    "simulation time when last image has been recorded"
 V,      cpuStartTime,               , 	             ,     Real,         0.,                     ,   P,    "CPU start time of computation (starts counting at computation of initial conditions)"
 V,      cpuLastTimePrinted,         , 	             ,     Real,         0.,                     ,   P,    "CPU time when output has been printed last time"
@@ -593,10 +618,11 @@ writeFile=CSolverStructures.h
 class = SolverFileData
 appendToFile=True
 writePybindIncludes = True
-classDescription = "Solver internal structure for output files."
+classDescription = "Solver internal structure for output files. This structure is not linked to pybind, because std::ofstream is not supported."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,            args,           cFlags, parameterDescription
 V,      solutionFile,               , 	             ,     std::ofstream,,                       ,    ,    "solution file with coordinate data"
 V,      solverFile,                 , 	             ,     std::ofstream,,                       ,    ,    "file with detailed solver information"
+V,      sensorFileList,             , 	             ,     std::vector<std::ofstream*>,,         ,    ,    "files for sensor output; the ofstream list corresponds exactly to the sensors in the computationalSystem (i.e., sensorFileList[0] is the ofstream for sensor 0, etc.); file lists need to be closed and deleted at end of simulation!"
 #
 #F,      InitializeData,             ,                ,     void,         "*this = SolverOutputData();",,P, "initialize SolverOutputData by assigning default values"
 #
@@ -613,11 +639,11 @@ writePybindIncludes = True
 #linkedClass = "cSolver" #not needed any more
 classDescription = "PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to python interfaces, and should thus be used for small systems. To access the solver in python, write: \bi\n \item[] solver = MainSolverStatic() \n\ei\n and hereafter you can access all data and functions via 'solver'."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,            args,           cFlags, parameterDescription
-VL,     timer,                    cSolver.timer , 	       ,     CSolverTimer,      ,                  ,   P,    "timer which measures the CPU time of solver sub functions"
-VL,     it,                       cSolver.it    , 	       ,     SolverIterationData, ,                ,   P,    "all information about iterations (steps, discontinuous iteration, newton,...)"
-VL,     conv,                     cSolver.conv  , 	       ,     SolverConvergenceData, ,              ,   P,    "all information about tolerances, errors and residua"
-VL,     output,                   cSolver.output, 	       ,     SolverOutputData,  ,                  ,   P,    "output modes and timers for exporting solver information and solution"
-VL,     newton,                   cSolver.newton, 	       ,     NewtonSettings,    ,                  ,   P,    "copy of newton settings from timeint or staticSolver"
+VL,     timer,                    cSolver.timer , 	       ,     CSolverTimer,      ,                  ,   PS,    "timer which measures the CPU time of solver sub functions"
+VL,     it,                       cSolver.it    , 	       ,     SolverIterationData, ,                ,   PS,    "all information about iterations (steps, discontinuous iteration, newton,...)"
+VL,     conv,                     cSolver.conv  , 	       ,     SolverConvergenceData, ,              ,   PS,    "all information about tolerances, errors and residua"
+VL,     output,                   cSolver.output, 	       ,     SolverOutputData,  ,                  ,   PS,    "output modes and timers for exporting solver information and solution"
+VL,     newton,                   cSolver.newton, 	       ,     NewtonSettings,    ,                  ,   PS,    "copy of newton settings from timeint or staticSolver"
 #these structures cannot be accessed directly via pybind:
 #VL,     data,                        , 	             ,     SolverLocalData,   ,                  ,   P,    "local solver vectors and matrices"
 #VL,     file,                      , 	             ,     SolverFileData,  ,                  ,   P,    "output files for solver information and solution"
@@ -647,7 +673,7 @@ FvL,    IncreaseStepSize,            ,                ,    void,        ,       
 #initialization functions:
 FvL,    InitializeSolver,            ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files"
 FvL,    PreInitializeSolverSpecific, ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset"
-FvL,    InitializeSolverOutput,      ,                ,    void,        ,                       "const SimulationSettings& simulationSettings",   GPV,    "initialize output files; called from InitializeSolver()"
+FvL,    InitializeSolverOutput,      ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "initialize output files; called from InitializeSolver()"
 FvL,    InitializeSolverPreChecks,   ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "check if system is solvable; initialize dense/sparse computation modes"
 FvL,    InitializeSolverData,        ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "initialize all data,it,conv; called from InitializeSolver()"
 FvL,    InitializeSolverInitialConditions, ,          ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "set/compute initial conditions (solver-specific!); called from InitializeSolver()"
@@ -773,7 +799,7 @@ FvL,    IncreaseStepSize,            ,                ,    void,        ,       
 #initialization functions:
 FvL,    InitializeSolver,            ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files"
 FvL,    PreInitializeSolverSpecific, ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset"
-FvL,    InitializeSolverOutput,      ,                ,    void,        ,                       "const SimulationSettings& simulationSettings",   GPV,    "initialize output files; called from InitializeSolver()"
+FvL,    InitializeSolverOutput,      ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "initialize output files; called from InitializeSolver()"
 FvL,    InitializeSolverPreChecks,   ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "check if system is solvable; initialize dense/sparse computation modes"
 FvL,    InitializeSolverData,        ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "initialize all data,it,conv; called from InitializeSolver()"
 FvL,    InitializeSolverInitialConditions, ,          ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "set/compute initial conditions (solver-specific!); called from InitializeSolver()"

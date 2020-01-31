@@ -33,6 +33,10 @@
 
 #include "Graphics/GlfwClient.h"
 
+extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
+#define rendererOut std::cout //defines the type of output for renderer: pout could be problematic because of parallel threads; std::cout does not work in Spyder
+
+
 GlfwRenderer glfwRenderer;
 
 //++++++++++++++++++++++++++++++++++++++++++
@@ -96,31 +100,31 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
 	{
 		visSettings->general.graphicsUpdateInterval = 0.02f;
-		std::cout << "Visualization update: 20ms\n";
+		rendererOut << "Visualization update: 20ms\n";
 	}
 
 	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
 	{
 		visSettings->general.graphicsUpdateInterval = 0.2f;
-		std::cout << "Visualization update: 200ms\n";
+		rendererOut << "Visualization update: 200ms\n";
 	}
 
 	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
 	{
 		visSettings->general.graphicsUpdateInterval = 1.f;
-		std::cout << "Visualization update: 1s\n";
+		rendererOut << "Visualization update: 1s\n";
 	}
 
 	if (key == GLFW_KEY_4 && action == GLFW_PRESS)
 	{
 		visSettings->general.graphicsUpdateInterval = 10.f;
-		std::cout << "Visualization update: 10s\n";
+		rendererOut << "Visualization update: 10s\n";
 	}
 
 	if (key == GLFW_KEY_5 && action == GLFW_PRESS)
 	{
 		visSettings->general.graphicsUpdateInterval = 100.f;
-		std::cout << "Visualization update: 100s\n";
+		rendererOut << "Visualization update: 100s\n";
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -128,55 +132,144 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (key == GLFW_KEY_N && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 	{
 		visSettings->nodes.show = !visSettings->nodes.show; UpdateGraphicsDataNow();
-		std::cout << "show nodes: " << visSettings->nodes.show << "\n";
+		rendererOut << "show nodes: " << visSettings->nodes.show << "\n";
 	}
 	if (key == GLFW_KEY_B && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 	{
 		visSettings->bodies.show = !visSettings->bodies.show; UpdateGraphicsDataNow();
-		std::cout << "show bodies: " << visSettings->bodies.show << "\n";
+		rendererOut << "show bodies: " << visSettings->bodies.show << "\n";
 	}
 	if (key == GLFW_KEY_C && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 	{
 		visSettings->connectors.show = !visSettings->connectors.show; UpdateGraphicsDataNow();
-		std::cout << "show connectors: " << visSettings->connectors.show << "\n";
+		rendererOut << "show connectors: " << visSettings->connectors.show << "\n";
 	}
 	if (key == GLFW_KEY_M && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 	{
 		visSettings->markers.show = !visSettings->markers.show; UpdateGraphicsDataNow();
-		std::cout << "show markers: " << visSettings->markers.show << "\n";
+		rendererOut << "show markers: " << visSettings->markers.show << "\n";
 	}
 	if (key == GLFW_KEY_L && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 	{
 		visSettings->loads.show = !visSettings->loads.show; UpdateGraphicsDataNow();
-		std::cout << "show loads: " << visSettings->loads.show << "\n";
+		rendererOut << "show loads: " << visSettings->loads.show << "\n";
+	}
+	if (key == GLFW_KEY_S && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+	{
+		visSettings->sensors.show = !visSettings->sensors.show; UpdateGraphicsDataNow();
+		rendererOut << "show sensors: " << visSettings->sensors.show << "\n";
 	}
 	//show node, object, ... numbers:
 	if (key == GLFW_KEY_N && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 	{
 		visSettings->nodes.showNumbers = !visSettings->nodes.showNumbers; UpdateGraphicsDataNow();
-		std::cout << "show node numbers: " << visSettings->nodes.showNumbers << "\n";
+		rendererOut << "show node numbers: " << visSettings->nodes.showNumbers << "\n";
 	}
 	if (key == GLFW_KEY_B && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 	{
 		visSettings->bodies.showNumbers = !visSettings->bodies.showNumbers; UpdateGraphicsDataNow();
-		std::cout << "show body numbers: " << visSettings->bodies.showNumbers << "\n";
+		rendererOut << "show body numbers: " << visSettings->bodies.showNumbers << "\n";
 	}
 	if (key == GLFW_KEY_C && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 	{
 		visSettings->connectors.showNumbers = !visSettings->connectors.showNumbers; UpdateGraphicsDataNow();
-		std::cout << "show connector numbers: " << visSettings->connectors.showNumbers << "\n";
+		rendererOut << "show connector numbers: " << visSettings->connectors.showNumbers << "\n";
 	}
 	if (key == GLFW_KEY_M && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 	{
 		visSettings->markers.showNumbers = !visSettings->markers.showNumbers; UpdateGraphicsDataNow();
-		std::cout << "show marker numbers: " << visSettings->markers.showNumbers << "\n";
+		rendererOut << "show marker numbers: " << visSettings->markers.showNumbers << "\n";
 	}
 	if (key == GLFW_KEY_L && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 	{
 		visSettings->loads.showNumbers = !visSettings->loads.showNumbers; UpdateGraphicsDataNow();
-		std::cout << "show load numbers: " << visSettings->loads.showNumbers << "\n";
+		rendererOut << "show load numbers: " << visSettings->loads.showNumbers << "\n";
 	}
+	if (key == GLFW_KEY_S && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+	{
+		visSettings->sensors.showNumbers = !visSettings->sensors.showNumbers; UpdateGraphicsDataNow();
+		rendererOut << "show sensor numbers: " << visSettings->sensors.showNumbers << "\n";
+	}
+	if (key == GLFW_KEY_X && action == GLFW_PRESS)
+	{
+		//open window to execute a python command ... (THREADSAFE???)
+		std::string str = R"(
+import tkinter as tk
+from tkinter.scrolledtext import ScrolledText
 
+singleCommandMainwin = tk.Tk()
+def OnSingleCommandReturn(event):
+    exec(singleCommandEntry.get(), globals())
+    singleCommandMainwin.destroy()
+
+tk.Label(singleCommandMainwin, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
+singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
+singleCommandEntry.grid(row=1, column=0)
+singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
+
+singleCommandMainwin.mainloop()
+)";
+		PyQueueExecutableString(str);
+		UpdateGraphicsDataNow();
+	}
+	//visualization settings dialog
+	if (key == GLFW_KEY_V && action == GLFW_PRESS)
+	{
+		//open window to execute a python command ... 
+		std::string str = "import exudynGUI\nvis=SC.visualizationSettings.GetDictionaryWithTypeInfo()\nSC.visualizationSettings.SetDictionary(exudynGUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))";
+		PyQueueExecutableString(str);
+		UpdateGraphicsDataNow();
+	}
+	//help key
+	if (key == GLFW_KEY_H && action == GLFW_PRESS)
+	{
+		//open window to execute a python command ... (THREADSAFE???)
+		std::string str = R"(import tkinter as tk
+root = tk.Tk()
+root.title("Help on keyboard commands and mouse")
+scrollW = tk.Scrollbar(root)
+textW = tk.Text(root, height = 30, width = 60)
+scrollW.pack(side = tk.RIGHT, fill = tk.Y)
+textW.pack(side = tk.LEFT, fill = tk.Y)
+scrollW.config(command = textW.yview)
+textW.config(yscrollcommand = scrollW.set)
+msg = """
+Mouse action:
+left mouse button     ... move model
+right mouse button    ... rotate model
+mouse wheel           ... zoom
+======================
+Key(s) action:
+1,2,3,4 or 5          ... visualization update speed
+'.' or KEYPAD '+'     ... zoom in
+',' or KEYPAD '-'     ... zoom out
+0 or KEYPAD '0'       ... reset rotation
+CURSOR UP, DOWN, etc. ... move scene
+A      ... zoom all
+C      ... show/hide connectors
+CTRL+C ... show/hide connector numbers
+B      ... show/hide bodies
+CTRL+B ... show/hide body numbers
+L      ... show/hide loads
+CTRL+L ... show/hide load numbers
+M      ... show/hide markers
+CTRL+M ... show/hide marker numbers
+N      ... show/hide nodes
+CTRL+N ... show/hide node numbers
+S      ... show/hide sensors
+CTRL+S ... show/hide sensor numbers
+Q      ... stop simulation
+X      ... execute command
+V      ... visualization settings
+ESCAPE ... close render window
+SPACE ... continue simulation
+"""
+textW.insert(tk.END, msg)
+tk.mainloop()
+)";
+		PyQueueExecutableString(str);
+		UpdateGraphicsDataNow();
+	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//process keys for move, rotate, zoom
@@ -207,7 +300,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();	//start with identity
 		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		std::cout << "Reset OpenGL modelview\n";
+		rendererOut << "Reset OpenGL modelview\n";
 	}
 
 
@@ -217,8 +310,20 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) { state->centerPoint[0] += transStep; }
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) { state->centerPoint[0] -= transStep; }
 	
-	if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_COMMA) && action == GLFW_PRESS) { state->zoom *= zoomStep; }
-	if ((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_PERIOD) && action == GLFW_PRESS) { state->zoom /= zoomStep; }
+	if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_COMMA) && action == GLFW_PRESS) 
+	{ 
+		if (mods == GLFW_MOD_CONTROL)
+		{ state->zoom *= pow(zoomStep,0.1f); } //small zoom step
+		else { state->zoom *= zoomStep; }
+	}
+	if ((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_PERIOD) && action == GLFW_PRESS) 
+	{ 
+		if (mods == GLFW_MOD_CONTROL)
+		{
+			state->zoom /= pow(zoomStep, 0.1f);
+		} //small zoom step
+		else { state->zoom /= zoomStep;; }
+	}
 
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) { ZoomAll(); UpdateGraphicsDataNow(); }
 
@@ -296,9 +401,9 @@ void GlfwRenderer::ZoomAll()
 		center = Float3({ 0,0,0 });
 	}
 
-	//std::cout << "Zoom all\n";
-	//std::cout << "maxScenesize=" << maxSceneSize << "\n";
-	//std::cout << "center=" << center << "\n";
+	//rendererOut << "Zoom all\n";
+	//rendererOut << "maxScenesize=" << maxSceneSize << "\n";
+	//rendererOut << "center=" << center << "\n";
 
 	state->zoom = 0.4f*maxSceneSize;
 	state->centerPoint = center; 
@@ -308,13 +413,13 @@ void GlfwRenderer::ZoomAll()
 
 void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	//std::cout << "scroll: x=" << xoffset << ", y=" << yoffset << "\n";
+	//rendererOut << "scroll: x=" << xoffset << ", y=" << yoffset << "\n";
 	float zoomStep = visSettings->window.zoomStepFactor;
 
 	if (yoffset > 0) { state->zoom /= zoomStep * (float)yoffset; }
 	if (yoffset < 0) { state->zoom *= zoomStep * (float)(-yoffset); }
 
-	//std::cout << "zoom=" << state->zoom << "\n";
+	//rendererOut << "zoom=" << state->zoom << "\n";
 
 }
 
@@ -324,7 +429,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	//STATE MACHINE MOUSE MOVE
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
-		//std::cout << "mouse button left pressed\n";
+		//rendererOut << "mouse button left pressed\n";
 		stateMachine.leftMousePressed = true;
 		//if (stateMachine.mode != RendererMode::None)
 		//{
@@ -335,14 +440,14 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
 		stateMachine.leftMousePressed = false;
-		//std::cout << "mouse button left released\n";
+		//rendererOut << "mouse button left released\n";
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//STATE MACHINE ROTATE
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && !stateMachine.leftMousePressed)
 	{
-		//std::cout << "mouse button left pressed\n";
+		//rendererOut << "mouse button left pressed\n";
 		stateMachine.rightMousePressed = true;
 		stateMachine.lastMousePressedX = stateMachine.mousePositionX;
 		stateMachine.lastMousePressedY = stateMachine.mousePositionY; //now see if the mouse moves, then switch to move mode!
@@ -350,7 +455,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 	{
 		stateMachine.rightMousePressed = false;
-		//std::cout << "mouse button left released\n";
+		//rendererOut << "mouse button left released\n";
 	}
 
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //unlimited cursor position (also outside of window) - might get negative coordinates
@@ -360,7 +465,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 
 void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	//std::cout << "mouse cursor: x=" << xpos << ", y=" << ypos << "\n";
+	//rendererOut << "mouse cursor: x=" << xpos << ", y=" << ypos << "\n";
 	stateMachine.mousePositionX = xpos;
 	stateMachine.mousePositionY = ypos;
 
@@ -436,6 +541,7 @@ bool GlfwRenderer::SetupRenderer()
 {
 	//glfwCreateThread();
 	//auto th = new std::thread(GlfwRenderer::StartThread);
+	globalPyRuntimeErrorFlag = false; //if previous renderer crashed, this allows to relase this error even if the old renderer is still running
 	if (!rendererActive)
 	{
 		basicVisualizationSystemContainer->UpdateMaximumSceneCoordinates(); //this is done to make OpenGL zoom and maxSceneCoordinates work
@@ -479,6 +585,41 @@ bool GlfwRenderer::SetupRenderer()
 
 }
 
+//! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
+void GlfwRenderer::StopRenderer()
+{
+	if (window)
+	{
+		stopRenderer = true;
+		glfwSetWindowShouldClose(window, 1);
+		Index timeOut = visSettings->window.startupTimeout / 10;
+
+		Index i = 0;
+		while (i++ < timeOut && rendererActive) //wait 5 seconds for thread to answer
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+
+		if (rendererActive) { SysError("OpenGL Renderer could not be stopped safely\n"); }
+		//else { pout << "Renderer Stopped\n"; }
+
+		glfwDestroyWindow(window);
+		//not necessary: glfwTerminate(); //test if this helps; should not be needed
+
+		//delete window; //will not work? VS2017 reports warning that destructor will not be called, since window is only a struct
+		window = nullptr; //this is used to identify if window has already been generated
+
+		//after this command, this thread is terminated! ==> nothing will be done any more
+		if (rendererThread.joinable()) //thread is still running from previous call ...
+		{
+			//pout << "join thread ...\n";
+			rendererThread.join();
+			//pout << "thread joined\n";
+			//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
+		}
+	}
+}
+
 void GlfwRenderer::InitCreateWindow()
 {
 
@@ -503,8 +644,15 @@ void GlfwRenderer::InitCreateWindow()
 	//GLFW_SCALE_TO_MONITOR (default: GLFW_FALSE) specified whether the window content area should be resized based on the monitor content scale of any monitor it is placed on. This includes the initial placement when the window is created. Possible values are GLFW_TRUE and GLFW_FALSE.
 
 	//window = glfwCreateWindow(visSettings->openGLWindowSize[0], visSettings->openGLWindowSize[1], "Exudyn OpenGL window", NULL, NULL);
-	window = glfwCreateWindow((int)state->currentWindowSize[0], (int)state->currentWindowSize[1], 
-							  "Exudyn OpenGL window", NULL, NULL);
+	int sizex = (int)state->currentWindowSize[0];
+	int sizey = (int)state->currentWindowSize[1];
+	if (sizex < 20) { sizex = 20; }//limit lower size: negative numbers or zero could make problems ...
+	if (sizey < 20) { sizey = 20; }
+
+	if (sizex > 8160) { sizex = 8160; } //limit upper size for now ...
+	if (sizey > 4320) { sizey = 4320; }
+
+	window = glfwCreateWindow(sizex, sizey, "Exudyn OpenGL window", NULL, NULL);
 
 	if (!window)
 	{
@@ -556,16 +704,19 @@ void GlfwRenderer::InitCreateWindow()
 void GlfwRenderer::RunLoop()
 {
 	//this is the OpenGL thread main loop
-	while (rendererActive && !glfwWindowShouldClose(window) && !stopRenderer)
+	while (rendererActive && !glfwWindowShouldClose(window) && 
+		!stopRenderer && !globalPyRuntimeErrorFlag)
 	{
 		basicVisualizationSystemContainer->UpdateGraphicsData();
 		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) { ZoomAll(); ZoomAll();}
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
 		glfwWaitEventsTimeout((double)(visSettings->general.graphicsUpdateInterval)); //wait x seconds for next event
-
 	}
-
+	if (globalPyRuntimeErrorFlag)
+	{
+		rendererOut << "render window stopped because of error\n";
+	}
 	basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
 
 	glfwDestroyWindow(window);
@@ -643,13 +794,13 @@ void GlfwRenderer::SetGLLights()
 Index firstRun = 0; //zoom all in first run
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
-	//std::cout << "Render\n";
+	//rendererOut << "Render\n";
 	float ratio;
 	int width, height;
 
 	glfwGetFramebufferSize(window, &width, &height);
 
-	//std::cout << "current window: width=" << width << ", height=" << height << "\n";
+	//rendererOut << "current window: width=" << width << ", height=" << height << "\n";
 	state->currentWindowSize[0] = width;
 	state->currentWindowSize[1] = height;
 
@@ -664,8 +815,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//get available line width range:
 	//GLfloat LineRange[2];
 	//glGetFloatv(GL_LINE_WIDTH_RANGE, LineRange);
-	//std::cout << "Minimum Line Width " << LineRange[0] << " – ";		//gives 0.5 run with VS2017
-	//std::cout << "Maximum Line Width " << LineRange[1] << std::endl;	//gives 10  run with VS2017
+	//rendererOut << "Minimum Line Width " << LineRange[0] << " – ";		//gives 0.5 run with VS2017
+	//rendererOut << "Maximum Line Width " << LineRange[1] << std::endl;	//gives 10  run with VS2017
 
 	glDisable(GL_LIGHTING);
 	glMatrixMode(GL_PROJECTION);
@@ -781,7 +932,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		Float3 p2 = p0 + v2;
 		Float3 p3 = p0 + v3;
 
-		//std::cout << "zoom=" << zoom << "\n";
+		//rendererOut << "zoom=" << zoom << "\n";
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -845,7 +996,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	glfwSwapBuffers(window);
 
-	//std::cout << "Render ready\n";
+	//rendererOut << "Render ready\n";
 
 	firstRun++;
 	//if (firstRun == 10) { ZoomAll(); }

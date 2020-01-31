@@ -58,7 +58,7 @@ public:
 	virtual LinkedDataVector GetInitialVector() const { PyError("Node does not support GetInitialVector_t functionality"); return LinkedDataVector(); }
 	//! Hook to initial values vector (velocities) implemented in derived class
 	virtual LinkedDataVector GetInitialVector_t() const { PyError("Node does not support GetInitialVector_t functionality"); return LinkedDataVector(); }
-
+	
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CNode GetOutputVariable(...)
 	virtual py::object GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration) const;
 

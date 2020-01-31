@@ -24,6 +24,7 @@
 #include <fstream>    
 
 #include <pybind11/pybind11.h>
+#include <pybind11/eval.h>
 #include <thread>
 //#include <pybind11/stl.h>
 //#include <pybind11/stl_bind.h>
@@ -32,17 +33,24 @@
 //does not work globally: #include <pybind11/iostream.h> //used to redirect cout:  py::scoped_ostream_redirect output;
 //#include <pybind11/cast.h> //for arguments
 //#include <pybind11/functional.h> //for functions
+#include <atomic> //for output buffer semaphore
+
 namespace py = pybind11;
 
 //these two variables become global
 OutputBuffer outputBuffer; //this is my customized output buffer, which can redirect the output stream;
 std::ostream pout(&outputBuffer);  // link ostream pout to buffer; pout behaves the same as std::cout
 
+bool globalPyRuntimeErrorFlag = false; //this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
+std::atomic_flag outputBufferAtomicFlag;   //!< flag, which is used to lock access to outputBuffer
 
+std::atomic_flag queuedPythonExecutableCodeAtomicFlag;  //!< flag for executable python code
+STDstring queuedPythonExecutableCodeStr;					//!< this string contains python code which shall be executed
 
 //! used to print to python; string is temporary stored and written as soon as '\n' is detected
 int OutputBuffer::overflow(int c)
 {
+	outputBufferAtomicFlag.test_and_set(std::memory_order_acquire); //lock outputBuffer
 	if ((char)c != '\n') {
 		buf.push_back((char)c);
 	}
@@ -63,6 +71,7 @@ int OutputBuffer::overflow(int c)
 		buf.clear();
 	}
 	//py::print((char)c); //this would be much slower as each character needs to be processed with py::print
+	outputBufferAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
 	return c;
 }
 
@@ -105,6 +114,7 @@ void PyError(std::string error_msg)
 //! additional output to file
 void PyError(std::string error_msg, std::ofstream& file) 
 {
+	globalPyRuntimeErrorFlag = true; //stop graphics, etc.
 	STDstring fileName;
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
@@ -133,6 +143,7 @@ void SysError(std::string error_msg)
 //! additional output to file
 void SysError(std::string error_msg, std::ofstream& file) 
 {
+	globalPyRuntimeErrorFlag = true; //stop graphics, etc.
 	STDstring fileName;
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
@@ -174,6 +185,27 @@ void PyWarning(std::string warning_msg, std::ofstream& file)
 		file << warning_msg << "\n\n";
 	}
 }
+
+//! put executable string into queue, which is called from other thread
+void PyQueueExecutableString(STDstring str) //call python function and execute string as python code
+{
+	queuedPythonExecutableCodeAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr
+	queuedPythonExecutableCodeStr += '\n' + str; //for safety add a "\n", as the last command may include spaces, tabs, ... at the end
+	queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+}
+
+void PyProcessExecuteQueue() //call python function and execute string as python code
+{
+	queuedPythonExecutableCodeAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr
+	if (queuedPythonExecutableCodeStr.size())
+	{
+		py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
+		py::exec(queuedPythonExecutableCodeStr.c_str(), scope);
+		queuedPythonExecutableCodeStr.clear();
+	}
+	queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+}
+
 ////this solution does not work!
 //int OutputBuffer::sync() 
 //{
