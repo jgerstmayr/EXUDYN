@@ -41,8 +41,9 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'Acceleration', 'measure (translational) acceleration of node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'RotationMatrix', 'measure rotation matrix of rigid body node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'AngularVelocity', 'measure angular velocity of node or object'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'AngularVelocityLocal', 'measure local (body-fixed) angular velocity of node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'AngularAcceleration', 'measure angular acceleration of node or object'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Rotation', 'measure, e.g., scalar rotation of 2D body or rotation within a joint'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Rotation', 'measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates', 'measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates_t', 'measure the time derivative of coordinates (= velocity coordinates) of a node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'SlidingCoordinate', 'measure sliding coordinate in sliding joint'); s+=s1; sLenum+=sL1
@@ -127,6 +128,10 @@ sLenum += DefLatexFinishClass()
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetOutputPrecision', cName='PySetOutputPrecision', 
                                 description="Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)",
                                 argList=['numberOfDigits']); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetLinalgOutputFormatPython', cName='PySetLinalgOutputFormatPython', 
+                                description="true: use python format for output of vectors and matrices; false: use matlab format",
+                                argList=['flagPythonFormat']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex', 
                             "This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list"); s+=s1; sL+=sL1

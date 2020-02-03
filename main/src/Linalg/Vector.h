@@ -335,12 +335,13 @@ public:
 	//! VS2017: leads to linker error, if put into .cpp file
 	friend std::ostream& operator<<(std::ostream& os, const VectorBase& v)
 	{
+		char s = ' ';
+		if (linalgPrintUsePythonFormat) { s = ','; }
 		os << "[";
 		for (Index i = 0; i < v.NumberOfItems(); i++) {
 			os << v[i];
-			if (i < v.NumberOfItems() - 1) { os << " "; }
+			if (i < v.NumberOfItems() - 1) { os << s; }
 		}
-
 		os << "]";
 		return os;
 	}

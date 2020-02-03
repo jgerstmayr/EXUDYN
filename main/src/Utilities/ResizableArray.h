@@ -371,10 +371,13 @@ public:
 template <class T>
 std::ostream& operator<<(std::ostream& os, const ResizableArray<T>& array)
 {
-    os << "[";
+	char s = ' ';
+	if (linalgPrintUsePythonFormat) { s = ','; }
+	
+	os << "[";
     for (Index i = 0; i < array.NumberOfItems(); i++) {
         os << array[i];
-        if (i < array.NumberOfItems() - 1) { os << " "; }
+        if (i < array.NumberOfItems() - 1) { os << s; }
     }
 
     os << "]";

@@ -31,25 +31,6 @@
 bool VisualizationSystemContainer::LinkToRenderEngine()
 {
 #ifdef USE_GLFW_GRAPHICS
-	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//rendererState.centerPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
-	//rendererState.zoom = settings.openGL.initialZoom;
-	//rendererState.maxSceneSize = settings.openGL.initialMaxSceneSize;
-	//rendererState.currentWindowSize = settings.window.renderWindowSize;
-
-	////set modelRotation to identity matrix (4x4); Use rotation part only from Float9 initialModelRotation
-	//rendererState.modelRotation.SetAll(0.f);
-	//rendererState.modelRotation[0] = settings.openGL.initialModelRotation[0];
-	//rendererState.modelRotation[1] = settings.openGL.initialModelRotation[1];
-	//rendererState.modelRotation[2] = settings.openGL.initialModelRotation[2];
-	//rendererState.modelRotation[4] = settings.openGL.initialModelRotation[3];
-	//rendererState.modelRotation[5] = settings.openGL.initialModelRotation[4];
-	//rendererState.modelRotation[6] = settings.openGL.initialModelRotation[5];
-	//rendererState.modelRotation[8] = settings.openGL.initialModelRotation[6];
-	//rendererState.modelRotation[9] = settings.openGL.initialModelRotation[7];
-	//rendererState.modelRotation[10]= settings.openGL.initialModelRotation[8];
-	//rendererState.modelRotation[15]= 1.;
-	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	glfwRenderer.DetachVisualizationSystem(); //means, that every new systemcontainer links to the render engine and the old container is lost; necessary if an old systemcontainer is still linked
 

@@ -68,6 +68,7 @@ namespace EXUstd {
 	const float MAXFLOAT =  1e38f; //!< largest positive value to be on the safe side
 } //EXUstd
 
+extern bool linalgPrintUsePythonFormat; //!< defined in Vector.cpp; true: use python format for output of vectors and matrices; false: use matlab format
 
 /** ***********************************************************************************************
 * @mainpage Getting started with Exudyn

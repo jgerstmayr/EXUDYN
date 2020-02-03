@@ -95,7 +95,8 @@ fig1.show() #bring to front
 fig1.savefig("figure_phaseplot"+str(casesList[0])+".pdf")
 fig2.savefig("figure_displacement"+str(casesList[0])+".pdf")
 
-
+#close all open figures:
+plt.close("all")
 
 
 

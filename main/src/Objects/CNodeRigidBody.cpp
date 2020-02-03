@@ -149,6 +149,18 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(configuration)); break;
+	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(configuration)); break;
+	case OutputVariableType::RotationMatrix: {
+		Matrix3D rot = GetRotationMatrix(configuration);
+		value.SetVector(9, rot.GetDataPointer());
+		break;
+	}
+	case OutputVariableType::Rotation: {
+		Matrix3D rotMat = GetRotationMatrix(configuration);
+		Vector3D rot = RigidBodyMath::RotationMatrix2AngXYZ(rotMat);
+		value.SetVector(3, rot.GetDataPointer());
+		break;
+	}
 	case OutputVariableType::Coordinates:
 	{
 		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))

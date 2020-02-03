@@ -96,16 +96,16 @@ def Normalize(vector):
     for i in range(len(v)): 
         v[i]*=fact
     return v
-#    fact = (v[0]**2+v[1]**2+v[2]**2)**0.5
-#    fact = 1./fact
-#    v[0]=fact*v[0]
-#    v[1]=fact*v[1]
-#    v[2]=fact*v[2]
-#    return v
     
+#apply tilde operator (skew) to R3-vector
+def Vec2Tilde(v):
+    return [[0.,-v[2],v[1]],[v[2],0.,-v[0]],[-v[1],v[0],0.]]
 
+#convert skew symmetric matrix to vector
+def Tilde2Vec(m):
+    return [-m[1][2], m[0][2], -m[0][1]]
 
-
+    
 # graphics functions
 color4steelblue = [0.4,0.4,0.9,1.]
 color4lightred = [0.9,0.4,0.4,1.]

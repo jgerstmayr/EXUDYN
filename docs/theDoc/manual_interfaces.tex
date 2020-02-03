@@ -13,6 +13,7 @@ These are the access functions to the \codeName\ module.
   StartRenderer() & Start OpenGL rendering engine (in separate thread)\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)\\ \hline 
+  SetLinalgOutputFormatPython(flagPythonFormat) & true: use python format for output of vectors and matrices; false: use matlab format\\ \hline 
   InvalidIndex() & This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list\\ \hline 
   SetWriteToConsole(flag) & set flag to write (true) or not write to console; default = true\\ \hline 
   SetWriteToFile(filename, flagWriteToFile = true, flagAppend = false) & set flag to write (true) or not write to console; default value of flagWriteToFile = false; flagAppend appends output to file, if set true; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file\tabnewline 
@@ -436,8 +437,9 @@ Available output variables and the interpreation of the output variable can be f
   Acceleration & measure (translational) acceleration of node or object\\ \hline 
   RotationMatrix & measure rotation matrix of rigid body node or object\\ \hline 
   AngularVelocity & measure angular velocity of node or object\\ \hline 
+  AngularVelocityLocal & measure local (body-fixed) angular velocity of node or object\\ \hline 
   AngularAcceleration & measure angular acceleration of node or object\\ \hline 
-  Rotation & measure, e.g., scalar rotation of 2D body or rotation within a joint\\ \hline 
+  Rotation & measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint\\ \hline 
   Coordinates & measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values\\ \hline 
   Coordinates\_t & measure the time derivative of coordinates (= velocity coordinates) of a node or object\\ \hline 
   SlidingCoordinate & measure sliding coordinate in sliding joint\\ \hline 

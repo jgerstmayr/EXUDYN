@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 328, 
-Number of resolved issues = 272, 
-EXUDYN version = 0.1.272, 
-last change =  2020-01-27
+Number of issues = 331, 
+Number of resolved issues = 276, 
+EXUDYN version = 0.1.276, 
+last change =  2020-02-03
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2020-01-27
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0327</td>
-    <td>visualization options</td>
+    <td>0330</td>
+    <td>correct ODE2RHS     </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> convert system structures to dictionary and back; include type information</td>
-    <td>EXTENSION</td>
+    <td> correct ODE2RHS to ODE2Terms in objects because it is left-hand-side</td>
+    <td>CHANGE</td>
     <td></td>
-    <td>2020-01-27</td>
-    <td>2020-03-27</td>
+    <td>2020-02-03</td>
+    <td>2020-04-03</td>
     <td></td>
     <td></td>
     <td></td>
@@ -55,15 +55,31 @@ last change =  2020-01-27
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0326</td>
-    <td>python single line  </td>
+    <td>0329</td>
+    <td>check markers       </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> fix possible threading issues of python single command execute</td>
-    <td>BUG</td>
+    <td> add integrity check if node/body implements necessary access functions for marker</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2020-01-27</td>
-    <td>2020-03-27</td>
+    <td>2020-02-02</td>
+    <td>2020-04-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0328</td>
+    <td>check ANCFALE       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check if access functions implemented correctly: local jacobians include only 3x8 instead of 3x9 components?</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-02-02</td>
+    <td>2020-04-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -128,22 +144,6 @@ last change =  2020-01-27
     <td></td>
     <td>2020-01-16</td>
     <td>2020-03-16</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0317</td>
-    <td>ANCF beam           </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add rigid body access functions for ANCF elements</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-15</td>
-    <td>2020-03-15</td>
     <td></td>
     <td></td>
     <td></td>
@@ -406,7 +406,7 @@ last change =  2020-01-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0281</td>
     <td>add STL import      </td>
     <td>JG</td>
@@ -679,22 +679,6 @@ last change =  2020-01-27
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0146</td>
-    <td>pout, threads      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Check if pout is threadsafe  ==> introduce a mutex</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-05-25</td>
-    <td>2019-07-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0142</td>
     <td>Vector performance  </td>
     <td>JG</td>
@@ -935,6 +919,38 @@ last change =  2020-01-27
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0327</td>
+    <td>visualization options</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> convert system structures to dictionary and back; include type information</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-27</td>
+    <td>2020-03-27</td>
+    <td>2020-01-31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0326</td>
+    <td>python single line  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix possible threading issues of python single command execute</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-01-27</td>
+    <td>2020-03-27</td>
+    <td>2020-01-31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0322</td>
     <td>node ltg            </td>
     <td>JG</td>
@@ -993,6 +1009,22 @@ last change =  2020-01-27
     <td>2020-01-15</td>
     <td>2020-03-15</td>
     <td>2020-01-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0317</td>
+    <td>ANCF beam           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add rigid body access functions for ANCF elements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-15</td>
+    <td>2020-03-15</td>
+    <td>2020-02-02</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3185,6 +3217,22 @@ last change =  2020-01-27
     <td>2019-05-25</td>
     <td>2019-07-24</td>
     <td>2019-05-28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0146</td>
+    <td>pout, threads      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Check if pout is threadsafe  ==> introduce a mutex</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-05-25</td>
+    <td>2019-07-24</td>
+    <td>2020-01-31</td>
     <td>JG</td>
     <td></td>
     <td></td>

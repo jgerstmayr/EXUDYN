@@ -531,17 +531,36 @@ public:
 	//template<typename T>
 	//inline std::ostream& operator<<(std::ostream& os, const MatrixBase<T>& matrix)
 	{
-		os << "[";
-		for (Index row = 0; row < matrix.NumberOfRows(); row++)
+		if (linalgPrintUsePythonFormat) 
 		{
-			for (Index column = 0; column < matrix.NumberOfColumns(); column++)
+			os << "[";
+			for (Index row = 0; row < matrix.NumberOfRows(); row++)
 			{
-				os << matrix(row, column);
-				if (column != matrix.NumberOfColumns() - 1) { os << " "; }
+				os << "[";
+				for (Index column = 0; column < matrix.NumberOfColumns(); column++)
+				{
+					os << matrix(row, column);
+					if (column != matrix.NumberOfColumns() - 1) { os << ","; }
+				}
+				os << "]";
+				if (row != matrix.NumberOfRows() - 1) { os << ","; } 
 			}
-			if (row != matrix.NumberOfRows() - 1) { os << "; "; } //';' and '[]' as a compromise between Python and MATLAB format
+			os << "]";
 		}
-		os << "]";
+		else
+		{
+			os << "[";
+			for (Index row = 0; row < matrix.NumberOfRows(); row++)
+			{
+				for (Index column = 0; column < matrix.NumberOfColumns(); column++)
+				{
+					os << matrix(row, column);
+					if (column != matrix.NumberOfColumns() - 1) { os << " "; }
+				}
+				if (row != matrix.NumberOfRows() - 1) { os << "; "; } //';' and '[]' as a compromise between Python and MATLAB format
+			}
+			os << "]";
+		}
 		return os;
 	}
 

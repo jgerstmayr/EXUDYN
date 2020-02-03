@@ -151,25 +151,26 @@ enum class OutputVariableType {
 	Acceleration = 1 << 4,			//!< acceleration vector, e.g. of node or body center of mass
 	RotationMatrix = 1 << 5,		//!< rotation matrix, e.g. rigid body
 	AngularVelocity = 1 << 6,		//!< angular velocity vector, e.g. rigid body; scalar quantity in 2D-elements
-	AngularAcceleration = 1 << 7,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
-	Rotation = 1 << 8,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
-	Coordinates = 1 << 9,			//!< single object or node coordinate(s) as output
-	Coordinates_t = 1 << 10,		//!< single object or node velocity coordinate(s) as output
-	SlidingCoordinate = 1 << 11,	//!< scalar coordinate in sliding joint
-	Director1 = 1 << 12,			//!< direction or (axial) slope vector 1 (in 2D-elements)
-	Director2 = 1 << 13,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
-	Director3 = 1 << 14,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
-	Force = 1 << 15,				//!< force e.g. in connector/constraint or section force in beam
-	Torque = 1 << 16,				//!< torque e.g. in connector/constraint or section moment/torque in beam
-	Strain = 1 << 17,				//!< strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
-	Stress = 1 << 18,				//!< stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
-	Curvature = 1 << 19,			//!< curvature (components) in beam or shell
+	AngularVelocityLocal = 1 << 7,	//!< angular velocity vector in local (body-fixed) coordinates
+	AngularAcceleration = 1 << 8,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
+	Rotation = 1 << 9,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
+	Coordinates = 1 << 10,			//!< single object or node coordinate(s) as output
+	Coordinates_t = 1 << 11,		//!< single object or node velocity coordinate(s) as output
+	SlidingCoordinate = 1 << 12,	//!< scalar coordinate in sliding joint
+	Director1 = 1 << 13,			//!< direction or (axial) slope vector 1 (in 2D-elements)
+	Director2 = 1 << 14,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
+	Director3 = 1 << 15,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
+	Force = 1 << 16,				//!< force e.g. in connector/constraint or section force in beam
+	Torque = 1 << 17,				//!< torque e.g. in connector/constraint or section moment/torque in beam
+	Strain = 1 << 18,				//!< strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
+	Stress = 1 << 19,				//!< stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
+	Curvature = 1 << 20,			//!< curvature (components) in beam or shell
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!
 
     //SecondPiolaKirchoffStress = (1 << 7), GreenStrain = (1 << 8),
     //BeamStrain = (1 << 9), BeamCurvature = (1 << 10), //are both 3D-vectors containing axial and transverse components
     //FramePosition = (1 << 11), FrameOrientation = (1 << 12), //position and orientation of the reference point
-    EndOfEnumList = 1 << 20 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+    EndOfEnumList = 1 << 21 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
 
 //! OutputVariable string conversion
@@ -185,6 +186,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 	case OutputVariableType::Acceleration: return "Acceleration";
 	case OutputVariableType::RotationMatrix: return "RotationMatrix";
 	case OutputVariableType::AngularVelocity: return "AngularVelocity";
+	case OutputVariableType::AngularVelocityLocal: return "AngularVelocityLocal";
 	case OutputVariableType::AngularAcceleration: return "AngularAcceleration";
 	//case OutputVariableType::ScalarPosition: return "ScalarPosition"; //use position instead!
 	//case OutputVariableType::ScalarDisplacement: return "ScalarDisplacement";

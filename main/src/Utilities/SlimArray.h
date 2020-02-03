@@ -253,10 +253,12 @@ public:
 template <class T, Index dataSize>
 std::ostream& operator<<(std::ostream& os, const SlimArray<T, dataSize>& array)
 {
-    os << "[";
+	char s = ' ';
+	if (linalgPrintUsePythonFormat) { s = ','; }
+	os << "[";
     for (Index i = 0; i < array.NumberOfItems(); i++) {
         os << array[i];
-        if (i < array.NumberOfItems() - 1) { os << " "; }
+        if (i < array.NumberOfItems() - 1) { os << s; }
     }
 
     os << "]";

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-11-12  21:51:18 (last modfied)
+* @date         2020-02-02  18:14:37 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -91,7 +91,7 @@ public: // AUTO:
     //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector
     virtual void GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return configuration dependent local (=body fixed) angular velocity of node; returns always a 3D Vector
+    //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector
     virtual void GetAngularVelocityLocal(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return position of marker

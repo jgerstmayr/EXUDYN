@@ -1210,3 +1210,30 @@ class SensorNode:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+class VSensorBody:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorBody:
+    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+        self.name = name
+        self.bodyNumber = bodyNumber
+        self.localPosition = localPosition
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.outputVariableType = outputVariableType
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'Body'
+        yield 'name', self.name
+        yield 'bodyNumber', self.bodyNumber
+        yield 'localPosition', self.localPosition
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'outputVariableType', self.outputVariableType
+        yield 'Vshow', dict(self.visualization)["show"]
+

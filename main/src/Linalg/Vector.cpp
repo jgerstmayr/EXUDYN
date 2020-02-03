@@ -39,6 +39,7 @@ Index matrix_new_counts = 0; //global counter of item allocations; is increased 
 Index matrix_delete_counts = 0; //global counter of item deallocations; is increased every time a delete is called
 #endif
 
+bool linalgPrintUsePythonFormat = true; //!< true: use python format for output of vectors and matrices; false: use matlab format
 
 //! add two vectors, result = v1+v2 (for each component)
 template<typename T>

@@ -159,7 +159,7 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.displayStatistics = True
+simulationSettings.displayStatistics = True #just in this example ...
 
 SC.visualizationSettings.bodies.showNumbers = False
 SC.visualizationSettings.nodes.defaultSize = 0.01

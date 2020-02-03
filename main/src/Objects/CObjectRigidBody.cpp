@@ -38,6 +38,11 @@ void CObjectRigidBody::ComputeMassMatrix(Matrix& massMatrix) const
 	EXUmath::MultMatrixTransposedMatrix(Glocal, localInertia, GlocalInertia);
 	EXUmath::MultMatrixMatrix(GlocalInertia, Glocal, inertia);
 
+	//pout << "inertia=" << inertia << "\n";
+	//delete:
+	//ConstSizeVector<nRotationCoordinates> ev({ 0.936055553906925, 0.300000000000000,0.170000000000000,0.070000000000000 });
+	//pout << "A=" << RigidBodyMath::EP2RotationMatrix(ev) << "\n";
+
 	for (int i = 0; i < nRotationCoordinates; i++)
 	{
 		for (int j = 0; j < nRotationCoordinates; j++)
@@ -56,16 +61,40 @@ void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
 
 	ConstSizeVector<nRotationCoordinates> ep = ((CNodeRigidBodyEP*)GetCNode(0))->GetEulerParameters();
 	ConstSizeVector<nRotationCoordinates> ep_t = ((CNodeRigidBodyEP*)GetCNode(0))->GetEulerParameters_t();
+	//pout << "ep = " << ep << "\n";
+	//pout << "ep_t=" << ep_t << "\n";
 
 	ConstSizeMatrix<nRotationCoordinates * 3> Glocal = RigidBodyMath::EP2Glocal(ep);
 
 	//compute: Glocal^T * (omegaBar.Cross(localInertia*omegaBar))
 	Vector3D omegaBar;
 	EXUmath::MultMatrixVector(Glocal, ep_t, omegaBar);
+	//pout << "omegaBar=" << omegaBar << "\n";
+
+	//+++++++++++++++++++++++++++++++++++++
+	//Version1 (different to Version2 (gives different forcesEP; difference acting in the nullspace of ep):
 	Vector3D temp = omegaBar.CrossProduct(localInertia * omegaBar);
-	
 	ConstSizeVector<nRotationCoordinates> forcesEP; //forces acting on Euler parameter coordinates
 	EXUmath::MultMatrixTransposedVector(Glocal, temp, forcesEP);
+
+	//+++++++++++++++++++++++++++++++++++++
+	//Version2:
+	//RHS = -2*Gbar_t^T*Ibar*omegaBar
+	//omegaBar *= 2.;
+	//Vector3D temp = localInertia * omegaBar;
+	//ConstSizeVector<nRotationCoordinates> forcesEP; //forces acting on Euler parameter coordinates
+	//ConstSizeMatrix<nRotationCoordinates * 3> Glocal_t = RigidBodyMath::EP_t2Glocal_t(ep_t);
+	//EXUmath::MultMatrixTransposedVector(Glocal_t, temp, forcesEP);
+
+	//++++++++++++++
+	//ConstSizeMatrix<nRotationCoordinates * 3> Glocal_t = RigidBodyMath::EP_t2Glocal_t(ep_t);
+	//Matrix Gbar_tT = Glocal_t;
+	//Vector temp2; 
+	//temp2.CopyFrom(temp);
+	//Vector forcesEP = Gbar_tT.GetTransposed() * temp2;
+
+	//+++++++++++++++++++++++++++++++++++++
+	//pout << "Qv = " << -1 * forcesEP << "\n";
 
 	//*******************************
 	//original code H1:
@@ -77,12 +106,9 @@ void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
 
 	for (Index i = 0; i < nRotationCoordinates; i++)
 	{
-		ode2Rhs[i + 3] -= forcesEP[i]; //negative sign, because forces are put on RHS
+		ode2Rhs[i + 3] += forcesEP[i]; //positive sign, because object ODEforces are put on LHS
 	}
 
-	//Add C_q^T terms
-	//==>currently, this must be done by the system, as it is computed in line with the jacobian of algebraic equations
-	//AddEPCqTterms(f);
 }
 
 //! Compute algebraic equations part of rigid body
@@ -140,11 +166,16 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 		ConstSizeMatrix<nRotationCoordinates * 3> Lep = RigidBodyMath::EP2Glocal(ep); //Lep=Glocal now
 		ConstSizeMatrix<9> uLocal_tilde = RigidBodyMath::Vector2SkewMatrix(localPosition);
 		uLocal_tilde *= -1.;//negative sign in -A*uLocalTilde*Glocal
+		//pout << "Glocal  =" << Lep << "\n";
+		//pout << "  utilde=" << uLocal_tilde << "\n";
+		//pout << "  A     =" << RigidBodyMath::EP2RotationMatrix(ep) << "\n";
 
 		ConstSizeMatrix<nRotationCoordinates * 3> temp; //temporary matrix during computation
 
 		EXUmath::MultMatrixMatrix(uLocal_tilde, Lep, temp);
+		//pout << "  temp  =" << temp << "\n";
 		EXUmath::MultMatrixMatrix(RigidBodyMath::EP2RotationMatrix(ep), temp, Lep);
+		//pout << "  L     =" << Lep << "\n";
 
 		value.SetNumberOfRowsAndColumns(3, nODE2Coordinates);
 		//unit matrix
@@ -214,9 +245,16 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
+	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(localPosition, configuration)); break;
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(localPosition, configuration);
 		value.SetVector(9, rot.GetDataPointer());
+		break;
+	}
+	case OutputVariableType::Rotation: {
+		Matrix3D rotMat = GetRotationMatrix(localPosition, configuration);
+		Vector3D rot = RigidBodyMath::RotationMatrix2AngXYZ(rotMat);
+		value.SetVector(3, rot.GetDataPointer());
 		break;
 	}
 	default:

@@ -157,6 +157,14 @@ void PySetOutputPrecision(Index precision)
 	pout.precision(precision);
 }
 
+extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
+
+//! true: use python format for output of vectors and matrices; false: use matlab format
+void PySetLinalgOutputFormatPython(bool flagPythonFormat)
+{
+	linalgPrintUsePythonFormat = flagPythonFormat;
+}
+
 //! start glfw renderer; return true if successful
 bool PyStartOpenGLRenderer()
 {

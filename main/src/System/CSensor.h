@@ -91,10 +91,11 @@ public:
 		CHECKandTHROWstring("Invalid call to CSensor::GetSensorValues");
 	}
 
-	//! get sensor values into values vector; special call for body sensors: additional localPosition needed
-	virtual void GetSensorValuesBody(const CSystemData& cSystemData, Vector& values, const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		CHECKandTHROWstring("Invalid call to CSensor::GetSensorValues");
-	}
+	//localPosition stored in SensorBody
+	////! get sensor values into values vector; special call for body sensors: additional localPosition needed
+	//virtual void GetSensorValuesBody(const CSystemData& cSystemData, Vector& values, const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
+	//	CHECKandTHROWstring("Invalid call to CSensor::GetSensorValuesBody");
+	//}
 
 	//! get sensor values into values vector; special call for body sensors: additional localPosition needed
 	virtual bool GetWriteToFileFlag() const {

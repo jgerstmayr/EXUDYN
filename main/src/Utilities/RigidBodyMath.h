@@ -164,8 +164,40 @@ namespace RigidBodyMath {
 	}
 
 	//********************************************************************************
+	//Euler angle functions (xyz-rotations sequence, i.e., Rxyz = Rx*Ry*Rz
+	
+	//! convert Euler angles (Tait-Bryan angles) to rotation matrix
+	template<class TVector>
+	inline Matrix3D AngXYZ2RotationMatrixTemplate(const TVector& rot)
+	{
+		Real psi = rot[0];
+		Real theta = rot[1];
+		Real phi = rot[2];
+		Real c0 = cos(rot[0]);
+		Real s0 = sin(rot[0]);
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+		Real c2 = cos(rot[2]);
+		Real s2 = sin(rot[2]);
 
-	//specializations for Euler parameter and related functions:
+		return Matrix3D(3,3,{ c1*c2,-c1 * s2,s1, s0*s1*c2 + c0 * s2,-s0 * s1*s2 + c0 * c2,-s0 * c1, -c0 * s1*c2 + s0 * s2,c0*s1*s2 + s0 * c2,c0*c1 });
+	}
+	inline Matrix3D AngXYZ2RotationMatrix(const Vector3D& rot) { return AngXYZ2RotationMatrixTemplate(rot); }
+	inline Matrix3D AngXYZ2RotationMatrix(const CSVector3D& rot) { return AngXYZ2RotationMatrixTemplate(rot); }
+
+	//! convert rotation matrix to Euler angles (Tait-Bryan angles)
+	inline Vector3D RotationMatrix2AngXYZ(const Matrix3D& R)
+	{
+		Vector3D rot;
+		rot[0] = atan2(-R(1, 2), R(2, 2));
+		rot[1] = atan2(R(0, 2), sqrt(fabs(1. - R(0, 2) * R(0, 2)))); //fabs for safety, if small round up error in rotation matrix ...
+		rot[2] = atan2(-R(0, 1), R(0, 0));
+		return rot;
+	}
+
+	//********************************************************************************
+
+	//! specializations for Euler parameter and related functions:
 	inline ConstSizeMatrix<9> Vector2SkewMatrix(const Vector3D& v) { return Vector2SkewMatrixTemplate<Vector3D>(v); }
 	inline ConstSizeMatrix<9> Vector2SkewMatrix(const CSVector3D& v) { return Vector2SkewMatrixTemplate<CSVector3D>(v); }
 

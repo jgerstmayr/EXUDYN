@@ -42,6 +42,7 @@ The following items are available in \codeName:
   \item LoadMassProportional
   \item LoadCoordinate
   \item SensorNode
+  \item SensorBody
 \end{itemize}
 
 %+++++++++++++++++++++++++++++++
@@ -142,8 +143,11 @@ A 3D rigid body node based on Euler parameters for rigid bodies or beams; the no
 \begin{itemize}
     \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
     \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
+    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix
     \item {\bf Velocity}: global 3D velocity vector of node
     \item {\bf AngularVelocity}: global 3D velocity vector of node
+    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
     \item {\bf Coordinates}: coordinates vector of node
     \item {\bf Coordinates\_t}: velocity coordinates vector of node
 \end{itemize}
@@ -458,9 +462,11 @@ A 3D rigid body which is attached to a 3D rigid body node. Equations of motion w
 \begin{itemize}
     \item {\bf Position}: global position vector of rotated and translated local position
     \item {\bf Displacement}: global displacement vector of local position
+    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
+    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix
     \item {\bf Velocity}: global velocity vector of local position
     \item {\bf AngularVelocity}: angular velocity of body
-    \item {\bf RotationMatrix}: rotation matrix in vector form (stored in row-major order)
+    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
 \end{itemize}
 The item ObjectRigidBody has the following parameters:
 %reference manual TABLE
@@ -1495,7 +1501,7 @@ The item VLoadCoordinate has the following parameters:
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{SensorNode}
-A sensor attached to a node. The sensor outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to modify sensor values accordingly.
+A sensor attached to a node. The sensor measures OutputVariables and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to modify sensor values accordingly.
  \\The item SensorNode has the following parameters:
 %reference manual TABLE
 \begin{center}
@@ -1513,6 +1519,37 @@ A sensor attached to a node. The sensor outputs values into a file, showing time
 	  \end{longtable}
 	\end{center}
 The item VSensorNode has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{SensorBody}
+A sensor attached to a body with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
+ \\The item SensorBody has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'Body'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
+    localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local (body-fixed) body position of sensor\\ \hline
+    writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::None &     OutputVariableType for sensor\\ \hline
+    visualization & VSensorBody & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VSensorBody has the following parameters:
 %reference manual TABLE
 \begin{center}
   \footnotesize

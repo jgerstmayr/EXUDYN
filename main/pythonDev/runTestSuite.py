@@ -40,7 +40,8 @@ testFileList = ['TestModels/fourBarMechanismTest.py',
                 'TestModels/ACNFslidingAndALEjointTest.py',
                 'TestModels/scissorPrismaticRevolute2D.py',
                 'TestModels/manualExplicitIntegrator.py',
-                'TestModels/PARTS_ATEs_moving.py']
+                'TestModels/PARTS_ATEs_moving.py',
+                'TestModels/heavyTop.py']
 
 
 
@@ -94,6 +95,7 @@ print('time elapsed =',round(timeStart,3),'seconds')
 #10+8 tests: 2019-12-18: 5.96 / 6.06 seconds on i9
 #10+11tests: 2020-01-6:  6.96 seconds on i9
 #10+11tests: 2020-01-24:  8.30 seconds on Surface Pro
+#10+12tests: 2020-02-03:  seconds on i9
 
 
 if rv == True:

@@ -106,7 +106,8 @@ public:
 		updateGraphicsDataNow = false;
 		stopSimulationFlag = false;
 
-		LinkToRenderEngine(); //links to render engine at the very beginning of the program start
+		//this-pointer needed; too early?:
+		LinkToRenderEngine(); //links to render engine at the very beginning of the creation of the VisualizationSystemContainer
 	}
 
 	//! list of GraphicsData of all visualizationSystems; linked from glfwclient!

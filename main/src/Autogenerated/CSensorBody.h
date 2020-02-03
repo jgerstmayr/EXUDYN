@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
-* @class        CSensorNodeParameters
-* @brief        Parameter class for CSensorNode
+* @class        CSensorBodyParameters
+* @brief        Parameter class for CSensorBody
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  00:54:47 (last modfied)
+* @date         2020-02-02  20:11:16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,18 +20,20 @@
 #include "Utilities/BasicDefinitions.h"
 
 
-//! AUTO: Parameters for class CSensorNodeParameters
-class CSensorNodeParameters // AUTO: 
+//! AUTO: Parameters for class CSensorBodyParameters
+class CSensorBodyParameters // AUTO: 
 {
 public: // AUTO: 
-    Index nodeNumber;                             //!< AUTO: node number to which sensor is attached to
+    Index bodyNumber;                             //!< AUTO: body (=object) number to which sensor is attached to
+    Vector3D localPosition;                       //!< AUTO: local (body-fixed) body position of sensor
     bool writeToFile;                             //!< AUTO: true: write sensor output to file
     std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType
     OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor
     //! AUTO: default constructor with parameter initialization
-    CSensorNodeParameters()
+    CSensorBodyParameters()
     {
-        nodeNumber = EXUstd::InvalidIndex;
+        bodyNumber = EXUstd::InvalidIndex;
+        localPosition = Vector3D({0.,0.,0.});
         writeToFile = true;
         fileName = "";
         outputVariableType = OutputVariableType::None;
@@ -40,8 +42,8 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
-* @class        CSensorNode
-* @brief        A sensor attached to a node. The sensor measures OutputVariables and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to modify sensor values accordingly.
+* @class        CSensorBody
+* @brief        A sensor attached to a body with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -59,30 +61,36 @@ public: // AUTO:
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
-//! AUTO: CSensorNode
-class CSensorNode: public CSensor // AUTO: 
+//! AUTO: CSensorBody
+class CSensorBody: public CSensor // AUTO: 
 {
 protected: // AUTO: 
-    CSensorNodeParameters parameters; //! AUTO: contains all parameters for CSensorNode
+    CSensorBodyParameters parameters; //! AUTO: contains all parameters for CSensorBody
 
 public: // AUTO: 
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
-    virtual CSensorNodeParameters& GetParameters() { return parameters; }
+    virtual CSensorBodyParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
-    virtual const CSensorNodeParameters& GetParameters() const { return parameters; }
+    virtual const CSensorBodyParameters& GetParameters() const { return parameters; }
 
-    //! AUTO:  general access to node number
-    virtual Index GetNodeNumber() const override
+    //! AUTO:  general access to object number
+    virtual Index GetObjectNumber() const override
     {
-        return parameters.nodeNumber;
+        return parameters.bodyNumber;
     }
 
     //! AUTO:  return sensor type (for node treatment in computation)
     virtual SensorType GetType() const override
     {
-        return SensorType::Node;
+        return SensorType::Body;
+    }
+
+    //! AUTO:  get local position
+    Vector3D GetBodyLocalPosition() const
+    {
+        return parameters.localPosition;
     }
 
     //! AUTO:  get writeToFile flag

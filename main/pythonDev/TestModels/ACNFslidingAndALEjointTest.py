@@ -181,7 +181,7 @@ for i in range(numberOfBodys):
 # Assemble multibody system
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 mbs.Assemble()
-print(mbs)
+#print(mbs)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 # Simualtion settings:

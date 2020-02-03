@@ -130,7 +130,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
 			if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
 			{
-				SysError(STDstring("failed to open sensor file '") + solverFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
+				SysError(STDstring("failed to open sensor file '") + item->GetFileName() + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
 				file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
 			}
 			else
@@ -1195,9 +1195,9 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 //! write unique sensor file header, depending on static/dynamic simulation
 void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+	Index cnt = 0;
 	for (auto item : computationalSystem.GetSystemData().GetCSensors())
 	{
-		Index cnt = 0;
 		if (file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
 		{
 			std::ofstream* sFile = file.sensorFileList[cnt];
@@ -1217,6 +1217,7 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
 			(*sFile) << "#\n";
 		}
+		cnt++;
 	}
 }
 
@@ -1235,9 +1236,9 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 		output.lastSensorsWritten += solutionSettings.sensorsWritePeriod;
 		output.lastSensorsWritten = EXUstd::Maximum(output.lastSensorsWritten, t); //never accept smaller values ==> for adaptive solver
 
+		Index cnt = 0;
 		for (auto item : computationalSystem.GetSystemData().GetCSensors())
 		{
-			Index cnt = 0;
 			if (file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
 			{
 				std::ofstream* sFile = file.sensorFileList[cnt];
@@ -1252,6 +1253,7 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 				}
 				(*sFile) << "\n";
 			}
+			cnt++;
 		}
 	}
 }

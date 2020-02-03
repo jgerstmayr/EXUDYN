@@ -319,7 +319,7 @@ void CObjectANCFCable2DBase::ComputeODE2RHS(Vector& ode2Rhs) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectANCFCable2DBase::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

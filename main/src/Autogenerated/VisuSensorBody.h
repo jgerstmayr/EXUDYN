@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
-* @class        VisualizationSensorNode
-* @brief        A sensor attached to a node. The sensor outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to modify sensor values accordingly.
+* @class        VisualizationSensorBody
+* @brief        A sensor attached to a body with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  00:34:48 (last modfied)
+* @date         2020-02-02  00:54:47 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -19,13 +19,13 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
-class VisualizationSensorNode: public VisualizationSensor // AUTO: 
+class VisualizationSensorBody: public VisualizationSensor // AUTO: 
 {
 protected: // AUTO: 
 
 public: // AUTO: 
     //! AUTO: default constructor with parameter initialization
-    VisualizationSensorNode()
+    VisualizationSensorBody()
     {
         show = true;
     };
