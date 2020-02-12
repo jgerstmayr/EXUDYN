@@ -17,57 +17,15 @@
 
 namespace RigidBodyMath {
 
-	//********************************************************************************
-	//functions containing EULER PARAMETERS (QUATERNIONS)
-
-	//! compute G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
-	template<class TVector>
-	inline ConstSizeMatrix<12> EP2GTemplate(const TVector& ep)
+	//! check whether the rotation is zero, i.e., the rotation matrix is a diagonal matrix with ones
+	//! this check is simplified in order to speed up constraint computations, does not check off-diagonal components!
+	inline bool IsNoRotation(const Matrix3D& rot)
 	{
-		return ConstSizeMatrix<12>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
-											-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
-											-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+		if (rot(0, 0) == 1. && rot(1, 1) == 1. && rot(2, 2) == 1.) { return true; } //third check would not be necessary
+		return false;
 	}
 
-	//! compute time derivative of G-Matrix from Euler Parameters ep_t
-	template<class TVector>
-	inline ConstSizeMatrix<12> EP_t2G_tTemplate(const TVector& ep_t)
-	{
-		return ConstSizeMatrix<12>(3, 4, {	-2.*ep_t[1], 2.*ep_t[0],-2.*ep_t[3], 2.*ep_t[2],
-											-2.*ep_t[2], 2.*ep_t[3], 2.*ep_t[0],-2.*ep_t[1],
-											-2.*ep_t[3],-2.*ep_t[2], 2.*ep_t[1], 2.*ep_t[0] });
-	}
-
-	//! compute transposed G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
-	template<class TVector>
-	inline ConstSizeMatrix<12> EP2GTTemplate(const TVector& ep)
-	{
-		return ConstSizeMatrix<12>(4, 3, {  -2.*ep[1],-2.*ep[2],-2.*ep[3],
-											 2.*ep[0], 2.*ep[3],-2.*ep[2],
-											-2.*ep[3], 2.*ep[0], 2.*ep[1],
-											 2.*ep[2],-2.*ep[1], 2.*ep[0] });
-	}
-
-	//! compute local G-Matrix from Euler Parameters ep; Glocal is defined such that the angular velocity given in local
-	//! coordinates omegaLocal follows from: omegaLocal = Glocal*ep_t
-	template<class TVector>
-	inline ConstSizeMatrix<12> EP2GlocalTemplate(const TVector& ep)
-	{
-		return ConstSizeMatrix<12>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
-											-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
-											-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
-	}
-
-	//! compute transposed Glocal-Matrix from Euler Parameters ep;
-	template<class TVector>
-	inline ConstSizeMatrix<12> EP2GlocalTTemplate(const TVector& ep)
-	{
-		return ConstSizeMatrix<12>(4, 3, { -2.*ep[1],-2.*ep[2],-2.*ep[3],
-											 2.*ep[0],-2.*ep[3], 2.*ep[2],
-											 2.*ep[3], 2.*ep[0],-2.*ep[1],
-											-2.*ep[2], 2.*ep[1], 2.*ep[0] });
-	}
-
+	const Index maxRotCoordinates = 4; //for Euler parameters
 	//! compute 3x3 skew(tilde)-matrix from vector v;
 	template<class TVector>
 	inline ConstSizeMatrix<9> Vector2SkewMatrixTemplate(const TVector& v)
@@ -78,11 +36,62 @@ namespace RigidBodyMath {
 										 -v[1], v[0],    0 });
 	}
 
+	//********************************************************************************
+	//functions containing EULER PARAMETERS (QUATERNIONS)
+
+	//! compute G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
+	template<class TVector>
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP2GTemplate(const TVector& ep)
+	{
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
+											-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
+											-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+	}
+
+	//! compute time derivative of G-Matrix from Euler Parameters ep_t
+	template<class TVector>
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2G_tTemplate(const TVector& ep_t)
+	{
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {	-2.*ep_t[1], 2.*ep_t[0],-2.*ep_t[3], 2.*ep_t[2],
+											-2.*ep_t[2], 2.*ep_t[3], 2.*ep_t[0],-2.*ep_t[1],
+											-2.*ep_t[3],-2.*ep_t[2], 2.*ep_t[1], 2.*ep_t[0] });
+	}
+
+	////! compute transposed G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
+	//template<class TVector>
+	//inline ConstSizeMatrix<3*maxRotCoordinates> EP2GTTemplate(const TVector& ep)
+	//{
+	//	return ConstSizeMatrix<3*maxRotCoordinates>(4, 3, {  -2.*ep[1],-2.*ep[2],-2.*ep[3],
+	//										 2.*ep[0], 2.*ep[3],-2.*ep[2],
+	//										-2.*ep[3], 2.*ep[0], 2.*ep[1],
+	//										 2.*ep[2],-2.*ep[1], 2.*ep[0] });
+	//}
+
+	//! compute local G-Matrix from Euler Parameters ep; Glocal is defined such that the angular velocity given in local
+	//! coordinates omegaLocal follows from: omegaLocal = Glocal*ep_t
+	template<class TVector>
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP2GlocalTemplate(const TVector& ep)
+	{
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
+											-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
+											-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
+	}
+
+	////! compute transposed Glocal-Matrix from Euler Parameters ep;
+	//template<class TVector>
+	//inline ConstSizeMatrix<3*maxRotCoordinates> EP2GlocalTTemplate(const TVector& ep)
+	//{
+	//	return ConstSizeMatrix<3*maxRotCoordinates>(4, 3, { -2.*ep[1],-2.*ep[2],-2.*ep[3],
+	//										 2.*ep[0],-2.*ep[3], 2.*ep[2],
+	//										 2.*ep[3], 2.*ep[0],-2.*ep[1],
+	//										-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+	//}
+
 	//! compute time derivative of local G-Matrix from time derivative of Euler Parameters: ep_t
 	template<class TVector>
-	inline ConstSizeMatrix<12> EP_t2Glocal_tTemplate(const TVector& ep_t)
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2Glocal_tTemplate(const TVector& ep_t)
 	{
-		return ConstSizeMatrix<12>(3, 4, { -2.*ep_t[1], 2.*ep_t[0], 2.*ep_t[3],-2.*ep_t[2],
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, { -2.*ep_t[1], 2.*ep_t[0], 2.*ep_t[3],-2.*ep_t[2],
 											-2.*ep_t[2],-2.*ep_t[3], 2.*ep_t[0], 2.*ep_t[1],
 											-2.*ep_t[3], 2.*ep_t[2],-2.*ep_t[1], 2.*ep_t[0] });
 	}
@@ -164,15 +173,19 @@ namespace RigidBodyMath {
 	}
 
 	//********************************************************************************
-	//Euler angle functions (xyz-rotations sequence, i.e., Rxyz = Rx*Ry*Rz
+	//Euler angle / Tait-Bryan functions (xyz-rotations sequence, i.e., Rxyz = Rx*Ry*Rz)
+	// References:
+	// Nikravesh(Computer - Aided Analysis of Mechanical Systems, P 347 ff)
+	//   and 
+	// Geradin and Cardona(Flexible Multibody Dynamics - A Finite Element Approach) page 84 ff.
 	
 	//! convert Euler angles (Tait-Bryan angles) to rotation matrix
 	template<class TVector>
-	inline Matrix3D AngXYZ2RotationMatrixTemplate(const TVector& rot)
+	inline Matrix3D RotXYZ2RotationMatrixTemplate(const TVector& rot)
 	{
-		Real psi = rot[0];
-		Real theta = rot[1];
-		Real phi = rot[2];
+		//Real psi = rot[0];
+		//Real theta = rot[1];
+		//Real phi = rot[2];
 		Real c0 = cos(rot[0]);
 		Real s0 = sin(rot[0]);
 		Real c1 = cos(rot[1]);
@@ -180,13 +193,16 @@ namespace RigidBodyMath {
 		Real c2 = cos(rot[2]);
 		Real s2 = sin(rot[2]);
 
-		return Matrix3D(3,3,{ c1*c2,-c1 * s2,s1, s0*s1*c2 + c0 * s2,-s0 * s1*s2 + c0 * c2,-s0 * c1, -c0 * s1*c2 + s0 * s2,c0*s1*s2 + s0 * c2,c0*c1 });
+		return Matrix3D(3,3,{ c1*c2,-c1 * s2,s1, 
+			                  s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2,-s0 * c1,
+			                 -c0 * s1*c2 + s0 * s2,c0*s1*s2 + s0 * c2,c0*c1 });
 	}
-	inline Matrix3D AngXYZ2RotationMatrix(const Vector3D& rot) { return AngXYZ2RotationMatrixTemplate(rot); }
-	inline Matrix3D AngXYZ2RotationMatrix(const CSVector3D& rot) { return AngXYZ2RotationMatrixTemplate(rot); }
+	inline Matrix3D RotXYZ2RotationMatrix(const Vector3D& rot) { return RotXYZ2RotationMatrixTemplate(rot); }
+	inline Matrix3D RotXYZ2RotationMatrix(const CSVector3D& rot) { return RotXYZ2RotationMatrixTemplate(rot); }
+	inline Matrix3D RotXYZ2RotationMatrix(const CSVector4D& rot) { return RotXYZ2RotationMatrixTemplate(rot); } //for NodeRigidBody compatibility functions
 
-	//! convert rotation matrix to Euler angles (Tait-Bryan angles)
-	inline Vector3D RotationMatrix2AngXYZ(const Matrix3D& R)
+	//! convert rotation matrix to Euler angles Rxyz (Tait-Bryan angles)
+	inline Vector3D RotationMatrix2RotXYZ(const Matrix3D& R)
 	{
 		Vector3D rot;
 		rot[0] = atan2(-R(1, 2), R(2, 2));
@@ -195,36 +211,130 @@ namespace RigidBodyMath {
 		return rot;
 	}
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	template<class TVector>
+	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2GTemplate(const TVector& rot)
+	{
+		Real c0 = cos(rot[0]);
+		Real s0 = sin(rot[0]);
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3, 
+			{ 1, 0, s1,
+			  0, c0, -c1*s0,
+			  0, s0,  c0*c1 });
+	}
+
+	//! compute time derivative of G-Matrix from Tait Bryan angles rot_t
+	template<class TVector1, class TVector2>
+	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2G_tTemplate(const TVector1& rot, const TVector2& rot_t)
+	{
+		Real c0 = cos(rot[0]);
+		Real s0 = sin(rot[0]);
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3,
+			{ 0, 0, rot_t[1]*c1,
+			  0, -rot_t[0]*s0, rot_t[1]*s0*s1 - rot_t[0]*c0*c1,
+			  0, rot_t[0]*c0, -rot_t[0]*c1*s0 - rot_t[1]*c0*s1 });
+	}
+
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	template<class TVector>
+	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2GlocalTemplate(const TVector& rot)
+	{
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+		Real c2 = cos(rot[2]);
+		Real s2 = sin(rot[2]);
+
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3, 
+			{ c1*c2, s2, 0,
+			  -c1*s2, c2, 0,
+			  s1, 0, 1 });
+	}
+
+	//! compute time derivative of local G-Matrix from time derivative of Tait Bryan angles: ep_t
+	template<class TVector1, class TVector2>
+	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2Glocal_tTemplate(const TVector1& rot, const TVector2& rot_t)
+	{
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+		Real c2 = cos(rot[2]);
+		Real s2 = sin(rot[2]);
+
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3, 
+			{ -rot_t[2]*c1*s2 - rot_t[1]*c2*s1, rot_t[2]*c2, 0,
+			   rot_t[1]*s2*s1 - rot_t[2]*c2*c1, -rot_t[2]*s2, 0,
+			   rot_t[1]*c1, 0, 0 });
+	}
+
+	//********************************************************************************
+	//Rotation vector; see paper Holzinger, Gerstmayr; Multibody System Dynamics 2020, submitted
+
+	//! convert Euler angles (Tait-Bryan angles) to rotation matrix
+	template<class TVector>
+	inline Matrix3D RotationVector2RotationMatrix(const TVector& rot)
+	{
+		Vector3D v;
+		v.CopyFrom(rot);
+		Real angle = rot.GetL2Norm();
+		Real cAngle = cos(angle);
+		Real sAngle = sin(angle);
+
+		if (angle == 0) {
+			return EXUmath::unitMatrix3D;
+		}
+		else
+		{
+			Matrix3D mat(EXUmath::unitMatrix3D);
+			Matrix3D vTilde(Vector2SkewMatrix(v));
+
+			mat += (sin(angle) / angle)*vTilde;
+			mat += ((1. - cAngle) / (angle * angle))*vTilde*vTilde;
+			return mat;
+		}
+	}
+
+	//inline Matrix3D RotationVector2RotationMatrix(const Vector3D& rot) { return RotationVector2RotationMatrixTemplate(rot); }
+	//inline Matrix3D RotationVector2RotationMatrix(const CSVector4D& rot) { return RotationVector2RotationMatrixTemplate(rot); } //for NodeRigidBody compatibility functions
 	//********************************************************************************
 
-	//! specializations for Euler parameter and related functions:
+	//! specializations of templates:
 	inline ConstSizeMatrix<9> Vector2SkewMatrix(const Vector3D& v) { return Vector2SkewMatrixTemplate<Vector3D>(v); }
 	inline ConstSizeMatrix<9> Vector2SkewMatrix(const CSVector3D& v) { return Vector2SkewMatrixTemplate<CSVector3D>(v); }
 
 	//! compute G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
-	inline ConstSizeMatrix<12> EP2G(const Vector4D& ep) { return EP2GTemplate<Vector4D>(ep); }
-	inline ConstSizeMatrix<12> EP2G(const CSVector4D& ep) { return EP2GTemplate<CSVector4D>(ep); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP2G(const Vector4D& ep) { return EP2GTemplate<Vector4D>(ep); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP2G(const CSVector4D& ep) { return EP2GTemplate<CSVector4D>(ep); }
 
 	//! compute time derivative of G-Matrix from Euler Parameters ep_t
-	inline ConstSizeMatrix<12> EP_t2G_t(const Vector4D& ep_t) { return EP_t2G_tTemplate<Vector4D>(ep_t); }
-	inline ConstSizeMatrix<12> EP_t2G_t(const CSVector4D& ep_t) { return EP_t2G_tTemplate<CSVector4D>(ep_t); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2G_t(const Vector4D& ep_t) { return EP_t2G_tTemplate<Vector4D>(ep_t); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2G_t(const CSVector4D& ep_t) { return EP_t2G_tTemplate<CSVector4D>(ep_t); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2G_t(const LinkedDataVector& ep_t) { return EP_t2G_tTemplate<LinkedDataVector>(ep_t); }
 
-	//! compute transposed G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
-	inline ConstSizeMatrix<12> EP2GT(const Vector4D& ep) { return EP2GTTemplate<Vector4D>(ep); }
-	inline ConstSizeMatrix<12> EP2GT(const CSVector4D& ep) { return EP2GTTemplate<CSVector4D>(ep); }
+	////! compute transposed G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
+	//inline ConstSizeMatrix<3*maxRotCoordinates> EP2GT(const Vector4D& ep) { return EP2GTTemplate<Vector4D>(ep); }
+	//inline ConstSizeMatrix<3*maxRotCoordinates> EP2GT(const CSVector4D& ep) { return EP2GTTemplate<CSVector4D>(ep); }
 
 	//! compute local G-Matrix from Euler Parameters ep; Glocal is defined such that the angular velocity given in local
 	//! coordinates omegaLocal follows from: omegaLocal = Glocal*ep_t
-	inline ConstSizeMatrix<12> EP2Glocal(const Vector4D& ep) { return EP2GlocalTemplate<Vector4D>(ep); }
-	inline ConstSizeMatrix<12> EP2Glocal(const CSVector4D& ep) { return EP2GlocalTemplate<CSVector4D>(ep); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP2Glocal(const Vector4D& ep) { return EP2GlocalTemplate<Vector4D>(ep); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP2Glocal(const CSVector4D& ep) { return EP2GlocalTemplate<CSVector4D>(ep); }
 
-	//! compute transposed Glocal-Matrix from Euler Parameters ep;
-	inline ConstSizeMatrix<12> EP2GlocalT(const Vector4D& ep) { return EP2GlocalTTemplate<Vector4D>(ep); }
-	inline ConstSizeMatrix<12> EP2GlocalT(const CSVector4D& ep) { return EP2GlocalTTemplate<CSVector4D>(ep); }
+	////! compute transposed Glocal-Matrix from Euler Parameters ep;
+	//inline ConstSizeMatrix<3*maxRotCoordinates> EP2GlocalT(const Vector4D& ep) { return EP2GlocalTTemplate<Vector4D>(ep); }
+	//inline ConstSizeMatrix<3*maxRotCoordinates> EP2GlocalT(const CSVector4D& ep) { return EP2GlocalTTemplate<CSVector4D>(ep); }
 
 	//! compute time derivative of local G-Matrix from time derivative of Euler Parameters: ep_t
-	inline ConstSizeMatrix<12> EP_t2Glocal_t(const Vector4D& ep_t) { return EP_t2Glocal_tTemplate<Vector4D>(ep_t); }
-	inline ConstSizeMatrix<12> EP_t2Glocal_t(const CSVector4D& ep_t) { return EP_t2Glocal_tTemplate<CSVector4D>(ep_t); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2Glocal_t(const Vector4D& ep_t) { return EP_t2Glocal_tTemplate<Vector4D>(ep_t); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2Glocal_t(const CSVector4D& ep_t) { return EP_t2Glocal_tTemplate<CSVector4D>(ep_t); }
+	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2Glocal_t(const LinkedDataVector& ep_t) { return EP_t2Glocal_tTemplate<LinkedDataVector>(ep_t); }
 
 	//! compute rotation matrix from 4-components vector of Euler parameters ep
 	inline Matrix3D EP2RotationMatrix(const Vector4D& ep) { return EP2RotationMatrixTemplate(ep); }

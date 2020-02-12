@@ -1,0 +1,9 @@
+VS2017 helper
+
+Debug:
+- handle exceptions (raised by exudyn when e.g. index error); help debugger not to go into python exception: 
+  Debug->Window->Exceptions: activate e.g. std::exception
+
+
+
+

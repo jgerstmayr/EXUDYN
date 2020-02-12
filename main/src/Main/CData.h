@@ -30,6 +30,9 @@ public: //
 	CSystemState startOfStepState;                       //!< state coordinates at beginning of computation step (static or time step); corresponds to current coordinates at beginning of step
 	CSystemState visualizationState;                     //!< visualization state coordinates; usually updated at end of computation step; uses semaphores between rendering and computation threads
 
+private:
+	bool systemIsConsistent;							 //!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
+
 public: // 
 
   // access functions
@@ -60,6 +63,12 @@ public: //
 	CSystemState& GetVisualization() { return visualizationState; }
 	//! Read (Reference) access to: state coordinates for visualization
 	const CSystemState& GetVisualization() const { return visualizationState; }
+
+	//! return if systemStates are consistent (if not, e.g., system cannot be drawn using state coordinates)
+	bool IsSystemConsistent() const { return systemIsConsistent; }
+
+	//! Set true, if system is assembled, initialized and ready to be computed; special draw functions can be applied (visualization state exists)
+	void SetSystemIsConsistent(bool flag) { systemIsConsistent = flag; }
 
 	virtual void Print(std::ostream& os) const
 	{

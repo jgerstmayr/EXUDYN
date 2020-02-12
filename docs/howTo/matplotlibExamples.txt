@@ -25,6 +25,8 @@ plt.plot(x, x, label='linear')
 plt.title("interactive test")
 plt.xlabel("index")
 plt.ylabel("ylabel")
+plt.grid(True, 'major', 'both')
+plt.tight_layout() #better arrangement of plot
 plt.legend()
 plt.show() #sometimes needed to update plot
 
@@ -69,7 +71,7 @@ plt.savefig("figure.png")
 #use solution data:
 lines = np.loadtxt('solution.txt', comments='#', delimiter=',')
 
-#several plot windows at same time:
+#several plot windows at same time (does not work when run in VS2017): 
 fig1, ax1 = plt.subplots()
 fig2, ax2 = plt.subplots()
 ax1.plot(data[:,1], data[:,1+n], plotColorList[iCase], label=legendList[iCase]) #phase plot

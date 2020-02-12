@@ -16,7 +16,7 @@
 
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, bool velocityLevel) const
+void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -24,7 +24,15 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 		{
 			//this is the usual way: the marker measures the according value (could be a velocity)
 			algebraicEquations.SetNumberOfItems(1);
-			algebraicEquations[0] = markerData.GetMarkerData(1).value * parameters.factorValue1 - markerData.GetMarkerData(0).value - parameters.offset;
+			Real offset = parameters.offset;
+			if (parameters.offsetUserFunction)
+			{
+				//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
+				offset = parameters.offsetUserFunction(t, parameters.offset);
+			}
+
+
+			algebraicEquations[0] = markerData.GetMarkerData(1).value * parameters.factorValue1 - markerData.GetMarkerData(0).value - offset;
 		}
 		else
 		{
@@ -33,7 +41,12 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 
 			algebraicEquations.SetNumberOfItems(1);
 			algebraicEquations[0] = markerData.GetMarkerData(1).value_t * parameters.factorValue1 - markerData.GetMarkerData(0).value_t; //this is the index-reduced equation: does not have offset!!!
-			if (parameters.velocityLevel) { algebraicEquations[0] -= parameters.offset; }
+			
+			if (parameters.offsetUserFunction_t)
+			{
+				algebraicEquations[0] -= parameters.offsetUserFunction_t(t, parameters.offset);
+			}
+			else if (parameters.velocityLevel) { algebraicEquations[0] -= parameters.offset; }
 		}
 	}
 	else
@@ -43,7 +56,8 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 
 }
 
-void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const
+void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
+	const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{

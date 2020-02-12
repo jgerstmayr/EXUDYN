@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 331, 
-Number of resolved issues = 276, 
-EXUDYN version = 0.1.276, 
-last change =  2020-02-03
+Number of issues = 335, 
+Number of resolved issues = 283, 
+EXUDYN version = 0.1.283, 
+last change =  2020-02-12
 
 
 <table style = "width:100%">
@@ -38,6 +38,38 @@ last change =  2020-02-03
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0333</td>
+    <td>node numbers with type</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend node/object/... numbers as python class with type information to check if item numbers are mixed illegally</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-06</td>
+    <td>2020-04-06</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0332</td>
+    <td>getobject/nodeparameter</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend getobjectparameter/node/.. with default function from MainObject / MainNode/ ... which returns basic information, e.g., NodeType </td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-04</td>
+    <td>2020-04-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0330</td>
     <td>correct ODE2RHS     </td>
@@ -103,22 +135,6 @@ last change =  2020-02-03
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0324</td>
-    <td>visualize sensors   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add visualization to sensors (draw as circle with cross)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-25</td>
-    <td>2020-03-25</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0323</td>
     <td>invalid index test  </td>
     <td>JG</td>
@@ -128,22 +144,6 @@ last change =  2020-02-03
     <td></td>
     <td>2020-01-24</td>
     <td>2020-03-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0319</td>
-    <td>PyError in C++      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check why PyError is not working any more properly</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2020-01-16</td>
-    <td>2020-03-16</td>
     <td></td>
     <td></td>
     <td></td>
@@ -215,38 +215,6 @@ last change =  2020-02-03
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0311</td>
-    <td>Add generic node ODE2</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> generic node with n ODE2 coordinates</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-10</td>
-    <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0310</td>
-    <td>GenericRigidBodyJoint3D</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add generic joint with local transformation matrix of marker1; enable fixed or free tranlatory motion (ux,uy,uz) and rotations (phix,phiy,phiz) in the joint, relative to marker1 coordinate system</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-10</td>
-    <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0309</td>
     <td>GenericRigidBodyJoint2D</td>
     <td>JG</td>
@@ -256,22 +224,6 @@ last change =  2020-02-03
     <td></td>
     <td>2020-01-10</td>
     <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0304</td>
-    <td>time in constraints </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> consistently add time to constraint evaluation; add flag to mark time dependency of constraints (influence on velocity level and on initial conditions)</td>
-    <td>EXTENSIONS</td>
-    <td></td>
-    <td>2019-12-28</td>
-    <td>2020-02-26</td>
     <td></td>
     <td></td>
     <td></td>
@@ -342,7 +294,7 @@ last change =  2020-02-03
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0288</td>
     <td>Item::CallFunction  </td>
     <td>JG</td>
@@ -358,7 +310,7 @@ last change =  2020-02-03
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0287</td>
     <td>Std::array          </td>
     <td>JG</td>
@@ -374,7 +326,7 @@ last change =  2020-02-03
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0284</td>
     <td>utilities docu      </td>
     <td>JG</td>
@@ -390,7 +342,7 @@ last change =  2020-02-03
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0283</td>
     <td>cylinder with hole  </td>
     <td>JG</td>
@@ -919,6 +871,38 @@ last change =  2020-02-03
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0334</td>
+    <td>add RigidBodySpringDamper</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add a generalization for CartesianSpringDamper, using local coordinate systems and coupling all local translations and rotations</td>
+    <td>NEW FEATURE</td>
+    <td></td>
+    <td>2020-02-12</td>
+    <td>2020-04-12</td>
+    <td>2020-02-12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0331</td>
+    <td>correct Rigid3DEP   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct gyroscopic terms and add test suite example</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-02-03</td>
+    <td>2020-04-03</td>
+    <td>2020-02-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0327</td>
     <td>visualization options</td>
     <td>JG</td>
@@ -945,6 +929,22 @@ last change =  2020-02-03
     <td>2020-01-27</td>
     <td>2020-03-27</td>
     <td>2020-01-31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0324</td>
+    <td>visualize sensors   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add visualization to sensors (draw as circle with cross)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-25</td>
+    <td>2020-03-25</td>
+    <td>2020-02-05</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -999,6 +999,22 @@ last change =  2020-02-03
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0319</td>
+    <td>PyError in C++      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check why PyError is not working any more properly</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-01-16</td>
+    <td>2020-03-16</td>
+    <td>2020-02-12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>did not show up again</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0318</td>
     <td>sparse init acc     </td>
     <td>JG</td>
@@ -1041,6 +1057,38 @@ last change =  2020-02-03
     <td>2020-01-10</td>
     <td>2020-03-10</td>
     <td>2020-01-22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0311</td>
+    <td>Add generic node ODE2</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> generic node with n ODE2 coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-10</td>
+    <td>2020-03-10</td>
+    <td>2020-02-12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0310</td>
+    <td>GenericRigidBodyJoint3D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add generic joint with local transformation matrix of marker1; enable fixed or free tranlatory motion (ux,uy,uz) and rotations (phix,phiy,phiz) in the joint, relative to marker1 coordinate system</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-10</td>
+    <td>2020-03-10</td>
+    <td>2020-02-12</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1109,6 +1157,22 @@ last change =  2020-02-03
     <td></td>
     <td></td>
     <td>but errors which occur directly in python cannot be catched</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0304</td>
+    <td>time in constraints </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> consistently add time to constraint evaluation; add flag to mark time dependency of constraints (influence on velocity level and on initial conditions)</td>
+    <td>EXTENSIONS</td>
+    <td></td>
+    <td>2019-12-28</td>
+    <td>2020-02-26</td>
+    <td>2020-02-12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0300</td>

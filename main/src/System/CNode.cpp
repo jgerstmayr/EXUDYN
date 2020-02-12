@@ -54,30 +54,29 @@ const Real& CNodeODE2::GetCurrentCoordinate(Index i) const
 const Real& CNodeODE2::GetCurrentCoordinate_t(Index i) const
 {
 	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_t: index out of range");
-
 	return computationalData->currentState.ODE2Coords_t[globalODE2CoordinateIndex + i];
 }
 
 //! get vector with current coordinates; corresponds to displacements
 LinkedDataVector CNodeODE2::GetCurrentCoordinateVector() const
 {
-    return LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	return LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
-//! get vector with current vcoordinates_t; corresponds to velocities
+//! get vector with current coordinates_t; corresponds to velocities
 LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_t() const
 {
-    return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
 LinkedDataVector CNodeODE2::GetInitialCoordinateVector() const
 {
-    return LinkedDataVector(computationalData->initialState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	return LinkedDataVector(computationalData->initialState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
 LinkedDataVector CNodeODE2::GetInitialCoordinateVector_t() const
 {
-    return LinkedDataVector(computationalData->initialState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	return LinkedDataVector(computationalData->initialState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
 LinkedDataVector CNodeODE2::GetVisualizationCoordinateVector() const

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  18:12:47 (last modfied)
+* @date         2020-02-04  17:40:40 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -54,11 +54,12 @@ public: // AUTO:
 #include "Utilities/BasicDefinitions.h"
 
 //! AUTO: CNodeRigidBodyEP
-class CNodeRigidBodyEP: public CNodeODE2AE // AUTO: 
+class CNodeRigidBodyEP: public CNodeRigidBody // AUTO: 
 {
 protected: // AUTO: 
     static const Index nRotationCoordinates = 4;
     static const Index nDisplacementCoordinates = 3;
+    Index globalAECoordinateIndex;
     CNodeRigidBodyEPParameters parameters; //! AUTO: contains all parameters for CNodeRigidBodyEP
 
 public: // AUTO: 
@@ -68,6 +69,18 @@ public: // AUTO:
     virtual CNodeRigidBodyEPParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CNodeRigidBodyEPParameters& GetParameters() const { return parameters; }
+
+    //! AUTO:  write access function needed by system for algebraic coordinate
+    virtual void SetGlobalAECoordinateIndex(Index globalIndex) override
+    {
+        globalAECoordinateIndex = globalIndex;
+    }
+
+    //! AUTO:  read access function needed by system for algebraic coordinate
+    virtual Index GetGlobalAECoordinateIndex() const override
+    {
+        return globalAECoordinateIndex;
+    }
 
     //! AUTO:  return number of second order diff. eq. coordinates
     virtual Index GetNumberOfODE2Coordinates() const override
@@ -81,10 +94,28 @@ public: // AUTO:
         return 1;
     }
 
+    //! AUTO:  return number of displacement coordinates
+    virtual Index GetNumberOfDisplacementCoordinates() const override
+    {
+        return nDisplacementCoordinates;
+    }
+
+    //! AUTO:  return number of rotation coordinates
+    virtual Index GetNumberOfRotationCoordinates() const override
+    {
+        return nRotationCoordinates;
+    }
+
     //! AUTO:  return node type (for node treatment in computation)
     virtual Node::Type GetType() const override
     {
-        return (Node::Type)(Node::Position + Node::Orientation + Node::RotationEulerParameters);
+        return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationEulerParameters);
+    }
+
+    //! AUTO:  return node group, which is special because of algebraic equations
+    virtual CNodeGroup GetNodeGroup() const override
+    {
+        return (CNodeGroup)((Index)CNodeGroup::ODE2variables + (Index)CNodeGroup::AEvariables);
     }
 
     //! AUTO:  return configuration dependent position of node; returns always a 3D Vector
@@ -102,12 +133,6 @@ public: // AUTO:
     //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector
     virtual Vector3D GetAngularVelocityLocal(ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  provide position jacobian of node; derivative of 3D Position with respect to 7 coordinates ux,uy,uz,ep0,...,ep3
-    virtual void GetPositionJacobian(Matrix& value) const override;
-
-    //! AUTO:  provide "rotation" jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ("G-matrix"); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
-    virtual void GetRotationJacobian(Matrix& value) const override;
-
     //! AUTO:  return internally stored reference coordinates of node
     virtual LinkedDataVector GetReferenceCoordinateVector() const override
     {
@@ -118,10 +143,22 @@ public: // AUTO:
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
 
     //! AUTO:  Compute vector to of 4 Euler Parameters from reference and configuration coordinates
-    ConstSizeVector<nRotationCoordinates> GetEulerParameters(ConfigurationType configuration = ConfigurationType::Current) const;
+    virtual ConstSizeVector<maxRotationCoordinates> GetRotationParameters(ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  Compute vector to time derivative of 4 Euler Parameters in given configuration
-    ConstSizeVector<nRotationCoordinates> GetEulerParameters_t(ConfigurationType configuration = ConfigurationType::Current) const;
+    virtual LinkedDataVector GetRotationParameters_t(ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  Compute G matrix (=diff(angularVelocity, velocityParameters)) for given configuration
+    virtual void GetG(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  Compute local G matrix for given configuration
+    virtual void GetGlocal(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  Compute G matrix (=diff(angularVelocity, velocityParameters)) for given configuration
+    virtual void GetG_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  Compute local G matrix for given configuration
+    virtual void GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

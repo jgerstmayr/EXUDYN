@@ -94,8 +94,8 @@ print('time elapsed =',round(timeStart,3),'seconds')
 #10+7 tests: 2019-12-17: 3.94 / 3.87 seconds on i9
 #10+8 tests: 2019-12-18: 5.96 / 6.06 seconds on i9
 #10+11tests: 2020-01-6:  6.96 seconds on i9
-#10+11tests: 2020-01-24:  8.30 seconds on Surface Pro
-#10+12tests: 2020-02-03:  seconds on i9
+#10+11tests: 2020-01-24: 8.30 seconds on Surface Pro
+#10+12tests: 2020-02-03: 7.10 seconds on i9
 
 
 if rv == True:

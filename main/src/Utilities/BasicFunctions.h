@@ -116,39 +116,39 @@ namespace EXUstd {
     // 'array' is replaced on output by its sorted rearrangement. 
     // needed member functions of array: operator[], Index NumberOfItems()
     // needed capability of items: operator>, copy constructor (operator=)
-	template <class ArrayClass>
-	void QuickSort(ArrayClass& array)
-	{
-		Index len = array.NumberOfItems();
-		Index i, j, inc;
-		if (!len) { return; } //exit if array has zero length (next line would fail otherwise!)
+	//template <class ArrayClass>
+	//void QuickSort(ArrayClass& array)
+	//{
+	//	Index len = array.NumberOfItems();
+	//	Index i, j, inc;
+	//	if (!len) { return; } //exit if array has zero length (next line would fail otherwise!)
 
-		auto item = array[0];
+	//	auto item = array[0];
 
-		inc = 1; //Determine the starting increment.
-		do
-		{
-			inc *= 3;
-			inc++;
-		} while (inc <= len);
+	//	inc = 1; //Determine the starting increment.
+	//	do
+	//	{
+	//		inc *= 3;
+	//		inc++;
+	//	} while (inc <= len); //<len ?
 
-		do
-		{ //Loop over the partial sorts.
-			inc /= 3;
-			for (i = inc; i < len; i++)
-			{ //Outer loop of straight insertion.
-				item = array[i];
-				j = i;
-				while (array[j - inc] > item)
-				{ //Inner loop of straight insertion.
-					array[j] = array[j - inc];
-					j -= inc;
-					if (j < inc) break;
-				}
-				array[j] = item;
-			}
-		} while (inc > 1);
-	}
+	//	do
+	//	{ //Loop over the partial sorts.
+	//		inc /= 3;
+	//		for (i = inc; i < len; i++)
+	//		{ //Outer loop of straight insertion.
+	//			item = array[i];
+	//			j = i;
+	//			while (array[j - inc] > item)
+	//			{ //Inner loop of straight insertion.
+	//				array[j] = array[j - inc];
+	//				j -= inc;
+	//				if (j < inc) break;
+	//			}
+	//			array[j] = item;
+	//		}
+	//	} while (inc > 1);
+	//}
 
 	//! template function to allow string conversion for objects having stream operator
 	template<class T>

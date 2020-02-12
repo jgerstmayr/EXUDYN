@@ -43,14 +43,13 @@ void CSystem::Assemble(const MainSystem& mainSystem)
 		AssembleInitializeSystemCoordinates(mainSystem); //mainSystem needed for initial displacements
 
 		//now system is consistent and can safely be drawn
-		systemConsistent = true;
+		SetSystemIsConsistent(true);
 		postProcessData.postProcessDataReady = true;
 		cSystemData.isODE2RHSjacobianComputation = false; //hack
 	}
 	else
 	{
-		systemConsistent = false;
-		postProcessData.postProcessDataReady = false;
+		SetSystemIsConsistent(false);
 	}
 }
 
@@ -143,12 +142,13 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			else //check if right nodeTypes are used
 			{
 				CNode* cNode = mainSystem.GetMainSystemData().GetMainNodes()[itemIndex]->GetCNode();
-				if ((item->GetRequestedNodeType() & cNode->GetType()) != item->GetRequestedNodeType())
+				//if ((item->GetRequestedNodeType() & cNode->GetType()) != item->GetRequestedNodeType())
+				if (!EXUstd::IsOfType(cNode->GetType(), item->GetRequestedNodeType()))
 				{
 					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
 						EXUstd::ToString(i) + " (global index = " + EXUstd::ToString(itemIndex) + ")" + 
 						" contains invalid node type " + Node::GetTypeString(cNode->GetType()) +
-						" while the requested object type was '" + Node::GetTypeString(item->GetRequestedNodeType()) + "'");
+						" while the requested node type was '" + Node::GetTypeString(item->GetRequestedNodeType()) + "'");
 					systemIsInteger = false;
 				}
 			}
@@ -157,42 +157,58 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		if ((Index)item->GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			CObjectConnector* connector = (CObjectConnector*)item->GetCObject();
-			for (Index i = 0; i < connector->GetMarkerNumbers().NumberOfItems(); i++)
+			if (connector->GetMarkerNumbers().NumberOfItems() != 2)
 			{
-				Index itemIndex = connector->GetMarkerNumbers()[i];
-				if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfMarkers))
+				PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
+					" must have two markers, but got " + EXUstd::ToString(connector->GetMarkerNumbers().NumberOfItems()) + " markers");
+				systemIsInteger = false;
+			}
+			else
+			{
+				if (connector->GetMarkerNumbers().NumberOfItems() == 2) //for future cases
 				{
-					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
-						EXUstd::ToString(i) + " contains invalid (global) marker number " + EXUstd::ToString(itemIndex));
-					systemIsInteger = false;
-				}
-				else
-				{
-					//now check Marker::Type flags
-					CMarker* marker = mainSystem.GetMainSystemData().GetMainMarkers()[itemIndex]->GetCMarker();
-					if ((connector->GetRequestedMarkerType() & marker->GetType()) != connector->GetRequestedMarkerType()) //marker must contain all requested flags
+					if (connector->GetMarkerNumbers()[0] == connector->GetMarkerNumbers()[1])
 					{
-						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
-							EXUstd::ToString(i) + " contains marker with invalid type '" + Marker::GetTypeString(marker->GetType()) +
-							"', but expected marker type '" + Marker::GetTypeString(connector->GetRequestedMarkerType()) + "'");
-						systemIsInteger = false;
+						PyWarning(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + ", contains two identical markers");
 					}
 				}
-			}
-
-			if ((Index)item->GetCObject()->GetType() & (Index)CObjectType::Constraint)
-			{
-				if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE2) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_function) != 0))
+				for (Index i = 0; i < connector->GetMarkerNumbers().NumberOfItems(); i++)
 				{
-					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-						": Internal error: connector JacobianType::AE_ODE2 must be consistent with JacobianType::AE_ODE2_function");
-					systemIsInteger = false;
+					Index itemIndex = connector->GetMarkerNumbers()[i];
+					if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfMarkers))
+					{
+						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
+							EXUstd::ToString(i) + " contains invalid (global) marker number " + EXUstd::ToString(itemIndex));
+						systemIsInteger = false;
+					}
+					else
+					{
+						//now check Marker::Type flags
+						CMarker* marker = mainSystem.GetMainSystemData().GetMainMarkers()[itemIndex]->GetCMarker();
+						if ((connector->GetRequestedMarkerType() & marker->GetType()) != connector->GetRequestedMarkerType()) //marker must contain all requested flags
+						{
+							PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
+								EXUstd::ToString(i) + " contains marker with invalid type '" + Marker::GetTypeString(marker->GetType()) +
+								"', but expected marker type '" + Marker::GetTypeString(connector->GetRequestedMarkerType()) + "'");
+							systemIsInteger = false;
+						}
+					}
 				}
-				if (((connector->GetAvailableJacobians() & JacobianType::AE_AE) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_AE_function) != 0))
+
+				if ((Index)item->GetCObject()->GetType() & (Index)CObjectType::Constraint)
 				{
-					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-						": Internal error: connector JacobianType::AE_AE must be consistent with JacobianType::AE_AE_function");
-					systemIsInteger = false;
+					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE2) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_function) != 0))
+					{
+						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							": Internal error: connector JacobianType::AE_ODE2 must be consistent with JacobianType::AE_ODE2_function");
+						systemIsInteger = false;
+					}
+					if (((connector->GetAvailableJacobians() & JacobianType::AE_AE) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_AE_function) != 0))
+					{
+						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							": Internal error: connector JacobianType::AE_AE must be consistent with JacobianType::AE_AE_function");
+						systemIsInteger = false;
+					}
 				}
 			}
 
@@ -600,18 +616,20 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 		//process markers --> they have associated coordinates
 		for (Index markerNumber : connector->GetMarkerNumbers())
 		{
+			//pout << "build LTG for " << objectIndex << " (=connector), marker " << markerNumber << "\n";
 			CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
 			if (marker->GetType() & Marker::Object) //was before::Object
 			{
-				//CMarkerBodyPosition* bodyMarker = (CBodyPositionMarker*)marker;
 				Index objectNumber = marker->GetObjectNumber();
-				//const CObjectBody& body = cSystemData.GetCObjectBody(bodyNumber);
 				const CObject& object = *(cSystemData.GetCObjects()[objectNumber]);
+
+				//pout << "  nNodes=" << object.GetNumberOfNodes() << "\n";
 
 				//object2 can't be a connector, so must have nodes
 				for (Index j = 0; j < object.GetNumberOfNodes(); j++)
 				{
 					CNode* node = object.GetCNode(j);
+					//pout << "  node ODE2=" << node->GetNumberOfODE2Coordinates() << "\n";
 					if (node->GetNumberOfODE2Coordinates())
 					{
 						Index gIndex = node->GetGlobalODE2CoordinateIndex();
@@ -822,13 +840,15 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 }
 
 
-#include "Utilities/RigidBodyMath.h"
-#include "Autogenerated/CNodeRigidBodyEP.h"
+//#include "Utilities/RigidBodyMath.h"
+//#include "Autogenerated/CNodeRigidBodyEP.h"
 
 //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Rhs, false otherwise
 bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Rhs)
 {
+	Index i = 0;
+	//std::cout << "ComputeODE2RHS" << i++ << ": " << (Index)object->GetType() << "\n";
 	if (!((Index)object->GetType() & (Index)CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
 	{
 		//if object is a body, it must have ODE2RHS
@@ -840,20 +860,12 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 		else if ((Index)object->GetType() & (Index)CObjectType::Connector)
 		{
 			CObjectConnector* connector = (CObjectConnector*)object;
+
 			//compute MarkerData for connector:
-
-			//const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
-			//Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-			//if (nMarkers != 2) { CHECKandTHROWstring("CSystem::ComputeODE2RHS(...): Number of connector markers != 2 not implemented"); }
-
-			//for (Index k = 0; k < 2; k++)
-			//{
-			//	const bool computeJacobian = true;
-			//	cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(k));
-			//}
 			const bool computeJacobian = true;
 			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
+			//pout << "ComputeODE2RHS " << i++ << "\n";
 			connector->ComputeODE2RHS(localODE2Rhs, temp.markerDataStructure);
 		}
 		else { CHECKandTHROWstring("CSystem::ComputeODE2RHS(...): object type not implemented"); return false; }
@@ -871,6 +883,10 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 
 	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
 	{
+		//pout << "ComputeODE2RHS" << j++ << ": " 
+		//	<< (Index)(cSystemData.GetCObjects()[j])->GetType() 
+		//	<< ", active=" << (cSystemData.GetCObjects()[j])->IsActive() 
+		//	<< ", ltg=" << cSystemData.GetLocalToGlobalODE2()[j] << "\n";
 		if ((cSystemData.GetCObjects()[j])->IsActive())
 		{
 			//work over bodies, connectors, etc.
@@ -943,7 +959,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 			//AccessFunctionType aft = GetAccessFunctionType(loadType, marker->GetType());
 			//==> lateron: depending on AccessFunctionType compute jacobians, put into markerDataStructure as in connectors
 			//    and call according jacobian function
-			//    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
+			//q    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
 
 			if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
 			{
@@ -978,33 +994,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 
 			if (ltg != nullptr) //must be object
 			{
-				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				////pout << "load1=" << temp.generalizedLoad << "\n";
-				//Matrix3D A = temp.markerDataStructure.GetMarkerData(0).orientation;
-				////-A * uLocalTilde*Glocal
-				////ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(Vector3D({0.,1.,0.}));
-				//Vector3D r({ 0.,1.,0. });
-				//Vector3D g({ 0.,0.,-9.81 });
-				//ConstSizeVector<4> ep = ((CNodeRigidBodyEP*)(cSystemData.GetCNodes()[0]))->GetEulerParameters();
-				//ConstSizeMatrix<4 * 3> G = RigidBodyMath::EP2G(ep);
-
-				////m*r x (A^T g)
-				////pout << "  A=" << A << "\n";
-				////pout << "  G=" << G << "\n";
-
-				//g = A.GetTransposed() * g;
-				//g = 15. * g;
-				//g = r.CrossProduct(g);
-				////pout << "  tauLoc=" << g << "\n";
-
-				//g = A * g;
-				//EXUmath::MultMatrixTransposedVector(G, g, ep);
-				//temp.generalizedLoad[3 + 0] = ep[0];
-				//temp.generalizedLoad[3 + 1] = ep[1];
-				//temp.generalizedLoad[3 + 2] = ep[2];
-				//temp.generalizedLoad[3 + 3] = ep[3];
-				//pout << "  load2=" << temp.generalizedLoad << "\n";
-
+	
 				//pout << "load=" << temp.generalizedLoad << ", LF=" << solverData.loadFactor << ", rotJac=" << temp.markerDataStructure.GetMarkerData(0).positionJacobian << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
@@ -1046,7 +1036,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 			{
 				if (object.GetAlgebraicEquationsSize()) //either body or constraint
 				{
-					object.ComputeAlgebraicEquations(temp.localAE, velocityLevel);
+					object.ComputeAlgebraicEquations(temp.localAE, velocityLevel); //no time given for objects for now (only Euler parameters...)
 				}
 
 			}
@@ -1070,7 +1060,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 				const bool computeJacobian = false;
 				ComputeMarkerDataStructure(&constraint, computeJacobian, temp.markerDataStructure);
 
-				constraint.ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, velocityLevel);
+				constraint.ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, velocityLevel);
 
 			}
 			//for connectors, linked to objects that contain algebraic variables (e.g. Euler-Parameter based rigid bodies)
@@ -1567,6 +1557,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	flagAE_ODE2filled = false; //true, if the jacobian AE_ODE2 is inserted
 	flagAE_ODE2_tFilled = false; //true, if the jacobian AE_ODE2 is inserted
 	flagAE_AEfilled = false;   //true, if the jacobian AE_AE is inserted
+	Real currentTime = cSystemData.GetCData().currentState.time;
 
 	//for body, evaluate algebraic equations directly --> depend only on body coordinates
 	if ((Index)object.GetType() & (Index)CObjectType::Body)
@@ -1606,7 +1597,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 
 		if (flagAE_ODE2filled || flagAE_ODE2_tFilled || flagAE_AEfilled)
 		{
-			constraint.ComputeJacobianAE(temp.localJacobianAE, temp.localJacobianAE_t, temp.localJacobianAE_AE, temp.markerDataStructure);
+			constraint.ComputeJacobianAE(temp.localJacobianAE, temp.localJacobianAE_t, temp.localJacobianAE_AE, temp.markerDataStructure, currentTime);
 			objectUsesVelocityLevel = constraint.UsesVelocityLevel();
 			//if (constraint.UsesVelocityLevel()) {factorVelocityLevel = factorAE_ODE2_t; } //in this case, always use the velocity level factor; then, the jacobian is interpreted as diff(AE_t, ODE2_t)
 		}

@@ -81,6 +81,7 @@ public:
 		
 		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize),
             "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, T): invalid parameters");
+		if (initializationValue != 0) { PyWarning("MatrixBase: initializationValue != 0"); }
 
         ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
 
@@ -309,10 +310,6 @@ public:
 		return result;
 	}
 
-	//{
-	//	CHECKandTHROWstring("ConstSizeVector<dataSize2> operator*: default opertor invalid");
-	//	return ConstSizeVector<dataSize2>();
-	//}
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // EXTENDED FUNCTIONS
@@ -331,6 +328,57 @@ public:
         return result;
     }
 
+	//! get fast inverse for 1D, 2D and 3D case
+	virtual ConstSizeMatrixBase<T, dataSize> GetInverse() const
+	{
+		static_assert(dataSize > 3);
+
+		switch (dataSize)
+		{
+			case 1: 
+			{
+				T x = (*this)(0, 0);
+				CHECKandTHROW(x == 0., "Matrix1D::Invert: matrix is singular");
+				return ConstSizeMatrixBase<T, dataSize>(1, 1, { (T)1. / x });
+			}
+			case 2: 
+			{
+				//m=[a b; c d]
+				//minv = 1/(ad-bc)[d -b; -c a]
+				ConstSizeMatrixBase<T, dataSize> result(2, 2);
+				T det = ((*this)(0, 0)*(*this)(2, 2) - (*this)(0, 1)*(*this)(1, 0));
+				CHECKandTHROW(det == 0., "Matrix2D::Invert: matrix is singular");
+
+				result(0, 0) = (*this)(1, 1);
+				result(0, 1) =-(*this)(0, 1);
+				result(1, 0) =-(*this)(1, 0);
+				result(1, 1) = (*this)(0, 0);
+				return result;
+			}
+			case 3:
+			{
+				const ConstSizeMatrixBase<T, dataSize>& m = *this;
+				T det = m(0, 0) * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2)) - m(0, 1) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) + m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0));
+				CHECKandTHROW(det == (T)0., "Matrix3D::Invert: matrix is singular");
+
+				T invdet = (T)1. / det;
+
+				ConstSizeMatrixBase<T, dataSize> result; // inverse of matrix m
+				result(0, 0) = invdet * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2));
+				result(0, 1) = invdet * (m(0, 2) * m(2, 1) - m(0, 1) * m(2, 2));
+				result(0, 2) = invdet * (m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1));
+				result(1, 0) = invdet * (m(1, 2) * m(2, 0) - m(1, 0) * m(2, 2));
+				result(1, 1) = invdet * (m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0));
+				result(1, 2) = invdet * (m(1, 0) * m(0, 2) - m(0, 0) * m(1, 2));
+				result(2, 0) = invdet * (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1));
+				result(2, 1) = invdet * (m(2, 0) * m(0, 1) - m(0, 0) * m(2, 1));
+				result(2, 2) = invdet * (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1));
+				return result;
+			}
+			default: //may not occur due to static assertion
+				return *this;
+		}
+	}
 
 };
 

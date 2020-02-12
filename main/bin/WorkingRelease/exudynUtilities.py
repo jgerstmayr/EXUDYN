@@ -563,6 +563,20 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
     
     GT = np.transpose(EulerParameters2G(eulerParameters))
     return 0.25*(GT.dot(angularVelocity))
+
+#compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
+def AngularVelocity2RotXYZ_t(angularVelocity, rotation):
+    psi = rotation[0]
+    theta = rotation[1]
+    phi = rotation[2]
+    cTheta = np.cos(theta)
+    if cTheta == 0:
+        print('AngularVelocity2RotXYZ_t: not possible for rotation[1] == pi/2, 3*pi/2, ...')
+
+    GInv = (1/cTheta)*np.array([[np.cos(theta), np.sin(psi)*np.sin(theta),-np.cos(psi)*np.sin(theta)],
+                                [0            , np.cos(psi)*np.cos(theta)   , np.sin(psi)*np.cos(theta)],
+                                [0            ,-np.sin(psi)              , np.cos(psi)]])
+    return np.dot(GInv,angularVelocity)
     
 #compute rotation matrix w.r.t. X-axis (first axis)
 def RotationMatrixX(angleRad):

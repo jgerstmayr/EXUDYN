@@ -50,11 +50,16 @@ namespace Node {
 		Point2DSlope1 = 1 << 3,				//!< used for: nodes which provide a position and a slope vector in 1-direction
 		//3D
 		Position = 1 << 4,					//!< used for: point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
-		Orientation = 1 << 5,				//!< used for: rigid nodes (independent of parameterization); node must provide rotation matrix, dAngularVelocity/dq
-		RotationEulerParameters = 1 << 6,	//!< used if orientation is described with euler parameters; maybe put this to extended node types
+		Orientation = 1 << 5,				//!< nodes, which can measure rotation, can apply torque (not only rigid nodes); node must provide rotation matrix, dAngularVelocity/dq
+		RigidBody = 1 << 6,					//!< nodes which are derived from NodeRigidBody; used for ObjectRigidBody or for beams; node must provide rotation matrix, dAngularVelocity/dq, and G, Glocal, ...
+		//special Rotation:
+		RotationEulerParameters = 1 << 7,	//!< used if orientation is described with euler parameters
+		RotationRxyz = 1 << 8,				//!< used if orientation is described with euler angles
+		RotationRotationVector = 1 << 9,	//!< used if orientation is described with rotation vector parameters
+		RotationLieGroup = 1 << 10,			//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
 		//General
-		GenericODE2 = 1 << 7,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
-		GenericData = 1 << 8				//!< used for node with data coordinates
+		GenericODE2 = 1 << 11,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
+		GenericData = 1 << 12				//!< used for node with data coordinates
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//keep these lists synchronized with PybindModule.cpp lists
 	};
@@ -64,13 +69,19 @@ namespace Node {
 		STDstring t; //empty string
 		if (var == Node::None) { t = "None/Undefined"; }
 		if (var & Ground) { t += "Ground"; }
+
 		if (var & Position2D) { t += "Position2D"; }
 		if (var & Orientation2D) { t += "Orientation2D"; }
 		if (var & Point2DSlope1) { t += "Point2DSlope1"; }
 
 		if (var & Position) { t += "Position"; }
 		if (var & Orientation) { t += "Orientation"; }
+		if (var & RigidBody) { t += "RigidBody"; }
+
 		if (var & RotationEulerParameters) { t += "RotationEulerParameters"; }
+		if (var & RotationRxyz) { t += "RotationRxyz"; }
+		if (var & RotationRotationVector) { t += "RotationRotationVector"; }
+		if (var & RotationLieGroup) { t += "RotationLieGroup"; }
 
 		if (var & GenericODE2) { t += "GenericODE2"; }
 		if (var & GenericData) { t += "GenericData"; }
@@ -232,7 +243,10 @@ public:
             case ConfigurationType::Current: return GetCurrentCoordinateVector();
             case ConfigurationType::Initial: return GetInitialCoordinateVector();
 			case ConfigurationType::Reference: return GetReferenceCoordinateVector();
-			case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
+			case ConfigurationType::Visualization: 
+			{
+				return GetVisualizationCoordinateVector();
+			}
 			default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector: invalid ConfigurationType"); return LinkedDataVector();
         }
     }
@@ -244,7 +258,14 @@ public:
 		case ConfigurationType::Current: return GetCurrentCoordinateVector_t();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector_t();
 		//case ConfigurationType::Reference: return GetReferenceCoordinateVector_t();
-		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_t();
+		case ConfigurationType::Visualization: 
+		{
+			//if (!computationalData->IsSystemConsistent())
+			//{
+			//	pout << "GetCoordinateVector_t: system inconsistent; cannot draw\n";
+			//}
+			return GetVisualizationCoordinateVector_t();
+		}
 		default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector_t: invalid ConfigurationType"); return LinkedDataVector();
 		}
 	}
@@ -279,29 +300,71 @@ public:
 
 };
 
-//! node with mixed ODE2 and algebraic equations coordinates
-class CNodeODE2AE : public CNodeODE2
+////! node with mixed ODE2 and algebraic equations coordinates
+//class CNodeODE2AE : public CNodeODE2
+//{
+//protected:
+//	Index globalAECoordinateIndex;                //!< refers to the place in the global ODE2 coordinate vector, either position or velocity level (must be the same!)
+//public:
+//	CNodeODE2AE(): CNodeODE2()
+//	{
+//		globalAECoordinateIndex = EXUstd::InvalidIndex;
+//	}
+//	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
+//	virtual CNodeODE2AE* GetClone() const { return new CNodeODE2AE(*this); }
+//
+//	virtual void Print(std::ostream& os) const {
+//		os << "CNodeODE2AE(ODE2Index=" << globalODE2CoordinateIndex << ", size=" << GetNumberOfODE2Coordinates() << ", ";
+//		os << "AEIndex=" << globalAECoordinateIndex << ", size=" << GetNumberOfAECoordinates() << "):";
+//		CNode::Print(os);
+//	}
+//
+//	virtual CNodeGroup GetNodeGroup() const { return (CNodeGroup)((Index)CNodeGroup::ODE2variables + (Index)CNodeGroup::AEvariables); }
+//	virtual void SetGlobalAECoordinateIndex(Index globalIndex) override { globalAECoordinateIndex = globalIndex; }
+//
+//	virtual Index GetGlobalAECoordinateIndex() const override { return globalAECoordinateIndex; }
+//};
+
+//! rigid body node for rigid bodies, beams, etc.
+class CNodeRigidBody : public CNodeODE2
 {
-protected:
-	Index globalAECoordinateIndex;                //!< refers to the place in the global ODE2 coordinate vector, either position or velocity level (must be the same!)
 public:
-	CNodeODE2AE(): CNodeODE2()
-	{
-		globalAECoordinateIndex = EXUstd::InvalidIndex;
-	}
+	static const Index maxRotationCoordinates = 4; //this is used to define the return value of ConstSizeVectors for rotation coordinates
+	static const Index maxDisplacementCoordinates = 3; //this is used to define the return value of ConstSizeVectors for displacement coordinates
+	static const Index nDim3D = 3; //dimensionality of 3D body (in order to avoid pure number "3" in implementation)
+	//CNodeRigidBody(): CNodeODE2()
+	//{
+	//}
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CNodeODE2AE* GetClone() const { return new CNodeODE2AE(*this); }
+	virtual CNodeRigidBody* GetClone() const { return new CNodeRigidBody(*this); }
 
 	virtual void Print(std::ostream& os) const {
-		os << "CNodeODE2AE(ODE2Index=" << globalODE2CoordinateIndex << ", size=" << GetNumberOfODE2Coordinates() << ", ";
-		os << "AEIndex=" << globalAECoordinateIndex << ", size=" << GetNumberOfAECoordinates() << "):";
+		os << "CNodeRigidBody(ODE2Index=" << globalODE2CoordinateIndex << ", size=" << GetNumberOfODE2Coordinates() << ", ";
 		CNode::Print(os);
 	}
 
-	virtual CNodeGroup GetNodeGroup() const { return (CNodeGroup)((Index)CNodeGroup::ODE2variables + (Index)CNodeGroup::AEvariables); }
-	virtual void SetGlobalAECoordinateIndex(Index globalIndex) override { globalAECoordinateIndex = globalIndex; }
+	virtual Index GetNumberOfRotationCoordinates() const { CHECKandTHROWstring("CNodeRigidBody::GetNumberOfRotationCoordinates(): invalid call");  return 0; }
+	virtual Index GetNumberOfDisplacementCoordinates() const { CHECKandTHROWstring("CNodeRigidBody::GetNumberOfDisplacementCoordinates(): invalid call");  return 0; }
 
-	virtual Index GetGlobalAECoordinateIndex() const override { return globalAECoordinateIndex; }
+	//! return current rotation parameters (= current+reference coordinates!)
+	virtual ConstSizeVector<maxRotationCoordinates> GetRotationParameters(ConfigurationType configuration = ConfigurationType::Current) const
+	{ 
+		CHECKandTHROWstring("CNodeRigidBody::GetRotationParameters(...): invalid call");  
+		return ConstSizeVector<maxRotationCoordinates>(); 
+	}
+
+	//! return current rotation parameters_t (=time derivative)
+	virtual LinkedDataVector GetRotationParameters_t(ConfigurationType configuration = ConfigurationType::Current) const
+	{ 
+		CHECKandTHROWstring("CNodeRigidBody::GetRotationParameters_t(...): invalid call");  
+		return LinkedDataVector();
+	}
+
+	virtual void GetG(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetG(...): invalid call"); }
+	virtual void GetGlocal(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGlocal(...): invalid call"); }
+	virtual void GetG_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetG_t(...): invalid call"); }
+	virtual void GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGlocal_t(...): invalid call"); }
+
 };
 
 //! node with data variables

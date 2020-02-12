@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-26  02:44:15 (last modfied)
+* @date         2020-02-10  21:17:19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -43,10 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectJointPrismatic2D
-* @brief        A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector \f$\tv_0\f$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector \f$\mathbf{n}_1\f$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector \f$\pv_0\f$ and rotation matrix \f$\Am_0\f$ of marker0 and the global position vector \f$\pv_1\f$ rotation matrix \f$\Am_1\f$ of marker1, the equations for the prismatic joint follow as
- \f[ (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \f] 
- \f[ (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\f]
- The lagrange multipliers follow for these two equations \f$[\lambda_0,\lambda_1]\f$, in which \f$\lambda_0\f$ is the transverse force and \f$\lambda_1\f$ is the torque in the joint.
+* @brief        A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector \f$\tv_0\f$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector \f$\mathbf{n}_1\f$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector \f$\pv_0\f$ and rotation matrix \f$\Am_0\f$ of marker0 and the global position vector \f$\pv_1\f$ rotation matrix \f$\Am_1\f$ of marker1, the equations for the prismatic joint follow as \f[ (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \f]  \f[ (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\f] The lagrange multipliers follow for these two equations \f$[\lambda_0,\lambda_1]\f$, in which \f$\lambda_0\f$ is the transverse force and \f$\lambda_1\f$ is the torque in the joint.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -97,10 +94,10 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute algebraic equations and write residual into "algebraicEquations"; velocityLevel: equation provided at velocity level
-    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, bool velocityLevel = false) const override;
+    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false) const override;
 
     //! AUTO:  compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
-    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const override;
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition
     virtual JacobianType::Type GetAvailableJacobians() const override;

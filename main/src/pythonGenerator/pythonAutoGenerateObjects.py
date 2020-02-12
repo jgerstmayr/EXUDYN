@@ -35,7 +35,9 @@ def DestinationNr(strDest):
 pyFunctionTypeConversion = {'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
                             'PyFunctionScalar5': 'std::function<Real(Real,Real,Real,Real,Real)>',
                             'PyFunctionScalar7': 'std::function<Real(Real,Real,Real,Real,Real,Real,Real)>',
-                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>'}
+                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>',
+                            'PyFunctionVector6DScalarVector6D': 'std::function<StdVector6D(Real,StdVector6D)>',
+                            }
 #                            'PyFunctionVector3DScalarVector3D': 'std::function<std::array<Real,3>(Real,std::array<Real,3)>'}
 
 #this function finds out, if a parameter is set with a special Set...Safely function in C++
@@ -45,6 +47,8 @@ def IsASetSafelyParameter(parameterType):
         (parameterType == 'Vector3D') | 
         (parameterType == 'Vector4D') | 
         (parameterType == 'Vector6D') | 
+        (parameterType == 'Matrix3D') | 
+        (parameterType == 'Matrix6D') | 
         (parameterType == 'Vector7D') ):
         return True
     else:
@@ -60,8 +64,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     
     #these are the typecasts for the dictionary in the according pybind functions in MainItem
     typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
-                 'Vector':'std::vector<Real>', 'Vector7D':'std::vector<Real>', 'Vector6D':'std::vector<Real>', 'Vector4D':'std::vector<Real>', 'Vector3D':'std::vector<Real>', 'Vector2D':'std::vector<Real>', 
-                 'Matrix':'Matrix', 'SymmetricMatrix':'Matrix',
+                 'Vector':'std::vector<Real>', 'Vector7D':'std::vector<Real>', 'Vector6D':'std::vector<Real>', 
+                 'Vector4D':'std::vector<Real>', 'Vector3D':'std::vector<Real>', 'Vector2D':'std::vector<Real>', 
+                 'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 'Matrix6D':'std::array<std::array<Real,6>,6>', 
                  'ArrayIndex':'std::vector<Index>', 'String':'std::string',
                  'Float2': 'std::vector<float>', 'Float3': 'std::vector<float>', 'Float4': 'std::vector<float>',  #e.g. for OpenGL vectors
                  'Float9': 'std::vector<float>', 'Float16': 'std::vector<float>', #e.g. for OpenGL rotation matrix and homogenous transformation
@@ -252,6 +257,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     vPythonClassInit = '' #the init function body
     vPythonIter = ''  #the iterator member function
     sIndent = '    ' #4 spaces indentation for python
+
 
     if hasPybindInterface: #otherwise do not include the description into latex doc
         sPythonClass += 'class ' + parseInfo['class'] + ':\n'
@@ -521,6 +527,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 parWrite = '' #used for dictionary write and for parameter write
                 if parameter['type'] == 'BodyGraphicsData': #special conversion routine
                     dictListRead[i] +='        d["' + pyName + '"] = PyGetBodyGraphicsDataDictionary(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                elif parameter['type'] == 'Matrix6D':
+                    dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix6DToStdArray66(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                elif parameter['type'] == 'Matrix3D':
+                    dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix3DToStdArray33(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
                 else:
                     parRead = '(' + typeCastStr + ')' + destStr
                     dictListRead[i] +='        d["' + pyName + '"] = ' + parRead + '; //! AUTO: cast variables into python (not needed for standard types) \n'
@@ -1005,7 +1015,16 @@ try: #still close file if crashes
     fileLatex.close()
 
     filePython=open('..\\..\\pythonDev\\itemInterface.py','w') 
-
+    s = '#item interface diagonal matrix creator\n'
+    s += 'def IIDiagMatrix(rowsColumns, value):\n'
+    s += '    m = []\n'
+    s += '    for i in range(rowsColumns):\n'
+    s += '        m += [rowsColumns*[0]]\n'
+    s += '        m[i][i] = value\n'
+    s += '    return m\n\n'
+    filePython.write(s)
+    
+    
     it = 0
     for item in sPythonGlobalNames: 
         filePython.write('#+++++++++++++++++++++++++++++++\n#'+item.upper()+'\n')

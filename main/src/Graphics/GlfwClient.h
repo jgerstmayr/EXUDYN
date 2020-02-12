@@ -134,13 +134,21 @@ public:
 		{ 
 			graphicsDataList = nullptr;
 			visSettings = nullptr;
+
+			window = nullptr; //is set in StopRenderer anyway
+			state = nullptr;
+			basicVisualizationSystemContainer = nullptr;
+
 			return true;
 		}
 	}
 
 	static void UpdateGraphicsDataNow()
 	{
-		basicVisualizationSystemContainer->UpdateGraphicsDataNow();
+		if (basicVisualizationSystemContainer)
+		{
+			basicVisualizationSystemContainer->UpdateGraphicsDataNow();
+		}
 	}
 
 private: //to be called internally only!

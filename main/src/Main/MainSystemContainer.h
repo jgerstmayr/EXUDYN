@@ -88,6 +88,7 @@ public:
 		mainSystem->LinkToRenderEngine(); //links the system to be rendered in OpenGL
 		visualizationSystems.Append(&mainSystem->GetVisualizationSystem());
 		GetMainSystems().Append(mainSystem);
+		mainSystem->SetInteractiveMode(false);
 
 		return *mainSystem;
 	}

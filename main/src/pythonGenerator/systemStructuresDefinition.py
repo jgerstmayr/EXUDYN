@@ -116,7 +116,7 @@ V,  newmarkGamma,	         ,  		      ,     UReal, 				0.5,    , P		, "value gam
 V,  useIndex2Constraints,	 ,  		      ,     bool, 				  false,   , P		, "set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation"
 V,  useNewmark,	            ,  		      ,     bool, 				  false,   , P		, "if true, use Newmark method with beta and gamma instead of generalized-Alpha"
 V,  spectralRadius,	       ,  		      ,     UReal, 				0.9,    , P		, "spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1"
-V,  computeInitialAccelerations,	,     ,     bool, 				  true,    , P		, "true: compute initial accelerations from system EOM in acceleration form; false: use zero accelerations"
+V,  computeInitialAccelerations,	,     ,     bool, 				  true,    , P		, "true: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! false: use zero accelerations"
 #
 writeFile=SimulationSettings.h
 
@@ -239,11 +239,12 @@ V,      minSceneSize,                   , 	             ,     float,        "0.1
 V,      backgroundColor,                , 	             4,    Float4,       "Float4({1.f,1.f,1.f,1.f})", , P, "red, green, blue and alpha values for background of render window (white=[1,1,1,1]; black = [0,0,0,1])"
 V,      coordinateSystemSize,           , 	             ,     float,        "0.4f",                 , P,      "size of coordinate system relative to screen"
 V,      drawCoordinateSystem,           , 	             ,     bool,         true,                   , P,      "false = no coordinate system shown"
-V,      showComputationInfo,           , 	             ,     bool,         true,                   , P,      "false = no info about computation (current time, solver, etc.) shown"
+V,      showComputationInfo,            , 	             ,     bool,         true,                   , P,      "false = no info about computation (current time, solver, etc.) shown"
 V,      pointSize,                      , 	             ,     float,        "0.01f",                , P,      "global point size (absolute)"
 V,      circleTiling,                   , 	             ,     Index,        "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
 V,      cylinderTiling,                 , 	             ,     Index,        "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
 V,      sphereTiling,                   , 	             ,     Index,        "8",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
+V,      axesTiling,                     , 	             ,     Index,        "12",                   , P,      "global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)"
 #
 writeFile=VisualizationSettings.h
 
@@ -377,6 +378,9 @@ classDescription = "Visualization settings for connectors."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the connectors are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the connector(=object) number is shown"
+V,      showJointAxes,              , 	             ,     bool,         false,                      , P,    "flag to decide, whether contact joint axes of 3D joints are shown"
+V,      jointAxesLength,            , 	             ,     float,        "0.2f",                     , P,    "global joint axes length"
+V,      jointAxesRadius,            , 	             ,     float,        "0.02f",                    , P,    "global joint axes radius"
 V,      showContact,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether contact points, lines, etc. are shown"
 V,      defaultSize,                , 	             ,     float,        "0.1f",                       , P,    "global connector size; if -1.f, connector size is relative to maxSceneSize"
 V,      contactPointsDefaultSize,   , 	             ,     float,        "0.02f",                      , P,    "global contact points size; if -1.f, connector size is relative to maxSceneSize"
@@ -392,7 +396,7 @@ classDescription = "Visualization settings for markers."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the markers are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the marker numbers are shown"
-V,      defaultSize,                , 	             ,     float,        "0.1f",                     , P,    "global marker size; if -1.f, marker size is relative to maxSceneSize"
+V,      defaultSize,                , 	             ,     float,        "-1.f",                     , P,    "global marker size; if -1.f, marker size is relative to maxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.1f,0.5f,0.1f,1.f})",, P,    "default cRGB olor for markers; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
@@ -405,7 +409,7 @@ classDescription = "Visualization settings for loads."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the loads are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the load numbers are shown"
-V,      defaultSize,                , 	             ,     float,        "0.2f",                     , P,    "global load size; if -1.f, node size is relative to maxSceneSize"
+V,      defaultSize,                , 	             ,     float,        "0.2f",                     , P,    "global load size; if -1.f, load size is relative to maxSceneSize"
 V,      fixedLoadSize,              , 	             ,     bool,         true,                       , P,    "if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size"
 V,      loadSizeFactor,             , 	             ,     float,        "0.1f",                     , P,    "if fixedLoadSize=false, then this scaling factor is used to draw the load vector"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default cRGB olor for loads; 4th value is alpha-transparency"
@@ -419,7 +423,7 @@ classDescription = "Visualization settings for sensors."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the sensors are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the sensor numbers are shown"
-V,      defaultSize,                , 	             ,     float,        "0.2f",                     , P,    "global sensor size; if -1.f, node size is relative to maxSceneSize"
+V,      defaultSize,                , 	             ,     float,        "-1.f",                     , P,    "global sensor size; if -1.f, sensor size is relative to maxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P,    "default cRGB olor for sensors; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h

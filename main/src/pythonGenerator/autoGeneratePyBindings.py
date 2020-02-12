@@ -153,8 +153,17 @@ sLenum += DefLatexFinishClass()
                             argList=['delayMilliSeconds']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='Print', cName='PyPrint', 
-                            description="this print command allows printing via exudyn, which allows to redirect all output to file; can print strings as well as printable python objects",
-                            argList=['pyObject']); s+=s1; sL+=sL1
+                            description="this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false",
+                            #argList=['pyObject'] #not compatible with py::args
+                            ); s+=s1; sL+=sL1
+
+#s += '        m.def_readwrite("variables", &exudynVariables, py::return_value_policy::reference)\n' 
+#variables in the module itself are exported with "m.attr(...)" !
+s += '        m.attr("variables") = exudynVariables;\n' 
+sL += '  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\\\ \\hline  \n'
+
+s += '        m.attr("sys") = exudynSystemVariables;\n' 
+sL += '  sys & this dictionary is used by the system, e.g. for testsuite or solvers to store exudyn-wide data in order to avoid global python variables \\\\ \\hline  \n'
 
 [s1,sL1] = DefPyFinishClass('')
 s+=s1; sL+=sL1
@@ -227,7 +236,7 @@ sL+=sL1
                                 ); sL+=sL1
 
 #s += '        .def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)\n' 
-sL += '  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  \\\\ \\hline '
+sL += '  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  \\\\ \\hline  \n'
 
 sL += DefLatexFinishClass()#only finalize latex table
 
@@ -272,19 +281,28 @@ s+=s1; sL+=sL1
 
 #++++++++++++++++
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + ">"; }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nmainSystem:\\n  variables = " + EXUstd::ToString(ms.variables) + "\\n  sys = " + EXUstd::ToString(ms.systemVariables) + "\\n>\\n"; }', 
                                 description="return the representation of the system, which can be, e.g., printed",
                                 isLambdaFunction = True,
                                 example = 'print(mbs)'); s+=s1; sL+=sL1
 
 s += '        .def_property("systemIsConsistent", &MainSystem::GetFlagSystemIsConsistent, &MainSystem::SetFlagSystemIsConsistent)\n' 
-sL += '  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\\\ \\hline '
+sL += '  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\\\ \\hline  \n'
+
+s += '        .def_property("interactiveMode", &MainSystem::GetInteractiveMode, &MainSystem::SetInteractiveMode)\n' 
+sL += '  systemIsConsistent & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\\\ \\hline  \n'
+
+s += '        .def_readwrite("variables", &MainSystem::variables, py::return_value_policy::reference)\n' 
+sL += '  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\\\ \\hline  \n'
+
+s += '        .def_readwrite("sys", &MainSystem::systemVariables, py::return_value_policy::reference)\n' 
+sL += '  sys & this dictionary is used by exudyn python libraries, e.g., solvers, to avoid global python variables \\\\ \\hline \n'
 
 s += '        .def_property("solverSignalJacobianUpdate", &MainSystem::GetFlagSolverSignalJacobianUpdate, &MainSystem::SetFlagSolverSignalJacobianUpdate)\n' 
-sL += '  solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\\\ \\hline '
+sL += '  solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\\\ \\hline  \n'
 
 s += '        .def_readwrite("systemData", &MainSystem::mainSystemData, py::return_value_policy::reference)\n' 
-sL += '  systemData & Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)\\\\ \\hline '
+sL += '  systemData & Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)\\\\ \\hline  \n'
 
 
 sL += DefLatexFinishClass()#only finalize latex table
@@ -293,14 +311,14 @@ sL += DefLatexFinishClass()#only finalize latex table
 #NODE
 s += "\n//        NODES:\n"
 sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.GetMainObjectFactory().AddMainNode(mainSystem, itemDict); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainNode(itemDict); }', 
                                 description="add a node with nodeDefinition in dictionary format; returns (global) node number of newly added node",
                                 argList=['itemDict'],
                                 example="nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialDisplacements': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.GetMainObjectFactory().AddMainNodePyClass(mainSystem, pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainNodePyClass(pyObject); }', 
                                 description="add a node with nodeDefinition from Python node class; returns (global) node number of newly added node",
                                 argList=['pyObject'],
                                 example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item)",
@@ -331,11 +349,11 @@ sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for a
                                 example = "nodeType = 'Point'\\\\nodeDict = mbs.GetNodeDefaults(nodeType)"
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='CallNodeFunction', cName='PyCallNodeFunction', 
-                                description="call specific node function",
-                                argList=['nodeNumber', 'functionName', 'args'],
-                                defaultArgs=['', '', 'py::dict()']
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='CallNodeFunction', cName='PyCallNodeFunction', 
+#                                description="call specific node function",
+#                                argList=['nodeNumber', 'functionName', 'args'],
+#                                defaultArgs=['', '', 'py::dict()']
+#                                ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeOutput', cName='PyGetNodeOutputVariable', 
                                 description="get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)",
@@ -365,14 +383,14 @@ sL += DefLatexFinishClass()
 #OBJECT
 s += "\n//        OBJECTS:\n"
 sL += DefLatexStartClass(classStr+': Object', 'This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.GetMainObjectFactory().AddMainObject(mainSystem, itemDict); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainObject(itemDict); }', 
                                 description="add a object with objectDefinition in dictionary format; returns (global) object number of newly added object",
                                 argList=['itemDict'],
                                 example="objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\ mbs.AddObject(objectDict)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.GetMainObjectFactory().AddMainObjectPyClass(mainSystem, pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainObjectPyClass(pyObject); }', 
                                 description="add a object with objectDefinition from Python object class; returns (global) object number of newly added object",
                                 argList=['pyObject'],
                                 example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item)",
@@ -403,11 +421,11 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
                                 example = "objectType = 'MassPoint'\\\\objectDict = mbs.GetObjectDefaults(objectType)"
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='CallObjectFunction', cName='PyCallObjectFunction', 
-                                description="call specific object function",
-                                argList=['objectNumber', 'functionName', 'args'],
-                                defaultArgs=['', '', 'py::dict()']
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='CallObjectFunction', cName='PyCallObjectFunction', 
+#                                description="call specific object function",
+#                                argList=['objectNumber', 'functionName', 'args'],
+#                                defaultArgs=['', '', 'py::dict()']
+#                                ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutput', cName='PyGetObjectOutputVariable', 
                                 description="get object's output variable from objectNumber and OutputVariableType",
@@ -436,14 +454,14 @@ sL += DefLatexFinishClass()
 #MARKER
 s += "\n//        MARKER:\n"
 sL += DefLatexStartClass(classStr+': Marker', 'This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.GetMainObjectFactory().AddMainMarker(mainSystem, itemDict); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainMarker(itemDict); }', 
                                 description="add a marker with markerDefinition in dictionary format; returns (global) marker number of newly added marker",
                                 argList=['itemDict'],
                                 example="markerDict = {'markerType': 'NodePosition', \\\\ 'nodeNumber': 0, \\\\ 'name': 'position0'}\\\\ mbs.AddMarker(markerDict)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.GetMainObjectFactory().AddMainMarkerPyClass(mainSystem, pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainMarkerPyClass(pyObject); }', 
                                 description="add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker",
                                 argList=['pyObject'],
                                 example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)",
@@ -491,14 +509,14 @@ sL += DefLatexFinishClass()
 #LOAD
 s += "\n//        LOADS:\n"
 sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.GetMainObjectFactory().AddMainLoad(mainSystem, itemDict); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainLoad(itemDict); }', 
                                 description="add a load with loadDefinition in dictionary format; returns (global) load number of newly added load",
                                 argList=['itemDict'],
                                 example="loadDict = {'loadType': 'ForceVector',\\\\ 'markerNumber': 0,\\\\ 'loadVector': [1.0, 0.0, 0.0],\\\\ 'name': 'heavy load'} \\\\ mbs.AddLoad(loadDict)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.GetMainObjectFactory().AddMainLoadPyClass(mainSystem, pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainLoadPyClass(pyObject); }', 
                                 description="add a load with loadDefinition from Python load class; returns (global) load number of newly added load",
                                 argList=['pyObject'],
                                 example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0],markerNumber=0,name='heavy load')) \\\\mbs.AddLoad(item)",
@@ -545,14 +563,14 @@ sL += DefLatexFinishClass()
 #SENSORS
 s += "\n//        SENSORS:\n"
 sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.GetMainObjectFactory().AddMainSensor(mainSystem, itemDict); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainSensor(itemDict); }', 
                                 description="add a sensor with sensor definition in dictionary format; returns (global) sensor number of newly added sensor",
                                 argList=['itemDict'],
                                 example="sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.GetMainObjectFactory().AddMainSensorPyClass(mainSystem, pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainSensorPyClass(pyObject); }', 
                                 description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor",
                                 argList=['pyObject'],
                                 example = "item = mbs.AddSensor(SensorNode(sensorType=exu.SensorType.Node,nodeNumber=0,name='test sensor')) \\\\mbs.AddSensor(item)",

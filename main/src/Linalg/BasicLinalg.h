@@ -30,6 +30,7 @@
 
 typedef ConstSizeMatrix<9> Matrix3D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<4> Matrix2D; //will be changed to SlimMatrix<...>
+typedef ConstSizeMatrix<6*6> Matrix6D;//will be changed to SlimMatrix<...>
 
 typedef ConstSizeMatrixBase<float,9> Matrix3DF; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float,4> Matrix2DF; //will be changed to SlimMatrix<...>
@@ -40,6 +41,17 @@ namespace EXUmath {
 
 	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	inline static const Vector3D unitVecX({ 1.,0.,0. });
+	inline static const Vector3D unitVecY({ 1.,0.,0. });
+	inline static const Vector3D unitVecZ({ 1.,0.,0. });
+
+	inline Vector3D GetUnitVector(Index i)
+	{
+		CHECKandTHROW(i < 3, "EXUmath::GetUnitVector: index must be < 3!");
+		Vector3D v({ 0.,0.,0. });
+		v[i] = 1.;
+		return v;
+	}
 
 	//convert 3x3 Matrix to std::array<std::array<Real, matrixColumns>, matrixRows>; used mainly for pybind conversion
 	template<Index rows, Index columns, class T>
@@ -55,6 +67,17 @@ namespace EXUmath {
 		return stdarray;
 	}
 
+	//convert Matrix6D to std::array (e.g. used to convert to python)
+	inline std::array<std::array<Real, 6>, 6> Matrix6DToStdArray66(const Matrix6D& matrix) {
+		return MatrixToStdArrayTemplate<6, 6, Real>(matrix);
+	}
+
+	//convert Matrix3D to std::array (e.g. used to convert to python)
+	inline std::array<std::array<Real, 3>, 3> Matrix3DToStdArray33(const Matrix3D& matrix) {
+		return MatrixToStdArrayTemplate<3, 3, Real>(matrix);
+	}
+
+	//convert Matrix to std::array (e.g. used to convert to python)
 	inline std::array<std::array<Real, 3>, 3> MatrixToStdArray33(const Matrix& matrix) {
 		return MatrixToStdArrayTemplate<3, 3, Real>(matrix);
 	}
@@ -186,6 +209,11 @@ namespace EXUmath {
 		MultMatrixVectorTemplate<Matrix, ConstSizeVector<3>, ConstSizeVector<3>>(matrix, vector, result);
 	}
 
+	//for rotation matrix times LDV:
+	inline void MultMatrixVector(const Matrix3D& matrix, const LinkedDataVector& vector, Vector3D& result) {
+		MultMatrixVectorTemplate<Matrix3D, LinkedDataVector, Vector3D>(matrix, vector, result);
+	}
+
 	//for Euler parameter multiplications with G-matrix:
 	inline void MultMatrixVector(const ConstSizeMatrix<12>& matrix, const ConstSizeVector<4>& vector, Vector& result) {
 		MultMatrixVectorTemplate<ConstSizeMatrix<12>, ConstSizeVector<4>, Vector>(matrix, vector, result);
@@ -221,7 +249,13 @@ namespace EXUmath {
 	inline void MultMatrixVector(const Matrix3D& matrix, const Vector& vector, Vector3D& result) {
 		MultMatrixVectorTemplate<Matrix3D, Vector, Vector3D>(matrix, vector, result);
 	}
-	
+
+	//for rigid-body stiffness times displacemnet calculation:
+	inline void MultMatrixVector(const ConstSizeMatrix<36>& matrix, const Vector6D& vector, Vector6D& result) {
+		MultMatrixVectorTemplate<ConstSizeMatrix<36>, Vector6D, Vector6D>(matrix, vector, result);
+	}
+
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//transposed version of Matrix x Vector:
 	inline void MultMatrixTransposedVector(const Matrix& matrix, const Vector& vector, Vector& result) {
@@ -242,6 +276,11 @@ namespace EXUmath {
 
 	inline void MultMatrixTransposedVector(const Matrix& matrix, const ConstSizeVector<3>& vector, ConstSizeVector<3>& result) {
 		MultMatrixTransposedVectorTemplate<Matrix, ConstSizeVector<3>, ConstSizeVector<3>>(matrix, vector, result);
+	}
+
+	//! result += matrix^T*vector (ADD results
+	inline void MultMatrixTransposedVectorAdd(const Matrix& matrix, const SlimVector<3>& vector, Vector& result) {
+		MultMatrixTransposedVectorAddTemplate<Matrix, SlimVector<3>, Vector>(matrix, vector, result);
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

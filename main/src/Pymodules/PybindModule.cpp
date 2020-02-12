@@ -94,6 +94,7 @@ extern Index matrix_new_counts;	//global counter of item allocations; is increas
 extern Index matrix_delete_counts; //global counter of item deallocations; is increased every time a delete is called
 #endif
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //functions linked to exudyn
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -110,13 +111,22 @@ void PySetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend)
 	outputBuffer.SetWriteToFile(filename, flagWriteToFile, flagAppend);
 }
 
-//redirect printing via exudyn, such that all output can be streamed to file ...
-void PyPrint(py::object pyObject)
+////redirect printing via exudyn, such that all output can be streamed to file ...
+//void PyPrint(py::object pyObject)
+//{
+//	pout << py::str(pyObject);
+//	//py::print(pyObject);
+//}
+//
+//! print function with line feed
+void PyPrint(py::args args)
 {
-	pout << pyObject;
-	//py::print(pyObject);
+	for (auto item: args)
+	{
+		pout << item << " ";
+	}
+	pout << "\n";
 }
-
 //! add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0
 void PySetPrintDelayMilliSeconds(Index delayMilliSeconds)
 {
@@ -268,23 +278,6 @@ void SeeMatrix(py::array_t<Real> pyArray)
 	}
 }
 
-//std::string throw_message;
-void PyThrowTest()
-{
-	//Matrix m(1, 2, { 1,2 });
-	//m.Invert();
-
-	//Vector v({ 1,2,3 });
-	//pout << "print v[2] ...\n";
-	//pout << "v[2]=" << v[2] << "\n";
-}
-
-//py::object ScaleMatrix(py::array pyArray, Real factor)
-//{
-//	Matrix m(2, 3, { 12.5,13,14,  15,16,17 }); //double precision maintained in NumPy array in python
-//
-//	return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)m.NumberOfRows(), (int)m.NumberOfColumns()}, m.GetDataPointer()); //copy array (could also be referenced!)
-//}
 
 #ifdef __FAST_EXUDYN_LINALG
 PYBIND11_MODULE(exudynFast, m) {
@@ -293,8 +286,14 @@ PYBIND11_MODULE(exudynFast, m) {
 PYBIND11_MODULE(exudyn, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
 #endif
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//variables linked to exudyn
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	//m.def("Print", &PyPrint, "this allows printing via exudyn, which allows to redirect all output to file");
+	py::dict exudynVariables; //!< global dictionary which can be used by the user to store local variables
+	py::dict exudynSystemVariables; //!< global dictionary which is used by system functions to store local variables
+
+	//m.def("PrintLF", &PyPrintLF, "this allows printing via exudyn with similar syntax as in python print(...) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...)");
 	
 	//m.def("PyThrowTest", &PyThrowTest, "PyThrowTest");
 
@@ -342,7 +341,11 @@ PYBIND11_MODULE(exudyn, m) {
 		.value("Point2DSlope1", Node::Point2DSlope1)
 		.value("Position", Node::Position)
 		.value("Orientation", Node::Orientation)
+		.value("RigidBody", Node::RigidBody)
 		.value("RotationEulerParameters", Node::RotationEulerParameters)
+		.value("RotationRxyz", Node::RotationRxyz)
+		.value("RotationRotationVector", Node::RotationRotationVector)
+		.value("RotationLieGroup", Node::RotationLieGroup)
 		.value("GenericODE2", Node::GenericODE2)
 		.value("GenericData", Node::GenericData)
 		.export_values();

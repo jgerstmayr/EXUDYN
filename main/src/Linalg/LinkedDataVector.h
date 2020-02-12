@@ -61,18 +61,30 @@ public:
 		this->numberOfItems = vector.NumberOfItems();
     }
 
-    //! Initialize LinkedDataVectorBase by data given by vector at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items); 
-    LinkedDataVectorBase(const VectorBase<T>& vector, Index startPosition, Index numberOfItemsLinked) : VectorBase<T>()
-    {
-        CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index), startPosition < 0");
-        CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index, Index), size mismatch");
+	//! Initialize LinkedDataVectorBase by data given by vector at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items); 
+	LinkedDataVectorBase(const VectorBase<T>& vector, Index startPosition, Index numberOfItemsLinked) : VectorBase<T>()
+	{
+		CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index), startPosition < 0");
+		CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index, Index), size mismatch");
 
-        const T* ptr = &vector[startPosition];
+		const T* ptr = &vector[startPosition];
 		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
 		this->numberOfItems = numberOfItemsLinked;
-    }
+	}
 
-    //! override destructor / delete[] from VectorBase<T>; no memory deallocated
+	//! links data to SlimVector<dataSize>; data given by vector at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items);
+	template<Index dataSize>
+	LinkedDataVectorBase(const SlimVectorBase<T, dataSize>& vector, Index startPosition, Index numberOfItemsLinked) : VectorBase<T>()
+	{
+		CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase(const SlimVectorBase<T, dataSize>&, Index), startPosition < 0");
+		CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase(const SlimVectorBase<T, dataSize>&, Index, Index), size mismatch");
+
+		const T* ptr = &vector[startPosition];
+		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
+		this->numberOfItems = numberOfItemsLinked;
+	}
+
+	//! override destructor / delete[] from VectorBase<T>; no memory deallocated
     virtual ~LinkedDataVectorBase()
     {
 		this->data = nullptr; //because destructor ~VectorBase<T> & VectorBase<T>::FreeMemory() are called hereafter ==> this will cause ~VectorBase<T> not to delete anything!

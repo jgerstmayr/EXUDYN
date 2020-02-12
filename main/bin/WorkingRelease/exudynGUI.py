@@ -18,7 +18,7 @@ import ast #for ast.literal_eval
 
 #unique text height for tk with given scaling
 def TkTextHeight(systemScaling):
-    return int(16*systemScaling) #must be int
+    return int(13*systemScaling) #must be int #16 is too big on surface
     
 ##convert a given value with type information and size to a string; depending on size, it converts from matrix, vector, scalar, ...
 #def ConvertValue2String(value, vType, vSize):

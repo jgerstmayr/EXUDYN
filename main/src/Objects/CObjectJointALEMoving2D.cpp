@@ -104,7 +104,7 @@ Real CObjectJointALEMoving2D::ComputeLocalSlidingCoordinate_t() const
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, bool velocityLevel) const
+void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	//markerData.GetMarkerData(1).vectorValue/_t:cable (refCoordinates+coordinates)/velocities
 	//markerData.GetMarkerData(1).value:cable Length (current cable)
@@ -190,7 +190,8 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 	}
 }
 
-void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const
+void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
+	const MarkerDataStructure& markerData, Real t) const
 {
 	const Index ns = 4;
 	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();

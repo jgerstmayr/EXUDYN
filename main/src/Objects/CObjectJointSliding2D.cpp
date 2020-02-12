@@ -94,7 +94,7 @@ Real CObjectJointSliding2D::ComputeLocalSlidingCoordinate() const
 bool sjnew = true; //new formulation of sliding joint using projection into tangential and normal direction
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, bool velocityLevel) const
+void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	//markerData.GetMarkerData(1).vectorValue/_t:cable (refCoordinates+coordinates)/velocities
 	//markerData.GetMarkerData(1).value:cable Length (current cable)
@@ -217,7 +217,8 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 }
 
 
-void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const
+void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
+	const MarkerDataStructure& markerData, Real t) const
 {
 	//CHECKandTHROWstring("CObjectJointSliding2D::ComputeJacobianAE");
 

@@ -16,7 +16,7 @@
 
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, bool velocityLevel) const
+void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -73,7 +73,8 @@ void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 }
 
 
-void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const
+void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{

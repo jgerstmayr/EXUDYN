@@ -5,6 +5,8 @@ The following items are available in \codeName:
   \item NodePoint
   \item NodePoint2D
   \item NodeRigidBodyEP
+  \item NodeRigidBodyRxyz
+  \item NodeRigidBodyRotVecLG
   \item NodeRigidBody2D
   \item NodePoint2DSlope1
   \item NodeGenericODE2
@@ -19,6 +21,7 @@ The following items are available in \codeName:
   \item ObjectGround
   \item ObjectConnectorSpringDamper
   \item ObjectConnectorCartesianSpringDamper
+  \item ObjectConnectorRigidBodySpringDamper
   \item ObjectConnectorCoordinateSpringDamper
   \item ObjectConnectorDistance
   \item ObjectConnectorCoordinate
@@ -27,6 +30,7 @@ The following items are available in \codeName:
   \item ObjectContactFrictionCircleCable2D
   \item ObjectJointSliding2D
   \item ObjectJointALEMoving2D
+  \item ObjectJointGeneric
   \item ObjectJointRevolute2D
   \item ObjectJointPrismatic2D
   \item MarkerBodyMass
@@ -137,7 +141,7 @@ The item VNodePoint2D has the following parameters:
 \mysubsubsection{NodeRigidBodyEP}
 A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions); all coordinates lead to second order differential equations; additionally there is one constraint equation for quaternions; The rotation matrix $\Am$, transforming local (body-fixed) 3D positions $\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T$ to global 3D positions $\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T$, \be \pv_{glob} = \Am \pv_{loc}, \ee is defined according to the book of Shabana, same with the transformation matrix $\mathbf{G}$ between time derivatives of Euler parameters and angular velocities.
  \\
-{\bf Short name} for Python: {\bf Rigid3DEP}
+{\bf Short name} for Python: {\bf RigidEP}
  \\\\ 
 {\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
 \begin{itemize}
@@ -160,13 +164,105 @@ The item NodeRigidBodyEP has the following parameters:
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBodyEP'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
     name &     String &      &     '' &     node"s unique name\\ \hline
-    referenceCoordinates &     Vector7D &     3 &     [0.,0.,0., 0.,0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
-    initialDisplacements &     Vector7D &     3 &     [0.,0.,0., 0.,0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 4 Euler parameters relative to reference coordinates\\ \hline
-    initialVelocities &     Vector7D &     3 &     [0.,0.,0., 0.,0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and 4 Euler parameters\\ \hline
+    referenceCoordinates &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialDisplacements &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 4 Euler parameters relative to reference coordinates\\ \hline
+    initialVelocities &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and 4 Euler parameters\\ \hline
     visualization & VNodeRigidBodyEP & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
 The item VNodeRigidBodyEP has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeRigidBodyRxyz}
+A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: $[u_x,u_y,u_z]$) and three rotation coordinates (angles $[\varphi_x,\varphi_y,\varphi_z]$ for rotations around x,y, and z-axis); all coordinates lead to second order differential equations; The rotation matrix $\Am=\Rm_x \Rm_y \Rm_z$ transforms local (body-fixed) 3D positions $\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T$ to global 3D positions $\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T$, \be \pv_{glob} = \Am \pv_{loc} \ee; the transformation matrix $\mathbf{G}$ between time derivatives of Euler angles and angular velocities is defined as according to the book of Nikravesh. NOTE that this node has a singularity if the second rotation parameter reaches $k \times \pi/2$, with $k \in \{...,-3,-1,1,3,... \}$.
+ \\
+{\bf Short name} for Python: {\bf RigidRxyz}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
+    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz)
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf AngularVelocity}: global 3D velocity vector of node
+    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodeRigidBodyRxyz has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBodyRxyz'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialDisplacements &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates\\ \hline
+    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz)\\ \hline
+    visualization & VNodeRigidBodyRxyz & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeRigidBodyRxyz has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeRigidBodyRotVecLG}
+A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: $[u_x,u_y,u_z]$) and three rotation coordinates (rotation vector $\mathbf{v} = [v_x,v_y,v_z]^T = \varphi \cdot \mathbf{n}$, defining the rotation axis $\mathbf{n}$ and the angle $\varphi$ for rotations around x,y, and z-axis); the velocity coordinates are based on the translational (global) velocity and the (local/body-fixed) angular velocity vector; this node can only be integrated using special Lie group integrators; NOTE that this node has a singularity if the rotation is zero or multiple of $2\pi$.
+ \\
+{\bf Short name} for Python: {\bf RigidRotVecLG}
+ \\\\ 
+{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
+\begin{itemize}
+    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
+    \item {\bf Displacement}: global 3D displacement vector of node
+    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
+    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz)
+    \item {\bf Velocity}: global 3D velocity vector of node
+    \item {\bf AngularVelocity}: global 3D velocity vector of node
+    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
+    \item {\bf Coordinates}: coordinates vector of node
+    \item {\bf Coordinates\_t}: velocity coordinates vector of node
+\end{itemize}
+The item NodeRigidBodyRotVecLG has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'RigidBodyRotVecLG'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     node"s unique name\\ \hline
+    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and rotation vector) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialDisplacements &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and rotation vector relative to reference coordinates\\ \hline
+    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and angular velocity vector\\ \hline
+    visualization & VNodeRigidBodyRotVecLG & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeRigidBodyRotVecLG has the following parameters:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -756,6 +852,44 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorRigidBodySpringDamper}
+An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers; represents a penalty-based rigid joint; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be force_x = (A0loc \cdot A0) \cdot stiffness_x \cdot (A0loc \cdot A0)^T(m1.position_x - m0.position_x - offset_x) + (A0loc \cdot A0) \cdot damping_x \cdot (A0loc \cdot A0)^T (m1.velocity_x - m0.velocity_x), etc. \ee and accordingly for rotation coordinates, which act on $(rotationMarker0 \cdot Rxyz0)^T \cdot (rotationMarker1 \cdot Rxyz1) $ rotations (0...rotation of marker0, 1...rotation of marker1).
+ \\
+{\bf Short name} for Python: {\bf RigidBodySpringDamper}
+ \\  {\bf Requested marker type} = (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation) \\ 
+The item ObjectConnectorRigidBodySpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'ConnectorRigidBodySpringDamper'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     connector"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    stiffness &     Matrix6D &      &     Matrix6D[6,6,0.] &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles)\\ \hline
+    damping &     Matrix6D &      &     Matrix6D[6,6,0.] &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; \\ \hline
+    rotationMarker0 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
+    offset &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     translational and rotational offset considered in the spring force calculation\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectConnectorRigidBodySpringDamper & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorRigidBodySpringDamper has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectConnectorCoordinateSpringDamper}
 A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be f = (m1.coordinate - m0.coordinate - offset)\cdot stiffness + (m1.coordinate_t - m0.coordinate_t)\cdot damping \ee If dry (Coulomb) friction is non-zero, an additional term \be \text{sign}(m1.coordinate_t - m0.coordinate_t)\cdot dryFriction \ee is added to the force $f$.
  \\
@@ -846,7 +980,9 @@ The item ObjectConnectorCoordinate has the following parameters:
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     offset &     UReal &      &     0. &     An offset between the two values\\ \hline
     factorValue1 &     UReal &      &     1. &     An additional factor multiplied with value1 used in algebraic equation\\ \hline
-    velocityLevel &     bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities\\ \hline
+    velocityLevel &     bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored\\ \hline
+    offsetUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent offset with parameters (t, offset); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offset): return offset*(1-np.cos(t*10*2*np.pi))\\ \hline
+    offsetUserFunction\_t &     PyFunctionScalar2 &     \tabnewline  &     0 &     time derivative of offsetUserFunction; needed for "velocityLevel=True", or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -1068,6 +1204,48 @@ The item VObjectJointALEMoving2D has the following parameters:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectJointGeneric}
+A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers; an additional local rotation can be used to define three rotation axes and/or sliding axes
+ \\
+{\bf Short name} for Python: {\bf GenericJoint}
+ \\  {\bf Requested marker type} = (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation) \\ 
+The item ObjectJointGeneric has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    \multicolumn{4}{l}{\parbox{10cm}{type = 'JointGeneric'}} & \multicolumn{1}{l}{\parbox{6cm}{\it item typename for initialization}}\\ \hline
+    name &     String &      &     '' &     constraints"s unique name\\ \hline
+    markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    constrainedAxes &     ArrayIndex &     6 &     [1,1,1,1,1,1] &     flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; 0=free, 1=constrained\\ \hline
+    rotationMarker0 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 0; translation and rotation axes for marker0 are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 1; translation and rotation axes for marker1 are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    forceTorqueUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     vector of 6 parameters for joint"s forceTorqueUserFunction\\ \hline
+    offsetUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     vector of 6 parameters for joint"s offsetUserFunction\\ \hline
+    forceTorqueUserFunction &     PyFunctionVector6DScalarVector6D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent force (indices 0,1,2) and torque (indices 3,4,5) joint coordinates with parameters (t, forceTorqueUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, forceTorqueUserFunctionParameters): return [forceTorqueUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]\\ \hline
+    offsetUserFunction &     PyFunctionVector6DScalarVector6D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offsetUserFunctionParameters): return [offsetUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]\\ \hline
+    offsetUserFunction\_t &     PyFunctionVector6DScalarVector6D &     \tabnewline  &     \tabnewline 0 &     time derivative of offsetUserFunction using the same parameters; needed for "velocityLevel=True", or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators\\ \hline
+    visualization & VObjectJointGeneric & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectJointGeneric has the following parameters:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    axesRadius &     float &      &     0.1 &     radius of joint axes to draw\\ \hline
+    axesLength &     float &      &     0.4 &     length of joint axes to draw\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectJointRevolute2D}
 A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers
  \\
@@ -1102,10 +1280,7 @@ The item VObjectJointRevolute2D has the following parameters:
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectJointPrismatic2D}
-A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as
- \be (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \ee 
- \be (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\ee
- The lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
+A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as \be (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \ee  \be (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\ee The lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
  \\
 {\bf Short name} for Python: {\bf PrismaticJoint2D}
  \\  {\bf Requested marker type} = (Marker::Type)(Marker::Position + Marker::Orientation) \\ 

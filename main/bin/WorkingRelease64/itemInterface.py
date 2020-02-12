@@ -1,3 +1,11 @@
+#item interface diagonal matrix creator
+def IIDiagMatrix(rowsColumns, value):
+    m = []
+    for i in range(rowsColumns):
+        m += [rowsColumns*[0]]
+        m[i][i] = value
+    return m
+
 #+++++++++++++++++++++++++++++++
 #NODE
 class VNodePoint:
@@ -94,7 +102,71 @@ class NodeRigidBodyEP:
         yield 'Vcolor', dict(self.visualization)["color"]
 
 #add typedef for short usage:
-Rigid3DEP = NodeRigidBodyEP
+RigidEP = NodeRigidBodyEP
+
+class VNodeRigidBodyRxyz:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+class NodeRigidBodyRxyz:
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialDisplacements = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialDisplacements = initialDisplacements
+        self.initialVelocities = initialVelocities
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'RigidBodyRxyz'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RigidRxyz = NodeRigidBodyRxyz
+
+class VNodeRigidBodyRotVecLG:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+class NodeRigidBodyRotVecLG:
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialDisplacements = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialDisplacements = initialDisplacements
+        self.initialVelocities = initialVelocities
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'RigidBodyRotVecLG'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RigidRotVecLG = NodeRigidBodyRotVecLG
 
 class VNodeRigidBody2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -545,6 +617,46 @@ class ObjectConnectorCartesianSpringDamper:
 #add typedef for short usage:
 CartesianSpringDamper = ObjectConnectorCartesianSpringDamper
 
+class VObjectConnectorRigidBodySpringDamper:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+class ObjectConnectorRigidBodySpringDamper:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1.), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1.), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.stiffness = stiffness
+        self.damping = damping
+        self.rotationMarker0 = rotationMarker0
+        self.rotationMarker1 = rotationMarker1
+        self.offset = offset
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorRigidBodySpringDamper'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'stiffness', self.stiffness
+        yield 'damping', self.damping
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'rotationMarker1', self.rotationMarker1
+        yield 'offset', self.offset
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RigidBodySpringDamper = ObjectConnectorRigidBodySpringDamper
+
 class VObjectConnectorCoordinateSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -631,12 +743,14 @@ class VObjectConnectorCoordinate:
         yield 'color', self.color
 
 class ObjectConnectorCoordinate:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], offset = 0., factorValue1 = 1., velocityLevel = False, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.offset = offset
         self.factorValue1 = factorValue1
         self.velocityLevel = velocityLevel
+        self.offsetUserFunction = offsetUserFunction
+        self.offsetUserFunction_t = offsetUserFunction_t
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -647,6 +761,8 @@ class ObjectConnectorCoordinate:
         yield 'offset', self.offset
         yield 'factorValue1', self.factorValue1
         yield 'velocityLevel', self.velocityLevel
+        yield 'offsetUserFunction', self.offsetUserFunction
+        yield 'offsetUserFunction_t', self.offsetUserFunction_t
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -847,6 +963,55 @@ class ObjectJointALEMoving2D:
 
 #add typedef for short usage:
 ALEMovingJoint2D = ObjectJointALEMoving2D
+
+class VObjectJointGeneric:
+    def __init__(self, show = True, axesRadius = 0.1, axesLength = 0.4, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.axesRadius = axesRadius
+        self.axesLength = axesLength
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'axesRadius', self.axesRadius
+        yield 'axesLength', self.axesLength
+        yield 'color', self.color
+
+class ObjectJointGeneric:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1.), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1.), activeConnector = True, forceTorqueUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], forceTorqueUserFunction = 0, offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.constrainedAxes = constrainedAxes
+        self.rotationMarker0 = rotationMarker0
+        self.rotationMarker1 = rotationMarker1
+        self.activeConnector = activeConnector
+        self.forceTorqueUserFunctionParameters = forceTorqueUserFunctionParameters
+        self.offsetUserFunctionParameters = offsetUserFunctionParameters
+        self.forceTorqueUserFunction = forceTorqueUserFunction
+        self.offsetUserFunction = offsetUserFunction
+        self.offsetUserFunction_t = offsetUserFunction_t
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointGeneric'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'constrainedAxes', self.constrainedAxes
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'rotationMarker1', self.rotationMarker1
+        yield 'activeConnector', self.activeConnector
+        yield 'forceTorqueUserFunctionParameters', self.forceTorqueUserFunctionParameters
+        yield 'offsetUserFunctionParameters', self.offsetUserFunctionParameters
+        yield 'forceTorqueUserFunction', self.forceTorqueUserFunction
+        yield 'offsetUserFunction', self.offsetUserFunction
+        yield 'offsetUserFunction_t', self.offsetUserFunction_t
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VaxesRadius', dict(self.visualization)["axesRadius"]
+        yield 'VaxesLength', dict(self.visualization)["axesLength"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+GenericJoint = ObjectJointGeneric
 
 class VObjectJointRevolute2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):

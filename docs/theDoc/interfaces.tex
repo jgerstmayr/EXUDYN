@@ -208,6 +208,7 @@ VSettingsGeneral has the following items:
     circleTiling &     Index &      &     16 &     global number of segments for circles; if smaller than 2, 2 segments are used (flat)\\ \hline
     cylinderTiling &     Index &      &     16 &     global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)\\ \hline
     sphereTiling &     Index &      &     8 &     global number of segments for spheres; if smaller than 2, 2 segments are used (flat)\\ \hline
+    axesTiling &     Index &      &     12 &     global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -380,6 +381,9 @@ VSettingsConnectors has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the connectors are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the connector(=object) number is shown\\ \hline
+    showJointAxes &     bool &      &     False &     flag to decide, whether contact joint axes of 3D joints are shown\\ \hline
+    jointAxesLength &     float &      &     0.2 &     global joint axes length\\ \hline
+    jointAxesRadius &     float &      &     0.02 &     global joint axes radius\\ \hline
     showContact &     bool &      &     False &     flag to decide, whether contact points, lines, etc. are shown\\ \hline
     defaultSize &     float &      &     0.1 &     global connector size; if -1.f, connector size is relative to maxSceneSize\\ \hline
     contactPointsDefaultSize &     float &      &     0.02 &     global contact points size; if -1.f, connector size is relative to maxSceneSize\\ \hline
@@ -400,7 +404,7 @@ VSettingsMarkers has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the markers are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the marker numbers are shown\\ \hline
-    defaultSize &     float &      &     0.1 &     global marker size; if -1.f, marker size is relative to maxSceneSize\\ \hline
+    defaultSize &     float &      &     -1. &     global marker size; if -1.f, marker size is relative to maxSceneSize\\ \hline
     defaultColor &     Float4 &     4 &     [0.1,0.5,0.1,1.] &     \tabnewline default cRGB olor for markers; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -418,7 +422,7 @@ VSettingsLoads has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the loads are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the load numbers are shown\\ \hline
-    defaultSize &     float &      &     0.2 &     global load size; if -1.f, node size is relative to maxSceneSize\\ \hline
+    defaultSize &     float &      &     0.2 &     global load size; if -1.f, load size is relative to maxSceneSize\\ \hline
     fixedLoadSize &     bool &      &     True &     if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size\\ \hline
     loadSizeFactor &     float &      &     0.1 &     if fixedLoadSize=false, then this scaling factor is used to draw the load vector\\ \hline
     defaultColor &     Float4 &     4 &     [0.7,0.1,0.1,1.] &     \tabnewline default cRGB olor for loads; 4th value is alpha-transparency\\ \hline
@@ -438,7 +442,7 @@ VSettingsSensors has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the sensors are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the sensor numbers are shown\\ \hline
-    defaultSize &     float &      &     0.2 &     global sensor size; if -1.f, node size is relative to maxSceneSize\\ \hline
+    defaultSize &     float &      &     -1. &     global sensor size; if -1.f, sensor size is relative to maxSceneSize\\ \hline
     defaultColor &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline default cRGB olor for sensors; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
 	\end{center}

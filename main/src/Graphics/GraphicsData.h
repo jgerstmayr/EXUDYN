@@ -28,8 +28,6 @@
 #include <array>						//std::array
 
 typedef SlimArray<float, 16> hMatrix4f; //introduce this typedef to enable switch to other matrix representations
-const Float4 defaultColorFloat4 = { 0.f,0.f,0.f,1.f }; //default color black, if color is not defined
-const Float4 defaultColorBlue4 = { 0.4f,0.4f,0.9f,1.f }; //default color blue, if color is not defined for triangles
 
 //! structure for colored line
 class GLLine
@@ -188,14 +186,28 @@ public:
 	}
 
 	//! create a triangle with local colors; normals not considered in this call!
-	Index AddTriangle(const std::array<Vector3D,3>& points, const std::array<Float4,3>& colors)
+	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Float4, 3>& colors)
 	{
 		GLTriangle trig;
-		
+
 		for (Index i = 0; i < points.size(); i++)
 		{
 			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
 			trig.normals[i] = Float3({ 0.,0.,0. });
+			trig.colors[i] = colors[i];
+		}
+		return glTriangles.Append(trig);
+	}
+
+	//! create a triangle with local colors; normals not considered in this call!
+	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Vector3D, 3>& normals, const std::array<Float4, 3>& colors)
+	{
+		GLTriangle trig;
+
+		for (Index i = 0; i < points.size(); i++)
+		{
+			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
+			trig.normals[i] = Float3({ (float)(normals[i][0]), (float)(normals[i][1]), (float)(normals[i][2]) });;
 			trig.colors[i] = colors[i];
 		}
 		return glTriangles.Append(trig);

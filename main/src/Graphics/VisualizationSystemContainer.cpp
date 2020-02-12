@@ -23,6 +23,7 @@
 //#include "Graphics/VisualizationSystem.h"
 //#include "Graphics/VisualizationSystemContainerBase.h"
 #include "Graphics/VisualizationSystemContainer.h"
+#include "Graphics/VisualizationPrimitives.h"
 
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
 //#ifdef USE_GLFW_GRAPHICS
@@ -62,14 +63,18 @@ void VisualizationSystemContainer::UpdateGraphicsData()
 	if (zoomAllRequest)
 	{
 		zoomAllRequest = false; //this is not fully thread safe, but should not happen very often ==> user needs to zoom manually then ...
+		//pout << "zoomAllrequest1\n";
 		UpdateMaximumSceneCoordinates();
+		//pout << "zoomAllrequest2\n";
 	}
 	if (updateGraphicsDataNow) { updateGraphicsDataNowInternal = true; updateGraphicsDataNow = false; } //enables immediate new set of updateGraphicsDataNow
 	if (saveImage) { saveImageOpenGL = true; } //as graphics are updated now, the saveImageOpenGL flag can be set
 
 	for (auto item : visualizationSystems)
 	{
+		//pout << "UpdateGraphicsData1\n";
 		item->UpdateGraphicsData(*this);
+		//pout << "UpdateGraphicsData2\n";
 	}
 	updateGraphicsDataNowInternal = false; //only valid for one run; may not be earlier, as item->UpdateGraphicsData(...) needs this flag!
 }
@@ -334,7 +339,7 @@ bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsDa
 							{
 
 								GLLine line;
-								line.color1 = line.color2 = defaultColorFloat4;
+								line.color1 = line.color2 = EXUvis::defaultColorFloat4;
 								if (gDict.contains("color"))
 								{
 									py::object gColor = gDict["color"]; //this is necessary to make isinstance work
@@ -380,7 +385,7 @@ bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsDa
 							else if (pyTypeStr == "Circle")
 							{
 								GLCircleXY circle;
-								circle.color = defaultColorFloat4;
+								circle.color = EXUvis::defaultColorFloat4;
 								circle.numberOfSegments = 0; //use default
 
 								if (gDict.contains("color"))
@@ -438,7 +443,7 @@ bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsDa
 							else if (pyTypeStr == "Text")
 							{
 								GLText text;
-								text.color = defaultColorFloat4;
+								text.color = EXUvis::defaultColorFloat4;
 								text.offsetX = 0.f;
 								text.offsetY = 0.f;
 								text.size = 0; //indicates to use default size
@@ -562,7 +567,7 @@ bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsDa
 								else
 								{   //set default color
 									colors.SetNumberOfItems(points.NumberOfItems());
-									for (auto& color : colors) { color = defaultColorBlue4; }
+									for (auto& color : colors) { color = EXUvis::defaultColorBlue4; }
 								}
 
 								bool normalsDefined = true;

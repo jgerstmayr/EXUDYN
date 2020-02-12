@@ -270,19 +270,31 @@ public:
         return result;
     }
 
-    //! add two vectors, result = v1-v2 (for each component)
-    friend SlimVectorBase<T, dataSize> operator- (const SlimVectorBase<T, dataSize>& v1, const SlimVectorBase<T, dataSize>& v2)
-    {
-        SlimVectorBase<T, dataSize> result;
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = v1[cnt] - v2[cnt];
-            cnt++;
-        }
-        return result;
-    }
+	//! subtract two vectors, result = v1-v2 (for each component)
+	friend SlimVectorBase<T, dataSize> operator- (const SlimVectorBase<T, dataSize>& v1, const SlimVectorBase<T, dataSize>& v2)
+	{
+		SlimVectorBase<T, dataSize> result;
+		Index cnt = 0;
+		for (auto &item : result) {
+			item = v1[cnt] - v2[cnt];
+			cnt++;
+		}
+		return result;
+	}
 
-    //! scalar multiply, result = scalar * v (for each component)
+	//! unary minus; result = -v1 (for each component)
+	friend SlimVectorBase<T, dataSize> operator- (const SlimVectorBase<T, dataSize>& v1)
+	{
+		SlimVectorBase<T, dataSize> result;
+		Index cnt = 0;
+		for (auto &item : result) {
+			item = -v1[cnt];
+			cnt++;
+		}
+		return result;
+	}
+
+	//! scalar multiply, result = scalar * v (for each component)
     friend SlimVectorBase<T, dataSize> operator* (const SlimVectorBase<T, dataSize>& v, T scalar)
     {
         SlimVectorBase<T, dataSize> result;

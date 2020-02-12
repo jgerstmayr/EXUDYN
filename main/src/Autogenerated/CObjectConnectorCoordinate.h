@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-18  22:06:39 (last modfied)
+* @date         2020-02-11  07:57:45 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -19,6 +19,7 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
+#include <functional> //! AUTO: needed for std::function
 
 //! AUTO: Parameters for class CObjectConnectorCoordinateParameters
 class CObjectConnectorCoordinateParameters // AUTO: 
@@ -27,7 +28,9 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Real offset;                                  //!< AUTO: An offset between the two values
     Real factorValue1;                            //!< AUTO: An additional factor multiplied with value1 used in algebraic equation
-    bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities
+    bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored
+    std::function<Real(Real,Real)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent offset with parameters (t, offset); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offset): return offset*(1-np.cos(t*10*2*np.pi))
+    std::function<Real(Real,Real)> offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for "velocityLevel=True", or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateParameters()
@@ -36,6 +39,8 @@ public: // AUTO:
         offset = 0.;
         factorValue1 = 1.;
         velocityLevel = false;
+        offsetUserFunction = 0;
+        offsetUserFunction_t = 0;
         activeConnector = true;
     };
 };
@@ -87,6 +92,12 @@ public: // AUTO:
         return false;
     }
 
+    //! AUTO:  connector is time dependent if user functions are defined
+    virtual bool IsTimeDependent() const override
+    {
+        return (parameters.offsetUserFunction != false || parameters.offsetUserFunction_t != false);
+    }
+
     //! AUTO:  constraint also implements velocity level equations
     virtual bool HasVelocityEquations() const override
     {
@@ -100,10 +111,10 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute algebraic equations and write residual into "algebraicEquations"; velocityLevel: equation provided at velocity level
-    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, bool velocityLevel = false) const override;
+    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false) const override;
 
     //! AUTO:  compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
-    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData) const override;
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition
     virtual JacobianType::Type GetAvailableJacobians() const override;

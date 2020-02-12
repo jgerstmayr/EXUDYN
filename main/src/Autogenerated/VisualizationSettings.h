@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,6 +36,7 @@ public: // AUTO:
   Index circleTiling;                             //!< AUTO: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
   Index cylinderTiling;                           //!< AUTO: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
   Index sphereTiling;                             //!< AUTO: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
+  Index axesTiling;                               //!< AUTO: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
 
 
 public: // AUTO: 
@@ -54,6 +55,7 @@ public: // AUTO:
     circleTiling = 16;
     cylinderTiling = 16;
     sphereTiling = 8;
+    axesTiling = 12;
   };
 
   // AUTO: access functions
@@ -78,6 +80,7 @@ public: // AUTO:
     os << "  circleTiling = " << circleTiling << "\n";
     os << "  cylinderTiling = " << cylinderTiling << "\n";
     os << "  sphereTiling = " << sphereTiling << "\n";
+    os << "  axesTiling = " << axesTiling << "\n";
     os << "\n";
   }
 
@@ -96,7 +99,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -179,7 +182,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -331,7 +334,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -403,7 +406,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -466,7 +469,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -537,7 +540,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -591,7 +594,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -666,7 +669,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -688,6 +691,9 @@ class VSettingsConnectors // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the connectors are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the connector(=object) number is shown
+  bool showJointAxes;                             //!< AUTO: flag to decide, whether contact joint axes of 3D joints are shown
+  float jointAxesLength;                          //!< AUTO: global joint axes length
+  float jointAxesRadius;                          //!< AUTO: global joint axes radius
   bool showContact;                               //!< AUTO: flag to decide, whether contact points, lines, etc. are shown
   float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
   float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize
@@ -700,6 +706,9 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
+    showJointAxes = false;
+    jointAxesLength = 0.2f;
+    jointAxesRadius = 0.02f;
     showContact = false;
     defaultSize = 0.1f;
     contactPointsDefaultSize = 0.02f;
@@ -718,6 +727,9 @@ public: // AUTO:
     os << "VSettingsConnectors" << ":\n";
     os << "  show = " << show << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
+    os << "  showJointAxes = " << showJointAxes << "\n";
+    os << "  jointAxesLength = " << jointAxesLength << "\n";
+    os << "  jointAxesRadius = " << jointAxesRadius << "\n";
     os << "  showContact = " << showContact << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
@@ -740,7 +752,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -772,7 +784,7 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
-    defaultSize = 0.1f;
+    defaultSize = -1.f;
     defaultColor = Float4({0.1f,0.5f,0.1f,1.f});
   };
 
@@ -808,7 +820,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -830,7 +842,7 @@ class VSettingsLoads // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the loads are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the load numbers are shown
-  float defaultSize;                              //!< AUTO: global load size; if -1.f, node size is relative to maxSceneSize
+  float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
   bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
   float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for loads; 4th value is alpha-transparency
@@ -882,7 +894,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -904,7 +916,7 @@ class VSettingsSensors // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the sensors are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the sensor numbers are shown
-  float defaultSize;                              //!< AUTO: global sensor size; if -1.f, node size is relative to maxSceneSize
+  float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for sensors; 4th value is alpha-transparency
 
 
@@ -914,7 +926,7 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
-    defaultSize = 0.2f;
+    defaultSize = -1.f;
     defaultColor = Float4({0.6f,0.6f,0.1f,1.f});
   };
 
@@ -950,7 +962,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-01-30 (last modfied)
+* @date         AUTO: 2020-02-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

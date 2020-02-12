@@ -60,7 +60,9 @@ VisualizationSystemContainerBase* GlfwRenderer::basicVisualizationSystemContaine
 GlfwRenderer::GlfwRenderer()
 {
 	rendererActive = false;
-	
+	graphicsDataList = nullptr;
+	window = nullptr;
+
 	stateMachine.leftMousePressed = false;
 	stateMachine.rightMousePressed = false;
 	stateMachine.shiftPressed = false;
@@ -331,6 +333,8 @@ tk.mainloop()
 
 void GlfwRenderer::ZoomAll()
 {
+	//pout << "zoom all\n";
+	//pout << "graphicsDataList=" << graphicsDataList << "\n";
 	//max scene size from current line data:
 	//Float3 pmax({ -1e30f,-1e30f,-1e30f });
 	//Float3 pmin({ 1e30f,1e30f,1e30f });
@@ -338,77 +342,82 @@ void GlfwRenderer::ZoomAll()
 	Float3 pmax({ -1e30f,-1e30f,-1e30f });
 	Float3 pmin({ 1e30f,1e30f,1e30f });
 
-	for (auto data : *graphicsDataList)
+	if (graphicsDataList != nullptr && state != nullptr && visSettings != nullptr)
 	{
-		for (auto item : data->glLines)
+		for (auto data : *graphicsDataList)
 		{
-			for (Index i = 0; i < 3; i++)
-			{
-				pmax[i] = EXUstd::Maximum(item.point1[i], pmax[i]);
-				pmin[i] = EXUstd::Minimum(item.point1[i], pmin[i]);
-				pmax[i] = EXUstd::Maximum(item.point2[i], pmax[i]);
-				pmin[i] = EXUstd::Minimum(item.point2[i], pmin[i]);
-			}
-		}
-		for (auto item : data->glTexts)
-		{
-			for (Index i = 0; i < 3; i++)
-			{
-				pmax[i] = EXUstd::Maximum(item.point[i], pmax[i]);
-				pmin[i] = EXUstd::Minimum(item.point[i], pmin[i]);
-			}
-		}
-		for (auto item : data->glPoints)
-		{
-			for (Index i = 0; i < 3; i++)
-			{
-				pmax[i] = EXUstd::Maximum(item.point[i], pmax[i]);
-				pmin[i] = EXUstd::Minimum(item.point[i], pmin[i]);
-			}
-		}
-		for (auto item : data->glCirclesXY)
-		{
-			for (Index i = 0; i < 3; i++)
-			{
-				pmax[i] = EXUstd::Maximum(item.point[i] + item.radius, pmax[i]);
-				pmin[i] = EXUstd::Minimum(item.point[i] - item.radius, pmin[i]);
-			}
-		}
-		for (auto item : data->glTriangles)
-		{
-			for (auto point: item.points)
+			for (auto item : data->glLines)
 			{
 				for (Index i = 0; i < 3; i++)
 				{
-					pmax[i] = EXUstd::Maximum(point[i], pmax[i]);
-					pmin[i] = EXUstd::Minimum(point[i], pmin[i]);
+					pmax[i] = EXUstd::Maximum(item.point1[i], pmax[i]);
+					pmin[i] = EXUstd::Minimum(item.point1[i], pmin[i]);
+					pmax[i] = EXUstd::Maximum(item.point2[i], pmax[i]);
+					pmin[i] = EXUstd::Minimum(item.point2[i], pmin[i]);
+				}
+			}
+			for (auto item : data->glTexts)
+			{
+				for (Index i = 0; i < 3; i++)
+				{
+					pmax[i] = EXUstd::Maximum(item.point[i], pmax[i]);
+					pmin[i] = EXUstd::Minimum(item.point[i], pmin[i]);
+				}
+			}
+			for (auto item : data->glPoints)
+			{
+				for (Index i = 0; i < 3; i++)
+				{
+					pmax[i] = EXUstd::Maximum(item.point[i], pmax[i]);
+					pmin[i] = EXUstd::Minimum(item.point[i], pmin[i]);
+				}
+			}
+			for (auto item : data->glCirclesXY)
+			{
+				for (Index i = 0; i < 3; i++)
+				{
+					pmax[i] = EXUstd::Maximum(item.point[i] + item.radius, pmax[i]);
+					pmin[i] = EXUstd::Minimum(item.point[i] - item.radius, pmin[i]);
+				}
+			}
+			for (auto item : data->glTriangles)
+			{
+				for (auto point : item.points)
+				{
+					for (Index i = 0; i < 3; i++)
+					{
+						pmax[i] = EXUstd::Maximum(point[i], pmax[i]);
+						pmin[i] = EXUstd::Minimum(point[i], pmin[i]);
+					}
 				}
 			}
 		}
-	}
 
-	Float3 center = 0.5f*(pmin + pmax);
+		Float3 center = 0.5f*(pmin + pmax);
 
-	float maxSceneSize = (pmax - pmin).GetL2Norm();
-	if (maxSceneSize < visSettings->general.minSceneSize) { maxSceneSize = visSettings->general.minSceneSize; }
+		float maxSceneSize = (pmax - pmin).GetL2Norm();
+		if (maxSceneSize < visSettings->general.minSceneSize) { maxSceneSize = visSettings->general.minSceneSize; }
 
-	if (graphicsDataList->NumberOfItems() == 0 ||
-		((*graphicsDataList)[0]->glCirclesXY.NumberOfItems() == 0 && (*graphicsDataList)[0]->glLines.NumberOfItems() == 0
-			&& (*graphicsDataList)[0]->glPoints.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0)
+		if (graphicsDataList->NumberOfItems() == 0 ||
+			((*graphicsDataList)[0]->glCirclesXY.NumberOfItems() == 0 && (*graphicsDataList)[0]->glLines.NumberOfItems() == 0
+				&& (*graphicsDataList)[0]->glPoints.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0)
 			&& (*graphicsDataList)[0]->glTriangles.NumberOfItems() == 0)
-	{
-		maxSceneSize = 1;
-		center = Float3({ 0,0,0 });
+		{
+			maxSceneSize = 1;
+			center = Float3({ 0,0,0 });
+		}
+
+		//rendererOut << "Zoom all\n";
+		//rendererOut << "maxScenesize=" << maxSceneSize << "\n";
+		//rendererOut << "center=" << center << "\n";
+
+		state->zoom = 0.4f*maxSceneSize;
+		state->centerPoint = center;
+		//state->zoom = 0.5f*state->maxSceneSize;
+		//state->centerPoint = state->sceneCenterPoint; //computed in VisualizationSystem::UpdateMaximumSceneCoordinates
+
+		UpdateGraphicsDataNow(); //remove from here; just put here for testing 
 	}
-
-	//rendererOut << "Zoom all\n";
-	//rendererOut << "maxScenesize=" << maxSceneSize << "\n";
-	//rendererOut << "center=" << center << "\n";
-
-	state->zoom = 0.4f*maxSceneSize;
-	state->centerPoint = center; 
-	//state->zoom = 0.5f*state->maxSceneSize;
-	//state->centerPoint = state->sceneCenterPoint; //computed in VisualizationSystem::UpdateMaximumSceneCoordinates
 }
 
 void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -542,7 +551,7 @@ bool GlfwRenderer::SetupRenderer()
 	//glfwCreateThread();
 	//auto th = new std::thread(GlfwRenderer::StartThread);
 	globalPyRuntimeErrorFlag = false; //if previous renderer crashed, this allows to relase this error even if the old renderer is still running
-	if (!rendererActive)
+	if (!rendererActive && basicVisualizationSystemContainer != nullptr) //check that renderer is not already running and that link to SystemContainer exists
 	{
 		basicVisualizationSystemContainer->UpdateMaximumSceneCoordinates(); //this is done to make OpenGL zoom and maxSceneCoordinates work
 
@@ -579,7 +588,7 @@ bool GlfwRenderer::SetupRenderer()
 	}
 	else
 	{
-		SysError("OpenGL renderer already active");
+		PyWarning("OpenGL renderer already active");
 		return false;
 	}
 
@@ -603,7 +612,7 @@ void GlfwRenderer::StopRenderer()
 		if (rendererActive) { SysError("OpenGL Renderer could not be stopped safely\n"); }
 		//else { pout << "Renderer Stopped\n"; }
 
-		glfwDestroyWindow(window);
+		//glfwDestroyWindow(window); //this is done in GLFW thread ...?
 		//not necessary: glfwTerminate(); //test if this helps; should not be needed
 
 		//delete window; //will not work? VS2017 reports warning that destructor will not be called, since window is only a struct
@@ -617,6 +626,8 @@ void GlfwRenderer::StopRenderer()
 			//pout << "thread joined\n";
 			//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
 		}
+
+
 	}
 }
 
@@ -708,7 +719,7 @@ void GlfwRenderer::RunLoop()
 		!stopRenderer && !globalPyRuntimeErrorFlag)
 	{
 		basicVisualizationSystemContainer->UpdateGraphicsData();
-		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) { ZoomAll(); ZoomAll();}
+		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) { ZoomAll(); }
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
 		glfwWaitEventsTimeout((double)(visSettings->general.graphicsUpdateInterval)); //wait x seconds for next event
@@ -720,8 +731,9 @@ void GlfwRenderer::RunLoop()
 	basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
 
 	glfwDestroyWindow(window);
-	glfwTerminate(); //move to destructor
+	window = nullptr;
 	rendererActive = false; //for new startup of renderer
+	glfwTerminate(); //move to destructor
 	stopRenderer = false;	//if stopped by user
 
 }
@@ -865,11 +877,15 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		float scale = 2.f*visSettings->general.textSize*zoom / ((float)height);
 		Float3 p0({ 0.f,-2*d,0.f }); //offset
 
-		if (graphicsDataList->NumberOfItems() > 1) { pout << "WARNING: contour plot color bar only works for one single system\n"; }
+		float minVal = 0;
+		float maxVal = 1;
+		if (graphicsDataList)
+		{
+			if (graphicsDataList->NumberOfItems() > 1) { pout << "WARNING: contour plot color bar only works for one single system\n"; }
 
-		float minVal = graphicsDataList->GetItem(0)->GetContourCurrentMinValue();
-		float maxVal = graphicsDataList->GetItem(0)->GetContourCurrentMaxValue();
-
+			minVal = graphicsDataList->GetItem(0)->GetContourCurrentMinValue();
+			maxVal = graphicsDataList->GetItem(0)->GetContourCurrentMaxValue();
+		}
 		//DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
 		STDstring contourStr = STDstring(GetOutputVariableTypeString(visSettings->contour.outputVariable)) + "(" + EXUstd::ToString(visSettings->contour.outputVariableComponent) + ")" +
 			"\nmin=" + EXUstd::ToString(minVal) + ",max=" + EXUstd::ToString(maxVal);
@@ -1064,184 +1080,187 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 
 void GlfwRenderer::RenderGraphicsData()
 {
-	for (auto data : *graphicsDataList)
+	if (graphicsDataList)
 	{
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//DRAW POINTS
-		GLfloat lineWidth = 0.5f; //has no action so far
-		GLfloat d = visSettings->general.pointSize; //point drawing parameter --> put into settings!
-		glLineWidth(visSettings->openGL.lineWidth);
-		if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
-
-		for (const GLPoint& item : data->glPoints)
+		for (auto data : *graphicsDataList)
 		{
-			glBegin(GL_LINES);
-			glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW POINTS
+			GLfloat lineWidth = 0.5f; //has no action so far
+			GLfloat d = visSettings->general.pointSize; //point drawing parameter --> put into settings!
+			glLineWidth(visSettings->openGL.lineWidth);
+			if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
 
-			//plot point as 3D cross
-			glVertex3f(item.point[0] + d, item.point[1], item.point[2]);
-			glVertex3f(item.point[0] - d, item.point[1], item.point[2]);
-			glVertex3f(item.point[0], item.point[1] + d, item.point[2]);
-			glVertex3f(item.point[0], item.point[1] - d, item.point[2]);
-			glVertex3f(item.point[0], item.point[1], item.point[2] + d);
-			glVertex3f(item.point[0], item.point[1], item.point[2] - d);
-
-			glEnd();
-		}
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//DRAW CIRCLES
-		//draw a circle in xy-plane
-		for (const GLCircleXY& item : data->glCirclesXY)
-		{
-			glBegin(GL_LINE_STRIP); //list of single points to define lines
-			glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
-
-			const Float3& p = item.point;
-			GLfloat r = item.radius;
-			float nSeg = (float)item.numberOfSegments;
-			if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
-
-			for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
+			for (const GLPoint& item : data->glPoints)
 			{
-				glVertex3f(p[0] + r * sin(i), p[1] + r * cos(i), p[2]);
-			}
-
-			glEnd(); //GL_LINE_STRIP
-		}
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//DRAW LINES
-		for (const GLLine& item : data->glLines)
-		{
-			glBegin(GL_LINES);
-			glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
-			glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
-			glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
-			glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
-			glEnd();
-		}
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//DRAW TRIANGLES
-		if (visSettings->openGL.showFaceEdges)
-		{
-			for (const GLTriangle& trig : data->glTriangles)
-			{ //draw lines
-				glColor4f(0.2f, 0.2f, 0.2f, 1.f);
-				for (Index i = 0; i < 3; i++)
-				{
-					Index j = i + 1;
-					if (j >= 3) { j = 0; }
-					glBegin(GL_LINES);
-					const Float3& p = trig.points[i];
-					glVertex3f(p[0], p[1], p[2]);
-
-					const Float3& p1 = trig.points[j];
-					glVertex3f(p1[0], p1[1], p1[2]);
-					glEnd();
-				}
-			}
-		}
-
-		if (visSettings->openGL.showFaces)
-		{
-			glEnable(GL_LIGHTING);
-			for (const GLTriangle& trig : data->glTriangles)
-			{ //draw faces
-				//glColor4f(0.2f, 0.2f, 0.9f, 1.f);
-				glBegin(GL_TRIANGLES);
-				for (Index i = 0; i < 3; i++)
-				{
-					glColor4fv(trig.colors[i].GetDataPointer());
-					glNormal3fv(trig.normals[i].GetDataPointer());
-					glVertex3fv(trig.points[i].GetDataPointer());
-				}
-				glEnd();
-			}
-			glDisable(GL_LIGHTING);
-		}
-
-		//draw normals
-		if (visSettings->openGL.drawFaceNormals)
-		{
-			float len = visSettings->openGL.drawNormalsLength;
-			for (const GLTriangle& trig : data->glTriangles)
-			{
-				Float3 midPoint = { 0,0,0 };
-				for (Index i = 0; i < 3; i++)
-				{
-					midPoint += trig.points[i];
-				}
-				midPoint *= 1.f / 3.f;
-				glColor4f(0.2f, 0.2f, 0.2f, 1.f);
 				glBegin(GL_LINES);
-				const Float3& p = midPoint;
-				glVertex3f(p[0], p[1], p[2]);
-				Float3 p1 = midPoint + len*trig.normals[0];
-				glVertex3f(p1[0], p1[1], p1[2]);
+				glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+
+				//plot point as 3D cross
+				glVertex3f(item.point[0] + d, item.point[1], item.point[2]);
+				glVertex3f(item.point[0] - d, item.point[1], item.point[2]);
+				glVertex3f(item.point[0], item.point[1] + d, item.point[2]);
+				glVertex3f(item.point[0], item.point[1] - d, item.point[2]);
+				glVertex3f(item.point[0], item.point[1], item.point[2] + d);
+				glVertex3f(item.point[0], item.point[1], item.point[2] - d);
+
 				glEnd();
 			}
-		}
-		
-		if (visSettings->openGL.drawVertexNormals)
-		{
-			float len = visSettings->openGL.drawNormalsLength;
-			for (const GLTriangle& trig : data->glTriangles)
-			{
-				for (Index i = 0; i < 3; i++)
-				{
-					glBegin(GL_LINES);
-					const Float3& p = trig.points[i];
-					glVertex3f(p[0], p[1], p[2]);
 
-					Float3 p1 = trig.points[i] + len*trig.normals[i];
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW CIRCLES
+			//draw a circle in xy-plane
+			for (const GLCircleXY& item : data->glCirclesXY)
+			{
+				glBegin(GL_LINE_STRIP); //list of single points to define lines
+				glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+
+				const Float3& p = item.point;
+				GLfloat r = item.radius;
+				float nSeg = (float)item.numberOfSegments;
+				if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
+
+				for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
+				{
+					glVertex3f(p[0] + r * sin(i), p[1] + r * cos(i), p[2]);
+				}
+
+				glEnd(); //GL_LINE_STRIP
+			}
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW LINES
+			for (const GLLine& item : data->glLines)
+			{
+				glBegin(GL_LINES);
+				glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
+				glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+				glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
+				glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+				glEnd();
+			}
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW TRIANGLES
+			if (visSettings->openGL.showFaceEdges)
+			{
+				for (const GLTriangle& trig : data->glTriangles)
+				{ //draw lines
+					glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+					for (Index i = 0; i < 3; i++)
+					{
+						Index j = i + 1;
+						if (j >= 3) { j = 0; }
+						glBegin(GL_LINES);
+						const Float3& p = trig.points[i];
+						glVertex3f(p[0], p[1], p[2]);
+
+						const Float3& p1 = trig.points[j];
+						glVertex3f(p1[0], p1[1], p1[2]);
+						glEnd();
+					}
+				}
+			}
+
+			if (visSettings->openGL.showFaces)
+			{
+				glEnable(GL_LIGHTING);
+				for (const GLTriangle& trig : data->glTriangles)
+				{ //draw faces
+					//glColor4f(0.2f, 0.2f, 0.9f, 1.f);
+					glBegin(GL_TRIANGLES);
+					for (Index i = 0; i < 3; i++)
+					{
+						glColor4fv(trig.colors[i].GetDataPointer());
+						glNormal3fv(trig.normals[i].GetDataPointer());
+						glVertex3fv(trig.points[i].GetDataPointer());
+					}
+					glEnd();
+				}
+				glDisable(GL_LIGHTING);
+			}
+
+			//draw normals
+			if (visSettings->openGL.drawFaceNormals)
+			{
+				float len = visSettings->openGL.drawNormalsLength;
+				for (const GLTriangle& trig : data->glTriangles)
+				{
+					Float3 midPoint = { 0,0,0 };
+					for (Index i = 0; i < 3; i++)
+					{
+						midPoint += trig.points[i];
+					}
+					midPoint *= 1.f / 3.f;
+					glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+					glBegin(GL_LINES);
+					const Float3& p = midPoint;
+					glVertex3f(p[0], p[1], p[2]);
+					Float3 p1 = midPoint + len * trig.normals[0];
 					glVertex3f(p1[0], p1[1], p1[2]);
 					glEnd();
 				}
 			}
+
+			if (visSettings->openGL.drawVertexNormals)
+			{
+				float len = visSettings->openGL.drawNormalsLength;
+				for (const GLTriangle& trig : data->glTriangles)
+				{
+					for (Index i = 0; i < 3; i++)
+					{
+						glBegin(GL_LINES);
+						const Float3& p = trig.points[i];
+						glVertex3f(p[0], p[1], p[2]);
+
+						Float3 p1 = trig.points[i] + len * trig.normals[i];
+						glVertex3f(p1[0], p1[1], p1[2]);
+						glEnd();
+					}
+				}
+			}
+
+			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW TEXT
+			//float scale = 0.025f; //scaling of text
+			float textheight = visSettings->general.textSize;
+			float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
+			//float scale = 2.f*textheight * state->zoom / ((float)state->currentWindowSize[1]);
+
+			Float16 m = state->modelRotation;
+
+			Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
+						   m[1],m[5],m[9],m[13],
+						   m[2],m[6],m[10],m[14],
+						   m[3],m[7],m[11],m[15] });
+
+			//if not called from modelview, use the following transformations
+			//glMatrixMode(GL_MODELVIEW);
+			//glPushMatrix(); //store current matrix -> before rotation
+			//glLoadIdentity();
+			//glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f);
+			//glMultMatrixf(state->modelRotation.GetDataPointer());
+
+			//Float3 p0({ 0.f,0.f,0.f }); //texts are drawn at position 0,0,0 ==> everything else done by tranformations
+
+			for (const GLText& t : data->glTexts)
+			{
+				float scale = textheight * scaleFactor;
+				if (t.size != 0.f) { scale = t.size * scaleFactor; }
+
+				float offx = t.offsetX * scale;
+				float offy = t.offsetX * scale;
+				//draw strings without applying the rotation:
+				glPushMatrix(); //store current matrix -> before rotation
+				glTranslated(t.point[0], t.point[1], t.point[2]);
+				glMultMatrixf(matTp.GetDataPointer());
+				DrawString(t.text, scale, Float3({ offx,offy,0.f }), t.color);
+				glPopMatrix(); //restore matrix
+			}
+			//glPopMatrix(); //restore matrix
 		}
-
-		if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//DRAW TEXT
-		//float scale = 0.025f; //scaling of text
-		float textheight = visSettings->general.textSize;
-		float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
-		//float scale = 2.f*textheight * state->zoom / ((float)state->currentWindowSize[1]);
-
-		Float16 m = state->modelRotation;
-
-		Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
-					   m[1],m[5],m[9],m[13],
-					   m[2],m[6],m[10],m[14],
-					   m[3],m[7],m[11],m[15] });
-
-		//if not called from modelview, use the following transformations
-		//glMatrixMode(GL_MODELVIEW);
-		//glPushMatrix(); //store current matrix -> before rotation
-		//glLoadIdentity();
-		//glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f);
-		//glMultMatrixf(state->modelRotation.GetDataPointer());
-
-		//Float3 p0({ 0.f,0.f,0.f }); //texts are drawn at position 0,0,0 ==> everything else done by tranformations
-
-		for (const GLText& t : data->glTexts)
-		{
-			float scale = textheight * scaleFactor;
-			if (t.size != 0.f) { scale = t.size * scaleFactor; }
-
-			float offx = t.offsetX * scale;
-			float offy = t.offsetX * scale;
-			//draw strings without applying the rotation:
-			glPushMatrix(); //store current matrix -> before rotation
-			glTranslated(t.point[0], t.point[1], t.point[2]);
-			glMultMatrixf(matTp.GetDataPointer());
-			DrawString(t.text, scale, Float3({ offx,offy,0.f }), t.color);
-			glPopMatrix(); //restore matrix
-		}
-		//glPopMatrix(); //restore matrix
 	}
 }
 

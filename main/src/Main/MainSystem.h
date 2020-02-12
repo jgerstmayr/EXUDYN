@@ -27,7 +27,6 @@
 //#include "Graphics/VisualizationSystemData.h"
 #include "Graphics/VisualizationSystemContainer.h"
 
-
 //#include "Utilities/BasicFunctions.h"
 
 //!Interface to a CSystem, used in Python
@@ -42,7 +41,11 @@ public: //! objects made public, because Python functions are anyway mostly Auto
 	//add specific Python lists here:
 	MainSystemData mainSystemData;
 	MainObjectFactory mainObjectFactory;
+	py::dict variables; //!< dictionary which is used to store local variables for models
+	py::dict systemVariables;		//!< dictionary which is used to store system variables (e.g. for solvers, etc.)
 
+private:
+	bool interactiveMode; //!< if this is true, every AddItem(...), ModifyItem(...), etc. causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
 public:
 	//MainSystem() {};
 
@@ -68,6 +71,9 @@ public:
 	bool GetFlagSolverSignalJacobianUpdate() const { return GetCSystem()->GetSolverData().signalJacobianUpdate; }
 	void SetFlagSolverSignalJacobianUpdate(bool flag) { GetCSystem()->GetSolverData().signalJacobianUpdate = flag; }
 
+	bool GetInteractiveMode() const { return interactiveMode; }
+	void SetInteractiveMode(bool flag) { interactiveMode = flag; }
+	void InteractiveModeActions(); //!<if interAciveMode == true: causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   VISUALIZATION FUNCTIONS
 
@@ -112,6 +118,8 @@ public:
 	//   NODES
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainNode(py::dict d);
+	//! Add a MainNode with a python class
+	Index AddMainNodePyClass(py::object pyObject);
 	//! get node's dictionary by name; does not throw a error message
 	Index PyGetNodeNumber(STDstring name);
 	//! hook to read node's dictionary
@@ -141,6 +149,8 @@ public:
 	//   OBJECTS
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainObject(py::dict d);
+	//! Add a MainObject with a python class
+	Index AddMainObjectPyClass(py::object pyObject);
 	//! get object's dictionary by name; does not throw a error message
 	Index PyGetObjectNumber(STDstring itemName);
 	//! hook to read object's dictionary
@@ -171,6 +181,8 @@ public:
 	//   MARKER
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainMarker(py::dict d);
+	//! Add a MainMarker with a python class
+	Index AddMainMarkerPyClass(py::object pyObject);
 	//! get marker's dictionary by name; does not throw a error message
 	Index PyGetMarkerNumber(STDstring itemName);
 	//! hook to read marker's dictionary
@@ -191,6 +203,8 @@ public:
 	//   LOAD
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainLoad(py::dict d);
+	//! Add a MainLoad with a python class
+	Index AddMainLoadPyClass(py::object pyObject);
 	//! get load's dictionary by name; does not throw a error message
 	Index PyGetLoadNumber(STDstring itemName);
 	//! hook to read load's dictionary
@@ -211,6 +225,8 @@ public:
 	//   SENSOR
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 	Index AddMainSensor(py::dict d);
+	//! Add a MainSensor with a python class
+	Index AddMainSensorPyClass(py::object pyObject);
 	//! get marker's dictionary by name; does not throw a error message
 	Index PyGetSensorNumber(STDstring itemName);
 	//! hook to read marker's dictionary

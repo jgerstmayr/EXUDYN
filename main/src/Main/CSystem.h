@@ -64,7 +64,7 @@ private:
 
 public:
 	std::atomic_flag accessState;		//!< flag, which is locked / released to access data
-	bool postProcessDataReady;			//!< signals, that data can be plotted (CSystem must be consistent, state is a current state of the CSystem, ...); usually same as CSyste::systemConsistent
+	bool postProcessDataReady;			//!< signals, that data can be plotted (CSystem must be consistent, state is a current state of the CSystem, ...); usually same as CSystem::systemIsConsistent
 	uint64_t updateCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
 	uint64_t recordImageCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
 	bool simulationFinished;			//!< shows that computation has been finished ==> visualize last step
@@ -141,7 +141,7 @@ protected:
 	SolverData solverData;				//!< data updated by specific solvers 
 
 
-	bool systemConsistent;				//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
+	bool systemIsConsistent;				//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
 
 public:
 
@@ -167,22 +167,26 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! return true, if system is assembled, initialized and ready to be computed; special draw functions can be applied (visualization state exists)
-	bool IsSystemConsistent() const { return systemConsistent; }
+	bool IsSystemConsistent() const { return systemIsConsistent; }
 
 	//! Set true, if system is assembled, initialized and ready to be computed; special draw functions can be applied (visualization state exists)
-	void SetSystemIsConsistent(bool flag) { systemConsistent = flag; }
+	void SetSystemIsConsistent(bool flag) 
+	{ 
+		systemIsConsistent = flag; 
+		cSystemData.GetCData().SetSystemIsConsistent(flag);
+		if (flag = false) { postProcessData.postProcessDataReady = flag; }	//do not draw system anymore
+	}
 
-	//! Function called e.g. by AddNode/Object/..., ModifyNode/Object/... to signal that the system has changed and consistency is not guaranteed
+	//merged with SetSystemIsConsistent //! Function called e.g. by AddNode/Object/..., ModifyNode/Object/... to signal that the system has changed and consistency is not guaranteed
 	void SystemHasChanged() 
 	{
-		systemConsistent = false;						//do not compute or access nodal dof lists, etc.
-		postProcessData.postProcessDataReady = false;	//do not draw system anymore ==> first Assemble()
+		SetSystemIsConsistent(false);						//do not compute or access nodal dof lists, etc.
 	}
 	
 	// reset system; everything done in MainSystem
 	void Initialize() 
 	{
-		systemConsistent = false;
+		SetSystemIsConsistent(false);
 		postProcessData.postProcessDataReady = false;
 		postProcessData.simulationFinished = false;
 

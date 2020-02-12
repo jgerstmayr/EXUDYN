@@ -66,8 +66,8 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		postProcessData->recordImageCounter--;				 //decrease value such that next update does not lead to image record
 	}
 
-	if ((postProcessData->postProcessDataReady && postProcessData->updateCounter > graphicsData.GetVisualizationCounter()) 
-		|| visualizationSystemContainer.UpdateGraphicsDataNowInternal())
+	if (((postProcessData->postProcessDataReady && postProcessData->updateCounter > graphicsData.GetVisualizationCounter()) 
+		|| visualizationSystemContainer.UpdateGraphicsDataNowInternal()) && systemData->GetCData().IsSystemConsistent())
 	{
 		graphicsData.GetVisualizationCounter() = postProcessData->updateCounter; //next update will only be done if postProcessData->updateCounter increases
 		
@@ -82,12 +82,26 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
 		//visualize nodes:
+		//pout << "UpdateGraphicsData nodes1\n";
 		if (visualizationSystemContainer.settings.nodes.show)
 		{
 			cnt = 0;
 			for (auto item : vSystemData.GetVisualizationNodes())
 			{
 				if (item->GetShow()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+				cnt++; //synchronize itemNumber with item!!!
+			}
+		}
+		//pout << "UpdateGraphicsData nodes2\n";
+
+		//++++++++++++++++++++++++++++++++++++++++++++++
+		//visualize connectors: (draw connectors before objects, to make coordinate systems visible inside of bodies
+		if (visualizationSystemContainer.settings.connectors.show)
+		{
+			cnt = 0;
+			for (auto item : vSystemData.GetVisualizationObjects())
+			{
+				if (item->GetShow() && item->IsConnector()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
 				cnt++; //synchronize itemNumber with item!!!
 			}
 		}
@@ -100,18 +114,6 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 			for (auto item : vSystemData.GetVisualizationObjects())
 			{
 				if (item->GetShow() && !(item->IsConnector())) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
-				cnt++; //synchronize itemNumber with item!!!
-			}
-		}
-
-		//++++++++++++++++++++++++++++++++++++++++++++++
-		//visualize connectors:
-		if (visualizationSystemContainer.settings.connectors.show)
-		{
-			cnt = 0;
-			for (auto item : vSystemData.GetVisualizationObjects())
-			{
-				if (item->GetShow() && item->IsConnector()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
 				cnt++; //synchronize itemNumber with item!!!
 			}
 		}

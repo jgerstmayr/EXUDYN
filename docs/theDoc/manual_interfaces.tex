@@ -23,7 +23,9 @@ These are the access functions to the \codeName\ module.
     exu.Print('print this to file')\tabnewline
     exu.SetWriteToFile('', False) \#terminate writing to file which closes the file}\\ \hline 
   SetPrintDelayMilliSeconds(delayMilliSeconds) & add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0\\ \hline 
-  Print(pyObject) & this print command allows printing via exudyn, which allows to redirect all output to file; can print strings as well as printable python objects\\ \hline 
+  Print() & this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false\\ \hline 
+  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
+  sys & this dictionary is used by the system, e.g. for testsuite or solvers to store exudyn-wide data in order to avoid global python variables \\ \hline  
 \end{longtable}
 \end{center}
 
@@ -63,7 +65,8 @@ The SystemContainer is the top level of structures in \codeName. The container h
   visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
     EXAMPLE:\tabnewline
     SC = exu.SystemContainer()\tabnewline
-    SC.visualizationSettings.autoFitScene=False  \\ \hline \end{longtable}
+    SC.visualizationSettings.autoFitScene=False  \\ \hline  
+\end{longtable}
 \end{center}
 
 %++++++++++++++++++++
@@ -87,7 +90,13 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     print(mbs)}\\ \hline 
-  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\ \hline   solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\ \hline   systemData & Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)\\ \hline \end{longtable}
+  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\ \hline  
+  systemIsConsistent & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\ \hline  
+  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\ \hline  
+  sys & this dictionary is used by exudyn python libraries, e.g., solvers, to avoid global python variables \\ \hline 
+  solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\ \hline  
+  systemData & Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)\\ \hline  
+\end{longtable}
 \end{center}
 
 %++++++++++++++++++++
@@ -123,7 +132,6 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     nodeType = 'Point'\tabnewline
     nodeDict = mbs.GetNodeDefaults(nodeType)}\\ \hline 
-  CallNodeFunction(nodeNumber, functionName, args = dict()) & call specific node function\\ \hline 
   GetNodeOutput(nodeNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     mbs.GetNodeOutput(nodeNumber=0, variableType='exu.OutputVariable.Displacement')}\\ \hline 
@@ -168,7 +176,6 @@ This section provides functions for adding, reading and modifying objects, which
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     objectType = 'MassPoint'\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}\\ \hline 
-  CallObjectFunction(objectNumber, functionName, args = dict()) & call specific object function\\ \hline 
   GetObjectOutput(objectNumber, variableType) & get object's output variable from objectNumber and OutputVariableType\\ \hline 
   GetObjectOutputBody(objectNumber, variableType, localPosition, configuration) & get body's output variable from objectNumber and OutputVariableType\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 

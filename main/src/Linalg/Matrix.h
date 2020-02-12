@@ -88,6 +88,7 @@ public:
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, T initializationValue)
 	{
 		//CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) && "Matrix::Matrix(Index, Index, T): invalid parameters"); //unsigned int always >= 0
+		if (initializationValue != 0) { PyWarning("MatrixBase: initializationValue != 0"); }
 
 		Init();
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
@@ -597,6 +598,25 @@ public:
 	//! return whether *this is a square matrix (numberOfRows == numberOfColumns)
 	bool IsSquare() const { return numberOfRows == numberOfColumns; }
 
+	//! get column vector as a SlimVector (no memory allocation, but final size needs to be known at compile time)
+	//! use e.g.: Vector3D v = GetColumnVector<3>(i);
+	template<Index columnSize>
+	SlimVectorBase<T, columnSize> GetColumnVector(Index column) const
+	{
+		CHECKandTHROW(this->numberOfRows == columnSize,
+			"ConstSizeMatrixBase::GetColumnVector(...): size mismatch");
+		CHECKandTHROW(column <= this->numberOfColumns,
+			"ConstSizeMatrixBase::GetColumnVector(...): illegal column");
+
+		SlimVectorBase<T, columnSize> result;
+
+		for (Index i = 0; i < this->numberOfRows; i++)
+		{
+			result[i] = (*this)(i, column);
+		}
+		return result;
+	}
+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// SOLVER
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -848,6 +868,36 @@ namespace EXUmath {
 				mr += resultLength;
 			}
 			result[i] = val;
+		}
+	}
+
+	//! implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
+	//! ADD matrix.GetTranspose()*vector multiplication to given result vector (does not invoke memory allocation if result vector has appropriate size)
+	//! result vector needs to have already appropriate size
+	template<class TMatrix, class TVector, class TVectorResult>
+	inline void MultMatrixTransposedVectorAddTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	{
+		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
+			"Hmath::MultMatrixTransposedVectorAddTemplate(matrix,vector,result): Size mismatch");
+
+		CHECKandTHROW(matrix.NumberOfColumns() == result.NumberOfItems(),
+			"Hmath::MultMatrixTransposedVectorAddTemplate(matrix,vector,result): Size mismatch");
+
+		Real* mm = matrix.GetDataPointer();
+		const Real* vv = vector.GetDataPointer();
+		Index resultLength = result.NumberOfItems();
+		Index vectorLength = vector.NumberOfItems();
+
+		for (Index i = 0; i < resultLength; i++)
+		{
+			Real val = 0;
+			Real* mr = &mm[i];
+			for (Index j = 0; j < vectorLength; j++)
+			{
+				val += *mr * vv[j];
+				mr += resultLength;
+			}
+			result[i] += val;
 		}
 	}
 

@@ -40,6 +40,17 @@ void MainSystem::Reset()
 	GetCSystem()->GetSystemData().Reset();
 	GetCSystem()->Initialize();
 	visualizationSystem.Reset();
+	interactiveMode = false;
+}
+
+//!  if interAciveMode == true: causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
+void MainSystem::InteractiveModeActions()
+{
+	if (GetInteractiveMode())
+	{
+		GetCSystem()->Assemble(*this);
+		GetCSystem()->GetPostProcessData()->SendRedrawSignal();
+	}
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -76,8 +87,16 @@ bool MainSystem::DetachRenderEngine()
 Index MainSystem::AddMainNode(py::dict d)
 {
 	GetCSystem()->SystemHasChanged();
-	return GetMainObjectFactory().AddMainNode(*this, d);
+	Index ind = GetMainObjectFactory().AddMainNode(*this, d);
+	InteractiveModeActions();
+	return ind;
 };
+
+Index MainSystem::AddMainNodePyClass(py::object pyObject)
+{
+	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	return AddMainNode(dictObject);
+}
 
 //! get node's dictionary by name; does not throw a error message
 Index MainSystem::PyGetNodeNumber(STDstring nodeName)
@@ -127,7 +146,8 @@ void MainSystem::PyModifyNode(Index nodeNumber, py::dict nodeDict)
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
-		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->SetWithDictionary(nodeDict);
+		mainSystemData.GetMainNodes().GetItem(nodeNumber)->SetWithDictionary(nodeDict);
+		InteractiveModeActions();
 	}
 	else
 	{
@@ -269,8 +289,16 @@ void MainSystem::PySetNodeParameter(Index nodeNumber, const STDstring& parameter
 Index MainSystem::AddMainObject(py::dict d)
 {
 	GetCSystem()->SystemHasChanged();
-	return GetMainObjectFactory().AddMainObject(*this, d);
+	Index ind = GetMainObjectFactory().AddMainObject(*this, d);
+	InteractiveModeActions();
+	return ind;
 };
+
+Index MainSystem::AddMainObjectPyClass(py::object pyObject)
+{
+	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	return AddMainObject(dictObject);
+}
 
 //! get object's dictionary by name; does not throw a error message
 Index MainSystem::PyGetObjectNumber(STDstring itemName)
@@ -319,7 +347,8 @@ void MainSystem::PyModifyObject(Index itemNumber, py::dict d)
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
-		return mainSystemData.GetMainObjects().GetItem(itemNumber)->SetWithDictionary(d);
+		mainSystemData.GetMainObjects().GetItem(itemNumber)->SetWithDictionary(d);
+		InteractiveModeActions();
 	}
 	else
 	{
@@ -460,8 +489,16 @@ void MainSystem::PySetObjectParameter(Index itemNumber, const STDstring& paramet
 Index MainSystem::AddMainMarker(py::dict d)
 {
 	GetCSystem()->SystemHasChanged();
-	return GetMainObjectFactory().AddMainMarker(*this, d);
+	Index ind = GetMainObjectFactory().AddMainMarker(*this, d);
+	InteractiveModeActions();
+	return ind;
 };
+
+Index MainSystem::AddMainMarkerPyClass(py::object pyObject)
+{
+	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	return AddMainMarker(dictObject);
+}
 
 //! get object's dictionary by name; does not throw a error message
 Index MainSystem::PyGetMarkerNumber(STDstring itemName)
@@ -510,7 +547,8 @@ void MainSystem::PyModifyMarker(Index itemNumber, py::dict d)
 	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
-		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->SetWithDictionary(d);
+		mainSystemData.GetMainMarkers().GetItem(itemNumber)->SetWithDictionary(d);
+		InteractiveModeActions();
 	}
 	else
 	{
@@ -583,8 +621,16 @@ void MainSystem::PySetMarkerParameter(Index markerNumber, const STDstring& param
 Index MainSystem::AddMainLoad(py::dict d)
 {
 	GetCSystem()->SystemHasChanged();
-	return GetMainObjectFactory().AddMainLoad(*this, d);
+	Index ind = GetMainObjectFactory().AddMainLoad(*this, d);
+	InteractiveModeActions();
+	return ind;
 };
+
+Index MainSystem::AddMainLoadPyClass(py::object pyObject)
+{
+	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	return AddMainLoad(dictObject);
+}
 
 //! get object's dictionary by name; does not throw a error message
 Index MainSystem::PyGetLoadNumber(STDstring itemName)
@@ -633,7 +679,8 @@ void MainSystem::PyModifyLoad(Index itemNumber, py::dict d)
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
-		return mainSystemData.GetMainLoads().GetItem(itemNumber)->SetWithDictionary(d);
+		mainSystemData.GetMainLoads().GetItem(itemNumber)->SetWithDictionary(d);
+		InteractiveModeActions();
 	}
 	else
 	{
@@ -705,8 +752,16 @@ void MainSystem::PySetLoadParameter(Index loadNumber, const STDstring& parameter
 Index MainSystem::AddMainSensor(py::dict d)
 {
 	GetCSystem()->SystemHasChanged();
-	return GetMainObjectFactory().AddMainSensor(*this, d);
+	Index ind = GetMainObjectFactory().AddMainSensor(*this, d);
+	InteractiveModeActions();
+	return ind;
 };
+
+Index MainSystem::AddMainSensorPyClass(py::object pyObject)
+{
+	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	return AddMainSensor(dictObject);
+}
 
 //! get object's dictionary by name; does not throw a error message
 Index MainSystem::PyGetSensorNumber(STDstring itemName)
@@ -755,7 +810,8 @@ void MainSystem::PyModifySensor(Index itemNumber, py::dict d)
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
-		return mainSystemData.GetMainSensors().GetItem(itemNumber)->SetWithDictionary(d);
+		mainSystemData.GetMainSensors().GetItem(itemNumber)->SetWithDictionary(d);
+		InteractiveModeActions();
 	}
 	else
 	{

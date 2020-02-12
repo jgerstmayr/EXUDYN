@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  18:12:47 (last modfied)
+* @date         2020-02-04  14:34:39 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -61,9 +61,8 @@ public: // AUTO:
 class CObjectRigidBody: public CObjectBody // AUTO: 
 {
 protected: // AUTO: 
-    static const Index nODE2Coordinates = 7;
-    static const Index nAECoordinates = 1;
-    static const Index nRotationCoordinates = 4;
+    static const Index nDim3D = 3; //used to avoid pure 3 in code where dimensionality applies
+    static const Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
     CObjectRigidBodyParameters parameters; //! AUTO: contains all parameters for CObjectRigidBody
 
 public: // AUTO: 
@@ -132,17 +131,11 @@ public: // AUTO:
         return 1;
     }
 
-    //! AUTO:  number of ODE2 coordinates; needed for object?
-    virtual Index GetODE2Size() const override
-    {
-        return nODE2Coordinates;
-    }
+    //! AUTO:  number of ODE2 coordinates; depends on node
+    virtual Index GetODE2Size() const override;
 
-    //! AUTO:  number of AE coordinates; needed for object?
-    virtual Index GetAlgebraicEquationsSize() const override
-    {
-        return nAECoordinates;
-    }
+    //! AUTO:  number of AE coordinates; depends on node
+    virtual Index GetAlgebraicEquationsSize() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
