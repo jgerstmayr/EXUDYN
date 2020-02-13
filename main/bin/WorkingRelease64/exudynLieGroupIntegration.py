@@ -123,7 +123,7 @@ def TSO3Inv(Omega):
         omegaNorm = LA.norm(Omega)
         #gamma      = 0.5*omegaNorm*cot( 0.5*omegaNorm )
         gamma1 = 0
-        if omegaNorm < 1e-1:
+        if omegaNorm < 1e-1: #approximate 1-x/tan(x)
             x=0.5*omegaNorm
             gamma1 = x**2/3+x**4/45+x**6*2/945+x**8/4725
         else:
