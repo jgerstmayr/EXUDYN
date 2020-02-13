@@ -51,8 +51,8 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 In order to run \codeName , you need an appropriate Python installation.
 We recommend to use
 \bi
-  \item Anaconda, 32bit, Python 3.6.5
-	\item Spyder 3.2.8 (Python 3.6.5 32 bits)	
+  \item Anaconda, 32bit, Python 3.6.5 (alternatively 64bit)
+	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit)\footnote{It is important that Spyder, python and exudyn are either 32bit or 64bit. There will be a strange .DLL error, if you mix up 32/64bit. Furthermore, it is possible to install both, Anaconda 32bit and Anacondo 64bit; Anaconda 64bit with Python3.6 must be downloaded manually via Anaconda3-5.2.0-Windows-x86\_64.exe, which can be found in repo archives.}
 \ei
 If you plan to use 64bit and newer Python versions, we recommend to use VS2019 to compile your code, which offers Python 3.7 compatibility.
 However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 {\bf both} in the exudyn module and in Spyder).
@@ -68,8 +68,10 @@ The second way ({\bf recommended}) is to use Python's \texttt{sys} module to lin
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
   import sys
-  sys.path.append('C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease')
+  sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
 \end{lstlisting}
+The path \texttt{C:/DATA/cpp/EXUDYN\_git/main/bin/WorkingRelease} needs to be adapted to the location of your \texttt{WorkingRelease} where the \texttt{exudyn.pyd} files are located. In case of 64bit, it must be changed to \texttt{.... /bin/WorkingRelease64}.
+
 In the future, there will also be a possibility to install the module using pip commands -- we are happy, if somebody could do this!
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -39,22 +39,21 @@ def ComposeRotationVectors(v0, Omega):
     # compute rotation angle of resulting rotation vector 
     phi = 2*np.arccos(np.cos(phi0/2)*np.cos(deltaPhi/2) - 0.5*np.dot(n0,Omega)*(np.sin(phi0/2)*Sinc(deltaPhi/2)))
     
-    # np.arccos(x) returns NaN in case that x=np.pi
+    # np.arccos(x) returns NaN in case that x>1 or x < -1, both leading to sin(phi/2) == 0
     if math.isnan( phi ):
-        phi = 2*np.pi
-    else:
-        phi = 2*np.arccos(np.cos(phi0/2)*np.cos(deltaPhi/2) - 0.5*np.dot(n0,Omega)*(np.sin(phi0/2)*Sinc(deltaPhi/2)))           
+        phi = 0.
         
     # compute rotation axis of resulting rotation vector v
     I = np.diag([1, 1, 1])
     n0Tilde = Skew(n0)
-    if phi == 0.0:
+    sinPhi2 = np.sin(phi/2)
+    if sinPhi2 == 0.:
         nBar = np.array([0.0, 0.0, 0.0])
-    elif phi == 2*np.pi:
-        nBar = np.array([0.0, 0.0, 0.0]) 
+#    elif phi == 2*np.pi:
+#        nBar = np.array([0.0, 0.0, 0.0]) 
     else:
-        x1 = ( (np.sin(phi0/2)*np.cos(deltaPhi/2))/np.sin(phi/2) )*n0
-        x2 = np.dot((Sinc(deltaPhi/2)/(2*np.sin(phi/2)))*(I*np.cos(phi0/2) + np.sin(phi0/2)*n0Tilde), Omega)
+        x1 = ( (np.sin(phi0/2)*np.cos(deltaPhi/2))/sinPhi2 )*n0
+        x2 = np.dot((Sinc(deltaPhi/2)/(2*sinPhi2))*(I*np.cos(phi0/2) + np.sin(phi0/2)*n0Tilde), Omega)
         nBar = x1 + x2
     
     # compute resulting rotation vector v
@@ -82,11 +81,12 @@ def ComputeRotationAxisFromRotationVector(rotationVector):
 
 # sinc function according to paper
 def Sinc(x):
-    if x == 0:
-        s = 1
-    else:
-        s = np.sin(x)/x
-    return s
+    return np.sinc(x/np.pi)
+#    if x == 0:
+#        s = 1
+#    else:
+#        s = np.sin(x)/x
+#    return s
 
 
 # compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
@@ -98,6 +98,20 @@ def Skew(vector):
     return skewsymmetricMatrix
 
 
+## inverse tangent operator corresponding to exponential map
+#def TSO3Inv(Omega):
+#    I = np.diag([1, 1, 1])
+#    incrementalRotationAngle = LA.norm(Omega)
+#    if incrementalRotationAngle == 0:
+#        Omega_t = I
+#    else:
+#        OmegaTilde = Skew(Omega)
+#        omegaNorm = LA.norm(Omega)
+#        gamma      = 0.5*omegaNorm*cot( 0.5*omegaNorm )
+#        phiSquared = omegaNorm*omegaNorm
+#        Omega_t = I + 0.5*OmegaTilde + ((1-gamma)/phiSquared)*np.dot(OmegaTilde,OmegaTilde)
+#    return Omega_t
+#
 # inverse tangent operator corresponding to exponential map
 def TSO3Inv(Omega):
     I = np.diag([1, 1, 1])
@@ -106,10 +120,20 @@ def TSO3Inv(Omega):
         Omega_t = I
     else:
         OmegaTilde = Skew(Omega)
-        gamma      = 0.5*LA.norm(Omega)*cot( 0.5*LA.norm(Omega) )
-        phiSquared = LA.norm(Omega)*LA.norm(Omega)
-        Omega_t = I + 0.5*OmegaTilde + ((1-gamma)/phiSquared)*np.dot(OmegaTilde,OmegaTilde)
+        omegaNorm = LA.norm(Omega)
+        #gamma      = 0.5*omegaNorm*cot( 0.5*omegaNorm )
+        gamma1 = 0
+        if omegaNorm < 1e-1: #approximate 1-x/tan(x)
+            x=0.5*omegaNorm
+            gamma1 = x**2/3+x**4/45+x**6*2/945+x**8/4725
+        else:
+            gamma1 = 1-0.5*omegaNorm*cot( 0.5*omegaNorm )
+        phiSquared = omegaNorm*omegaNorm
+        Omega_t = I + 0.5*OmegaTilde + ((gamma1)/phiSquared)*np.dot(OmegaTilde,OmegaTilde)
     return Omega_t
+
+#cot(x) = 1/x-1/3*x-1/45*x**3-2/945*x**5
+    
                
 def cot(x):
     # Cotangent of angle in radians
@@ -272,10 +296,10 @@ def ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2):
 #computes global K for rotation vector update; used for explicit LieGroup RK integrator
 #v0 is startOfStep global velocity vector
 #Kprev is K of previous stage
-def LieGroupComputeKrotVec(mainSys, u0, v0, h, nODE2, Kprev, kprev, factK):
+def LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, Kprev, kprev, factK):
 
     #K = np.zeros(nODE2)
-    K = h*(v0[0:nODE2] + factK*Kprev) #this is the correct displacement stage for non-LieGroup coordinates; LieGroup coordinates will be overwritten!
+    K = h*(v0[0:nODE2] + factK*kprev) #this is the correct displacement stage for non-LieGroup coordinates; LieGroup coordinates will be overwritten!
     for i in mainSys.sys['lieGroupODE2indices']:
         i1 = i+3 #start index of rotation
         i2 = i+6 #end index of rotation
@@ -346,29 +370,27 @@ def UserFunctionNewtonLieGroupRK4(mainSolver, mainSys, sims):
     #+++++++++++++++++++++++++++++++++++++     
     u0 = mainSys.systemData.GetODE2Coordinates()
     v0 = mainSys.systemData.GetODE2Coordinates_t()
-    
-        
-    K0 = np.zeros(nODE2)
+     
+    #K0 = np.zeros(nODE2)
     mainSys.systemData.SetTime(t0)
     k1 = h*ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)#velocities
-    K1 = LieGroupComputeKrotVec(mainSys, u0, v0, h, nODE2, K0, K0, 0.)      #displacements; K0==k0; 
+    #K1 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K0, K0, 0.)      #displacements; K0==k0; 
+    K1 = h*v0[0:nODE2]
 
     mainSys.systemData.SetTime(t0 + 0.5*h)
     LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, K1, k1, 0.5)
     k2 = h*ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)
-    K2 = LieGroupComputeKrotVec(mainSys, u0, v0, h, nODE2, K1, k1, 0.5)
+    K2 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K1, k1, 0.5)
     
     mainSys.systemData.SetTime(t0 + 0.5*h)
     LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, K2, k2, 0.5)
     k3 = h*ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)
-    K3 = LieGroupComputeKrotVec(mainSys, u0, v0, h, nODE2, K2, k2, 0.5)
+    K3 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K2, k2, 0.5)
     
     mainSys.systemData.SetTime(t0 + h) #this is also the step end time
     LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, K3, k3, 1.)
-    #SetSystemVelocities(mainSys, ComposeRotationVectors(vec0, K3), omega0+k3 )
     k4 = h*ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)
-    K4 = LieGroupComputeKrotVec(mainSys, u0, v0, h, nODE2, K3, k3, 1.)
-    #K4 = h*np.dot(TSO3Inv(K3), omega0+k3 )
+    K4 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K3, k3, 1.)
     
     #++++++++++++++++++
     mainSys.systemData.SetTime(tend)

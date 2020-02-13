@@ -123,29 +123,35 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute data needed for Lie group integrator:
-global constrainedToGroundCoordinatesList  #list of constrained (fixed) ODE2 coordinates
-global constrainedCoordinatesList  #list of pairs of constrained ODE2 coordinates
-global lieGroupODE2indices #list of ODE2 coordinate indices for lie group nodes
-constrainedToGroundCoordinatesList = [] 
-constrainedCoordinatesList =[]  
-lieGroupODE2indices = [] 
-
-#from exudynLieGroupIntegration import lieGroupODE2indices, constrainedToGroundCoordinatesList, constrainedCoordinatesList
-
-
 if nodeType == exu.NodeType.RotationRotationVector:
-    [lieGroupODE2indices, constrainedToGroundCoordinatesList, constrainedCoordinatesList] = LieGroupExplicitRKInitialize(mbs)
+    LieGroupExplicitRKInitialize(mbs)
 
-print("constrained coords=",constrainedToGroundCoordinatesList )
+    print("constrained coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
 
 #STEP2000, t = 2 sec, timeToGo = 7.99602e-14 sec, Nit/step = 0
 #solver finished after 1.46113 seconds.
 #omegay= -106.16651966441937
 #single body reference solution: omegay= -106.16651966441937
 
+#convergence: (RotVecLieGroup)
+#1000: omegay= -105.89196163228372
+#2000: omegay= -106.16651966442134
+#4000: omegay= -106.16459373617013
+#8000: omegay= -106.16387282138162
+#16000:omegay= -106.16380903826868
+#32000:omegay= -106.163804467377
+ts=[2000,4000,8000,16000,32000]
+val=np.array([-106.16651966442134,
+-106.16459373617013,
+-106.16387282138162,
+-106.16380903826868,
+-106.163804467377]) +106.1638041640045
+val *= -1
+print(val)
+
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-fact = 2000
+fact = 1000
 simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
 simulationSettings.timeIntegration.endTime = 2              #1s for test suite / error
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
@@ -193,10 +199,11 @@ if exudynTestGlobals.useGraphics:
     ax2.plot(data1[:,0], data1[:,2], 'g:', label='omega 1 ref') 
     ax2.plot(data1[:,0], data1[:,3], 'b:', label='omega 2 ref') 
     
-    data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
-    ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
-    ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
-    ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
+#    data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
+#    ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
+#    ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
+#    ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
+    ax3.loglog(ts, val, 'b-', label='conv') 
 #    
 #    axList=[ax1,ax2,ax3]
 #    figList=[fig1, fig2, fig3]
@@ -205,8 +212,8 @@ if exudynTestGlobals.useGraphics:
     
     for ax in axList:
         ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+        #ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+        #ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
         ax.set_xlabel("time (s)")
         ax.legend()
         

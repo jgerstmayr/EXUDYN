@@ -81,7 +81,7 @@ public:
 		
 		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize),
             "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, T): invalid parameters");
-		if (initializationValue != 0) { PyWarning("MatrixBase: initializationValue != 0"); }
+		CHECKandTHROW((initializationValue == 0), "ConstSizeMatrixBase: initializationValue != 0"); 
 
         ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
 

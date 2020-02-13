@@ -88,7 +88,7 @@ public:
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, T initializationValue)
 	{
 		//CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0) && "Matrix::Matrix(Index, Index, T): invalid parameters"); //unsigned int always >= 0
-		if (initializationValue != 0) { PyWarning("MatrixBase: initializationValue != 0"); }
+		CHECKandTHROW((initializationValue == 0), "MatrixBase: initializationValue != 0");
 
 		Init();
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);

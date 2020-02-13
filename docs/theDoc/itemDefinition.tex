@@ -869,8 +869,8 @@ The item ObjectConnectorRigidBodySpringDamper has the following parameters:
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     stiffness &     Matrix6D &      &     Matrix6D[6,6,0.] &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles)\\ \hline
     damping &     Matrix6D &      &     Matrix6D[6,6,0.] &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; \\ \hline
-    rotationMarker0 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
-    rotationMarker1 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
+    rotationMarker0 &     Matrix3D &      &     EXUmath::unitMatrix3D &     local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &      &     EXUmath::unitMatrix3D &     local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
     offset &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     translational and rotational offset considered in the spring force calculation\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorRigidBodySpringDamper & & & parameters for visualization of item \\ \hline
@@ -1220,8 +1220,8 @@ The item ObjectJointGeneric has the following parameters:
     name &     String &      &     '' &     constraints"s unique name\\ \hline
     markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     constrainedAxes &     ArrayIndex &     6 &     [1,1,1,1,1,1] &     flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; 0=free, 1=constrained\\ \hline
-    rotationMarker0 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 0; translation and rotation axes for marker0 are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
-    rotationMarker1 &     Matrix3D &      &     Matrix3D[3,3,1.] &     local rotation matrix for marker 1; translation and rotation axes for marker1 are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
+    rotationMarker0 &     Matrix3D &      &     EXUmath::unitMatrix3D &     local rotation matrix for marker 0; translation and rotation axes for marker0 are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &      &     EXUmath::unitMatrix3D &     local rotation matrix for marker 1; translation and rotation axes for marker1 are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     forceTorqueUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     vector of 6 parameters for joint"s forceTorqueUserFunction\\ \hline
     offsetUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     vector of 6 parameters for joint"s offsetUserFunction\\ \hline

@@ -629,7 +629,7 @@ class VObjectConnectorRigidBodySpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorRigidBodySpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1.), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1.), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness
@@ -978,7 +978,7 @@ class VObjectJointGeneric:
         yield 'color', self.color
 
 class ObjectJointGeneric:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1.), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1.), activeConnector = True, forceTorqueUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], forceTorqueUserFunction = 0, offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, forceTorqueUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], forceTorqueUserFunction = 0, offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes

@@ -42,8 +42,8 @@ namespace EXUmath {
 	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
 	inline static const Vector3D unitVecX({ 1.,0.,0. });
-	inline static const Vector3D unitVecY({ 1.,0.,0. });
-	inline static const Vector3D unitVecZ({ 1.,0.,0. });
+	inline static const Vector3D unitVecY({ 0.,1.,0. });
+	inline static const Vector3D unitVecZ({ 0.,0.,1. });
 
 	inline Vector3D GetUnitVector(Index i)
 	{

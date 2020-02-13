@@ -87,16 +87,19 @@ def DefaultValue2Python(s): #replace _ and other symbols to fit into latex code
 
     s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
     s = s.replace('OutputVariableType::None','0')  #none always corresponds to 0
-    
+    s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
+
     
     if (s.find('Matrix6D(6,6,') != -1):
         s = s.replace('Matrix6D(6,6,','')
         s = s.replace(')','')
+        if s != '0' and s != '0.': print('error: Matrix6D(...) may only initialized with 0s')
         s = 'IIDiagMatrix(rowsColumns=6,value=' + s + ')'
         #
     elif (s.find('Matrix3D(3,3,') != -1):
         s = s.replace('Matrix3D(3,3,','')
         s = s.replace(')','')
+        if s != '0' and s != '0.': print('error: Matrix3D(...) may only initialized with 0s')
         s = 'IIDiagMatrix(rowsColumns=3,value=' + s + ')'
         #
     elif (s.find('Index') != -1) | (s.find('Float') != -1) | (s.find('Vector') != -1):

@@ -519,7 +519,7 @@ sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainLoadPyClass(pyObject); }', 
                                 description="add a load with loadDefinition from Python load class; returns (global) load number of newly added load",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0],markerNumber=0,name='heavy load')) \\\\mbs.AddLoad(item)",
+                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
@@ -573,7 +573,7 @@ sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions f
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainSensorPyClass(pyObject); }', 
                                 description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddSensor(SensorNode(sensorType=exu.SensorType.Node,nodeNumber=0,name='test sensor')) \\\\mbs.AddSensor(item)",
+                                example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 

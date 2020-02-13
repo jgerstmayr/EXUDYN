@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-11  09:45:23 (last modfied)
+* @date         2020-02-12  16:38:34 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,8 +40,8 @@ public: // AUTO:
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
         constrainedAxes = ArrayIndex({1,1,1,1,1,1});
-        rotationMarker0 = Matrix3D(3,3,1.);
-        rotationMarker1 = Matrix3D(3,3,1.);
+        rotationMarker0 = EXUmath::unitMatrix3D;
+        rotationMarker1 = EXUmath::unitMatrix3D;
         activeConnector = true;
         forceTorqueUserFunctionParameters = Vector6D({0.,0.,0.,0.,0.,0.});
         offsetUserFunctionParameters = Vector6D({0.,0.,0.,0.,0.,0.});
