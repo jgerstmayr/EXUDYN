@@ -424,5 +424,27 @@ namespace EXUvis {
 			}
 		}
 	}
+	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles, bool doubleArrow)
+	{
+		Real arrowSizeRelative = 2.5;
+		Real len = v.GetL2Norm();
+		if (len != 0)
+		{
+			Vector3D v0 = (1. / len)*v;
+			if (!doubleArrow)
+			{
+				Vector3D v1 = (len - 3 * radius * arrowSizeRelative)*v0;
+				DrawCylinder(p, v1, radius, color, graphicsData, nTiles);
+				DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+			}
+			else
+			{
+				Vector3D v1 = (len - 2 * 3 * radius * arrowSizeRelative)*v0;
+				DrawCylinder(p, v1, radius, color, graphicsData, nTiles);
+				DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+				DrawCone(p + v1 + (3 * radius * arrowSizeRelative) * v0, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+			}
+		}
+	}
 
 };

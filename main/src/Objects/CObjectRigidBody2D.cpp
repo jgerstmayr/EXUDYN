@@ -91,7 +91,7 @@ void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, 
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
-	case OutputVariableType::Rotation: value.SetAll({ GetCNode(0)->GetCoordinateVector(configuration)[2] }); break;
+	case OutputVariableType::Rotation: value.CopyFrom(Vector1D( GetCNode(0)->GetCoordinateVector(configuration)[2])); break;
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(localPosition, configuration);

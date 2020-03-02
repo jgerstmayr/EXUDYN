@@ -47,7 +47,7 @@ void ComputeConnectorCoordinateSpringDamperProperties(const MarkerDataStructure&
 		else
 		{
 			//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-			force = parameters.springForceUserFunction(relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.dryFriction, parameters.dryFrictionProportionalZone);
+			force = parameters.springForceUserFunction(markerData.GetTime(), relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.dryFriction, parameters.dryFrictionProportionalZone);
 		}
 	}
 }
@@ -100,13 +100,13 @@ void CObjectConnectorCoordinateSpringDamper::ComputeJacobianODE2_ODE2(ResizableM
 	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCoordinateSpringDamper::ComputeODE2RHSJacobian");
 }
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectConnectorCoordinateSpringDamper::GetOutputVariableTypes() const
-{
-	//return OutputVariableType::None;
-	return (OutputVariableType)((Index)OutputVariableType::Distance + (Index)OutputVariableType::Displacement +
-		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Force);
-}
+////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
+//OutputVariableType CObjectConnectorCoordinateSpringDamper::GetOutputVariableTypes() const
+//{
+//	//return OutputVariableType::_None;
+//	return (OutputVariableType)((Index)OutputVariableType::Distance + (Index)OutputVariableType::Displacement +
+//		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Force);
+//}
 
 //! provide according output variable in "value"
 void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
@@ -118,7 +118,6 @@ void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVa
 
 	switch (variableType)
 	{
-	case OutputVariableType::Distance: value = Vector({ relPos }); break;
 	case OutputVariableType::Displacement: value = Vector({ relPos }); break;
 	case OutputVariableType::Velocity: value = Vector({ relVel }); break;
 	case OutputVariableType::Force: value = Vector({ force }); break;

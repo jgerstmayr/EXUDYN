@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  18:14:37 (last modfied)
+* @date         2020-02-19  19:00:14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -26,13 +26,11 @@ class CMarkerBodyRigidParameters // AUTO:
 public: // AUTO: 
     Index bodyNumber;                             //!< AUTO: body number to which marker is attached to
     Vector3D localPosition;                       //!< AUTO: local body position of marker; e.g. local (body-fixed) position where force is applied to
-    bool bodyFixed;                               //!< AUTO: if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates
     //! AUTO: default constructor with parameter initialization
     CMarkerBodyRigidParameters()
     {
         bodyNumber = EXUstd::InvalidIndex;
         localPosition = Vector3D({0.,0.,0.});
-        bodyFixed = false;
     };
 };
 

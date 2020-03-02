@@ -35,7 +35,12 @@
 //#include <pybind11/functional.h> //for functions
 #include <atomic> //for output buffer semaphore
 
+#include "Utilities/TimerStructure.h"
+
 namespace py = pybind11;
+
+//global variable for timers:
+TimerStructure globalTimers;
 
 //these two variables become global
 OutputBuffer outputBuffer; //this is my customized output buffer, which can redirect the output stream;

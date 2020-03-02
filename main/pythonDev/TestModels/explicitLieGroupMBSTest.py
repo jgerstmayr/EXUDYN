@@ -52,7 +52,7 @@ JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)
 #print(JFP)
 
 #omega0 = [0,150,-4.61538] #arbitrary initial angular velocity
-omega0 = [0,0,0] #arbitrary initial angular velocity
+omega0 = [3*0,2*0,1*0] #arbitrary initial angular velocity
 p0 = [0,0,0] #reference position
 p1 = [0,L,0] #reference position
 v0 = [0.,0.,0.] #initial translational velocity
@@ -61,6 +61,8 @@ v0 = [0.,0.,0.] #initial translational velocity
 #nodeType = exu.NodeType.RotationEulerParameters
 #nodeType = exu.NodeType.RotationRxyz
 nodeType = exu.NodeType.RotationRotationVector
+
+useExplicitIntegrator = True
 
 useBody2 = True
 
@@ -73,20 +75,27 @@ if nodeType == exu.NodeType.RotationEulerParameters:
     if useBody2:
         nRB2 = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p1+ep0, initialVelocities=v0+list(ep_t0)))
 elif nodeType == exu.NodeType.RotationRxyz:
-    rot0 = [0,0,0]
+    rot0 = [0,1*0,0]
     #omega0 = [10,0,0]
     rot_t0 = AngularVelocity2RotXYZ_t(omega0, rot0)
+    rotMat = RotXYZ2RotationMatrix(rot0)
+#    print('rotMat=',rotMat)
     #print('rot_t0=',rot_t0)
     nRB = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
     if useBody2:
         nRB2 = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=p1+rot0, initialVelocities=v0+list(rot_t0)))
 elif nodeType == exu.NodeType.RotationRotationVector:
-    rot0 = [0,0,0]
-    rot_t0 = omega0
+    rot0 = [0,1*0,0]
+    rotMat = RotationVector2RotationMatrix(rot0)
+#    print('rotMat=',rotMat)
+#    print('rot0b=',RotationMatrix2RotationVector(rotMat))
+
+
+    rot_t0 = np.dot(rotMat.transpose(),omega0)
     print('rot_t0=',rot_t0)
-    nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
+    nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+[0,0,0], initialCoordinates=[0,0,0]+rot0, initialVelocities=v0+list(rot_t0)))
     if useBody2:
-        nRB2 = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p1+rot0, initialVelocities=v0+list(rot_t0)))
+        nRB2 = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p1+[0,0,0], initialCoordinates=[0,0,0]+rot0, initialVelocities=v0+list(rot_t0)))
 
 
 oGraphics = GraphicsDataOrthoCube(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,0.5])
@@ -149,7 +158,7 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute data needed for Lie group integrator:
-if nodeType == exu.NodeType.RotationRotationVector:
+if useExplicitIntegrator:#nodeType == exu.NodeType.RotationRotationVector:
     LieGroupExplicitRKInitialize(mbs) #initialize Lie group nodes and coordinate constraints for explicit integration
     
     print("constrained to ground coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
@@ -221,7 +230,7 @@ dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
 fact = 16000
 simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
-simulationSettings.timeIntegration.endTime = 0.5              #1s for test suite / error
+simulationSettings.timeIntegration.endTime = 1              #1s for test suite / error
 
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -234,7 +243,7 @@ if nodeType != exu.NodeType.RotationRotationVector:
 else:
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
     
-if nodeType == exu.NodeType.RotationRotationVector:
+if useExplicitIntegrator:#nodeType == exu.NodeType.RotationRotationVector:
     dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
 
 dynamicSolver.SolveSystem(mbs, simulationSettings)
@@ -258,7 +267,7 @@ if exudynTestGlobals.useGraphics:
 #    [fig1, ax1] = plt.subplots()
     [fig2, ax2] = plt.subplots()
     [fig3, ax3] = plt.subplots()
-    data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
+#    data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
 #    ax1.plot(data1[:,0], data1[:,1+3], 'r-', label='coordinate 0')  #1, because coordinates to not include ref. values
 #    ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='coordinate 1') 
 #    ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='coordinate 2') 
@@ -269,21 +278,26 @@ if exudynTestGlobals.useGraphics:
     ax2.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
     ax2.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
 
-    data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt', comments='#', delimiter=',')
-    ax2.plot(data1[:,0], data1[:,1], 'r:', label='omega 0 ref')  #1, because coordinates to not include ref. values
-    ax2.plot(data1[:,0], data1[:,2], 'g:', label='omega 1 ref') 
-    ax2.plot(data1[:,0], data1[:,3], 'b:', label='omega 2 ref') 
+    data2 = np.loadtxt('solution/sensorAngVelLocalRef.txt', comments='#', delimiter=',')
+    ax2.plot(data2[:,0], data2[:,1], 'r:', label='omega X') 
+    ax2.plot(data2[:,0], data2[:,2], 'g:', label='omega Y') 
+    ax2.plot(data2[:,0], data2[:,3], 'b:', label='omega Z') 
+
+#    data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt', comments='#', delimiter=',')
+#    ax2.plot(data1[:,0], data1[:,1], 'r:', label='omega 0 ref')  #1, because coordinates to not include ref. values
+#    ax2.plot(data1[:,0], data1[:,2], 'g:', label='omega 1 ref') 
+#    ax2.plot(data1[:,0], data1[:,3], 'b:', label='omega 2 ref') 
     
 #    data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
 #    ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
 #    ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
 #    ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
     
-    ax3.loglog(ts, val, 'b-', label='conv') #    
+    #ax3.loglog(ts, val, 'b-', label='conv') #    
 #    axList=[ax1,ax2,ax3]
 #    figList=[fig1, fig2, fig3]
-    axList=[ax2,ax3]
-    figList=[fig2,fig3]
+    axList=[ax2]
+    figList=[fig2]
     
     for ax in axList:
         ax.grid(True, 'major', 'both')
@@ -293,7 +307,7 @@ if exudynTestGlobals.useGraphics:
         ax.legend()
         
     ax2.set_ylabel("angular velocity (rad/s)")
-    ax3.set_ylabel("coordinate (m)")
+    #ax3.set_ylabel("coordinate (m)")
     
     for f in figList:
         f.tight_layout()

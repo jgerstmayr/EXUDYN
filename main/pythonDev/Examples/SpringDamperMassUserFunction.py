@@ -24,7 +24,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 #defines relative displacement, relative velocity, stiffness k, damping d, and additional spring force f0
-def springForce(u, v, k, d, f0):
+def springForce(t, u, v, k, d, f0):
     return u*k+v*d
 
 sqrt2 = 2**0.5
@@ -39,7 +39,7 @@ for j in range(nBodies2):
     
     for i in range(nBodies-1): 
         #2D:
-        node = mbs.AddNode(NodePoint2D(referenceCoordinates=[i+1, j], initialDisplacements=[0, 0]))
+        node = mbs.AddNode(NodePoint2D(referenceCoordinates=[i+1, j], initialCoordinates=[0, 0]))
         body = mbs.AddObject(MassPoint2D(physicsMass=10, nodeNumber=node))
         mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
         #dynamic/explicit:

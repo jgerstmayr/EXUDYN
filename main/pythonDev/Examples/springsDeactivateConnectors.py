@@ -30,7 +30,7 @@ for j in range(nBodies2):
     body = mbs.AddObject({'objectType': 'Ground', 'referencePosition': [0,j,0]})
     mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
     for i in range(nBodies-1): 
-        node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],'initialDisplacements': [(i+1)*0.05*0, 0.0, 0.0], 'initialVelocities': [0., 0., 0.],})
+        node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],'initialCoordinates': [(i+1)*0.05*0, 0.0, 0.0], 'initialVelocities': [0., 0., 0.],})
         body = mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': 10, 'nodeNumber': node})
         mBody = mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
         bodyMarkerList += [mBody]

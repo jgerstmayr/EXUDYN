@@ -35,7 +35,7 @@
 
 
 enum class RendererMode {
-	None, Move, Rotate, ZoomView, Select
+	_None, Move, Rotate, ZoomView, Select
 };
 
 

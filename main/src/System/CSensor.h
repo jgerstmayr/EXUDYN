@@ -35,7 +35,7 @@ public:
 	//! determine type of marker in order to decide according action in assembly; to be filled in derived class
 	virtual SensorType GetType() const {
 		CHECKandTHROWstring("Invalid call to CSensor::GetType");
-		return SensorType::None;
+		return SensorType::_None;
 	}
 
 	//! get type dependent index (node, object, load, ...)-index in global lists
@@ -43,7 +43,7 @@ public:
 	{
 		switch (GetType())
 		{
-		//case SensorType::None:  return 0; //should not occur!
+		//case SensorType::_None:  return 0; //should not occur!
 		case SensorType::Node:  return GetNodeNumber();
 		case SensorType::Object: return GetObjectNumber();
 		case SensorType::Body:  return GetObjectNumber();
@@ -83,7 +83,7 @@ public:
 	//! get OutputVariableType for node, body, object and marker sensors; unused for loads
 	virtual OutputVariableType GetOutputVariableType() const {
 		CHECKandTHROWstring("Invalid call to CSensor::GetOutputVariableType");
-		return OutputVariableType::None;
+		return OutputVariableType::_None;
 	}
 
 	//! get sensor values into values vector

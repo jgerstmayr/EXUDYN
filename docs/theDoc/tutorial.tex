@@ -64,10 +64,10 @@ We first need to add nodes, which provide the coordinates (and the degrees of fr
 The following line adds a 3D node for 3D mass point\footnote{Note: Point is an abbreviation for NodePoint, defined in \texttt{itemInterface.py}.}:
 \begin{lstlisting}[language=Python, firstnumber=19]
   n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-                       initialDisplacements = [u0,0,0], 
+                       initialCoordinates = [u0,0,0], 
                        initialVelocities = [v0,0,0]))
 \end{lstlisting}
-Here, \texttt{Point} (=\texttt{NodePoint}) is a Python class, which takes a number of arguments defined in the reference manual. The arguments here are \texttt{referenceCoordinates}, which are the coordinates for which the system is defined. The initial configuration is given by \texttt{referenceCoordinates + initialDisplacements}, while the initial state additionally gets \texttt{initialVelocities}.
+Here, \texttt{Point} (=\texttt{NodePoint}) is a Python class, which takes a number of arguments defined in the reference manual. The arguments here are \texttt{referenceCoordinates}, which are the coordinates for which the system is defined. The initial configuration is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state additionally gets \texttt{initialVelocities}.
 
 %
 While \texttt{Point} adds 3 unknown coordinates to the system, which need to be solved, we also can add ground nodes, which can be used similar to nodes, but they do not have unknown coordinates -- and therefore also have no initial displacements or velocities. The advantage of ground nodes (and ground bodies) is that no constraints are needed to fix these nodes.

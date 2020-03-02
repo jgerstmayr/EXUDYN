@@ -36,7 +36,7 @@ x0 = f/k
 #(exact) dynamic result with u0 and v0: (see bottom of file)
 
 #node for mass point:
-n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialDisplacements = [u0,0,0], initialVelocities= [v0,0,0]))
+n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], initialVelocities= [v0,0,0]))
 
 #add mass points and ground object:
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))

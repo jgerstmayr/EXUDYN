@@ -120,7 +120,7 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		const Index forceXindex = 0;
 		const Index forceYindex = 1;
 
-		if (!velocityLevel)
+		if (!velocityLevel || parameters.usePenaltyFormulation)
 		{
 			//compute ANCF position:
 			const Index ns = 4;
@@ -142,8 +142,20 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 			vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0
 			vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
 
-			algebraicEquations[0] = vPos[0];
-			algebraicEquations[1] = vPos[1];
+			//pout << "lambda = " << markerData.GetLagrangeMultipliers() << ", vPos=" << vPos << "\n";
+
+			if (!parameters.usePenaltyFormulation)
+			{
+				algebraicEquations[0] = vPos[0];
+				algebraicEquations[1] = vPos[1];
+			}
+			else
+			{
+				//algebraicEquations[0] = parameters.penaltyStiffness * vPos[0] + markerData.GetLagrangeMultipliers()[forceXindex];
+				//algebraicEquations[1] = parameters.penaltyStiffness * vPos[1] + markerData.GetLagrangeMultipliers()[forceYindex];
+				algebraicEquations[0] = vPos[0] - markerData.GetLagrangeMultipliers()[forceXindex] / parameters.penaltyStiffness;
+				algebraicEquations[1] = vPos[1] - markerData.GetLagrangeMultipliers()[forceYindex] / parameters.penaltyStiffness;
+			}
 
 			//Real forceX = GetCurrentAEcoordinate(forceXindex);
 			//Real forceY = GetCurrentAEcoordinate(forceYindex);
@@ -194,7 +206,7 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 	const MarkerDataStructure& markerData, Real t) const
 {
 	const Index ns = 4;
-	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
+	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(); //moving body coordinates length
 	jacobian.SetNumberOfRowsAndColumns(2, columnsOffset + 2 * ns + 1); //add 1 coordinate for sALE
 	jacobian.SetAll(0.);
 
@@ -202,7 +214,6 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 
 	if (parameters.activeConnector)
 	{
-
 		jacobian_AE.SetScalarMatrix(2, 0.); //no dependencies
 
 		//marker0: contains position jacobian
@@ -220,19 +231,27 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		Vector4D SV_x = CObjectANCFCable2DBase::ComputeShapeFunctions_x(slidingCoordinate, L);
 		Vector2D r_x = CObjectANCFCable2DBase::MapCoordinates(SV_x, qNode0, qNode1);
 
-		for (Index i = 0; i < columnsOffset; i++)
+		for (Index i = 0; i < columnsOffset; i++) //moving body 
 		{
 			jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
 			jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
 		}
-		for (Index i = 0; i < ns; i++)
+		for (Index i = 0; i < ns; i++) //ANCF
 		{
 			jacobian(0, 2 * i + columnsOffset) = SV[i];
 			jacobian(1, 2 * i + 1 + columnsOffset) = SV[i];
 		}
-		//new version, missing component for ALE joint:
+		
+		//additional component for ALE coordinate
 		jacobian(0, 2 * ns + columnsOffset) = r_x[0];
 		jacobian(1, 2 * ns + columnsOffset) = r_x[1];
+
+		if (parameters.usePenaltyFormulation)
+		{
+			//jacobian *= parameters.penaltyStiffness;
+			jacobian_AE.SetScalarMatrix(2, -1./ parameters.penaltyStiffness);
+			//pout << jacobian_AE << "\n";
+		}
 	}
 	else
 	{
@@ -309,7 +328,7 @@ Real CObjectJointALEMoving2D::PostNewtonStep(const MarkerDataStructure& markerDa
 	//also use second dataCoordinate for current (+initial) position!!!
 
 	Real discontinuousError = 0;
-	flags = PostNewtonFlags::None;
+	flags = PostNewtonFlags::_None;
 
 	Real L = markerDataCurrent.GetMarkerData(1).value; //kind of hack ...
 	const Index slidingCoordinateIndex = 2;

@@ -41,7 +41,7 @@ fFriction = 20 #force in Newton, only depends on direction of velocity
 #print('damping='+str(d))
 
 #node for mass point:
-n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialDisplacements = [u0,0,0], initialVelocities= [v0,0,0]))
+n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], initialVelocities= [v0,0,0]))
 nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [L,0,0]))
 
 #add mass points and ground object:

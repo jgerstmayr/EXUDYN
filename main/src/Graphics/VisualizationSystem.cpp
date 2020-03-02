@@ -120,7 +120,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
 		//recompute colors in contourplot objects (LATERON: add triangles ...!)
-		if (visualizationSystemContainer.settings.contour.outputVariable != OutputVariableType::None)
+		if (visualizationSystemContainer.settings.contour.outputVariable != OutputVariableType::_None)
 		{
 			float minVal = visualizationSystemContainer.settings.contour.minValue;
 			float maxVal = visualizationSystemContainer.settings.contour.maxValue;

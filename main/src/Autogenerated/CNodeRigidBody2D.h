@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  18:12:47 (last modfied)
+* @date         2020-02-21  22:41:14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,7 +24,7 @@
 class CNodeRigidBody2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector3D referenceCoordinates;                //!< AUTO: reference coordinates (x-pos,y-pos and rotation phi) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement
+    Vector3D referenceCoordinates;                //!< AUTO: reference coordinates (x-pos,y-pos and rotation theta) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement
     //! AUTO: default constructor with parameter initialization
     CNodeRigidBody2DParameters()
     {
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeRigidBody2D
-* @brief        A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi); all coordinates lead to second order differential equations; The rotation matrix \f$\Am\f$, transforming local (body-fixed) 3D positions \f$\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;0]^T\f$ to global 3D positions \f$\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T\f$, \f[ \pv_{glob} = \Am \pv_{loc}, \f] is defined as \f[ \Am = \mp{\cos(\varphi)}{-\sin(\varphi)}{\sin(\varphi)}{\cos(\varphi)}.\f]
+* @brief        A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

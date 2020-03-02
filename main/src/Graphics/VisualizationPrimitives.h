@@ -90,5 +90,7 @@ namespace EXUvis {
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
 	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, GraphicsData& graphicsData, float colorFactor = 1.f, bool draw3D = true, Index nTiles = 12, Real arrowSizeRelative = 2.5);
 
+	//! draw arraw (for forces, etc.); doubleArrow for torques
+	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles = 12, bool doubleArrow = false);
 
 } //EXUvis

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-24  13:27:00 (last modfied)
+* @date         2020-02-20  00:00:02 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -37,7 +37,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectMassPoint
-* @brief        A 3D mass point which is attached to a position-based node. Equations of motion with the displacements \f$[u_x\;\; u_y\;\; u_z]^T\f$, the mass \f$m\f$ and the residual of all forces \f$[R_x\;\; R_y\;\; R_z]^T\f$ are given as \f[ \vr{m \cdot \ddot u_x}{m \cdot \ddot u_y}{m \cdot \ddot u_z} = \vr{R_x}{R_y}{R_z}.\f]
+* @brief        A 3D mass point which is attached to a position-based node, usually NodePoint.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -79,7 +79,7 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
-        return JacobianType::None;
+        return JacobianType::_None;
     }
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible

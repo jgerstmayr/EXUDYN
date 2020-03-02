@@ -216,6 +216,9 @@ public:
 	//! get load's default values, which helps for manual writing of python input
 	py::dict PyGetLoadDefaults(STDstring typeName);
 
+	//! Get current load values, specifically if user-defined loads are used
+	virtual py::object PyGetLoadValues(Index nodeNumber) const;
+
 	//! Get (read) parameter 'parameterName' of 'itemNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object PyGetLoadParameter(Index itemNumber, const STDstring& parameterName) const;
 	//! Set (write) parameter 'parameterName' of 'itemNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
@@ -227,18 +230,18 @@ public:
 	Index AddMainSensor(py::dict d);
 	//! Add a MainSensor with a python class
 	Index AddMainSensorPyClass(py::object pyObject);
-	//! get marker's dictionary by name; does not throw a error message
+	//! get sensor's dictionary by name; does not throw a error message
 	Index PyGetSensorNumber(STDstring itemName);
-	//! hook to read marker's dictionary
+	//! hook to read sensor's dictionary
 	py::dict PyGetSensor(Index itemNumber);
-	//! get marker's dictionary by name
+	//! get sensor's dictionary by name
 	py::dict PyGetSensorByName(STDstring itemName);
-	//! modify marker's dictionary
+	//! modify sensor's dictionary
 	void PyModifySensor(Index itemNumber, py::dict d);
-	//! get marker's default values, which helps for manual writing of python input
+	//! get sensor's default values, which helps for manual writing of python input
 	py::dict PyGetSensorDefaults(STDstring typeName);
-	//! get marker's default values, which helps for manual writing of python input
-	py::object PyGetSensorValue(Index itemNumber, ConfigurationType configuration = ConfigurationType::Current);
+	//! get sensor's values
+	py::object PyGetSensorValues(Index itemNumber, ConfigurationType configuration = ConfigurationType::Current);
 
 	//! Get (read) parameter 'parameterName' of 'itemNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object PyGetSensorParameter(Index itemNumber, const STDstring& parameterName) const;

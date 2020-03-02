@@ -34,7 +34,7 @@ namespace Marker {
 	//  coordinates, or how to measure the orientation of the body;
 	//  use unscoped enum to directly translate to Index
 	enum Type {
-		None = 0, //marks that no type is used
+		_None = 0, //marks that no type is used
 		//bits to determine the item which is acted on (not relevant for connector, load, OutputVariable):
 		//1+4==Body, 2==Node, 4==Object, 2+4=Node+Object
 		Body = 1 << 0,						//!< 1==Body, 0==other (must be also object!!!)
@@ -62,7 +62,7 @@ namespace Marker {
 	inline STDstring GetTypeString(Type var)
 	{
 		STDstring t; //empty string
-		if (var == Marker::None) { t = "None/Undefined"; }
+		if (var == Marker::_None) { t = "_None/Undefined"; }
 		if (var & Body) { t += "Body"; }
 		if (var & Node) { t += "Node"; }
 		if ((var & Object) && !(var & Body)) { t += "Object"; }
@@ -82,7 +82,7 @@ namespace Marker {
 }
 
 enum class AccessFunctionType { //determines which connectors/forces can be applied to object; underscores mark the derivative w.r.t. q
-	None = 0, //marks that no type is used
+	_None = 0, //marks that no type is used
 	//TranslationalVelocity_qt = (1 << 0), //for application of forces, position constraints
 	//AngularVelocity_qt = (1 << 1), //for application of torques, rotational constraints
 	//DisplacementVolumeIntegral_q = (1 << 2), //for distributed (body) loads
@@ -101,7 +101,7 @@ enum class AccessFunctionType { //determines which connectors/forces can be appl
 };
 
 enum class LoadType {
-    None = 0, //marks that no type is used
+    _None = 0, //marks that no type is used
 
 	//keep this list SYNCHRONIZED with MarkerType:
 	Force = (Index)Marker::Position,		//!< vector force applied to BodyPosition, BodyVolume, BodySurface, ...
@@ -116,7 +116,7 @@ enum class LoadType {
 
 //! sensor types are used to identify what items are measured
 enum class SensorType {
-	None = 0, //marks that no type is used
+	_None = 0, //marks that no type is used
 	Node   = 1 << 0, //!< use OutputVariableType
 	Object = 1 << 1, //!< use OutputVariableType
 	Body   = 1 << 2, //!< use OutputVariableType; additionally has localPosition
@@ -129,7 +129,7 @@ inline const char* GetSensorTypeString(SensorType var)
 {
 	switch (var)
 	{
-	case SensorType::None: return "None";
+	case SensorType::_None: return "_None";
 	case SensorType::Node: return "Node";
 	case SensorType::Object: return "Object";
 	case SensorType::Body: return "Body";
@@ -143,7 +143,7 @@ inline const char* GetSensorTypeString(SensorType var)
 //! OutputVariable used for output data in objects, nodes, loads, ...
 enum class OutputVariableType {
 	//all cases are independent of 2D/3D, which is known by the object itself; TYPES CAN BE COMBINED (==> used for available types in element)
-	None = 0, //marks that no type is used
+	_None = 0, //marks that no type is used
 	Distance = 1 << 0,				//!< distance, e.g. of joint or spring-damper
 	Position = 1 << 1,				//!< position vector, e.g. of node or body center of mass
 	Displacement = 1 << 2,			//!< displacement vector, e.g. of node or body center of mass
@@ -165,12 +165,16 @@ enum class OutputVariableType {
 	Strain = 1 << 18,				//!< strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
 	Stress = 1 << 19,				//!< stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
 	Curvature = 1 << 20,			//!< curvature (components) in beam or shell
+	DisplacementLocal = 1 << 21,	//!< local displacement vector (used e.g. in joints)
+	VelocityLocal = 1 << 22,		//!< local velocity vector (used e.g. in joints)
+	ForceLocal = 1 << 23,			//!< local force e.g. in connector/constraint or section force in beam
+	TorqueLocal = 1 << 24,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!
 
     //SecondPiolaKirchoffStress = (1 << 7), GreenStrain = (1 << 8),
     //BeamStrain = (1 << 9), BeamCurvature = (1 << 10), //are both 3D-vectors containing axial and transverse components
     //FramePosition = (1 << 11), FrameOrientation = (1 << 12), //position and orientation of the reference point
-    EndOfEnumList = 1 << 21 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+    EndOfEnumList = 1 << 25 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
 
 //! OutputVariable string conversion
@@ -178,7 +182,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 {
 	switch (var)
 	{
-	case OutputVariableType::None: return "None";
+	case OutputVariableType::_None: return "_None";
 	case OutputVariableType::Distance: return "Distance";
 	case OutputVariableType::Position: return "Position";
 	case OutputVariableType::Displacement: return "Displacement";
@@ -206,6 +210,10 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 	case OutputVariableType::Strain: return "Strain";
 	case OutputVariableType::Stress: return "Stress";
 	case OutputVariableType::Curvature: return "Curvature";
+	case OutputVariableType::DisplacementLocal: return "DisplacementLocal";
+	case OutputVariableType::VelocityLocal: return "VelocityLocal";
+	case OutputVariableType::ForceLocal: return "ForceLocal";
+	case OutputVariableType::TorqueLocal: return "TorqueLocal";
 	case OutputVariableType::EndOfEnumList: return "EndOfEnumList";
 	default: SysError("GetOutputVariableTypeString: invalid variable type");  return "Invalid";
 	}
@@ -224,7 +232,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //{
 //    switch (outputVariableType)
 //    {
-//        case OutputVariableType::None: return Index2(0, 0);
+//        case OutputVariableType::_None: return Index2(0, 0);
 //        case OutputVariableType::Position: return Index2(3, 0);
 //        case OutputVariableType::Displacement: return Index2(3, 0);
 //        case OutputVariableType::Velocity: return Index2(3, 0);
@@ -240,7 +248,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //{
 //    switch (outputVariableType)
 //    {
-//        case OutputVariableType::None: return OutputVariableUnit::NoUnit;
+//        case OutputVariableType::_None: return OutputVariableUnit::NoUnit;
 //        case OutputVariableType::Position: return OutputVariableUnit::Length;
 //        case OutputVariableType::Displacement: return OutputVariableUnit::Length;
 //        case OutputVariableType::Velocity: return OutputVariableUnit::LengthPerTime;
@@ -253,7 +261,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //};
 
 enum class ConfigurationType {
-	None = 0, //marks that no configuration is used
+	_None = 0, //marks that no configuration is used
 	Initial = 1,
 	Current = 2,
 	Reference = 3,
@@ -301,17 +309,17 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
             return AccessFunctionType::AngularVelocity_qt;
         }
         else {
-            CHECKandTHROWstring("GetAccessFunctionType:  Marker::BodyPosition"); return AccessFunctionType::None;
+            CHECKandTHROWstring("GetAccessFunctionType:  Marker::BodyPosition"); return AccessFunctionType::_None;
         }
     case Marker::BodyMass:
         if (loadType == LoadType::ForcePerVolume) {
             return AccessFunctionType::DisplacementVolumeIntegral_q;
         }
         else {
-            CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerVolume"); return AccessFunctionType::None;
+            CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerVolume"); return AccessFunctionType::_None;
         }
 
-    default: CHECKandTHROWstring("GetAccessFunctionType"); return AccessFunctionType::None;
+    default: CHECKandTHROWstring("GetAccessFunctionType"); return AccessFunctionType::_None;
     }
 
 };
@@ -328,7 +336,7 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //			return AccessFunctionType::TranslationalVelocity_qt;
 //		}
 //		else {
-//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::None;
+//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::_None;
 //		}
 //
 //	case Marker::Orientation:
@@ -336,7 +344,7 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //			return AccessFunctionType::AngularVelocity_qt;
 //		}
 //		else {
-//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::None;
+//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::Position"); return AccessFunctionType::_None;
 //		}
 //
 //	case Marker::BodyMass:
@@ -344,10 +352,10 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //			return AccessFunctionType::DisplacementMassIntegral_q;
 //		}
 //		else {
-//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerMass"); return AccessFunctionType::None;
+//			CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerMass"); return AccessFunctionType::_None;
 //		}
 //
-//	default: CHECKandTHROWstring("GetAccessFunctionType illegal"); return AccessFunctionType::None;
+//	default: CHECKandTHROWstring("GetAccessFunctionType illegal"); return AccessFunctionType::_None;
 //	}
 //};
 
@@ -365,7 +373,7 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 
 //! enum to determine how to set up the system matrix 
 enum class LinearSolverType {
-	None = 0,			//marks that no type is used
+	_None = 0,			//marks that no type is used
 	EXUdense = 1,		//use internal dense matrix (e.g. matrix inverse for factorization)
 	EigenSparse = 2		//use Eigen::SparseMatrix
 };
@@ -375,7 +383,7 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
 {
 	switch (value)
 	{
-	case LinearSolverType::None:			return os << "None"; break;
+	case LinearSolverType::_None:			return os << "_None"; break;
 	case LinearSolverType::EXUdense:			return os << "EXUdense"; break;
 	case LinearSolverType::EigenSparse:		return os << "EigenSparse"; break;
 	default: 		return os << "LinearSolverType::invalid";

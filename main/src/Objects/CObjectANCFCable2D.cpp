@@ -724,7 +724,7 @@ py::object MainObjectANCFCable2D::CallFunction(STDstring functionName, py::dict 
 	{
 		Vector3D locPos;
 		STDstring configStr;
-		ConfigurationType configType = ConfigurationType::None;
+		ConfigurationType configType = ConfigurationType::_None;
 		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
 		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }
@@ -738,7 +738,7 @@ py::object MainObjectANCFCable2D::CallFunction(STDstring functionName, py::dict 
 	{
 		Vector3D locPos;
 		STDstring configStr;
-		ConfigurationType configType = ConfigurationType::None;
+		ConfigurationType configType = ConfigurationType::_None;
 		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
 		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }

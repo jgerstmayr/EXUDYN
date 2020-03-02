@@ -80,6 +80,8 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 
 #include "Pymodules/PybindTests.h"
 
+//#include "../../include/ngs-core-master/autodiff.hpp" //for testing
+
 #ifdef USE_GLFW_GRAPHICS
 	extern GlfwRenderer glfw;
 #endif
@@ -195,12 +197,9 @@ void PyStopOpenGLRenderer()
 	PyWarning("GLFW_Graphics deactivated");
 #endif
 }
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
 
 // Define the function to be called when ctrl-c (SIGINT) is sent to process
 void signal_callback_handler(int signum) 
@@ -228,19 +227,15 @@ public:
 
 MySignal registerSignal;
 
-//translate exceptions to python //https://github.com/pybind/pybind11/blob/master/docs/advanced/exceptions.rst
-//static py::exception<MyCustomException> exc(m, "MyCustomError");
-//py::register_exception_translator([](std::exception_ptr p) {
-//	try {
-//		if (p) std::rethrow_exception(p);
-//	}
-//	catch (const MyCustomException &e) {
-//		exc(e.what());
-//	}
-//	catch (const OtherException &e) {
-//		PyErr_SetString(PyExc_RuntimeError, e.what());
-//	}
-//});
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//test functions
+void PyAutoDiffTest()
+{
+	//add testing here
+}
+
 
 py::object GetVector()
 {
@@ -308,7 +303,7 @@ PYBIND11_MODULE(exudyn, m) {
 #endif
 
 	py::enum_<AccessFunctionType>(m, "AccessFunctionType")
-		.value("None", AccessFunctionType::None)
+		.value("_None", AccessFunctionType::_None)
 		.value("TranslationalVelocity_qt", AccessFunctionType::TranslationalVelocity_qt)
 		.value("AngularVelocity_qt", AccessFunctionType::AngularVelocity_qt)
 		.value("Coordinate_q", AccessFunctionType::Coordinate_q)
@@ -322,7 +317,7 @@ PYBIND11_MODULE(exudyn, m) {
 		.export_values();
 
 	py::enum_<CObjectType>(m, "ObjectType")
-		.value("None", CObjectType::None)
+		.value("_None", CObjectType::_None)
 		.value("Ground", CObjectType::Ground)
 		.value("Constraint", CObjectType::Constraint)
 		.value("Connector", CObjectType::Connector)
@@ -334,7 +329,7 @@ PYBIND11_MODULE(exudyn, m) {
 		.export_values();
 
 	py::enum_<Node::Type>(m, "NodeType")
-		.value("None", Node::None)
+		.value("_None", Node::_None)
 		.value("Ground", Node::Ground)
 		.value("Position2D", Node::Position2D)
 		.value("Orientation2D", Node::Orientation2D)
@@ -351,7 +346,7 @@ PYBIND11_MODULE(exudyn, m) {
 		.export_values();
 
 	//py::enum_<CNodeType>(m, "CNodeType")
-	//	.value("None", CNodeType::None)
+	//	.value("_None", CNodeType::_None)
 	//	.value("Point", CNodeType::Point)
 	//	.value("RigidBody", CNodeType::RigidBody)
 	//	.value("Temperature", CNodeType::Temperature)
@@ -359,7 +354,7 @@ PYBIND11_MODULE(exudyn, m) {
 	//	.export_values();
 
 	py::enum_<CNodeGroup>(m, "NodeGroup")
-		.value("None", CNodeGroup::None)
+		.value("_None", CNodeGroup::_None)
 		.value("ODE1variables", CNodeGroup::ODE1variables)
 		.value("ODE2variables", CNodeGroup::ODE2variables)
 		.value("AEvariables", CNodeGroup::AEvariables)
@@ -367,7 +362,7 @@ PYBIND11_MODULE(exudyn, m) {
 		.export_values();
 
 	//py::enum_<LinearSolverType>(m, "LinearSolverType")
-	//	.value("None", LinearSolverType::None)
+	//	.value("_None", LinearSolverType::_None)
 	//	.value("EXUdense", LinearSolverType::EXUdense)
 	//	.value("EigenSparse", LinearSolverType::EigenSparse)
 	//	.export_values();

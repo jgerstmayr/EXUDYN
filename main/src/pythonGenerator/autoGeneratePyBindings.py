@@ -33,7 +33,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
                             description=descriptionStr, 
                             subSection=True)
 #keep this list synchronized with the accoring enum structure in C++!!!
-[s1,sL1] = AddEnumValue(pyClass, 'None', 'no value; used, e.g., to select no output variable in contour plot'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, '_None', 'no value; used, e.g., to select no output variable in contour plot'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Distance', 'e.g., measure distance in spring damper connector'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Position', 'measure 3D position, e.g., of node or body'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Displacement', 'measure displacement; usually difference between current position and reference position'); s+=s1; sLenum+=sL1
@@ -55,6 +55,11 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'Strain', 'measure strain, e.g., axial strain in beam'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Stress', 'measure stress, e.g., axial stress in beam'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Curvature', 'measure curvature; may be scalar or vectorial: twist and curvature'); s+=s1; sLenum+=sL1
+
+[s1,sL1] = AddEnumValue(pyClass, 'DisplacementLocal', 'measure local displacement, e.g. in local joint coordinates'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, , e.g. in local joint coordinates'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ForceLocal', 'measure local force, e.g., in joint or beam (resultant force)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'TorqueLocal', 'measure local torque, e.g., in joint or beam (resultant couple/moment)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EndOfEnumList', 'this marks the end of the list, usually not important to the user'); s+=s1; sLenum+=sL1
 
 s +=	'		.export_values();\n\n'
@@ -63,7 +68,7 @@ sLenum += DefLatexFinishClass()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'ConfigurationType'
 #	py::enum_<ConfigurationType>(m, "ConfigurationType")
-#		.value("None", ConfigurationType::None)
+#		.value("_None", ConfigurationType::_None)
 #		.value("Initial", ConfigurationType::Initial)
 #		.value("Current", ConfigurationType::Current)
 #		.value("Reference", ConfigurationType::Reference)
@@ -79,7 +84,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
                             description=descriptionStr, 
                             subSection=True)
 #keep this list synchronized with the accoring enum structure in C++!!!
-[s1,sL1] = AddEnumValue(pyClass, 'None', 'no configuration; usually not valid, but may be used, e.g., if no configurationType is required'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, '_None', 'no configuration; usually not valid, but may be used, e.g., if no configurationType is required'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Initial', 'initial configuration prior to static or dynamic solver; is computed during mbs.Assemble() or AssembleInitializeSystemCoordinates()'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Current', 'current configuration during and at the end of the computation of a step (static or dynamic)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Reference', 'configuration used to define deformable bodies (reference configuration for finite elements) or joints (configuration for which some joints are defined)'); s+=s1; sLenum+=sL1
@@ -105,7 +110,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
                             description=descriptionStr, 
                             subSection=True)
 #keep this list synchronized with the accoring enum structure in C++!!!
-[s1,sL1] = AddEnumValue(pyClass, 'None', 'no value; used, e.g., if no solver is selected'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, '_None', 'no value; used, e.g., if no solver is selected'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EXUdense', 'use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EigenSparse', 'use sparse matrices and according solvers; additional overhead for very small systems; specifically, memory allocation is performed during a factorization process'); s+=s1; sLenum+=sL1
 
@@ -314,7 +319,7 @@ sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for a
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainNode(itemDict); }', 
                                 description="add a node with nodeDefinition in dictionary format; returns (global) node number of newly added node",
                                 argList=['itemDict'],
-                                example="nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialDisplacements': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)",
+                                example="nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)",
                                 isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
@@ -428,13 +433,14 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
 #                                ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutput', cName='PyGetObjectOutputVariable', 
-                                description="get object's output variable from objectNumber and OutputVariableType",
+                                description="get object's current output variable from objectNumber and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!",
                                 argList=['objectNumber', 'variableType']
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputBody', cName='PyGetObjectOutputVariableBody', 
                                 description="get body's output variable from objectNumber and OutputVariableType",
                                 argList=['objectNumber', 'variableType', 'localPosition', 'configuration'],
+                                defaultArgs=['','','','ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)"
                                 ); s+=s1; sL+=sL1
 
@@ -547,6 +553,11 @@ sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for
                                 example = "loadType = 'ForceVector'\\\\loadDict = mbs.GetLoadDefaults(loadType)"
                                 ); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetLoadValues', cName='PyGetLoadValues', 
+                                description="Get current load values, specifically if user-defined loads are used; can be scalar or vector-valued return value",
+                                argList=['loadNumber']
+                                ); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetLoadParameter', cName='PyGetLoadParameter', 
                                 description="get loads's parameter from loadNumber and parameterName; parameter names can be found for the specific items in the reference manual",
                                 argList=['loadNumber', 'parameterName']
@@ -599,6 +610,12 @@ sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions f
                                 description="get sensor's default values for a certain sensorType as (dictionary)",
                                 argList=['typeName'],
                                 example = "sensorType = 'Node'\\\\sensorDict = mbs.GetSensorDefaults(sensorType)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorValues', cName='PyGetSensorValues', 
+                                description="get sensors's values for configuration; can be a scalar or vector-valued return value!",
+                                defaultArgs=['','ConfigurationType::Current'],
+                                argList=['sensorNumber', 'configuration']
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorParameter', cName='PyGetSensorParameter', 

@@ -235,6 +235,9 @@ public:
 	//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
 	virtual void ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs);
 
+	//! compute right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
+	virtual void ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs);
+
 	//! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
 	virtual void ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp, const Vector& reactionForces, Vector& ode2ReactionForces);

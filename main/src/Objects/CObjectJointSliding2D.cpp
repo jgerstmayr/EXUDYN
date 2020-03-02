@@ -410,7 +410,7 @@ Real CObjectJointSliding2D::PostNewtonStep(const MarkerDataStructure& markerData
 	//also use second dataCoordinate for current (+initial) position!!!
 
 	Real discontinuousError = 0;
-	flags = PostNewtonFlags::None;
+	flags = PostNewtonFlags::_None;
 
 	Real L = markerDataCurrent.GetMarkerData(1).value; //kind of hack ...
 	const Index slidingCoordinateIndex = 2;
@@ -440,7 +440,7 @@ Real CObjectJointSliding2D::PostNewtonStep(const MarkerDataStructure& markerData
 			slidingJoint2Dwarned = true;
 		}
 		parameters.markerNumbers[1] = parameters.slidingMarkerNumbers[(Index)currentState[0]]; //now use the new cableMarker
-		flags = PostNewtonFlags::UpdateLTGLists; //this signals the system that the LTG lists need to be updated do to major system change
+		flags = PostNewtonFlags::UpdateLTGLists; //this signals the system that the LTG lists need to be updated due to major system change
 		//pout << "new cable marker: " << parameters.markerNumbers[1] << "\n";
 
 	}

@@ -192,7 +192,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	else
 	{
 		PyError("CSolverBase::InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile);
-		data.SetLinearSolverType(LinearSolverType::None);
+		data.SetLinearSolverType(LinearSolverType::_None);
 		return false;
 	}
 
@@ -339,6 +339,7 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 	bool success = true; //local success variable
 	success = InitializeSolver(computationalSystem, simulationSettings);
 
+	globalTimers.Reset();
 	timer.Reset(simulationSettings.displayComputationTime);
 	timer.total = -EXUstd::GetTimeInSeconds();
 	if (success)
@@ -373,6 +374,13 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		if (simulationSettings.displayComputationTime) //computation statistics
 		{
 			VerboseWrite(1, timer.ToString());
+			STDstring sGlobal;
+			sGlobal = globalTimers.ToString();
+			if (sGlobal.size())
+			{
+				sGlobal = "global timings:\n" + sGlobal + "\n";
+				VerboseWrite(1, sGlobal);
+			}
 		}
 		if (simulationSettings.displayStatistics)
 		{
@@ -748,13 +756,11 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 	return discIterFinishedSuccessful || (newton.maxDiscontinuousIterations == 0); //return success; in case that no discIter. are needed (==0), no error is returned
 }
 
-////! compute residual for Newton method (e.g. static or time step)
-//bool CSolverBase::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { CHECKandTHROWstring("CSolverBase::illegal call"); return 0; }
-//
-////! compute jacobian for newton method
-//bool CSolverBase::ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
-//{
-//}
+//Index TSfinalizeMatrix;
+//TimerStructureRegistrator TSRfinalizeMatrix("finalize matrix", TSfinalizeMatrix, globalTimers);
+//Index TSfactorize;
+//TimerStructureRegistrator TSRfactorize("factorize", TSfactorize, globalTimers);
+
 //! perform Newton method for given solver method
 bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -856,13 +862,18 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 			ComputeNewtonJacobian(computationalSystem, simulationSettings);
 
 			STARTTIMER(timer.factorization);
+
+			//STARTGLOBALTIMER(TSfinalizeMatrix);
 			data.systemJacobian->FinalizeMatrix();
+			//STOPGLOBALTIMER(TSfinalizeMatrix);
+			//STARTGLOBALTIMER(TSfactorize);
 			if (data.systemJacobian->Factorize() != 0)
 			{
 				SysError("CSolverBase::Newton: System Jacobian not invertible!"); //this error might not be recoverable
 				conv.linearSolverFailed = true;
 				stopNewton = true;
 			}
+			//STOPGLOBALTIMER(TSfactorize);
 			STOPTIMER(timer.factorization);
 
 			it.newtonJacobiCount++;

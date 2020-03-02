@@ -217,7 +217,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), 1., 1., false, true);
 	STOPTIMER(timer.jacobianAE);
 
-
+	//pout << "stabilizerODE2term=" << simulationSettings.staticSolver.stabilizerODE2term << "\n";
 	if (simulationSettings.staticSolver.stabilizerODE2term != 0.)
 	{
 		Real currentODE2stabilizer = (1. - pow(ComputeLoadFactor(simulationSettings), 2))*simulationSettings.staticSolver.stabilizerODE2term;
@@ -228,6 +228,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 		data.systemMassMatrix->SetAllZero();
 		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
 		data.systemMassMatrix->MultiplyWithFactor(-currentODE2stabilizer);
+
 		data.systemJacobian->AddSubmatrix(*(data.systemMassMatrix));
 		STOPTIMER(timer.massMatrix);
 	}

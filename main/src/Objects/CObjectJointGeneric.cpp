@@ -58,7 +58,16 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 		{
 
 			//use difference of positions in local coordinates
-			Vector3D vPos = A0all.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //only for now; global equations
+			Vector3D vPos;
+			if (parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1)
+			{
+				//global equations in case that all position coordinates are locked!
+				vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
+			}
+			else
+			{
+				vPos = A0all.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //local equations (marker0-fixed)
+			}
 
 			//++++++++++++++++++++++++++++++++
 			//translation constraints:
@@ -142,11 +151,19 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 			//CHECKandTHROWstring("CObjectJointGeneric: velocity level not implemented");
 			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointGeneric::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
-			//use difference of velocities in local coordinates
-			//the term A0all_t is not considered here as we assume that the positions are identical ...; may this cause problems in Newton or drift?
-			Vector3D vVel = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity); 
-							//+ A0all_t.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //only for now; global equations
-
+			Vector3D vVel;
+			if (parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1)
+			{
+				//use difference of velocities in global coordinates
+				vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+			}
+			else
+			{
+				//use difference of velocities in local coordinates
+				//the term A0all_t is not considered here as we assume that the positions are identical ...; may this cause problems in Newton or drift?
+				vVel = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+				//+ A0all_t.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
+			}
 			//++++++++++++++++++++++++++++++++
 			//translation constraints:
 			for (Index i = 0; i < 3; i++)
@@ -278,20 +295,58 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 		Matrix3D A0all = (A0*A0off);
 		Matrix3D A1all = (A1*A1off);
 
-		for (Index i = 0; i < nColumnsJac0; i++)
+		if (parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1)
 		{
-			//add terms for A0all.GetTransposed()*...
-			jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i); //negative sign in marker0 because of eq: A0all.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
-			jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
-			jacobian(2, i) = -markerData.GetMarkerData(0).positionJacobian(2, i);
+			//global equations
+			//vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //local equations (marker0-fixed)
+			for (Index i = 0; i < nColumnsJac0; i++)
+			{
+				jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i); //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
+				jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
+				jacobian(2, i) = -markerData.GetMarkerData(0).positionJacobian(2, i);
+			}
+			for (Index i = 0; i < nColumnsJac1; i++)
+			{
+				jacobian(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i);
+				jacobian(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i);
+				jacobian(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i);
+			}
 		}
-		for (Index i = 0; i < nColumnsJac1; i++)
+		else
 		{
-			jacobian(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i);
-			jacobian(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i);
-			jacobian(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i);
+			Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
+			Matrix3D A0allT = A0all.GetTransposed();
+			Matrix3D vPosTilde = RigidBodyMath::Vector2SkewMatrix(vPos);
+
+			//vPos = A0allT*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //local equations (marker0-fixed)
+			// A0allT_q0*vPos - A0allT * posJac0
+			// A0allT * posJac1
+			for (Index i = 0; i < nColumnsJac0; i++)
+			{
+				//A^T*A_t = omegaBarTilde, A_t*A^T=omegaTilde; A*A_t^T = -omegaTilde
+				//(A*vBar)_theta = -A*uBarTilde*Gbar
+				//A*A_t^T*u = -omegaTilde*u
+				//A_t^T*u = -A^T*omegaTilde*u = A^T*uTilde*omega
+				//(A^T*u)_theta = A^T*uTilde*G (positive sign!)
+				Vector3D Gvec0 = markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
+				Vector3D jacPos0 = markerData.GetMarkerData(0).positionJacobian.GetColumnVector<3>(i);
+				Vector3D v = A0allT * (vPosTilde*Gvec0 - jacPos0);  //A0allT*vPosTilde*Gvec0  - A0allT * jacPos0;
+				jacobian(0, i) = v[0];
+				jacobian(1, i) = v[1];
+				jacobian(2, i) = v[2];
+			}
+			for (Index i = 0; i < nColumnsJac1; i++)
+			{
+				Vector3D jacPos1 = markerData.GetMarkerData(1).positionJacobian.GetColumnVector<3>(i);
+				Vector3D v = A0allT * jacPos1;
+				jacobian(0, i) = v[0];
+				jacobian(1, i) = v[1];
+				jacobian(2, i) = v[2];
+			}
 		}
 
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		Index constraintRotations = parameters.constrainedAxes[3] + parameters.constrainedAxes[4] + parameters.constrainedAxes[5];
 		if (constraintRotations == 3) //rigid joint (at least regarding rotations)
 		{

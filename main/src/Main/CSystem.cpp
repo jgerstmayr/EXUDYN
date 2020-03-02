@@ -30,6 +30,7 @@
 #include "Linalg/LinearSolver.h" //for GeneralMatrixEXUdense
 #include "Main/OutputVariable.h" //for GeneralMatrixEXUdense
 
+#include "Utilities/TimerStructure.h" //for local CPU time measurement
 
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
 void CSystem::Assemble(const MainSystem& mainSystem)
@@ -275,7 +276,19 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
 					", contains marker with invalid type '" + Marker::GetTypeString(markerType) +
 					"', but expected marker type '" + Marker::GetTypeString(requestedType) + "'");
-					systemIsInteger = false;
+				systemIsInteger = false;
+			}
+		}
+		if (systemIsInteger) //only if markerNumber is valid
+		{
+			CLoad* cLoad = item->GetCLoad();
+
+			if (cLoad->IsBodyFixed() && ((mainSystem.GetCSystem()->GetSystemData().GetCMarker(cLoad->GetMarkerNumber()).GetType() & Marker::Orientation) == 0))
+			{
+				PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+					": marker (marker number = " + EXUstd::ToString(cLoad->GetMarkerNumber()) + 
+					") must provide orientation (e.g. RigidBody marker) in case that bodyFixed == True");
+				systemIsInteger = false;
 			}
 		}
 
@@ -297,7 +310,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
 					"', type = SensorType::Node: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in node with node number " + EXUstd::ToString(n));
@@ -314,7 +327,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
 			}
-			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
 					"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
@@ -327,7 +340,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Object, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
 					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
@@ -349,17 +362,11 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Load)
 		{
-			CHECKandTHROWstring("SensorType::Load: CheckSystemIntegrity not implemented!");
 			Index n = item->GetCSensor()->GetLoadNumber();
 			if (!EXUstd::IndexIsInRange(n, 0, numberOfLoads))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Load, contains invalid load number " + EXUstd::ToString(n));
 			}
-			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainLoads()[n]->GetCLoad()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
-			//{
-			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//		"', type = SensorType::Load: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in load with load number " + EXUstd::ToString(n));
-			//}
 		}
 		else
 		{
@@ -840,8 +847,14 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 }
 
 
-//#include "Utilities/RigidBodyMath.h"
-//#include "Autogenerated/CNodeRigidBodyEP.h"
+Index TScomputeODE2RHSobject;
+TimerStructureRegistrator TSRcomputeODE2RHSobject("computeODE2RHSobject", TScomputeODE2RHSobject, globalTimers);
+Index TScomputeODE2RHSconnector;
+TimerStructureRegistrator TSRcomputeODE2RHSconnector("computeODE2RHSconnector", TScomputeODE2RHSconnector, globalTimers);
+Index TScomputeODE2RHSmarkerData;
+TimerStructureRegistrator TSRcomputeODE2RHSmarkerData("computeODE2RHSmarkerData", TScomputeODE2RHSmarkerData, globalTimers);
+Index TScomputeLoads;
+TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, globalTimers);
 
 //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Rhs, false otherwise
@@ -854,7 +867,9 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 		//if object is a body, it must have ODE2RHS
 		if ((Index)object->GetType() & (Index)CObjectType::Body)
 		{
+			STARTGLOBALTIMER(TScomputeODE2RHSobject);
 			object->ComputeODE2RHS(localODE2Rhs);
+			STOPGLOBALTIMER(TScomputeODE2RHSobject);
 			//pout << "temp.localODE2RHS=" << temp.localODE2RHS << "\n";
 		}
 		else if ((Index)object->GetType() & (Index)CObjectType::Connector)
@@ -863,10 +878,16 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 
 			//compute MarkerData for connector:
 			const bool computeJacobian = true;
+			STARTGLOBALTIMER(TScomputeODE2RHSmarkerData);
 			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+			STOPGLOBALTIMER(TScomputeODE2RHSmarkerData);
 
 			//pout << "ComputeODE2RHS " << i++ << "\n";
+			//Real t = cSystemData.GetCData().currentState.time; //==>done in markerdatastructure
+			STARTGLOBALTIMER(TScomputeODE2RHSconnector);
 			connector->ComputeODE2RHS(localODE2Rhs, temp.markerDataStructure);
+			STOPGLOBALTIMER(TScomputeODE2RHSconnector);
+
 		}
 		else { CHECKandTHROWstring("CSystem::ComputeODE2RHS(...): object type not implemented"); return false; }
 
@@ -878,20 +899,14 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
 void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 {
-	//Still needed? ode2Rhs.SetNumberOfItems(cSystemData.GetNumberOfCoordinatesODE2()); //needed for numerical differentiation
 	ode2Rhs.SetAll(0.);
 
 	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
 	{
-		//pout << "ComputeODE2RHS" << j++ << ": " 
-		//	<< (Index)(cSystemData.GetCObjects()[j])->GetType() 
-		//	<< ", active=" << (cSystemData.GetCObjects()[j])->IsActive() 
-		//	<< ", ltg=" << cSystemData.GetLocalToGlobalODE2()[j] << "\n";
 		if ((cSystemData.GetCObjects()[j])->IsActive())
 		{
 			//work over bodies, connectors, etc.
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
-			//CObject* object = cSystemData.GetCObjects()[j];
 
 			if (ltgODE2.NumberOfItems() && ComputeObjectODE2RHS(temp, cSystemData.GetCObjects()[j], temp.localODE2RHS))//temp.localODE2RHS))
 			{
@@ -905,9 +920,18 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 	}
 	//pout << "ode2Rhs=" << ode2Rhs << "\n";
 
+	ComputeLoads(temp, ode2Rhs);
+}
+
+//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
+{
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute loads ==> not needed in jacobian, except for follower loads, 
 	//  using e.g. local body coordinate system
+
+	STARTGLOBALTIMER(TScomputeLoads);
+
 	Index nLoads = cSystemData.GetCLoads().NumberOfItems();
 	Vector3D loadVector3D;
 	Vector1D loadVector1D; //scalar loads...
@@ -921,7 +945,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 		CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
 		LoadType loadType = cSystemData.GetCLoads()[j]->GetType();
 
-		ArrayIndex* ltg=nullptr;		//for objects
+		ArrayIndex* ltg = nullptr;		//for objects
 		Index nodeCoordinate;	//starting index for nodes (consecutively numbered)
 		bool applyLoad = false; //loads are not applied to ground objects/nodes
 
@@ -938,7 +962,6 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 		else if (marker->GetType() & Marker::Node) //code for body markers
 		{
 			Index markerNodeNumber = marker->GetNodeNumber();
-			//if (cSystemData.GetCNodes()[markerNodeNumber]->GetNumberOfAccessibleCoordinates()) //if node has zero coordinates ==> ground node; no action on ground nodes!
 			if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
 			{
 				if ((marker->GetType() & Marker::Position) || (marker->GetType() & Marker::Coordinate))
@@ -959,12 +982,20 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 			//AccessFunctionType aft = GetAccessFunctionType(loadType, marker->GetType());
 			//==> lateron: depending on AccessFunctionType compute jacobians, put into markerDataStructure as in connectors
 			//    and call according jacobian function
-			//q    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
+			//    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
+
+			//bodyFixed (local) follower loads:
+			bool bodyFixed = false;
+			if (cSystemData.GetCLoads()[j]->IsBodyFixed())
+			{
+				bodyFixed = true;
+			}
 
 			if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
 			{
 				const bool computeJacobian = true;
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+				if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).positionJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dPos/dq)^T * Force
 
 				//marker->GetPositionJacobian(cSystemData, temp.loadJacobian);
@@ -974,6 +1005,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 			{
 				const bool computeJacobian = true;
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+				if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).rotationJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
 				//pout << "rotationJacobian=" << temp.markerDataStructure.GetMarkerData(0).rotationJacobian << "\n";
 				//pout << "loadVector3D=" << loadVector3D << "\n";
@@ -994,7 +1026,7 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 
 			if (ltg != nullptr) //must be object
 			{
-	
+
 				//pout << "load=" << temp.generalizedLoad << ", LF=" << solverData.loadFactor << ", rotJac=" << temp.markerDataStructure.GetMarkerData(0).positionJacobian << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
@@ -1006,14 +1038,14 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 				//pout << "  nodeCoordinate=" << nodeCoordinate << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
-					ode2Rhs[nodeCoordinate+k] += solverData.loadFactor * temp.generalizedLoad[k];
+					ode2Rhs[nodeCoordinate + k] += solverData.loadFactor * temp.generalizedLoad[k];
 				}
 
 			}
 		}
 
 	}
-
+	STOPGLOBALTIMER(TScomputeLoads);
 }
 
 //! compute right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
@@ -1088,6 +1120,7 @@ void CSystem::ComputeMarkerDataStructure(CObjectConnector* connector, bool compu
 	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
 	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
 	if (nMarkers != 2) { CHECKandTHROWstring("CSystem::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
+	markerDataStructure.SetTime(cSystemData.GetCData().currentState.GetTime());
 
 	if ((Index)connector->GetType() & (Index)CObjectType::Constraint)
 	{
@@ -1120,15 +1153,6 @@ Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
 
 			if (connector->HasDiscontinuousIteration())
 			{
-				//const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
-				//Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-				//if (nMarkers != 2) { CHECKandTHROWstring("CSystem::PostNewtonStep(...): Number of connector markers != 2 not implemented"); }
-
-				//for (Index k = 0; k < 2; k++)
-				//{
-				//	const bool computeJacobian = true;
-				//	cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(k));
-				//}
 
 				const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
 				ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);

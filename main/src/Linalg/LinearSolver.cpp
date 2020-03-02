@@ -12,6 +12,7 @@
 
 //BasicLinalg provides consistent includes for BasicDefinitions, arrays, vectors and matrices
 #include "Linalg/LinearSolver.h"	
+#include "Utilities/TimerStructure.h" //for local CPU time measurement
 
 
 	//! factorize matrix (invert, SparseLU, etc.); 0=success
@@ -234,14 +235,24 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 	SetMatrixBuiltFromTriplets(); //now the sparse matrix is finally set and ready for multiplication and factorization
 }
 
+Index TSeigenFactorize;
+TimerStructureRegistrator TSReigenFactorize("eigenFactorize", TSeigenFactorize, globalTimers);
+Index TSeigenAnalyzePattern;
+TimerStructureRegistrator TSReigenAnalyzePattern("eigenAnalyzePattern", TSeigenAnalyzePattern, globalTimers);
+
 //! factorize matrix (invert, SparseLU, etc.); 0=success
 Index GeneralMatrixEigenSparse::Factorize()
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
 
+	STARTGLOBALTIMER(TSeigenAnalyzePattern);
 	solver.analyzePattern(matrix);
+	STOPGLOBALTIMER(TSeigenAnalyzePattern);
+
 	// Compute the numerical factorization 
+	STARTGLOBALTIMER(TSeigenFactorize);
 	solver.factorize(matrix);
+	STOPGLOBALTIMER(TSeigenFactorize);
 
 	//0: successful factorization
 	//if info = i, and i is

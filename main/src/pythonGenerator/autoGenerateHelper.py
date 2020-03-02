@@ -45,6 +45,11 @@ def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into
 
         s = s.replace('EXUstd::InvalidIndex','MAXINT') #correct python notation
 
+        if (s.find('EXUmath::unitMatrix3D') != -1): #manually done - could be automatized in future ...
+            s = s.replace('EXUmath::unitMatrix3D','[[1,0,0], [0,1,0], [0,0,1]]')  
+
+        if (s.find('Matrix6D(6,6,0.)') != -1): #manually done - could be automatized in future ...
+            s = 'np.zeros([6,6])'
         
         
         if (s.find('Index') != -1) | (s.find('Float') != -1) | (s.find('Vector') != -1) | (s.find('Matrix') != -1):
@@ -86,7 +91,7 @@ def DefaultValue2Python(s): #replace _ and other symbols to fit into latex code
     s = s.replace('false','False') #correct python notation
 
     s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
-    s = s.replace('OutputVariableType::None','0')  #none always corresponds to 0
+    s = s.replace('OutputVariableType::_None','OutputVariableType._None')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
 
     

@@ -16,7 +16,9 @@
 
 #pragma once
 
-#define _USE_MATH_DEFINES //this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
+
+#define EXUDYN_RELEASE		//!< set this flag to exclude experimental parts of the code
+#define _USE_MATH_DEFINES	//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
 
 #include <string> //std::string
 #include <cstdint> //for uint32_t

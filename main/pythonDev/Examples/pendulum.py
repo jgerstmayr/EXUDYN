@@ -27,9 +27,9 @@ L = 0.8 #distance
 #phi = -0.7853981633974483 #-np.pi/8*2
 n1=mbs.AddNode({'nodeType': 'Point',
                 'referenceCoordinates': [L,0,0],
-                'initialDisplacements':   [0,0,0]})
-                #'initialDisplacements':   [-0.23431457505076192, -0.565685424949238, 0]})
-                #'initialDisplacements':   [-(L-L*np.cos(phi)),L*np.sin(phi),0]})
+                'initialCoordinates':   [0,0,0]})
+                #'initialCoordinates':   [-0.23431457505076192, -0.565685424949238, 0]})
+                #'initialCoordinates':   [-(L-L*np.cos(phi)),L*np.sin(phi),0]})
 
 Lo=L*0.3 #graphics
 mass = 2.5

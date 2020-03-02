@@ -37,7 +37,7 @@ print('static displacement = '+str(x0))
 
 #node for 3D mass point:
 n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-                     initialDisplacements = [u0,0,0], 
+                     initialCoordinates = [u0,0,0], 
                      initialVelocities= [v0,0,0]))
 
 #ground node

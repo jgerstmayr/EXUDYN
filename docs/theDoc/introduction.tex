@@ -222,7 +222,7 @@ Nodes usually have separated reference and initial quantities. Here,
 \texttt{referenceCoordinates} are the coordinates for which the system is defined upon creation. Reference coordinates are needed, e.g., for definition of joints and for the reference configuration of finite elements. In many cases it marks the undeformed configuration (e.g., with finite elements), but not, e.g., for \texttt{ObjectConnectorSpringDamper}, which has its own reference length. 
 
 Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
-As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialDisplacements}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
+As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
 
 
 \mysubsection{Exudyn Basics} \label{sec_exudynBasics}
@@ -758,6 +758,25 @@ The following list covers changes in the python interface and functionality:
 	%\bi \ttfamily
 	  %\item $\ra$ 
 	%\ei
+
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.288 $\ra$ Version 0.1.289}
+	\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
+	\bi \ttfamily
+	  \item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.287 $\ra$ Version 0.1.288}
+	\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
+	\bi \ttfamily
+	  \item changed the name of {\bf initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.282 $\ra$ Version 0.1.284}
+	\item[] Changes in the python interface:
+	\bi \ttfamily
+	  \item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
+	\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 0.1.260 $\ra$ Version 0.1.263}
 	\item[] Changes in the python interface:

@@ -1135,17 +1135,55 @@ void VisualizationObjectJointALEMoving2D::UpdateGraphics(const VisualizationSett
 	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
+	//moving body position:
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
-	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetPosition(*vSystem->systemData, pos[1], ConfigurationType::Visualization);
+	
+	//marker1 (ANCF) does not provide current positino, but only ANCF coordinates ...
+	//vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetPosition(*vSystem->systemData, pos[1], ConfigurationType::Visualization);
 
+	Index nALEANCF = vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetObjectNumber();
+	const CObjectALEANCFCable2D& cable = (const CObjectALEANCFCable2D&)vSystem->systemData->GetCObjectBody(nALEANCF);
+
+	//compute ANCF coordinates:
+	const Index ns = 4;
+	ConstSizeVector<ns> qNode0;
+	ConstSizeVector<ns> qNode1;
+
+	qNode0.CopyFrom(cable.GetCNode(0)->GetCoordinateVector(ConfigurationType::Visualization)); //displacement coordinates node 0
+	qNode1.CopyFrom(cable.GetCNode(1)->GetCoordinateVector(ConfigurationType::Visualization)); //displacement coordinates node 1
+
+	qNode0 += ((CNodeODE2*)cable.GetCNode(0))->GetReferenceCoordinateVector(); //reference coordinates + displacements
+	qNode1 += ((CNodeODE2*)cable.GetCNode(1))->GetReferenceCoordinateVector();
+
+	//compute sliding position:
+	Real L = cable.GetParameters().physicsLength;
+
+	//compute sliding coordinate
+	Real slidingCoordinate = cItem->GetCNode(1)->GetCoordinateVector(ConfigurationType::Visualization)[0]
+		+ cItem->GetParameters().slidingOffset; //this is the global (Eulerian) sliding position
+
+	Index slidingMarkerIndex = (Index)cItem->GetCNode(0)->GetCoordinateVector(ConfigurationType::Visualization)[0]; //this contains the current index in the cable marker list; slidingMarkerIndex will always be in valid range!
+
+	slidingCoordinate -= cItem->GetParameters().slidingMarkerOffsets[slidingMarkerIndex]; //slidingPos now ranges from 0 to L in current cable element
+
+	//draw sliding position:
+	Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
+	Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
+	pos[1] = { slidingPosition[0],slidingPosition[1],0 };
+	//std::cout << "pos1=" << pos[1] << ",pos0=" << pos[0] << "\n";
 
 	if (color[0] != -1.f) { currentColor = color; }
 
 	float r = 0.5f*drawSize; //radius of spring
 	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
+	Vector3D vy({ 0,r,0 });
+	Vector3D vx({ r,0,0 });
 	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }));
+
 	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor);
+	vSystem->graphicsData.AddLine(pos[1] - vx, pos[1] + vx, currentColor, currentColor);
+	vSystem->graphicsData.AddLine(pos[1] - vy, pos[1] + vy, currentColor, currentColor);
 
 	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, "", currentColor); }
 }
@@ -1321,6 +1359,14 @@ void VisualizationLoadForceVector::UpdateGraphics(const VisualizationSettings& v
 		if (visualizationSettings.loads.defaultSize == -1.f) { size = visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
 		Vector3D loadVector = cLoad->GetParameters().loadVector;
+
+		if (cLoad->IsBodyFixed()) //transform load from local to global coordinates for drawing
+		{
+			Matrix3D rot;
+			cMarker->GetRotationMatrix(*vSystem->systemData, rot, ConfigurationType::Visualization);
+			loadVector = rot * loadVector;
+		}
+
 		if (visualizationSettings.loads.fixedLoadSize)
 		{
 			Real L = loadVector.GetL2Norm();
@@ -1332,19 +1378,27 @@ void VisualizationLoadForceVector::UpdateGraphics(const VisualizationSettings& v
 			loadVector *= visualizationSettings.loads.loadSizeFactor;
 		}
 
-		Vector3D n1; //resulting normal vector to loadVector ==> for drawing of arrow
-		Vector3D n2;
-		EXUmath::ComputeOrthogonalBasis(loadVector, n1, n2);
-		Real L = loadVector.GetL2Norm();
 
-		//Vector3D hatOffset({ -0.1*loadVector[1], 0.1*loadVector[0], 0. });
-		Vector3D hatOffset = (0.1*L)*n1;
+		if (visualizationSettings.openGL.showFaces) //show in 3D
+		{
+			EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor, vSystem->graphicsData, visualizationSettings.general.axesTiling);
+		}
+		else
+		{
+			Vector3D n1; //resulting normal vector to loadVector ==> for drawing of arrow
+			Vector3D n2;
+			EXUmath::ComputeOrthogonalBasis(loadVector, n1, n2);
+			Real L = loadVector.GetL2Norm();
 
-		vSystem->graphicsData.AddLine(pos, pos + loadVector, currentColor, currentColor);
-		vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector + hatOffset, currentColor, currentColor);
-		vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector - hatOffset, currentColor, currentColor);
+			//Vector3D hatOffset({ -0.1*loadVector[1], 0.1*loadVector[0], 0. });
+			Vector3D hatOffset = (0.1*L)*n1;
 
-		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, "L", currentColor); }
+			vSystem->graphicsData.AddLine(pos, pos + loadVector, currentColor, currentColor);
+			vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector + hatOffset, currentColor, currentColor);
+			vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector - hatOffset, currentColor, currentColor);
+		}
+
+		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos+loadVector, vSystem, itemNumber, "L", currentColor); }
 	}
 }
 
@@ -1369,17 +1423,23 @@ void VisualizationLoadMassProportional::UpdateGraphics(const VisualizationSettin
 		if (L > 0.) { loadVector *= 1. / L; }
 		loadVector *= size;
 
-		Vector3D n1; //resulting normal vector to loadVector ==> for drawing of arrow
-		Vector3D n2;
-		EXUmath::ComputeOrthogonalBasis(loadVector, n1, n2);
+		if (visualizationSettings.openGL.showFaces) //show in 3D
+		{
+			EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor, vSystem->graphicsData, visualizationSettings.general.axesTiling);
+		}
+		else
+		{
+			Vector3D n1; //resulting normal vector to loadVector ==> for drawing of arrow
+			Vector3D n2;
+			EXUmath::ComputeOrthogonalBasis(loadVector, n1, n2);
 
-		//Vector3D hatOffset({ -0.1*loadVector[1], 0.1*loadVector[0], 0. });
-		Vector3D hatOffset = (0.1*(Real)size)*n1;
+			//Vector3D hatOffset({ -0.1*loadVector[1], 0.1*loadVector[0], 0. });
+			Vector3D hatOffset = (0.1*(Real)size)*n1;
 
-		vSystem->graphicsData.AddLine(pos, pos + loadVector, currentColor, currentColor);
-		vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector + hatOffset, currentColor, currentColor);
-		vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector - hatOffset, currentColor, currentColor);
-
+			vSystem->graphicsData.AddLine(pos, pos + loadVector, currentColor, currentColor);
+			vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector + hatOffset, currentColor, currentColor);
+			vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector - hatOffset, currentColor, currentColor);
+		}
 		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, "L", currentColor); }
 	}
 }
@@ -1402,6 +1462,13 @@ void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& 
 		if (visualizationSettings.loads.defaultSize == -1.f) { size = visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
 		Vector3D loadVector = cLoad->GetParameters().loadVector;
+		if (cLoad->IsBodyFixed()) //transform load from local to global coordinates for drawing
+		{
+			Matrix3D rot;
+			cMarker->GetRotationMatrix(*vSystem->systemData, rot, ConfigurationType::Visualization);
+			loadVector = rot * loadVector;
+		}
+
 		if (visualizationSettings.loads.fixedLoadSize)
 		{
 			Real L = loadVector.GetL2Norm();
@@ -1413,33 +1480,40 @@ void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& 
 			loadVector *= visualizationSettings.loads.loadSizeFactor;
 		}
 
-		Vector3D n1; //resulting normal vector to loadVector ==> for drawing of torque
-		Vector3D n2;
-		EXUmath::ComputeOrthogonalBasis(loadVector, n1, n2);
-		Real L = loadVector.GetL2Norm()*0.5; //size is related to diameter
-
-		vSystem->graphicsData.AddPoint(pos, currentColor); //midpoint of torque
-
-		const Real phiInc = 0.075*EXUstd::pi;
-		for (Real phi = 0.; phi < 1.49999*EXUstd::pi; phi += phiInc)
+		if (visualizationSettings.openGL.showFaces) //show in 3D
 		{
-			Real x1 = L * cos(phi);
-			Real y1 = L * sin(phi);
-			Real x2 = L * cos(phi + phiInc);
-			Real y2 = L * sin(phi + phiInc);
-			vSystem->graphicsData.AddLine(pos + x1*n1 + y1*n2, pos + x2*n1 + y2*n2, currentColor, currentColor);
+			EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor, vSystem->graphicsData, visualizationSettings.general.axesTiling, true);
+		}
+		else
+		{
 
-			if (phi >= 1.49999*EXUstd::pi - phiInc) //draw Arrow
+			Vector3D n1; //resulting normal vector to loadVector ==> for drawing of torque
+			Vector3D n2;
+			EXUmath::ComputeOrthogonalBasis(loadVector, n1, n2);
+			Real L = loadVector.GetL2Norm()*0.5; //size is related to diameter
+
+			vSystem->graphicsData.AddPoint(pos, currentColor); //midpoint of torque
+
+			const Real phiInc = 0.075*EXUstd::pi;
+			for (Real phi = 0.; phi < 1.49999*EXUstd::pi; phi += phiInc)
 			{
-				x1 = L * 1.1 * cos(phi);
-				y1 = L * 1.1 * sin(phi);
+				Real x1 = L * cos(phi);
+				Real y1 = L * sin(phi);
+				Real x2 = L * cos(phi + phiInc);
+				Real y2 = L * sin(phi + phiInc);
 				vSystem->graphicsData.AddLine(pos + x1 * n1 + y1 * n2, pos + x2 * n1 + y2 * n2, currentColor, currentColor);
-				x1 = L * 0.9 * cos(phi);
-				y1 = L * 0.9 * sin(phi);
-				vSystem->graphicsData.AddLine(pos + x1 * n1 + y1 * n2, pos + x2 * n1 + y2 * n2, currentColor, currentColor);
+
+				if (phi >= 1.49999*EXUstd::pi - phiInc) //draw Arrow
+				{
+					x1 = L * 1.1 * cos(phi);
+					y1 = L * 1.1 * sin(phi);
+					vSystem->graphicsData.AddLine(pos + x1 * n1 + y1 * n2, pos + x2 * n1 + y2 * n2, currentColor, currentColor);
+					x1 = L * 0.9 * cos(phi);
+					y1 = L * 0.9 * sin(phi);
+					vSystem->graphicsData.AddLine(pos + x1 * n1 + y1 * n2, pos + x2 * n1 + y2 * n2, currentColor, currentColor);
+				}
 			}
 		}
-
 		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, "L", currentColor); }
 	}
 }

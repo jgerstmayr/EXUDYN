@@ -109,7 +109,7 @@ py::object MainObjectGround::CallFunction(STDstring functionName, py::dict args)
 	{
 		Vector3D locPos;
 		STDstring configStr;
-		ConfigurationType configType = ConfigurationType::None;
+		ConfigurationType configType = ConfigurationType::_None;
 		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
 		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }

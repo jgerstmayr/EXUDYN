@@ -35,7 +35,7 @@
 //! Connectors link two bodies (e.g. by means of spring), constraints are Lagrange-multiplier based, FiniteElement additionally has shape functions, etc.
 //! Body: contains its own node(s); finiteElement: connects several nodes; connectors: based on markers
 enum class CObjectType {
-	None = 0, //marks that no type is used
+	_None = 0, //marks that no type is used
 	Ground = 1 << 1,		//!< Ground (is also a Body) can connect to other bodies, but has not DOF
 	Constraint = 1 << 2,	//!< Lagrange-multiplier based, leads to algebraic equations
 	Connector = 1 << 3,		//!< Connects two objects (usually bodies); can be a spring-damper, but also a constraint
@@ -52,7 +52,7 @@ enum class CObjectType {
 namespace JacobianType {
 //! used mainly to show which jacobians are available analytically in objects; can be combined binary to see, which jacobian is available
 	enum Type {
-		None = 0,				//marks that no type is available
+		_None = 0,				//marks that no type is available
 		ODE2_ODE2 = 1 << 1,		//derivative of ODE2 equations with respect to ODE2 variables
 		ODE2_ODE2_t = 1 << 2,	//derivative of ODE2 equations with respect to ODE2_t (velocity) variables
 		ODE1_ODE1 = 1 << 3,		//derivative of ODE1 equations with respect to ODE1 variables
@@ -132,7 +132,7 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	
 	//! distinguish between different body types for management in CSystem
-	virtual CObjectType GetType() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetType"); return CObjectType::None; }
+	virtual CObjectType GetType() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetType"); return CObjectType::_None; }
 
 	//! Return true, if object will be computed (used to deactivate objects/contacts without computational overhead)
 	virtual bool IsActive() const { return true; }
@@ -167,7 +167,7 @@ public:
     // Computation FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
+    //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'; time t not provided, as nodes can obtain time from CData
     virtual void ComputeODE2RHS(Vector& ode2Rhs) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2RHS"); }
 
     //! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs', which has dimension GetODE1Size(); q are the system coordinates
@@ -179,7 +179,7 @@ public:
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeAlgebraicEquations"); }
 
 	//! return the available jacobian types (can be combined with 2^i enum flags); default: no jacobians ==> computed numerically
-	virtual JacobianType::Type GetAvailableJacobians() const { return JacobianType::None; }
+	virtual JacobianType::Type GetAvailableJacobians() const { return JacobianType::_None; }
 
     //! compute derivative of right-hand-side (RHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
     virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2RHSJacobian"); }
@@ -192,9 +192,9 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! get available access function types for forces and constraints (action of lagrange multipliers)
-    virtual AccessFunctionType GetAccessFunctionTypes() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetAccessFunctionTypes"); return AccessFunctionType::None; }
+    virtual AccessFunctionType GetAccessFunctionTypes() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetAccessFunctionTypes"); return AccessFunctionType::_None; }
 	//! get available output variable types for constraints and for sensors
-	virtual OutputVariableType GetOutputVariableTypes() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetOutputVariableTypes"); return OutputVariableType::None; }
+	virtual OutputVariableType GetOutputVariableTypes() const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetOutputVariableTypes"); return OutputVariableType::_None; }
 
 	//! get access function 'accessType' in (matrix) value
 	virtual void GetAccessFunction(AccessFunctionType accessType, Matrix& value) const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetAccessFunction"); }

@@ -67,7 +67,7 @@ def userLoadBWy(t, load):
 
 #node for Rigid2D body: px, py, phi:
 n1=mbs.AddNode(Rigid2D(referenceCoordinates = [0,eps,0], 
-                       initialDisplacements=[0,0,0], 
+                       initialCoordinates=[0,0,0], 
                        initialVelocities=[0,0,omegaInitial]))
 
 #ground node
@@ -90,11 +90,6 @@ coordXMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 0
 coordYMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 1))
 coordPhiMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 2))
 
-#Spring-Damper between two marker coordinates
-#mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, coordXMarker], 
-#                                     stiffness = spring, damping = damper, springForceUserFunction = springForce)) 
-#mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, coordYMarker], 
-#                                     stiffness = spring, damping = damper, springForceUserFunction = springForce)) 
 mbs.AddObject(CartesianSpringDamper(markerNumbers=[rotorSupportMarker, rotorAxisMarker], stiffness=[spring,spring,0], damping=[damper, damper,0]))
 
 #add load:

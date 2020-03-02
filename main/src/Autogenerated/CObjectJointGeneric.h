@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-12  16:38:34 (last modfied)
+* @date         2020-02-19  00:54:34 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,9 +30,7 @@ public: // AUTO:
     Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; translation and rotation axes for marker0 are defined in the local body coordinate system and additionally transformed by rotationMarker0
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; translation and rotation axes for marker1 are defined in the local body coordinate system and additionally transformed by rotationMarker1
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    Vector6D forceTorqueUserFunctionParameters;   //!< AUTO: vector of 6 parameters for joint"s forceTorqueUserFunction
     Vector6D offsetUserFunctionParameters;        //!< AUTO: vector of 6 parameters for joint"s offsetUserFunction
-    std::function<StdVector6D(Real,StdVector6D)> forceTorqueUserFunction;//!< AUTO: A python function which defines the time-dependent force (indices 0,1,2) and torque (indices 3,4,5) joint coordinates with parameters (t, forceTorqueUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, forceTorqueUserFunctionParameters): return [forceTorqueUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]
     std::function<StdVector6D(Real,StdVector6D)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offsetUserFunctionParameters): return [offsetUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]
     std::function<StdVector6D(Real,StdVector6D)> offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction using the same parameters; needed for "velocityLevel=True", or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators
     //! AUTO: default constructor with parameter initialization
@@ -43,9 +41,7 @@ public: // AUTO:
         rotationMarker0 = EXUmath::unitMatrix3D;
         rotationMarker1 = EXUmath::unitMatrix3D;
         activeConnector = true;
-        forceTorqueUserFunctionParameters = Vector6D({0.,0.,0.,0.,0.,0.});
         offsetUserFunctionParameters = Vector6D({0.,0.,0.,0.,0.,0.});
-        forceTorqueUserFunction = 0;
         offsetUserFunction = 0;
         offsetUserFunction_t = 0;
     };

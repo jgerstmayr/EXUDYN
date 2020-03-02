@@ -120,7 +120,7 @@ for i in range( len(stepSizeList) ):
             else:
                 nodeDict = {"nodeType": "Point",
                             "referenceCoordinates": [j*springDamperElementLength, i*springDamperElementLength, 0.0],
-                            "initialDisplacements": [0.0, 0.0, 0.0],
+                            "initialCoordinates": [0.0, 0.0, 0.0],
                             "name": nodeName}
             
             # add node to mbs

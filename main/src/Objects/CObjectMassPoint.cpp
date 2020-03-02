@@ -110,7 +110,7 @@ py::object MainObjectMassPoint::CallFunction(STDstring functionName, py::dict ar
 	{
 		Vector3D locPos;
 		STDstring configStr;
-		ConfigurationType configType = ConfigurationType::None;
+		ConfigurationType configType = ConfigurationType::_None;
 		EPyUtils::SetVector3DSafely(args, "localPosition", locPos);
 		EPyUtils::SetStringSafely(args, "configuration", configStr);
 		if (configStr == "Current") { configType = ConfigurationType::Current; }

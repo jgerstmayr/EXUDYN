@@ -27,7 +27,7 @@
 
 namespace PostNewtonFlags {
 	enum Type {
-		None = 0,
+		_None = 0,
 		UpdateLTGLists = 1 << 0	//!< signals the solver that a change was such that the localToGlobal index list must be updated for the object
 	};
 }
@@ -56,7 +56,7 @@ public:
 	//! connector may have nodes (data coordinates)
 	virtual Index GetNumberOfNodes() const override { return 0; }
 		
-	virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::RequestedMarkerType"); return Marker::None; }
+	virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::RequestedMarkerType"); return Marker::_None; }
 
     virtual CObjectType GetCObjectType() const { return CObjectType::Connector; }
 
@@ -68,7 +68,7 @@ public:
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//specific Connector/Marker functions!
-	//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
+	//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'; provides time t for user functions
 	virtual void ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2RHS"); }
 
 	//! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates

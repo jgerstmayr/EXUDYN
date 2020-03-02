@@ -82,7 +82,7 @@ There are several ways to using the code, but you {\bf cannot} install \codeName
 %{\bf Ways to use \codeName }:
 In order to make full usage of the C++ code and extending it, you can use:
 \bi
-	\item Windows / Microsoft Visual Studio 17 and above:
+	\item Windows / Microsoft Visual Studio 2017 and above:
 	\bi
 		\item get the files from git
 		\item put them into a local directory (recommended: \texttt{C:/DATA/cpp/EXUDYN\_git})
@@ -103,12 +103,12 @@ After the first development phase (planned in Q4/2021), it will
 \bi
   \item be a small multibody library, which can be easily linked to other projects,
 	\item allow to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
-	\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$ (planned: Q4 2020),
-	\item use multi-threaded parallel computing techniques (planned: Q4 2020),
-	\item be accessible safe and at a wide range via the Python interface,
+	%\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$ (planned: Q4 2020),
+	%\item use multi-threaded parallel computing techniques (planned: Q4 2020),
+	\item safe and widely accessible module for Python,
 	\item allow to add user defined objects in C++,
-	\item allow to add user defined objects in Python (planned: 2021),
-	\item allow to add user defined solvers in Python (finished: Q1 2020).
+	%\item allow to add user defined objects in Python (planned: 2021),
+	\item allow to add user defined solvers in Python).
 \ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -190,6 +190,13 @@ Within this file, the first column shows the simulation time and the following c
 	WORKAROUND: type \texttt{mbs=MainSystem()} {\bf before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 	\ei
 	%
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item How to add graphics?
+	\bi
+	\item[$\ra$] Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object.
+	Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time.
+	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item What is the difference between MarkerBodyPosition and MarkerBodyRigid?

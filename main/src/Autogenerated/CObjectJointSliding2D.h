@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-10  21:17:19 (last modfied)
+* @date         2020-02-26  12:00:02 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: marker0: position-marker of mass point or rigid body; marker1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
     ArrayIndex slidingMarkerNumbers;              //!< AUTO: these markers are used to update marker1, if the sliding position exceeds the current cable"s range; the markers must be sorted such that marker(i) at x=cable.length is equal to marker(i+1) at x=0
     Vector slidingMarkerOffsets;                  //!< AUTO: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...
-    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the initial (global) sliding position
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectJointSliding2DParameters()
@@ -43,7 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectJointSliding2D
-* @brief        A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinates provide [0] the current index in slidingMarkerNumbers, and [1] the local position in the cable element at the beginning of the timestep; the algebraic variables are \f[ \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \f] in which \f$\lambda_x\f$ and \f$\lambda_y\f$ are the Lagrange multipliers for the position of the sliding joint and \f$s\f$ is the (algebraic) sliding coordinate relative to the value at the beginning at the solution step; the data coordinates are \f[ \qv_{Data} = [i_{marker} \;\; s_{0}]^T \f] in which \f$i_{marker}\f$ is the current local index to the slidingMarkerNumber list and  \f$s_{0}\f$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step.
+* @brief        A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -139,10 +139,10 @@ public: // AUTO:
     //! AUTO:  provide according output variable in "value"
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
-    //! AUTO:  provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::None
+    //! AUTO:  provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None
     virtual Marker::Type GetRequestedMarkerType() const override
     {
-        return Marker::None;
+        return Marker::_None;
     }
 
     //! AUTO:  return object type (for node treatment in computation)

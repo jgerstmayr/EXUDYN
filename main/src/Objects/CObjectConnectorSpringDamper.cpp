@@ -49,7 +49,7 @@ void ComputeConnectorProperties(const MarkerDataStructure& markerData, const COb
 		else
 		{
 			//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real springForce)
-			force += parameters.springForceUserFunction(springLength - parameters.referenceLength, relVel*forceDirection, parameters.stiffness, parameters.damping, parameters.force);
+			force += parameters.springForceUserFunction(markerData.GetTime(), springLength - parameters.referenceLength, relVel*forceDirection, parameters.stiffness, parameters.damping, parameters.force);
 		}
 	}
 }
@@ -98,12 +98,12 @@ void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jac
 	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorSpringDamper::ComputeODE2RHSJacobian");
 }
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectConnectorSpringDamper::GetOutputVariableTypes() const
-{
-	return (OutputVariableType)((Index)OutputVariableType::Distance + (Index)OutputVariableType::Displacement +
-		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Force);
-}
+////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
+//OutputVariableType CObjectConnectorSpringDamper::GetOutputVariableTypes() const
+//{
+//	return (OutputVariableType)((Index)OutputVariableType::Distance + (Index)OutputVariableType::Displacement +
+//		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Force);
+//}
 
 //! provide according output variable in "value"
 void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const

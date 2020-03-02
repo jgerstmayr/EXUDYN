@@ -41,7 +41,7 @@ steps = 5000  #number of steps
 
 
 #user function for spring force
-def springForce(u, v, k, d, offset, mu, muPropZone):
+def springForce(t, u, v, k, d, offset, mu, muPropZone):
     return 0.1*k*u+k*u**3+v*d
 
 #linear frequency sweep in time interval [0, t1] and frequency interval [f0,f1];
@@ -75,9 +75,17 @@ mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker],
                                      stiffness = spring, damping = damper, springForceUserFunction = springForce)) 
 
 #add load:
-mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
+loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                            load = load0, loadUserFunction=userLoad))
 
+writeSensorFile = False
+if exudynTestGlobals.useGraphics:
+    writeSensorFile = True
+
+mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, fileName="solution/userFunctionLoad.txt"))
+#mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, fileName="solution/userFunctionNode.txt"))
+mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, outputVariableType=exu.OutputVariableType.Coordinates, fileName="solution/userFunctionNode.txt"))
+    
 #print(mbs)
 mbs.Assemble()
 

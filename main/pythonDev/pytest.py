@@ -42,7 +42,7 @@ for i in range(n):
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))
 
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[L*(i+1),0], 
-                                    initialDisplacements=[0,0],
+                                    initialCoordinates=[0,0],
                                     initialVelocities=[0,-vInit]))
     oMass = mbs.AddObject(MassPoint2D(physicsMass = mass, nodeNumber = nMass, visualization = VObjectMassPoint2D(graphicsData = [graphicsSphere])))
 

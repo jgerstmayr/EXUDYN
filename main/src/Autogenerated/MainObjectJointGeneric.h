@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-11  09:45:23 (last modfied)
+* @date         2020-02-19  00:54:34 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,9 +108,7 @@ public: // AUTO:
         EPyUtils::SetMatrix3DSafely(d, "rotationMarker0", cObjectJointGeneric->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetMatrix3DSafely(d, "rotationMarker1", cObjectJointGeneric->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointGeneric->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetVector6DSafely(d, "forceTorqueUserFunctionParameters", cObjectJointGeneric->GetParameters().forceTorqueUserFunctionParameters); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetVector6DSafely(d, "offsetUserFunctionParameters", cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "forceTorqueUserFunction")) { if (EPyUtils::CheckForValidFunction(d["forceTorqueUserFunction"])) { cObjectJointGeneric->GetParameters().forceTorqueUserFunction = py::cast<std::function<StdVector6D(Real,StdVector6D)>>((py::function)d["forceTorqueUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
         if (EPyUtils::DictItemExists(d, "offsetUserFunction")) { if (EPyUtils::CheckForValidFunction(d["offsetUserFunction"])) { cObjectJointGeneric->GetParameters().offsetUserFunction = py::cast<std::function<StdVector6D(Real,StdVector6D)>>((py::function)d["offsetUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
         if (EPyUtils::DictItemExists(d, "offsetUserFunction_t")) { if (EPyUtils::CheckForValidFunction(d["offsetUserFunction_t"])) { cObjectJointGeneric->GetParameters().offsetUserFunction_t = py::cast<std::function<StdVector6D(Real,StdVector6D)>>((py::function)d["offsetUserFunction_t"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -131,9 +129,7 @@ public: // AUTO:
         d["rotationMarker0"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker0); //! AUTO: generate dictionary with special function
         d["rotationMarker1"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker1); //! AUTO: generate dictionary with special function
         d["activeConnector"] = (bool)cObjectJointGeneric->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["forceTorqueUserFunctionParameters"] = (std::vector<Real>)cObjectJointGeneric->GetParameters().forceTorqueUserFunctionParameters; //! AUTO: cast variables into python (not needed for standard types) 
         d["offsetUserFunctionParameters"] = (std::vector<Real>)cObjectJointGeneric->GetParameters().offsetUserFunctionParameters; //! AUTO: cast variables into python (not needed for standard types) 
-        d["forceTorqueUserFunction"] = (std::function<StdVector6D(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().forceTorqueUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["offsetUserFunction"] = (std::function<StdVector6D(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["offsetUserFunction_t"] = (std::function<StdVector6D(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
@@ -151,9 +147,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectJointGeneric->GetParameters().markerNumbers);} //! AUTO: get parameter
         else if (parameterName.compare("constrainedAxes") == 0) { return py::cast((std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointGeneric->GetParameters().activeConnector);} //! AUTO: get parameter
-        else if (parameterName.compare("forceTorqueUserFunctionParameters") == 0) { return py::cast((std::vector<Real>)cObjectJointGeneric->GetParameters().forceTorqueUserFunctionParameters);} //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunctionParameters") == 0) { return py::cast((std::vector<Real>)cObjectJointGeneric->GetParameters().offsetUserFunctionParameters);} //! AUTO: get parameter
-        else if (parameterName.compare("forceTorqueUserFunction") == 0) { return py::cast((std::function<StdVector6D(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().forceTorqueUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction") == 0) { return py::cast((std::function<StdVector6D(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction_t") == 0) { return py::cast((std::function<StdVector6D(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointGeneric->GetShow());} //! AUTO: get parameter
@@ -174,9 +168,7 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectJointGeneric->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectJointGeneric->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointGeneric->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("forceTorqueUserFunctionParameters") == 0) { EPyUtils::SetVector6DSafely(value, cObjectJointGeneric->GetParameters().forceTorqueUserFunctionParameters); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunctionParameters") == 0) { EPyUtils::SetVector6DSafely(value, cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("forceTorqueUserFunction") == 0) { cObjectJointGeneric->GetParameters().forceTorqueUserFunction = py::cast<std::function<StdVector6D(Real,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction") == 0) { cObjectJointGeneric->GetParameters().offsetUserFunction = py::cast<std::function<StdVector6D(Real,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction_t") == 0) { cObjectJointGeneric->GetParameters().offsetUserFunction_t = py::cast<std::function<StdVector6D(Real,StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointGeneric->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

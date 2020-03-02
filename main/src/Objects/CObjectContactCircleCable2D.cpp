@@ -232,7 +232,7 @@ Real CObjectContactCircleCable2D::PostNewtonStep(const MarkerDataStructure& mark
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error
 	Real discontinuousError = 0;
-	flags = PostNewtonFlags::None;
+	flags = PostNewtonFlags::_None;
 	if (parameters.activeConnector)
 	{
 		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...

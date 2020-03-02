@@ -72,7 +72,7 @@ public:
 	virtual void SetParameter(const STDstring& parameterName, const py::object& value) { SysError("Illegal call to MainObject::SetParameter(...)"); }
 
 	//! provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
-	virtual Node::Type GetRequestedNodeType() const { SysError("Illegal call to MainObject::GetRequestedNodeType"); return Node::None; }
+	virtual Node::Type GetRequestedNodeType() const { SysError("Illegal call to MainObject::GetRequestedNodeType"); return Node::_None; }
 
 	//! call pybind object function, possibly with arguments
 	virtual py::object CallFunction(STDstring functionName, py::dict args) const { SysError("Illegal call to MainObject::CallFunction"); return py::object();  }

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -99,7 +99,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -182,7 +182,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -334,7 +334,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -355,7 +355,7 @@ class VSettingsContour // AUTO:
 {
 public: // AUTO: 
   Index outputVariableComponent;                  //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; if this component is not available by certain objects or nodes, no value is drawn
-  OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.None to deactivate contour plotting.
+  OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.
   float minValue;                                 //!< AUTO: minimum value for contour plot; set manually, if automaticRange == False
   float maxValue;                                 //!< AUTO: maximum value for contour plot; set manually, if automaticRange == False
   bool automaticRange;                            //!< AUTO: if true, the contour plot value range is chosen automatically to the maximum range
@@ -368,7 +368,7 @@ public: // AUTO:
   VSettingsContour()
   {
     outputVariableComponent = 0;
-    outputVariable = OutputVariableType::None;
+    outputVariable = OutputVariableType::_None;
     minValue = 0;
     maxValue = 1;
     automaticRange = true;
@@ -406,7 +406,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -469,7 +469,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -540,7 +540,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -594,7 +594,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -669,7 +669,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -752,7 +752,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -820,7 +820,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -843,6 +843,7 @@ public: // AUTO:
   bool show;                                      //!< AUTO: flag to decide, whether the loads are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the load numbers are shown
   float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
+  float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
   bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
   float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for loads; 4th value is alpha-transparency
@@ -855,6 +856,7 @@ public: // AUTO:
     show = true;
     showNumbers = false;
     defaultSize = 0.2f;
+    defaultRadius = 0.005f;
     fixedLoadSize = true;
     loadSizeFactor = 0.1f;
     defaultColor = Float4({0.7f,0.1f,0.1f,1.f});
@@ -873,6 +875,7 @@ public: // AUTO:
     os << "  show = " << show << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultRadius = " << defaultRadius << "\n";
     os << "  fixedLoadSize = " << fixedLoadSize << "\n";
     os << "  loadSizeFactor = " << loadSizeFactor << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
@@ -894,7 +897,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -962,7 +965,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-09 (last modfied)
+* @date         AUTO: 2020-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

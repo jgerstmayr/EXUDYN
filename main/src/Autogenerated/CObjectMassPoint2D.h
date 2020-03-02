@@ -79,7 +79,7 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
-        return JacobianType::None;
+        return JacobianType::_None;
     }
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible

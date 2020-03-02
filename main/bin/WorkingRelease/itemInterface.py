@@ -1,3 +1,10 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries
+#author: Johannes Gerstmayr
+#created: 2019-07-01
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+from exudyn import OutputVariableType
+
 #item interface diagonal matrix creator
 def IIDiagMatrix(rowsColumns, value):
     m = []
@@ -20,10 +27,10 @@ class VNodePoint:
         yield 'color', self.color
 
 class NodePoint:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialDisplacements = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -31,7 +38,7 @@ class NodePoint:
         yield 'nodeType', 'Point'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -52,10 +59,10 @@ class VNodePoint2D:
         yield 'color', self.color
 
 class NodePoint2D:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.], initialDisplacements = [0.,0.], initialVelocities = [0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.], initialCoordinates = [0.,0.], initialVelocities = [0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -63,7 +70,7 @@ class NodePoint2D:
         yield 'nodeType', 'Point2D'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -84,10 +91,10 @@ class VNodeRigidBodyEP:
         yield 'color', self.color
 
 class NodeRigidBodyEP:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialDisplacements = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -95,7 +102,7 @@ class NodeRigidBodyEP:
         yield 'nodeType', 'RigidBodyEP'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -116,10 +123,10 @@ class VNodeRigidBodyRxyz:
         yield 'color', self.color
 
 class NodeRigidBodyRxyz:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialDisplacements = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -127,7 +134,7 @@ class NodeRigidBodyRxyz:
         yield 'nodeType', 'RigidBodyRxyz'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -148,10 +155,10 @@ class VNodeRigidBodyRotVecLG:
         yield 'color', self.color
 
 class NodeRigidBodyRotVecLG:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialDisplacements = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -159,7 +166,7 @@ class NodeRigidBodyRotVecLG:
         yield 'nodeType', 'RigidBodyRotVecLG'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -180,10 +187,10 @@ class VNodeRigidBody2D:
         yield 'color', self.color
 
 class NodeRigidBody2D:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialDisplacements = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -191,7 +198,7 @@ class NodeRigidBody2D:
         yield 'nodeType', 'RigidBody2D'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -212,10 +219,10 @@ class VNodePoint2DSlope1:
         yield 'color', self.color
 
 class NodePoint2DSlope1:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,1.,0.], initialDisplacements = [0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
-        self.initialDisplacements = initialDisplacements
+        self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
         self.visualization = visualization
 
@@ -223,7 +230,7 @@ class NodePoint2DSlope1:
         yield 'nodeType', 'Point2DSlope1'
         yield 'name', self.name
         yield 'referenceCoordinates', self.referenceCoordinates
-        yield 'initialDisplacements', self.initialDisplacements
+        yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -593,12 +600,13 @@ class VObjectConnectorCartesianSpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorCartesianSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness
         self.damping = damping
         self.offset = offset
+        self.springForceUserFunction = springForceUserFunction
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -609,6 +617,7 @@ class ObjectConnectorCartesianSpringDamper:
         yield 'stiffness', self.stiffness
         yield 'damping', self.damping
         yield 'offset', self.offset
+        yield 'springForceUserFunction', self.springForceUserFunction
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -938,13 +947,15 @@ class VObjectJointALEMoving2D:
         yield 'color', self.color
 
 class ObjectJointALEMoving2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ -1, -1 ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ -1, -1 ], usePenaltyFormulation = False, penaltyStiffness = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.slidingMarkerNumbers = slidingMarkerNumbers
         self.slidingMarkerOffsets = slidingMarkerOffsets
         self.slidingOffset = slidingOffset
         self.nodeNumbers = nodeNumbers
+        self.usePenaltyFormulation = usePenaltyFormulation
+        self.penaltyStiffness = penaltyStiffness
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -956,6 +967,8 @@ class ObjectJointALEMoving2D:
         yield 'slidingMarkerOffsets', self.slidingMarkerOffsets
         yield 'slidingOffset', self.slidingOffset
         yield 'nodeNumbers', self.nodeNumbers
+        yield 'usePenaltyFormulation', self.usePenaltyFormulation
+        yield 'penaltyStiffness', self.penaltyStiffness
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -978,16 +991,14 @@ class VObjectJointGeneric:
         yield 'color', self.color
 
 class ObjectJointGeneric:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, forceTorqueUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], forceTorqueUserFunction = 0, offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
         self.rotationMarker0 = rotationMarker0
         self.rotationMarker1 = rotationMarker1
         self.activeConnector = activeConnector
-        self.forceTorqueUserFunctionParameters = forceTorqueUserFunctionParameters
         self.offsetUserFunctionParameters = offsetUserFunctionParameters
-        self.forceTorqueUserFunction = forceTorqueUserFunction
         self.offsetUserFunction = offsetUserFunction
         self.offsetUserFunction_t = offsetUserFunction_t
         self.visualization = visualization
@@ -1000,9 +1011,7 @@ class ObjectJointGeneric:
         yield 'rotationMarker0', self.rotationMarker0
         yield 'rotationMarker1', self.rotationMarker1
         yield 'activeConnector', self.activeConnector
-        yield 'forceTorqueUserFunctionParameters', self.forceTorqueUserFunctionParameters
         yield 'offsetUserFunctionParameters', self.offsetUserFunctionParameters
-        yield 'forceTorqueUserFunction', self.forceTorqueUserFunction
         yield 'offsetUserFunction', self.offsetUserFunction
         yield 'offsetUserFunction_t', self.offsetUserFunction_t
         yield 'Vshow', dict(self.visualization)["show"]
@@ -1108,11 +1117,10 @@ class VMarkerBodyPosition:
         yield 'show', self.show
 
 class MarkerBodyPosition:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], bodyFixed = False, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
-        self.bodyFixed = bodyFixed
         self.visualization = visualization
 
     def __iter__(self):
@@ -1120,7 +1128,6 @@ class MarkerBodyPosition:
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
         yield 'localPosition', self.localPosition
-        yield 'bodyFixed', self.bodyFixed
         yield 'Vshow', dict(self.visualization)["show"]
 
 class VMarkerBodyRigid:
@@ -1131,11 +1138,10 @@ class VMarkerBodyRigid:
         yield 'show', self.show
 
 class MarkerBodyRigid:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], bodyFixed = False, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
-        self.bodyFixed = bodyFixed
         self.visualization = visualization
 
     def __iter__(self):
@@ -1143,7 +1149,6 @@ class MarkerBodyRigid:
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
         yield 'localPosition', self.localPosition
-        yield 'bodyFixed', self.bodyFixed
         yield 'Vshow', dict(self.visualization)["show"]
 
 class VMarkerNodePosition:
@@ -1255,10 +1260,11 @@ class VLoadForceVector:
         yield 'show', self.show
 
 class LoadForceVector:
-    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = loadVector
+        self.bodyFixed = bodyFixed
         self.loadVectorUserFunction = loadVectorUserFunction
         self.visualization = visualization
 
@@ -1267,6 +1273,7 @@ class LoadForceVector:
         yield 'name', self.name
         yield 'markerNumber', self.markerNumber
         yield 'loadVector', self.loadVector
+        yield 'bodyFixed', self.bodyFixed
         yield 'loadVectorUserFunction', self.loadVectorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
@@ -1281,10 +1288,11 @@ class VLoadTorqueVector:
         yield 'show', self.show
 
 class LoadTorqueVector:
-    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = loadVector
+        self.bodyFixed = bodyFixed
         self.loadVectorUserFunction = loadVectorUserFunction
         self.visualization = visualization
 
@@ -1293,6 +1301,7 @@ class LoadTorqueVector:
         yield 'name', self.name
         yield 'markerNumber', self.markerNumber
         yield 'loadVector', self.loadVector
+        yield 'bodyFixed', self.bodyFixed
         yield 'loadVectorUserFunction', self.loadVectorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
@@ -1358,7 +1367,7 @@ class VSensorNode:
         yield 'show', self.show
 
 class SensorNode:
-    def __init__(self, name = '', nodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = OutputVariableType._None, visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.writeToFile = writeToFile
@@ -1383,7 +1392,7 @@ class VSensorBody:
         yield 'show', self.show
 
 class SensorBody:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = OutputVariableType._None, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
@@ -1400,5 +1409,28 @@ class SensorBody:
         yield 'writeToFile', self.writeToFile
         yield 'fileName', self.fileName
         yield 'outputVariableType', self.outputVariableType
+        yield 'Vshow', dict(self.visualization)["show"]
+
+class VSensorLoad:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorLoad:
+    def __init__(self, name = '', loadNumber = -1, writeToFile = True, fileName = '', visualization = {'show': True}):
+        self.name = name
+        self.loadNumber = loadNumber
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'Load'
+        yield 'name', self.name
+        yield 'loadNumber', self.loadNumber
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
         yield 'Vshow', dict(self.visualization)["show"]
 

@@ -296,6 +296,8 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 						computationalSystem.ComputeMassMatrix(tempCompData, systemMassMatrixGM);
 						systemMassMatrixGM.MultiplyWithFactor(-currentODE2stabilizer);
 
+						//pout << "Sold=" << systemMassMatrixGM << "\n";
+
 						systemJacobian.AddSubmatrix(systemMassMatrixGM);
 						timer.massMatrix += EXUstd::GetTimeInSeconds();
 

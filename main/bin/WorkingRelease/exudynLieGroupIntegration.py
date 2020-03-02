@@ -22,6 +22,7 @@ from numpy import linalg as LA
 import math
 
 import exudyn as exu
+from exudynRigidBodyUtilities import Skew
 
 ###############################################################################
 # rotation vector update formulas
@@ -88,14 +89,6 @@ def Sinc(x):
 #        s = np.sin(x)/x
 #    return s
 
-
-# compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
-# this function should be replaced with a ExuDyn function!!!
-def Skew(vector):
-    skewsymmetricMatrix = np.array([[0.0, -vector[2], vector[1]], 
-                                    [vector[2], 0.0, -vector[0]],
-                                    [-vector[1], vector[0], 0.0]])
-    return skewsymmetricMatrix
 
 
 ## inverse tangent operator corresponding to exponential map
@@ -237,14 +230,17 @@ def LieGroupExplicitRKInitialize(mainSys):
 #    lieGroupNodesList = []   #UNUSED #list of lie group nodes which need special treatment
 
     lieGroupODE2indices = []
+    lieGroupReferenceRotations = [] #store reference values of nodes; need to be added to current values when computing rotation vectors
     constrainedToGroundCoordinatesList = [] #list of constrained (fixed) ODE2 coordinates
     constrainedCoordinatesList =[]  #list of pairs of constrained ODE2 coordinates
+    
 
     for i in range(nNodes):
         d = mainSys.GetNode(i)
         if d['nodeType'] == 'RigidBodyRotVecLG':
 #            lieGroupNodesList += [i]
             lieGroupODE2indices += [mainSys.GetNodeODE2Index(i)]
+            lieGroupReferenceRotations += [d['referenceCoordinates'][3:6] ]
     
     for i in range(nObjects):
         d = mainSys.GetObject(i)
@@ -270,6 +266,8 @@ def LieGroupExplicitRKInitialize(mainSys):
                     constrainedToGroundCoordinatesList += [coords[0]] #this global coordinate needs to be fixed
 #    print("constrained coordinates =",constrainedToGroundCoordinatesList)
     mainSys.sys['lieGroupODE2indices'] = lieGroupODE2indices
+    mainSys.sys['lieGroupReferenceRotations'] = lieGroupReferenceRotations
+    
     mainSys.sys['constrainedToGroundCoordinatesList'] = constrainedToGroundCoordinatesList
     mainSys.sys['constrainedCoordinatesList'] = constrainedCoordinatesList
     
@@ -280,6 +278,8 @@ def ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2):
     Fode2 = res[0:nODE2]
     mainSolver.ComputeMassMatrix(mainSys)
     M = mainSolver.GetSystemMassMatrix()
+#    print("Fode2=",Fode2)
+#    print("M=",np.diag(M))
     
     #adjust mass and force for constrained coordinates:
     #cCoords[0] is the relevant coordinate
@@ -335,17 +335,20 @@ def LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, Kprev, kprev, f
     u = u0[0:nODE2] + factK * Kprev
     v = v0[0:nODE2] + factK * kprev
 
-    #update rotation vector and angular velocities for every Lie group node:    
+    #update rotation vector and angular velocities for every Lie group node: 
+    cnt = 0
     for i in mainSys.sys['lieGroupODE2indices']:
         i1 = i+3 #start index of rotation
         i2 = i+6 #end index of rotation
-        vec0 = u0[i1:i2]
+        vecRef = mainSys.sys['lieGroupReferenceRotations'][cnt]
+        vec0 = vecRef + u0[i1:i2]
         omega0 = v0[i1:i2]
         K = Kprev[i1:i2]
         k = kprev[i1:i2]
-        u[i1:i2] = ComposeRotationVectors(vec0, factK*K)
+        u[i1:i2] = ComposeRotationVectors(vec0, factK*K) - vecRef
         #print("k=",k, ",factK=", factK, ",omega0=", omega0)
         v[i1:i2] = omega0+factK*k
+        cnt += 1
 
     mainSys.systemData.SetODE2Coordinates(u)
     mainSys.systemData.SetODE2Coordinates_t(v)    
@@ -369,6 +372,7 @@ def UserFunctionNewtonLieGroupRK4(mainSolver, mainSys, sims):
 
     #+++++++++++++++++++++++++++++++++++++     
     u0 = mainSys.systemData.GetODE2Coordinates()
+    #uRef=mainSys.systemData.GetODE2Coordinates(configuration = exu.ConfigurationType.Reference)
     v0 = mainSys.systemData.GetODE2Coordinates_t()
      
     #K0 = np.zeros(nODE2)
@@ -403,12 +407,16 @@ def UserFunctionNewtonLieGroupRK4(mainSolver, mainSys, sims):
     uStep = u0 + deltaU #standard update for non-LieGroup nodes
     
     #compute final rotation vector updates based on deltaU:
+    cnt = 0
     for i in mainSys.sys['lieGroupODE2indices']:
         i1 = i+3 #start index of rotation
         i2 = i+6 #end index of rotation
-        vec0 = u0[i1:i2]
+        vecRef = mainSys.sys['lieGroupReferenceRotations'][cnt]
+        vec0 = vecRef + u0[i1:i2]
+        #vec0 = u0[i1:i2]
         incrRotVec = deltaU[i1:i2]
-        uStep[i1:i2] = ComposeRotationVectors(vec0, incrRotVec)
+        uStep[i1:i2] = ComposeRotationVectors(vec0, incrRotVec) - vecRef
+        cnt += 1
         
     mainSys.systemData.SetODE2Coordinates(uStep)
     mainSys.systemData.SetODE2Coordinates_t(vStep)

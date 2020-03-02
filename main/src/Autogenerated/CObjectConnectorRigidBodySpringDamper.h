@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-12  16:38:34 (last modfied)
+* @date         2020-02-24  12:40:15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,8 +25,8 @@ class CObjectConnectorRigidBodySpringDamperParameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
-    Matrix6D stiffness;                           //!< AUTO: stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles)
-    Matrix6D damping;                             //!< AUTO: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; 
+    Matrix6D stiffness;                           //!< AUTO: stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis
+    Matrix6D damping;                             //!< AUTO: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector
     Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
     Vector6D offset;                              //!< AUTO: translational and rotational offset considered in the spring force calculation
@@ -47,7 +47,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorRigidBodySpringDamper
-* @brief        An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers; represents a penalty-based rigid joint; the resulting force in the spring-damper reads (\f$m0 = marker[0]\f$ and \f$m1 = marker[1]\f$): \f[ force_x = (A0loc \cdot A0) \cdot stiffness_x \cdot (A0loc \cdot A0)^T(m1.position_x - m0.position_x - offset_x) + (A0loc \cdot A0) \cdot damping_x \cdot (A0loc \cdot A0)^T (m1.velocity_x - m0.velocity_x), etc. \f] and accordingly for rotation coordinates, which act on \f$(rotationMarker0 \cdot Rxyz0)^T \cdot (rotationMarker1 \cdot Rxyz1) \f$ rotations (0...rotation of marker0, 1...rotation of marker1).
+* @brief        An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers and represents a penalty-based rigid joint (or prismatic, revolute, etc.)
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -103,9 +103,6 @@ public: // AUTO:
         return (JacobianType::Type)(JacobianType::ODE2_ODE2+JacobianType::ODE2_ODE2_t);
     }
 
-    //! AUTO:  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-    virtual OutputVariableType GetOutputVariableTypes() const override;
-
     //! AUTO:  provide according output variable in "value"
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
@@ -125,6 +122,17 @@ public: // AUTO:
     virtual bool IsActive() const override
     {
         return parameters.activeConnector;
+    }
+
+    virtual OutputVariableType GetOutputVariableTypes() const override
+    {
+        return (OutputVariableType)(
+            (Index)OutputVariableType::DisplacementLocal +
+            (Index)OutputVariableType::VelocityLocal +
+            (Index)OutputVariableType::Rotation +
+            (Index)OutputVariableType::AngularVelocityLocal +
+            (Index)OutputVariableType::ForceLocal +
+            (Index)OutputVariableType::TorqueLocal );
     }
 
 };

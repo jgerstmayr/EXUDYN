@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-05  00:03:34 (last modfied)
+* @date         2020-02-21  22:45:24 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,7 +132,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::SetVector6DSafely(d, "referenceCoordinates", cNodeRigidBodyRxyz->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "initialDisplacements")) { EPyUtils::SetVector6DSafely(d, "initialDisplacements", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::SetVector6DSafely(d, "initialCoordinates", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::SetVector6DSafely(d, "initialVelocities", GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeRigidBodyRxyz->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -146,7 +146,7 @@ public: // AUTO:
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
         d["referenceCoordinates"] = (std::vector<Real>)cNodeRigidBodyRxyz->GetParameters().referenceCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialDisplacements"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
         d["initialVelocities"] = (std::vector<Real>)GetParameters().initialCoordinates_t; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeRigidBodyRxyz->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -160,7 +160,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("referenceCoordinates") == 0) { return py::cast((std::vector<Real>)cNodeRigidBodyRxyz->GetParameters().referenceCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialDisplacements") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("initialVelocities") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeRigidBodyRxyz->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationNodeRigidBodyRxyz->GetDrawSize());} //! AUTO: get parameter
@@ -175,7 +175,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::SetVector6DSafely(value, cNodeRigidBodyRxyz->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialDisplacements") == 0) { EPyUtils::SetVector6DSafely(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::SetVector6DSafely(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::SetVector6DSafely(value, GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationNodeRigidBodyRxyz->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationNodeRigidBodyRxyz->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

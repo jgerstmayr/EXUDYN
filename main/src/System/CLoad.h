@@ -43,11 +43,14 @@ public: //
   virtual Index GetMarkerNumber() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetMarkerNumber() const"); return 0; }
 
   //! determine type of load in order to decide according action in assembly
-  virtual LoadType GetType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetType"); return LoadType::None; }
+  virtual LoadType GetType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetType"); return LoadType::_None; }
 
   const static Index VectorSize = 3; //dimensionality of vector loads
   //! determine type of load in order to decide according action in assembly
   virtual bool IsVector() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::IsVector"); return true; }
+
+  //! per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system
+  virtual bool IsBodyFixed() const { return false; }
 
   //! Write (Reference) access to: general load vector (e.g. force or torque); used if LoadType::IsVector = 1
   //DELETE: should not be needed: virtual Vector3D& GetLoadVector() { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector"); Vector3D* v = new Vector3D(0.); return *v; }
@@ -60,7 +63,7 @@ public: //
   //! Read (Reference) access to: scalar load value (e.g. object/node coordinate) as a function of time; used if LoadType::IsVector = 0
   virtual Real GetLoadValue(Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadValue(Real t) const");  Real* v = new Real(0.); return *v; }
 
-  virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::RequestedMarkerType"); return Marker::None; }
+  virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::RequestedMarkerType"); return Marker::_None; }
 
   virtual void Print(std::ostream& os) const
   {

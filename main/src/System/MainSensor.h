@@ -56,6 +56,9 @@ public:
 	//! Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail; override by according classes
 	virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const { return true; }
 
+	//! GetSensorOutput with configuration; copies values==>slow!; can be scalar or vector-valued! maps to CSensor GetSensorValues(...)
+	virtual py::object GetSensorValues(const CSystemData& cSystemData, ConfigurationType configuration = ConfigurationType::Current) const;
+
 	//! Get (read) parameter 'parameterName' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Invalid call to MainSensor::GetParameter"); return py::object(); }
 	//! Set (write) parameter 'parameterName' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-28  08:47:25 (last modfied)
+* @date         2020-02-21  22:45:24 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,7 +30,7 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainNodeRigidBody2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector3D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux, uy and uphi
+    Vector3D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux, uy and psi
     Vector3D initialCoordinates_t;                //!< AUTO: initial velocity coordinate: vx, vy, omega
     //! AUTO: default constructor with parameter initialization
     MainNodeRigidBody2DParameters()
@@ -43,7 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeRigidBody2D
-* @brief        A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi); all coordinates lead to second order differential equations; The rotation matrix \f$\Am\f$, transforming local (body-fixed) 3D positions \f$\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;0]^T\f$ to global 3D positions \f$\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T\f$, \f[ \pv_{glob} = \Am \pv_{loc}, \f] is defined as \f[ \Am = \mp{\cos(\varphi)}{-\sin(\varphi)}{\sin(\varphi)}{\cos(\varphi)}.\f]
+* @brief        A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -132,7 +132,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::SetVector3DSafely(d, "referenceCoordinates", cNodeRigidBody2D->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "initialDisplacements")) { EPyUtils::SetVector3DSafely(d, "initialDisplacements", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::SetVector3DSafely(d, "initialCoordinates", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::SetVector3DSafely(d, "initialVelocities", GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeRigidBody2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -146,7 +146,7 @@ public: // AUTO:
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
         d["referenceCoordinates"] = (std::vector<Real>)cNodeRigidBody2D->GetParameters().referenceCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialDisplacements"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
         d["initialVelocities"] = (std::vector<Real>)GetParameters().initialCoordinates_t; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeRigidBody2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -160,7 +160,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("referenceCoordinates") == 0) { return py::cast((std::vector<Real>)cNodeRigidBody2D->GetParameters().referenceCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialDisplacements") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("initialVelocities") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeRigidBody2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationNodeRigidBody2D->GetDrawSize());} //! AUTO: get parameter
@@ -175,7 +175,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::SetVector3DSafely(value, cNodeRigidBody2D->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialDisplacements") == 0) { EPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::SetVector3DSafely(value, GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationNodeRigidBody2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationNodeRigidBody2D->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

@@ -156,7 +156,7 @@ def SpringDamperMesh(mbs, testInterface):
         body = mbs.AddObject({'objectType': 'Ground', 'referencePosition': [0,j,0]})
         mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
         for i in range(nBodies-1): 
-            node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],'initialDisplacements': [(i+1)*0.05*0, 0.0, 0.0], 'initialVelocities': [0., 0., 0.],})
+            node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],'initialCoordinates': [(i+1)*0.05*0, 0.0, 0.0], 'initialVelocities': [0., 0., 0.],})
             body = mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': 10, 'nodeNumber': node})
             mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
 
@@ -253,7 +253,7 @@ def MathematicalPendulumTest(mbs, testInterface):
     nodeList = [0,0]
 
     for k in range(2):
-        n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialDisplacements = [0,0,0]))
+        n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [0,0,0]))
         nodeList[k] = n1
 
         mass = 2.5
@@ -643,7 +643,7 @@ def SlidingJoint2DTest(mbs, testInterface):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#test8 linear spring-damper: CartesianSpringDamper, initialDisplacements, initialVelocities
+#test8 linear spring-damper: CartesianSpringDamper, initialCoordinates, initialVelocities
 def CartesianSpringDamperTest(mbs, testInterface):
     L=0.5
     mass = 1.6
@@ -657,7 +657,7 @@ def CartesianSpringDamperTest(mbs, testInterface):
     x0 = f/k
 
     #node for mass point:
-    n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialDisplacements = [u0,0,0], initialVelocities= [v0,0,0]))
+    n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], initialVelocities= [v0,0,0]))
 
     #add mass points and ground object:
     objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
@@ -708,7 +708,7 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     fFriction = 20 #force in Newton, only depends on direction of velocity
     
     #node for mass point:
-    n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialDisplacements = [u0,0,0], initialVelocities= [v0,0,0]))
+    n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], initialVelocities= [v0,0,0]))
     nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [L,0,0]))
     
     #add mass points and ground object:

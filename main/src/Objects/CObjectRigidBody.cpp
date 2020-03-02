@@ -72,18 +72,17 @@ void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
 	ConstSizeMatrix<9> localInertia;
 	RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, localInertia);
 
-	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
-	LinkedDataVector rot_t = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters_t();
-	//pout << "rot=" << rot << "\n";
-	//pout << "rot_t=" << rot_t << "\n";
 
+	//compute: Glocal^T * (omegaBar.Cross(localInertia*omegaBar))
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 	((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);
 
-	//compute: Glocal^T * (omegaBar.Cross(localInertia*omegaBar))
-	Vector3D omegaBar;
-	EXUmath::MultMatrixVector(Glocal, rot_t, omegaBar);
-	//pout << "omegaBar=" << omegaBar << "\n";
+	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
+	//LinkedDataVector rot_t = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters_t();
+	//Vector3D omegaBar;
+	//EXUmath::MultMatrixVector(Glocal, rot_t, omegaBar);
+
+	Vector3D omegaBar = ((CNodeRigidBody*)GetCNode(0))->GetAngularVelocityLocal();
 
 	//+++++++++++++++++++++++++++++++++++++
 	//Version1 (different to Version2 (gives different forces1; difference acting in the nullspace of rot):
@@ -98,6 +97,7 @@ void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
 		//compute: forces2 = Glocal^T * localInertia * Glocal_t * rot_t
 		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forces2;
 		Vector3D temp2;
+		LinkedDataVector rot_t = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters_t();
 
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal_t;
 		((CNodeRigidBody*)GetCNode(0))->GetGlocal_t(Glocal_t);

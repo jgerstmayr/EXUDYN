@@ -120,17 +120,89 @@ void CObjectConnectorRigidBodySpringDamper::ComputeJacobianODE2_ODE2(ResizableMa
 {
 	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorRigidBodySpringDamper::ComputeODE2RHSJacobian");
 }
-
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectConnectorRigidBodySpringDamper::GetOutputVariableTypes() const
-{
-	return OutputVariableType::Distance;
-}
+//
+////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
+//OutputVariableType CObjectConnectorRigidBodySpringDamper::GetOutputVariableTypes() const
+//{
+//	return OutputVariableType::Distance;
+//}
 
 //! provide according output variable in "value"
 void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	SysError("CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector not implemented");
+	//(Index)OutputVariableType::DisplacementLocal +
+	//	(Index)OutputVariableType::VelocityLocal +
+	//	(Index)OutputVariableType::AngularVelocityLocal +
+	//	(Index)OutputVariableType::ForceLocal +
+	//	(Index)OutputVariableType::TorqueLocal );
+	//
+	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
+	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
+	const Matrix3D& A0off = parameters.rotationMarker0;
+	const Matrix3D& A1off = parameters.rotationMarker1;
+	//Matrix3D A0all = (A0off * A0);
+	//Matrix3D A1all = (A1off * A1);
+	Matrix3D A0all = (A0*A0off);
+	Matrix3D A1all = (A1*A1off);
+
+	//relative position, spring length and inverse spring length
+	Vector3D vLocPos = A0all.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //vLocPos transformed to marker0 local coordinate system, where springs are defined
+	Vector3D vLocVel = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+
+	//relative rotation
+	Matrix3D relRot = A0all.GetTransposed() * A1all;
+	Vector3D vLocRot = RigidBodyMath::RotationMatrix2RotXYZ(relRot);
+
+	Vector3D vLocAngVel = A0all.GetTransposed()*(A1*markerData.GetMarkerData(1).angularVelocityLocal - A0 * markerData.GetMarkerData(0).angularVelocityLocal);
+
+
+	if (vLocRot[0] > EXUstd::pi) { vLocRot[0] -= 2.*EXUstd::pi; }
+	if (vLocRot[1] > EXUstd::pi) { vLocRot[1] -= 2.*EXUstd::pi; }
+	if (vLocRot[2] > EXUstd::pi) { vLocRot[2] -= 2.*EXUstd::pi; }
+
+	//unit direction and relative velocity of spring-damper
+	//Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+
+	//if (markerData.GetMarkerData(1).velocity.GetL2NormSquared() == 0)
+	//{
+	//	pout << "RSD: vel=0" << "\n";
+	//}
+
+	//compute resulting displacement vector:
+	Vector6D uLoc6D;
+	Vector6D vLoc6D;
+	for (Index i = 0; i < 3; i++)
+	{
+		uLoc6D[i] = vLocPos[i];
+		uLoc6D[i + 3] = vLocRot[i];
+		vLoc6D[i] = vLocVel[i];
+		vLoc6D[i + 3] = vLocAngVel[i];
+	}
+	uLoc6D -= parameters.offset;
+	//pout << "uLoc6D=" << uLoc6D << "\n";
+
+	Vector6D fLocVec6D;
+	EXUmath::MultMatrixVector(parameters.stiffness, uLoc6D, fLocVec6D);
+
+	Vector6D temp;
+	EXUmath::MultMatrixVector(parameters.damping, vLoc6D, temp);
+	fLocVec6D += temp;
+
+	//pout << "  fLocVec6D=" << fLocVec6D << "\n";
+	LinkedDataVector fPosLoc(fLocVec6D, 0, 3);
+	LinkedDataVector fRotLoc(fLocVec6D, 3, 3);
+
+	switch (variableType)
+	{
+	case OutputVariableType::DisplacementLocal: value.CopyFrom(vLocPos); break;
+	case OutputVariableType::VelocityLocal: value.CopyFrom(vLocVel); break;
+	case OutputVariableType::Rotation: value.CopyFrom(vLocRot); break;
+	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(vLocAngVel); break;
+	case OutputVariableType::ForceLocal: value.CopyFrom(fPosLoc); break;
+	case OutputVariableType::TorqueLocal: value.CopyFrom(fRotLoc); break;
+	default:
+		SysError("CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
+	}
 }
 
 ////! @todo NEEDED? should be done during preprocessing ==> written in global list; number of ODE2 coordinates the connector is related to; depends on coordinates of marker objects/nodes

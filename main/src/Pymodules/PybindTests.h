@@ -65,7 +65,7 @@ void CreateTestSystem(Index systemNumber, Index arg0, Index arg1)
 			if (j == 0) :
 				body = mbs.AddObject({ 'objectType': 'Ground', 'referencePosition' : [0,j,0] })
 			else :
-				node = mbs.AddNode(NodePoint2D(referenceCoordinates = [L*(j + 1), 0], initialDisplacements = [0, 0]))
+				node = mbs.AddNode(NodePoint2D(referenceCoordinates = [L*(j + 1), 0], initialCoordinates = [0, 0]))
 				body = mbs.AddObject(MassPoint2D(physicsMass = 10, nodeNumber = node))
 				#constrain y - direction:
 
@@ -96,7 +96,7 @@ void CreateTestSystem(Index systemNumber, Index arg0, Index arg1)
 //	py::exec(R"(
 //		systemContainer = exu.SystemContainer()
 //		mbs = systemContainer.AddSystem()
-//		for i in range(10): mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i, 0.0, 0.0],'initialDisplacements': [0.0, 0.0, (i+1)/10], 'initialVelocities': [0.0, i*2, 0.0],})
+//		for i in range(10): mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i, 0.0, 0.0],'initialCoordinates': [0.0, 0.0, (i+1)/10], 'initialVelocities': [0.0, i*2, 0.0],})
 //		for i in range(10): mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': 20-i, 'nodeNumber': i})
 //		for i in range(10): mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': i,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
 //		for i in range(9): mbs.AddObject({'objectType': 'SpringDamper', 'stiffness': 4, 'damping': 0, 'force': 0, 'referenceLength':1, 'markerNumbers': [i,i+1]})		

@@ -101,7 +101,7 @@ public: // AUTO:
     //! AUTO:  node types are checked in CheckPreAssembleConsistency(...);provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
     virtual Node::Type GetRequestedNodeType() const override
     {
-        return Node::None;
+        return Node::_None;
     }
 
     //! AUTO:  Call a specific object function ==> automatically generated in future?

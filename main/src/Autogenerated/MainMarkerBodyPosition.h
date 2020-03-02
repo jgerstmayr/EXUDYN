@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-28  08:47:25 (last modfied)
+* @date         2020-02-19  19:00:14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -104,7 +104,6 @@ public: // AUTO:
     {
         cMarkerBodyPosition->GetParameters().bodyNumber = py::cast<Index>(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DSafely(d, "localPosition", cMarkerBodyPosition->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "bodyFixed")) { cMarkerBodyPosition->GetParameters().bodyFixed = py::cast<bool>(d["bodyFixed"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerBodyPosition->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -116,7 +115,6 @@ public: // AUTO:
         d["markerType"] = (std::string)GetTypeName();
         d["bodyNumber"] = (Index)cMarkerBodyPosition->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["localPosition"] = (std::vector<Real>)cMarkerBodyPosition->GetParameters().localPosition; //! AUTO: cast variables into python (not needed for standard types) 
-        d["bodyFixed"] = (bool)cMarkerBodyPosition->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerBodyPosition->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -128,7 +126,6 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { return py::cast((Index)cMarkerBodyPosition->GetParameters().bodyNumber);} //! AUTO: get parameter
         else if (parameterName.compare("localPosition") == 0) { return py::cast((std::vector<Real>)cMarkerBodyPosition->GetParameters().localPosition);} //! AUTO: get parameter
-        else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cMarkerBodyPosition->GetParameters().bodyFixed);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerBodyPosition->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyPosition::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -141,7 +138,6 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { cMarkerBodyPosition->GetParameters().bodyNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetVector3DSafely(value, cMarkerBodyPosition->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("bodyFixed") == 0) { cMarkerBodyPosition->GetParameters().bodyFixed = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerBodyPosition->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyPosition::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

@@ -47,7 +47,8 @@ Jzz=0.234375
 
 #vector to COM, where force is applied
 rp = [0.,1.,0.]
-rpt = np.array(Vec2Tilde(rp))
+#rpt = np.array(Skew(rp))
+rpt = Skew(rp)
 Fg = [0,0,-m*9.81]
 #inertia tensor w.r.t. fixed point
 JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)
@@ -94,12 +95,15 @@ for nodeType in nodeTypeList:
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
     
     if exudynTestGlobals.useGraphics:
-        #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
-        mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
-        #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
+        sAdd = ''
+        if nodeType == exu.NodeType.RotationRxyz:
+            sAdd = 'Rxyz' #avoid that both sensor file names are identical
+        #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.Rotation))
+        mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVelLocal'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
+        #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
         
-        mbs.AddSensor(SensorBody(bodyNumber=oRB, fileName='solution/sensorPosition.txt', localPosition=rp, outputVariableType=exu.OutputVariableType.Position))
-        mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorCoordinates.txt', outputVariableType=exu.OutputVariableType.Coordinates))
+        mbs.AddSensor(SensorBody(bodyNumber=oRB, fileName='solution/sensorPosition'+sAdd+'.txt', localPosition=rp, outputVariableType=exu.OutputVariableType.Position))
+        mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorCoordinates'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.Coordinates))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
@@ -168,7 +172,7 @@ if exudynTestGlobals.useGraphics:
     ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='theta 2') 
     ax1.plot(data1[:,0], data1[:,4+3], 'k-', label='theta 3') 
     
-    data1 = np.loadtxt('../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt', comments='#', delimiter=',')
+    data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt', comments='#', delimiter=',')
     ax1.plot(data1[:,0], data1[:,1], 'r:', label='theta 0 ref')  #1, because coordinates to not include ref. values
     ax1.plot(data1[:,0], data1[:,2], 'g:', label='theta 1 ref') 
     ax1.plot(data1[:,0], data1[:,3], 'b:', label='theta 2 ref') 

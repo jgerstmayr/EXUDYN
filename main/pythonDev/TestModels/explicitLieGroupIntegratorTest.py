@@ -12,7 +12,6 @@
 import sys
 sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-sys.path.append('../pythonDev')            
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 from itemInterface import *
@@ -22,7 +21,7 @@ from exudynLieGroupIntegration import *
 
 import numpy as np
 
-exu.SetWriteToFile('testOutput.log', flagWriteToFile=True, flagAppend=True)
+exu.SetWriteToFile('testOutput.log', flagWriteToFile=False, flagAppend=True)
 
 SC = exu.SystemContainer()
 #mbs = exu.MainSystem()
@@ -45,7 +44,7 @@ Jzz=0.234375
 
 #vector to COM, where force is applied
 rp = [0.,1.,0.]
-rpt = np.array(Vec2Tilde(rp))
+rpt = np.array(Skew(rp))
 Fg = [0,0,-m*9.81]
 #inertia tensor w.r.t. fixed point
 JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)
@@ -75,7 +74,7 @@ elif nodeType == exu.NodeType.RotationRxyz:
 elif nodeType == exu.NodeType.RotationRotationVector:
     rot0 = [0,0,0]
     rot_t0 = omega0
-    print('rot_t0=',rot_t0)
+    #print('rot_t0=',rot_t0)
     nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
 
 
@@ -125,8 +124,7 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 #compute data needed for Lie group integrator:
 if nodeType == exu.NodeType.RotationRotationVector:
     LieGroupExplicitRKInitialize(mbs)
-
-    print("constrained coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
+    #print("constrained coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
 
 #STEP2000, t = 2 sec, timeToGo = 7.99602e-14 sec, Nit/step = 0
 #solver finished after 1.46113 seconds.
@@ -140,28 +138,26 @@ if nodeType == exu.NodeType.RotationRotationVector:
 #8000: omegay= -106.16387282138162
 #16000:omegay= -106.16380903826868
 #32000:omegay= -106.163804467377
-ts=[2000,4000,8000,16000,32000]
-val=np.array([-106.16651966442134,
--106.16459373617013,
--106.16387282138162,
--106.16380903826868,
--106.163804467377]) +106.1638041640045
-val *= -1
-print(val)
+#ts=[2000,4000,8000,16000,32000]
+#val=np.array([-106.16651966442134,
+#-106.16459373617013,
+#-106.16387282138162,
+#-106.16380903826868,
+#-106.163804467377]) +106.1638041640045
+#val *= -1
+#print(val)
 
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-fact = 1000
-simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
-simulationSettings.timeIntegration.endTime = 2              #1s for test suite / error
+fact = 400 #400 steps for test suite/error
+simulationSettings.timeIntegration.numberOfSteps = fact 
+simulationSettings.timeIntegration.endTime = 0.01              #0.01s for test suite 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 #simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 
-#dynamicSolver.SetUserFunctionInitializeStep(mbs, UserFunctionInitializeStep)
-#dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewton)
 dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
 
 dynamicSolver.SolveSystem(mbs, simulationSettings)
@@ -169,7 +165,10 @@ dynamicSolver.SolveSystem(mbs, simulationSettings)
 
 omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-component of angular vel
 print("omegay=", omegay)
-exudynTestGlobals.testError = omegay - (0) #2020-02-11: 
+#400 steps, tEnd=0.01, rotationVector, RK4 LieGroup integrator
+#solution is converged for 14 digits (compared to 800 steps)
+exudynTestGlobals.testError = omegay - (149.8473939540758) #2020-02-11: 149.8473939540758
+
 
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()
@@ -203,12 +202,12 @@ if exudynTestGlobals.useGraphics:
 #    ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
 #    ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
 #    ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
-    ax3.loglog(ts, val, 'b-', label='conv') 
+#    ax3.loglog(ts, val, 'b-', label='conv') 
 #    
 #    axList=[ax1,ax2,ax3]
 #    figList=[fig1, fig2, fig3]
-    axList=[ax2,ax3]
-    figList=[fig2,fig3]
+    axList=[ax2]
+    figList=[fig2]
     
     for ax in axList:
         ax.grid(True, 'major', 'both')
@@ -218,7 +217,7 @@ if exudynTestGlobals.useGraphics:
         ax.legend()
         
     ax2.set_ylabel("angular velocity (rad/s)")
-    ax3.set_ylabel("coordinate (m)")
+#    ax3.set_ylabel("coordinate (m)")
     
     for f in figList:
         f.tight_layout()

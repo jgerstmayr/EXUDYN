@@ -67,7 +67,7 @@ GlfwRenderer::GlfwRenderer()
 	stateMachine.rightMousePressed = false;
 	stateMachine.shiftPressed = false;
 	stateMachine.ctrlPressed = false;
-	stateMachine.mode = RendererMode::None;			//!< determines the state of any action
+	stateMachine.mode = RendererMode::_None;			//!< determines the state of any action
 
 	stateMachine.mousePositionX = 0;	//!< last mouse position used for move and zoom
 	stateMachine.mousePositionY = 0;	//!< last mouse position used for move and zoom
@@ -440,7 +440,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	{
 		//rendererOut << "mouse button left pressed\n";
 		stateMachine.leftMousePressed = true;
-		//if (stateMachine.mode != RendererMode::None)
+		//if (stateMachine.mode != RendererMode::_None)
 		//{
 		stateMachine.lastMousePressedX = stateMachine.mousePositionX;
 		stateMachine.lastMousePressedY = stateMachine.mousePositionY; //now see if the mouse moves, then switch to move mode!
@@ -482,7 +482,7 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 	//MOUSE MOVE state machine:
 	//check if one should switch to mouse move mode:
 	double minMove = 2;
-	if (stateMachine.leftMousePressed && stateMachine.mode == RendererMode::None)
+	if (stateMachine.leftMousePressed && stateMachine.mode == RendererMode::_None)
 	{
 		if (fabs(stateMachine.lastMousePressedX - xpos) >= minMove || fabs(stateMachine.lastMousePressedY - ypos) >= minMove)
 		{ 
@@ -501,14 +501,14 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 			state->centerPoint[0] = stateMachine.storedCenterPointX - (float)(xpos - stateMachine.lastMousePressedX) * factor;
 			state->centerPoint[1] = stateMachine.storedCenterPointY + (float)(ypos - stateMachine.lastMousePressedY) * factor;
 		}
-		else { stateMachine.mode = RendererMode::None; } //finish move operation if button is released!
+		else { stateMachine.mode = RendererMode::_None; } //finish move operation if button is released!
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//ROTATE state machine:
 	//check if one should switch to mouse move mode:
 	minMove = 2; //for rotation
-	if (stateMachine.rightMousePressed && stateMachine.mode == RendererMode::None)
+	if (stateMachine.rightMousePressed && stateMachine.mode == RendererMode::_None)
 	{
 		if (fabs(stateMachine.lastMousePressedX - xpos) >= minMove || fabs(stateMachine.lastMousePressedY - ypos) >= minMove)
 		{
@@ -536,7 +536,7 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
 
 		}
-		else { stateMachine.mode = RendererMode::None; } //finish move operation if button is released!
+		else { stateMachine.mode = RendererMode::_None; } //finish move operation if button is released!
 	}
 
 
@@ -865,7 +865,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
 	}
 
-	if (visSettings->contour.showColorBar && visSettings->contour.outputVariable != OutputVariableType::None) //draw coordinate system
+	if (visSettings->contour.showColorBar && visSettings->contour.outputVariable != OutputVariableType::_None) //draw coordinate system
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

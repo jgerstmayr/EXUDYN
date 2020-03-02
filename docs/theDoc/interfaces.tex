@@ -102,7 +102,7 @@ GeneralizedAlphaSettings has the following items:
     useIndex2Constraints &     bool &      &     False &     set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation\\ \hline
     useNewmark &     bool &      &     False &     if true, use Newmark method with beta and gamma instead of generalized-Alpha\\ \hline
     spectralRadius &     UReal &      &     0.9 &     spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1\\ \hline
-    computeInitialAccelerations &     bool &      &     True &     true: compute initial accelerations from system EOM in acceleration form; false: use zero accelerations\\ \hline
+    computeInitialAccelerations &     bool &      &     True &     true: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! false: use zero accelerations\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -288,7 +288,7 @@ VSettingsContour has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     outputVariableComponent &     Index &     1 &     0 &     select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; if this component is not available by certain objects or nodes, no value is drawn\\ \hline
-    outputVariable &     OutputVariableType &      &     OutputVariableType::None &     \tabnewline selected contour plot output variable type; select OutputVariableType.None to deactivate contour plotting.\\ \hline
+    outputVariable &     OutputVariableType &      &     OutputVariableType::\_None &     \tabnewline selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.\\ \hline
     minValue &     float &     1 &     0 &     minimum value for contour plot; set manually, if automaticRange == False\\ \hline
     maxValue &     float &     1 &     1 &     maximum value for contour plot; set manually, if automaticRange == False\\ \hline
     automaticRange &     bool &      &     True &     if true, the contour plot value range is chosen automatically to the maximum range\\ \hline
@@ -423,6 +423,7 @@ VSettingsLoads has the following items:
     show &     bool &      &     True &     flag to decide, whether the loads are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the load numbers are shown\\ \hline
     defaultSize &     float &      &     0.2 &     global load size; if -1.f, load size is relative to maxSceneSize\\ \hline
+    defaultRadius &     float &      &     0.005 &     global radius of load axis if drawn in 3D\\ \hline
     fixedLoadSize &     bool &      &     True &     if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size\\ \hline
     loadSizeFactor &     float &      &     0.1 &     if fixedLoadSize=false, then this scaling factor is used to draw the load vector\\ \hline
     defaultColor &     Float4 &     4 &     [0.7,0.1,0.1,1.] &     \tabnewline default cRGB olor for loads; 4th value is alpha-transparency\\ \hline

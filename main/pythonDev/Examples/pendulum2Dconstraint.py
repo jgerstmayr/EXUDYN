@@ -33,7 +33,7 @@ graphicsSphere = GraphicsDataSphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1
 oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0], 
                            visualization = VObjectGround(graphicsData = [graphicsBackground])))
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[L,0], 
-                                initialDisplacements=[0,0],
+                                initialCoordinates=[0,0],
                                 initialVelocities=[0,0]))
 oMass = mbs.AddObject(MassPoint2D(physicsMass = mass, nodeNumber = nMass, 
                                   visualization = VObjectMassPoint2D(graphicsData = [graphicsSphere])))

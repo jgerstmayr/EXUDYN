@@ -189,7 +189,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 #simulationSettings.staticSolver.loadStepGeometric = True
 #simulationSettings.staticSolver.adaptiveStep = False
-#simulationSettings.staticSolver.numberOfLoadSteps=10
+simulationSettings.staticSolver.numberOfLoadSteps=10
 #simulationSettings.staticSolver.loadStepGeometricRange = 100
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-7 #with this error tolerance, the adaptive step selection needs 4 steps
 #simulationSettings.staticSolver.verboseMode=1
@@ -265,7 +265,7 @@ if solveDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.3
-    simulationSettings.timeIntegration.verboseMode = 2
+    simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.displayStatistics = True
     
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-10  21:17:19 (last modfied)
+* @date         2020-02-28  10:01:42 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,11 +24,13 @@
 class CObjectJointALEMoving2DParameters // AUTO: 
 {
 public: // AUTO: 
-    ArrayIndex markerNumbers;                     //!< AUTO: marker0: position-marker of mass point or rigid body; marker1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
-    ArrayIndex slidingMarkerNumbers;              //!< AUTO: these markers are used to update marker1, if the sliding position exceeds the current cable"s range; the markers must be sorted such that marker(i) at x=cable.length is equal to marker(i+1) at x=0
+    ArrayIndex markerNumbers;                     //!< AUTO: marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
+    ArrayIndex slidingMarkerNumbers;              //!< AUTO: a list of sn (global) marker numbers which are are used to update marker1
     Vector slidingMarkerOffsets;                  //!< AUTO: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...
-    Real slidingOffset;                           //!< AUTO: offset [SI:m] used set the sliding position relative to the chosen Eulerian (NodeGenericODE2) coordinate; the following relation is used: \f$slidingPosition = posALE + slidingOffset\f$
-    ArrayIndex nodeNumbers;                       //!< AUTO: node numbers of: [0] NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active; [1] of the GenericNodeODE2 of the ALE sliding coordinate
+    Real slidingOffset;                           //!< AUTO: sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements
+    ArrayIndex nodeNumbers;                       //!< AUTO: node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate
+    bool usePenaltyFormulation;                   //!< AUTO: flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)
+    Real penaltyStiffness;                        //!< AUTO: penalty stiffness [SI:N/m] used if usePenaltyFormulation=True
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectJointALEMoving2DParameters()
@@ -38,6 +40,8 @@ public: // AUTO:
         slidingMarkerOffsets = Vector();
         slidingOffset = 0.;
         nodeNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
+        usePenaltyFormulation = false;
+        penaltyStiffness = 0.;
         activeConnector = true;
     };
 };
@@ -45,7 +49,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectJointALEMoving2D
-* @brief        A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); the data coordinate [0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate [0] provides the (given) moving coordinate in the cable element; the algebraic variables are \f[ \qv_{AE}=[\lambda_x\;\; \lambda_y]^T \f], in which \f$\lambda_x\f$ and \f$\lambda_y\f$ are the Lagrange multipliers for the position constraint of the moving joint; the data coordinate is \f[ \qv_{Data} = [i_{marker}]^T \f] in which \f$i_{marker}\f$ is the current local index to the slidingMarkerNumber list.
+* @brief        A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -141,10 +145,10 @@ public: // AUTO:
     //! AUTO:  provide according output variable in "value"
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
-    //! AUTO:  provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::None
+    //! AUTO:  provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None
     virtual Marker::Type GetRequestedMarkerType() const override
     {
-        return Marker::None;
+        return Marker::_None;
     }
 
     //! AUTO:  return object type (for node treatment in computation)

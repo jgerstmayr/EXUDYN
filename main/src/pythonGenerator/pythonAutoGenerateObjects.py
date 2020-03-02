@@ -33,10 +33,11 @@ def DestinationNr(strDest):
 
 #conversion list for python functions; names must always start with 'PyFunction'...
 pyFunctionTypeConversion = {'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
-                            'PyFunctionScalar5': 'std::function<Real(Real,Real,Real,Real,Real)>',
-                            'PyFunctionScalar7': 'std::function<Real(Real,Real,Real,Real,Real,Real,Real)>',
+                            'PyFunctionScalar6': 'std::function<Real(Real,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
+                            'PyFunctionScalar8': 'std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
                             'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>',
                             'PyFunctionVector6DScalarVector6D': 'std::function<StdVector6D(Real,StdVector6D)>',
+                            'PyFunctionVector3DScalar5Vector3D': 'std::function<StdVector3D(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>' #CartesianSpringDamper
                             }
 #                            'PyFunctionVector3DScalarVector3D': 'std::function<std::array<Real,3>(Real,std::array<Real,3)>'}
 
@@ -53,6 +54,40 @@ def IsASetSafelyParameter(parameterType):
         return True
     else:
         return False
+
+#function which writes the mini examples for every item into a separate file
+def WriteMiniExample(className, miniExample):
+    s = '#+++++++++++++++++++++++++++++++++++++++++++\n'
+    s+= '# Mini example for class ' + className + '\n'
+    s+= '#+++++++++++++++++++++++++++++++++++++++++++\n\n'
+
+    s+= 'import sys\n'
+    s+= "sys.path.append('../../bin/WorkingRelease')\n"
+    s+= "sys.path.append('../TestModels')\n"
+    s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
+    s+= 'import exudyn as exu\n'
+    s+= 'from exudynUtilities import *\n'
+    s+= 'from itemInterface import *\n'
+    s+= 'import numpy as np\n'
+    s+= '\n'
+    s+= '#create an environment for mini example\n'
+    s+= 'SC = exu.SystemContainer()\n'
+    s+= 'mbs = SC.AddSystem()\n'
+    s+= '\n'
+    s+= 'oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))\n'
+    s+= 'nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))\n'
+    s+= '\n'
+    s+= 'print("start mini example for class ' + className + '")\n'
+    s+= 'try: #puts example in safe environment\n'
+    s+= miniExample
+    s+= '\n'
+    s+= 'finally:\n'
+    s+= '    print("example for ' + className + ' completed, test error =", testError)\n'
+    s+= '\n'
+    
+    fileExample=open('../../pythonDev/MiniExamples/'+className+'.py','w') 
+    fileExample.write(s)
+    fileExample.close()
 
 
 #************************************************
@@ -128,6 +163,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #no includes for visualization classes, because they are included at a place, where all necessary headers exist
     #sParamMain += '#include "Graphics/Visualization.h"      //! AUTO: link to visualization class; also includes settings and base classes VisualizationObject/Node/...
 
+    if len(parseInfo['miniExample']) != 0:
+        WriteMiniExample(parseInfo['class'], parseInfo['miniExample'])
 
     sComp = "" #computation
     sComp = GenerateHeader(compClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False)
@@ -181,20 +218,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         
         sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
         sLatex += descriptionStr + '\n \\\\'
-        if len(parseInfo['pythonShortName']) != 0:
-            sLatex += '\n{\\bf Short name} for Python: {\\bf ' + parseInfo['pythonShortName'] + '}\n \\\\'
-        if len(parseInfo['outputVariables']) != 0:
-            sLatex += '\\\\ \n{\\bf Output variables} (chose type, e.g., OutputVariableType.Position): \n\\begin{itemize}\n'
-            #print('OV=',parseInfo['outputVariables'])
-            dictOV = eval(parseInfo['outputVariables']) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
-            for outputVariables in dictOV.items(): 
-                sLatex += '    \\item {\\bf ' + outputVariables[0].replace('_','\_') + '}: ' + outputVariables[1].replace('_','\_') + '\n'
-            
-            sLatex += '\\end{itemize}\n'
+
+
+        cLatex  = '\\vspace{12pt} \\noindent The item {\\bf ' + parseInfo['class'] + "} with type = '"
+        cLatex += sTypeName + "' has the following parameters:\\vspace{-1cm}\\\\ \n"
         
-        cLatex  = 'The item ' + parseInfo['class'] + ' has the following parameters:\n'
-        
-        vLatex  = 'The item V' + parseInfo['class'] + ' has the following parameters:\n'
+        vLatex  = 'The item V' + parseInfo['class'] + ' has the following parameters:\\vspace{-1cm}\\\\ \n'
         
         sTemp   = '%reference manual TABLE\n'
         sTemp  += '\\begin{center}\n'
@@ -206,8 +235,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         cLatex += sTemp
         vLatex += sTemp
     
-        cLatex += '    \\multicolumn{4}{l}{\\parbox{10cm}{type = ' + "'" + sTypeName + "'" + '}} & \\multicolumn{1}{l}{\\parbox{6cm}{\\it item typename for initialization}}\\\\ \\hline\n'
+        #cLatex += '    \\multicolumn{4}{l}{\\parbox{10cm}{type = ' + "'" + sTypeName + "'" + '}} & \\multicolumn{1}{l}{\\parbox{6cm}{\\it item typename for initialization}}\\\\ \\hline\n'
 
+        symbolList = ''
         requestedMarkerString = ''
         for parameter in parameterList:
             if (parameter['lineType'].find('V') != -1) & (parameter['cFlags'].find('I') != -1): #also include parent class members!
@@ -215,6 +245,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if (parameter['type'] == 'String'):
                     sString="'"
                 #write latex doc:
+                parameterDescription = parameter['parameterDescription']
+                if parameterDescription[0]=='$':
+                    splitDesc = parameterDescription.split('$')
+                    if len(splitDesc)!=3:
+                        print("ERROR: symbol for description must include exactly two '$' symbols; description =", parameterDescription)
+                    parameterDescription = splitDesc[2]
+                    symbolList+= "\\rowTable{" + parameter['pythonName'] +"}{$" + splitDesc[1] + "$}{}\n"  #this is the latex symbol string
+                
                 parameterTypeStr = parameter['type']
                 parameterSizeStr = parameter['size']
                 parameterDefaultValueStr = parameter['defaultValue']
@@ -227,7 +265,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 sTemp  += '    ' + Str2Latex(parameterTypeStr) + ' & '
                 sTemp  += '    ' + Str2Latex(parameterSizeStr) + ' & '
                 sTemp  += '    ' + sString+Str2Latex(parameterDefaultValueStr, True)+sString + ' & '
-                sTemp  += '    ' + parameter['parameterDescription'] + '\\\\ \\hline\n'
+                sTemp  += '    ' + parameterDescription + '\\\\ \\hline\n'
                 if parameter['destination'].find('V') != -1: #visualization
                     vLatex += sTemp
                 else:
@@ -235,7 +273,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     
             elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
                 markerType = parameter['defaultValue'].replace('return ','').replace(';','')
-                requestedMarkerString = "  {\\bf Requested marker type} = " + markerType + " \\\\ \n"
+                requestedMarkerString = "  {\\bf Requested marker type} = " + Str2Latex(markerType) + " \\\\ \n"
 
         sLatex += requestedMarkerString
 
@@ -246,6 +284,36 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         vLatex += '	\\end{center}\n'
         #now assemble visualization and computation tables:
         sLatex += cLatex+vLatex
+
+        #add additional information auto-generated
+        if len(parseInfo['pythonShortName']) != 0:
+            sLatex += '\n\\noindent{\\bf Short name} for Python: {\\bf ' + parseInfo['pythonShortName'] + '}\n \\vspace{6pt}\\\\'
+        if len(parseInfo['outputVariables']) != 0:
+            sLatex += '{\\bf Output variables} (chose type, e.g., OutputVariableType.Position): \n\\begin{itemize}\n'
+            #print('OV=',parseInfo['outputVariables'])
+            dictOV = eval(parseInfo['outputVariables']) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
+            for outputVariables in dictOV.items(): 
+                sLatex += '    \\item {\\bf ' + outputVariables[0].replace('_','\_') + '}: ' + outputVariables[1].replace('_','\_') + '\n'
+            
+            sLatex += '\\end{itemize}\n'
+   
+            
+        if len(symbolList) != 0: #automatically generated import parameter symbol list
+            #sLatex += "\\vspace{6pt}\\\\ \n"
+            sLatex += "{\\bf Definition of quantities}:\n"
+            sLatex += "\\startTable{input parameter}{symbol}{description see above}\n"
+            sLatex += symbolList
+            sLatex += "\\finishTable\n"
+        if len(parseInfo['equations']) != 0:
+            sLatex +=' \\noindent\n' + parseInfo['equations']
+        if len(parseInfo['miniExample']) != 0:
+            #sLatex +='\\vspace{12pt}\\\\ \n'
+            sLatex +='\\noindent {\\bf Example} for ' + parseInfo['class'] + ':\n'
+            sLatex +='\\pythonstyle\n'
+            sLatex +='\\begin{lstlisting}[language=Python, firstnumber=1]\n'
+            sLatex += parseInfo['miniExample'] + '\n'
+            sLatex +='\\end{lstlisting}\n\n'
+
 
     #************************************
     #Python interface class:
@@ -363,7 +431,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             insertSpaces = ''
             if nChar < alignment:
                 insertSpaces = ' '*(alignment-nChar)
-            lineStr = temp + insertSpaces + '//!< AUTO: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+
+            parameterDescription = parameter['parameterDescription'] #remove symbol from parameter description
+            if parameterDescription[0]=='$':
+                splitDesc = parameterDescription.split('$')
+                if len(splitDesc)!=3:
+                    print("ERROR: symbol for description must include exactly two '$' symbols; description =", parameterDescription)
+                parameterDescription = splitDesc[2]
+
+            lineStr = temp + insertSpaces + '//!< AUTO: ' + Str2Doxygen(parameterDescription) + '\n'
 
             sList[DestinationNr(parameter['destination'])] += lineStr
 
@@ -818,6 +894,8 @@ try: #still close file if crashes
                  'addIncludesMain':'',     #code added at includes section (e.g. special base class)
                  'classType':'',        #type of class: Object, Node, Sensor, Marker, Load, Sensor
                  'outputVariables':'',  #definition of output variables and description given as dictionary "{'OutputVariableType':'description ...', ...}"
+                 'miniExample':'',      #mini python example (without headers and typical setup); code in separate lines, ended with '/end' in separate line
+                 'equations':'',        #latex style equations, direct latex code; latex code in separate lines, ended with '/end' in separate line
                  'classDescription':''} #add a (brief, one line) description of class
     #this defines the columns of the line, which is then filled into this structure
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
@@ -845,8 +923,28 @@ try: #still close file if crashes
     sPythonGlobal = ['']*5  #global python interface class strings; 'Node','Object','Marker','Load','Sensor'
     sPythonGlobalNames = ['Node','Object','Marker','Load','Sensor']  #global python interface class types
     
+    miniExamplesList = []    #generate file list for mini examples
+    multiLineReading = False #for equations and miniExample
+    multiLineString = ''     #stored string from multiline reading
+    multiLineType = ''       #equations or miniExample
+    cnt = 0
+    
     for line in fileLines:
         if continueOperation:
+            if multiLineReading:
+                pureline = (line.strip('\n')) #eliminate EOL
+                if pureline != '/end':
+                    multiLineString += line
+                else: #store string and finish reading
+                    parseInfo[multiLineType] = multiLineString
+                    #print('multiline=\n'+multiLineString)
+                    multiLineReading = False #end 
+                    multiLineString = ''     #stored string from multiline reading
+                    multiLineType = ''       #equations or miniExample
+                linecnt+=1
+                continue
+            
+
             if line[0] != '#':
                 pureline = (line.strip('\n')) #eliminate EOL
                 pureline = pureline.replace('\\n','\n') #put correct line brake symbols
@@ -877,10 +975,19 @@ try: #still close file if crashes
                         #print("info =", info)
                         defName = info[0].replace(' ','')
                         #print("defname =",defName)
+                        if (defName == 'equations') or (defName == 'miniExample'):
+                            multiLineReading = True
+                            multiLineType = defName
+                            linecnt+=1
+                            continue #read next line
+
+                        
                         RHS = RemoveSpacesTabs(info[1])
                         RHS = RHS.strip('"')
                         RHS = RHS.strip("'") #for includes using "..." for include filename
-                        if ((defName != 'classDescription') & (defName != 'addProtectedC') & (defName != 'addProtectedMain') & (defName != 'addPublicC') & (defName != 'addPublicMain') & (defName != 'addIncludesC') & (defName != 'addIncludesMain') & (defName != 'outputVariables')):
+                        if ((defName != 'classDescription') and (defName != 'addProtectedC') and (defName != 'addProtectedMain') and 
+                            (defName != 'addPublicC') and (defName != 'addPublicMain') and (defName != 'addIncludesC') and
+                            (defName != 'addIncludesMain') and (defName != 'outputVariables')):
                             RHS = RHS.replace(' ','')
                         if (defName in parseInfo):
                             parseInfo[defName] = RHS
@@ -914,6 +1021,9 @@ try: #still close file if crashes
                                     print("ERROR: no valid base name found")
                                 else:
                                     sPythonGlobal[typeInd] += fileStr[6]
+                                    if len(sLatexGlobal[typeInd]) != 0:
+                                        sLatexGlobal[typeInd] += '\\newpage\n' #add newpage after every subsection!
+                                        
                                     sLatexGlobal[typeInd] += fileStr[3]
 
                                 #+++++++++++++++++++++++++++++++
@@ -954,6 +1064,9 @@ try: #still close file if crashes
                                     file.close()
                                     totalNumberOfFilesChanged += 1
 
+                                if len(parseInfo['miniExample']) != 0:
+                                    miniExamplesList += [parseInfo['class']+'.py']
+
                                 #++++++++++++++++++++++++++++++
                                 #write Python/pybind11 includes
 # not needed now:
@@ -983,6 +1096,8 @@ try: #still close file if crashes
                                 parseInfo['classType'] = ''
                                 parseInfo['outputVariables'] = ''
                                 parseInfo['classDescription'] = ''
+                                parseInfo['equations'] = ''
+                                parseInfo['miniExample'] = ''
                                 #parseInfo['writePybindIncludes'] = 'False'
                             else:
                                 print("ERROR: did not expect 'writeFile' keyword in line",linecnt)    
@@ -997,25 +1112,33 @@ try: #still close file if crashes
     
     if (continueOperation == False):
         print('\n\nERROR: Parsing terminated unexpectedly in line',linecnt,'\n\n')
+        
+    print("parsed a total of", linecnt, "lines")
 
     print('total number of lines generated =',totalNumberOfLines)
     print('total number of files changed =',totalNumberOfFilesChanged)
 
-    sLatexItemList = '\n\\mysubsection{List of Items}\nThe following items are available in \codeName:\n\\begin{itemize}\n' + sLatexItemList
-    sLatexItemList += '\\end{itemize}\n'
+#    sLatexItemList = '\n\\mysubsection{List of Items}\nThe following items are available in \codeName:\n\\begin{itemize}\n' + sLatexItemList
+#    sLatexItemList += '\\end{itemize}\n'
 
     fileLatex=open('..\\..\\..\\docs\\theDoc\\itemDefinition.tex','w') 
-    fileLatex.write(sLatexItemList)
+#    fileLatex.write(sLatexItemList)
     it = 0
     for item in sPythonGlobalNames: 
-        fileLatex.write('\n%+++++++++++++++++++++++++++++++\n%+++++++++++++++++++++++++++++++\n\\mysubsection{'+item+'s}\n')
+        fileLatex.write('\n\\newpage\n%+++++++++++++++++++++++++++++++\n%+++++++++++++++++++++++++++++++\n\\mysubsection{'+item+'s}\n')
         fileLatex.write(sLatexGlobal[it])
         it+=1
     
     fileLatex.close()
 
     filePython=open('..\\..\\pythonDev\\itemInterface.py','w') 
-    s = '#item interface diagonal matrix creator\n'
+    s = '#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
+    s += '#automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries\n'
+    s += '#author: Johannes Gerstmayr\n'
+    s += '#created: 2019-07-01\n'
+    s += '#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
+    s += 'from exudyn import OutputVariableType\n\n'
+    s += '#item interface diagonal matrix creator\n'
     s += 'def IIDiagMatrix(rowsColumns, value):\n'
     s += '    m = []\n'
     s += '    for i in range(rowsColumns):\n'
@@ -1032,6 +1155,20 @@ try: #still close file if crashes
         it+=1
     
     filePython.close()
+
+    fileExampleList=open('../../pythonDev/MiniExamples/miniExamplesFileList.py','w') 
+    s = '#this file provides a list of file names for mini examples\n'
+    s+= '\n'
+    s+= 'miniExamplesFileList = ['
+    sepStr = ''
+    for item in miniExamplesList:
+        s+= sepStr + "'" + item + "'"
+        sepStr=',\n'
+    s+= ']\n'
+    s+= '\n'
+    fileExampleList.write(s)
+    fileExampleList.close()
+
 
 finally:    
     file.close()

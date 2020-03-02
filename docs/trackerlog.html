@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 335, 
-Number of resolved issues = 283, 
-EXUDYN version = 0.1.283, 
-last change =  2020-02-12
+Number of issues = 349, 
+Number of resolved issues = 293, 
+EXUDYN version = 0.1.293, 
+last change =  2020-02-24
 
 
 <table style = "width:100%">
@@ -38,6 +38,118 @@ last change =  2020-02-12
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0348</td>
+    <td>GetObjectOutputBody </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> GetObjectOutputBody and similar functions shall not be callable if system is inconsistent</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-24</td>
+    <td>2020-04-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0347</td>
+    <td>initialCoordinates_t</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> instead of initialVelocities</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-02-24</td>
+    <td>2020-04-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0346</td>
+    <td>evaluate autodiff   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> evaluate netgen autodiff and autodiff.github.io for straightforward auto-differentiation of ODE2RHS functions</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-02-23</td>
+    <td>2020-04-23</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0339</td>
+    <td>add LoadController  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add possibility to add controllers with sensors as input and a user python function</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-18</td>
+    <td>2020-04-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0338</td>
+    <td>check accessFunctionTypes</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add automatized marker/force/accessFunctionType checks using the fact that same bits are used in types</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-18</td>
+    <td>2020-04-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0337</td>
+    <td>local force beam    </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> change beam output to local forces and torques!</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-02-18</td>
+    <td>2020-04-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0336</td>
+    <td>euler parameters    </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check input of euler paramters: is norm of EP given for 1-e8</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-02-17</td>
+    <td>2020-04-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0333</td>
     <td>node numbers with type</td>
@@ -214,23 +326,7 @@ last change =  2020-02-12
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0309</td>
-    <td>GenericRigidBodyJoint2D</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add generic joint with local transformation matrix of marker1; enable fixed or free ux,uy and phi in the joint, relative to marker1 coordinate system</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-10</td>
-    <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0303</td>
     <td>constraints derivatives</td>
     <td>JG</td>
@@ -246,7 +342,7 @@ last change =  2020-02-12
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0302</td>
     <td>benchmark problems  </td>
     <td>JG</td>
@@ -262,23 +358,7 @@ last change =  2020-02-12
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0301</td>
-    <td>exudynUtilities     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> split up exudynUtilities into separate files</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-12-26</td>
-    <td>2020-02-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0297</td>
     <td>ALEANCFCable2D mass terms</td>
     <td>JG</td>
@@ -304,22 +384,6 @@ last change =  2020-02-12
     <td></td>
     <td>2019-12-10</td>
     <td>2020-02-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0287</td>
-    <td>Std::array          </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check if performance of python interfaces can be improved using std::array; add typdefs for std::array<Real,3>, etc.</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-12-09</td>
-    <td>2020-02-07</td>
     <td></td>
     <td></td>
     <td></td>
@@ -871,6 +935,118 @@ last change =  2020-02-12
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0345</td>
+    <td>time in connector UF</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add time to connector user functions, to allow time dependent trajectories in spring dampers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-22</td>
+    <td>2020-04-22</td>
+    <td>2020-02-23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0344</td>
+    <td>initialDisplacements</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change the misleading name initialDisplacements to initialCoordinates in all nodes for consitency reasons</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-02-21</td>
+    <td>2020-04-21</td>
+    <td>2020-02-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0343</td>
+    <td>extend CoordinateConstraint</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend CoordinateConstraint user function: value0/1, value_t0/1, factorValue1</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-20</td>
+    <td>2020-04-20</td>
+    <td>2020-02-22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>NOT COMPLETED: do this extension instead in a separate user coordinate constraint as it requires also the jacobians to be computed</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0342</td>
+    <td>add load sensor     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add load sensor which measures loads especially if modified in user defined loads</td>
+    <td>NEW FEATURE</td>
+    <td></td>
+    <td>2020-02-19</td>
+    <td>2020-04-19</td>
+    <td>2020-02-19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0341</td>
+    <td>add bodyFixed loads </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add bodyFixed (local / follower) forces and torques</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-19</td>
+    <td>2020-04-19</td>
+    <td>2020-02-19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0340</td>
+    <td>bodyFixed force     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use markers bodyFixed property to realize local forces - make bodyFixed globally available in markers and add to computation of loads in csystem.cpp</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-19</td>
+    <td>2020-04-19</td>
+    <td>2020-02-19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>moved bodyFixed property to loads; see issue #341</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0335</td>
+    <td>docu examples+equations</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add multiline equations section and example section in the object description</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-16</td>
+    <td>2020-04-16</td>
+    <td>2020-02-23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0334</td>
     <td>add RigidBodySpringDamper</td>
     <td>JG</td>
@@ -944,7 +1120,7 @@ last change =  2020-02-12
     <td></td>
     <td>2020-01-25</td>
     <td>2020-03-25</td>
-    <td>2020-02-05</td>
+    <td>2020-02-18</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1095,6 +1271,22 @@ last change =  2020-02-12
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0309</td>
+    <td>GenericRigidBodyJoint2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add generic joint with local transformation matrix of marker1; enable fixed or free ux,uy and phi in the joint, relative to marker1 coordinate system</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-10</td>
+    <td>2020-03-10</td>
+    <td>2020-02-23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0308</td>
     <td>add show constraints mode</td>
     <td>JG</td>
@@ -1169,6 +1361,22 @@ last change =  2020-02-12
     <td>2019-12-28</td>
     <td>2020-02-26</td>
     <td>2020-02-12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0301</td>
+    <td>exudynUtilities     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> split up exudynUtilities into separate files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-12-26</td>
+    <td>2020-02-24</td>
+    <td>2020-02-14</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1345,6 +1553,22 @@ last change =  2020-02-12
     <td>2019-12-13</td>
     <td>2020-02-11</td>
     <td>2020-01-04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0287</td>
+    <td>Std::array          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if performance of python interfaces can be improved using std::array; add typdefs for std::array<Real,3>, etc.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-12-09</td>
+    <td>2020-02-07</td>
+    <td>2020-02-23</td>
     <td>JG</td>
     <td></td>
     <td></td>

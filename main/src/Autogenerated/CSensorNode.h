@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  00:54:47 (last modfied)
+* @date         2020-02-18  20:36:19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
         nodeNumber = EXUstd::InvalidIndex;
         writeToFile = true;
         fileName = "";
-        outputVariableType = OutputVariableType::None;
+        outputVariableType = OutputVariableType::_None;
     };
 };
 
@@ -79,7 +79,7 @@ public: // AUTO:
         return parameters.nodeNumber;
     }
 
-    //! AUTO:  return sensor type (for node treatment in computation)
+    //! AUTO:  return sensor type
     virtual SensorType GetType() const override
     {
         return SensorType::Node;
@@ -91,7 +91,7 @@ public: // AUTO:
         return parameters.writeToFile;
     }
 
-    //! AUTO:  get SensorType
+    //! AUTO:  get file name
     virtual STDstring GetFileName() const override
     {
         return parameters.fileName;

@@ -34,7 +34,7 @@ public: //
 	//! determine type of marker in order to decide according action in assembly; to be filled in derived class
 	virtual Marker::Type GetType() const {
 		CHECKandTHROWstring("Invalid call to CMarker::Type");
-		return Marker::None;
+		return Marker::_None;
 	}
 
 	//! if body marker: get object number (otherwise assertion)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-28  08:47:25 (last modfied)
+* @date         2020-02-26  13:43:56 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectJointALEMoving2D
-* @brief        A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); the data coordinate [0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate [0] provides the (given) moving coordinate in the cable element; the algebraic variables are \f[ \qv_{AE}=[\lambda_x\;\; \lambda_y]^T \f], in which \f$\lambda_x\f$ and \f$\lambda_y\f$ are the Lagrange multipliers for the position constraint of the moving joint; the data coordinate is \f[ \qv_{Data} = [i_{marker}]^T \f] in which \f$i_{marker}\f$ is the current local index to the slidingMarkerNumber list.
+* @brief        A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -98,7 +98,7 @@ public: // AUTO:
     //! AUTO:  must be checked in CheckPreAssembleConsistency(...); provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()
     virtual Node::Type GetRequestedNodeType() const override
     {
-        return Node::None;
+        return Node::_None;
     }
 
     //! AUTO:  Get type name of object (without keyword "Object"...!); could also be realized via a string -> type conversion?
@@ -116,6 +116,8 @@ public: // AUTO:
         cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(d["slidingMarkerOffsets"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointALEMoving2D->GetParameters().slidingOffset = py::cast<Real>(d["slidingOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointALEMoving2D->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "usePenaltyFormulation")) { cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation = py::cast<bool>(d["usePenaltyFormulation"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        cObjectJointALEMoving2D->GetParameters().penaltyStiffness = py::cast<Real>(d["penaltyStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointALEMoving2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointALEMoving2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -134,6 +136,8 @@ public: // AUTO:
         d["slidingMarkerOffsets"] = (std::vector<Real>)cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets; //! AUTO: cast variables into python (not needed for standard types) 
         d["slidingOffset"] = (Real)cObjectJointALEMoving2D->GetParameters().slidingOffset; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumbers"] = (std::vector<Index>)cObjectJointALEMoving2D->GetParameters().nodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["usePenaltyFormulation"] = (bool)cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation; //! AUTO: cast variables into python (not needed for standard types) 
+        d["penaltyStiffness"] = (Real)cObjectJointALEMoving2D->GetParameters().penaltyStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointALEMoving2D->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectJointALEMoving2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -151,6 +155,8 @@ public: // AUTO:
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { return py::cast((std::vector<Real>)cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets);} //! AUTO: get parameter
         else if (parameterName.compare("slidingOffset") == 0) { return py::cast((Real)cObjectJointALEMoving2D->GetParameters().slidingOffset);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast((std::vector<Index>)cObjectJointALEMoving2D->GetParameters().nodeNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("usePenaltyFormulation") == 0) { return py::cast((bool)cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation);} //! AUTO: get parameter
+        else if (parameterName.compare("penaltyStiffness") == 0) { return py::cast((Real)cObjectJointALEMoving2D->GetParameters().penaltyStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointALEMoving2D->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointALEMoving2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectJointALEMoving2D->GetDrawSize());} //! AUTO: get parameter
@@ -169,6 +175,8 @@ public: // AUTO:
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingOffset") == 0) { cObjectJointALEMoving2D->GetParameters().slidingOffset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { cObjectJointALEMoving2D->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("usePenaltyFormulation") == 0) { cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("penaltyStiffness") == 0) { cObjectJointALEMoving2D->GetParameters().penaltyStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointALEMoving2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointALEMoving2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectJointALEMoving2D->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

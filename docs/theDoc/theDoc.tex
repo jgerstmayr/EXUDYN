@@ -12,14 +12,42 @@
 \usepackage{import}
 \usepackage{hyperref}
 \usepackage{longtable} %for tables in reference manual
+\usepackage{mathtools} %for \prescript
 
 \usepackage[latin1]{inputenc} %Achtung, dies ist die File-Encodierung (wird meist als ANSI angezeigt) und sollte nicht auf UTF-8 stehen (in Notepad++ umstellen!)
 \usepackage[T1]{fontenc}
 
 %\input{docincludes}
-\usepackage{docincludes}
+\usepackage{docincludes} %exudyn definitions
 \usepackage{xcolor}
 
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%configurations subscripts
+\newcommand{\cIni}{_\mathrm{ini}} %initial
+\newcommand{\cRef}{_\mathrm{ref}} %reference
+\newcommand{\cCur}{_\mathrm{cur}} %current
+\newcommand{\cVis}{_\mathrm{vis}} %visualization
+\newcommand{\cSOS}{_\mathrm{start\;of\;step}}
+\newcommand{\cConfig}{_\mathrm{config}} %any configuration
+
+\newcommand{\body}{_\mathrm{ini}} %initial
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%define standard 3-column tables with python name, symbol and description
+\newcommand{\startTable}[3]{
+\begin{center} \vspace{-12pt}
+  \footnotesize
+  \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |}
+    \hline
+    \bf #1 & \bf #2 & \bf #3 \\ \hline
+}
+\newcommand{\rowTable}[3]{#1 & #2 & #3 \\ \hline}
+\newcommand{\finishTable}{
+	  \end{longtable}
+	\end{center}\vspace{-30pt}
+}
+
+%
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %environment for flowcharts:
 %\usepackage[latin1]{inputenc}
@@ -216,7 +244,103 @@ Understanding the usage of functions for the '\texttt{MainSystem}' provided by \
 
 
 \mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec_item_reference_manual}
-This section includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors.
+This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors.
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsection{Notation for item equations}
+%
+The following subscripts are used to define configurations of a quantity, e.g., $\xv$:
+\bi
+  \item $\xv\cConfig \ldots$ $\xv$ in any configuration
+  \item $\xv\cRef \ldots$ $\xv$ in reference configuration, e.g., reference coordinates: $\cv\cRef$
+  \item $\xv\cIni \ldots$ $\xv$ in initial configuration, e.g., initial displacements: $\uv\cIni$
+  \item $\xv\cCur \ldots$ $\xv$ in current configuration
+  \item $\xv\cVis \ldots$ $\xv$ in visualization configuration
+  \item $\xv\cSOS \ldots$ $\xv$ in start of step configuration
+\ei
+As written in the introduction, the coordinates can have the types:
+\bi
+  \item ODE2 $\ldots$ second order differential equations coordinates
+  \item ODE1 $\ldots$ first order differential equations coordinates; CURRENTLY NOT AVAILABLE
+  \item AE $\ldots$ algebraic equations coordinates
+  \item Data $\ldots$ data coordinates (history variables)
+\ei
+Finally, time is defined as 'time' or $t$.
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\noindent The following table contains the common notation: \vspace{-12pt}
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |}
+    \hline
+    \bf python name (or description) & \bf symbol & \bf description \\ \hline
+    displacement coordinates & $\qv = [q_0,\, \ldots,\, q_n]\tp$ & vector of $n$ displacement based coordinates in any configuration\\ \hline
+    rotation coordinates & $\tpsi = [\psi_0,\, \ldots,\, \psi_n]\tp$ & vector of $n$ {\bf rotation based coordinates} in any configuration; this coordinates are added to reference rotation parameters to provide the current rotation parameters\\ \hline
+    algebraic coordinates & $\zv = [z_0,\, \ldots,\, z_m]\tp$ & vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration\\ \hline
+    Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates) in any configuration\\ \hline
+    data coordinates & $\xv = [x_0,\, \ldots,\, x_l]\tp$ & vector of $l$ data coordinates in any configuration\\ \hline
+%+++++++++++++++++++++++++++++++++++++++++++++++++++
+    \hline %new part of table
+		\bf python name: OutputVariable & \bf symbol & \bf description \\ \hline
+    Coordinate & $\cv = [c_0,\, \ldots,\, c_n]\tp$ & coordinate vector with $n$ generalized coordinates $c_i$ in any configuration\\ \hline
+    Coordinate\_t & $\dot \cv = [c_0,\, \ldots,\, c_n]\tp$ & time derivative of coordinate vector\\ \hline
+    Displacement & $\LU{0}{\uv} = [u_0,\, u_1,\, u_2]\tp$ & global displacement vector with 3 displacement coordinates $u_i$ in any configuration; in 1D or 2D objects, some of there coordinates may be zero\\ \hline
+    Rotation & $\ttheta = [\theta_0,\, \ldots,\, \theta_n]\tp$ & vector of {\bf rotation parameters} (e.g., Euler parameters, Tait Bryan angles, ...) with $n$ coordinates $\theta_i$ in any configuration\\ \hline
+    RotationMatrix & $\LU{0b}{\Rot} = \mr{A_{00}}{A_{01}}{A_{02}} {A_{10}}{A_{11}}{A_{12}} {A_{20}}{A_{21}}{A_{22}}$ & a 3D rotation matrix, which transforms local (e.g., body $b$) to global coordinates (0): $\LU{0}{\xv} = \LU{0b}{\Rot} \LU{b}{\xv}$\\ \hline
+    Position & $\LU{0}{\pv} = [p_0,\, p_1,\, p_2]\tp$ & global position vector with 3 position coordinates $p_i$ in any configuration\\ \hline
+    Velocity & $\LU{0}{\vv} = \LU{0}{\dot \uv} = [v_0,\, v_1,\, v_2]\tp$ & global velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
+    AngularVelocity & $\LU{0}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & global angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline
+%
+    VelocityLocal & $\LU{b}{\vv} = [v_0,\, v_1,\, v_2]\tp$ & local (body-fixed) velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
+    AngularVelocityLocal & $\LU{b}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & local (body-fixed) angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline
+    Force & $\LU{0}{\fv} = [f_0,\, \ldots,\, f_2]\tp$ & vector of $3$ force components in global coordinates\\ \hline
+    Torque & $\LU{0}{\ttau} = [\tau_0,\, \ldots,\, \tau_2]\tp$ & vector of $3$ torque components in global coordinates\\ \hline
+%+++++++++++++++++++++++++++++++++++++++++++++++++++
+		\hline %new part of table
+    \bf python name: input to nodes, markers, etc. & \bf symbol & \bf description \\ \hline
+    referenceCoordinates & $\cv\cRef = [c_0,\, \ldots,\, c_n]\cRef\tp = [c_{\mathrm{Ref},0},\, \ldots,\, c_{\mathrm{Ref},n}]\cRef\tp$ & $n$ coordinates of reference configuration (can usually be set at initialization of nodes)\\ \hline
+    initialCoordinates & $\cv\cIni$ & initial coordinates with generalized or mixed displacement/rotation quantities (can usually be set at initialization of nodes)  \\ \hline
+    localPosition & $\LU{b}{\pv} = [\LUR{b}{p}{0},\, \LUR{b}{p}{1},\, \LUR{b}{p}{2}]\tp$ & local (body-fixed) position vector with 3 position coordinates $p_i$ in any configuration; used for local position of markers, sensors, etc.\\ \hline
+	  \end{longtable}
+	\end{center}
+%
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Reference and current coordinates}
+%
+An important fact on the coordinates is upon the splitting of quantities (e.g. position, rotation parameters, etc.) into reference and current (initial/visualization/...) coordinates.
+For the current position of a point node we have, e.g.,
+\be
+  \pv\cCur = \pv\cRef + \uv\cCur
+\ee
+The same holds, e.g., for rotation parameters,
+\be
+  \ttheta\cCur = \ttheta\cRef + \tpsi\cCur
+\ee
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Coordinate Systems}
+%
+\noindent The left indices provide information about the coordinate system, e.g.,
+\be
+  \LU{0}{\uv}
+\ee
+is the displacement vector in the global (inertial) coordinate systme $0$, while 
+\be
+  \LU{m1}{\uv}
+\ee
+represents the displacement vector in marker 1 ($m1$) coordinates. Typical coordinate systems:
+\bi
+  \item $\LU{0}{\uv}$ $\ldots$ global coordinates
+  \item $\LU{b}{\uv}$ $\ldots$ body-fixed, local coordinates
+  \item $\LU{m0}{\uv}$ $\ldots$ local coordinates of (the body or node of) marker $m0$
+  \item $\LU{m1}{\uv}$ $\ldots$ local coordinates of (the body or node of) marker $m1$
+\ei
+To transform the local coordinates $\LU{m0}{\uv}$ of marker 0 into global coordinates $\LU{0}{\xv}$, we use
+\be
+  \LU{0}{\uv} = \LU{0,m0}{\Rot} \LU{m0}{\uv}
+\ee
+in which $\LU{0,m0}{\Rot}$ is the transformation matrix of (the body or node of) the underlying marker 0.
 
 \input{itemDefinition}
 

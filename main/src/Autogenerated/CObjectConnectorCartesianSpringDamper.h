@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-18  22:06:39 (last modfied)
+* @date         2020-02-22  23:45:08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -19,6 +19,7 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
+#include <functional> //! AUTO: needed for std::function
 
 //! AUTO: Parameters for class CObjectConnectorCartesianSpringDamperParameters
 class CObjectConnectorCartesianSpringDamperParameters // AUTO: 
@@ -28,6 +29,7 @@ public: // AUTO:
     Vector3D stiffness;                           //!< AUTO: stiffness [SI:N/m] of springs; act against relative displacements in x, y, and z-direction
     Vector3D damping;                             //!< AUTO: damping [SI:N/(m s)] of dampers; act against relative velocities in x, y, and z-direction
     Vector3D offset;                              //!< AUTO: offset between two springs
+    std::function<StdVector3D(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)> springForceUserFunction;//!< AUTO: A python function which computes the 3D force vector between the two marker points, if activeConnector=True;  The function takes the relative displacement (3D) vector (m1.position-m0.position, etc.) and the relative velocity vector (3D), the spring striffness vector 3D, damping and offset parameter vectors (3D): f(time, displacement, velocity, stiffness, damping, offset); Example for python function: def f(t, u, v, k, d, offset): return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCartesianSpringDamperParameters()
@@ -36,6 +38,7 @@ public: // AUTO:
         stiffness = Vector3D({0.,0.,0.});
         damping = Vector3D({0.,0.,0.});
         offset = Vector3D({0.,0.,0.});
+        springForceUserFunction = 0;
         activeConnector = true;
     };
 };
@@ -99,9 +102,6 @@ public: // AUTO:
         return (JacobianType::Type)(JacobianType::ODE2_ODE2+JacobianType::ODE2_ODE2_t);
     }
 
-    //! AUTO:  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-    virtual OutputVariableType GetOutputVariableTypes() const override;
-
     //! AUTO:  provide according output variable in "value"
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
@@ -117,10 +117,21 @@ public: // AUTO:
         return CObjectType::Connector;
     }
 
+    //! AUTO:  compute spring damper force helper function
+    void ComputeSpringForce(const MarkerDataStructure& markerData, const CObjectConnectorCartesianSpringDamperParameters& parameters, Vector3D& vPos, Vector3D& vVel, Vector3D& fVec) const;
+
     //! AUTO:  return if connector is active-->speeds up computation
     virtual bool IsActive() const override
     {
         return parameters.activeConnector;
+    }
+
+    virtual OutputVariableType GetOutputVariableTypes() const override
+    {
+        return (OutputVariableType)(
+            (Index)OutputVariableType::Displacement +
+            (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::Force );
     }
 
 };

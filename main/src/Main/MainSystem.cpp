@@ -202,7 +202,7 @@ py::object MainSystem::PyGetNodeOutputVariable(Index nodeNumber, OutputVariableT
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetNodeOutputVariable: invalid access to node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::GetNodeOutputVariable: invalid access to node number ") + EXUstd::ToString(nodeNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -219,13 +219,13 @@ Index MainSystem::PyGetNodeODE2Index(Index nodeNumber) const
 		}
 		else
 		{
-			PyError(STDstring("MainSystem::PyGetNodeODE2Index: invalid access to node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE2 node");
+			PyError(STDstring("MainSystem::GetNodeODE2Index: invalid access to node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE2 node");
 			return EXUstd::InvalidIndex;
 		}
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetNodeODE2Index: invalid access to node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
+		PyError(STDstring("MainSystem::GetNodeODE2Index: invalid access to node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
 		return EXUstd::InvalidIndex;
 	}
 }
@@ -258,7 +258,7 @@ py::object MainSystem::PyGetNodeParameter(Index nodeNumber, const STDstring& par
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetNodeParameter: invalid access to node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::GetNodeParameter: invalid access to node number ") + EXUstd::ToString(nodeNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -273,7 +273,7 @@ void MainSystem::PySetNodeParameter(Index nodeNumber, const STDstring& parameter
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PySetNodeParameter: invalid access to node number ") + EXUstd::ToString(nodeNumber));
+		PyError(STDstring("MainSystem::SetNodeParameter: invalid access to node number ") + EXUstd::ToString(nodeNumber));
 	}
 }
 
@@ -417,7 +417,7 @@ py::object MainSystem::PyGetObjectOutputVariable(Index itemNumber, OutputVariabl
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetObjectOutputVariable: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetObjectOutputVariable: invalid access to object number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -437,14 +437,14 @@ py::object MainSystem::PyGetObjectOutputVariableBody(Index itemNumber, OutputVar
 		}
 		else
 		{
-			PyError(STDstring("MainSystem::PyGetObjectOutputVariableBody: invalid access to object number ") + EXUstd::ToString(itemNumber));
+			PyError(STDstring("MainSystem::GetObjectOutputVariableBody: invalid access to object number ") + EXUstd::ToString(itemNumber));
 			return py::int_(EXUstd::InvalidIndex);
 			//return py::object();
 		}
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetOutputVariableBody: invalid localPosition: expected vector with 3 real values"));
+		PyError(STDstring("MainSystem::GetOutputVariableBody: invalid localPosition: expected vector with 3 real values"));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -459,7 +459,7 @@ py::object MainSystem::PyGetObjectParameter(Index itemNumber, const STDstring& p
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetObjectParameter: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetObjectParameter: invalid access to object number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -474,7 +474,7 @@ void MainSystem::PySetObjectParameter(Index itemNumber, const STDstring& paramet
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PySetObjectParameter: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetObjectParameter: invalid access to object number ") + EXUstd::ToString(itemNumber));
 	}
 }
 
@@ -590,7 +590,7 @@ py::object MainSystem::PyGetMarkerParameter(Index markerNumber, const STDstring&
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
+		PyError(STDstring("MainSystem::GetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -605,7 +605,7 @@ void MainSystem::PySetMarkerParameter(Index markerNumber, const STDstring& param
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PySetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
+		PyError(STDstring("MainSystem::SetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
 	}
 }
 
@@ -713,6 +713,21 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 	return d;
 }
 
+//! Get current load values, specifically if user-defined loads are used
+py::object MainSystem::PyGetLoadValues(Index itemNumber) const
+{
+	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
+	{
+		Real t = GetCSystem()->GetSystemData().GetCData().GetCurrent().GetTime(); //only current time available
+		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetLoadValues(t);
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::GetLoadValues: invalid access to load number ") + EXUstd::ToString(itemNumber));
+		return py::int_(EXUstd::InvalidIndex);
+	}
+}
+
 //! Get (read) parameter 'parameterName' of 'loadNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetLoadParameter(Index loadNumber, const STDstring& parameterName) const
 {
@@ -722,7 +737,7 @@ py::object MainSystem::PyGetLoadParameter(Index loadNumber, const STDstring& par
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
+		PyError(STDstring("MainSystem::GetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -737,7 +752,7 @@ void MainSystem::PySetLoadParameter(Index loadNumber, const STDstring& parameter
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PySetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
+		PyError(STDstring("MainSystem::SetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
 	}
 }
 
@@ -844,6 +859,22 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 	return d;
 }
 
+//! get sensor's values
+py::object MainSystem::PyGetSensorValues(Index itemNumber, ConfigurationType configuration)
+{
+	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
+	{
+		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetSensorValues(GetCSystem()->GetSystemData(), configuration);
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::GetSensorValues: invalid access to node number ") + EXUstd::ToString(itemNumber));
+		return py::int_(EXUstd::InvalidIndex);
+	}
+}
+
+
+
 //! Get (read) parameter 'parameterName' of 'sensorNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetSensorParameter(Index itemNumber, const STDstring& parameterName) const
 {
@@ -853,7 +884,7 @@ py::object MainSystem::PyGetSensorParameter(Index itemNumber, const STDstring& p
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PyGetSensorParameter: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensorParameter: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -868,7 +899,7 @@ void MainSystem::PySetSensorParameter(Index itemNumber, const STDstring& paramet
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::PySetSensorParameter: invalid access to Sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetSensorParameter: invalid access to Sensor number ") + EXUstd::ToString(itemNumber));
 	}
 }
 

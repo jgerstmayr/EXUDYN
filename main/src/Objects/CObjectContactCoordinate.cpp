@@ -124,7 +124,7 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error
 	Real discontinuousError = 0;
-	flags = PostNewtonFlags::None;
+	flags = PostNewtonFlags::_None;
 
 	Real startofStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[0];	//state0
 	Real& currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0];			//state1

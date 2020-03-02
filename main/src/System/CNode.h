@@ -32,7 +32,7 @@ class CData;
 
 ////! nodetype is used to know, which quantities can be measured (position, rotation) and which actions are possible (force, moment)
 //enum class CNodeType {
-//    None, Point, RigidBody, Temperature, General
+//    _None, Point, RigidBody, Temperature, General
 //};
 
 //namespace instead of class enum CNodeType ==> allows to write logics easier (e.g. adding Node::Type::Position + Node::Type::Orientation)
@@ -41,7 +41,7 @@ namespace Node {
 	enum Type {
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//keep these lists synchronized with PybindModule.cpp lists
-		None = 0, //marks that no type is used
+		_None = 0, //marks that no type is used
 		Ground = 1 << 0,					//!< used for ground nodes
 
 		//2D
@@ -67,7 +67,7 @@ namespace Node {
 	inline STDstring GetTypeString(Type var)
 	{
 		STDstring t; //empty string
-		if (var == Node::None) { t = "None/Undefined"; }
+		if (var == Node::_None) { t = "_None/Undefined"; }
 		if (var & Ground) { t += "Ground"; }
 
 		if (var & Position2D) { t += "Position2D"; }
@@ -93,7 +93,7 @@ namespace Node {
 
 // if nodes should have several groups, use namespace enum and 2^i values
 enum class CNodeGroup {
-    None=0, ODE1variables=1, ODE2variables=2, AEvariables=4, DataVariables=8
+    _None=0, ODE1variables=1, ODE2variables=2, AEvariables=4, DataVariables=8
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //keep these lists synchronized with PybindModule.cpp lists
 };
@@ -173,12 +173,12 @@ public:
 	virtual Index GetGlobalDataCoordinateIndex() const {
 		CHECKandTHROWstring("CNode::GetGlobalDataCoordinateIndex"); return 0;	}
 
-	virtual OutputVariableType GetOutputVariableTypes() const { CHECKandTHROWstring("ERROR: illegal call to CNode::GetOutputVariableTypes"); return OutputVariableType::None; }
+	virtual OutputVariableType GetOutputVariableTypes() const { CHECKandTHROWstring("ERROR: illegal call to CNode::GetOutputVariableTypes"); return OutputVariableType::_None; }
 	virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CNode::GetOutputVariable"); }
 
 
-    virtual CNodeGroup GetNodeGroup() const { CHECKandTHROWstring("CNode::GetNodeGroup"); return CNodeGroup::None; }
-    virtual Node::Type GetType() const { CHECKandTHROWstring("CNode::GetType"); return Node::None; }
+    virtual CNodeGroup GetNodeGroup() const { CHECKandTHROWstring("CNode::GetNodeGroup"); return CNodeGroup::_None; }
+    virtual Node::Type GetType() const { CHECKandTHROWstring("CNode::GetType"); return Node::_None; }
 
     friend std::ostream& operator<<(std::ostream& os, const CNode& object) {
         object.Print(os);
