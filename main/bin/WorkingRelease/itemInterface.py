@@ -3,8 +3,6 @@
 #author: Johannes Gerstmayr
 #created: 2019-07-01
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-from exudyn import OutputVariableType
-
 #item interface diagonal matrix creator
 def IIDiagMatrix(rowsColumns, value):
     m = []
@@ -426,6 +424,37 @@ class ObjectRigidBody2D:
 
 #add typedef for short usage:
 RigidBody2D = ObjectRigidBody2D
+
+class VObjectGenericODE2:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class ObjectGenericODE2:
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, visualization = {'show': True}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.massMatrix = massMatrix
+        self.stiffnessMatrix = stiffnessMatrix
+        self.dampingMatrix = dampingMatrix
+        self.forceVector = forceVector
+        self.forceUserFunction = forceUserFunction
+        self.massMatrixUserFunction = massMatrixUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'GenericODE2'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'massMatrix', self.massMatrix
+        yield 'stiffnessMatrix', self.stiffnessMatrix
+        yield 'dampingMatrix', self.dampingMatrix
+        yield 'forceVector', self.forceVector
+        yield 'forceUserFunction', self.forceUserFunction
+        yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
 
 class VObjectANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -1367,7 +1396,7 @@ class VSensorNode:
         yield 'show', self.show
 
 class SensorNode:
-    def __init__(self, name = '', nodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = OutputVariableType._None, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.writeToFile = writeToFile
@@ -1392,7 +1421,7 @@ class VSensorBody:
         yield 'show', self.show
 
 class SensorBody:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = OutputVariableType._None, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
@@ -1406,6 +1435,31 @@ class SensorBody:
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
         yield 'localPosition', self.localPosition
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'outputVariableType', self.outputVariableType
+        yield 'Vshow', dict(self.visualization)["show"]
+
+class VSensorObject:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorObject:
+    def __init__(self, name = '', objectNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+        self.name = name
+        self.objectNumber = objectNumber
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.outputVariableType = outputVariableType
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'Object'
+        yield 'name', self.name
+        yield 'objectNumber', self.objectNumber
         yield 'writeToFile', self.writeToFile
         yield 'fileName', self.fileName
         yield 'outputVariableType', self.outputVariableType

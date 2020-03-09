@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-10  21:17:19 (last modfied)
+* @date         2020-03-07  01:18:18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -98,9 +98,6 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
-    //! AUTO:  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-    virtual OutputVariableType GetOutputVariableTypes() const override;
-
     //! AUTO:  provide according output variable in "value"
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
@@ -126,6 +123,15 @@ public: // AUTO:
     virtual bool IsActive() const override
     {
         return parameters.activeConnector;
+    }
+
+    virtual OutputVariableType GetOutputVariableTypes() const override
+    {
+        return (OutputVariableType)(
+            (Index)OutputVariableType::Displacement +
+            (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::Distance +
+            (Index)OutputVariableType::Force );
     }
 
 };

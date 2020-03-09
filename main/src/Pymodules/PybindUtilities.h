@@ -124,128 +124,6 @@ namespace EPyUtils {
 		return SetVectorTemplateSafely<7>(d, item, destination);}
 
 
-	//inline bool SetVector2DSafely(const py::dict& d, const char* item, Vector2D& destination)
-	//{
-	//	if (d.contains(item))
-	//	{
-	//		py::object other = d[item]; //this is necessary to make isinstance work
-	//		if (py::isinstance<py::list>(other))
-	//		{
-	//			std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-	//			if (stdlist.size() == 2)
-	//			{
-	//				destination = stdlist;
-	//				return true;
-	//			}
-	//			else
-	//			{
-	//				PyError("Vector2D size mismatch: expected 2 items in list!");
-	//			}
-	//		}
-	//	}
-	//	PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector2D; dictionary:\n" + EXUstd::ToString(d));
-	//	return false;
-	//}
-
-	//inline bool SetVector3DSafely(const py::dict& d, const char* item, Vector3D& destination)
-	//{
-	//	if (d.contains(item))
-	//	{
-	//		py::object other = d[item]; //this is necessary to make isinstance work
-	//		if (py::isinstance<py::list>(other))
-	//		{
-	//			std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-	//			if (stdlist.size() == 3)
-	//			{
-	//				destination = stdlist;
-	//				return true;
-	//			}
-	//			{
-	//				PyError("Vector3D size mismatch: expected 3 items in list!");
-	//				//pout << "ERROR: Vector3D size mismatch: expected 3 items in list!\n";
-	//			}
-	//		}
-	//	}
-	//	PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector3D; dictionary:\n" + EXUstd::ToString(d));
-	//	//pout << "ERROR: failed to convert '" << item << "' into Vector3D; dictionary:\n";
-	//	//pout << d << "\n\n";
-	//	return false;
-	//}
-
-	//inline bool SetVector4DSafely(const py::dict& d, const char* item, Vector4D& destination)
-	//{
-	//	if (d.contains(item))
-	//	{
-	//		py::object other = d[item]; //this is necessary to make isinstance work
-	//		if (py::isinstance<py::list>(other))
-	//		{
-	//			std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-	//			if (stdlist.size() == 4)
-	//			{
-	//				destination = stdlist;
-	//				return true;
-	//			}
-	//			{
-	//				PyError("Vector4D size mismatch: expected 4 items in list!");
-	//				//pout << "ERROR: Vector4D size mismatch: expected 4 items in list!\n";
-	//			}
-	//		}
-	//	}
-	//	PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector4D; dictionary:\n" + EXUstd::ToString(d));
-	//	//pout << "ERROR: failed to convert '" << item << "' into Vector4D; dictionary:\n";
-	//	//pout << d << "\n\n";
-	//	return false;
-	//}
-
-	//inline bool SetVector6DSafely(const py::dict& d, const char* item, Vector6D& destination)
-	//{
-	//	if (d.contains(item))
-	//	{
-	//		py::object other = d[item]; //this is necessary to make isinstance work
-	//		if (py::isinstance<py::list>(other))
-	//		{
-	//			std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-	//			if (stdlist.size() == 6)
-	//			{
-	//				destination = stdlist;
-	//				return true;
-	//			}
-	//			{
-	//				PyError("Vector6D size mismatch: expected 6 items in list!");
-	//				//pout << "ERROR: Vector6D size mismatch: expected 4 items in list!\n";
-	//			}
-	//		}
-	//	}
-	//	PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector6D; dictionary:\n" + EXUstd::ToString(d));
-	//	//pout << "ERROR: failed to convert '" << item << "' into Vector6D; dictionary:\n";
-	//	//pout << d << "\n\n";
-	//	return false;
-	//}
-
-	//inline bool SetVector7DSafely(const py::dict& d, const char* item, Vector7D& destination)
-	//{
-	//	if (d.contains(item))
-	//	{
-	//		py::object other = d[item]; //this is necessary to make isinstance work
-	//		if (py::isinstance<py::list>(other))
-	//		{
-	//			std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-	//			if (stdlist.size() == 7)
-	//			{
-	//				destination = stdlist;
-	//				return true;
-	//			}
-	//			{
-	//				PyError("Vector7D size mismatch: expected 7 items in list!");
-	//				//pout << "ERROR: Vector7D size mismatch: expected 4 items in list!\n";
-	//			}
-	//		}
-	//	}
-	//	PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector7D; dictionary:\n" + EXUstd::ToString(d));
-	//	//pout << "ERROR: failed to convert '" << item << "' into Vector7D; dictionary:\n";
-	//	//pout << d << "\n\n";
-	//	return false;
-	//}
 
 	//! Set a Matrix6D from a py::object safely and return false (if failed) and true if value has been set
 	template<Index rows, Index columns>
@@ -400,118 +278,28 @@ namespace EPyUtils {
 		return SetVectorTemplateSafely<7>(value, destination);
 	}
 
-	////! Set a Vector2D from a py::object safely and return false (if failed) and 1 of value has been set
-	//inline bool SetVector2DSafely(const py::object& value, Vector2D& destination)
-	//{
-	//	if (py::isinstance<py::list>(value))
-	//	{
-	//		std::vector<Real> stdlist = py::cast<std::vector<Real>>(value); //! # read out dictionary and cast to C++ type
-	//		if (stdlist.size() == 2)
-	//		{
-	//			destination = stdlist;
-	//			return true;
-	//		}
-	//		else
-	//		{
-	//			PyError("Vector2D size mismatch: expected 2 items in list!");
-	//		}
-	//	}
-	//	PyError(STDstring("failed to convert to Vector2D: " + py::cast<std::string>(value)));
-	//	return false;
-	//}
 
-	////! Set a Vector3D from a py::object safely and return false (if failed) and 1 of value has been set
-	//inline bool SetVector3DSafely(const py::object& value, Vector3D& destination)
-	//{
-	//	if (py::isinstance<py::list>(value))
-	//	{
-	//		std::vector<Real> stdlist = py::cast<std::vector<Real>>(value); //! # read out dictionary and cast to C++ type
-	//		if (stdlist.size() == 3)
-	//		{
-	//			destination = stdlist;
-	//			return true;
-	//		}
-	//		{
-	//			PyError("Vector3D size mismatch: expected 3 items in list!");
-	//		}
-	//	}
-	//	PyError(STDstring("failed to convert to Vector3D: " + py::cast<std::string>(value)));
-	//	return false;
-	//}
-
-	////! Set a Vector4D from a py::object safely and return false (if failed) and 1 of value has been set
-	//inline bool SetVector4DSafely(const py::object& value, Vector4D& destination)
-	//{
-	//	if (py::isinstance<py::list>(value))
-	//	{
-	//		std::vector<Real> stdlist = py::cast<std::vector<Real>>(value); //! # read out dictionary and cast to C++ type
-	//		if (stdlist.size() == 4)
-	//		{
-	//			destination = stdlist;
-	//			return true;
-	//		}
-	//		{
-	//			PyError("Vector4D size mismatch: expected 4 items in list!");
-	//		}
-	//	}
-	//	PyError(STDstring("failed to convert to Vector4D: " + py::cast<std::string>(value)));
-	//	return false;
-	//}
-
-	////! Set a Vector6D from a py::object safely and return false (if failed) and 1 of value has been set
-	//inline bool SetVector6DSafely(const py::object& value, Vector6D& destination)
-	//{
-	//	if (py::isinstance<py::list>(value))
-	//	{
-	//		std::vector<Real> stdlist = py::cast<std::vector<Real>>(value); //! # read out dictionary and cast to C++ type
-	//		if (stdlist.size() == 6)
-	//		{
-	//			destination = stdlist;
-	//			return true;
-	//		}
-	//		{
-	//			PyError("Vector6D size mismatch: expected 6 items in list!");
-	//		}
-	//	}
-	//	PyError(STDstring("failed to convert to Vector6D: " + py::cast<std::string>(value)));
-	//	return false;
-	//}
-
-	////! Set a Vector7D from a py::object safely and return false (if failed) and 1 of value has been set
-	//inline bool SetVector7DSafely(const py::object& value, Vector7D& destination)
-	//{
-	//	if (py::isinstance<py::list>(value))
-	//	{
-	//		std::vector<Real> stdlist = py::cast<std::vector<Real>>(value); //! # read out dictionary and cast to C++ type
-	//		if (stdlist.size() == 7)
-	//		{
-	//			destination = stdlist;
-	//			return true;
-	//		}
-	//		{
-	//			PyError("Vector7D size mismatch: expected 7 items in list!");
-	//		}
-	//	}
-	//	PyError(STDstring("failed to convert to Vector7D: " + py::cast<std::string>(value)));
-	//	return false;
-	//}
-
-
-	inline py::array_t<Real> PyVector(const Vector& v)
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//!convert Vector to numpy vector
+	inline py::array_t<Real> Vector2NumPy(const Vector& v)
 	{
 		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
 	}
 
-	inline py::array_t<Real> PyVector(const SlimVector<3>& v)
+	//!convert SlimVector to numpy vector
+	inline py::array_t<Real> SlimVector2NumPy(const SlimVector<3>& v)
 	{
 		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
 	}
 
+	//!convert Matrix to numpy matrix
 	inline py::array_t<Real> Matrix2NumPy(const Matrix& matrix)
 	{
 		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
+	//!convert numpy matrix to Matrix
 	inline void NumPy2Matrix(const py::array_t<Real>& pyArray, Matrix& m)
 	{
 		if (pyArray.ndim() == 2)
@@ -535,6 +323,26 @@ namespace EPyUtils {
 		}
 	}
 
+	//!convert numpy matrix to Vector
+	inline void NumPy2Vector(const py::array_t<Real>& pyArray, Vector& v)
+	{
+		if (pyArray.ndim() == 1)
+		{
+			auto pyVec = pyArray.unchecked<1>();
+			v.SetNumberOfItems(pyVec.shape(0));
+
+			for (Index i = 0; i < v.NumberOfItems(); i++)
+			{
+				v[i] = pyVec(i);
+			}
+		}
+		else
+		{
+			SysError("failed to convert numpy array to vector: array must have dimension 1 (list / matrix with 1 row, no columns)");
+		}
+	}
+
+	//!convert numpy matrix to Matrix
 	inline Matrix NumPy2Matrix(const py::array_t<Real>& pyArray)
 	{
 		Matrix m;
@@ -542,12 +350,54 @@ namespace EPyUtils {
 		return m;
 	}
 
+	//!convert numpy matrix to ResizableMatrix
 	inline ResizableMatrix NumPy2ResizableMatrix(const py::array_t<Real>& pyArray)
 	{
 		ResizableMatrix m;
 		NumPy2Matrix(pyArray, m);
 		return m;
 	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//numpy conversions
+	inline bool SetNumpyMatrixSafely(const py::dict& d, const char* itemName, Matrix& destination)
+	{
+		if (d.contains(itemName))
+		{
+			py::object other = d[itemName]; //this is necessary to make isinstance work
+
+			NumPy2Matrix(py::cast<py::array_t<Real>>(other), destination);
+			return true;
+		}
+		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy matrix) into Matrix; dictionary:\n" + EXUstd::ToString(d));
+		return false;
+	}
+	inline bool SetNumpyVectorSafely(const py::dict& d, const char* itemName, Vector& destination)
+	{
+		if (d.contains(itemName))
+		{
+			py::object other = d[itemName]; //this is necessary to make isinstance work
+
+			NumPy2Vector(py::cast<py::array_t<Real>>(other), destination);
+			//destination = Vector(py::cast<std::vector<Real>>(other)); //alternative via std::vector
+			return true;
+		}
+		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy vector) into Vector; dictionary:\n" + EXUstd::ToString(d));
+		return false;
+	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	inline bool SetNumpyMatrixSafely(const py::object& value, Matrix& destination)
+	{
+		NumPy2Matrix(py::cast<py::array_t<Real>>(value), destination);
+		return true;
+	}
+	inline bool SetNumpyVectorSafely(const py::object& value, Vector& destination)
+	{
+		NumPy2Vector(py::cast<py::array_t<Real>>(value), destination);
+		return true;
+	}
+
 
 
 } //namespace HPyUtils

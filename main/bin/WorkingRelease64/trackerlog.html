@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 349, 
-Number of resolved issues = 293, 
-EXUDYN version = 0.1.293, 
-last change =  2020-02-24
+Number of issues = 357, 
+Number of resolved issues = 303, 
+EXUDYN version = 0.1.303, 
+last change =  2020-03-08
 
 
 <table style = "width:100%">
@@ -39,15 +39,63 @@ last change =  2020-02-24
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0348</td>
-    <td>GetObjectOutputBody </td>
+    <td>0356</td>
+    <td>sensor tutorial     </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> GetObjectOutputBody and similar functions shall not be callable if system is inconsistent</td>
+    <td> add sensor to tutorial</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2020-02-24</td>
-    <td>2020-04-24</td>
+    <td>2020-03-08</td>
+    <td>2020-05-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0355</td>
+    <td>generalized alpha   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> implement version of Brüls and Arnold for generalized alpha solver</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-08</td>
+    <td>2020-05-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0354</td>
+    <td>autodiff            </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add consistent object (not connector) differentiation either manually or with autodiff</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-05</td>
+    <td>2020-05-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0349</td>
+    <td>add causing row     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> output causing row/column (=coordinate) which leads to singular matrix; do this for Matrix.Invert as well as for SparseLU .info code; matrix class creates string with error message!</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-02</td>
+    <td>2020-05-01</td>
     <td></td>
     <td></td>
     <td></td>
@@ -64,22 +112,6 @@ last change =  2020-02-24
     <td></td>
     <td>2020-02-24</td>
     <td>2020-04-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0346</td>
-    <td>evaluate autodiff   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> evaluate netgen autodiff and autodiff.github.io for straightforward auto-differentiation of ODE2RHS functions</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2020-02-23</td>
-    <td>2020-04-23</td>
     <td></td>
     <td></td>
     <td></td>
@@ -215,22 +247,6 @@ last change =  2020-02-24
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0328</td>
-    <td>check ANCFALE       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check if access functions implemented correctly: local jacobians include only 3x8 instead of 3x9 components?</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2020-02-02</td>
-    <td>2020-04-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0325</td>
     <td>key callback        </td>
     <td>JG</td>
@@ -333,22 +349,6 @@ last change =  2020-02-24
     <td>RAISED  </td>
     <td> add consistent flag, if constraints have velocity coordinate dependence or if they explicitly depend on time (needs additional derivatives for consistent initial accelerations)!</td>
     <td>EXTENSION</td>
-    <td></td>
-    <td>2019-12-26</td>
-    <td>2020-02-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0302</td>
-    <td>benchmark problems  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> implement benchmark problems of iftomm web page and from papers Bruls/Arnold, Terze, etc.</td>
-    <td>VERIFICATION</td>
     <td></td>
     <td>2019-12-26</td>
     <td>2020-02-24</td>
@@ -582,22 +582,6 @@ last change =  2020-02-24
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#AAAAFF">
-    <td>0192</td>
-    <td>ReferenceCoordinates</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Check, whether it is better to use the referenceState coordinate vector after assembly - this would simplify the workflow of finite elements</td>
-    <td>DISCUSSION</td>
-    <td></td>
-    <td>2019-06-19</td>
-    <td>2019-08-18</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
   <tr style = "background-color:#FFAAAA">
     <td>0191</td>
     <td>Newton lambda       </td>
@@ -701,22 +685,6 @@ last change =  2020-02-24
     <td>RAISED  </td>
     <td> check Vector operator[], and ConstVector performance regarding inlining</td>
     <td>CHECK</td>
-    <td></td>
-    <td>2019-05-21</td>
-    <td>2019-07-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#AAAAFF">
-    <td>0141</td>
-    <td>AutoDiff            </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Check Netgen autodiff functionality and possible integration into Vector/Matrix for automatic differentiation of RHS in objects; test with simple math functions</td>
-    <td>DISCUSSION</td>
     <td></td>
     <td>2019-05-21</td>
     <td>2019-07-20</td>
@@ -935,6 +903,102 @@ last change =  2020-02-24
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0353</td>
+    <td>AddItem             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> unify AddItem(dict/py::object) into one function</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-04</td>
+    <td>2020-05-03</td>
+    <td>2020-03-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0352</td>
+    <td>exceptions pybind   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check whether lambda functions do not catch appropriately exceptions in pybind ==> use manual try catch mechanisms to catch exceptions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-03</td>
+    <td>2020-05-02</td>
+    <td>2020-03-06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0351</td>
+    <td>exudynFast          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> name all versions exudyn, because of unresolvable conflicts in utilities includes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-03</td>
+    <td>2020-05-02</td>
+    <td>2020-03-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0350</td>
+    <td>Add ODE2equations   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ObjectODE2equations with GenericODE2/NodePoint/NodePoint2D nodes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-02</td>
+    <td>2020-05-01</td>
+    <td>2020-03-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0348</td>
+    <td>GetObjectOutputBody </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> GetObjectOutputBody and similar functions shall not be callable if system is inconsistent</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-24</td>
+    <td>2020-04-24</td>
+    <td>2020-03-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0346</td>
+    <td>evaluate autodiff   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> evaluate netgen autodiff and autodiff.github.io for straightforward auto-differentiation of ODE2RHS functions</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-02-23</td>
+    <td>2020-04-23</td>
+    <td>2020-03-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0345</td>
     <td>time in connector UF</td>
     <td>JG</td>
@@ -1073,6 +1137,22 @@ last change =  2020-02-24
     <td>2020-02-03</td>
     <td>2020-04-03</td>
     <td>2020-02-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0328</td>
+    <td>check ANCFALE       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if access functions implemented correctly: local jacobians include only 3x8 instead of 3x9 components?</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-02-02</td>
+    <td>2020-04-02</td>
+    <td>2020-03-06</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1361,6 +1441,22 @@ last change =  2020-02-24
     <td>2019-12-28</td>
     <td>2020-02-26</td>
     <td>2020-02-12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0302</td>
+    <td>benchmark problems  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> implement benchmark problems of iftomm web page and from papers Bruls/Arnold, Terze, etc.</td>
+    <td>VERIFICATION</td>
+    <td></td>
+    <td>2019-12-26</td>
+    <td>2020-02-24</td>
+    <td>2020-03-08</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -2887,6 +2983,22 @@ last change =  2020-02-24
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0192</td>
+    <td>ReferenceCoordinates</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Check, whether it is better to use the referenceState coordinate vector after assembly - this would simplify the workflow of finite elements</td>
+    <td>DISCUSSION</td>
+    <td></td>
+    <td>2019-06-19</td>
+    <td>2019-08-18</td>
+    <td>2020-03-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0190</td>
     <td>PybindMatrix        </td>
     <td>JG</td>
@@ -3569,6 +3681,22 @@ last change =  2020-02-24
     <td>2019-05-23</td>
     <td>2019-07-22</td>
     <td>2019-05-27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0141</td>
+    <td>AutoDiff            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Check Netgen autodiff functionality and possible integration into Vector/Matrix for automatic differentiation of RHS in objects; test with simple math functions</td>
+    <td>DISCUSSION</td>
+    <td></td>
+    <td>2019-05-21</td>
+    <td>2019-07-20</td>
+    <td>2020-03-05</td>
     <td>JG</td>
     <td></td>
     <td></td>

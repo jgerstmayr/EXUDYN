@@ -37,7 +37,8 @@ public:
 	ResizableVector localODE2RHS;       //!< body ODE2RHS vector
 	ResizableVector localAE;			//!< object (local) algebraic equations evaluation
 
-	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical differentiation
+	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical/automatic differentiation
+	ResizableMatrix localJacobian_t;    //!< local velocity (object)-jacobian during numerical/automatic differentiation
 
 	ResizableVector generalizedLoad;    //!< generalized load vector added to ODE2 right-hand-side
 	ResizableMatrix loadJacobian;       //!< Jacobian for application of load
@@ -260,7 +261,8 @@ public:
 	virtual void ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel = false);
 
 	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeODE2RHS, GetOutputVariableConnector, etc.
-	virtual void ComputeMarkerDataStructure(CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const;
+	virtual void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
+	{ cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure); }
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Jacobians

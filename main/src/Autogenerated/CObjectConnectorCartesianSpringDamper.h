@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-22  23:45:08 (last modfied)
+* @date         2020-03-07  19:52:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -26,8 +26,8 @@ class CObjectConnectorCartesianSpringDamperParameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
-    Vector3D stiffness;                           //!< AUTO: stiffness [SI:N/m] of springs; act against relative displacements in x, y, and z-direction
-    Vector3D damping;                             //!< AUTO: damping [SI:N/(m s)] of dampers; act against relative velocities in x, y, and z-direction
+    Vector3D stiffness;                           //!< AUTO: stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction
+    Vector3D damping;                             //!< AUTO: damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction
     Vector3D offset;                              //!< AUTO: offset between two springs
     std::function<StdVector3D(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)> springForceUserFunction;//!< AUTO: A python function which computes the 3D force vector between the two marker points, if activeConnector=True;  The function takes the relative displacement (3D) vector (m1.position-m0.position, etc.) and the relative velocity vector (3D), the spring striffness vector 3D, damping and offset parameter vectors (3D): f(time, displacement, velocity, stiffness, damping, offset); Example for python function: def f(t, u, v, k, d, offset): return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
@@ -96,12 +96,6 @@ public: // AUTO:
     //! AUTO:  Computational function: compute Jacobian of ODE2 RHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates
     virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const override;
 
-    //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2+JacobianType::ODE2_ODE2_t);
-    }
-
     //! AUTO:  provide according output variable in "value"
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
@@ -130,6 +124,7 @@ public: // AUTO:
     {
         return (OutputVariableType)(
             (Index)OutputVariableType::Displacement +
+            (Index)OutputVariableType::Distance +
             (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::Force );
     }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-28  08:47:25 (last modfied)
+* @date         2020-03-07  19:09:31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectGround
-* @brief        A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action.
+* @brief        A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action. For examples see spring dampers and joints.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -94,8 +94,19 @@ Index MainSystem::AddMainNode(py::dict d)
 
 Index MainSystem::AddMainNodePyClass(py::object pyObject)
 {
-	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	return AddMainNode(dictObject);
+	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	//return AddMainNode(dictObject);
+	if (py::isinstance<py::dict>(pyObject))
+	{
+		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		return AddMainNode(dictObject);
+
+	}
+	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	{
+		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		return AddMainNode(dictObject);
+	}
 }
 
 //! get node's dictionary by name; does not throw a error message
@@ -296,8 +307,19 @@ Index MainSystem::AddMainObject(py::dict d)
 
 Index MainSystem::AddMainObjectPyClass(py::object pyObject)
 {
-	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	return AddMainObject(dictObject);
+	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	//return AddMainObject(dictObject);
+	if (py::isinstance<py::dict>(pyObject))
+	{
+		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		return AddMainObject(dictObject);
+
+	}
+	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	{
+		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		return AddMainObject(dictObject);
+	}
 }
 
 //! get object's dictionary by name; does not throw a error message
@@ -496,8 +518,19 @@ Index MainSystem::AddMainMarker(py::dict d)
 
 Index MainSystem::AddMainMarkerPyClass(py::object pyObject)
 {
-	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	return AddMainMarker(dictObject);
+	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	//return AddMainMarker(dictObject);
+	if (py::isinstance<py::dict>(pyObject))
+	{
+		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		return AddMainMarker(dictObject);
+
+	}
+	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	{
+		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		return AddMainMarker(dictObject);
+	}
 }
 
 //! get object's dictionary by name; does not throw a error message
@@ -628,8 +661,19 @@ Index MainSystem::AddMainLoad(py::dict d)
 
 Index MainSystem::AddMainLoadPyClass(py::object pyObject)
 {
-	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	return AddMainLoad(dictObject);
+	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	//return AddMainLoad(dictObject);
+	if (py::isinstance<py::dict>(pyObject))
+	{
+		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		return AddMainLoad(dictObject);
+
+	}
+	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	{
+		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		return AddMainLoad(dictObject);
+	}
 }
 
 //! get object's dictionary by name; does not throw a error message
@@ -774,8 +818,17 @@ Index MainSystem::AddMainSensor(py::dict d)
 
 Index MainSystem::AddMainSensorPyClass(py::object pyObject)
 {
-	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	return AddMainSensor(dictObject);
+	if (py::isinstance<py::dict>(pyObject))
+	{
+		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		return AddMainSensor(dictObject);
+
+	}
+	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	{
+		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		return AddMainSensor(dictObject);
+	}
 }
 
 //! get object's dictionary by name; does not throw a error message

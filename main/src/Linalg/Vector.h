@@ -511,4 +511,5 @@ VectorBase<T>::VectorBase(std::initializer_list<T> listOfReals)
 
 typedef VectorBase<Real> Vector;
 typedef VectorBase<float> VectorF; //always float, used for graphics
+typedef std::vector<Real> StdVector; //needed for user functions
 

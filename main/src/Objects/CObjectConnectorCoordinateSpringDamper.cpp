@@ -47,7 +47,8 @@ void ComputeConnectorCoordinateSpringDamperProperties(const MarkerDataStructure&
 		else
 		{
 			//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-			force = parameters.springForceUserFunction(markerData.GetTime(), relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.dryFriction, parameters.dryFrictionProportionalZone);
+			force = parameters.springForceUserFunction(markerData.GetTime(), relPos, relVel, parameters.stiffness, 
+				parameters.damping, parameters.offset, parameters.dryFriction, parameters.dryFrictionProportionalZone);
 		}
 	}
 }

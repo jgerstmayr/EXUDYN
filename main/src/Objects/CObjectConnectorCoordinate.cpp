@@ -113,16 +113,30 @@ JacobianType::Type CObjectConnectorCoordinate::GetAvailableJacobians() const
 }
 
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectConnectorCoordinate::GetOutputVariableTypes() const
-{
-	return OutputVariableType::Coordinates;
-}
-
 //! provide according output variable in "value"
 void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	SysError("CObjectConnectorCoordinate::GetOutputVariableConnector not implemented");
+	Real relPos = markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value;
+	Real relVel = markerData.GetMarkerData(1).value_t - markerData.GetMarkerData(0).value_t; //this is the index-reduced equation: does not have offset!!!
+
+	switch (variableType)
+	{
+	case OutputVariableType:: Displacement: value = Vector({ relPos }); break;
+	case OutputVariableType::Velocity: value = Vector({ relVel }); break;
+	case OutputVariableType::ConstraintEquation: 
+	{
+		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
+		bool velocityLevel = false;
+		Vector algebraicEquations;
+		ComputeAlgebraicEquations(algebraicEquations, markerData, t, velocityLevel);
+		value.CopyFrom(algebraicEquations); 
+		break;
+	}
+	case OutputVariableType::Force: value.CopyFrom(markerData.GetLagrangeMultipliers()); break;
+	default:
+		SysError("CObjectConnectorCoordinate::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
+	}
+
 }
 
 

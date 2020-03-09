@@ -173,7 +173,7 @@ bodyNumberList = [-1]*nRigidBodyNodes
 for i in range(nRigidBodyNodes):    
     [n0,b0]=AddRigidBody(mainSys = mbs, 
                          inertia = inertiaList[i], 
-                         nodeType = nodeType, 
+                         nodeType = str(nodeType), 
                          position = refPosList[i], 
                          velocity = refVelList[i],
                          rotationMatrix = [],#refRotMatList[i],

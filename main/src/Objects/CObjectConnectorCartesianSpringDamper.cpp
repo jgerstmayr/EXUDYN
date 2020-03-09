@@ -96,8 +96,9 @@ void CObjectConnectorCartesianSpringDamper::GetOutputVariableConnector(OutputVar
 	switch (variableType)
 	{
 	case OutputVariableType::Displacement: value.CopyFrom(vPos); break;
+	case OutputVariableType::Distance: value.SetVector({vPos.GetL2Norm()}); break;
 	case OutputVariableType::Velocity: value.CopyFrom(vVel); break;
-	case OutputVariableType::ForceLocal: value.CopyFrom(fVec); break;
+	case OutputVariableType::Force: value.CopyFrom(fVec); break;
 	default:
 		SysError("CObjectConnectorCartesianSpringDamper::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}

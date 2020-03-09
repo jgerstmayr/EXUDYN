@@ -60,6 +60,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, , e.g. in local joint coordinates'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ForceLocal', 'measure local force, e.g., in joint or beam (resultant force)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'TorqueLocal', 'measure local torque, e.g., in joint or beam (resultant couple/moment)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ConstraintEquation', 'evaluates constraint equation (=current deviation or drift of constraint equation)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EndOfEnumList', 'this marks the end of the list, usually not important to the user'); s+=s1; sLenum+=sL1
 
 s +=	'		.export_values();\n\n'
@@ -295,7 +296,7 @@ s += '        .def_property("systemIsConsistent", &MainSystem::GetFlagSystemIsCo
 sL += '  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\\\ \\hline  \n'
 
 s += '        .def_property("interactiveMode", &MainSystem::GetInteractiveMode, &MainSystem::SetInteractiveMode)\n' 
-sL += '  systemIsConsistent & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\\\ \\hline  \n'
+sL += '  interactiveMode & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\\\ \\hline  \n'
 
 s += '        .def_readwrite("variables", &MainSystem::variables, py::return_value_policy::reference)\n' 
 sL += '  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\\\ \\hline  \n'
@@ -316,18 +317,19 @@ sL += DefLatexFinishClass()#only finalize latex table
 #NODE
 s += "\n//        NODES:\n"
 sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainNode(itemDict); }', 
-                                description="add a node with nodeDefinition in dictionary format; returns (global) node number of newly added node",
-                                argList=['itemDict'],
-                                example="nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)",
-                                isLambdaFunction = True
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainNode(itemDict); }', 
+#                                description="add a node with nodeDefinition in dictionary format; returns (global) node number of newly added node",
+#                                argList=['itemDict'],
+#                                example="nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)",
+#                                isLambdaFunction = True
+#                                ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainNodePyClass(pyObject); }', 
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainNodePyClass(pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='AddMainNodePyClass', 
                                 description="add a node with nodeDefinition from Python node class; returns (global) node number of newly added node",
                                 argList=['pyObject'],
-                                example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item)",
-                                isLambdaFunction = True
+                                example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item) \\\\" + "nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)"
+#                                isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeNumber', cName='PyGetNodeNumber', 
@@ -388,18 +390,19 @@ sL += DefLatexFinishClass()
 #OBJECT
 s += "\n//        OBJECTS:\n"
 sL += DefLatexStartClass(classStr+': Object', 'This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainObject(itemDict); }', 
-                                description="add a object with objectDefinition in dictionary format; returns (global) object number of newly added object",
-                                argList=['itemDict'],
-                                example="objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\ mbs.AddObject(objectDict)",
-                                isLambdaFunction = True
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainObject(itemDict); }', 
+#                                description="add a object with objectDefinition in dictionary format; returns (global) object number of newly added object",
+#                                argList=['itemDict'],
+#                                example="objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\ mbs.AddObject(objectDict)",
+#                                isLambdaFunction = True
+#                                ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainObjectPyClass(pyObject); }', 
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainObjectPyClass(pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='AddMainObjectPyClass', 
                                 description="add a object with objectDefinition from Python object class; returns (global) object number of newly added object",
                                 argList=['pyObject'],
-                                example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item)",
-                                isLambdaFunction = True
+                                example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item) \\\\" + "objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\ mbs.AddObject(objectDict)"
+#                                isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectNumber', cName='PyGetObjectNumber', 
@@ -460,18 +463,19 @@ sL += DefLatexFinishClass()
 #MARKER
 s += "\n//        MARKER:\n"
 sL += DefLatexStartClass(classStr+': Marker', 'This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainMarker(itemDict); }', 
-                                description="add a marker with markerDefinition in dictionary format; returns (global) marker number of newly added marker",
-                                argList=['itemDict'],
-                                example="markerDict = {'markerType': 'NodePosition', \\\\ 'nodeNumber': 0, \\\\ 'name': 'position0'}\\\\ mbs.AddMarker(markerDict)",
-                                isLambdaFunction = True
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainMarker(itemDict); }', 
+#                                description="add a marker with markerDefinition in dictionary format; returns (global) marker number of newly added marker",
+#                                argList=['itemDict'],
+#                                example="markerDict = {'markerType': 'NodePosition', \\\\ 'nodeNumber': 0, \\\\ 'name': 'position0'}\\\\ mbs.AddMarker(markerDict)",
+#                                isLambdaFunction = True
+#                                ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainMarkerPyClass(pyObject); }', 
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainMarkerPyClass(pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='AddMainMarkerPyClass', 
                                 description="add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker",
                                 argList=['pyObject'],
-                                example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)",
-                                isLambdaFunction = True
+                                example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)\\\\" + "markerDict = {'markerType': 'NodePosition', \\\\ 'nodeNumber': 0, \\\\ 'name': 'position0'}\\\\ mbs.AddMarker(markerDict)"
+#                                isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerNumber', cName='PyGetMarkerNumber', 
@@ -515,18 +519,19 @@ sL += DefLatexFinishClass()
 #LOAD
 s += "\n//        LOADS:\n"
 sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainLoad(itemDict); }', 
-                                description="add a load with loadDefinition in dictionary format; returns (global) load number of newly added load",
-                                argList=['itemDict'],
-                                example="loadDict = {'loadType': 'ForceVector',\\\\ 'markerNumber': 0,\\\\ 'loadVector': [1.0, 0.0, 0.0],\\\\ 'name': 'heavy load'} \\\\ mbs.AddLoad(loadDict)",
-                                isLambdaFunction = True
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainLoad(itemDict); }', 
+#                                description="add a load with loadDefinition in dictionary format; returns (global) load number of newly added load",
+#                                argList=['itemDict'],
+#                                example="loadDict = {'loadType': 'ForceVector',\\\\ 'markerNumber': 0,\\\\ 'loadVector': [1.0, 0.0, 0.0],\\\\ 'name': 'heavy load'} \\\\ mbs.AddLoad(loadDict)",
+#                                isLambdaFunction = True
+#                                ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainLoadPyClass(pyObject); }', 
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainLoadPyClass(pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='AddMainLoadPyClass', 
                                 description="add a load with loadDefinition from Python load class; returns (global) load number of newly added load",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)",
-                                isLambdaFunction = True
+                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)\\\\" + "loadDict = {'loadType': 'ForceVector',\\\\ 'markerNumber': 0,\\\\ 'loadVector': [1.0, 0.0, 0.0],\\\\ 'name': 'heavy load'} \\\\ mbs.AddLoad(loadDict)"
+#                                isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetLoadNumber', cName='PyGetLoadNumber', 
@@ -574,18 +579,19 @@ sL += DefLatexFinishClass()
 #SENSORS
 s += "\n//        SENSORS:\n"
 sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.', subSection=True)
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainSensor(itemDict); }', 
-                                description="add a sensor with sensor definition in dictionary format; returns (global) sensor number of newly added sensor",
-                                argList=['itemDict'],
-                                example="sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)",
-                                isLambdaFunction = True
-                                ); s+=s1; sL+=sL1
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainSensor(itemDict); }', 
+#                                description="add a sensor with sensor definition in dictionary format; returns (global) sensor number of newly added sensor",
+#                                argList=['itemDict'],
+#                                example="sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)",
+#                                isLambdaFunction = True
+#                                ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainSensorPyClass(pyObject); }', 
+#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainSensorPyClass(pyObject); }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='AddMainSensorPyClass',
                                 description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)",
-                                isLambdaFunction = True
+                                example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)\\\\" + "sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)"
+#                                isLambdaFunction = True
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorNumber', cName='PyGetSensorNumber', 

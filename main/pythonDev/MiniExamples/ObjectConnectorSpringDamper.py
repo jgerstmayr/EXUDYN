@@ -18,6 +18,7 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
+testError=1 #set default error, if failed
 print("start mini example for class ObjectConnectorSpringDamper")
 try: #puts example in safe environment
     node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
@@ -38,6 +39,8 @@ try: #puts example in safe environment
     #check result at default integration time
     testError = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] - 0.9736596225944887
 
-finally:
+except BaseException as e:
+    print("An error occured in test example for ObjectConnectorSpringDamper:", e)
+else:
     print("example for ObjectConnectorSpringDamper completed, test error =", testError)
 

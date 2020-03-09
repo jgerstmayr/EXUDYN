@@ -144,13 +144,13 @@ py::array_t<Real> MainSolverBase::GetSystemMassMatrix() const
 //! get locally stored / last computed system residual
 py::array_t<Real> MainSolverBase::GetSystemResidual() const
 {
-	return EPyUtils::PyVector(this->GetCSolver().data.systemResidual);
+	return EPyUtils::Vector2NumPy(this->GetCSolver().data.systemResidual);
 }
 
 //! get locally stored / last computed solution (=increment) of Newton
 py::array_t<Real> MainSolverBase::GetNewtonSolution() const
 {
-	return EPyUtils::PyVector(this->GetCSolver().data.newtonSolution);
+	return EPyUtils::Vector2NumPy(this->GetCSolver().data.newtonSolution);
 }
 
 //! set locally stored system jacobian of solver

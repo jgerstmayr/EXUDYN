@@ -9,7 +9,7 @@ goal: support functions, which simplify the generation of models
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
 from itemInterface import *
-import exudyn as exu
+#import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
 from exudynBasicUtilities import NormL2
 
 #pi = 3.1415926535897932 #define pi in order to avoid importing large libraries
@@ -342,7 +342,7 @@ class InertiaHollowSphere(RigidBodyInertia):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#adds a node (with nodeType) and body for a given rigid body
+#adds a node (with str(exu.NodeType. ...)) and body for a given rigid body
 #either the initial rotation is given by the rotationMatrix (while rotationParameters=[]) or by rotationParameters (while rotationMatrix=[]) (non empty)
 #position ... initial position, etc.
 #all quantities (esp. velocity and angular velocity) are given in global coordinates!
@@ -360,7 +360,7 @@ def AddRigidBody(mainSys, inertia, nodeType,
         raise ValueError('AddRigidBody: either rotationMatrix or rotationParameters must empty!')
         
     nodeNumber = -1
-    if nodeType == exu.NodeType.RotationEulerParameters:
+    if nodeType == 'NodeType.RotationEulerParameters':
         if len(rotationParameters) == 0:
             ep0 = RotationMatrix2EulerParameters(rotationMatrix)
         else:
@@ -369,7 +369,7 @@ def AddRigidBody(mainSys, inertia, nodeType,
         ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
         nodeNumber = mainSys.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0), 
                                                      initialVelocities=list(velocity)+list(ep_t0)))
-    elif nodeType == exu.NodeType.RotationRxyz:
+    elif nodeType == 'NodeType.RotationRxyz':
         if len(rotationParameters) == 0:
             rot0 = RotationMatrix2RotXYZ(rotationMatrix)
         else:
@@ -380,7 +380,7 @@ def AddRigidBody(mainSys, inertia, nodeType,
 #        print('rot_t0=',rot_t0)
         nodeNumber = mainSys.AddNode(NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0), 
                                                        initialVelocities=list(velocity)+list(rot_t0)))
-    elif nodeType == exu.NodeType.RotationRotationVector:
+    elif nodeType == 'NodeType.RotationRotationVector':
         if len(rotationParameters) == 0:
             #raise ValueError('NodeType.RotationRotationVector not implemented!')
             rot0 = RotationMatrix2RotationVector(rotationMatrix)

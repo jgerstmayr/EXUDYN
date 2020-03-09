@@ -91,8 +91,10 @@ def DefaultValue2Python(s): #replace _ and other symbols to fit into latex code
     s = s.replace('false','False') #correct python notation
 
     s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
-    s = s.replace('OutputVariableType::_None','OutputVariableType._None')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
+    #old, would need exu in utilities: s = s.replace('OutputVariableType::_None','OutputVariableType._None')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
+    s = s.replace('OutputVariableType::_None','0')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
+    s = s.replace('Matrix()','[]')  #replace empty matrix with emtpy list
 
     
     if (s.find('Matrix6D(6,6,') != -1):

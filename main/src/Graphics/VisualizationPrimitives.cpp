@@ -107,8 +107,8 @@ namespace EXUvis {
 		Real alpha = angleRange[1] - angleRange[0]; //angular range
 		Real alpha0 = angleRange[0];
 
-		Real fact = nTiles; //#create correct part of cylinder (closed/not closed
-		if (alpha < 2.*EXUstd::pi) { fact = nTiles - 1; } 
+		Real fact = (Real)nTiles; //#create correct part of cylinder (closed/not closed
+		if (alpha < 2.*EXUstd::pi) { fact = (Real)(nTiles - 1); } 
 
 		std::array<Vector3D, 3> points;
 		std::array<Vector3D, 3> normals;
@@ -353,7 +353,7 @@ namespace EXUvis {
 		//#create normals at left and right face(pointing inwards)
 		Real alpha = 2.*EXUstd::pi;
 
-		Real fact = nTiles; //#create correct part of cylinder (closed/not closed
+		Real fact = (Real)nTiles; //#create correct part of cylinder (closed/not closed
 
 		std::array<Vector3D, 3> points;
 		std::array<Vector3D, 3> normals;

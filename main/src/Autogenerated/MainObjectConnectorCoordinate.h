@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-10  20:53:11 (last modfied)
+* @date         2020-03-08  20:27:27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,7 +36,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectConnectorCoordinate
-* @brief        A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint must fulfill the condition: \f[ factorValue1*marker[1].value-marker[0].value - offset = 0 \f]
+* @brief        A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

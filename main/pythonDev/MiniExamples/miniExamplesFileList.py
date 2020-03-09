@@ -2,5 +2,9 @@
 
 miniExamplesFileList = ['ObjectMassPoint.py',
 'ObjectRigidBody2D.py',
-'ObjectConnectorSpringDamper.py']
+'ObjectConnectorSpringDamper.py',
+'ObjectConnectorCartesianSpringDamper.py',
+'ObjectConnectorCoordinateSpringDamper.py',
+'ObjectConnectorDistance.py',
+'ObjectConnectorCoordinate.py']
 

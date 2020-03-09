@@ -901,6 +901,35 @@ namespace EXUmath {
 		}
 	}
 
+	//! implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
+	//! ADD result of matrix*vector multiplication to given result vector (does not invoke memory allocation if result vector has appropriate size)
+	//! result vector needs to have already appropriate size
+	template<class TMatrix, class TVector, class TVectorResult>
+	inline void MultMatrixVectorAddTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	{
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+			"Hmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
+
+		CHECKandTHROW(matrix.NumberOfRows() == result.NumberOfItems(),
+			"Hmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
+
+		Real* mm = matrix.GetDataPointer();
+		const Real* vv = vector.GetDataPointer();
+		Index resultLength = result.NumberOfItems(); //numberOfRows
+		Index vectorLength = vector.NumberOfItems(); //numberOfColumns
+
+		for (Index i = 0; i < resultLength; i++)
+		{
+			Real val = 0;
+			Real* mr = &mm[i*vectorLength];
+			for (Index j = 0; j < vectorLength; j++)
+			{
+				val += mr[j] * vv[j];
+			}
+			result[i] += val;
+		}
+	}
+
 	//! generic matrix*matrix multiplication template
 	template<class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixMatrixTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)

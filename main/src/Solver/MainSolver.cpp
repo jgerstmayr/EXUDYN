@@ -56,13 +56,13 @@ MainSolverImplicitSecondOrder::MainSolverImplicitSecondOrder()
 //! get locally stored / last computed system residual
 py::array_t<Real> MainSolverImplicitSecondOrder::GetAAlgorithmic()
 {
-	return EPyUtils::PyVector(cSolver.data.aAlgorithmic);
+	return EPyUtils::Vector2NumPy(cSolver.data.aAlgorithmic);
 }
 
 //! get locally stored / last computed algorithmic accelerations at start of step
 py::array_t<Real> MainSolverImplicitSecondOrder::GetStartOfStepStateAAlgorithmic()
 {
-	return EPyUtils::PyVector(cSolver.data.startOfStepStateAAlgorithmic);
+	return EPyUtils::Vector2NumPy(cSolver.data.startOfStepStateAAlgorithmic);
 }
 
 //OLD:

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  00:54:47 (last modfied)
+* @date         2020-03-04  23:29:57 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainSensorBody
-* @brief        A sensor attached to a body with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
+* @brief        A sensor attached to a body-object with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -106,7 +106,7 @@ public: // AUTO:
         EPyUtils::SetVector3DSafely(d, "localPosition", cSensorBody->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
         cSensorBody->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "fileName", cSensorBody->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
-        cSensorBody->GetParameters().outputVariableType = py::cast<OutputVariableType>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cSensorBody->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationSensorBody->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }

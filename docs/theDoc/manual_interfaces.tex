@@ -91,7 +91,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     print(mbs)}\\ \hline 
   systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\ \hline  
-  systemIsConsistent & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\ \hline  
+  interactiveMode & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\ \hline  
   variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\ \hline  
   sys & this dictionary is used by exudyn python libraries, e.g., solvers, to avoid global python variables \\ \hline 
   solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\ \hline  
@@ -108,17 +108,15 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddNode(itemDict) & add a node with nodeDefinition in dictionary format; returns (global) node number of newly added node\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    nodeDict = \{'nodeType': 'Point', \tabnewline
-    'referenceCoordinates': [1.0, 0.0, 0.0], \tabnewline
-    'initialDisplacements': [0.0, 2.0, 0.0], \tabnewline
-    'name': 'example node'\} \tabnewline
-     mbs.AddNode(nodeDict)}\\ \hline 
   AddNode(pyObject) & add a node with nodeDefinition from Python node class; returns (global) node number of newly added node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \tabnewline
-    mbs.AddNode(item)}\\ \hline 
+    mbs.AddNode(item) \tabnewline
+    nodeDict = \{'nodeType': 'Point', \tabnewline
+    'referenceCoordinates': [1.0, 0.0, 0.0], \tabnewline
+    'initialCoordinates': [0.0, 2.0, 0.0], \tabnewline
+    'name': 'example node'\} \tabnewline
+     mbs.AddNode(nodeDict)}\\ \hline 
   GetNodeNumber(nodeName) & get node's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     n = mbs.GetNodeNumber('example node')}\\ \hline 
@@ -152,17 +150,15 @@ This section provides functions for adding, reading and modifying objects, which
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddObject(itemDict) & add a object with objectDefinition in dictionary format; returns (global) object number of newly added object\tabnewline 
+  AddObject(pyObject) & add a object with objectDefinition from Python object class; returns (global) object number of newly added object\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \tabnewline
+    mbs.AddObject(item) \tabnewline
     objectDict = \{'objectType': 'MassPoint', \tabnewline
     'physicsMass': 10, \tabnewline
     'nodeNumber': 0, \tabnewline
     'name': 'example object'\} \tabnewline
      mbs.AddObject(objectDict)}\\ \hline 
-  AddObject(pyObject) & add a object with objectDefinition from Python object class; returns (global) object number of newly added object\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \tabnewline
-    mbs.AddObject(item)}\\ \hline 
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     n = mbs.GetObjectNumber('heavy object')}\\ \hline 
@@ -194,16 +190,14 @@ This section provides functions for adding, reading and modifying markers. Marke
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddMarker(itemDict) & add a marker with markerDefinition in dictionary format; returns (global) marker number of newly added marker\tabnewline 
+  AddMarker(pyObject) & add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    item = MarkerNodePosition(name='my marker',nodeNumber=1) \tabnewline
+    mbs.AddMarker(item)\tabnewline
     markerDict = \{'markerType': 'NodePosition', \tabnewline
      'nodeNumber': 0, \tabnewline
      'name': 'position0'\}\tabnewline
      mbs.AddMarker(markerDict)}\\ \hline 
-  AddMarker(pyObject) & add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = MarkerNodePosition(name='my marker',nodeNumber=1) \tabnewline
-    mbs.AddMarker(item)}\\ \hline 
   GetMarkerNumber(markerName) & get marker's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     n = mbs.GetMarkerNumber('my marker')}\\ \hline 
@@ -231,17 +225,15 @@ This section provides functions for adding, reading and modifying operating load
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddLoad(itemDict) & add a load with loadDefinition in dictionary format; returns (global) load number of newly added load\tabnewline 
+  AddLoad(pyObject) & add a load with loadDefinition from Python load class; returns (global) load number of newly added load\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \tabnewline
+    mbs.AddLoad(item)\tabnewline
     loadDict = \{'loadType': 'ForceVector',\tabnewline
      'markerNumber': 0,\tabnewline
      'loadVector': [1.0, 0.0, 0.0],\tabnewline
      'name': 'heavy load'\} \tabnewline
      mbs.AddLoad(loadDict)}\\ \hline 
-  AddLoad(pyObject) & add a load with loadDefinition from Python load class; returns (global) load number of newly added load\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \tabnewline
-    mbs.AddLoad(item)}\\ \hline 
   GetLoadNumber(loadName) & get load's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     n = mbs.GetLoadNumber('heavy load')}\\ \hline 
@@ -270,17 +262,15 @@ This section provides functions for adding, reading and modifying operating sens
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddSensor(itemDict) & add a sensor with sensor definition in dictionary format; returns (global) sensor number of newly added sensor\tabnewline 
+  AddSensor(pyObject) & add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \tabnewline
+    mbs.AddSensor(item)\tabnewline
     sensorDict = \{'sensorType': 'Node',\tabnewline
      'nodeNumber': 0,\tabnewline
      'fileName': 'sensor.txt',\tabnewline
      'name': 'test sensor'\} \tabnewline
      mbs.AddSensor(sensorDict)}\\ \hline 
-  AddSensor(pyObject) & add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \tabnewline
-    mbs.AddSensor(item)}\\ \hline 
   GetSensorNumber(sensorName) & get sensor's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     n = mbs.GetSensorNumber('test sensor')}\\ \hline 
@@ -464,6 +454,7 @@ Available output variables and the interpreation of the output variable can be f
   VelocityLocal & measure local (translational) velocity, , e.g. in local joint coordinates\\ \hline 
   ForceLocal & measure local force, e.g., in joint or beam (resultant force)\\ \hline 
   TorqueLocal & measure local torque, e.g., in joint or beam (resultant couple/moment)\\ \hline 
+  ConstraintEquation & evaluates constraint equation (=current deviation or drift of constraint equation)\\ \hline 
   EndOfEnumList & this marks the end of the list, usually not important to the user\\ \hline 
 \end{longtable}
 \end{center}

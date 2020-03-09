@@ -458,7 +458,7 @@ public:
 			data[0] * v.data[1] - data[1] * v.data[0] });
 	}
 
-	Real CrossProduct2D(const SlimVectorBase& v) const
+	T CrossProduct2D(const SlimVectorBase& v) const
 	{
 		static_assert((dataSize == 2), "SlimVectorBase::CrossProduct2D: only implemented for 2D case");
 
@@ -494,7 +494,6 @@ typedef std::array<Real, 4> StdVector4D;
 //typedef std::array<Real, 5> StdVector5D;
 typedef std::array<Real, 6> StdVector6D;
 typedef std::array<StdVector3D, 3> StdMatrix3D;
-
 
 //this way would allow direct size check, but invalid size casted to std::vector<T>
 //template<> inline SlimVectorBase<T, 2>::SlimVector(const T(&listOfItems)[2]) {

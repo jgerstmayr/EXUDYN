@@ -109,9 +109,10 @@ public:
 
 private:
 	//the following functions are not available for connectors, because they need the markerData structure
-	virtual void ComputeJacobianODE2_ODE2(Matrix& jacobian, Matrix& jacobian_ODE2_t) const final {}; //!< this is the non-connector function, which is not available for connectors!
-	virtual void ComputeJacobianAE(Matrix& jacobian, ResizableMatrix& jacobian_t, Matrix& jacobian_AE) const final {}; //!< this is the non-connector function, which is not available for connectors!
-	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value) const final { } //!< this is the non-connector function, which is not available for connectors!
+	//they could be called via the base class, therefore exceptions are thrown!
+	virtual void ComputeJacobianODE2_ODE2(Matrix& jacobian, Matrix& jacobian_ODE2_t) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }; //!< this is the non-connector function, which is not available for connectors!
+	virtual void ComputeJacobianAE(Matrix& jacobian, ResizableMatrix& jacobian_t, Matrix& jacobian_AE) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianAE"); }; //!< this is the non-connector function, which is not available for connectors!
+	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariable"); } //!< this is the non-connector function, which is not available for connectors!
 
 };
 

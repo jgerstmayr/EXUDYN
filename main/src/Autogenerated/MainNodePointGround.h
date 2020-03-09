@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-01-28  08:47:25 (last modfied)
+* @date         2020-03-07  00:49:20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodePointGround
-* @brief        A 3D point node fixed to ground. The node can be used as NodePoint, but does not lead to equations. Applied or reaction forces do not have any effect.
+* @brief        A 3D point node fixed to ground. The node can be used as NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

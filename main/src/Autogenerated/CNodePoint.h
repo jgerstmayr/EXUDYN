@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-19  21:46:34 (last modfied)
+* @date         2020-03-06  21:10:05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,7 +24,7 @@
 class CNodePointParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector3D referenceCoordinates;                //!< AUTO: reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement
+    Vector3D referenceCoordinates;                //!< AUTO: reference coordinates of node, e.g. ref. coordinates for finite elements; global position of node without displacement
     //! AUTO: default constructor with parameter initialization
     CNodePointParameters()
     {

@@ -278,9 +278,15 @@ namespace EXUmath {
 		MultMatrixTransposedVectorTemplate<Matrix, ConstSizeVector<3>, ConstSizeVector<3>>(matrix, vector, result);
 	}
 
-	//! result += matrix^T*vector (ADD results
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! result += matrix^T*vector (ADD results)
 	inline void MultMatrixTransposedVectorAdd(const Matrix& matrix, const SlimVector<3>& vector, Vector& result) {
 		MultMatrixTransposedVectorAddTemplate<Matrix, SlimVector<3>, Vector>(matrix, vector, result);
+	}
+
+	//! result += matrix*vector (ADD results)
+	inline void MultMatrixVectorAdd(const Matrix& matrix, const Vector& vector, Vector& result) {
+		MultMatrixVectorAddTemplate<Matrix, Vector, Vector>(matrix, vector, result);
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

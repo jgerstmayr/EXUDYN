@@ -101,16 +101,29 @@ JacobianType::Type CObjectConnectorDistance::GetAvailableJacobians() const
 	}
 }
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectConnectorDistance::GetOutputVariableTypes() const
-{
-	return OutputVariableType::Distance;
-}
+////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
+//OutputVariableType CObjectConnectorDistance::GetOutputVariableTypes() const
+//{
+//	return OutputVariableType::Distance;
+//}
 
 //! provide according output variable in "value"
 void CObjectConnectorDistance::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	SysError("CObjectConnectorDistance::GetOutputVariableConnector not implemented");
+	Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
+	Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+	Real currentDistance = vPos.GetL2Norm();
+
+	switch (variableType)
+	{
+		case OutputVariableType::Displacement: value.CopyFrom(vPos); break;
+		case OutputVariableType::Velocity: value.CopyFrom(vVel); break;
+		case OutputVariableType::Distance: value = Vector({ currentDistance }); break;
+		case OutputVariableType::Force: value.CopyFrom(markerData.GetLagrangeMultipliers()); break;
+		default:
+			SysError("CObjectConnectorDistance::GetOutputVariable failed"); //error should not occur, because types are checked!
+	}
+
 }
 
 

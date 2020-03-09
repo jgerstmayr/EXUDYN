@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-21  22:45:24 (last modfied)
+* @date         2020-03-06  21:36:12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,8 +30,8 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainNodeRigidBodyEPParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector7D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux,uy,uz and 4 Euler parameters relative to reference coordinates
-    Vector7D initialCoordinates_t;                //!< AUTO: initial velocity coordinate: time derivatives of ux,uy,uz and 4 Euler parameters
+    Vector7D initialCoordinates;                  //!< AUTO: initial displacement coordinates and 4 Euler parameters relative to reference coordinates
+    Vector7D initialCoordinates_t;                //!< AUTO: initial velocity coordinates: time derivatives of initial displacements and Euler parameters
     //! AUTO: default constructor with parameter initialization
     MainNodeRigidBodyEPParameters()
     {
@@ -43,7 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeRigidBodyEP
-* @brief        A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions); all coordinates lead to second order differential equations; additionally there is one constraint equation for quaternions; The rotation matrix \f$\Am\f$, transforming local (body-fixed) 3D positions \f$\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T\f$ to global 3D positions \f$\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T\f$, \f[ \pv_{glob} = \Am \pv_{loc}, \f] is defined according to the book of Shabana, same with the transformation matrix \f$\mathbf{G}\f$ between time derivatives of Euler parameters and angular velocities.
+* @brief        A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

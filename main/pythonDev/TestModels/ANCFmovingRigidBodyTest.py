@@ -48,7 +48,7 @@ fixANCFRotation = 1
 #######################SUSPENSION ROPE##################################################################################################################################################################
 suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87, physicsBendingStiffness=78878*complianceFactBend, physicsAxialStiffness=398240000*complianceFactAxial)
 
-[suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0], positionOfNode1=[L,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
+[suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0], positionOfNode1=[L,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
                                                                   massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 ##################################################################################################################################################################
 
@@ -61,7 +61,7 @@ mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE
 haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, physicsBendingStiffness=5956*complianceFactBend, physicsAxialStiffness=96725000*complianceFactAxial)
 haulageCableTemplate.nodeNumbers[2]=nALE
 
-[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,offset], positionOfNode1=[L,offset], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
+[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,offset], positionOfNode1=[L,offset], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
                                                                   massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 
 cAleConstraint=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGlobalGround,mALE]))
@@ -205,8 +205,8 @@ mbs.systemData.SetDataCoordinates(data,configuration = exu.ConfigurationType.Ini
 ncables = len(suspensionCableNodeList)
 sol = mbs.systemData.GetODE2Coordinates(); 
 u = sol[int(ncables/4)*4+1]; #y-displacement of node at midpoint of rope
-print('deflection =',u)      #2019-12-17(new static solver): -0.06446474690512931;  2019-12-16: -0.06446474679809994
-u -= -0.06446474690512931
+print('deflection =',u)      #2020-03-05(corrected Cable2DshapeMarker): -0.06446474690480661    2019-12-17(new static solver): -0.06446474690512931;  2019-12-16: -0.06446474679809994
+u -= -0.06446474690480661
      
 
 #mbs.WaitForUserToContinue()
@@ -243,14 +243,14 @@ if solveDynamic:
     
 
 if exudynTestGlobals.useGraphics: 
-    SC.WaitForRenderEngineStopFlag()
+    #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
 #compute error for test suite:
 ncables = len(suspensionCableNodeList)
 sol2 = mbs.systemData.GetODE2Coordinates(); 
 u2 = sol2[int(ncables/4)*4+1]; #y-displacement of node in first quater of rope
-print('deflection =',u2)       #2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
-u2 -= (-0.06446627698121662)
+print('deflection =',u2)       #2020-03-05(corrected Cable2DshapeMarker):0.06446627698400298; 2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
+u2 -= (-0.06446627698400298)
 exudynTestGlobals.testError = u + u2
 

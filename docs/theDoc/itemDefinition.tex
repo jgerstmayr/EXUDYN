@@ -15,7 +15,7 @@ A 3D point node for point masses or solid finite elements which has 3 displaceme
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node"s unique name\\ \hline
-    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
+    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates of node, e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
     initialCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     initial displacement coordinate\\ \hline
     initialVelocities &     Vector3D &     3 &     [0.,0.,0.] &     initial velocity coordinate\\ \hline
     visualization & VNodePoint & & & parameters for visualization of item \\ \hline
@@ -35,26 +35,27 @@ The item VNodePoint has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Point}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector $\pv$ of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector $\mathbf{u}$ of node
-    \item {\bf Velocity}: global 3D velocity vector $\mathbf{v}$ of node
-    \item {\bf Coordinates}: coordinates vector $\cv = \mathbf{u}$ of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector $\dot\cv = \mathbf{v}$ of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,q_2]\tp\cRef = \pv\cRef = [r_0,\,r_1,\,r_2]\tp$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2]\cIni\tp = \uv\cIni = [u_0,\,u_1,\,u_2]\cIni\tp$}{}
+\rowTable{initialVelocities}{$\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2]\cIni\tp$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv_{ref}$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = \uv\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig$}{ coordinate vector of node}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = \vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig$}{ velocity coordinates vector of node}
+\finishTable
+{\bf Description of Item}:
  \noindent
-    The node provides 3 displacement coordinates. According equations need to be provided by an according object (e.g., MassPoint).
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
-    \bi
-      \item $\uv = [u_0,\,u_1,\,u_2]\tp \ldots$ Displacement vector (in any configuration, e.g. Current) 
-      \item $\cv = \uv = [c_0,\,c_1,\,c_2]\tp \ldots$ Coordinates (in any configuration, e.g. Current) 
-      \item $\vv = \dot \uv = \dot\cv = [v_0,\,v_1,\,v_2]\tp \ldots$ Velocity vector = Coordinates\_t (in any configuration, e.g. Current) 
-      \item $\dot \cv =[\dot c_0,\,\dot c_1,\,\dot c_2]\tp \ldots$ Coordinates\_t (in any configuration, e.g. Current) 
-      \item $\pv\cRef \cv\cRef = [r_0,\,r_1,\,r_2]\tp \ldots$ reference Position = referenceCoordinates
-      \item $\pv\cConfig = \uv\cConfig + \pv_{ref} \ldots$ Position vector (global); $\uv\cRef=0$
-    \ei
+    %\startTable{intermediate variables}{symbol}{description}
+    %  \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+    %\finishTable
+    The node provides $n_c=3$ displacement coordinates. According equations need to be provided by an according object (e.g., MassPoint, finite elements, ...).
+    Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
     \noindent {\bf Example} for NodePoint: see ObjectMassPoint
 \newpage
@@ -90,34 +91,37 @@ The item VNodePoint2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Point2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector of node
-    \item {\bf Velocity}: global 3D velocity vector of node
-    \item {\bf Coordinates}: coordinates vector of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1]\tp\cRef = \pv\cRef = [r_0,\,r_1]\tp$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1]\cIni\tp = [u_0,\,u_1]\cIni\tp$}{}
+\rowTable{initialVelocities}{$\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1]\cIni\tp$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\cConfig + \pv_{ref}$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\uv\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\vv\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1]\tp\cConfig$}{ coordinate vector of node}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1]\tp\cConfig$}{ velocity coordinates vector of node}
+\finishTable
+{\bf Description of Item}:
  \noindent
-    The node provides 2 displacement coordinates. According equations need to be provided by an according object (e.g., MassPoint2D).
     \vspace{6pt}\\
-    {\bf Definition of quantities}:
-    \bi
-      \item $\cv = [c_0,\,c_1]\tp = [u_0,\,u_1]\tp \ldots$ Coordinates (in any configuration, e.g. Current) 
-      \item $\dot \cv = [\dot c_0,\,\dot c_1]\tp \ldots$ velocity coordinates Coordinates\_t (in any configuration, e.g. Current) 
-      \item $\uv = [u_0,\,u_1,\,0]\tp \ldots$ Displacement vector (in any configuration, e.g. Current) 
-      \item $\vv = \dot \uv = \dot\cv = [v_0,\,v_1,\,0]\tp \ldots$ Velocity vector = Coordinates\_t (in any configuration, e.g. Current) 
-      \item $\cv\cRef = [c_0,\,c_1]\cRef\tp \ldots$ referenceCoordinates
-      \item $\pv\cRef = [c_0,\,c_1,\,0]\cRef\tp \ldots$ reference Position
-      \item $\pv\cConfig = \uv\cConfig + \pv_{ref} \ldots$ Position vector (global); $\uv\cRef=0$
-    \ei
-    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
+    {\bf Note the difference of coordinate vectors and displacement or position vectors}:
+    \startTable{quantity}{symbol}{description}
+      \rowTable{Coordinates}{$\cv\cConfig = \qv\cConfig = [q_0,\,q_1]\cConfig\tp = [u_0,\,u_1]\cConfig\tp \ldots$}{displacement coordinates}
+      \rowTable{Displacement}{$\uv\cConfig = [u_0,\,u_1,\,0]\cConfig\tp$}{displacement vector, 0 in third component}
+      \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp = [u_0,\,u_1,\,0]\cConfig\tp + [r_0,\,r_1,\,0]\cRef\tp$}{displacement vector, 0 in third component}
+    \finishTable
+    The node provides $n_c=2$ displacement coordinates. According equations need to be provided by an according object (e.g., MassPoint2D).
+    Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \vspace{6pt}\\
     \noindent {\bf Example} for NodePoint: see ObjectMassPoint
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodeRigidBodyEP}
-A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions); all coordinates lead to second order differential equations; additionally there is one constraint equation for quaternions; The rotation matrix $\Am$, transforming local (body-fixed) 3D positions $\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T$ to global 3D positions $\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T$, \be \pv_{glob} = \Am \pv_{loc}, \ee is defined according to the book of Shabana, same with the transformation matrix $\mathbf{G}$ between time derivatives of Euler parameters and angular velocities.
+A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions).
  \\\vspace{12pt} \noindent The item {\bf NodeRigidBodyEP} with type = 'RigidBodyEP' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -126,9 +130,9 @@ A 3D rigid body node based on Euler parameters for rigid bodies or beams; the no
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node"s unique name\\ \hline
-    referenceCoordinates &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
-    initialCoordinates &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 4 Euler parameters relative to reference coordinates\\ \hline
-    initialVelocities &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and 4 Euler parameters\\ \hline
+    referenceCoordinates &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialCoordinates &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     initial displacement coordinates and 4 Euler parameters relative to reference coordinates\\ \hline
+    initialVelocities &     Vector7D &     7 &     [0.,0.,0., 0.,0.,0.,0.] &     initial velocity coordinates: time derivatives of initial displacements and Euler parameters\\ \hline
     visualization & VNodeRigidBodyEP & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -146,23 +150,61 @@ The item VNodeRigidBodyEP has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RigidEP}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector of node
-    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
-    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix
-    \item {\bf Velocity}: global 3D velocity vector of node
-    \item {\bf AngularVelocity}: global 3D velocity vector of node
-    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
-    \item {\bf Coordinates}: coordinates vector of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef = [\pv\tp\cRef,\,\tpsi\tp\cRef]\tp$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$}{}
+\rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}_{ref}$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 4 Euler parameters}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    All coordinates $\cv\cConfig$ lead to second order differential equations, but there is one additional constraint equation for the quaternions.
+    The additional constraint equation, which needs to be provided by the object, reads
+    \be
+      1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+    \ee
+    The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms local (body-fixed) 3D positions $\LU{b}{\pv} = \LU{b}{[p_0,\,p_1,\,p_2]}\tp$ to global 3D positions,
+    \be
+      \LU{0}{\pv}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pv} 
+    \ee
+    Note that the Euler parameters $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
+    \be
+      \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+    \ee
+    The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$
+    \be
+      \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} 
+                         {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
+                         {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
+    \ee
+    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    \bea
+      \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
+      \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
+		%return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
+		%									-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
+		%									-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+		%return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
+		%									-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
+		%									-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
+    \eea
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodeRigidBodyRxyz}
-A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: $[u_x,u_y,u_z]$) and three rotation coordinates (angles $[\varphi_x,\varphi_y,\varphi_z]$ for rotations around x,y, and z-axis); all coordinates lead to second order differential equations; The rotation matrix $\Am=\Rm_x \Rm_y \Rm_z$ transforms local (body-fixed) 3D positions $\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T$ to global 3D positions $\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T$, \be \pv_{glob} = \Am \pv_{loc} \ee; the transformation matrix $\mathbf{G}$ between time derivatives of Euler angles and angular velocities is defined as according to the book of Nikravesh. NOTE that this node has a singularity if the second rotation parameter reaches $k \times \pi/2$, with $k \in \{...,-3,-1,1,3,... \}$.
+A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; all coordinates lead to second order differential equations; NOTE that this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.
  \\\vspace{12pt} \noindent The item {\bf NodeRigidBodyRxyz} with type = 'RigidBodyRxyz' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -171,9 +213,9 @@ A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beam
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node"s unique name\\ \hline
-    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
-    initialCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates\\ \hline
-    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz)\\ \hline
+    referenceCoordinates &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialCoordinates &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates\\ \hline
+    initialVelocities &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz)\\ \hline
     visualization & VNodeRigidBodyRxyz & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -191,23 +233,50 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RigidRxyz}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector of node
-    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
-    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz)
-    \item {\bf Velocity}: global 3D velocity vector of node
-    \item {\bf AngularVelocity}: global 3D velocity vector of node
-    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
-    \item {\bf Coordinates}: coordinates vector of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cRef = [\pv\tp\cRef,\,\tpsi\tp\cRef]\tp$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$}{}
+\rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}_{ref}$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).
+    All coordinates $\cv\cConfig$ lead to second order differential equations.
+    The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms local (body-fixed) 3D positions $\LU{b}{\pv} = \LU{b}{[p_0,\,p_1,\,p_2]}\tp$ to global 3D positions,
+    \be
+      \LU{0}{\pv}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pv} 
+    \ee
+    Note that the Euler angles $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
+    \be
+      \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+    \ee
+    The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
+    \be
+      \LU{0b}{\Rot} = \Rot_0(\theta_0)\Rot_1(\theta_1)\Rot_2(\theta_2)
+    \ee
+    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    \bea
+      \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
+      \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
+    \eea
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodeRigidBodyRotVecLG}
-A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: $[u_x,u_y,u_z]$) and three rotation coordinates (rotation vector $\mathbf{v} = [v_x,v_y,v_z]^T = \varphi \cdot \mathbf{n}$, defining the rotation axis $\mathbf{n}$ and the angle $\varphi$ for rotations around x,y, and z-axis); the velocity coordinates are based on the translational (global) velocity and the (local/body-fixed) angular velocity vector; this node can only be integrated using special Lie group integrators; NOTE that this node has a singularity if the rotation is zero or multiple of $2\pi$.
+A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates.
  \\\vspace{12pt} \noindent The item {\bf NodeRigidBodyRotVecLG} with type = 'RigidBodyRotVecLG' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -216,9 +285,9 @@ A 3D rigid body node based on rotation vector and Lie group methods for rigid bo
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node"s unique name\\ \hline
-    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     reference coordinates (x-pos,y-pos,z-pos and rotation vector) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
-    initialCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial displacement coordinates: ux,uy,uz and rotation vector relative to reference coordinates\\ \hline
-    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial velocity coordinate: time derivatives of ux,uy,uz and angular velocity vector\\ \hline
+    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates\\ \hline
+    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     initial velocity coordinate: time derivatives of displacement and angular velocity vector\\ \hline
     visualization & VNodeRigidBodyRotVecLG & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -236,23 +305,55 @@ The item VNodeRigidBodyRotVecLG has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RigidRotVecLG}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector of node
-    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
-    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz)
-    \item {\bf Velocity}: global 3D velocity vector of node
-    \item {\bf AngularVelocity}: global 3D velocity vector of node
-    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
-    \item {\bf Coordinates}: coordinates vector of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [\pv\tp\cRef,\,\tnu\tp\cRef]\tp$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [\uv\tp\cIni,\,\tnu\tp\cIni]\tp$}{}
+\rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}_{ref}$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
+    \be
+      \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
+    \ee
+    with the rotation angle $\varphi$ and the rotation axis $\nv$.
+    All coordinates $\cv\cConfig$ lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.
+
+    The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms local (body-fixed) 3D positions $\LU{b}{\pv} = \LU{b}{[p_0,\,p_1,\,p_2]}\tp$ to global 3D positions,
+    \be
+      \LU{0}{\pv}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pv} 
+    \ee
+    Note that the rotation vector $\tnu\cCur$ are computed as sum of current coordinates plus reference coordinates,
+    \be
+      \ttheta\cCur = \tnu\cCur + \tnu\cRef \quad \mathrm{with}.
+    \ee
+    %The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
+    %\be
+    %  \LU{0b}{\Rot} = \Rot_0(\theta_0)\Rot_1(\theta_1)\Rot_2(\theta_2)
+    %\ee
+    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    \bea
+      \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
+      \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
+    \eea
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodeRigidBody2D}
-A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
+A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
  \\\vspace{12pt} \noindent The item {\bf NodeRigidBody2D} with type = 'RigidBody2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -261,9 +362,9 @@ A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degr
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node"s unique name\\ \hline
-    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates (x-pos,y-pos and rotation theta) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
-    initialCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     initial displacement coordinates: ux, uy and psi\\ \hline
-    initialVelocities &     Vector3D &     3 &     [0.,0.,0.] &     initial velocity coordinate: vx, vy, omega\\ \hline
+    referenceCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement\\ \hline
+    initialCoordinates &     Vector3D &     3 &     [0.,0.,0.] &     initial displacement coordinates and angle (relative to reference coordinates)\\ \hline
+    initialVelocities &     Vector3D &     3 &     [0.,0.,0.] &     initial velocity coordinates\\ \hline
     visualization & VNodeRigidBody2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -281,45 +382,31 @@ The item VNodeRigidBody2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Rigid2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector of node
-    \item {\bf Velocity}: global 3D velocity vector of node
-    \item {\bf Coordinates}: coordinates vector of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,\psi_0]\tp\cRef$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,\psi_0]\tp\cIni$}{}
+\rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni =  [v_0,\,v_1,\,\omega_2]\tp\cIni$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}_{ref}$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,\psi_0]\tp\cConfig$}{ coordinate vector of node, having 2 displacement coordinates and 1 angle}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
+\rowTable{Rotation}{$[\theta_0]\tp\cConfig = [\psi_0]\tp\cRef + [\psi_0]\tp\cConfig$}{vector with 1 angle around out of plane axix}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\finishTable
+{\bf Description of Item}:
  \noindent
     The node provides 2 displacement coordinates (displacement of center of mass, COM, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
-    \vspace{6pt}\\
-    {\bf Definition of coordinates}:
-    \bi
-      \item $\cv = [c_0,\,c_1,\,c_2]\tp = [q_0,\,q_1,\,\psi_2]\tp \ldots$ nodal coordinates, having two displacements and one rotation around axis 2 (out of plane 'z-axis')
-    \ei
-    Input parameters and outputVariables: %\vspace{-12pt}
-    \begin{center}
-      \footnotesize
-      \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |}
-        \hline
-        \bf python name: OutputVariable & \bf symbol & \bf description \\ \hline
-        Coordinate & $\cv$ & see above \\ \hline
-        Displacement & $\LU{0}{\uv} = [u_0,\, u_1,\, 0]\tp$ & global 3D displacement vector with \\ \hline
-        Rotation & $\ttheta\cConfig = \theta_{2,config} = \theta_{Ref0} + \psi_{2,config}$ & scalar rotation angle w.r.t.\ axis 2 in rad in any configuration; may be larger than 2$\pi$ \\ \hline
-        RotationMatrix & $\LU{0b}{\Rot} = \mr{\cos(\theta_2)}{-\sin(\theta_2)}{0}{\sin(\theta_2)}{\cos(\theta_2)}{0} {0}{0}{1}$ & 3D rotation matrix, which transforms local to global coordinates\\ \hline
-        Position & $\LU{0}{\pv} = [p_0,\, p_1,\, 0]\tp$ & global position vector with 3 position coordinates $p_i$ in any configuration\\ \hline
-        Velocity & $\LU{0}{\vv} = \LU{0}{\dot \uv} = [v_0,\, v_1,\, 0]\tp$ & global velocity vector\\ \hline
-        AngularVelocity & $\LU{0}{\tomega} = [0,\,0,\,\omega_2]\tp = [0,\,0,\,\dot \psi_2]\tp$ & global angular velocity vector\\ \hline
-    %
-        VelocityLocal & $\LU{b}{\vv} = \LU{0b}{\Rot}\tp \LU{0}{\vv}$ & local (body-fixed) velocity vector\\ \hline
-        AngularVelocityLocal & $\LU{b}{\tomega} = \LU{0}{\tomega}$ & local (body-fixed) angular velocity vector (same as global)\\ \hline \hline
-    %
-        \bf python name: input variable & \bf symbol & \bf description \\ \hline
-        referenceCoordinates & $\cv\cRef = [p_0,\, p_1,\, \theta_2]\cRef\tp$ & coordinates of reference configuration\\ \hline
-        initialCoordinates & $\cv\cIni = [q_0,\,q_1,\,\psi_0]\tp$ & initial (displacement) coordinates \\ \hline
-        initialVelocities & $\dot\cv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_2]\tp$ & initial velocity coordinates \\ \hline
-    	  \end{longtable}
-    	\end{center}
-    %\vspace{6pt}\\
+    Using the rotation parameter $\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}$, the rotation matrix is defined as
+    \be
+      \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}\cConfig
+    \ee
     \noindent {\bf Example} for NodeRigidBody2D: see ObjectRigidBody2D
 \newpage
 
@@ -354,14 +441,15 @@ The item VNodePoint2DSlope1 has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Point2DS1}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=displacement+reference position)
-    \item {\bf Displacement}: global 3D displacement vector of node
-    \item {\bf Velocity}: global 3D velocity vector of node
-    \item {\bf Coordinates}: coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global 3D position vector of node (=displacement+reference position)}
+\rowTable{Displacement}{}{global 3D displacement vector of node}
+\rowTable{Velocity}{}{global 3D velocity vector of node}
+\rowTable{Coordinates}{}{coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)}
+\rowTable{Coordinates\_t}{}{velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -392,11 +480,18 @@ The item VNodeGenericODE2 has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     False &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
-{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Coordinates}: coordinates vector of node
-    \item {\bf Coordinates\_t}: velocity coordinates vector of node
-\end{itemize}
+{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,\ldots,\,q_{nc}]\tp\cRef$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,\ldots,\,q_{nc}]\tp\cIni$}{}
+\rowTable{initialCoordinates\_t}{$\dot \qv\cIni = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cIni$}{}
+\rowTable{numberOfODE2Coordinates}{$n_c$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Coordinates}{$\qv\cConfig = [q_0,\,\ldots,\,q_{nc}]\tp\cConfig$}{coordinates vector of node}
+\rowTable{Coordinates\_t}{$\dot \qv\cConfig = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cConfig$}{velocity coordinates vector of node}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -425,15 +520,16 @@ The item VNodeGenericData has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     False &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
-{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Coordinates}: data coordinates (history variables) vector of node
-\end{itemize}
+{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Coordinates}{}{data coordinates (history variables) vector of node}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodePointGround}
-A 3D point node fixed to ground. The node can be used as NodePoint, but does not lead to equations. Applied or reaction forces do not have any effect.
+A 3D point node fixed to ground. The node can be used as NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect.
  \\\vspace{12pt} \noindent The item {\bf NodePointGround} with type = 'PointGround' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -460,14 +556,15 @@ The item VNodePointGround has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf PointGround}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global 3D position vector of node (=reference position)
-    \item {\bf Displacement}: zero 3D vector
-    \item {\bf Velocity}: zero 3D vector
-    \item {\bf Coordinates}: vector of length zero
-    \item {\bf Coordinates\_t}: vector of length zero
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global 3D position vector of node (=reference position)}
+\rowTable{Displacement}{}{zero 3D vector}
+\rowTable{Velocity}{}{zero 3D vector}
+\rowTable{Coordinates}{}{vector of length zero}
+\rowTable{Coordinates\_t}{}{vector of length zero}
+\finishTable
 
 \newpage
 %+++++++++++++++++++++++++++++++
@@ -503,12 +600,14 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf MassPoint}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of translated local position
-    \item {\bf Displacement}: global displacement vector of center point
-    \item {\bf Velocity}: global velocity vector of center point
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of translated local position}
+\rowTable{Displacement}{}{global displacement vector of center point}
+\rowTable{Velocity}{}{global velocity vector of center point}
+\finishTable
+{\bf Description of Item}:
  \noindent
     \vspace{6pt}\\
     {\bf Definition of quantities}:
@@ -523,7 +622,7 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
     \ei
     {\bf Equations of motion}:
     \be 
-      \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_x}{\ddot q_y}{\ddot q_z} = \vr{f_0}{f_1}{f_2}.
+      \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
     \ee
     For example, a LoadCoordinate on coordinate 1 of the node would add a term in $f_1$ on the RHS.
     
@@ -584,12 +683,13 @@ The item VObjectMassPoint2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf MassPoint2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of translated local position
-    \item {\bf Displacement}: global displacement vector of center point
-    \item {\bf Velocity}: global velocity vector of center point
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of translated local position}
+\rowTable{Displacement}{}{global displacement vector of center point}
+\rowTable{Velocity}{}{global velocity vector of center point}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -622,16 +722,17 @@ The item VObjectRigidBody has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RigidBody}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of rotated and translated local position
-    \item {\bf Displacement}: global displacement vector of local position
-    \item {\bf RotationMatrix}: vector with 9 components of the rotation matrix (row-major format)
-    \item {\bf Rotation}: vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix
-    \item {\bf Velocity}: global velocity vector of local position
-    \item {\bf AngularVelocity}: angular velocity of body
-    \item {\bf AngularVelocityLocal}: local (body-fixed) 3D velocity vector of node
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of rotated and translated local position}
+\rowTable{Displacement}{}{global displacement vector of local position}
+\rowTable{RotationMatrix}{}{vector with 9 components of the rotation matrix (row-major format)}
+\rowTable{Rotation}{}{vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix}
+\rowTable{Velocity}{}{global velocity vector of local position}
+\rowTable{AngularVelocity}{}{angular velocity of body}
+\rowTable{AngularVelocityLocal}{}{local (body-fixed) 3D velocity vector of node}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -664,15 +765,17 @@ The item VObjectRigidBody2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RigidBody2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of rotated and translated local position
-    \item {\bf Displacement}: global displacement vector of local position
-    \item {\bf Velocity}: global velocity vector of local position
-    \item {\bf Rotation}: scalar rotation angle of body
-    \item {\bf AngularVelocity}: angular velocity of body
-    \item {\bf RotationMatrix}: rotation matrix in vector form (stored in row-major order)
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of rotated and translated local position}
+\rowTable{Displacement}{}{global displacement vector of local position}
+\rowTable{Velocity}{}{global velocity vector of local position}
+\rowTable{Rotation}{}{scalar rotation angle of body}
+\rowTable{AngularVelocity}{}{angular velocity of body}
+\rowTable{RotationMatrix}{}{rotation matrix in vector form (stored in row-major order)}
+\finishTable
+{\bf Description of Item}:
  \noindent
     \vspace{6pt}\\
     {\bf Definition of quantities}:
@@ -735,6 +838,72 @@ The item VObjectRigidBody2D has the following parameters:\vspace{-1cm}\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectGenericODE2}
+A system of $n$ second order ordinary differential equations (ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.
+ \\\vspace{12pt} \noindent The item {\bf ObjectGenericODE2} with type = 'GenericODE2' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects"s unique name\\ \hline
+    nodeNumbers &     ArrayIndex &      &     [] &     node numbers which provide the coordinates for the object (consecutively as provided in this list)\\ \hline
+    massMatrix &     NumpyMatrix &      &     Matrix[] &     mass matrix of object in python numpy format\\ \hline
+    stiffnessMatrix &     NumpyMatrix &      &     Matrix[] &     stiffness matrix of object in python numpy format\\ \hline
+    dampingMatrix &     NumpyMatrix &      &     Matrix[] &     damping matrix of object in python numpy format\\ \hline
+    forceVector &     NumpyVector &      &     [] &     generalized force vector added to RHS\\ \hline
+    forceUserFunction &     PyFunctionVectorScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy stiffness matrix K: def f(t, q, q\_t): return np.dot(K, q)\\ \hline
+    massMatrixUserFunction &     PyFunctionMatrixScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the mass matrix instead of the constant mass matrix; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy stiffness matrix M: def f(t, q, q\_t): return (q[0]+1)*M\\ \hline
+    visualization & VObjectGenericODE2 & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{nodeNumbers}{$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$}{}
+\rowTable{massMatrix}{$\Mm \in \Rcal^{n \times n}$}{}
+\rowTable{stiffnessMatrix}{$\Km \in \Rcal^{n \times n}$}{}
+\rowTable{dampingMatrix}{$\Dm \in \Rcal^{n \times n}$}{}
+\rowTable{forceVector}{$\fv \in \Rcal^{n}$}{}
+\rowTable{forceUserFunction}{$\fv_{user} \in \Rcal^{n}$}{}
+\rowTable{massMatrixUserFunction}{$\Mm_{user} \in \Rcal^{n\times n}$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Coordinates}{}{all ODE2 coordinates}
+\rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
+\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2RHS)}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
+    \be
+      n = \sum_{i} n_{c_i}.
+    \ee
+    {\bf Equations of motion}:
+    \be \label{eq_ObjectGenericODE2_EOM}
+      \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
+    \ee
+    Note that the user function $\fv_{user}(t,\qv,\dot \qv)$ may be empty (=0). 
+    
+    In case that a user mass matrix is specified, \eq{eq_ObjectGenericODE2_EOM} is replaced with
+    \be
+      \Mm_{user}(t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
+    \ee
+    CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation.
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectANCFCable2D}
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1; the element has 8 coordinates and uses cubic polynomials for position interpolation; the Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
  \\\vspace{12pt} \noindent The item {\bf ObjectANCFCable2D} with type = 'ANCFCable2D' has the following parameters:\vspace{-1cm}\\ 
@@ -772,17 +941,18 @@ The item VObjectANCFCable2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Cable2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of local axis (1) and cross section (2) position
-    \item {\bf Displacement}: global displacement vector of local axis (1) and cross section (2) position
-    \item {\bf Velocity}: global velocity vector of local axis (1) and cross section (2) position
-    \item {\bf Director1}: (axial) slope vector of local axis position
-    \item {\bf Strain}: axial strain (scalar)
-    \item {\bf Curvature}: axial strain (scalar)
-    \item {\bf Force}: (local) section normal force (scalar)
-    \item {\bf Torque}: (local) bending moment (scalar)
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of local axis (1) and cross section (2) position}
+\rowTable{Displacement}{}{global displacement vector of local axis (1) and cross section (2) position}
+\rowTable{Velocity}{}{global velocity vector of local axis (1) and cross section (2) position}
+\rowTable{Director1}{}{(axial) slope vector of local axis position}
+\rowTable{Strain}{}{axial strain (scalar)}
+\rowTable{Curvature}{}{axial strain (scalar)}
+\rowTable{Force}{}{(local) section normal force (scalar)}
+\rowTable{Torque}{}{(local) bending moment (scalar)}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -825,22 +995,23 @@ The item VObjectALEANCFCable2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf ALECable2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of local axis (1) and cross section (2) position
-    \item {\bf Displacement}: global displacement vector of local axis (1) and cross section (2) position
-    \item {\bf Velocity}: global velocity vector of local axis (1) and cross section (2) position
-    \item {\bf Director1}: (axial) slope vector of local axis position
-    \item {\bf Strain}: axial strain (scalar)
-    \item {\bf Curvature}: axial strain (scalar)
-    \item {\bf Force}: (local) section normal force (scalar)
-    \item {\bf Torque}: (local) bending moment (scalar)
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of local axis (1) and cross section (2) position}
+\rowTable{Displacement}{}{global displacement vector of local axis (1) and cross section (2) position}
+\rowTable{Velocity}{}{global velocity vector of local axis (1) and cross section (2) position}
+\rowTable{Director1}{}{(axial) slope vector of local axis position}
+\rowTable{Strain}{}{axial strain (scalar)}
+\rowTable{Curvature}{}{axial strain (scalar)}
+\rowTable{Force}{}{(local) section normal force (scalar)}
+\rowTable{Torque}{}{(local) bending moment (scalar)}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectGround}
-A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action.
+A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action. For examples see spring dampers and joints.
  \\\vspace{12pt} \noindent The item {\bf ObjectGround} with type = 'Ground' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -865,14 +1036,15 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
     graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
 	  \end{longtable}
 	\end{center}
-{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: global position vector of rotated and translated local position
-    \item {\bf Displacement}: global displacement vector of local position
-    \item {\bf Velocity}: global velocity vector of local position
-    \item {\bf AngularVelocity}: angular velocity of body
-    \item {\bf RotationMatrix}: rotation matrix in vector form (stored in row-major order)
-\end{itemize}
+{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{global position vector of rotated and translated local position}
+\rowTable{Displacement}{}{global displacement vector of local position}
+\rowTable{Velocity}{}{global velocity vector of local position}
+\rowTable{AngularVelocity}{}{angular velocity of body}
+\rowTable{RotationMatrix}{}{rotation matrix in vector form (stored in row-major order)}
+\finishTable
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -911,13 +1083,15 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf SpringDamper}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Distance}: distance between both points
-    \item {\bf Displacement}: relative displacement between both points
-    \item {\bf Velocity}: relative velocity between both points
-    \item {\bf Force}: spring-damper force
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Distance}{}{distance between both points}
+\rowTable{Displacement}{}{relative displacement between both points}
+\rowTable{Velocity}{}{relative velocity between both points}
+\rowTable{Force}{}{spring-damper force}
+\finishTable
+{\bf Description of Item}:
  \noindent
     \vspace{6pt}\\
     {\bf Definition of quantities}:
@@ -958,7 +1132,7 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
     \ee
     If \texttt{activeConnector = True}, the scalar spring force is computed as
     \be
-      f_{SD} = \left(k\cdot(L-L_0) + d \cdot\Delta\! \LU{0}{\vv}\tp \vv_{f} + f_{a} \right)
+      f_{SD} = k\cdot(L-L_0) + d \cdot\Delta\! \LU{0}{\vv}\tp \vv_{f} + f_{a}
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv$ instead becomes ($t$ is current time)
     \be
@@ -1007,8 +1181,8 @@ An 3D spring-damper element acting accordingly in three directions (x,y,z); conn
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector"s unique name\\ \hline
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
-    stiffness &     Vector3D &      &     [0.,0.,0.] &     stiffness [SI:N/m] of springs; act against relative displacements in x, y, and z-direction\\ \hline
-    damping &     Vector3D &      &     [0.,0.,0.] &     damping [SI:N/(m s)] of dampers; act against relative velocities in x, y, and z-direction\\ \hline
+    stiffness &     Vector3D &      &     [0.,0.,0.] &     stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction\\ \hline
+    damping &     Vector3D &      &     [0.,0.,0.] &     damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction\\ \hline
     offset &     Vector3D &      &     [0.,0.,0.] &     offset between two springs\\ \hline
     springForceUserFunction &     PyFunctionVector3DScalar5Vector3D &     \tabnewline  &     \tabnewline 0 &     A python function which computes the 3D force vector between the two marker points, if activeConnector=True;  The function takes the relative displacement (3D) vector (m1.position-m0.position, etc.) and the relative velocity vector (3D), the spring striffness vector 3D, damping and offset parameter vectors (3D): f(time, displacement, velocity, stiffness, damping, offset); Example for python function: def f(t, u, v, k, d, offset): return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
@@ -1029,12 +1203,72 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:\vsp
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf CartesianSpringDamper}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Displacement}: relative displacement in global coordinates
-    \item {\bf Velocity}: relative translational velocity in global coordinates
-    \item {\bf Force}: joint force in global coordinates
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{markerNumbers}{$[m0,m1]\tp$}{}
+\rowTable{stiffness}{$\kv$}{}
+\rowTable{damping}{$\dv$}{}
+\rowTable{offset}{$\vv_{\mathrm{off}}$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Displacement}{$\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{relative displacement in global coordinates}
+\rowTable{Distance}{$L=|\Delta\! \LU{0}{\pv}|$}{scalar distance between both marker points}
+\rowTable{Velocity}{$\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{relative translational velocity in global coordinates}
+\rowTable{Force}{$\fv_{SD}$}{joint force in global coordinates, see equations}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    \vspace{6pt}\\
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
+    \finishTable
+    \noindent {\bf Connector equations}:
+    Displacement between marker m0 to marker m1 positions,
+    \be
+      \Delta\! \LU{0}{\pv}= \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}
+    \ee
+    and relative velocity,
+    \be
+      \Delta\! \LU{0}{\vv}= \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}
+    \ee
+    If \texttt{activeConnector = True}, the spring force vector is computed as
+    \be
+      \fv_{SD} = \left(\kv\cdot(\Delta\! \LU{0}{\pv}-\vv_{\mathrm{off}}) + \dv \Delta\! \LU{0}{\vv} \right)
+    \ee
+    If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+    \be
+      \fv_{SD} = \mathrm{UF}(t, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
+    \ee
+    if \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.
+\noindent {\bf Example} for ObjectConnectorCartesianSpringDamper:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #example with mass at [1,1,0], 5kg under load 5N in -y direction
+    k=5000
+    nMass = mbs.AddNode(NodePoint(referenceCoordinates=[1,1,0]))
+    oMass = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [1,1,0]))
+    mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
+                                        stiffness = [k,k,k], 
+                                        damping = [0,k*0.05,0], offset = [0,0,0]))
+    mbs.AddLoad(Force(markerNumber = mMass, loadVector = [0, -5, 0])) #static solution=-5/5000=-0.001m
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1] - (-0.00099999999997058)
+
+\end{lstlisting}
+
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1073,15 +1307,17 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:\vsp
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RigidBodySpringDamper}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf DisplacementLocal}: relative displacement in local marker0 coordinates
-    \item {\bf VelocityLocal}: relative translational velocity in local marker0 coordinates
-    \item {\bf Rotation}: relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.)
-    \item {\bf AngularVelocityLocal}: relative angular velocity in local marker0 coordinates
-    \item {\bf ForceLocal}: joint force in local marker0 coordinates
-    \item {\bf TorqueLocal}: joint torque in in local marker0 coordinates
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{DisplacementLocal}{}{relative displacement in local marker0 coordinates}
+\rowTable{VelocityLocal}{}{relative translational velocity in local marker0 coordinates}
+\rowTable{Rotation}{}{relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.)}
+\rowTable{AngularVelocityLocal}{}{relative angular velocity in local marker0 coordinates}
+\rowTable{ForceLocal}{}{joint force in local marker0 coordinates}
+\rowTable{TorqueLocal}{}{joint torque in in local marker0 coordinates}
+\finishTable
+{\bf Description of Item}:
  \noindent
     \vspace{6pt}\\
     {\bf Definition of quantities}:
@@ -1130,7 +1366,7 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:\vsp
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectConnectorCoordinateSpringDamper}
-A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be f = (m1.coordinate - m0.coordinate - offset)\cdot stiffness + (m1.coordinate_t - m0.coordinate_t)\cdot damping \ee If dry (Coulomb) friction is non-zero, an additional term \be \text{sign}(m1.coordinate_t - m0.coordinate_t)\cdot dryFriction \ee is added to the force $f$.
+A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
  \\  {\bf Requested marker type} = Marker::Coordinate \\ 
 \vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinateSpringDamper} with type = 'ConnectorCoordinateSpringDamper' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
@@ -1144,10 +1380,10 @@ A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects 
     stiffness &     Real &      &     0. &     stiffness [SI:N/m] of spring; acts against relative value of coordinates\\ \hline
     damping &     Real &      &     0. &     damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates\\ \hline
     offset &     Real &      &     0. &     offset between two coordinates (reference length of springs), see equation\\ \hline
-    dryFriction &     Real &      &     0. &     dry friction coefficient against relative velocity\\ \hline
+    dryFriction &     Real &      &     0. &     dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$\\ \hline
     dryFrictionProportionalZone &     Real &      &     0. &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
-    springForceUserFunction &     PyFunctionScalar8 &     \tabnewline  &     0 &     A python function which defines the spring force with parameters (time, deltaL, deltaL$_t$, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone); the parameters are provided to the function using the current values of the SpringDamper object; note that $u=(m1.coordinate - m0.coordinate)$, not including the offset; The python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; Example for python function: def f(t, u, v, k, d, offset, mu, muProp): return k*u + d*v + F0\\ \hline
+    springForceUserFunction &     PyFunctionScalar8 &     \tabnewline  &     0 &     A python function which defines the spring force with 8 parameters, see equations section; Example for python function: def f(t, u, v, k, d, offset, frictionForce, frictionProportionalZone): return k*(u-offset) + d*v\\ \hline
     visualization & VObjectConnectorCoordinateSpringDamper & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1165,12 +1401,81 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf CoordinateSpringDamper}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Displacement}: relative scalar displacement of coordinates
-    \item {\bf Velocity}: difference of scalar velocity coordinates
-    \item {\bf Force}: scalar spring force
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{stiffness}{$k$}{}
+\rowTable{damping}{$d$}{}
+\rowTable{offset}{$l_\mathrm{off}$}{}
+\rowTable{dryFriction}{$f_\mu$}{}
+\rowTable{dryFrictionProportionalZone}{$v_\mu$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Displacement}{$\Delta q$}{relative scalar displacement of marker coordinates}
+\rowTable{Velocity}{$\Delta v$}{difference of scalar marker velocity coordinates}
+\rowTable{Force}{$f_{SD}$}{scalar spring force}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    \vspace{6pt}\\
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
+    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
+    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
+    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
+    \finishTable
+    \noindent {\bf Connector equations}:
+    Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
+    \be
+      \Delta q= q_{m1} - q_{m0}
+    \ee
+    and relative velocity,
+    \be
+      \Delta v= v_{m1} - v_{m0}
+    \ee
+    If $f_\mu > 0$, the friction force is computed as 
+    \be
+      f_\mathrm{friction} = \left\{ 
+              \begin{aligned} \mathrm{Sgn}(\Delta v) \cdot f_\mu \quad \mathrm{if} \quad |\Delta v| \ge v_\mu \\
+              \frac{\Delta v}{v_\mu} f_\mu \quad \mathrm{if} \quad |\Delta v| < v_\mu 
+              \end{aligned}  \right.
+    \ee
+    If \texttt{activeConnector = True}, the scalar spring force vector is computed as
+    \be
+      f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v + f_\mathrm{friction}
+    \ee
+    If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+    \be
+      f_{SD} = \mathrm{UF}(t, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+    \ee
+    if \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
+\noindent {\bf Example} for ObjectConnectorCoordinateSpringDamper:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    def springForce(t, u, v, k, d, offset, frictionForce, frictionProportionalZone):
+        return 0.1*k*u+k*u**3+v*d
+
+    nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    
+    groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+    nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+    
+    #Spring-Damper between two marker coordinates
+    mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
+                                         stiffness = 5000, damping = 80, springForceUserFunction = springForce)) 
+    loadCoord = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, load = 1)) #static linear solution:0.002
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0] - 0.0019995158325691875
+
+\end{lstlisting}
+
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1205,11 +1510,76 @@ The item VObjectConnectorDistance has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf DistanceConstraint}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{markerNumbers}{$[m0,m1]\tp$}{}
+\rowTable{distance}{$d_0$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Displacement}{$\LU{0}{\Delta\pv}$}{relative displacement in global coordinates}
+\rowTable{Velocity}{$\LU{0}{\Delta\vv}$}{relative translational velocity in global coordinates}
+\rowTable{Distance}{$|\LU{0}{\Delta\pv}|$}{distance between markers (should stay constant; shows constraint deviation)}
+\rowTable{Force}{$\lambda_0$}{joint force in global coordinates}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+        \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+        \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
+    %
+        \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+        \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
+        \rowTable{relative displacement}{$\LU{0}{\Delta\pv}$} {$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
+        \rowTable{relative velocity}{$\LU{0}{\Delta\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
+    %
+        \rowTable{algebraicVariable}{$\lambda_0$}{Lagrange multiplier = force in constraint}
+    \finishTable
+
+    \noindent {\bf Algebraic constraint equations}:
+    If \texttt{activeConnector = True}, the index 3 algebraic equation reads
+    \be
+      \left|\LU{0}{\Delta\pv}\right| - d_0 = 0
+    \ee
+    The index 2 (velocity level) algebraic equation reads
+    \be
+      \left(\frac{\LU{0}{\Delta\pv}}{\left|\LU{0}{\Delta\pv}\right|}\right)\tp \Delta\vv = 0
+    \ee
+    if \texttt{activeConnector = False}, the algebraic equation reads
+    \be
+      \lambda_0 = 0
+    \ee
+\noindent {\bf Example} for ObjectConnectorDistance:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #example with 1m pendulum, 50kg under gravity
+    nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[1,0]))
+    oMass = mbs.AddObject(MassPoint2D(physicsMass = 50, nodeNumber = nMass))
+    
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))
+    oDistance = mbs.AddObject(DistanceConstraint(markerNumbers = [mGround, mMass], distance = 1))
+    
+    mbs.AddLoad(Force(markerNumber = mMass, loadVector = [0, -50*9.81, 0])) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.generalizedAlpha.spectralRadius=0.7
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] - (-0.9845225086606828)
+
+\end{lstlisting}
+
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectConnectorCoordinate}
-A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint must fulfill the condition: \be factorValue1*marker[1].value-marker[0].value - offset = 0 \ee
+A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values.
  \\  {\bf Requested marker type} = Marker::Coordinate \\ 
 \vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinate} with type = 'ConnectorCoordinate' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
@@ -1223,7 +1593,7 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
     offset &     UReal &      &     0. &     An offset between the two values\\ \hline
     factorValue1 &     UReal &      &     1. &     An additional factor multiplied with value1 used in algebraic equation\\ \hline
     velocityLevel &     bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored\\ \hline
-    offsetUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent offset with parameters (t, offset); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offset): return offset*(1-np.cos(t*10*2*np.pi))\\ \hline
+    offsetUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent offset; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def UF(t, l\_offset): return l\_offset*(1-np.cos(t*10*2*np.pi))\\ \hline
     offsetUserFunction\_t &     PyFunctionScalar2 &     \tabnewline  &     0 &     time derivative of offsetUserFunction; needed for "velocityLevel=True", or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorCoordinate & & & parameters for visualization of item \\ \hline
@@ -1243,7 +1613,84 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf CoordinateConstraint}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{markerNumbers}{$[m0,m1]\tp$}{}
+\rowTable{offset}{$l_\mathrm{off}$}{}
+\rowTable{factorValue1}{$k_{m1}$}{}
+\rowTable{offsetUserFunction}{$\mathrm{UF}(t,l_\mathrm{off})$}{}
+\rowTable{offsetUserFunction\_t}{$\mathrm{UF}_t(t,l_\mathrm{off})$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Displacement}{$\Delta q$}{relative scalar displacement of marker coordinates, not including factorValue1}
+\rowTable{Velocity}{$\Delta v$}{difference of scalar marker velocity coordinates, not including factorValue1}
+\rowTable{ConstraintEquation}{$\cv$}{(residuum of) constraint equation}
+\rowTable{Force}{$\lambda_0$}{scalar constraint force (Lagrange multiplier)}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
+    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
+    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
+    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
+    \rowTable{difference of coordinates}{$\Delta q = q_{m1} - q_{m0}$}{Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates)}
+    \rowTable{difference of velocity coordinates}{$\Delta v= v_{m1} - v_{m0}$}{}
+    \finishTable
+    \noindent {\bf Algebraic constraint equations}:
+    If \texttt{activeConnector = True}, the index 3 algebraic equation reads
+    \be
+      \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} - l_\mathrm{off} = 0
+    \ee
+    If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
+    \be
+      \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(t,l_\mathrm{off}) = 0
+    \ee
+    The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
+    \be
+      \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - d = 0
+    \ee
+    The factor $d$ in velocity level equations is zero, or if parameters.velocityLevel = True, $d=l_\mathrm{off}$.
+    If velocity level constraints are active and the velocity level offsetUserFunction\_t $\mathrm{UF}_t$ is defined, $\dot \cv$ instead becomes ($t$ is current time)
+    \be
+      \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(t,l_\mathrm{off}) = 0
+    \ee
+    Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
+    The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
+    it is recommended that $\mathrm{UF}$ and $\mathrm{UF}_t$ does not include initial accelerations.
+
+    If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
+    \be
+      \cv(\lambda_0) = \lambda_0 = 0
+    \ee
+\noindent {\bf Example} for ObjectConnectorCoordinate:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    def OffsetUF(t, lOffset): #gives 0.05 at t=1
+        return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
+
+    nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    
+    groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+    nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+    
+    #Spring-Damper between two marker coordinates
+    mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
+                                       offset = 0.1, offsetUserFunction = OffsetUF)) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0] - 0.049999999999272404
+
+\end{lstlisting}
+
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectContactCoordinate}
@@ -1278,6 +1725,7 @@ The item VObjectContactCoordinate has the following parameters:\vspace{-1cm}\\
     color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1315,6 +1763,7 @@ The item VObjectContactCircleCable2D has the following parameters:\vspace{-1cm}\
     color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1355,6 +1804,7 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
     color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGB connector color; if R==-1, use default color\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1391,13 +1841,15 @@ The item VObjectJointSliding2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf SlidingJoint2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: position vector of joint given by marker0
-    \item {\bf Velocity}: velocity vector of joint given by marker0
-    \item {\bf SlidingCoordinate}: global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements
-    \item {\bf Force}: joint force vector (3D)
-\end{itemize}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{}{position vector of joint given by marker0}
+\rowTable{Velocity}{}{velocity vector of joint given by marker0}
+\rowTable{SlidingCoordinate}{}{global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements}
+\rowTable{Force}{}{joint force vector (3D)}
+\finishTable
+{\bf Description of Item}:
  \noindent
     \vspace{6pt}\\
     {\bf Definition of quantities}:
@@ -1527,17 +1979,8 @@ The item VObjectJointALEMoving2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf ALEMovingJoint2D}
- \vspace{6pt}\\{\bf Output variables} (chose type, e.g., OutputVariableType.Position): 
-\begin{itemize}
-    \item {\bf Position}: position vector of joint given by marker0
-    \item {\bf Velocity}: velocity vector of joint given by marker0
-    \item {\bf SlidingCoordinate}: global sliding coordinate along all elements + slidingOffset
-    \item {\bf Coordinates}: provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate
-    \item {\bf Coordinates\_t}: provides one value: [0] ALE sliding velocity
-    \item {\bf Force}: joint force vector (3D)
-\end{itemize}
-{\bf Definition of quantities}:
-\startTable{input parameter}{symbol}{description see above}
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\startTable{input parameter}{symbol}{description see tables above}
 \rowTable{markerNumbers}{$[m0,\,m1]\tp$}{}
 \rowTable{slidingMarkerNumbers}{$[m_{s0}, \ldots, m_{sn}]\tp$}{}
 \rowTable{slidingMarkerOffsets}{$[d_{s0}, \ldots, d_{sn}]$}{}
@@ -1545,11 +1988,21 @@ The item VObjectJointALEMoving2D has the following parameters:\vspace{-1cm}\\
 \rowTable{nodeNumbers}{$[n_{GD}, n_{ALE}]$}{}
 \rowTable{penaltyStiffness}{$k$}{}
 \finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\ 
+\startTable{output parameters}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
+\rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
+\rowTable{SlidingCoordinate}{$s_g = q_{ALE} + s_{off}$}{current value of the global sliding ALE coordinate, including offset; note that reference coordinate of $q_{ALE}$ is ignored!}
+\rowTable{Coordinates}{$[x_{data0},\,q_{ALE}]\tp$}{provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate}
+\rowTable{Coordinates\_t}{$[\dot q_{ALE}]\tp$}{provides ALE sliding velocity}
+\rowTable{Force}{$\fv$}{joint force vector (3D)}
+\finishTable
+{\bf Description of Item}:
  \noindent
     %\vspace{6pt}\\
     %{\bf Definition of quantities}:
     %\startTable{input parameter}{symbol}{description}
-    %\rowTable{nodeNumbers}{$[n_{GD}, n_{ALE}]$}{node number of NodeGenericData $n_{gd}$ with one data coordinate and $n_{ALE}$ of NodeGenericODE2 with one ODE2 coordinate}
+    %\rowTable{nodeNumbers}{$[n_{GD}, n_{ALE}]$}{node number of NodeGenericData $n_{GD}$ with one data coordinate and $n_{ALE}$ of NodeGenericODE2 with one ODE2 coordinate}
     %\rowTable{slidingOffset}{$s_{off}$}{sliding offset, which is added to the current value of the ALE node coordinate}
     %\rowTable{markerNumbers[0]}{$m0$}{position-marker of mass point or rigid body}
     %\rowTable{markerNumbers[1]}{$m1$}{marker to a Cable2D element, which is {\bf updated} in every PostNewtonStep; $m1$ contains the current marker number, which is active for the sliding joint; must be initialized appropriately}
@@ -1562,7 +2015,7 @@ The item VObjectJointALEMoving2D has the following parameters:\vspace{-1cm}\\
     \rowTable{generic data node}{$\xv=[x_{data0}]\tp$}{coordinates of node with node number $n_{GD}$}
     \rowTable{generic ODE2 node}{$\qv=[q_{0}]\tp$}{coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects}
     \rowTable{data coordinate}{$x_{data0}$}{the current index in slidingMarkerNumbers}
-    \rowTable{ALE coordinate}{$q_{ALE} = q_{0}$}{current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation)}
+    \rowTable{ALE coordinate}{$q_{ALE} = q_{0}$}{current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation); note that reference coordinate of $q_{ALE}$ is ignored!}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
 %
@@ -1576,14 +2029,14 @@ The item VObjectJointALEMoving2D has the following parameters:\vspace{-1cm}\\
 %
     \rowTable{algebraic coordinates}{$\zv=[\lambda_0,\,\lambda_1]\tp$}{algebraic coordinates composed of Lagrange multipliers $\lambda_0$ and $\lambda_1$, according to the algebraic equations }
     \finishTable
-    \startTable{output variables}{symbol}{formula}
-    \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
-    \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
-    \rowTable{SlidingCoordinate}{$s_g = q_{ALE} + s_{off}$}{current value of the global sliding ALE coordinate, including offset}
-    \rowTable{Coordinates}{$[x_{data0},\,q_{ALE}]\tp$}{}
-    \rowTable{Coordinates\_t}{$[\dot q_{ALE}]\tp$}{}
-    \rowTable{Force}{$\fv$}{see below}
-    \finishTable
+    %\startTable{output variables}{symbol}{formula}
+    %\rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
+    %\rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
+    %\rowTable{SlidingCoordinate}{$s_g = q_{ALE} + s_{off}$}{current value of the global sliding ALE coordinate, including offset; note that reference coordinate of $q_{ALE}$ is ignored!}
+    %\rowTable{Coordinates}{$[x_{data0},\,q_{ALE}]\tp$}{}
+    %\rowTable{Coordinates\_t}{$[\dot q_{ALE}]\tp$}{}
+    %\rowTable{Force}{$\fv$}{see below}
+    %\finishTable
 
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate
     \be
@@ -1685,7 +2138,8 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf GenericJoint}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectJointRevolute2D}
@@ -1718,7 +2172,8 @@ The item VObjectJointRevolute2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf RevoluteJoint2D}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectJointPrismatic2D}
@@ -1754,7 +2209,8 @@ The item VObjectJointPrismatic2D has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf PrismaticJoint2D}
- \vspace{6pt}\\
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+
 \newpage
 %+++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++
@@ -1785,6 +2241,7 @@ The item VMarkerBodyMass has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1813,6 +2270,7 @@ The item VMarkerBodyPosition has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1841,6 +2299,7 @@ The item VMarkerBodyRigid has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1868,6 +2327,7 @@ The item VMarkerNodePosition has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1895,6 +2355,7 @@ The item VMarkerNodeRigid has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1923,6 +2384,7 @@ The item VMarkerNodeCoordinate has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1951,6 +2413,7 @@ The item VMarkerBodyCable2DShape has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1978,6 +2441,7 @@ The item VMarkerBodyCable2DCoordinates has the following parameters:\vspace{-1cm
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 
 \newpage
 %+++++++++++++++++++++++++++++++
@@ -2015,7 +2479,8 @@ The item VLoadForceVector has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Force}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{LoadTorqueVector}
@@ -2048,7 +2513,8 @@ The item VLoadTorqueVector has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Torque}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{LoadMassProportional}
@@ -2080,7 +2546,8 @@ The item VLoadMassProportional has the following parameters:\vspace{-1cm}\\
 	\end{center}
 
 \noindent{\bf Short name} for Python: {\bf Gravity}
- \vspace{6pt}\\\newpage
+ \vspace{6pt}\\{\bf Definition of quantities}:\\
+\newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{LoadCoordinate}
@@ -2110,6 +2577,7 @@ The item VLoadCoordinate has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 
 \newpage
 %+++++++++++++++++++++++++++++++
@@ -2144,11 +2612,12 @@ The item VSensorNode has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{SensorBody}
-A sensor attached to a body with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
+A sensor attached to a body-object with local position. As a difference to other ObjectSensors, the body sensor has a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
  \\\vspace{12pt} \noindent The item {\bf SensorBody} with type = 'Body' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2175,6 +2644,38 @@ The item VSensorBody has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{SensorObject}
+A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc). As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing time, sensorValue[0], sensorValue[1], ... . A user function can be attached to postprocess sensor values accordingly.
+ \\\vspace{12pt} \noindent The item {\bf SensorObject} with type = 'Object' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     marker"s unique name\\ \hline
+    objectNumber &     Index &      &     MAXINT &     object (e.g. connector) number to which sensor is attached to\\ \hline
+    writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
+    visualization & VSensorObject & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VSensorObject has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)!\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Definition of quantities}:\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -2204,3 +2705,4 @@ The item VSensorLoad has the following parameters:\vspace{-1cm}\\
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; CURRENTLY NOT AVAILABLE\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Definition of quantities}:\\

@@ -3,8 +3,6 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{docincludes}
 
-\setcounter{tocdepth}{2}    % or level of table of contents
-
 %common abbreviations:
 \newcommand{\ba}{\begin{array}{c}} %==>Mechatronische Systeme
 \newcommand{\ea}{\end{array}}
@@ -42,11 +40,14 @@
 
 \newcommand{\ra}{\rightarrow}
 
+\newcommand{\Rcal}{\mathbb{R}}
+\newcommand{\Ccal}{\mathbb{C}}
 
 %Vektoren mit v nachgestellt
 \newcommand{\av}{\mathbf{a}}
 \newcommand{\bv}{\mathbf{b}}
 \newcommand{\cv}{\mathbf{c}}
+\newcommand{\dv}{\mathbf{d}}
 \newcommand{\ev}{\mathbf{e}}
 \newcommand{\fv}{\mathbf{f}}
 \newcommand{\gv}{\mathbf{g}}
@@ -91,11 +92,13 @@
 \newcommand{\Wm}{\mathbf{W}}
 \newcommand{\Xm}{\mathbf{X}}
 
-\newcommand{\Rot}{\mathbf{T}}
+\newcommand{\Rot}{\mathbf{A}}
 \newcommand{\dd}{\mathrm{d}}
 
 \newcommand{\co}{\mathrm{c}}
 \newcommand{\si}{\mathrm{s}}
+
+\newcommand{\tp}{^\mathrm{T}} %transpose
 
 
 \newcommand{\Null}{\mathbf{0}}
@@ -104,10 +107,12 @@
 \newcommand{\ttheta}{\mbox{\boldmath $\theta$ \unboldmath}\!\!}
 \newcommand{\tomega}{\mbox{\boldmath $\omega$ \unboldmath}\!\!}
 \newcommand{\tpsi}{\mbox{\boldmath $\psi$ \unboldmath}\!\!}
+\newcommand{\tphi}{\mbox{\boldmath $\phi$ \unboldmath}\!\!}
 \newcommand{\talpha}{\mbox{\boldmath $\alpha$ \unboldmath}\!\!}
 \newcommand{\tbeta}{\mbox{\boldmath $\beta$ \unboldmath}\!\!}
 \newcommand{\tgamma}{\mbox{\boldmath $\gamma$ \unboldmath}\!\!}
 \newcommand{\tlambda}{\mbox{\boldmath $\lambda$ \unboldmath}\!\!}
+\newcommand{\ttau}{\mbox{\boldmath $\tau$ \unboldmath}\!\!}
 
 \newcommand{\vareps}{\varepsilon}
 
@@ -133,7 +138,7 @@
 \newcommand{\mysubsection}[1]{\section{#1}}
 \newcommand{\mysubsubsection}[1]{\subsection{#1}}
 
-\newcommand{\codeName}{EXUDYN}%{XDYNAPP}%{PYMDYN}{PyMSSim}PINNAMICS INNDYNAMICS
+\newcommand{\codeName}{EXUDYN}
 
 \newcommand{\SO}{2}
 \newcommand{\FO}{1}

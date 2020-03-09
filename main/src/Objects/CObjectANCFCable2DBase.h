@@ -44,14 +44,42 @@ public:
 	//!  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
 
-    //!  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//TEMPLATED FUNCTIONS
+	template<class TReal>
+	void ComputeODE2RHStemplate(VectorBase<TReal>& ode2Rhs, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const;
+
+	//!  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
+	template<class TReal>
+	SlimVectorBase<TReal, 2> MapCoordinates(const Vector4D& SV, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF) const
+	{
+		SlimVectorBase<TReal, 2> v;
+		v[0] = 0;
+		v[1] = 0;
+		for (Index i = 0; i < 4; i++)
+		{
+			v[0] += SV[i] * qANCF[2 * i];
+			v[1] += SV[i] * qANCF[2 * i + 1];
+		}
+		return v;
+	}
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+	//!  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
     virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
 
-    //!  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2);
-    }
+    ////!  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+    //virtual JacobianType::Type GetAvailableJacobians() const override
+    //{
+    //    return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+    //}
+
+	//! compute derivative of right-hand-side (RHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
+	virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const;
 
     //!  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override;
@@ -93,7 +121,8 @@ public:
     //!  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
     static Vector2D MapCoordinates(const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1);
 
-    //!  get compressed shape function vector \f$\Sm_v\f$, depending local position \f$x \in [0,L]\f$
+	
+	//!  get compressed shape function vector \f$\Sm_v\f$, depending local position \f$x \in [0,L]\f$
     static Vector4D ComputeShapeFunctions(Real x, Real L);
 
     //!  get first derivative of compressed shape function vector \f$\frac{\partial \Sm_v}{\partial x}\f$, depending local position \f$x \in [0,L]\f$

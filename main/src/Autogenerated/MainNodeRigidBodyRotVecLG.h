@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-21  22:45:24 (last modfied)
+* @date         2020-03-07  00:33:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,8 +30,8 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainNodeRigidBodyRotVecLGParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector6D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux,uy,uz and rotation vector relative to reference coordinates
-    Vector6D initialCoordinates_t;                //!< AUTO: initial velocity coordinate: time derivatives of ux,uy,uz and angular velocity vector
+    Vector6D initialCoordinates;                  //!< AUTO: initial displacement coordinates \f$\uv\f$ and rotation vector \f$\tnu\f$ relative to reference coordinates
+    Vector6D initialCoordinates_t;                //!< AUTO: initial velocity coordinate: time derivatives of displacement and angular velocity vector
     //! AUTO: default constructor with parameter initialization
     MainNodeRigidBodyRotVecLGParameters()
     {
@@ -43,7 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeRigidBodyRotVecLG
-* @brief        A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: \f$[u_x,u_y,u_z]\f$) and three rotation coordinates (rotation vector \f$\mathbf{v} = [v_x,v_y,v_z]^T = \varphi \cdot \mathbf{n}\f$, defining the rotation axis \f$\mathbf{n}\f$ and the angle \f$\varphi\f$ for rotations around x,y, and z-axis); the velocity coordinates are based on the translational (global) velocity and the (local/body-fixed) angular velocity vector; this node can only be integrated using special Lie group integrators; NOTE that this node has a singularity if the rotation is zero or multiple of \f$2\pi\f$.
+* @brief        A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

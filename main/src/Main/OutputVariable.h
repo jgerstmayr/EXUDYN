@@ -169,12 +169,13 @@ enum class OutputVariableType {
 	VelocityLocal = 1 << 22,		//!< local velocity vector (used e.g. in joints)
 	ForceLocal = 1 << 23,			//!< local force e.g. in connector/constraint or section force in beam
 	TorqueLocal = 1 << 24,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
+	ConstraintEquation = 1 << 25,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!
 
     //SecondPiolaKirchoffStress = (1 << 7), GreenStrain = (1 << 8),
     //BeamStrain = (1 << 9), BeamCurvature = (1 << 10), //are both 3D-vectors containing axial and transverse components
     //FramePosition = (1 << 11), FrameOrientation = (1 << 12), //position and orientation of the reference point
-    EndOfEnumList = 1 << 25 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+    EndOfEnumList = 1 << 26 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
 
 //! OutputVariable string conversion
@@ -214,6 +215,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 	case OutputVariableType::VelocityLocal: return "VelocityLocal";
 	case OutputVariableType::ForceLocal: return "ForceLocal";
 	case OutputVariableType::TorqueLocal: return "TorqueLocal";
+	case OutputVariableType::ConstraintEquation: return "ConstraintEquation";
 	case OutputVariableType::EndOfEnumList: return "EndOfEnumList";
 	default: SysError("GetOutputVariableTypeString: invalid variable type");  return "Invalid";
 	}

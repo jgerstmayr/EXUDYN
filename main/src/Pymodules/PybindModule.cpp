@@ -231,9 +231,18 @@ MySignal registerSignal;
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //test functions
-void PyAutoDiffTest()
+void PyTest()
 {
 	//add testing here
+	Vector v1({ 1,2,3 });
+	Vector v2({ 8,7,6 });
+	Matrix m(3, 2, { 1,2,3, 4,5,6 });
+	Vector r({ 0,1 });
+
+	EXUmath::MultMatrixVectorAdd(m, v1, r);
+	pout << "r1=" << r << "\n";				//=> (14, 33)
+	EXUmath::MultMatrixVectorAdd(m, v2, r); 
+	pout << "r2=" << r << "\n";				//=> (54,136)
 }
 
 
@@ -295,6 +304,7 @@ PYBIND11_MODULE(exudyn, m) {
 	//m.def("GetVector", &GetVector, "GetVector");
 	//m.def("GetMatrix", &GetMatrix, "GetMatrix");
 	//m.def("SeeMatrix", &SeeMatrix, "SeeMatrix");
+	m.def("Test", &PyTest, "internal test");
 	//m.def("SetTestFunction2", &PySetTestFunction2, "Set the test function");
 	//m.def("EvaluateTestFunction", &PyEvaluateTestFunction, "Evaluate test function");
 
@@ -408,21 +418,34 @@ PYBIND11_MODULE(exudyn, m) {
 		//Solver functions:
 		.def("TimeIntegrationSolve", [](MainSystemContainer& msc, MainSystem& ms, STDstring solverName, const SimulationSettings& simulationSettings) {
 		pout.precision(simulationSettings.outputPrecision);
-		if (solverName == "RungeKutta1")
+		try
 		{
-			msc.GetSolvers().GetSolverRK1().SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			if (solverName == "RungeKutta1")
+			{
+				msc.GetSolvers().GetSolverRK1().SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			}
+			else if (solverName == "GeneralizedAlphaOldSolver")
+			{
+				msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			}
+			else if (solverName == "GeneralizedAlpha")
+			{
+				CSolverImplicitSecondOrderTimeInt solverSO;
+				solverSO.SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			}
+			else {
+				PyError(STDstring("SystemContainer::TimeIntegrationSolve: invalid solverName '") + solverName + "'; options are: RungeKutta1 or GeneralizedAlpha");
+			}
 		}
-		else if (solverName == "GeneralizedAlphaOldSolver")
+		catch (const std::exception& ex)
 		{
-			msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			SysError("EXUDYN raised internal error in TimeIntegrationSolve:\n" + STDstring(ex.what()) + "\n");
 		}
-		else if (solverName == "GeneralizedAlpha")
+		catch (...) //any other exception
 		{
-			CSolverImplicitSecondOrderTimeInt solverSO;
-			solverSO.SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			SysError("Unexpected exception during TimeIntegrationSolve!\n");
 		}
-		else
-			PyError(STDstring("SystemContainer::TimeIntegrationSolve: invalid solverName '")+solverName+"'; options are: RungeKutta1 or GeneralizedAlpha");
+
 		}, "Solve system in time with a specific time integrator")
 
 		.def("StaticSolveOldSolver", [](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
@@ -434,8 +457,20 @@ PYBIND11_MODULE(exudyn, m) {
 		.def("StaticSolve", [](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
 			pout.precision(simulationSettings.outputPrecision);
 
-			CSolverStatic solverStatic;
-			solverStatic.SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			try
+			{
+				CSolverStatic solverStatic;
+				solverStatic.SolveSystem(*(ms.GetCSystem()), simulationSettings);
+			}
+			catch (const std::exception& ex)
+			{
+				SysError("EXUDYN raised internal error in StaticSolve:\n" + STDstring(ex.what()) + "\n");
+			}
+			catch (...) //any other exception
+			{
+				SysError("Unexpected exception during StaticSolve!\n");
+			}
+
 		}, "Statically solve system (linear/nonlinear)")
 
 		.def("__repr__", [](const MainSystemContainer &item) {

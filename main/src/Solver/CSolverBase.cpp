@@ -337,18 +337,47 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	bool success = true; //local success variable
-	success = InitializeSolver(computationalSystem, simulationSettings);
+	try 
+	{
+		success = InitializeSolver(computationalSystem, simulationSettings);
+	}
+	catch (const std::exception& ex) 
+	{
+		SysError("EXUDYN raised internal error in InitializeSolver:\n" + STDstring(ex.what()) + "\n");
+	}
+	catch (...) //any other exception
+	{ 
+		SysError("Unexpected exception during InitializeSolver!\n");
+	}
 
 	globalTimers.Reset();
 	timer.Reset(simulationSettings.displayComputationTime);
 	timer.total = -EXUstd::GetTimeInSeconds();
 	if (success)
 	{
-		success = SolveSteps(computationalSystem, simulationSettings);
+		try
+		{
+			success = SolveSteps(computationalSystem, simulationSettings);
+		}
+		catch (const std::exception& ex)
+		{
+			SysError("EXUDYN raised internal error in SolveSteps:\n" + STDstring(ex.what()) + "\n");
+		}
+		catch (...) //any other exception
+		{
+			SysError("Unexpected exception during SolveSteps!\n");
+		}
 	}
 	timer.total += EXUstd::GetTimeInSeconds();
 
-	FinalizeSolver(computationalSystem, simulationSettings);
+	try
+	{
+		FinalizeSolver(computationalSystem, simulationSettings);
+	}
+	catch (...) //any other exception
+	{
+		SysError("Unexpected exception during FinalizeSolver!\n");
+	}
 	output.finishedSuccessfully = success;
 
 	return success;
@@ -1005,7 +1034,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				conv.lastResidual = conv.residual;
 				//in case of modified newton try with jacobian update and full newton ...
 				
-				if (newton.useModifiedNewton && (conv.newtonSolutionDiverged || switchToFullNewton || //ADDED switchToFullNewton; but do not enter this loop in case that solely fullNewtonRequested=true
+				if (!fullNewtonRequested && newton.useModifiedNewton && (conv.newtonSolutionDiverged || switchToFullNewton || //ADDED switchToFullNewton; but do not enter this loop in case that solely fullNewtonRequested=true
 					(conv.contractivity > newton.modifiedNewtonContractivity && it.newtonSteps > 2))) //only check contractivity at third step
 				{
 					conv.jacobianUpdateRequested = true; //make a simple Jacobian update and continue Newton iterations
@@ -1043,7 +1072,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						ComputeNewtonUpdate(computationalSystem, simulationSettings); //better initial guess for Newton
 						ComputeNewtonResidual(computationalSystem, simulationSettings);
 
-						if (IsVerbose(2) && !conv.newtonSolutionDiverged) { Verbose(2, "    ... Newton restarted to bad contractivity, divergence or iterations count\n"); }
+						if (IsVerbose(2) && !conv.newtonSolutionDiverged) { Verbose(2, "    ... Newton restarted due to bad contractivity, divergence or iterations count\n"); }
 					}
 				} //contractivity check
 			}//converged
@@ -1160,6 +1189,8 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 	const Vector& solutionLambda = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 	const Vector& solutionData = computationalSystem.GetSystemData().GetCData().currentState.dataCoords;
 
+	bool isStatic = IsStaticSolver();
+
 	//OLD timeIntegrationSolver: if (t == startTime || (t - lastSolutionWritten) >= (0 * solutionSettings.GetSolutionWritePeriod() - 1e-10)) //1e-10 because of roundoff errors
 	if (t == startTime || (t - output.lastSolutionWritten) >= -1e-10) //1e-10 because of roundoff errors
 	{
@@ -1174,13 +1205,13 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 		for (Index k = 0; k < solutionU.NumberOfItems(); k++) {
 			solFile << "," << solutionU[k];
 		}
-		if (solutionSettings.exportVelocities)
+		if (solutionSettings.exportVelocities && !isStatic)
 		{
 			for (Index k = 0; k < solutionV.NumberOfItems(); k++) {
 				solFile << "," << solutionV[k];
 			}
 		}
-		if (solutionSettings.exportAccelerations)
+		if (solutionSettings.exportAccelerations && !isStatic)
 		{
 			for (Index k = 0; k < solutionA.NumberOfItems(); k++) {
 				solFile << "," << solutionA[k];

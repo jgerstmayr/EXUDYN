@@ -34,7 +34,7 @@ def LoadSolutionFile(fileName):
     columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
     print('columns imported =', columnsExported)
     nColumns = sum(columnsExported)
-    print('total columns =', nColumns, ', array size =', np.size(data,1))
+    print('total columns to be imported =', nColumns, ', array size of file =', np.size(data,1))
 
     if (nColumns + 1) != np.size(data,1): #one additional column for time!
         print('ERROR in LoadSolution: number of columns is inconsistent')
@@ -118,6 +118,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     cableNodePositionList=[positionOfNode0]
     cableObjectList=[]
     loadList=[]
+    cableCoordinateConstraintList=[]
 
     # length of one element, calculated from first and last node position:
     cableLength = NormL2(VSub(positionOfNode1, positionOfNode0))/numberOfElements
@@ -173,18 +174,19 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
                 #fix ANCF coordinates of first node
                 mCableCoordinateConstraint0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
                 cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
+                cableCoordinateConstraintList+=[cBoundaryCondition]
             
             if fixedConstraintsNode1[j] != 0:                 
                 # fix right end position coordinates, i.e., add markers and constraints:
                 mCableCoordinateConstraint1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
                 cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  
-        
+                cableCoordinateConstraintList+=[cBoundaryCondition]
         
 #        if vALE !=0 and ConstrainAleCoordinate:
 #            cConstrainAle=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mALE]))
             
     
-    return [cableNodeList, cableObjectList, loadList, cableNodePositionList]
+    return [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
 
 
@@ -212,12 +214,15 @@ def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,loc
 
 
 
-def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,AleNode,localMarkerIndexOfStartCable=0,AleSlidingOffset=0,penaltyStiffness=0):
+
+def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,AleNode,
+                            localMarkerIndexOfStartCable=0,AleSlidingOffset=0,
+                            activeConnector=True, penaltyStiffness=0):
 
     cableMarkerList = []#list of Cable2DCoordinates markers
     offsetList = []     #list of offsets counted from first cable element; needed in sliding joint
     offset = 0          #first cable element has offset 0
-    usePenalty = (penaltyStiffness!=0)
+    usePenalty = (penaltyStiffness!=0) #penaltyStiffness=0 ==> no penalty formulation!
     
     for item in cableObjectList: #create markers for cable elements
         m = mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber = item))
@@ -228,8 +233,9 @@ def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,
     nodeDataAleSlidingJoint = mbs.AddNode(NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable],numberOfDataCoordinates=1)) #initial index in cable list   
     oAleSlidingJoint = mbs.AddObject(ObjectJointALEMoving2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
                                                       slidingMarkerNumbers=cableMarkerList, slidingMarkerOffsets=offsetList,
-                                                      nodeNumbers=[nodeDataAleSlidingJoint, AleNode], slidingOffset=AleSlidingOffset,
+                                                      nodeNumbers=[nodeDataAleSlidingJoint, AleNode], slidingOffset=AleSlidingOffset,activeConnector=activeConnector,
                                                       usePenaltyFormulation = usePenalty, penaltyStiffness=penaltyStiffness))
 
 
     return [oAleSlidingJoint]
+

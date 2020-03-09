@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-21  22:45:24 (last modfied)
+* @date         2020-03-07  00:22:22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,8 +30,8 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainNodeRigidBody2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector3D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux, uy and psi
-    Vector3D initialCoordinates_t;                //!< AUTO: initial velocity coordinate: vx, vy, omega
+    Vector3D initialCoordinates;                  //!< AUTO: initial displacement coordinates and angle (relative to reference coordinates)
+    Vector3D initialCoordinates_t;                //!< AUTO: initial velocity coordinates
     //! AUTO: default constructor with parameter initialization
     MainNodeRigidBody2DParameters()
     {
@@ -43,7 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeRigidBody2D
-* @brief        A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom (displacement of center of mass - COM: ux,uy) and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
+* @brief        A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

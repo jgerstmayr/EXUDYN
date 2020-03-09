@@ -98,19 +98,19 @@ nodeType=exu.NodeType.RotationEulerParameters
 #graphicsAB = GraphicsDataOrthoCube(-d/2,-d/2,0, d/2,d/2, lAB, [0.1,0.1,0.8,1])
 graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], radius=[0.01,0.01], thickness = 0.01, width = [0.02,0.02], color=color4steelblue)
 
-[n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=nodeType, 
+[n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=str(nodeType), 
                     position=pA, angularVelocity=omega0, gravity=g, graphicsDataList=[graphicsAB])
 
 ################ Body1: CONROD
 graphicsBC = GraphicsDataRigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], radius=[0.01,0.01], thickness = 0.01, width = [0.02,0.02], color=color4lightred)
 pBC = ScalarMult(0.5,VAdd(pB,pC))
-[n1,b1]=AddRigidBody(mainSys = mbs, inertia=inertiaBC, nodeType=nodeType, 
+[n1,b1]=AddRigidBody(mainSys = mbs, inertia=inertiaBC, nodeType=str(nodeType), 
                     position=pBC, velocity=v1Init, angularVelocity=omega1Init, rotationMatrix=rotMatBC, gravity=g, graphicsDataList=[graphicsBC])
 
 ################ Body2: SLIDER
 d = 0.03
 graphicsSlider = GraphicsDataOrthoCube(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
-[n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=nodeType, 
+[n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=str(nodeType), 
                     position=pC, velocity=v2Init, angularVelocity=[0,0,0], graphicsDataList=[graphicsSlider])
 
 
@@ -182,7 +182,7 @@ SC.visualizationSettings.connectors.jointAxesRadius = 0.002
 
 if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
-    #mbs.WaitForUserToContinue()
+    mbs.WaitForUserToContinue()
 
 SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 

@@ -189,7 +189,6 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(Matrix& massMatrix) const
 	//pout << "mass=" << parameters.physicsLength*parameters.physicsMassPerLength << "\n";
 
 	//pout << "Mass =" << massMatrix << "\n";
-		
 }
 
 //! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
