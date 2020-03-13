@@ -32,7 +32,7 @@ void CMarkerBodyCable2DCoordinates::ComputeMarkerData(const CSystemData& cSystem
 	//maxNumberOfSegments ... used for ConstSizeVectors
 
 	//the markerdata consists of the shape functions SV(pos_i)*q_Cable, in which pos_i is evaluated at (numberOfSegments+1) equidistant points 
-	CObjectANCFCable2D* cable = ((CObjectANCFCable2D*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
+	CObjectANCFCable2DBase* cable = ((CObjectANCFCable2DBase*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
 	Index nCoordinatesCable = cable->GetODE2Size();
 	const Index ns = 4;   //number of shape functions
 
@@ -40,7 +40,7 @@ void CMarkerBodyCable2DCoordinates::ComputeMarkerData(const CSystemData& cSystem
 	ConstSizeVector<ns> q0DisplRef;	//coordinates (displacement+reference) node 0
 	ConstSizeVector<ns> q1DisplRef; //coordinates (displacement+reference) node 1
 
-	markerData.value = cable->GetParameters().physicsLength; //needed for shape function computation; WORKAROUND
+	markerData.value = cable->GetLength(); //OLD: 2020-03-09; cable->GetParameters().physicsLength; //needed for shape function computation; WORKAROUND
 
 	markerData.vectorValue.SetNumberOfItems(nCoordinatesCable); //stores 8 cable coordinates
 	markerData.vectorValue_t.SetNumberOfItems(nCoordinatesCable); //stores 8 cable coordinates velocities

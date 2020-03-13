@@ -3,7 +3,6 @@
 # This is an EXUDYN example
 #
 # Details:  Mathematical pendulum with constraint or spring-damper;
-#           Remark: uses old style definition of items
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-01-10

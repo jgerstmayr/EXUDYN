@@ -91,7 +91,7 @@ Real CObjectJointSliding2D::ComputeLocalSlidingCoordinate() const
 	return slidingPos;
 }
 
-bool sjnew = true; //new formulation of sliding joint using projection into tangential and normal direction
+//bool sjnew = true; //new formulation of sliding joint using projection into tangential and normal direction, also suitable for index 2 formulation
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
 void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
@@ -108,7 +108,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 
 	if (parameters.activeConnector)
 	{
-		if (!sjnew)
+		if (parameters.classicalFormulation)
 		{
 			if (!velocityLevel)
 			{
@@ -229,7 +229,7 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 
 	if (parameters.activeConnector)
 	{
-		if (!sjnew)
+		if (parameters.classicalFormulation)
 		{
 			//marker0: contains position jacobian
 			const Index forceXindex = 0;
@@ -323,7 +323,8 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 
 			//derivatives w.r.t. to s and w.r.t. forceX (dummy)
 			jacobian_AE(forceXindex, forceXindex) = 1;
-			jacobian_AE(1, 2) = slidingPosition*normalVector_x;					//d(vPos * normalVector)/ds = r'*n + r*n'
+			//OLD: 2020-03-09: jacobian_AE(1, 2) = slidingPosition * normalVector_x;	//d(vPos * normalVector)/ds = r'*n + r*n'
+			jacobian_AE(1, 2) = slidingPosition * normalVector_x + slopeVector * normalVector;	//d(vPos * normalVector)/ds = r'*n + r*n'
 			jacobian_AE(2, 2) = slopeVector*slopeVector + vPos*slopeVector_x;	//deq2/dq2 = d(vPos * slopeVector)/ds = r'*r' + vPos*r'' ; vPos = r(s) - p0
 
 			//jacobian(1, part1) = -posJac*n
@@ -337,8 +338,8 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 
 			for (Index i = 0; i < ns; i++)
 			{
-				//jacobian(1, part2) = d(r(s) - p0)*n / dq1 = SV*n + (r(s) - p0) * [-SV'[1],SV'[0]]
-				jacobian(1, 2 * i + columnsOffset)     = SV[i] * normalVector[0] + vPos[1] * SV_x[i];
+				//jacobian(1, part2) = d(r(s) - p0)*n / dq1 = SV*n + (r(s) - p0) * [-SV'[1],SV'[0]] 
+				jacobian(1, 2 * i + columnsOffset) = SV[i] * normalVector[0] + vPos[1] * SV_x[i]; //special sign, follows from normal!
 				jacobian(1, 2 * i + 1 + columnsOffset) = SV[i] * normalVector[1] - vPos[0] * SV_x[i];
 
 				//jacobian(2, part2) = d(r(s) - p0)*r'/ dq1 = SV*r' + (r(s) - p0) * SV' = SV*r' + SV' * (r(s) - p0)

@@ -940,12 +940,13 @@ class VObjectJointSliding2D:
         yield 'color', self.color
 
 class ObjectJointSliding2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = -1, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = -1, classicalFormulation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.slidingMarkerNumbers = slidingMarkerNumbers
         self.slidingMarkerOffsets = slidingMarkerOffsets
         self.nodeNumber = nodeNumber
+        self.classicalFormulation = classicalFormulation
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -956,6 +957,7 @@ class ObjectJointSliding2D:
         yield 'slidingMarkerNumbers', self.slidingMarkerNumbers
         yield 'slidingMarkerOffsets', self.slidingMarkerOffsets
         yield 'nodeNumber', self.nodeNumber
+        yield 'classicalFormulation', self.classicalFormulation
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]

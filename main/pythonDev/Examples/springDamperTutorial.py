@@ -15,7 +15,7 @@ sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudy
 
 import exudyn as exu
 from itemInterface import *
-import numpy as np
+import numpy as np #for postprocessing
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -51,14 +51,17 @@ groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate 
 #marker for springDamper for first (x-)coordinate:
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 0))
 
-#Spring-Damper between two marker coordinates
-mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
-                                     stiffness = spring, 
-                                     damping = damper)) 
+#spring-damper between two marker coordinates
+nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
+                                          stiffness = spring, damping = damper)) 
 
 #add load:
 mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
-                           load = f))
+                                         load = f))
+
+#add sensor:
+mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
+                           outputVariableType=exu.OutputVariableType.Force))
 
 print(mbs)
 mbs.Assemble()
@@ -67,7 +70,8 @@ steps = 1000  #number of steps to show solution
 tEnd = 1     #end time of simulation
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-2  #output interval
+simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
+simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 
@@ -106,13 +110,20 @@ for i in range(0,steps+1):
 #print('refSol=',refSol[steps,1])
 
 data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
-plt.plot(data[:,0], data[:,1], 'b-') #numerical solution
+plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
 #plt.plot(data[:,0], data[:,1+3], 'g-') #numerical solution:velocity
-plt.plot(refSol[:,0], refSol[:,1], 'r-') #exact solution
+plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
+
+#show force in constraint/support:
+data = np.loadtxt('groundForce.txt', comments='#', delimiter=',')
+plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)') #numerical solution
 
 ax=plt.gca() # get current axes
 ax.grid(True, 'major', 'both')
 ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
 ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+plt.legend() #show labels as legend
 plt.tight_layout()
 plt.show() 
+
+

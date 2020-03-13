@@ -1219,7 +1219,7 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCartesianSpringDamper
-classDescription = "An 3D spring-damper element acting accordingly in three directions (x,y,z); connects to position-based markers; represents a penalty-based spherical joint; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be force_x = (m1.position_x - m0.position_x - offset_x)\cdot stiffness_x + (m1.velocity_x - m0.velocity_x)\cdot damping_x, etc. \ee."
+classDescription = "An 3D spring-damper element acting accordingly in three (global) directions (x,y,z) which connects to position-based markers."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -1890,7 +1890,7 @@ equations =
 %
     \rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
     \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
-    \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1}$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
+    \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1]\tp$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
     \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!)}
     \rowTable{sliding velocity slope}{$\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$}{current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
 %
@@ -1923,8 +1923,30 @@ equations =
     \ee
 %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Algebraic constraint equations}:
-    The 2D sliding joint is implemented having 3 equations, using the special algebraic coordinates $\zv$. 
+    \noindent {\bf Algebraic constraint equations (classicalFormulation=True)}:
+    The 2D sliding joint is implemented having 3 equations, using the special algebraic coordinates $\zv$.
+    The algebraic equations read
+    \bea
+      \LU{0}{\Delta\pv} &=& \Null, \quad \mbox{... 2 index 3 equations, ensuring the sliding body to stay at the cable}\\
+      \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} &=& 0, \quad \mbox{... 1 index 1 equation, ensuring the force in sliding direction = 0}  \\
+    \eea
+    No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and ODE2 coordinates read
+    \be
+      J_{AE} = \mr{0}{0}{r^\prime_0} {0}{0}{r^\prime_1} {r^\prime_0}{r^\prime_1}{r^{\prime\prime}_0\lambda_0 + r^{\prime\prime}_1\lambda_1}    %\LURU{0}{\rv}{ANCF}{\prime\prime \mathrm{T}} \vp{\lambda_0}{\lambda_1}}
+    \ee
+    \be
+      J_{ODE2} = \mp{-J_{pos,m0}}{\Sm(s_{el})} {\Null\tp}{\left[\lambda_0,\,\lambda_1\right]\cdot\Sm^\prime(s_{el}) }
+    \ee
+    if \texttt{activeConnector = False}, the algebraic equations are changed to:
+    \bea
+      \lambda_0 &=& 0,   \\
+      \lambda_1 &=& 0,   \\
+      s &=& 0
+    \eea
+    %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
+    %+++++++++++++++++++++++++++++++++++++++++++++
+    \noindent {\bf Algebraic constraint equations (classicalFormulation=False)}:
+    The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated), using the special algebraic coordinates $\zv$. 
     The algebraic equations read
     \bea
       \lambda_0 &=& 0, \quad \mbox{... this equation is not necessary, but can be used for switching to other modes}  \\
@@ -1968,7 +1990,8 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               ,       ArrayIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "marker0: position-marker of mass point or rigid body; marker1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)"
 V,      CP,     slidingMarkerNumbers,           ,               ,       ArrayIndex,"ArrayIndex()",              ,       I,      "these markers are used to update marker1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker(i) at x=cable.length is equal to marker(i+1) at x=0"
 V,      CP,     slidingMarkerOffsets,           ,               ,       Vector,"Vector()", ,                            I,      "this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ..."
-V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",       ,       I,      "node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position"
+V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",       ,       I,     "node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position"
+V,      CP,     classicalFormulation,           ,               ,       bool,       "true",                      ,       IO,     "uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation"
 V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 

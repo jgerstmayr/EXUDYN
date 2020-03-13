@@ -910,7 +910,7 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 		Vector3D pContactLast; //previously computed point
 
 		Index objectNum = vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetObjectNumber();
-		Real lCable = ((const CObjectANCFCable2D&)vSystem->systemData->GetCObjectBody(objectNum)).GetParameters().physicsLength;
+		Real lCable = ((const CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[objectNum])->GetLength();//GetParameters().physicsLength;
 
 		for (Index i = 0; i <= nSeg; i++)
 		{
@@ -962,7 +962,8 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 		Vector3D pContactLast; //previously computed point
 
 		Index objectNum = vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetObjectNumber();
-		Real lCable = ((const CObjectANCFCable2D&)vSystem->systemData->GetCObjectBody(objectNum)).GetParameters().physicsLength;
+		//Real lCable = ((const CObjectANCFCable2D&)vSystem->systemData->GetCObjectBody(objectNum)).GetParameters().physicsLength;
+		Real lCable = ((const CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[objectNum])->GetLength();//GetParameters().physicsLength;
 
 		for (Index i = 0; i <= nSeg; i++)
 		{
