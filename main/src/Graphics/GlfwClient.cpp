@@ -28,6 +28,7 @@
 //#include <gl/glu.h>
 
 //#define GLFW_INCLUDE_ES3 //open gl ES version
+#define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 
 

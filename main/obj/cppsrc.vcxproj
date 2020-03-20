@@ -247,7 +247,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\include;$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -274,7 +274,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11;C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\include;$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;__FAST_EXUDYN_LINALG</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

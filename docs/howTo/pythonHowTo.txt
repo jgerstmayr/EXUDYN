@@ -1,0 +1,3 @@
+
+how to exit .py file (in Spyder): (exit, quit, exit(), ... do not work!)
+	sys.exit()
