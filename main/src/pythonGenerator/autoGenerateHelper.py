@@ -81,6 +81,7 @@ def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into
     s = s.replace('_','\_')
     s = s.replace('{','\{')
     s = s.replace('}','\}')
+    #s = s.replace('/',' / ')
     #s = s.replace('$','\$') #do not exclude $ in order to allow latex formulas
 
     return s

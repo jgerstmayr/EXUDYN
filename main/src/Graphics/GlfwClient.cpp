@@ -530,11 +530,19 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 			//use OpenGL transformation to compute incremental rotation
 
 			glMatrixMode(GL_MODELVIEW);
-			//glLoadIdentity();	//start with identity
-			glLoadMatrixf(stateMachine.storedModelRotation.GetDataPointer()); //load previous rotation
+			glLoadIdentity();	//start with identity
 			glRotatef(deltaX*rotationFactor, 0.f, 1.f, 0.f); //apply "incremental" rotation around x
 			glRotatef(deltaY*rotationFactor, 1.f, 0.f, 0.f); //apply "incremental" rotation around y
+			glMultMatrixf(stateMachine.storedModelRotation.GetDataPointer()); //load previous rotation
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+
+			////this mode always works locally (does not allow rotation around local z-axis!):
+			//glMatrixMode(GL_MODELVIEW);
+			////glLoadIdentity();	//start with identity
+			//glLoadMatrixf(stateMachine.storedModelRotation.GetDataPointer()); //load previous rotation
+			//glRotatef(deltaX*rotationFactor, 0.f, 1.f, 0.f); //apply "incremental" rotation around x
+			//glRotatef(deltaY*rotationFactor, 1.f, 0.f, 0.f); //apply "incremental" rotation around y
+			//glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
 
 		}
 		else { stateMachine.mode = RendererMode::_None; } //finish move operation if button is released!
@@ -547,18 +555,24 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 }
 
 
-bool GlfwRenderer::SetupRenderer()
+bool GlfwRenderer::SetupRenderer(bool verbose)
 {
 	//glfwCreateThread();
 	//auto th = new std::thread(GlfwRenderer::StartThread);
 	globalPyRuntimeErrorFlag = false; //if previous renderer crashed, this allows to relase this error even if the old renderer is still running
-	if (!rendererActive && basicVisualizationSystemContainer != nullptr) //check that renderer is not already running and that link to SystemContainer exists
+
+	if (rendererActive)//check that renderer is not already running and that link to SystemContainer exists
+	{
+		PyWarning("OpenGL renderer already active");
+		return false;
+	}
+	else if (basicVisualizationSystemContainer != nullptr) //check that renderer is not already running and that link to SystemContainer exists
 	{
 		basicVisualizationSystemContainer->UpdateMaximumSceneCoordinates(); //this is done to make OpenGL zoom and maxSceneCoordinates work
 
 		rendererError = 0; 
 
-		pout << "Setup OpenGL renderer ...\n";
+		if (verbose) { pout << "Setup OpenGL renderer ...\n"; }
 		if (rendererThread.joinable()) //thread is still running from previous call ...
 		{
 			rendererThread.join();
@@ -572,8 +586,11 @@ bool GlfwRenderer::SetupRenderer()
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
-		pout << "waited for " << i * 10 << " milliseconds \n";
-		if (rendererActive) { pout << "OpenGL renderer started!\n"; return true; }
+		if (verbose) { pout << "waited for " << i * 10 << " milliseconds \n"; }
+		if (rendererActive)
+		{
+			if (verbose) { pout << "OpenGL renderer started!\n"; return true; }
+		}
 		else { 
 			if (rendererError == 1)
 			{
@@ -589,10 +606,10 @@ bool GlfwRenderer::SetupRenderer()
 	}
 	else
 	{
-		PyWarning("OpenGL renderer already active");
+		PyError("No SystemContainer has been. Renderer cannot be started without SystemContainer.");
 		return false;
 	}
-
+	return false; //not needed, but to suppress warnings
 }
 
 //! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
@@ -627,8 +644,6 @@ void GlfwRenderer::StopRenderer()
 			//pout << "thread joined\n";
 			//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
 		}
-
-
 	}
 }
 

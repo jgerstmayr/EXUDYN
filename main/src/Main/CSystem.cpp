@@ -638,7 +638,7 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 				//object2 can't be a connector, so must have nodes
 				for (Index j = 0; j < object.GetNumberOfNodes(); j++)
 				{
-					CNode* node = object.GetCNode(j);
+					const CNode* node = object.GetCNode(j);
 					//pout << "  node ODE2=" << node->GetNumberOfODE2Coordinates() << "\n";
 					if (node->GetNumberOfODE2Coordinates())
 					{
@@ -724,13 +724,16 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 	{
 		pout << "ERROR: ObjectType Nr. " << (Index)object->GetType() << " not implemented in CSystem::AssembleLTGLists!\n";
 	}
+
+	//pout << "ltgODE2=" << ltgListODE2 << "\n";
+	//pout << "ltgAE=" << ltgListAE << "\n";
 }
 
 
 //! Use initial values of nodes to compute system-wide initial coordinate vectors
 void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 {
-	pout << "Set initial system coordinates (for ODE2, ODE1 and Data coordinates) ...\n";
+	//pout << "Set initial system coordinates (for ODE2, ODE1 and Data coordinates) ...\n";
 
 	//initial system vectors
 	Vector ODE2u =  Vector(cSystemData.GetNumberOfCoordinatesODE2());
@@ -1063,6 +1066,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 		//work over bodies, connectors, etc.
 		CObject& object = *(cSystemData.GetCObjects()[j]);
 		ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[j];
+		bool localAEfilled = false; //if object does not provide algebraic equation, shall not produce error (ObjectGenericODE2)
 
 		if (ltg.NumberOfItems())
 		{
@@ -1072,6 +1076,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 				if (object.GetAlgebraicEquationsSize()) //either body or constraint
 				{
 					object.ComputeAlgebraicEquations(temp.localAE, velocityLevel); //no time given for objects for now (only Euler parameters...)
+					localAEfilled = true;
 				}
 
 			}
@@ -1080,23 +1085,11 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 			{
 				CObjectConstraint& constraint = (CObjectConstraint&)object;
 
-				//const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
-				//Index nMarkers = constraint.GetMarkerNumbers().NumberOfItems();
-				//if (nMarkers != 2) { CHECKandTHROWstring("SolveSystem(...): Number of constraint markers != 2 not implemented"); }
-
-				//for (Index k = 0; k < 2; k++)
-				//{
-				//	//lateron: use accessFunctionType to determine necessary computations!
-
-				//	const bool computeJacobian = false;
-				//	cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(k));
-				//}
-
 				const bool computeJacobian = false;
 				ComputeMarkerDataStructure(&constraint, computeJacobian, temp.markerDataStructure);
 
 				constraint.ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, velocityLevel);
-
+				localAEfilled = true;
 			}
 			//for connectors, linked to objects that contain algebraic variables (e.g. Euler-Parameter based rigid bodies)
 			else if ((Index)object.GetType() & (Index)CObjectType::Connector)
@@ -1106,11 +1099,14 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 			}
 			else { CHECKandTHROWstring("CSystem::ComputeAlgebraicEquations(...): object type not implemented"); }
 
-			CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
-			//now add RHS to system vector
-			for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+			if (localAEfilled)
 			{
-				algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
+				CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+				//now add RHS to system vector
+				for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+				{
+					algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
+				}
 			}
 		}
 	}

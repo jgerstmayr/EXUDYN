@@ -39,7 +39,7 @@ latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Simulation
 classDescription = "General settings for exporting the solution (results) of a simulation."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args,cFlags, parameterDescription
 V,  writeSolutionToFile,			,    , bool, 						   true,      ,      P		, "flag (true/false), which determines if (global) solution vector is written to file"
-V,  appendToFile,			        ,  	, bool, 					   false,     ,      P	  , "flag (true/false); if true, solution is appended to existing file (otherwise created)"
+V,  appendToFile,			        ,  	, bool, 					   false,     ,      P	  , "flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created)"
 V,  writeFileHeader,			     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)"
 V,  writeFileFooter,			     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics"
 V,  solutionWritePeriod,			,  	, UReal, 						0.01,  		,      P     , "time span (period), determines how often the solution is written during a simulation"
@@ -54,7 +54,7 @@ V,  exportAlgebraicCoordinates,	,    , bool, 						   true,  		,      P     , "s
 V,  exportDataCoordinates,	     ,    , bool, 						   true,  		,      P     , "solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates"
 V,  coordinatesSolutionFileName,, 	  , FileName,                "coordinatesSolution.txt", ,P		, "filename and (relative) path of solution file containing all coordinates versus time"
 #
-V,  solverInformationFileName,  , 	  , FileName,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile"
+V,  solverInformationFileName,  , 	  , FileName,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step"
 V,  solutionInformation,	     ,    , String,                "",       ,      P	  , "special information added to header of solution file (e.g. parameters and settings, modes, ...)"
 V,  outputPrecision,            , 	  , Index,                 10,       ,       P		, "precision for floating point numbers written to solution and sensor files"
 V,  recordImagesInterval,       , 	  , Real,                  -1.,      ,       P    ,  "record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages"
@@ -243,7 +243,7 @@ V,      showComputationInfo,            , 	             ,     bool,         true
 V,      pointSize,                      , 	             ,     float,        "0.01f",                , P,      "global point size (absolute)"
 V,      circleTiling,                   , 	             ,     Index,        "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
 V,      cylinderTiling,                 , 	             ,     Index,        "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
-V,      sphereTiling,                   , 	             ,     Index,        "8",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
+V,      sphereTiling,                   , 	             ,     Index,        "6",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
 V,      axesTiling,                     , 	             ,     Index,        "12",                   , P,      "global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)"
 #
 writeFile=VisualizationSettings.h
@@ -328,7 +328,7 @@ writePybindIncludes = True
 classDescription = "Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      saveImageTimeOut,               , 	             ,     Index,        "5000",                 , P,      "timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
-V,      saveImageFileName,              , 	             ,     FileName,       "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!"
+V,      saveImageFileName,              , 	             ,     FileName,     "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!"
 V,      saveImageFileCounter,           , 	             ,     Index,        0,                      , P,      "current value of the counter which is used to consecutively save frames (images) with consecutive numbers"
 V,      saveImageSingleFile,            , 	             ,     bool,         false,                  , P,      "true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName"
 #
@@ -341,6 +341,10 @@ classDescription = "Visualization settings for nodes."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                     , P,      "flag to decide, whether the nodes are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                    , P,      "flag to decide, whether the node number is shown"
+V,      drawNodesAsPoint,           , 	             ,     bool,         true,                     , P,      "simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines"
+V,      showBasis,                  , 	             ,     bool,         false,                    , P,      "show basis (three axes) of coordinate system in 3D nodes"
+V,      basisSize,                  , 	             ,     float,        "0.2f",                   , P,      "size of basis for nodes"
+V,      tiling,                     , 	             ,     Index,        "4",                      , P,      "tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                   , P,      "global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for nodes; 4th value is alpha-transparency"
 V,      showNodalSlopes,            , 	             ,     Index,        false,                    , P,       "draw nodal slope vectors, e.g. in ANCF beam finite elements"
@@ -365,7 +369,7 @@ classDescription = "Visualization settings for bodies."
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the bodies are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the body(=object) number is shown"
 V,      defaultSize,                , 	             3,    Float3,       "Float3({1.f,1.f,1.f})",    , P,    "global body size of xyz-cube"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for bodies; 4th value is "
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,    "default cRGB olor for bodies; 4th value is "
 V,      beams,                      , 	             ,     VSettingsBeams,   ,                       , PS,    "visualization settings for beams (e.g. ANCFCable or other beam elements)"
 #
 writeFile=VisualizationSettings.h
@@ -378,11 +382,13 @@ classDescription = "Visualization settings for connectors."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the connectors are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the connector(=object) number is shown"
+V,      defaultSize,                , 	             ,     float,        "0.1f",                     , P,    "global connector size; if -1.f, connector size is relative to maxSceneSize"
+#
 V,      showJointAxes,              , 	             ,     bool,         false,                      , P,    "flag to decide, whether contact joint axes of 3D joints are shown"
 V,      jointAxesLength,            , 	             ,     float,        "0.2f",                     , P,    "global joint axes length"
 V,      jointAxesRadius,            , 	             ,     float,        "0.02f",                    , P,    "global joint axes radius"
 V,      showContact,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether contact points, lines, etc. are shown"
-V,      defaultSize,                , 	             ,     float,        "0.1f",                       , P,    "global connector size; if -1.f, connector size is relative to maxSceneSize"
+V,      springNumberOfWindings,     , 	             ,     Index,        8,                          , P,    "number of windings for springs drawn as helical spring"
 V,      contactPointsDefaultSize,   , 	             ,     float,        "0.02f",                      , P,    "global contact points size; if -1.f, connector size is relative to maxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for connectors; 4th value is alpha-transparency"
 #
@@ -396,6 +402,7 @@ classDescription = "Visualization settings for markers."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the markers are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the marker numbers are shown"
+V,      drawSimplified,             , 	             ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                     , P,    "global marker size; if -1.f, marker size is relative to maxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.1f,0.5f,0.1f,1.f})",, P,    "default cRGB olor for markers; 4th value is alpha-transparency"
 #
@@ -412,6 +419,7 @@ V,      showNumbers,                , 	             ,     bool,         false,  
 V,      defaultSize,                , 	             ,     float,        "0.2f",                     , P,    "global load size; if -1.f, load size is relative to maxSceneSize"
 V,      defaultRadius,              , 	             ,     float,        "0.005f",                   , P,    "global radius of load axis if drawn in 3D"
 V,      fixedLoadSize,              , 	             ,     bool,         true,                       , P,    "if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size"
+V,      drawSimplified,             , 	             ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      loadSizeFactor,             , 	             ,     float,        "0.1f",                     , P,    "if fixedLoadSize=false, then this scaling factor is used to draw the load vector"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default cRGB olor for loads; 4th value is alpha-transparency"
 #
@@ -424,6 +432,7 @@ classDescription = "Visualization settings for sensors."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the sensors are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the sensor numbers are shown"
+V,      drawSimplified,             , 	             ,     bool,         true,                       , P,    "draw sensors with simplified symbols"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                     , P,    "global sensor size; if -1.f, sensor size is relative to maxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P,    "default cRGB olor for sensors; 4th value is alpha-transparency"
 #

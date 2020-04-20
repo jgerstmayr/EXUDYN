@@ -46,8 +46,19 @@ namespace EXUvis {
 		}
 	}
 
+	//! compute normalized normal from triangle points, Vector3D version
+	Vector3D ComputeTriangleNormal(const std::array<Vector3D, 3>& trigPoints)
+	{
+		Vector3D v1 = trigPoints[1] - trigPoints[0];
+		Vector3D v2 = trigPoints[2] - trigPoints[0];
+		Vector3D n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
+		Real len = n.GetL2Norm();
+		if (len != 0.f) { n *= 1.f / len; }
+		return n;
+	}
+
 	//! draw a simple spring in 2D with given endpoints p0,p1 a width, a (normalized) normal vector for the width drawing and number of spring points numberOfPoints
-	void DrawSpring2D(const Vector3D& p0, const Vector3D& p1, const Vector3D& vN, Index numberOfPoints, Real width, const Float4& color, GraphicsData& graphicsData)
+	void DrawSpring2D(const Vector3D& p0, const Vector3D& p1, const Vector3D& vN, Index numberOfPoints, Real halfWidth, const Float4& color, GraphicsData& graphicsData)
 	{
 		//2D drawing in XY plane
 		Vector3D v0 = p1 - p0;
@@ -61,7 +72,7 @@ namespace EXUvis {
 		{
 			Vector3D pAct = p0 + v0 * (float)i*d;
 			Real sign = (Real)(i % 2); //sign
-			if (i > 1 && i < numberOfPoints - 1) { pAct += width * (sign*2.f - 1.f)* vN; }
+			if (i > 1 && i < numberOfPoints - 1) { pAct += halfWidth * (sign*2.f - 1.f)* vN; }
 
 			if (i > 0)
 			{
@@ -69,6 +80,39 @@ namespace EXUvis {
 			}
 
 			pLast = pAct;
+		}
+
+	}
+
+	//! draw a spring in 3D with given endpoints p0,p1, a width, windings and tiling
+	void DrawSpring(const Vector3D& p0, const Vector3D& p1, Index numberOfWindings, Index nTilesPerWinding,
+		Real radius, const Float4& color, GraphicsData& graphicsData, bool draw3D)
+	{
+		Vector3D v0 = p1 - p0;
+
+		Real L = v0.GetL2Norm(); //length of spring
+		Real d = L / (Real)numberOfWindings; //split spring into pieces: shaft, (n-2) parts, end
+		if (L != 0.f) 
+		{ 
+			v0 /= L;
+			Vector3D n1, n2;
+			EXUmath::ComputeOrthogonalBasis(v0, n1, n2);
+
+			Vector3D pLast = p0;
+
+			for (Index i = 0; i < numberOfWindings; i++)
+			{
+				for (Index j = 0; j < nTilesPerWinding; j++)
+				{
+					Real phi = 2 * EXUstd::pi * j / (Real)nTilesPerWinding;
+					Vector3D p = p0 + d * ((Real)i + j / (Real)nTilesPerWinding)*v0 + radius*sin(phi)*n1 + radius*cos(phi)*n2;
+
+					graphicsData.AddLine(pLast, p, color, color);
+					pLast = p;
+				}
+			}
+			graphicsData.AddLine(pLast, p1, color, color);
+
 		}
 
 	}
@@ -90,7 +134,7 @@ namespace EXUvis {
 	//! cutPlain=true: a plain cut through cylinder is made; false: draw the cake shape ...
 	//! innerRadius: if > 0, then this is a cylinder with a hole
 	void DrawCylinder(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData,
-		Index nTiles, Real innerRadius, Vector2D angleRange, bool lastFace, bool cutPlain)
+		Index nTiles, Real innerRadius, Vector2D angleRange, bool lastFace, bool cutPlain, bool drawSmooth)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
 		if (radius <= 0.) { return; } //just a line
@@ -100,8 +144,8 @@ namespace EXUvis {
 		//points0 = copy.deepcopy(pAxis) #[pAxis[0], pAxis[1], pAxis[2]] #avoid change of pAxis
 		Vector3D pAxis1 = pAxis0 + vAxis;
 
-		Vector3D n1, n2;
-		EXUmath::ComputeOrthogonalBasis(vAxis, n1, n2);
+		Vector3D basisN1, basisN2;
+		EXUmath::ComputeOrthogonalBasis(vAxis, basisN1, basisN2);
 
 		//#create normals at left and right face(pointing inwards)
 		Real alpha = angleRange[1] - angleRange[0]; //angular range
@@ -120,6 +164,9 @@ namespace EXUvis {
 		std::array<Vector3D, 3> normalsFace0({ nF1,nF1,nF1 });
 		nF1 = -nF1;
 		std::array<Vector3D, 3> normalsFace1({ nF1,nF1,nF1 });
+		Vector3D n0(0);
+		Vector3D n1(0);
+
 
 		for (Index i = 0; i < nTiles; i++)
 		{
@@ -130,17 +177,19 @@ namespace EXUvis {
 			Real y0 = radius * cos(phi0);
 			Real x1 = radius * sin(phi1);
 			Real y1 = radius * cos(phi1);
-			Vector3D vv0 = x0 * n1 + y0 * n2;
-			Vector3D vv1 = x1 * n1 + y1 * n2;
+			Vector3D vv0 = x0 * basisN1 + y0 * basisN2;
+			Vector3D vv1 = x1 * basisN1 + y1 * basisN2;
 			Vector3D pzL0 = pAxis0 + vv0;
 			Vector3D pzL1 = pAxis0 + vv1;
 			Vector3D pzR0 = pAxis1 + vv0;
 			Vector3D pzR1 = pAxis1 + vv1;
-
-			Vector3D n0 = -vv0;
-			Vector3D n1 = -vv1;
-			n0.Normalize();
-			n1.Normalize();
+			if (drawSmooth)
+			{
+				n0 = -vv0;
+				n1 = -vv1;
+				n0.Normalize();
+				n1.Normalize();
+			}
 
 			//+++++++++++++++++++++++++++++++
 			//circumference:
@@ -224,31 +273,28 @@ namespace EXUvis {
 	}
 
 	//! draw a sphere with center at p, radius and color; nTiles are in 2 dimensions (8 tiles gives 8x8 x 2 faces)
-	void DrawSphere(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles)
+	void DrawSphere(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles, bool drawSmooth)
 	{
-		if (nTiles < 3) { nTiles = 3; } //less than 3 tiles makes no sense
+		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
 		if (radius <= 0.) { return; } //not visible
 		
-		//const Vector3D& e0 = EXUmath::unitVecX;
-		//const Vector3D& e1 = EXUmath::unitVecY;
-		//const Vector3D& e2 = EXUmath::unitVecZ;
-
 		std::array<Vector3D, 3> points;
-		std::array<Vector3D, 3> normals;
+		std::array<Vector3D, 3> normals; // = { Vector3D(0), Vector3D(0), Vector3D(0) };
 		std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
 
+		Index nTiles2 = 2 * nTiles;
 		//create points for circles around z - axis with tiling
 		for (Index i0 = 0; i0 < nTiles; i0++) //nTiles+1 in python, when generating points
 		{
-			for (Index iphi = 0; iphi < nTiles; iphi++)
+			for (Index iphi = 0; iphi < nTiles2; iphi++)
 			{
 				Real z0 = -radius * cos(EXUstd::pi * (Real)i0 / (Real)nTiles);    //runs from - r ..r(this is the coordinate of the axis of circles)
 				Real fact0 = sin(EXUstd::pi*(Real)i0 / (Real)nTiles);
 				Real z1 = -radius * cos(EXUstd::pi * (Real)(i0+1) / (Real)nTiles);    //runs from - r ..r(this is the coordinate of the axis of circles)
 				Real fact1 = sin(EXUstd::pi*(Real)(i0 + 1) / (Real)nTiles);
 
-				Real phiA = 2. * EXUstd::pi * (Real)iphi / (Real)nTiles; //angle
-				Real phiB = 2. * EXUstd::pi * (Real)(iphi+1) / (Real)nTiles; //angle
+				Real phiA = 2. * EXUstd::pi * (Real)iphi / (Real)nTiles2; //angle
+				Real phiB = 2. * EXUstd::pi * (Real)(iphi+1) / (Real)nTiles2; //angle
 
 				Real x0A = fact0 * radius * sin(phiA);
 				Real y0A = fact0 * radius * cos(phiA);
@@ -264,79 +310,104 @@ namespace EXUvis {
 				Vector3D v0B({ x0B, y0B, z0 });
 				Vector3D v1B({ x1B, y1B, z1 });
 
-				//triangle1: 0A, 1B, 1A
-				normals[0] = -v0A;
-				normals[1] = -v1A;
-				normals[2] = -v1B;
-				normals[0].Normalize();
-				normals[1].Normalize();
-				normals[2].Normalize();
 				points[0] = p + v0A;
 				points[1] = p + v1A;
 				points[2] = p + v1B;
+				//triangle1: 0A, 1B, 1A
+				if (drawSmooth)
+				{
+					normals[0] = -v0A;
+					normals[1] = -v1A;
+					normals[2] = -v1B;
+					normals[0].Normalize();
+					normals[1].Normalize();
+					normals[2].Normalize();
+				}
+				else
+				{
+					ComputeTriangleNormals(points, normals);
+				}
 				graphicsData.AddTriangle(points, normals, colors);
 
-				//triangle1: 0A, 0B, 1B
-				normals[0] = -v0A;
-				normals[1] = -v0B;
-				normals[2] = -v1B;
-				normals[0].Normalize();
-				normals[1].Normalize();
-				normals[2].Normalize();
 				points[0] = p + v0A;
 				points[1] = p + v0B;
 				points[2] = p + v1B;
+				//triangle1: 0A, 0B, 1B
+				if (drawSmooth)
+				{
+					normals[0] = -v0A;
+					normals[1] = -v0B;
+					normals[2] = -v1B;
+					normals[0].Normalize();
+					normals[1].Normalize();
+					normals[2].Normalize();
+				}
+				else
+				{
+					ComputeTriangleNormals(points, normals);
+				}
 				graphicsData.AddTriangle(points, normals, colors);
 			}
 		}
 	}
 
-//	def GraphicsDataCube(pList, color = [0., 0., 0., 1.], faces = [1, 1, 1, 1, 1, 1]) :
-//		# bottom : (z goes upwards from node 1 to node 5)
-//# ^y
-//# |
-//		# 3-- - 2
-//# |   |
-//# |   |
-//		# 0-- - 1-- > x
-//#
-//		# top:
-//# ^y
-//# |
-//	# 7-- - 6
-//# |   |
-//# |   |
-//		# 4-- - 5-- > x
-//#
-//		# faces: bottom, top, sideface0, sideface1, sideface2, sideface3(sideface0 has nodes 0, 1, 4, 5)
-//
-//		colors = []
-//		for i in range(8) :
-//			colors = colors + color
-//
-//			points = []
-//			for p in pList :
-//	points += p
-//		#    points = [xMin, yMin, zMin, xMax, yMin, zMin, xMax, yMax, zMin, xMin, yMax, zMin,
-//		#              xMin, yMin, zMax, xMax, yMin, zMax, xMax, yMax, zMax, xMin, yMax, zMax]
-//
-//		#1 - based ... triangles = [1, 3, 2, 1, 4, 3, 5, 6, 7, 5, 7, 8, 1, 2, 5, 2, 6, 5, 2, 3, 6, 3, 7, 6, 3, 4, 7, 4, 8, 7, 4, 1, 8, 1, 5, 8]
-//		#triangles = [0, 2, 1, 0, 3, 2, 6, 4, 5, 6, 7, 4, 0, 1, 4, 1, 5, 4, 1, 2, 5, 2, 6, 5, 2, 3, 6, 3, 7, 6, 3, 0, 7, 0, 4, 7]
-//
-//		#    triangles = [0, 1, 2, 0, 2, 3, 6, 5, 4, 6, 4, 7, 0, 4, 1, 1, 4, 5, 1, 5, 2, 2, 5, 6, 2, 6, 3, 3, 6, 7, 3, 7, 0, 0, 7, 4]
-//		trigList = [[0, 1, 2, 0, 2, 3], [6, 5, 4, 6, 4, 7], [0, 4, 1, 1, 4, 5], [1, 5, 2, 2, 5, 6], [2, 6, 3, 3, 6, 7], [3, 7, 0, 0, 7, 4]]
-//		triangles = []
-//		for i in range(6) :
-//			if faces[i] :
-//				triangles += trigList[i]
-//
-//				data = { 'type':'TriangleList', 'colors' : colors, 'points' : points, 'triangles' : triangles }
-//
-//				return data
+	//! draw cube with midpoint and size in x,y and z direction
+	void DrawOrthoCube(const Vector3D& midPoint, const Vector3D& size, const Float4& color, GraphicsData& graphicsData)
+	{
+		//sketch of cube: (z goes upwards from node 1 to node 5)
+		// bottom :         top:
+		// ^ y				^ y
+		// |				|
+		// 3---2			7---6
+		// |   |			|   |
+		// |   |			|   |
+		// 0---1--> x		4---5--> x
+
+		//std::array<SlimArray<Index,3>, 12> //does not work with recursive initializer list
+		const Index nTrigs = 12;
+		//Index trigList[nTrigs][3] = { {0, 1, 2}, {0, 2, 3},  {6, 5, 4}, {6, 4, 7},  {0, 4, 1}, {1, 4, 5},  {1, 5, 2}, {2, 5, 6},  {2, 6, 3}, {3, 6, 7},  {3, 7, 0}, {0, 7, 4} };
+
+		SlimVectorBase<Index, 12*3> trigList = { 0, 1, 2, 0, 2, 3, 6, 5, 4, 6, 4, 7, 0, 4, 1, 1, 4, 5, 1, 5, 2, 2, 5, 6, 2, 6, 3, 3, 6, 7, 3, 7, 0, 0, 7, 4 };
+
+		Real x = 0.5*size[0];
+		Real y = 0.5*size[1];
+		Real z = 0.5*size[2];
+
+		SlimVectorBase<Vector3D, 8> pc = { Vector3D({-x,-y,-z}), Vector3D({ x,-y,-z}), Vector3D({ x, y,-z}), Vector3D({-x, y,-z}),
+										   Vector3D({-x,-y, z}), Vector3D({ x,-y, z}), Vector3D({ x, y, z}), Vector3D({-x, y, z}) }; //cube corner points
+
+		for (Vector3D& point : pc)
+		{
+			point += midPoint;
+		}
+
+		std::array<Vector3D, 3> points;
+		std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
+		SlimVectorBase<Float4, 3> colors({ color,color,color }); //all triangles have same color
+		//std::array<Vector3D, 8> pc = { Vector3D({-x,-y,-z}), Vector3D({ x,-y,-z}), Vector3D({ x, y,-z}), Vector3D({-x, y,-z}),
+		//							   Vector3D({-x,-y, z}), Vector3D({ x,-y, z}), Vector3D({ x, y, z}), Vector3D({-x, y, z}) }; //cube corner points
+
+		//std::array<Vector3D, 3> points;
+		//std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
+		//std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
+
+		for (Index i = 0; i < nTrigs; i++)
+		{
+			points[0] = pc[trigList[i*3+0]];
+			points[1] = pc[trigList[i*3+1]];
+			points[2] = pc[trigList[i*3+2]];
+			//points[0] = pc[trigList[i][0]];
+			//points[1] = pc[trigList[i][1]];
+			//points[2] = pc[trigList[i][2]];
+			ComputeTriangleNormals(points, normals);
+			graphicsData.AddTriangle(points, normals, colors);
+		}
+	}
+
 
 	//! add a cone to graphicsData with reference point (pAxis0), axis vector (vAxis) and radius using triangle representation
 	//! cone starts at pAxis0, tip is at pAxis0+vAxis0
-	void DrawCone(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles)
+	void DrawCone(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles, bool drawSmooth)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
 		if (radius <= 0.) { return; } //just a line
@@ -347,8 +418,8 @@ namespace EXUvis {
 		//points0 = copy.deepcopy(pAxis) #[pAxis[0], pAxis[1], pAxis[2]] #avoid change of pAxis
 		Vector3D pAxis1 = pAxis0 + vAxis;
 
-		Vector3D n1, n2;
-		EXUmath::ComputeOrthogonalBasis(vAxis, n1, n2);
+		Vector3D basisN1, basisN2;
+		EXUmath::ComputeOrthogonalBasis(vAxis, basisN1, basisN2);
 
 		//#create normals at left and right face(pointing inwards)
 		Real alpha = 2.*EXUstd::pi;
@@ -356,7 +427,7 @@ namespace EXUvis {
 		Real fact = (Real)nTiles; //#create correct part of cylinder (closed/not closed
 
 		std::array<Vector3D, 3> points;
-		std::array<Vector3D, 3> normals;
+		std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
 		std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
 
 		Vector3D nF0 = vAxis;
@@ -373,22 +444,25 @@ namespace EXUvis {
 			Real y0 = radius * cos(phi0);
 			Real x1 = radius * sin(phi1);
 			Real y1 = radius * cos(phi1);
-			Vector3D vv0 = x0 * n1 + y0 * n2;
-			Vector3D vv1 = x1 * n1 + y1 * n2;
+			Vector3D vv0 = x0 * basisN1 + y0 * basisN2;
+			Vector3D vv1 = x1 * basisN1 + y1 * basisN2;
 			Vector3D pzL0 = pAxis0 + vv0;
 			Vector3D pzL1 = pAxis0 + vv1;
 
-			//normal to cone surface:
-			Vector3D n0 = (-axisLength/radius)*vv0 + radius*nF0;
-			Vector3D n1 = (-axisLength / radius)*vv1 + radius * nF0;
-			n0.Normalize();
-			n1.Normalize();
-
 			//+++++++++++++++++++++++++++++++
 			//circumference:
-			normals[0] = n0;
-			normals[1] = n1;
-			normals[2] = n1;
+			if (drawSmooth)
+			{
+				//normal to cone surface:
+				Vector3D n0 = (-axisLength / radius)*vv0 + radius * nF0;
+				Vector3D n1 = (-axisLength / radius)*vv1 + radius * nF0;
+				n0.Normalize();
+				n1.Normalize();
+
+				normals[0] = n0;
+				normals[1] = n1;
+				normals[2] = n1;
+			}
 			points[0] = pzL0;
 			points[1] = pzL1;
 			points[2] = pAxis1;
@@ -407,7 +481,8 @@ namespace EXUvis {
 	//! red=axisX, green=axisY, blue=axisZ
 	//! length defines the length of each axis; radius is the radius of the shaft; arrowSize is diameter relative to radius
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
-	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, GraphicsData& graphicsData, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative)
+	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, 
+		GraphicsData& graphicsData, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber)
 	{
 
 		for (Index i = 0; i < 3; i++)
@@ -422,28 +497,150 @@ namespace EXUvis {
 			{
 				graphicsData.AddLine(p, p + length * v, color, color);
 			}
+			if (showNumber != EXUstd::InvalidIndex)
+			{
+				graphicsData.AddText(p + (length + radius*arrowSizeRelative * 3) * v, color, EXUstd::ToString(showNumber), 0.f, 0.25f, 0.25f);
+			}
 		}
 	}
-	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index nTiles, bool doubleArrow)
+	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, 
+		Index nTiles, bool doubleArrow, bool draw3D)
 	{
 		Real arrowSizeRelative = 2.5;
 		Real len = v.GetL2Norm();
+
 		if (len != 0)
 		{
 			Vector3D v0 = (1. / len)*v;
-			if (!doubleArrow)
+
+			if (!draw3D) //draw simplified vector
 			{
 				Vector3D v1 = (len - 3 * radius * arrowSizeRelative)*v0;
-				DrawCylinder(p, v1, radius, color, graphicsData, nTiles);
-				DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+				Vector3D n1, n2;
+				EXUmath::ComputeOrthogonalBasis(v0, n1, n2);
+
+				graphicsData.AddLine(p, p + v, color, color);
+				graphicsData.AddLine(p + v, p + v1 + radius * n1, color, color);
+				graphicsData.AddLine(p + v, p + v1 - radius * n1, color, color);
+				graphicsData.AddLine(p + v, p + v1 + radius * n2, color, color);
+				graphicsData.AddLine(p + v, p + v1 - radius * n2, color, color);
+
+				if (doubleArrow)
+				{
+					Vector3D v2 = (len - 2*3 * radius * arrowSizeRelative)*v0;
+
+					graphicsData.AddLine(p + v1, p + v2 + radius * n1, color, color);
+					graphicsData.AddLine(p + v1, p + v2 - radius * n1, color, color);
+					graphicsData.AddLine(p + v1, p + v2 + radius * n2, color, color);
+					graphicsData.AddLine(p + v1, p + v2 - radius * n2, color, color);
+				}
 			}
 			else
 			{
-				Vector3D v1 = (len - 2 * 3 * radius * arrowSizeRelative)*v0;
-				DrawCylinder(p, v1, radius, color, graphicsData, nTiles);
-				DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
-				DrawCone(p + v1 + (3 * radius * arrowSizeRelative) * v0, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+				if (!doubleArrow)
+				{
+					Vector3D v1 = (len - 3 * radius * arrowSizeRelative)*v0;
+					DrawCylinder(p, v1, radius, color, graphicsData, nTiles);
+					DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+				}
+				else
+				{
+					Vector3D v1 = (len - 2 * 3 * radius * arrowSizeRelative)*v0;
+					DrawCylinder(p, v1, radius, color, graphicsData, nTiles);
+					DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+					DrawCone(p + v1 + (3 * radius * arrowSizeRelative) * v0, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, nTiles);
+				}
 			}
+		}
+	}
+
+	//! draw node either with 3 circles or with sphere at given point and with given radius
+	void DrawNode(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, bool draw3D, Index nTiles)
+	{
+		if (nTiles == 0)
+		{
+			graphicsData.AddPoint(p, color);
+		}
+		else if (draw3D)
+		{
+			DrawSphere(p, radius, color, graphicsData, nTiles);
+		}
+		else
+		{
+			Vector3D pPrevious[3]; //end points of previous segment
+			Vector3D pAct[3];
+			for (Index i = 0; i <= nTiles; i++)
+			{
+				Real phi = (Real)i / (Real)nTiles * 2. * EXUstd::pi;
+				Real x = radius * sin(phi);
+				Real y = radius * cos(phi);
+
+				pAct[0] = p + Vector3D({ 0,x,y });
+				pAct[1] = p + Vector3D({ x,0,y });
+				pAct[2] = p + Vector3D({ x,y,0 });
+
+				if (i > 0)
+				{
+					for (Index j = 0; j < 3; j++)
+					{
+						graphicsData.AddLine(pAct[j],pPrevious[j],color,color);
+					}
+				}
+				for (Index j = 0; j < 3; j++)
+				{
+					pPrevious[j] = pAct[j];
+				}
+			}
+		}
+	}
+
+	//! draw marker either with 3 crosses or with cube at given point and with given size
+	void DrawMarker(const Vector3D& p, Real size, const Float4& color, GraphicsData& graphicsData, bool draw3D)
+	{
+		if (draw3D)
+		{
+			DrawOrthoCube(p, Vector3D({ size,size,size }), color, graphicsData);
+			//DrawSphere(p, size, color, graphicsData, 2, false); //draw coarse and with flat shading
+		}
+		else
+		{
+			Real s = 0.5*size;
+			graphicsData.AddLine(p + Vector3D({ s,s,0 }), p - Vector3D({ s,s,0 }), color, color);
+			graphicsData.AddLine(p + Vector3D({ -s,s,0 }), p - Vector3D({ -s,s,0 }), color, color);
+
+			graphicsData.AddLine(p + Vector3D({ s,0,s }), p - Vector3D({ s,0,s }), color, color);
+			graphicsData.AddLine(p + Vector3D({ -s,0,s }), p - Vector3D({ -s,0,s }), color, color);
+
+			graphicsData.AddLine(p + Vector3D({ 0,s,s }), p - Vector3D({ 0,s,s }), color, color);
+			graphicsData.AddLine(p + Vector3D({ 0,-s,s }), p - Vector3D({ 0,-s,s }), color, color);
+
+		}
+	}
+
+	//! draw sensor as diamond
+	void DrawSensor(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, bool draw3D)
+	{
+		if (draw3D)
+		{
+			DrawSphere(p, radius, color, graphicsData, 2, false); //draw coarse and with flat shading
+		}
+		else
+		{
+			Real s = radius;
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0, s,0 }), color, color);
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,-s,0 }), color, color);
+			graphicsData.AddLine(p + Vector3D({ -s,0,0 }), p - Vector3D({ 0, s,0 }), color, color);
+			graphicsData.AddLine(p + Vector3D({ -s,0,0 }), p - Vector3D({ 0,-s,0 }), color, color);
+
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,0, s }), color, color);
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,0,-s }), color, color);
+			graphicsData.AddLine(p + Vector3D({-s,0,0 }), p - Vector3D({ 0,0, s }), color, color);
+			graphicsData.AddLine(p + Vector3D({-s,0,0 }), p - Vector3D({ 0,0,-s }), color, color);
+
+			graphicsData.AddLine(p + Vector3D({ 0, s,0 }), p - Vector3D({ 0,0, s }), color, color);
+			graphicsData.AddLine(p + Vector3D({ 0, s,0 }), p - Vector3D({ 0,0,-s }), color, color);
+			graphicsData.AddLine(p + Vector3D({ 0,-s,0 }), p - Vector3D({ 0,0, s }), color, color);
+			graphicsData.AddLine(p + Vector3D({ 0,-s,0 }), p - Vector3D({ 0,0,-s }), color, color);
 		}
 	}
 

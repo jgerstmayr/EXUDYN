@@ -6,6 +6,7 @@ some notes on use of matplotlib in spyder:
 #if you want to switch back to "inline", type this:
 %matplotlib inline
 
+#Spyder: to use inline plot, change preferences: IPython consolse->Graphics->backend: inline=plot inline, automatic=plot into separate window
 
 #====================================
 #EXAMPLE for data of Hotint:
@@ -27,9 +28,14 @@ plt.xlabel("index")
 plt.ylabel("ylabel")
 plt.grid(True, 'major', 'both')
 plt.tight_layout() #better arrangement of plot
-plt.legend()
-plt.show() #sometimes needed to update plot
 
+plt.legend(loc='upper right')
+#The strings 'upper left', 'upper right', 'lower left', 'lower right' place the legend at the corresponding corner of the axes/figure.
+#The strings 'upper center', 'lower center', 'center left', 'center right' place the legend at the center of the corresponding edge of the axes/figure.
+#The string 'center' places the legend at the center of the axes/figure.
+#The string 'best' places the legend at the location, among the nine locations defined so far, with the minimum overlap with other drawn artists. This option can be quite slow for plots with large amounts of data; your plotting speed may benefit from providing a specific location.
+
+plt.show() #sometimes needed to update plot
 #colors, line style and markers:
 plt.plot([1,2,3,4,5], [1,2,3,4,10], 'go-') # 'g'reen 'd'ots '-'solid line
 	# 'r*--' : ‘red stars with dashed lines’

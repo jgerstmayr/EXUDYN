@@ -49,6 +49,21 @@ public:
 	//local to global coordinates are available in CSystemData
 	virtual void GetODE2LocalToGlobalCoordinates(ArrayIndex& ltg) const;
 
+	//!compute local coordinate index (within body coordinates) for a certain local node number
+	//!this is inefficient for objects with many nodes and needs to be reimplemented, e.g., in ObjectGenericODE2
+	virtual Index GetLocalODE2CoordinateIndexPerNode(Index localNode) const
+	{
+		Index nn = GetNumberOfNodes();
+		Index localCoordinate = 0;
+		for (Index i = 0; i < nn; i++)
+		{
+			if (localNode == i) { return localCoordinate; }
+			localCoordinate += GetCNode(i)->GetNumberOfODE2Coordinates();
+		}
+		CHECKandTHROWstring("CObjectBody::GetLocalCoordinateIndexPerNode: invalid localNode number");
+		return 0;
+	}
+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ACCESS FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

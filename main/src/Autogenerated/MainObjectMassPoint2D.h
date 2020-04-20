@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-04  23:29:57 (last modfied)
+* @date         2020-04-08  14:46:12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectMassPoint2D
-* @brief        A 2D mass point which is attached to a position-based 2D node. Equations of motion with the displacements \f$[u_x\;\; u_y]^T\f$, the mass \f$m\f$ and the residual of all forces \f$[R_x\;\; R_y]^T\f$ are given as \f[ \vp{m \cdot \ddot u_x}{m \cdot \ddot u_y} = \vp{R_x}{R_y}.\f]
+* @brief        A 2D mass point which is attached to a position-based 2D node.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -149,6 +149,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { cObjectMassPoint2D->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectMassPoint2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectMassPoint2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        GetCObject()->ParametersHaveChanged();
     }
 
 };

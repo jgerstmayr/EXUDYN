@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-04  23:29:57 (last modfied)
+* @date         2020-03-30  22:45:22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -92,7 +92,7 @@ public: // AUTO:
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationSensor(VisualizationSensor* pVisualizationSensor) { visualizationSensorObject = (VisualizationSensorObject*)pVisualizationSensor; }
 
-    //! AUTO:  Get type name of sensor (without keyword "Sensor"...!)
+    //! AUTO:  Get type name of sensor (without keyword 'Sensor'...!)
     virtual const char* GetTypeName() const override
     {
         return "Object";

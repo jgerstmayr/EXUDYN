@@ -16,12 +16,29 @@ import copy as copy #to be able to copy e.g. lists
 #import time        #AnimateSolution
 
 # color definitions
-color4steelblue = [0.4,0.4,0.9,1.]
+color4red = [1,0,0,1.]
+color4green = [0,1,0,1]
+color4blue = [0,0,1,1]
+
+color4cyan = [0,1,1,1]
+color4magenta = [1,0,1,1]
+color4yellow = [1,1,0,1]
+
 color4lightred = [0.9,0.4,0.4,1.]
 color4lightgreen = [0.3,0.9,0.3,1.]
-color4darkgrey = [0.25,0.25,0.25,1.]
+color4steelblue = [0.4,0.4,0.9,1.]
+
 color4grey = [0.5,0.5,0.5,1.]
+
+color4darkgrey = [0.25,0.25,0.25,1.]
 color4lightgrey = [0.75,0.75,0.75,1.]
+color4white = [1.,1.,1.,1.]
+
+#define a list of 4 colors for numbered colors
+color4list = [color4red, color4green, color4blue, 
+              color4cyan, color4magenta, color4yellow,
+              color4lightred, color4lightgreen, color4steelblue, 
+              color4grey]
 
 #************************************************
 #generate graphics dictionary data for rectangle
@@ -42,11 +59,24 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
 
     return dataRect
 
+#generate graphics for cube with min and max dimensions
 def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
     
     pList = [[xMin,yMin,zMin], [xMax,yMin,zMin], [xMax,yMax,zMin], [xMin,yMax,zMin],
              [xMin,yMin,zMax], [xMax,yMin,zMax], [xMax,yMax,zMax], [xMin,yMax,zMax]]
     return GraphicsDataCube(pList, color)
+
+#generate graphics for cube with center point and size
+def GraphicsDataOrthoCubePoint(centerPoint, size, color=[0.,0.,0.,1.]): 
+    
+    xMin = centerPoint[0] - 0.5*size[0]
+    yMin = centerPoint[1] - 0.5*size[1]
+    zMin = centerPoint[2] - 0.5*size[2]
+    xMax = centerPoint[0] + 0.5*size[0]
+    yMax = centerPoint[1] + 0.5*size[1]
+    zMax = centerPoint[2] + 0.5*size[2]
+
+    return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color)
 
 #draw general cube with endpoints, according to given vertex definition
 #pList is a list of points [[x0,y0,z0],[x1,y11,z1],...]
@@ -163,10 +193,10 @@ def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16,
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
     
     #create points at left and right face
-    points0=copy.deepcopy(pAxis) #[pAxis[0],pAxis[1],pAxis[2]] #avoid change of pAxis
+    points0=list(copy.deepcopy(pAxis)) #[pAxis[0],pAxis[1],pAxis[2]] #avoid change of pAxis
     pAxis1=[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]]
     points1=copy.deepcopy(pAxis1) #[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]] #copy in order to avoid change of pAxis1 for use lateron
-    vz = np.array(vAxis)
+    
     p0 = np.array(pAxis)
     p1 = np.array(pAxis) + np.array(vAxis)
     

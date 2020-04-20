@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-08  23:27:33 (last modfied)
+* @date         2020-04-09  10:54:59 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,7 +24,7 @@ class VisualizationObjectJointGeneric: public VisualizationObject // AUTO:
 protected: // AUTO: 
     float axesRadius;                             //!< AUTO: radius of joint axes to draw
     float axesLength;                             //!< AUTO: length of joint axes to draw
-    Float4 color;                                 //!< AUTO: RGB connector color; if R==-1, use default color
+    Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
 public: // AUTO: 
     //! AUTO: default constructor with parameter initialization
@@ -60,11 +60,11 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:length of joint axes to draw
     float& GetAxesLength() { return axesLength; }
 
-    //! AUTO:  Write (Reference) access to:RGB connector color; if R==-1, use default color
+    //! AUTO:  Write (Reference) access to:RGBA connector color; if R==-1, use default color
     void SetColor(const Float4& value) { color = value; }
-    //! AUTO:  Read (Reference) access to:RGB connector color; if R==-1, use default color
+    //! AUTO:  Read (Reference) access to:RGBA connector color; if R==-1, use default color
     const Float4& GetColor() const { return color; }
-    //! AUTO:  Read (Reference) access to:RGB connector color; if R==-1, use default color
+    //! AUTO:  Read (Reference) access to:RGBA connector color; if R==-1, use default color
     Float4& GetColor() { return color; }
 
 };

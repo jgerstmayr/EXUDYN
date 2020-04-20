@@ -10,7 +10,7 @@ These are the access functions to the \codeName\ module.
 {\bf function/structure name} & {\bf description}\\ \hline
   Go() & Creates a SystemContainer SC and a main system mbs\\ \hline 
   InfoStat() & Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.\\ \hline 
-  StartRenderer() & Start OpenGL rendering engine (in separate thread)\\ \hline 
+  StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)\\ \hline 
   SetLinalgOutputFormatPython(flagPythonFormat) & true: use python format for output of vectors and matrices; false: use matlab format\\ \hline 
@@ -47,8 +47,12 @@ The SystemContainer is the top level of structures in \codeName. The container h
   GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     SC = exu.SystemContainer()\tabnewline
-    d = SC.GetRenderState() \tabnewline
-    print(d['zoom'])}\\ \hline 
+    renderState = SC.GetRenderState() \tabnewline
+    print(renderState['zoom'])}\\ \hline 
+  SetRenderState(renderState) & Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    SC = exu.SystemContainer()\tabnewline
+    SC.GetRenderState(renderState)}\\ \hline 
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
   TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 

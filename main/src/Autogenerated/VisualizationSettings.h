@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -54,7 +54,7 @@ public: // AUTO:
     pointSize = 0.01f;
     circleTiling = 16;
     cylinderTiling = 16;
-    sphereTiling = 8;
+    sphereTiling = 6;
     axesTiling = 12;
   };
 
@@ -99,7 +99,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -182,7 +182,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -334,7 +334,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -406,7 +406,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -469,7 +469,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -491,6 +491,10 @@ class VSettingsNodes // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the nodes are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the node number is shown
+  bool drawNodesAsPoint;                          //!< AUTO: simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines
+  bool showBasis;                                 //!< AUTO: show basis (three axes) of coordinate system in 3D nodes
+  float basisSize;                                //!< AUTO: size of basis for nodes
+  Index tiling;                                   //!< AUTO: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
   float defaultSize;                              //!< AUTO: global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for nodes; 4th value is alpha-transparency
   Index showNodalSlopes;                          //!< AUTO: draw nodal slope vectors, e.g. in ANCF beam finite elements
@@ -502,6 +506,10 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
+    drawNodesAsPoint = true;
+    showBasis = false;
+    basisSize = 0.2f;
+    tiling = 4;
     defaultSize = -1.f;
     defaultColor = Float4({0.2f,0.2f,1.f,1.f});
     showNodalSlopes = false;
@@ -519,6 +527,10 @@ public: // AUTO:
     os << "VSettingsNodes" << ":\n";
     os << "  show = " << show << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
+    os << "  drawNodesAsPoint = " << drawNodesAsPoint << "\n";
+    os << "  showBasis = " << showBasis << "\n";
+    os << "  basisSize = " << basisSize << "\n";
+    os << "  tiling = " << tiling << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "  showNodalSlopes = " << showNodalSlopes << "\n";
@@ -540,7 +552,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -594,7 +606,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -628,7 +640,7 @@ public: // AUTO:
     show = true;
     showNumbers = false;
     defaultSize = Float3({1.f,1.f,1.f});
-    defaultColor = Float4({0.2f,0.2f,1.f,1.f});
+    defaultColor = Float4({0.3f,0.3f,1.f,1.f});
   };
 
   // AUTO: access functions
@@ -669,7 +681,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -691,11 +703,12 @@ class VSettingsConnectors // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the connectors are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the connector(=object) number is shown
+  float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
   bool showJointAxes;                             //!< AUTO: flag to decide, whether contact joint axes of 3D joints are shown
   float jointAxesLength;                          //!< AUTO: global joint axes length
   float jointAxesRadius;                          //!< AUTO: global joint axes radius
   bool showContact;                               //!< AUTO: flag to decide, whether contact points, lines, etc. are shown
-  float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
+  Index springNumberOfWindings;                   //!< AUTO: number of windings for springs drawn as helical spring
   float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for connectors; 4th value is alpha-transparency
 
@@ -706,11 +719,12 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
+    defaultSize = 0.1f;
     showJointAxes = false;
     jointAxesLength = 0.2f;
     jointAxesRadius = 0.02f;
     showContact = false;
-    defaultSize = 0.1f;
+    springNumberOfWindings = 8;
     contactPointsDefaultSize = 0.02f;
     defaultColor = Float4({0.2f,0.2f,1.f,1.f});
   };
@@ -727,11 +741,12 @@ public: // AUTO:
     os << "VSettingsConnectors" << ":\n";
     os << "  show = " << show << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
     os << "  showJointAxes = " << showJointAxes << "\n";
     os << "  jointAxesLength = " << jointAxesLength << "\n";
     os << "  jointAxesRadius = " << jointAxesRadius << "\n";
     os << "  showContact = " << showContact << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  springNumberOfWindings = " << springNumberOfWindings << "\n";
     os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "\n";
@@ -752,7 +767,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -774,6 +789,7 @@ class VSettingsMarkers // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the markers are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the marker numbers are shown
+  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
   float defaultSize;                              //!< AUTO: global marker size; if -1.f, marker size is relative to maxSceneSize
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for markers; 4th value is alpha-transparency
 
@@ -784,6 +800,7 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
+    drawSimplified = true;
     defaultSize = -1.f;
     defaultColor = Float4({0.1f,0.5f,0.1f,1.f});
   };
@@ -800,6 +817,7 @@ public: // AUTO:
     os << "VSettingsMarkers" << ":\n";
     os << "  show = " << show << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "\n";
@@ -820,7 +838,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -845,6 +863,7 @@ public: // AUTO:
   float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
   float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
   bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
+  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
   float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for loads; 4th value is alpha-transparency
 
@@ -858,6 +877,7 @@ public: // AUTO:
     defaultSize = 0.2f;
     defaultRadius = 0.005f;
     fixedLoadSize = true;
+    drawSimplified = true;
     loadSizeFactor = 0.1f;
     defaultColor = Float4({0.7f,0.1f,0.1f,1.f});
   };
@@ -877,6 +897,7 @@ public: // AUTO:
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  defaultRadius = " << defaultRadius << "\n";
     os << "  fixedLoadSize = " << fixedLoadSize << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
     os << "  loadSizeFactor = " << loadSizeFactor << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "\n";
@@ -897,7 +918,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -919,6 +940,7 @@ class VSettingsSensors // AUTO:
 public: // AUTO: 
   bool show;                                      //!< AUTO: flag to decide, whether the sensors are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the sensor numbers are shown
+  bool drawSimplified;                            //!< AUTO: draw sensors with simplified symbols
   float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
   Float4 defaultColor;                            //!< AUTO: default cRGB olor for sensors; 4th value is alpha-transparency
 
@@ -929,6 +951,7 @@ public: // AUTO:
   {
     show = true;
     showNumbers = false;
+    drawSimplified = true;
     defaultSize = -1.f;
     defaultColor = Float4({0.6f,0.6f,0.1f,1.f});
   };
@@ -945,6 +968,7 @@ public: // AUTO:
     os << "VSettingsSensors" << ":\n";
     os << "  show = " << show << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "\n";
@@ -965,7 +989,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-02-19 (last modfied)
+* @date         AUTO: 2020-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

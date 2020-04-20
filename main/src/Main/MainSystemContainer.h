@@ -49,7 +49,7 @@ public:
 	void RedrawAndSaveImage() { visualizationSystems.RedrawAndSaveImage(); }
 
 	//! return current render state to a dictionary; can be used afterwards for initilization of modelview matrix
-	py::dict PyGetRenderState()
+	py::dict PyGetRenderState() const
 	{
 		auto d = py::dict();
 		const RendererState& state = visualizationSystems.rendererState;
@@ -57,20 +57,57 @@ public:
 		d["centerPoint"] = (const std::vector<float>)state.centerPoint;
 		d["maxSceneSize"] = state.maxSceneSize;
 		d["zoom"] = state.zoom;
-		
 		d["currentWindowSize"] = (const std::vector<Index>)state.currentWindowSize;
 		
 		//current orientation:
 		const Float16& A = state.modelRotation;
-		Float9 A33({ A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] }); //convert 4x4 into 3x3 matrix as position part of A is [0,0,0]
-		d["modelRotation"] = EXUmath::SlimVectorF9ToStdArray33F(A33);
-
-
-		//d["openGLModelViewMatrix"] = EXUmath::SlimVectorF16ToStdArray44F(state.openGLModelViewMatrix);
-		//d["openGLProjection"] = EXUmath::SlimVectorF16ToStdArray44F(state.openGLProjection);
-
+		//Float9 A33({ A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] }); //convert 4x4 into 3x3 matrix as position part of A is [0,0,0]
+		//d["modelRotation"] = EXUmath::SlimVectorF9ToStdArray33F(A33);
+		
+		Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+		d["modelRotation"] = EPyUtils::MatrixF2NumPy(rotMatrix);
 		return d;
+	}
+	//! set current render state with a dictionary
+	void PySetRenderState(py::dict renderState)
+	{
+		try
+		{
+			RendererState& state = visualizationSystems.rendererState;
+			
+			Vector3D centerPoint;
+			EPyUtils::SetVectorTemplateSafely<float,3>(renderState["centerPoint"], state.centerPoint);
 
+			state.maxSceneSize = py::cast<float>(renderState["maxSceneSize"]);
+			state.zoom = py::cast<float>(renderState["zoom"]);
+
+			Vector2D windowSize;
+			EPyUtils::SetVector2DSafely(renderState["currentWindowSize"], windowSize);
+			state.currentWindowSize[0] = (Index)windowSize[0];
+			state.currentWindowSize[1] = (Index)windowSize[1];
+
+			//check if all parts of modelRotation (translation part) shall be modified?
+			Float16& A = state.modelRotation;
+			Matrix3D R;
+			EPyUtils::SetNumpyMatrixSafely(renderState["modelRotation"], R);
+			A[0] = (float)R(0, 0);
+			A[1] = (float)R(0, 1);
+			A[2] = (float)R(0, 2);
+			A[4] = (float)R(1, 0);
+			A[5] = (float)R(1, 1);
+			A[6] = (float)R(1, 2);
+			A[8] = (float)R(2, 0);
+			A[9] = (float)R(2, 1);
+			A[10]= (float)R(2, 2);
+		}
+		catch (const std::exception& ex)
+		{
+			SysError("EXUDYN raised internal error in SetRenderState(...):\n" + STDstring(ex.what()) + "\nCheck dictionary format.\n");
+		}
+		catch (...) //any other exception
+		{
+			SysError("Unexpected exception during SetRenderState(...)! Check dictionary format.\n");
+		}
 	}
 	//*********************************************************************
 	//object factory functions

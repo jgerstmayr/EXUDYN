@@ -278,10 +278,10 @@ if exudynTestGlobals.useGraphics:
     ax2.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
     ax2.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
 
-    data2 = np.loadtxt('solution/sensorAngVelLocalRef.txt', comments='#', delimiter=',')
-    ax2.plot(data2[:,0], data2[:,1], 'r:', label='omega X') 
-    ax2.plot(data2[:,0], data2[:,2], 'g:', label='omega Y') 
-    ax2.plot(data2[:,0], data2[:,3], 'b:', label='omega Z') 
+#    data2 = np.loadtxt('solution/sensorAngVelLocalRef.txt', comments='#', delimiter=',')
+#    ax2.plot(data2[:,0], data2[:,1], 'r:', label='omega X') 
+#    ax2.plot(data2[:,0], data2[:,2], 'g:', label='omega Y') 
+#    ax2.plot(data2[:,0], data2[:,3], 'b:', label='omega Z') 
 
 #    data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt', comments='#', delimiter=',')
 #    ax2.plot(data1[:,0], data1[:,1], 'r:', label='omega 0 ref')  #1, because coordinates to not include ref. values

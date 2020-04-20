@@ -426,14 +426,20 @@ class ObjectRigidBody2D:
 RigidBody2D = ObjectRigidBody2D
 
 class VObjectGenericODE2:
-    def __init__(self, show = True):
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
         self.show = show
+        self.color = color
+        self.triangleMesh = triangleMesh
+        self.showNodes = showNodes
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'color', self.color
+        yield 'triangleMesh', self.triangleMesh
+        yield 'showNodes', self.showNodes
 
 class ObjectGenericODE2:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, coordinateIndexPerNode = [], useFirstNodeAsReferenceFrame = False, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrix = massMatrix
@@ -442,6 +448,8 @@ class ObjectGenericODE2:
         self.forceVector = forceVector
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
+        self.coordinateIndexPerNode = coordinateIndexPerNode
+        self.useFirstNodeAsReferenceFrame = useFirstNodeAsReferenceFrame
         self.visualization = visualization
 
     def __iter__(self):
@@ -454,7 +462,12 @@ class ObjectGenericODE2:
         yield 'forceVector', self.forceVector
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'coordinateIndexPerNode', self.coordinateIndexPerNode
+        yield 'useFirstNodeAsReferenceFrame', self.useFirstNodeAsReferenceFrame
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+        yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
+        yield 'VshowNodes', dict(self.visualization)["showNodes"]
 
 class VObjectANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -928,6 +941,149 @@ class ObjectContactFrictionCircleCable2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+class VObjectJointGeneric:
+    def __init__(self, show = True, axesRadius = 0.1, axesLength = 0.4, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.axesRadius = axesRadius
+        self.axesLength = axesLength
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'axesRadius', self.axesRadius
+        yield 'axesLength', self.axesLength
+        yield 'color', self.color
+
+class ObjectJointGeneric:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.constrainedAxes = constrainedAxes
+        self.rotationMarker0 = rotationMarker0
+        self.rotationMarker1 = rotationMarker1
+        self.activeConnector = activeConnector
+        self.offsetUserFunctionParameters = offsetUserFunctionParameters
+        self.offsetUserFunction = offsetUserFunction
+        self.offsetUserFunction_t = offsetUserFunction_t
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointGeneric'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'constrainedAxes', self.constrainedAxes
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'rotationMarker1', self.rotationMarker1
+        yield 'activeConnector', self.activeConnector
+        yield 'offsetUserFunctionParameters', self.offsetUserFunctionParameters
+        yield 'offsetUserFunction', self.offsetUserFunction
+        yield 'offsetUserFunction_t', self.offsetUserFunction_t
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VaxesRadius', dict(self.visualization)["axesRadius"]
+        yield 'VaxesLength', dict(self.visualization)["axesLength"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+GenericJoint = ObjectJointGeneric
+
+class VObjectJointSpherical:
+    def __init__(self, show = True, jointRadius = 0.1, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.jointRadius = jointRadius
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'jointRadius', self.jointRadius
+        yield 'color', self.color
+
+class ObjectJointSpherical:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1], activeConnector = True, visualization = {'show': True, 'jointRadius': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.constrainedAxes = constrainedAxes
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointSpherical'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'constrainedAxes', self.constrainedAxes
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VjointRadius', dict(self.visualization)["jointRadius"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+SphericalJoint = ObjectJointSpherical
+
+class VObjectJointRevolute2D:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+class ObjectJointRevolute2D:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointRevolute2D'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RevoluteJoint2D = ObjectJointRevolute2D
+
+class VObjectJointPrismatic2D:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+class ObjectJointPrismatic2D:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.axisMarker0 = axisMarker0
+        self.normalMarker1 = normalMarker1
+        self.constrainRotation = constrainRotation
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointPrismatic2D'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'axisMarker0', self.axisMarker0
+        yield 'normalMarker1', self.normalMarker1
+        yield 'constrainRotation', self.constrainRotation
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+PrismaticJoint2D = ObjectJointPrismatic2D
+
 class VObjectJointSliding2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1007,117 +1163,6 @@ class ObjectJointALEMoving2D:
 
 #add typedef for short usage:
 ALEMovingJoint2D = ObjectJointALEMoving2D
-
-class VObjectJointGeneric:
-    def __init__(self, show = True, axesRadius = 0.1, axesLength = 0.4, color = [-1.,-1.,-1.,-1.]):
-        self.show = show
-        self.axesRadius = axesRadius
-        self.axesLength = axesLength
-        self.color = color
-
-    def __iter__(self):
-        yield 'show', self.show
-        yield 'axesRadius', self.axesRadius
-        yield 'axesLength', self.axesLength
-        yield 'color', self.color
-
-class ObjectJointGeneric:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
-        self.name = name
-        self.markerNumbers = markerNumbers
-        self.constrainedAxes = constrainedAxes
-        self.rotationMarker0 = rotationMarker0
-        self.rotationMarker1 = rotationMarker1
-        self.activeConnector = activeConnector
-        self.offsetUserFunctionParameters = offsetUserFunctionParameters
-        self.offsetUserFunction = offsetUserFunction
-        self.offsetUserFunction_t = offsetUserFunction_t
-        self.visualization = visualization
-
-    def __iter__(self):
-        yield 'objectType', 'JointGeneric'
-        yield 'name', self.name
-        yield 'markerNumbers', self.markerNumbers
-        yield 'constrainedAxes', self.constrainedAxes
-        yield 'rotationMarker0', self.rotationMarker0
-        yield 'rotationMarker1', self.rotationMarker1
-        yield 'activeConnector', self.activeConnector
-        yield 'offsetUserFunctionParameters', self.offsetUserFunctionParameters
-        yield 'offsetUserFunction', self.offsetUserFunction
-        yield 'offsetUserFunction_t', self.offsetUserFunction_t
-        yield 'Vshow', dict(self.visualization)["show"]
-        yield 'VaxesRadius', dict(self.visualization)["axesRadius"]
-        yield 'VaxesLength', dict(self.visualization)["axesLength"]
-        yield 'Vcolor', dict(self.visualization)["color"]
-
-#add typedef for short usage:
-GenericJoint = ObjectJointGeneric
-
-class VObjectJointRevolute2D:
-    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
-        self.show = show
-        self.drawSize = drawSize
-        self.color = color
-
-    def __iter__(self):
-        yield 'show', self.show
-        yield 'drawSize', self.drawSize
-        yield 'color', self.color
-
-class ObjectJointRevolute2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
-        self.name = name
-        self.markerNumbers = markerNumbers
-        self.activeConnector = activeConnector
-        self.visualization = visualization
-
-    def __iter__(self):
-        yield 'objectType', 'JointRevolute2D'
-        yield 'name', self.name
-        yield 'markerNumbers', self.markerNumbers
-        yield 'activeConnector', self.activeConnector
-        yield 'Vshow', dict(self.visualization)["show"]
-        yield 'VdrawSize', dict(self.visualization)["drawSize"]
-        yield 'Vcolor', dict(self.visualization)["color"]
-
-#add typedef for short usage:
-RevoluteJoint2D = ObjectJointRevolute2D
-
-class VObjectJointPrismatic2D:
-    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
-        self.show = show
-        self.drawSize = drawSize
-        self.color = color
-
-    def __iter__(self):
-        yield 'show', self.show
-        yield 'drawSize', self.drawSize
-        yield 'color', self.color
-
-class ObjectJointPrismatic2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
-        self.name = name
-        self.markerNumbers = markerNumbers
-        self.axisMarker0 = axisMarker0
-        self.normalMarker1 = normalMarker1
-        self.constrainRotation = constrainRotation
-        self.activeConnector = activeConnector
-        self.visualization = visualization
-
-    def __iter__(self):
-        yield 'objectType', 'JointPrismatic2D'
-        yield 'name', self.name
-        yield 'markerNumbers', self.markerNumbers
-        yield 'axisMarker0', self.axisMarker0
-        yield 'normalMarker1', self.normalMarker1
-        yield 'constrainRotation', self.constrainRotation
-        yield 'activeConnector', self.activeConnector
-        yield 'Vshow', dict(self.visualization)["show"]
-        yield 'VdrawSize', dict(self.visualization)["drawSize"]
-        yield 'Vcolor', dict(self.visualization)["color"]
-
-#add typedef for short usage:
-PrismaticJoint2D = ObjectJointPrismatic2D
 
 #+++++++++++++++++++++++++++++++
 #MARKER
@@ -1240,6 +1285,34 @@ class MarkerNodeCoordinate:
         yield 'nodeNumber', self.nodeNumber
         yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
+
+class VMarkerGenericBodyPosition:
+    def __init__(self, show = True, showMarkerNodes = True):
+        self.show = show
+        self.showMarkerNodes = showMarkerNodes
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'showMarkerNodes', self.showMarkerNodes
+
+class MarkerGenericBodyPosition:
+    def __init__(self, name = '', bodyNumber = -1, nodeNumbers = [], weightingFactors = [], useFirstNodeAsReferenceFrame = False, visualization = {'show': True, 'showMarkerNodes': True}):
+        self.name = name
+        self.bodyNumber = bodyNumber
+        self.nodeNumbers = nodeNumbers
+        self.weightingFactors = weightingFactors
+        self.useFirstNodeAsReferenceFrame = useFirstNodeAsReferenceFrame
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'GenericBodyPosition'
+        yield 'name', self.name
+        yield 'bodyNumber', self.bodyNumber
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'weightingFactors', self.weightingFactors
+        yield 'useFirstNodeAsReferenceFrame', self.useFirstNodeAsReferenceFrame
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 
 class VMarkerBodyCable2DShape:
     def __init__(self, show = True):

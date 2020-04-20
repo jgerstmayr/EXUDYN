@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-05  17:05:11 (last modfied)
+* @date         2020-04-09  10:54:59 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,7 +23,7 @@ class VisualizationObjectJointPrismatic2D: public VisualizationObject // AUTO:
 {
 protected: // AUTO: 
     float drawSize;                               //!< AUTO: drawing size = radius of revolute joint; size == -1.f means that default connector size is used
-    Float4 color;                                 //!< AUTO: RGB connector color; if R==-1, use default color
+    Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
 public: // AUTO: 
     //! AUTO: default constructor with parameter initialization
@@ -51,11 +51,11 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:drawing size = radius of revolute joint; size == -1.f means that default connector size is used
     float& GetDrawSize() { return drawSize; }
 
-    //! AUTO:  Write (Reference) access to:RGB connector color; if R==-1, use default color
+    //! AUTO:  Write (Reference) access to:RGBA connector color; if R==-1, use default color
     void SetColor(const Float4& value) { color = value; }
-    //! AUTO:  Read (Reference) access to:RGB connector color; if R==-1, use default color
+    //! AUTO:  Read (Reference) access to:RGBA connector color; if R==-1, use default color
     const Float4& GetColor() const { return color; }
-    //! AUTO:  Read (Reference) access to:RGB connector color; if R==-1, use default color
+    //! AUTO:  Read (Reference) access to:RGBA connector color; if R==-1, use default color
     Float4& GetColor() { return color; }
 
 };

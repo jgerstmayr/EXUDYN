@@ -58,7 +58,7 @@ def AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBody
     #slidingJoint:
     oSlidingJoint=GenerateSlidingJoint(mbs,cable2ObjectList,markerRigidTop,localMarkerIndexOfStartCable=count,slidingCoordinateStartPosition=referencePositionOfBodyAlongCable)[0] 
         
-    return [oRigid,nRigid] 
+    return [oRigid,nRigid, oAleSlidingJoint, oSlidingJoint] 
 
 
 #Background:
@@ -164,7 +164,8 @@ positionOfBody=0
 for i in range(numberOfBodys):
 
     #Add Body
-    [oRigid,nRigid]=AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBodyAlongCable=positionOfBody,gravityFieldConstant=gravityFieldConstant)
+    [oRigid,nRigid,oAleSlidingJoint,oSlidingJoint]=AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBodyAlongCable=positionOfBody,gravityFieldConstant=gravityFieldConstant)
+    mbs.SetObjectParameter(oSlidingJoint, 'classicalFormulation', False) #test model computed with new sliding joint formulation
 
     #fix rotation of rigid body
     mRigidBodyRot = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nRigid, coordinate=2)) #add rigid body marker

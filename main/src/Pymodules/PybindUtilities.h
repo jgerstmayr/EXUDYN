@@ -90,7 +90,7 @@ namespace EPyUtils {
 		if (d.contains(item))
 		{
 			py::object other = d[item]; //this is necessary to make isinstance work
-			if (py::isinstance<py::list>(other))
+			if (py::isinstance<py::list>(other) || py::isinstance<py::array>(other))
 			{
 				std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
 				if (stdlist.size() == size)
@@ -242,12 +242,12 @@ namespace EPyUtils {
 		return false;
 	}
 
-	template<Index size>
-	inline bool SetVectorTemplateSafely(const py::object& value, SlimVector<size>& destination)
+	template<class T, Index size>
+	inline bool SetVectorTemplateSafely(const py::object& value, SlimVectorBase<T, size>& destination)
 	{
 		if (py::isinstance<py::list>(value))
 		{
-			std::vector<Real> stdlist = py::cast<std::vector<Real>>(value); //! # read out dictionary and cast to C++ type
+			std::vector<T> stdlist = py::cast<std::vector<T>>(value); //! # read out dictionary and cast to C++ type
 			if (stdlist.size() == size)
 			{
 				destination = stdlist;
@@ -263,19 +263,19 @@ namespace EPyUtils {
 	}
 
 	inline bool SetVector2DSafely(const py::object& value, Vector2D& destination) {
-		return SetVectorTemplateSafely<2>(value, destination);
+		return SetVectorTemplateSafely<Real,2>(value, destination);
 	}
 	inline bool SetVector3DSafely(const py::object& value, Vector3D& destination) {
-		return SetVectorTemplateSafely<3>(value, destination);
+		return SetVectorTemplateSafely<Real, 3>(value, destination);
 	}
 	inline bool SetVector4DSafely(const py::object& value, Vector4D& destination) {
-		return SetVectorTemplateSafely<4>(value, destination);
+		return SetVectorTemplateSafely<Real, 4>(value, destination);
 	}
 	inline bool SetVector6DSafely(const py::object& value, Vector6D& destination) {
-		return SetVectorTemplateSafely<6>(value, destination);
+		return SetVectorTemplateSafely<Real, 6>(value, destination);
 	}
 	inline bool SetVector7DSafely(const py::object& value, Vector7D& destination) {
-		return SetVectorTemplateSafely<7>(value, destination);
+		return SetVectorTemplateSafely<Real, 7>(value, destination);
 	}
 
 
@@ -299,10 +299,20 @@ namespace EPyUtils {
 		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
+	//!convert MatrixF to numpy matrix
+	inline py::array_t<float> MatrixF2NumPy(const MatrixF& matrix)
+	{
+		return py::array_t<float>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
+	}
+
 	//!convert numpy matrix to Matrix
 	inline void NumPy2Matrix(const py::array_t<Real>& pyArray, Matrix& m)
 	{
-		if (pyArray.ndim() == 2)
+		if (pyArray.size() == 0) //process empty arrays, which leads to empty matrix, but has no dimension 2
+		{
+			m.SetNumberOfRowsAndColumns(0, 0); //empty matrix
+		}
+		else if (pyArray.ndim() == 2)
 		{
 			auto mat = pyArray.unchecked<2>();
 			Index nrows = mat.shape(0);

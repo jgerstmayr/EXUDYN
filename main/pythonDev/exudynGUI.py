@@ -454,7 +454,7 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
     master = tk.Tk()
     master.title(dictionaryName)
     systemScaling = master.call('tk', 'scaling') #obtains current scaling?
-    print('display scaling=',systemScaling)
+    #print('display scaling=',systemScaling)
     textHeight = TkTextHeight(systemScaling)
     
     style = ttk.Style(master)

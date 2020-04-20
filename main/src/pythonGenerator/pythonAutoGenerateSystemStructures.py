@@ -111,7 +111,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if len(pythonName)>28: 
                     typeName = '\\tabnewline ' + typeName
                     
-                if parameter['type'] != 'String': #don't do this for file names!
+                if parameter['type'] != 'String' and parameter['type'] != 'FileName': #don't do this for file names, because 'f' is erased!
                     defaultValueStr = Str2Latex(defaultValueStr, True)
                     
                 sLatex += '    ' + pythonName + ' & '                

@@ -121,7 +121,7 @@ void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType v
 
 	switch (variableType)
 	{
-	case OutputVariableType:: Displacement: value = Vector({ relPos }); break;
+	case OutputVariableType::Displacement: value = Vector({ relPos }); break;
 	case OutputVariableType::Velocity: value = Vector({ relVel }); break;
 	case OutputVariableType::ConstraintEquation: 
 	{

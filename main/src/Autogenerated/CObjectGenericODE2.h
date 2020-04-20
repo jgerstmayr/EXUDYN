@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-05  15:48:01 (last modfied)
+* @date         2020-04-10  10:39:20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,8 @@
 #include "Utilities/BasicDefinitions.h"
 
 #include <functional> //! AUTO: needed for std::function
+#include <pybind11/numpy.h>//for NumpyMatrix
+#include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix; 
 
@@ -34,6 +36,8 @@ public: // AUTO:
     Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
     std::function<StdVector(Real, StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy stiffness matrix K: def f(t, q, q\_t): return np.dot(K, q)
     std::function<NumpyMatrix(Real, StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy stiffness matrix M: def f(t, q, q\_t): return (q[0]+1)*M
+    ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
+    bool useFirstNodeAsReferenceFrame;            //!< AUTO: set true, if first node (\f$n_0\f$) is used as floating reference frame; all other nodes are interpreted relative to the reference frame; used to implement FFRF (floating frame of reference formulation); NOTE that in this case, nodes \f$[n_1,\,\ldots,\,n_n]\tp\f$ are still drawn without the reference frame
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE2Parameters()
     {
@@ -44,6 +48,8 @@ public: // AUTO:
         forceVector = Vector();
         forceUserFunction = 0;
         massMatrixUserFunction = 0;
+        coordinateIndexPerNode = ArrayIndex();
+        useFirstNodeAsReferenceFrame = false;
     };
 };
 
@@ -75,6 +81,7 @@ protected: // AUTO:
     CObjectGenericODE2Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE2
 
 public: // AUTO: 
+    static const Index ffrfNodeNumber = 0; //floating frame of reference (ffrf) node number in body, if useFirstNodeAsReferenceFrame=True
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -85,7 +92,7 @@ public: // AUTO:
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
 
-    //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+    //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
     virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
@@ -97,19 +104,19 @@ public: // AUTO:
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override;
 
-    //! AUTO:  provide Jacobian at localPosition in "value" according to object access
+    //! AUTO:  provide Jacobian at localPosition in 'value' according to object access
     virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const override;
 
-    //! AUTO:  provide according output variable in "value"
+    //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const override;
 
-    //! AUTO:  return the (global) position of "localPosition" according to configuration type
+    //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return the (global) position of "localPosition" according to configuration type
+    //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return the (global) velocity of "localPosition" according to configuration type
+    //! AUTO:  return the (global) velocity of 'localPosition' according to configuration type
     virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
@@ -133,8 +140,23 @@ public: // AUTO:
         return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);
     }
 
+    //! AUTO:  This flag is reset upon change of parameters; says that the vector of coordinate indices has changed
+    virtual void ParametersHaveChanged() override
+    {
+        InitializeCoordinateIndices();
+    }
+
+    //! AUTO:  read access to coordinate index array
+    virtual Index GetLocalODE2CoordinateIndexPerNode(Index localNode) const override
+    {
+        return parameters.coordinateIndexPerNode[localNode];
+    }
+
     //! AUTO:  compute object coordinates composed from all nodal coordinates; does not include reference coordinates
     void ComputeObjectCoordinates(Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  initialize coordinateIndexPerNode array
+    void InitializeCoordinateIndices();
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

@@ -631,14 +631,15 @@ bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsDa
 												}
 												if (!normalsDefined)
 												{
-													Float3 v1 = trig.points[1] - trig.points[0];
-													Float3 v2 = trig.points[2] - trig.points[0];
-													Float3 n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
-													float len = n.GetL2Norm();
-													if (len != 0.f) { n *= 1.f/len; }
-													trig.normals[0] = n;
-													trig.normals[1] = n;
-													trig.normals[2] = n;
+													EXUvis::ComputeTriangleNormals(trig.points, trig.normals);
+													//Float3 v1 = trig.points[1] - trig.points[0];
+													//Float3 v2 = trig.points[2] - trig.points[0];
+													//Float3 n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
+													//float len = n.GetL2Norm();
+													//if (len != 0.f) { n *= 1.f/len; }
+													//trig.normals[0] = n;
+													//trig.normals[1] = n;
+													//trig.normals[2] = n;
 												}
 												data.glTriangles.Append(trig);
 												//pout << "trig" << i << " = " << trig.points[0] << "," << trig.points[0] << "," << trig.points[0] << "\n";

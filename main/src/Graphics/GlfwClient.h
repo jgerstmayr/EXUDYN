@@ -93,7 +93,7 @@ public:
 	//! Initializes and starts the Renderer in a separate thread;
 	//  Returns false, if problems with glfw library or windows creation, otherwise true; 
 	//  @todo test with apple and linux
-	static bool SetupRenderer();
+	static bool SetupRenderer(bool verbose = false);
 
 	//! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
 	static void StopRenderer();

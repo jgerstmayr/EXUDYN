@@ -161,7 +161,7 @@ public:
 	//access to CNode
 	virtual CNode*& GetCNode(Index localIndex);
 
-	virtual CNode* GetCNode(Index localIndex) const;
+	virtual const CNode* GetCNode(Index localIndex) const;
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Computation FUNCTIONS

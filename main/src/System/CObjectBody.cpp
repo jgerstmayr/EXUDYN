@@ -26,7 +26,7 @@ CNode*& CObject::GetCNode(Index localIndex)
 	return cSystemData->GetCNodes()[GetNodeNumber(localIndex)];
 }
 
-CNode* CObject::GetCNode(Index localIndex) const
+const CNode* CObject::GetCNode(Index localIndex) const
 {
 	return cSystemData->GetCNodes()[GetNodeNumber(localIndex)];
 }
@@ -52,7 +52,7 @@ void CObjectBody::GetODE2LocalToGlobalCoordinates(ArrayIndex& ltg) const
 	//loop over local node numbers:
 	for (Index nodeNumber = 0; nodeNumber < GetNumberOfNodes(); nodeNumber++)
 	{
-		CNode* node = GetCNode(nodeNumber);
+		const CNode* node = GetCNode(nodeNumber);
 		Index n = node->GetNumberOfODE2Coordinates();
 
 		for (Index j = 0; j < n; j++)

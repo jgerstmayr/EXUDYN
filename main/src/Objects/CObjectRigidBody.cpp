@@ -215,8 +215,8 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 		((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(localPosition); 
-		uLocalTilde *= -1.;//negative sign in -A*uLocalTilde*Glocal
+		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
+		//uLocalTilde *= -1.;//moved into (-localPosition)
 
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
 		EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);

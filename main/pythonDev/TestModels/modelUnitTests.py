@@ -594,7 +594,7 @@ def SlidingJoint2DTest(mbs, testInterface):
         nodeDataSJ = mbs.AddNode(NodeGenericData(initialCoordinates=[initialLocalMarker,slidingCoordinateInit],numberOfDataCoordinates=2)) #initial index in cable list
         slidingJoint = mbs.AddObject(ObjectJointSliding2D(name='slider', markerNumbers=[markerRigidTop,cableMarkerList[initialLocalMarker]], 
                                                           slidingMarkerNumbers=cableMarkerList, slidingMarkerOffsets=offsetList, 
-                                                          nodeNumber=nodeDataSJ))
+                                                          nodeNumber=nodeDataSJ, classicalFormulation = False))
 
 
     mbs.Assemble()

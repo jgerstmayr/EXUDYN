@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-04  23:29:57 (last modfied)
+* @date         2020-03-30  22:45:21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,7 +30,7 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainNodePoint2DSlope1Parameters // AUTO: 
 {
 public: // AUTO: 
-    Vector4D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux, uy and x/y "displacements" of slopex
+    Vector4D initialCoordinates;                  //!< AUTO: initial displacement coordinates: ux, uy and x/y 'displacements' of slopex
     Vector4D initialCoordinates_t;                //!< AUTO: initial velocity coordinates
     //! AUTO: default constructor with parameter initialization
     MainNodePoint2DSlope1Parameters()
@@ -106,7 +106,7 @@ public: // AUTO:
     //! AUTO: Read access to parameters
     virtual const MainNodePoint2DSlope1Parameters& GetParameters() const { return parameters; }
 
-    //! AUTO:  Get type name of node (without keyword "Node"...!); could also be realized via a string -> type conversion?
+    //! AUTO:  Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
         return "Point2DSlope1";

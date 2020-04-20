@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-08  20:27:27 (last modfied)
+* @date         2020-04-08  14:46:12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -93,7 +93,7 @@ public: // AUTO:
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectConnectorCoordinate = (VisualizationObjectConnectorCoordinate*)pVisualizationObject; }
 
-    //! AUTO:  Get type name of object (without keyword "Object"...!); could also be realized via a string -> type conversion?
+    //! AUTO:  Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
         return "ConnectorCoordinate";
@@ -170,6 +170,7 @@ public: // AUTO:
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorCoordinate->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorCoordinate->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectConnectorCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
+        GetCObject()->ParametersHaveChanged();
     }
 
 };

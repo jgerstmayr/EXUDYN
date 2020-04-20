@@ -12,15 +12,13 @@ from itemInterface import *
 #import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
 from exudynBasicUtilities import NormL2
 
-#pi = 3.1415926535897932 #define pi in order to avoid importing large libraries
-#sqrt2 = 1.41421356237309505
 
 eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle is zero (rotation axis arbitrary)
 
 # compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); if vector0 == [0,0,0], then any normal basis is returned
 def ComputeOrthonormalBasis(vector0):
-
     v = np.array([vector0[0],vector0[1],vector0[2]])
+
     L0 = np.linalg.norm(v)
     if L0 == 0:
         n1 = np.array([1,0,0])
@@ -234,6 +232,61 @@ def RotationMatrixZ(angleRad):
                       [0,	    0,        1] ]);
 
     
+#compute homogeneous transformation matrix from rotation matrix A and translation vector r
+def HomogeneousTransformation(A, r):
+    T = np.zeros((4,4))
+    T[0:3,0:3] = A
+    T[0:3,3] = r
+    T[3,3] = 1
+    return T
+
+HT = HomogeneousTransformation #shortcut
+
+#homogeneous transformation for translation with vector r
+def HTtranslate(r):
+    T = np.eye(4)
+    T[0:3,3] = r
+    return T
+
+#identity homogeneous transformation:
+def HT0():
+    return np.eye(4)
+
+#homogeneous transformation for rotation around axis X (first axis)
+def HTrotateX(angle):
+    T = np.eye(4)
+    T[0:3,0:3] = RotationMatrixX(angle)
+    return T
+    
+#homogeneous transformation for rotation around axis X (first axis)
+def HTrotateY(angle):
+    T = np.eye(4)
+    T[0:3,0:3] = RotationMatrixY(angle)
+    return T
+    
+#homogeneous transformation for rotation around axis X (first axis)
+def HTrotateZ(angle):
+    T = np.eye(4)
+    T[0:3,0:3] = RotationMatrixZ(angle)
+    return T
+
+#return translation part of homogeneous transformation
+def HT2translation(T):
+    return T[0:3,3]
+
+#return rotation matrix of homogeneous transformation
+def HT2rotationMatrix(T):
+    return T[0:3,0:3]
+
+################################################################################
+#Test (compared with Robotcs, Vision and Control book of P. Corke:
+#T=HTtranslate([1,0,0]) @ HTrotateX(np.pi/2) @ HTtranslate([0,1,0])
+#print("T=",T.round(8))
+#
+#R = RotationMatrixZ(0.1) @ RotationMatrixY(0.2) @ RotationMatrixZ(0.3) 
+#print("R=",R.round(4))
+
+################################################################################
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #helper classes for rigid body inertia

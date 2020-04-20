@@ -47,6 +47,7 @@ testFileList = ['TestModels/fourBarMechanismTest.py',
                 'TestModels/PARTS_ATEs_moving.py',
                 'TestModels/sliderCrank3Dbenchmark.py',
                 'TestModels/explicitLieGroupIntegratorTest.py',
+                'TestModels/sphericalJointTest.py',
                 'TestModels/heavyTop.py']
 
 
@@ -120,16 +121,17 @@ print('******************************************')
 
 #++++++++++++++++++++++++++++++++++
 print('time elapsed =',round(timeStart,3),'seconds') 
-#10+5 tests: 2019-12-10: 2.4 seconds on Surface Pro
-#10+5 tests: 2019-12-13: 3.0,2.7 seconds on Surface Pro
-#10+6 tests: 2019-12-16: 3.8, 3.7 seconds on i9
-#10+7 tests: 2019-12-16: 4.49 seconds on i9
-#10+7 tests: 2019-12-17: 3.94 / 3.87 seconds on i9
-#10+8 tests: 2019-12-18: 5.96 / 6.06 seconds on i9
-#10+11tests: 2020-01-6:  6.96 seconds on i9
-#10+11tests: 2020-01-24: 8.30 seconds on Surface Pro
-#10+12tests: 2020-02-03: 7.10 seconds on i9
-#10+14tests: 2020-02-19: 7.60 seconds on Surface Pro
+#10+5 tests:   2019-12-10: 2.4 seconds on Surface Pro
+#10+5 tests:   2019-12-13: 3.0,2.7 seconds on Surface Pro
+#10+6 tests:   2019-12-16: 3.8, 3.7 seconds on i9
+#10+7 tests:   2019-12-16: 4.49 seconds on i9
+#10+7 tests:   2019-12-17: 3.94 / 3.87 seconds on i9
+#10+8 tests:   2019-12-18: 5.96 / 6.06 seconds on i9
+#10+11tests:   2020-01-6:  6.96 seconds on i9
+#10+11tests:   2020-01-24: 8.30 seconds on Surface Pro
+#10+12tests:   2020-02-03: 7.10 seconds on i9
+#10+14tests:   2020-02-19: 7.60 seconds on Surface Pro
+#10+15+8tests: 2020-02-19: 7.729 seconds on i9
 
 
 if rv == True:

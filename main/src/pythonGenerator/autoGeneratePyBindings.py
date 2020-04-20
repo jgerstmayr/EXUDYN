@@ -127,7 +127,10 @@ sLenum += DefLatexFinishClass()
 
 [s1,sL1] = DefPyFunctionAccess('', 'InfoStat', 'PythonInfoStat', 'Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.'); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess('', 'StartRenderer', 'PyStartOpenGLRenderer', "Start OpenGL rendering engine (in separate thread)"); s+=s1; sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
+                                defaultArgs=['false'],
+                                argList=['verbose'],
+                                description="Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'PyStopOpenGLRenderer', "Stop OpenGL rendering engine"); s+=s1; sL+=sL1
 
@@ -210,7 +213,13 @@ sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
                                 description="Get dictionary with current render state (openGL zoom, modelview, etc.)",
-                                example = "SC = exu.SystemContainer()\\\\d = SC.GetRenderState() \\\\print(d['zoom'])"
+                                example = "SC = exu.SystemContainer()\\\\renderState = SC.GetRenderState() \\\\print(renderState['zoom'])"
+                                ); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderState', cName='PySetRenderState', 
+                                description="Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState",
+                                example = "SC = exu.SystemContainer()\\\\SC.GetRenderState(renderState)",
+                                argList=['renderState'],
                                 ); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 

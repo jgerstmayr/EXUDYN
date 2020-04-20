@@ -96,22 +96,29 @@ nodeType=exu.NodeType.RotationEulerParameters
 
 ################ Body0: CRANK
 #graphicsAB = GraphicsDataOrthoCube(-d/2,-d/2,0, d/2,d/2, lAB, [0.1,0.1,0.8,1])
-graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], radius=[0.01,0.01], thickness = 0.01, width = [0.02,0.02], color=color4steelblue)
+graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0], 
+                                   radius=[0.01,0.01], thickness = 0.01, 
+                                   width = [0.02,0.02], color=color4steelblue)
 
 [n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=str(nodeType), 
-                    position=pA, angularVelocity=omega0, gravity=g, graphicsDataList=[graphicsAB])
+                    position=pA, angularVelocity=omega0, gravity=g, 
+                    graphicsDataList=[graphicsAB])
 
 ################ Body1: CONROD
-graphicsBC = GraphicsDataRigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], radius=[0.01,0.01], thickness = 0.01, width = [0.02,0.02], color=color4lightred)
+graphicsBC = GraphicsDataRigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
+                                   radius=[0.01,0.01], thickness = 0.01, 
+                                   width = [0.02,0.02], color=color4lightred)
 pBC = ScalarMult(0.5,VAdd(pB,pC))
 [n1,b1]=AddRigidBody(mainSys = mbs, inertia=inertiaBC, nodeType=str(nodeType), 
-                    position=pBC, velocity=v1Init, angularVelocity=omega1Init, rotationMatrix=rotMatBC, gravity=g, graphicsDataList=[graphicsBC])
+                    position=pBC, velocity=v1Init, angularVelocity=omega1Init, 
+                    rotationMatrix=rotMatBC, gravity=g, graphicsDataList=[graphicsBC])
 
 ################ Body2: SLIDER
 d = 0.03
 graphicsSlider = GraphicsDataOrthoCube(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
 [n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=str(nodeType), 
-                    position=pC, velocity=v2Init, angularVelocity=[0,0,0], graphicsDataList=[graphicsSlider])
+                    position=pC, velocity=v2Init, angularVelocity=[0,0,0], 
+                    graphicsDataList=[graphicsSlider])
 
 
 oGround = mbs.AddObject(ObjectGround())
@@ -143,17 +150,22 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrai
                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
 if exudynTestGlobals.useGraphics:
-    mbs.AddSensor(SensorNode(nodeNumber = n0, fileName='solution/crankAngle.txt',outputVariableType=exu.OutputVariableType.Rotation))
-    mbs.AddSensor(SensorNode(nodeNumber = n0, fileName='solution/crankAngularVelocity.txt',outputVariableType=exu.OutputVariableType.AngularVelocity))
-    mbs.AddSensor(SensorNode(nodeNumber = n2, fileName='solution/sliderPosition.txt',outputVariableType=exu.OutputVariableType.Position))
-    mbs.AddSensor(SensorNode(nodeNumber = n2, fileName='solution/sliderVelocity.txt',outputVariableType=exu.OutputVariableType.Velocity))
+    mbs.AddSensor(SensorNode(nodeNumber = n0, fileName='solution/crankAngle.txt',
+                             outputVariableType=exu.OutputVariableType.Rotation))
+    mbs.AddSensor(SensorNode(nodeNumber = n0, fileName='solution/crankAngularVelocity.txt',
+                             outputVariableType=exu.OutputVariableType.AngularVelocity))
+    mbs.AddSensor(SensorNode(nodeNumber = n2, fileName='solution/sliderPosition.txt',
+                             outputVariableType=exu.OutputVariableType.Position))
+    mbs.AddSensor(SensorNode(nodeNumber = n2, fileName='solution/sliderVelocity.txt',
+                             outputVariableType=exu.OutputVariableType.Velocity))
 
 if fixedVelocity:
     groundNode = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #add a coordinate fixed to ground
     markerGroundCoordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=groundNode, coordinate=0))
     markerRotX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=3)) #Euler angle x
     
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[markerGroundCoordinate, markerRotX], offset = 6, velocityLevel=True))
+    mbs.AddObject(CoordinateConstraint(markerNumbers=[markerGroundCoordinate, markerRotX], 
+                                       offset = 6, velocityLevel=True))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()

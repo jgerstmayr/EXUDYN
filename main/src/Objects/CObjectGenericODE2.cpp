@@ -48,13 +48,23 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 	for (Index nn = 0; nn < cObject->GetParameters().nodeNumbers.NumberOfItems(); nn++)
 	//for (auto item : cObject->GetParameters().nodeNumbers)
 	{
-		if (!EXUstd::IsOfType((Node::Type)( Node::GenericODE2 + Node::Position2D + Node::Orientation2D + Node::Point2DSlope1 + Node::Position + Node::Orientation + Node::RigidBody), cObject->GetCNode(nn)->GetType()))
+		//if (!EXUstd::IsOfType((Node::Type)(Node::GenericODE2 + Node::Position2D + Node::Orientation2D + Node::Point2DSlope1 + Node::Position + Node::Orientation + Node::RigidBody),
+		//	cObject->GetCNode(nn)->GetType()))
+		if (((Index)cObject->GetCNode(nn)->GetNodeGroup() & (Index)CNodeGroup::ODE2variables) == 0)
 		{
-			errorString = "ObjectGenericODE2: local node " + EXUstd::ToString(nn) + " has invalide node type " + EXUstd::ToString(Node::GetTypeString(cObject->GetCNode(nn)->GetType())) + ", but should be ODE2 node";
+			errorString = "ObjectGenericODE2: local node " + EXUstd::ToString(nn) + " has invalide node type " + EXUstd::ToString(Node::GetTypeString(cObject->GetCNode(nn)->GetType())) + ", but should be ODE2 node (node group ODE2variables)";
 				return false;
 		}
 	}
 
+	if (cObject->GetParameters().useFirstNodeAsReferenceFrame)
+	{
+		if (!EXUstd::IsOfType(cObject->GetCNode(0)->GetType(), (Node::Type)(Node::RigidBody)))
+		{
+			errorString = "ObjectGenericODE2: local node 0 must be of type 'Node.RigidBody' because useFirstNodeAsReferenceFrame = True";
+			return false;
+		}
+	}
 
 
 	//now check size of vectors and matrices
@@ -69,7 +79,7 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 
 	Index rowsMass = cObject->GetParameters().massMatrix.NumberOfRows();
 	Index columnsMass = cObject->GetParameters().massMatrix.NumberOfColumns();
-	if (!(rowsMass == nODE2 && columnsMass == nODE2)) //mass matrix always must exist
+	if (!(rowsMass == nODE2 && columnsMass == nODE2) && !((rowsMass == 0 && columnsMass == 0)))
 	{
 		errorString = "ObjectGenericODE2: total ODE2 coordinates of nodes is " + EXUstd::ToString(nODE2) + ", but mass matrix has size (" + EXUstd::ToString(rowsMass) + " x " + EXUstd::ToString(columnsMass) + ")";
 		return false;
@@ -89,6 +99,24 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 	{
 		errorString = "ObjectGenericODE2: total ODE2 coordinates of nodes is " + EXUstd::ToString(nODE2) + ", but damping matrix has size (" + EXUstd::ToString(rowsDamping) + " x " + EXUstd::ToString(columnsDamping) + ")";
 		return false;
+	}
+
+	//check visualization
+	VisualizationObjectGenericODE2* vObject = (VisualizationObjectGenericODE2*)GetVisualizationObject();
+	if (vObject->GetTriangleMesh().NumberOfRows() != 0)
+	{
+		const Matrix& trigs = vObject->GetTriangleMesh();
+		for (Index i = 0; i < trigs.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < trigs.NumberOfColumns(); j++)
+			{
+				if (trigs(i, j) >= cObject->GetNumberOfNodes())
+				{
+					errorString = "ObjectGenericODE2: node number in triangleMesh(" + EXUstd::ToString(i) +"," + EXUstd::ToString(j) + ") is invalid; valid node numbers: 0 .. " + EXUstd::ToString(cObject->GetNumberOfNodes());
+					return false;
+				}
+			}
+		}
 	}
 
 
@@ -131,7 +159,16 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
 	}
 	else //standard constant matrix
 	{
-		massMatrix = parameters.massMatrix;
+		if (parameters.massMatrix.NumberOfRows() != 0)
+		{
+			massMatrix = parameters.massMatrix;
+		}
+		else //set zero mass matrix, e.g. for static computation
+		{
+			Index nODE2 = GetODE2Size();
+			massMatrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
+			massMatrix.SetAll(0.);
+		}
 	}
 }
 
@@ -232,10 +269,27 @@ Vector3D CObjectGenericODE2::GetDisplacement(const Vector3D& localPosition, Conf
 
 Index CObjectGenericODE2::GetODE2Size() const
 {
+	//Index s = 0;
+	//for (Index i = 0; i < parameters.nodeNumbers.NumberOfItems(); i++)
+	//{
+	//	s += GetCNode(i)->GetNumberOfODE2Coordinates();
+	//}
+	//return s;
+
+	//faster version, does not require iterations:
+	Index nn = parameters.nodeNumbers.NumberOfItems();
+	if (nn) { return parameters.coordinateIndexPerNode.Last() + GetCNode(nn - 1)->GetNumberOfODE2Coordinates(); }
+	else { return 0; }
+}
+
+void CObjectGenericODE2::InitializeCoordinateIndices()
+{
+	parameters.coordinateIndexPerNode.SetNumberOfItems(parameters.nodeNumbers.NumberOfItems());
+
 	Index s = 0;
 	for (Index i = 0; i < parameters.nodeNumbers.NumberOfItems(); i++)
 	{
+		parameters.coordinateIndexPerNode[i] = s;
 		s += GetCNode(i)->GetNumberOfODE2Coordinates();
 	}
-	return s;
 }

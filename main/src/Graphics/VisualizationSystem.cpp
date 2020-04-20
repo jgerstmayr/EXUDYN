@@ -132,7 +132,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				//normalize contour plot values
 				for (auto item : graphicsData.glLines)
 				{
-					if (item.color1[3] == contourPlotFlag)
+					if (item.color1[3] == contourPlotFlag) //just check color1
 					{
 						minVal = EXUstd::Minimum(minVal, item.color1[0]); //contour plot value is given in RED channel
 						minVal = EXUstd::Minimum(minVal, item.color2[0]);
@@ -146,6 +146,25 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 					{
 						minVal = EXUstd::Minimum(minVal, item.color[0]); //contour plot value is given in RED channel
 						maxVal = EXUstd::Maximum(maxVal, item.color[0]); //contour plot value is given in RED channel
+					}
+				}
+				for (auto item : graphicsData.glPoints)
+				{
+					if (item.color[3] == contourPlotFlag)
+					{
+						minVal = EXUstd::Minimum(minVal, item.color[0]); //contour plot value is given in RED channel
+						maxVal = EXUstd::Maximum(maxVal, item.color[0]); //contour plot value is given in RED channel
+					}
+				}
+				for (auto item : graphicsData.glTriangles)
+				{
+					if (item.colors[0][3] == contourPlotFlag) //just check color of first node
+					{
+						for (const Float4& color : item.colors)
+						{
+							minVal = EXUstd::Minimum(minVal, color[0]); //contour plot value is given in RED channel
+							maxVal = EXUstd::Maximum(maxVal, color[0]); //contour plot value is given in RED channel
+						}
 					}
 				}
 
@@ -172,6 +191,23 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				if (item.color[3] == contourPlotFlag)
 				{
 					item.color = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, item.color[0]);
+				}
+			}
+			for (auto& item : graphicsData.glPoints)
+			{
+				if (item.color[3] == contourPlotFlag)
+				{
+					item.color = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, item.color[0]);
+				}
+			}
+			for (auto& item : graphicsData.glTriangles)
+			{
+				if (item.colors[0][3] == contourPlotFlag) //just check color of first node
+				{
+					for (Float4& color : item.colors)
+					{
+						color = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, color[0]);
+					}
 				}
 			}
 		}

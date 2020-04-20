@@ -15,9 +15,46 @@ from exudynBasicUtilities import *
 from exudynRigidBodyUtilities import *
 from exudynGraphicsDataUtilities import *
 
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#helper functions for matplotlib
+def PlotLineCode(index):
+    CC = ['r-','g-','b-','k-','c-','m-','y-','r:','g:','b:','k:','c:','m:','y:','r--','g--','b--','k--','c--','m--','y--','r-.','g-.','b-.','k-.','c-.','m-.','y-.']
+    if index < len(CC):
+        return CC[index]
+    else:
+        return 'k:' #black line
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   LOAD SOLUTION AND ANIMATION   ++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#fill submatrix into given destinationMatrix at destination row 'destRow' and destination column 'destColumn'; all matrices must be numpy arrays 
+def FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn):
+    nRows = subMatrix.shape[0]
+    nColumns = subMatrix.shape[1]
+
+    destinationMatrix[destRow:destRow+nRows, destColumn:destColumn+nColumns] = subMatrix
+
+    #for i in range(nRows):
+    #    for j in range(nColumns):
+    #        destinationMatrix[i+destRow, j+destColumn] = subMatrix[i,j]
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#sweep in time interval [0,t1], frequency interval [f0,f1] Hz; use sin function
+def SweepSin(t, t1, f0, f1):
+    k = (f1-f0)/t1
+    return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
+
+#sweep in time interval [0,t1], frequency interval [f0,f1] Hz; use cos function
+def SweepCos(t, t1, f0, f1):
+    k = (f1-f0)/t1
+    return np.cos(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
+
+#frequency sweep in time interval [0,t1], frequency interval [f0,f1] Hz
+def FrequencySweep(t, t1, f0, f1):
+    return t*(f1-f0)/t1 + f0
 
 #++++++++++++++++++++++++++++++++++++++++++++
 #read Solution file into dictionary:

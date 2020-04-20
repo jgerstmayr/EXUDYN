@@ -49,8 +49,6 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 		LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
 
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
-		//const Matrix3D& A0off = EXUmath::unitMatrix3D; //parameters.rotationMarker0;
-		//const Matrix3D& A1off = EXUmath::unitMatrix3D; //parameters.rotationMarker1;
 		const Matrix3D& A0off = parameters.rotationMarker0;
 		Matrix3D A0all = (A0*A0off);
 
@@ -331,17 +329,17 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 				Vector3D Gvec0 = markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
 				Vector3D jacPos0 = markerData.GetMarkerData(0).positionJacobian.GetColumnVector<3>(i);
 				Vector3D v = A0allT * (vPosTilde*Gvec0 - jacPos0);  //A0allT*vPosTilde*Gvec0  - A0allT * jacPos0;
-				jacobian(0, i) = v[0];
-				jacobian(1, i) = v[1];
-				jacobian(2, i) = v[2];
+				jacobian(0, i) = v[0]; //????? shouldn't the according equations be excluded, if constrainedAxes[i] = 0?
+				jacobian(1, i) = v[1]; //????? shouldn't the according equations be excluded, if constrainedAxes[i] = 0?
+				jacobian(2, i) = v[2]; //????? shouldn't the according equations be excluded, if constrainedAxes[i] = 0?
 			}
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
 				Vector3D jacPos1 = markerData.GetMarkerData(1).positionJacobian.GetColumnVector<3>(i);
 				Vector3D v = A0allT * jacPos1;
-				jacobian(0, i) = v[0];
-				jacobian(1, i) = v[1];
-				jacobian(2, i) = v[2];
+				jacobian(0, i) = v[0]; //????? shouldn't the according equations be excluded, if constrainedAxes[i] = 0?
+				jacobian(1, i) = v[1]; //????? shouldn't the according equations be excluded, if constrainedAxes[i] = 0?
+				jacobian(2, i) = v[2]; //????? shouldn't the according equations be excluded, if constrainedAxes[i] = 0?
 			}
 		}
 
@@ -467,17 +465,60 @@ JacobianType::Type CObjectJointGeneric::GetAvailableJacobians() const
 	}
 }
 
-
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectJointGeneric::GetOutputVariableTypes() const
-{
-	return (OutputVariableType)((Index)OutputVariableType::Displacement + (Index)OutputVariableType::Rotation); //Displacement represents drift in index2 case
-}
-
 //! provide according output variable in "value"
 void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	SysError("CObjectJointGeneric::GetOutputVariableConnector not implemented");
+	LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
+
+	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
+	const Matrix3D& A0off = parameters.rotationMarker0;
+	Matrix3D A0all = (A0*A0off);
+
+	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
+	const Matrix3D& A1off = parameters.rotationMarker1;
+	Matrix3D A1all = (A1*A1off);
+
+	//use difference of positions in local joint J0 coordinates
+	Vector3D vPosLocal = A0all.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
+	Vector3D vVelLocal = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+
+	Vector3D angVelLocal = A0all.GetTransposed()*(A1*markerData.GetMarkerData(1).angularVelocityLocal - A0 * markerData.GetMarkerData(0).angularVelocityLocal); //difference of global angular velocities, projected into J0
+
+	//compute relative rotation, J0-fixed:
+	Matrix3D relRot = A0all.GetTransposed() * A1all;
+	Vector3D vLocRot = RigidBodyMath::RotationMatrix2RotXYZ(relRot);
+
+	if (vLocRot[0] > EXUstd::pi) { vLocRot[0] -= 2.*EXUstd::pi; }
+	if (vLocRot[1] > EXUstd::pi) { vLocRot[1] -= 2.*EXUstd::pi; }
+	if (vLocRot[2] > EXUstd::pi) { vLocRot[2] -= 2.*EXUstd::pi; }
+
+	switch (variableType)
+	{
+	case OutputVariableType::Position: value.CopyFrom(markerData.GetMarkerData(0).position); break;
+	case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
+	case OutputVariableType::DisplacementLocal: value.CopyFrom(vPosLocal); break;
+	case OutputVariableType::Rotation: value.CopyFrom(vLocRot); break;
+	case OutputVariableType::VelocityLocal: value.CopyFrom(vVelLocal); break;
+	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(angVelLocal); break;
+	case OutputVariableType::ForceLocal:
+	{
+		Vector3D force({ GetCurrentAEcoordinate(0), GetCurrentAEcoordinate(1), GetCurrentAEcoordinate(2) }); 
+		if (parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1) //then force is global!
+		{
+			force = A0all.GetTransposed()*force;
+		}
+		value.CopyFrom(force);
+		break;
+	}
+	case OutputVariableType::TorqueLocal:
+	{
+		Vector3D torque({ GetCurrentAEcoordinate(3), GetCurrentAEcoordinate(4), GetCurrentAEcoordinate(5) });
+		value.CopyFrom(torque);
+	}
+	default:
+		SysError("CObjectJointGeneric::GetOutputVariable failed"); //error should not occur, because types are checked!
+	}
+
 }
 
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-07  00:13:14 (last modfied)
+* @date         2020-04-08  10:14:16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,13 +114,19 @@ public: // AUTO:
     //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector
     virtual Vector3D GetAngularVelocityLocal(ConfigurationType configuration = ConfigurationType::Current) const override;
 
+    //! AUTO:  provide position jacobian of node; derivative of 3D Position with respect to 3 displacement coordinates \f$[q_0,\,q_1,\,q_2]\tp\f$ and 3 rotation coordinates \f$[\psi_0,\,\psi_1,\,\psi_2]\tp\f$
+    virtual void GetPositionJacobian(Matrix& value) const override;
+
+    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
+    virtual void GetRotationJacobian(Matrix& value) const override;
+
     //! AUTO:  return internally stored reference coordinates of node
     virtual LinkedDataVector GetReferenceCoordinateVector() const override
     {
         return parameters.referenceCoordinates;
     }
 
-    //! AUTO:  provide according output variable in "value"; used e.g. for postprocessing and sensors
+    //! AUTO:  provide according output variable in 'value'; used e.g. for postprocessing and sensors
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
 
     //! AUTO:  Compute vector to of 4 Euler Parameters from reference and configuration coordinates

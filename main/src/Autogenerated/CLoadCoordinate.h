@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-12-01  23:45:14 (last modfied)
+* @date         2020-03-30  22:45:22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,7 @@
 class CLoadCoordinateParameters // AUTO: 
 {
 public: // AUTO: 
-    Index markerNumber;                           //!< AUTO: marker"s number to which load is applied
+    Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Real load;                                    //!< AUTO: scalar load [SI:N]
     std::function<Real(Real,Real)> loadUserFunction;//!< AUTO: A python function which defines the time-dependent load with parameters (Real t, Real load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, load): return load*np.sin(t*10*2*3.1415)
     //! AUTO: default constructor with parameter initialization

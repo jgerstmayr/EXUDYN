@@ -128,6 +128,34 @@ Vector3D CNodeRigidBodyRotVecLG::GetAngularVelocityLocal(ConfigurationType confi
 	return omegaLocal;
 }
 
+//! AUTO:  provide position jacobian of node; derivative of 3D Position with respect to all coordinates
+void CNodeRigidBodyRotVecLG::GetPositionJacobian(Matrix& value) const
+{
+	value.SetNumberOfRowsAndColumns(3, nDisplacementCoordinates + nRotationCoordinates);
+	value.SetAll(0.);
+	value(0, 0) = 1.;
+	value(1, 1) = 1.;
+	value(2, 2) = 1.;
+}
+
+//! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all coordinates (zero-matrix + 'G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
+void CNodeRigidBodyRotVecLG::GetRotationJacobian(Matrix& value) const
+{
+	value.SetNumberOfRowsAndColumns(3, nDisplacementCoordinates + nRotationCoordinates);
+	value.SetAll(0.);
+
+	ConstSizeMatrix<3 * maxRotationCoordinates> G;
+	GetG(G);
+
+	for (int i = 0; i < 3; i++) //dimensionality
+	{
+		for (int j = 0; j < nRotationCoordinates; j++)
+		{
+			value(i, j + nDisplacementCoordinates) = G(i, j);
+		}
+	}
+}
+
 //! provide according output variable in "value"
 void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const
 {

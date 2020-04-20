@@ -72,7 +72,8 @@ nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 0))
 
 #Spring-Damper between two marker coordinates
 mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
-                                     stiffness = spring, damping = damper, springForceUserFunction = springForce)) 
+                                     stiffness = spring, damping = damper, 
+                                     springForceUserFunction = springForce)) 
 
 #add load:
 loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
@@ -82,9 +83,12 @@ writeSensorFile = False
 if exudynTestGlobals.useGraphics:
     writeSensorFile = True
 
-mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, fileName="solution/userFunctionLoad.txt"))
+mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, 
+                         fileName="solution/userFunctionLoad.txt"))
 #mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, fileName="solution/userFunctionNode.txt"))
-mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, outputVariableType=exu.OutputVariableType.Coordinates, fileName="solution/userFunctionNode.txt"))
+mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, 
+                         outputVariableType=exu.OutputVariableType.Coordinates, 
+                         fileName="solution/userFunctionNode.txt"))
     
 #print(mbs)
 mbs.Assemble()

@@ -230,7 +230,7 @@ void CObjectALEANCFCable2D::ComputeODE2RHS(Vector& ode2Rhs) const
 	Qvqt += 0.5*vALE*vALE*(qANCF*temp);
 	//pout << "QV=" << Qvqt << "\n";
 
-	ode2Rhs[nODE2Coordinates] = Qvqt; //this term is not added, because it does exist in ANCF
+	ode2Rhs[nODE2Coordinates] = Qvqt; //this term is not added, because it does not exist in standard ANCF
 
 	//++++++++++++++++++++++++++++++
 	//Term Q_q_tv (1x8 vector): 2*v*M' \dot q + v^2(B'-M'')q

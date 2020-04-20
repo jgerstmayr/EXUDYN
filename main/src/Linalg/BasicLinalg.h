@@ -318,6 +318,27 @@ namespace EXUmath {
 		MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<9>, ConstSizeMatrix<12>>(m1, m2, result);
 	}
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! apply column-wise a transformation matrix of fixed size (e.g. for a 3xn matrix, multiply with 3x3 rotation matrix A => size=3)
+	template<Index size>
+	inline void ApplyTransformation(ConstSizeMatrix<size*size> transformationMatrix, Matrix& sourceDestination)
+	{
+		CHECKandTHROW(size == sourceDestination.NumberOfRows() && 
+			size == transformationMatrix.NumberOfColumns() && 
+			size == transformationMatrix.NumberOfRows(),
+			"ApplyTransformation: transformationMatrix must be square and equal to number of rows of sourceDestination");
+
+		Vector3D temp;
+		for (Index i = 0; i < sourceDestination.NumberOfColumns(); i++)
+		{
+			MultMatrixVector(transformationMatrix, sourceDestination.GetColumnVector<size>(i), temp);
+			for (Index j = 0; j < sourceDestination.NumberOfRows(); j++)
+			{
+				sourceDestination(j, i) = temp[j];
+			}
+		}
+	}
+
 
 }
 

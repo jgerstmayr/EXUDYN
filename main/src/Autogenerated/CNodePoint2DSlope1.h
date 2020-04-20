@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-02  18:12:47 (last modfied)
+* @date         2020-03-30  22:45:21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -97,10 +97,10 @@ public: // AUTO:
         return GetAngularVelocity(configuration);
     }
 
-    //! AUTO:  provide position jacobian \f$\Jm_P\f$ of node; derivative of 3D position with respect to 4 coordinates ux,uy and x/y "displacements" of slopex; action of force: \f$\Qm_f = \Jm_P^T \fv\f$
+    //! AUTO:  provide position jacobian \f$\Jm_P\f$ of node; derivative of 3D position with respect to 4 coordinates ux,uy and x/y 'displacements' of slopex; action of force: \f$\Qm_f = \Jm_P^T \fv\f$
     virtual void GetPositionJacobian(Matrix& value) const override;
 
-    //! AUTO:  provide "rotation" jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity with respect to 4 velocity coordinates ux,uy and x/y "displacements" of slopex; action of torque: \f$\Qm_m = \Jm_R^T \mv\f$
+    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity with respect to 4 velocity coordinates ux,uy and x/y 'displacements' of slopex; action of torque: \f$\Qm_m = \Jm_R^T \mv\f$
     virtual void GetRotationJacobian(Matrix& value) const override;
 
     //! AUTO:  return internally stored reference coordinates of node
@@ -109,7 +109,7 @@ public: // AUTO:
         return parameters.referenceCoordinates;
     }
 
-    //! AUTO:  provide according output variable in "value"; used e.g. for postprocessing and sensors
+    //! AUTO:  provide according output variable in 'value'; used e.g. for postprocessing and sensors
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

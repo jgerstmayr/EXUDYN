@@ -348,7 +348,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         #process outputVariables, including symbols
         if len(parseInfo['outputVariables']) != 0:
             sLatex += "{\\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\\\ \n"
-            sLatex += "\\startTable{output parameters}{symbol}{description}\n"
+            sLatex += "\\startTable{output parameter}{symbol}{description}\n"
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
@@ -822,6 +822,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     sList[3] += '    {\n        '
     sList[3] += parameterWriteStr
     sList[3] += ' {PyError(STDstring("' + classStr + '::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user\n'
+    #notify object that parameters have changed
+    if parseInfo['classType'] == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
+        sList[3] += '        GetCObject()->ParametersHaveChanged();\n'
     #sList[3] += '        \n'
 #        if parseInfo['classType'] == 'Object': #if parameters have changed, some functions may be necessary to be reset
 #            sList[3] += '        GetCObject()->ParametersHaveChanged();\n'
@@ -1032,7 +1035,12 @@ try: #still close file if crashes
                         
                         cnt = 0
                         for item in lineDefinition:
-                            info[cnt] = info[cnt].replace("'",'"')
+                            if lineDefinition[cnt] != 'parameterDescription':
+                                info[cnt] = info[cnt].replace("'",'"')
+#                            else:
+#                                if info[cnt].find("'"):
+#                                    print(info[cnt])
+
                             d[lineDefinition[cnt]] = info[cnt]
                             cnt+=1
                         if len(d['cplusplusName']) == 0:

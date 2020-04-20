@@ -16,7 +16,7 @@ SolutionSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     writeSolutionToFile &     bool &      &     True &     flag (true/false), which determines if (global) solution vector is written to file\\ \hline
-    appendToFile &     bool &      &     False &     flag (true/false); if true, solution is appended to existing file (otherwise created)\\ \hline
+    appendToFile &     bool &      &     False &     flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created)\\ \hline
     writeFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)\\ \hline
     writeFileFooter &     bool &      &     True &     flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics\\ \hline
     solutionWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the solution is written during a simulation\\ \hline
@@ -28,7 +28,7 @@ SolutionSettings has the following items:
     exportAlgebraicCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]\\ \hline
     exportDataCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates\\ \hline
     coordinatesSolutionFileName &     FileName &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time\\ \hline
-    solverInformationFileName &     FileName &      &     'solverInormation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile\\ \hline
+    solverInformationFileName &     FileName &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step\\ \hline
     solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...)\\ \hline
     outputPrecision &     Index &      &     10 &     precision for floating point numbers written to solution and sensor files\\ \hline
     recordImagesInterval &     Real &      &     -1. &     record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages\\ \hline
@@ -207,7 +207,7 @@ VSettingsGeneral has the following items:
     pointSize &     float &      &     0.01 &     global point size (absolute)\\ \hline
     circleTiling &     Index &      &     16 &     global number of segments for circles; if smaller than 2, 2 segments are used (flat)\\ \hline
     cylinderTiling &     Index &      &     16 &     global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)\\ \hline
-    sphereTiling &     Index &      &     8 &     global number of segments for spheres; if smaller than 2, 2 segments are used (flat)\\ \hline
+    sphereTiling &     Index &      &     6 &     global number of segments for spheres; if smaller than 2, 2 segments are used (flat)\\ \hline
     axesTiling &     Index &      &     12 &     global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -309,7 +309,7 @@ VSettingsExportImages has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     saveImageTimeOut &     Index &      &     5000 &     timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
-    saveImageFileName &     FileName &      &     'images/rame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!\\ \hline
+    saveImageFileName &     FileName &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); folders must already exist!\\ \hline
     saveImageFileCounter &     Index &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
     saveImageSingleFile &     bool &      &     False &     true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName\\ \hline
 	  \end{longtable}
@@ -328,6 +328,10 @@ VSettingsNodes has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the nodes are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the node number is shown\\ \hline
+    drawNodesAsPoint &     bool &      &     True &     simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines\\ \hline
+    showBasis &     bool &      &     False &     show basis (three axes) of coordinate system in 3D nodes\\ \hline
+    basisSize &     float &      &     0.2 &     size of basis for nodes\\ \hline
+    tiling &     Index &      &     4 &     tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4\\ \hline
     defaultSize &     float &      &     -1. &     global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize\\ \hline
     defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB olor for nodes; 4th value is alpha-transparency\\ \hline
     showNodalSlopes &     Index &      &     False &     draw nodal slope vectors, e.g. in ANCF beam finite elements\\ \hline
@@ -363,7 +367,7 @@ VSettingsBodies has the following items:
     show &     bool &      &     True &     flag to decide, whether the bodies are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the body(=object) number is shown\\ \hline
     defaultSize &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline global body size of xyz-cube\\ \hline
-    defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB olor for bodies; 4th value is \\ \hline
+    defaultColor &     Float4 &     4 &     [0.3,0.3,1.,1.] &     \tabnewline default cRGB olor for bodies; 4th value is \\ \hline
     beams &     VSettingsBeams &      &      &     visualization settings for beams (e.g. ANCFCable or other beam elements)\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -381,11 +385,12 @@ VSettingsConnectors has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the connectors are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the connector(=object) number is shown\\ \hline
+    defaultSize &     float &      &     0.1 &     global connector size; if -1.f, connector size is relative to maxSceneSize\\ \hline
     showJointAxes &     bool &      &     False &     flag to decide, whether contact joint axes of 3D joints are shown\\ \hline
     jointAxesLength &     float &      &     0.2 &     global joint axes length\\ \hline
     jointAxesRadius &     float &      &     0.02 &     global joint axes radius\\ \hline
     showContact &     bool &      &     False &     flag to decide, whether contact points, lines, etc. are shown\\ \hline
-    defaultSize &     float &      &     0.1 &     global connector size; if -1.f, connector size is relative to maxSceneSize\\ \hline
+    springNumberOfWindings &     Index &      &     8 &     number of windings for springs drawn as helical spring\\ \hline
     contactPointsDefaultSize &     float &      &     0.02 &     global contact points size; if -1.f, connector size is relative to maxSceneSize\\ \hline
     defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB olor for connectors; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
@@ -404,6 +409,7 @@ VSettingsMarkers has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the markers are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the marker numbers are shown\\ \hline
+    drawSimplified &     bool &      &     True &     draw markers with simplified symbols\\ \hline
     defaultSize &     float &      &     -1. &     global marker size; if -1.f, marker size is relative to maxSceneSize\\ \hline
     defaultColor &     Float4 &     4 &     [0.1,0.5,0.1,1.] &     \tabnewline default cRGB olor for markers; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
@@ -425,6 +431,7 @@ VSettingsLoads has the following items:
     defaultSize &     float &      &     0.2 &     global load size; if -1.f, load size is relative to maxSceneSize\\ \hline
     defaultRadius &     float &      &     0.005 &     global radius of load axis if drawn in 3D\\ \hline
     fixedLoadSize &     bool &      &     True &     if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size\\ \hline
+    drawSimplified &     bool &      &     True &     draw markers with simplified symbols\\ \hline
     loadSizeFactor &     float &      &     0.1 &     if fixedLoadSize=false, then this scaling factor is used to draw the load vector\\ \hline
     defaultColor &     Float4 &     4 &     [0.7,0.1,0.1,1.] &     \tabnewline default cRGB olor for loads; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
@@ -443,6 +450,7 @@ VSettingsSensors has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     show &     bool &      &     True &     flag to decide, whether the sensors are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the sensor numbers are shown\\ \hline
+    drawSimplified &     bool &      &     True &     draw sensors with simplified symbols\\ \hline
     defaultSize &     float &      &     -1. &     global sensor size; if -1.f, sensor size is relative to maxSceneSize\\ \hline
     defaultColor &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline default cRGB olor for sensors; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}

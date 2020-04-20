@@ -178,10 +178,10 @@ void PySetLinalgOutputFormatPython(bool flagPythonFormat)
 }
 
 //! start glfw renderer; return true if successful
-bool PyStartOpenGLRenderer()
+bool PyStartOpenGLRenderer(bool verbose=true)
 {
 #ifdef USE_GLFW_GRAPHICS
-	return glfwRenderer.SetupRenderer();
+	return glfwRenderer.SetupRenderer(verbose);
 #else
 	PyWarning("GLFW_Graphics deactivated");
 	return false;
@@ -413,7 +413,9 @@ PYBIND11_MODULE(exudyn, m) {
 		.def("RedrawAndSaveImage", &MainSystemContainer::RedrawAndSaveImage, "Redraw openGL scene and save image (command waits until process is finished)")
 
 		.def("GetRenderState", &MainSystemContainer::PyGetRenderState, "Get dictionary with current render state (openGL zoom, modelview, etc.)")
-		
+
+		.def("SetRenderState", &MainSystemContainer::PySetRenderState, "Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState")
+
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//Solver functions:
 		.def("TimeIntegrationSolve", [](MainSystemContainer& msc, MainSystem& ms, STDstring solverName, const SimulationSettings& simulationSettings) {

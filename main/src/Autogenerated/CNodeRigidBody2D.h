@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-07  00:22:22 (last modfied)
+* @date         2020-03-30  22:45:21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -103,7 +103,7 @@ public: // AUTO:
         value.SetMatrix(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,0.f});
     }
 
-    //! AUTO:  provide "rotation" jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ("G-matrix"); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
+    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
     virtual void GetRotationJacobian(Matrix& value) const override
     {
         value.SetMatrix(3,3,{0.f,0.f,0.f, 0.f,0.f,0.f, 0.f,0.f,1.f});
@@ -115,7 +115,7 @@ public: // AUTO:
         return parameters.referenceCoordinates;
     }
 
-    //! AUTO:  provide according output variable in "value"; used e.g. for postprocessing and sensors
+    //! AUTO:  provide according output variable in 'value'; used e.g. for postprocessing and sensors
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

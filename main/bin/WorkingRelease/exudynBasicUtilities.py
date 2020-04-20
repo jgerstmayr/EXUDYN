@@ -13,6 +13,7 @@ pi = 3.1415926535897932 #define pi in order to avoid importing large libraries
 sqrt2 = 2.**0.5
 g = 9.81 #gravity constant
 
+
 #item interface diagonal matrix creator
 def DiagonalMatrix(rowsColumns, value):
     m = []
