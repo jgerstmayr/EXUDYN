@@ -40,9 +40,11 @@ mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround,
 
 #create a chain of bodies:
 for i in range(20):
+    #print("Build Object", i)
     f = 0 #factor for initial velocities
     omega0 = [0,50.*f,20*f] #arbitrary initial angular velocity
     ep0 = eulerParameters0 #no rotation
+    
     ep_t0 = AngularVelocity2EulerParameters_t(omega0, ep0)
 
     p0 = [-sx+i*2*sx,0.,0] #reference position

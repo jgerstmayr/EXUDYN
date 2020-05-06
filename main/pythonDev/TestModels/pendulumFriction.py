@@ -12,14 +12,20 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys
 sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
-#import time #for sleep()
+from itemInterface import *
+from exudynUtilities import *
+from exudynFEM import *
+from exudynGraphicsDataUtilities import *
+
+import numpy as np
+
 import exudyn as exu
-from exudynUtilities import*
-
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
+
 
 L = 0.8 #length of arm
 mass = 2.5
@@ -39,7 +45,7 @@ graphicsSphere2 = GraphicsDataSphere(point=[0,0,0], radius=r, color=color4steelb
 graphicsLink = GraphicsDataOrthoCube(-L/2,-d/2,-d/2, L/2,d/2, d/2, [0.5,0.5,0.5,0.5])
 
 inertia = InertiaCuboid(density=mass/(L*d*d), sideLengths=[L,d,d])
-print("mass=",inertia.mass)
+exu.Print("mass=",inertia.mass)
 
 nR0 = mbs.AddNode(Rigid2D(referenceCoordinates=[L/2,0,0])) #body goes from [0,0,0] to [L,0,0]
 oR0 = mbs.AddObject(RigidBody2D(nodeNumber=nR0, physicsMass = inertia.mass, physicsInertia=inertia.inertiaTensor[2][2], 
@@ -70,15 +76,16 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround0, mTip0],
 
 #mbs.AddSensor(SensorNode(nodeNumber = nR0, fileName='solution/pendulumFrictionRotation0.txt',
 #                         outputVariableType=exu.OutputVariableType.Coordinates))
-mbs.AddSensor(SensorBody(bodyNumber = oR0, fileName='solution/pendulumFrictionRotation0.txt',
-                         outputVariableType=exu.OutputVariableType.Rotation))
+if exudynTestGlobals.useGraphics:
+    mbs.AddSensor(SensorBody(bodyNumber = oR0, fileName='solution/pendulumFrictionRotation0.txt',
+                             outputVariableType=exu.OutputVariableType.Rotation))
 
 
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
 
-f = 400000
+f = 4000
 simulationSettings.timeIntegration.numberOfSteps = int(1*f)
 simulationSettings.timeIntegration.endTime = 0.0001*f
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
@@ -94,21 +101,28 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.60 #0.62 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 simulationSettings.solutionSettings.coordinatesSolutionFileName= "coordinatesSolution.txt"
 
-simulationSettings.displayStatistics = True
+#simulationSettings.displayStatistics = True
 
 SC.visualizationSettings.nodes.defaultSize = 0.05
-exu.StartRenderer()
-mbs.WaitForUserToContinue()
 
-#exu.InfoStat()
+if exudynTestGlobals.useGraphics:
+    exu.StartRenderer()
+    mbs.WaitForUserToContinue()
+
 SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
-#exu.InfoStat()
 
-#SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer() #safely close rendering window!
+p0=mbs.GetObjectOutputBody(oR0, exu.OutputVariableType.Position, localPosition=[0,0,0])
+exu.Print("p0=", p0)
+u=NormL2(p0)
+exu.Print('solution of pendulumFriction=',u)
+
+exudynTestGlobals.testError = u - (0.3999999877698205) #2020-04-22: 0.3999999877698205
 
 
-if True:
+if exudynTestGlobals.useGraphics:
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() #safely close rendering window!
+
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     

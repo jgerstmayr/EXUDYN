@@ -95,7 +95,7 @@ def SetSolutionState(exu, mbs, solution, row, configuration):
         if (nData): mbs.systemData.SetDataCoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic+nData], configuration)
 
         if configuration == exu.ConfigurationType.Visualization:
-            mbs.systemData.SetVisualizationTime(rowData[0])
+            mbs.systemData.SetTime(rowData[0], exu.ConfigurationType.Visualization)
             mbs.SendRedrawSignal()
     else:
         print("ERROR in SetVisualizationState: invalid row (out of range)")
@@ -109,19 +109,20 @@ def SetVisualizationState(exu, mbs, solution, row):
 #consecutively load the rows of a solution file and visualize the result
 #timeout (in seconds) is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
 #rowIncrement can be set larger than one in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
-def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, createImages = False):
+def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, createImages = False, runLoop = False):
     nRows = solution['nRows']
     if (rowIncrement < 1) | (rowIncrement > nRows):
         print('ERROR in AnimateSolution: rowIncrement must be at least 1 and must not be larger than the number of rows in the solution file')
     oldUpdateInterval = SC.visualizationSettings.general.graphicsUpdateInterval
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.5*min(timeout, 2e-3) #avoid too small values to run multithreading properly
 
-    for i in range(0,nRows,rowIncrement):
-        if not(mbs.GetRenderEngineStopFlag()):
-            SetVisualizationState(exu, mbs, solution, i)
-            if createImages:
-                SC.RedrawAndSaveImage() #create images for animation
-            time.sleep(timeout)
+    while runLoop and not mbs.GetRenderEngineStopFlag():
+        for i in range(0,nRows,rowIncrement):
+            if not(mbs.GetRenderEngineStopFlag()):
+                SetVisualizationState(exu, mbs, solution, i)
+                if createImages:
+                    SC.RedrawAndSaveImage() #create images for animation
+                time.sleep(timeout)
 
     SC.visualizationSettings.general.graphicsUpdateInterval = oldUpdateInterval #set values back to original
 

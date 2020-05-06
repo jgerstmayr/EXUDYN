@@ -1980,7 +1980,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
 		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
-		if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems()) //omit bodies and ground objects ...
+		if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems() && cSystemData.GetCObjects()[j]->GetAlgebraicEquationsSize()) //omit bodies and ground objects ...
 		{
 
 			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);

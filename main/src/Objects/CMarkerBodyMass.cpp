@@ -17,7 +17,8 @@
 
 void CMarkerBodyMass::GetPosition(const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration) const
 {
-	position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetPosition(Vector3D({0., 0., 0.}), configuration);
+	const CObjectBody* cBody = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
+	position = cBody->GetPosition(cBody->GetLocalCenterOfMass(), configuration);
 }
 
 void CMarkerBodyMass::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
@@ -25,8 +26,10 @@ void CMarkerBodyMass::ComputeMarkerData(const CSystemData& cSystemData, bool com
 
 	if (computeJacobian)
 	{
-		((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
-			GetAccessFunctionBody(AccessFunctionType::DisplacementMassIntegral_q, Vector3D({ 0., 0., 0. }), markerData.positionJacobian); //use positionJacobian to keep compatibility with BodyPosition marker
+		const CObjectBody* cBody = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
+		cBody->GetAccessFunctionBody(AccessFunctionType::DisplacementMassIntegral_q, 
+			cBody->GetLocalCenterOfMass(), 
+			markerData.positionJacobian); //use positionJacobian to keep compatibility with BodyPosition marker
 	}
 	markerData.velocityAvailable = false;
 

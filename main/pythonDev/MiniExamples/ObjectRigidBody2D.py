@@ -19,7 +19,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 testError=1 #set default error, if failed
-print("start mini example for class ObjectRigidBody2D")
+exu.Print("start mini example for class ObjectRigidBody2D")
 try: #puts example in safe environment
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
                                        initialCoordinates=[0.5,0,0],
@@ -36,7 +36,7 @@ try: #puts example in safe environment
     #final x-coordinate of position shall be 2, angle theta shall be np.pi
 
 except BaseException as e:
-    print("An error occured in test example for ObjectRigidBody2D:", e)
+    exu.Print("An error occured in test example for ObjectRigidBody2D:", e)
 else:
-    print("example for ObjectRigidBody2D completed, test error =", testError)
+    exu.Print("example for ObjectRigidBody2D completed, test error =", testError)
 

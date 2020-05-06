@@ -19,7 +19,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 testError=1 #set default error, if failed
-print("start mini example for class ObjectConnectorCoordinate")
+exu.Print("start mini example for class ObjectConnectorCoordinate")
 try: #puts example in safe environment
     def OffsetUF(t, lOffset): #gives 0.05 at t=1
         return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
@@ -42,7 +42,7 @@ try: #puts example in safe environment
     testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0] - 0.049999999999272404
 
 except BaseException as e:
-    print("An error occured in test example for ObjectConnectorCoordinate:", e)
+    exu.Print("An error occured in test example for ObjectConnectorCoordinate:", e)
 else:
-    print("example for ObjectConnectorCoordinate completed, test error =", testError)
+    exu.Print("example for ObjectConnectorCoordinate completed, test error =", testError)
 

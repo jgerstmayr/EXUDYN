@@ -51,8 +51,9 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 In order to run \codeName , you need an appropriate Python installation.
 We recommend to use
 \bi
-  \item Anaconda, 32bit, Python 3.6.5 (alternatively 64bit)
-	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit)\footnote{It is important that Spyder, python and exudyn are either 32bit or 64bit. There will be a strange .DLL error, if you mix up 32/64bit. Furthermore, it is possible to install both, Anaconda 32bit and Anacondo 64bit; Anaconda 64bit with Python3.6 must be downloaded manually via Anaconda3-5.2.0-Windows-x86\_64.exe, which can be found in repo archives.}
+  \item Anaconda, 32bit, Python 3.6.5 (alternatively 64bit)\footnote{Anaconda 32/64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe} or \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
+	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anacondo 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer}
+%Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
 If you plan to use 64bit and newer Python versions, we recommend to use VS2019 to compile your code, which offers Python 3.7 compatibility.
 However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 {\bf both} in the exudyn module and in Spyder).
@@ -203,6 +204,31 @@ Within this file, the first column shows the simulation time and the following c
 	\bi
 	\item[$\ra$] Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
 	\ei
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item I do not understand the python errors -- how can I find the reason of the error or crash?
+	\bi
+	\item[$\ra$] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
+	\item[$\ra$] If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
+	\item[$\ra$] If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \texttt{ reply.exudyn@gmail.com}
+	\ei
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item I get an error in \texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)} but no further information -- how can I solve it?
+	\bi
+	\item[$\ra$] Typical time integration errors may look like:\\
+	{\footnotesize
+  \texttt{File "C:/DATA/cpp/EXUDYN\_git/main/pythonDev/...<file name>", line XXX, in <module>}\\  
+	\texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)}\\
+  \texttt{SystemError: <built-in method TimeIntegrationSolve of PyCapsule object at 0x0CC63590> returned a result with an error set}}
+	\item[$\ra$] The prechecks, which are performed to enable a crash-free simulation are insufficient for your model.
+	\item[$\ra$] Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(t,load), which tries to access load[4] will fail internally.
+	\item[$\ra$] Use the print(...) command in python at many places to find a possible error in user functions (e.g., put \texttt{print("Start user function XYZ")} at the beginning of every user function.
+	\item[$\ra$] It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
+	\item[$\ra$] see also {\it I do not understand the python errors -- how can I find the cause?}
+ 	\ei
+
+
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item Why can't I get the focus of the simulation window on startup (render window hidden)?

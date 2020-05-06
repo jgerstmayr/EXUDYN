@@ -41,8 +41,8 @@ A=b*h                   # cross sectional area of ANCF element in m^2
 I=b*h**3/12             # second moment of area of ANCF element in m^4
 f=3*E*I/L**2            # tip load applied to ANCF element in N
 
-print("load f="+str(f))
-print("EI="+str(E*I))
+exu.Print("load f="+str(f))
+exu.Print("EI="+str(E*I))
 
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
@@ -137,7 +137,7 @@ if useCircleContact:
 #mbs.systemData.Info()
 
 mbs.Assemble()
-#print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -183,7 +183,7 @@ SC.StaticSolveOldSolver(mbs, simulationSettings) #183 Newton iterations, 0.114 s
 
 sol = mbs.systemData.GetODE2Coordinates()
 n = len(sol)
-print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
+exu.Print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
 
 if exudynTestGlobals.useGraphics: 
     SC.WaitForRenderEngineStopFlag()

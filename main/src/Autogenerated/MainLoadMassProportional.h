@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-30  22:45:22 (last modfied)
+* @date         2020-04-24  20:17:46 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,7 +105,7 @@ public: // AUTO:
     {
         cLoadMassProportional->GetParameters().markerNumber = py::cast<Index>(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DSafely(d, "loadVector", cLoadMassProportional->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadVectorUserFunction"])) { cLoadMassProportional->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector3D(Real,StdVector3D)>>((py::function)d["loadVectorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
+        if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadVectorUserFunction"])) { cLoadMassProportional->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(Real,StdVector3D)>>((py::function)d["loadVectorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadMassProportional->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -117,7 +117,7 @@ public: // AUTO:
         d["loadType"] = (std::string)GetTypeName();
         d["markerNumber"] = (Index)cLoadMassProportional->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["loadVector"] = (std::vector<Real>)cLoadMassProportional->GetParameters().loadVector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["loadVectorUserFunction"] = (std::function<StdVector3D(Real,StdVector3D)>)cLoadMassProportional->GetParameters().loadVectorUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        d["loadVectorUserFunction"] = (std::function<StdVector(Real,StdVector3D)>)cLoadMassProportional->GetParameters().loadVectorUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationLoadMassProportional->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -129,7 +129,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((Index)cLoadMassProportional->GetParameters().markerNumber);} //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { return py::cast((std::vector<Real>)cLoadMassProportional->GetParameters().loadVector);} //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector3D(Real,StdVector3D)>)cLoadMassProportional->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector(Real,StdVector3D)>)cLoadMassProportional->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadMassProportional->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("LoadMassProportional::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -142,7 +142,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { cLoadMassProportional->GetParameters().markerNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { EPyUtils::SetVector3DSafely(value, cLoadMassProportional->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadMassProportional->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector3D(Real,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadMassProportional->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(Real,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationLoadMassProportional->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadMassProportional::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

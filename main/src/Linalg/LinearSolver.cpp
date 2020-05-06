@@ -9,6 +9,7 @@
 ************************************************************************************************ */
 
 #pragma once
+#pragma warning(disable : 4996) //warning deprecated of Eigen2020
 
 //BasicLinalg provides consistent includes for BasicDefinitions, arrays, vectors and matrices
 #include "Linalg/LinearSolver.h"	
@@ -341,6 +342,7 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 	Index n = NumberOfRows(); //must be same as number of columns
 	Eigen::VectorXd b = Eigen::Map<Eigen::VectorXd>(rhs.GetDataPointer(), n);
 
+	//Eigen::VectorXd b(n);
 	//for (Index i = 0; i < n; i++)
 	//{
 	//	b[i] = rhs[i];

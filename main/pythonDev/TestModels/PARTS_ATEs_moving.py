@@ -454,7 +454,7 @@ if constrainLeftSide:
 
 
 mbs.Assemble() #creates initial configuration
-#print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -530,7 +530,7 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 nLast = mbs.systemData.NumberOfNodes()-1#just take last node-1 (last node is ground)
 
 uy=mbs.GetNodeOutput(nLast-1,exu.OutputVariableType.Position)[1] #y-coordinate of last node
-print("uy=", uy)
+exu.Print("uy=", uy)
 exudynTestGlobals.testError = uy - (0.44656762760262225) #2020-01-16: 0.44656762760262225
 
 

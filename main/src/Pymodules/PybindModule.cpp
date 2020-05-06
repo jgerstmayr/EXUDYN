@@ -111,7 +111,7 @@ void PySetWriteToConsole(bool flag) { outputBuffer.SetWriteToConsole(flag); }
 void PySetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend)
 {
 	outputBuffer.SetWriteToFile(filename, flagWriteToFile, flagAppend);
-}
+} 
 
 ////redirect printing via exudyn, such that all output can be streamed to file ...
 //void PyPrint(py::object pyObject)
@@ -335,6 +335,7 @@ PYBIND11_MODULE(exudyn, m) {
 		.value("SingleNoded", CObjectType::SingleNoded)
 		.value("MultiNoded", CObjectType::MultiNoded)
 		.value("FiniteElement", CObjectType::FiniteElement)
+		.value("SuperElement", CObjectType::SuperElement)
 		.value("EndOfEnumList", CObjectType::EndOfEnumList)
 		.export_values();
 

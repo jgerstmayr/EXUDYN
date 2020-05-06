@@ -182,7 +182,7 @@ for i in range(numberOfBodys):
 # Assemble multibody system
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 mbs.Assemble()
-#print(mbs)
+#exu.Print(mbs)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 # Simualtion settings:
@@ -220,10 +220,10 @@ SC.StaticSolve(mbs, simulationSettings)
 #compute error for test suite:
 ltgCable = mbs.systemData.GetObjectLTGODE2(cable1ObjectList[int(len(cable1ObjectList)/2)])
 nc = ltgCable[1] #vertical displacement
-print("select cable coordinate", nc)
+exu.Print("select cable coordinate", nc)
 sol = mbs.systemData.GetODE2Coordinates(); 
 uStatic = sol[nc]; #y-displacement of first node of four bar mechanism
-print('static solution of cable1 =',uStatic)
+exu.Print('static solution of cable1 =',uStatic)
 exudynTestGlobals.testError = uStatic - (-2.197321886974786) #2020-03-05(corrected Cable2DshapeMarker): -2.197321886974786 #2019-12-26:  2.1973218859908146
 
 #++++++++++++++++++++++++++++++++++++++++
@@ -278,7 +278,7 @@ if exudynTestGlobals.useGraphics:
 
 sol = mbs.systemData.GetODE2Coordinates(); 
 uDynamic = sol[nc]; #y-displacement of first node of four bar mechanism
-print('dynamic solution of cable1 =',uDynamic)
+exu.Print('dynamic solution of cable1 =',uDynamic)
 
 exudynTestGlobals.testError += uDynamic - (-2.2290811574753953) #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627
 

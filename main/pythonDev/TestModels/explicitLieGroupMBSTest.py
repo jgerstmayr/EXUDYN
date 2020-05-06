@@ -49,7 +49,7 @@ rpt = np.array(Vec2Tilde(rp))
 Fg = [0,0,-m*9.81]
 #inertia tensor w.r.t. fixed point
 JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)
-#print(JFP)
+#exu.Print(JFP)
 
 #omega0 = [0,150,-4.61538] #arbitrary initial angular velocity
 omega0 = [3*0,2*0,1*0] #arbitrary initial angular velocity
@@ -79,20 +79,20 @@ elif nodeType == exu.NodeType.RotationRxyz:
     #omega0 = [10,0,0]
     rot_t0 = AngularVelocity2RotXYZ_t(omega0, rot0)
     rotMat = RotXYZ2RotationMatrix(rot0)
-#    print('rotMat=',rotMat)
-    #print('rot_t0=',rot_t0)
+#    exu.Print('rotMat=',rotMat)
+    #exu.Print('rot_t0=',rot_t0)
     nRB = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
     if useBody2:
         nRB2 = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=p1+rot0, initialVelocities=v0+list(rot_t0)))
 elif nodeType == exu.NodeType.RotationRotationVector:
     rot0 = [0,1*0,0]
     rotMat = RotationVector2RotationMatrix(rot0)
-#    print('rotMat=',rotMat)
-#    print('rot0b=',RotationMatrix2RotationVector(rotMat))
+#    exu.Print('rotMat=',rotMat)
+#    exu.Print('rot0b=',RotationMatrix2RotationVector(rotMat))
 
 
     rot_t0 = np.dot(rotMat.transpose(),omega0)
-    print('rot_t0=',rot_t0)
+    exu.Print('rot_t0=',rot_t0)
     nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+[0,0,0], initialCoordinates=[0,0,0]+rot0, initialVelocities=v0+list(rot_t0)))
     if useBody2:
         nRB2 = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p1+[0,0,0], initialCoordinates=[0,0,0]+rot0, initialVelocities=v0+list(rot_t0)))
@@ -161,8 +161,8 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 if useExplicitIntegrator:#nodeType == exu.NodeType.RotationRotationVector:
     LieGroupExplicitRKInitialize(mbs) #initialize Lie group nodes and coordinate constraints for explicit integration
     
-    print("constrained to ground coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
-    print("lieGroupODE2indices=",mbs.sys['lieGroupODE2indices'] )
+    exu.Print("constrained to ground coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
+    exu.Print("lieGroupODE2indices=",mbs.sys['lieGroupODE2indices'] )
     
 
 #STEP2000, t = 2 sec, timeToGo = 7.99602e-14 sec, Nit/step = 0
@@ -219,7 +219,7 @@ val=np.array([2.702587408085803,3.500994026725583,3.494254676339284,
 3.4934356926497165,3.4934357574192836,3.4934358339144076
 ]) - 3.493435692625912
 val=abs(val)
-print(val)
+exu.Print(val)
 
 
 #linear motion:
@@ -250,9 +250,9 @@ dynamicSolver.SolveSystem(mbs, simulationSettings)
 #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
 omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-component of angular vel
-print("omegay=", omegay)
+exu.Print("omegay=", omegay)
 #pos=mbs.GetNodeOutput(nRB,exu.OutputVariableType.Position)[2] #z-component of pos
-#print("pos=", pos)
+#exu.Print("pos=", pos)
 exudynTestGlobals.testError = omegay - (0) #2020-02-11: 
 
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set

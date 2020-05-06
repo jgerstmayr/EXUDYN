@@ -222,6 +222,16 @@ public:
         return true;
     }
 
+	//! comparison operator for scalar value; returns true, if all components are equal to value
+	bool operator==(T value) const
+	{
+		for (auto item : (*this))
+		{
+			if (item != value) { return false; }
+		}
+		return true;
+	}
+
     //! add vector v to *this vector (for each component); both vectors must have same size
     SlimVectorBase<T,dataSize>& operator+= (const SlimVectorBase<T, dataSize>& v)
     {

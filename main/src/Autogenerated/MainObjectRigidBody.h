@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-04-08  14:46:12 (last modfied)
+* @date         2020-04-22  17:46:23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectRigidBody
-* @brief        A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements \f$[u_x\;\; u_y\;\; u_z]^T\f$ of the center of mass and the rotation parameters (Euler parameters) \f$\mathbf{q}\f$, the mass \f$m\f$, inertia \f$\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]\f$ and the residual of all forces and moments \f$[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T\f$ are given as ...
+* @brief        A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements \f$[u_x\;\; u_y\;\; u_z]^T\f$ of the center of mass and the rotation parameters (Euler parameters) \f$\mathbf{q}\f$, the mass \f$m\f$, inertia \f$\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]\f$ and the residual of all forces and moments \f$[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T\f$ are given as ...; REMARK: Use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -110,6 +110,7 @@ public: // AUTO:
     {
         cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector6DSafely(d, "physicsInertia", cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::SetVector3DSafely(d, "physicsCenterOfMass", cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/} 
         cObjectRigidBody->GetParameters().nodeNumber = py::cast<Index>(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectRigidBody->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -124,6 +125,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["physicsMass"] = (Real)cObjectRigidBody->GetParameters().physicsMass; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsInertia"] = (std::vector<Real>)cObjectRigidBody->GetParameters().physicsInertia; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMass"] = (std::vector<Real>)cObjectRigidBody->GetParameters().physicsCenterOfMass; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (Index)cObjectRigidBody->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectRigidBody->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -137,6 +139,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectRigidBody->GetParameters().physicsMass);} //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { return py::cast((std::vector<Real>)cObjectRigidBody->GetParameters().physicsInertia);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { return py::cast((std::vector<Real>)cObjectRigidBody->GetParameters().physicsCenterOfMass);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((Index)cObjectRigidBody->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRigidBody->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRigidBody::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -150,6 +153,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::SetVector6DSafely(value, cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::SetVector3DSafely(value, cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectRigidBody->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRigidBody->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRigidBody::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

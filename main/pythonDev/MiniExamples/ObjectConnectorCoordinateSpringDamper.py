@@ -19,7 +19,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 testError=1 #set default error, if failed
-print("start mini example for class ObjectConnectorCoordinateSpringDamper")
+exu.Print("start mini example for class ObjectConnectorCoordinateSpringDamper")
 try: #puts example in safe environment
     def springForce(t, u, v, k, d, offset, frictionForce, frictionProportionalZone):
         return 0.1*k*u+k*u**3+v*d
@@ -43,7 +43,7 @@ try: #puts example in safe environment
     testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0] - 0.0019995158325691875
 
 except BaseException as e:
-    print("An error occured in test example for ObjectConnectorCoordinateSpringDamper:", e)
+    exu.Print("An error occured in test example for ObjectConnectorCoordinateSpringDamper:", e)
 else:
-    print("example for ObjectConnectorCoordinateSpringDamper completed, test error =", testError)
+    exu.Print("example for ObjectConnectorCoordinateSpringDamper completed, test error =", testError)
 

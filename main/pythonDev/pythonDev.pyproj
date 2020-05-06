@@ -10,7 +10,7 @@
     <OutputPath>.</OutputPath>
     <Name>pythonDev</Name>
     <RootNamespace>pythonDev</RootNamespace>
-    <InterpreterId>Global|PythonCore|3.6-32</InterpreterId>
+    <InterpreterId>Global|PythonCore|3.6</InterpreterId>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>
@@ -33,13 +33,21 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <OutputPath>bin\Release64\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseP37' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <OutputPath>bin\ReleaseP37\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="pytest.py" />
   </ItemGroup>
   <ItemGroup>
+    <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda36-32" />
+    <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda36-64" />
+    <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda37-64" />
     <InterpreterReference Include="Global|PythonCore|3.6" />
     <InterpreterReference Include="Global|PythonCore|3.6-32" />
-    <InterpreterReference Include="Global|VisualStudio|Python 3.6 (64-bit)" />
+    <InterpreterReference Include="Global|PythonCore|3.7-32" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\obj\cppsrc.vcxproj">

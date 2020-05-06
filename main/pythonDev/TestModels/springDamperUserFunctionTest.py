@@ -20,7 +20,7 @@ import numpy as np
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-print('EXUDYN version='+exu.__version__)
+exu.Print('EXUDYN version='+exu.__version__)
 
 L=0.5
 mass = 1.6          #mass in kg
@@ -32,7 +32,7 @@ omega0=np.sqrt(spring/mass)
 f0 = 0.*omega0/(2*np.pi)
 f1 = 1.*omega0/(2*np.pi)
 
-print('resonance frequency = '+str(omega0))
+exu.Print('resonance frequency = '+str(omega0))
 tEnd = 50     #end time of simulation
 steps = 5000  #number of steps
 
@@ -52,7 +52,7 @@ def Sweep(t, t1, f0, f1):
 #user function for load
 def userLoad(t, load):
     #return load*np.sin(0.5*omega0*t) #gives resonance
-    #print(t)
+    #exu.Print(t)
     return load*Sweep(t, tEnd, f0, f1)
     #return load*Sweep(t, tEnd, f1, f0) #backward sweep
 
@@ -90,7 +90,7 @@ mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile,
                          outputVariableType=exu.OutputVariableType.Coordinates, 
                          fileName="solution/userFunctionNode.txt"))
     
-#print(mbs)
+#exu.Print(mbs)
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
@@ -114,7 +114,7 @@ SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
 #evaluate final (=current) output values
 u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
-print('displacement=',u[0])
+exu.Print('displacement=',u[0])
 
 exudynTestGlobals.testError = u[0] - (0.5062872273010898) #2019-12-18: 0.5062872273010898; #2019-12-15: 0.5062872272996835; 2019-12-13:0.5062872273014417; 2019-12-01: 0.5152217339585201
 

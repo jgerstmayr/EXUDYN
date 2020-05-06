@@ -52,7 +52,7 @@ yA = 0.1        #y-position of crank CoR
 
 #initial x-position of slider:
 xD  = np.sqrt(lBC**2 - yA**2 - (zA + lAB)**2);
-print('slider initial position =', xD)
+exu.Print('slider initial position =', xD)
 
 #initial positions of points A-C
 pA = [0, yA, zA]
@@ -60,7 +60,7 @@ pB = VAdd([0, yA, zA], [0,0,lAB])
 pC = [xD, 0, 0]
 
 vCB = np.array(pC) - np.array(pB)
-print('vCB len=', LA.norm(vCB))
+exu.Print('vCB len=', LA.norm(vCB))
 #xAxis1 = (1/lBC)*vCB #local x-axis of conrod
 [xAxis1,zAxis1, vDummy] = GramSchmidt(vCB, pA) # compute projected pA to xAxis1 ==> gives z axis
 yAxis1 = -np.cross(xAxis1, zAxis1)
@@ -193,6 +193,9 @@ SC.visualizationSettings.connectors.jointAxesLength = 0.02
 SC.visualizationSettings.connectors.jointAxesRadius = 0.002
 
 if exudynTestGlobals.useGraphics:
+#    simulationSettings.timeIntegration.numberOfSteps = 4*5000
+#    simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
+    
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -202,29 +205,29 @@ SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 #compute initial velocities:
 #if fixedVelocity:
 #    v0 = mbs.GetNodeOutput(n0,exu.OutputVariableType.Coordinates_t)
-#    print('v0=',v0)
+#    exu.Print('v0=',v0)
 #    
 #    v1 = mbs.GetNodeOutput(n1,exu.OutputVariableType.Coordinates_t)
-#    print('v1=',v1[0:3])
+#    exu.Print('v1=',v1[0:3])
 #    omega1 = mbs.GetNodeOutput(n1,exu.OutputVariableType.AngularVelocity)
-#    print('omega1=',omega1[0],omega1[1],omega1[2])
+#    exu.Print('omega1=',omega1[0],omega1[1],omega1[2])
 #    
 #    v2 = mbs.GetNodeOutput(n2,exu.OutputVariableType.Coordinates_t)
-#    print('v2=',v2[0:3])
+#    exu.Print('v2=',v2[0:3])
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 #compute TestModel error for EulerParameters and index2 solver
 sol = mbs.systemData.GetODE2Coordinates(); 
 solref = mbs.systemData.GetODE2Coordinates(configuration=exu.ConfigurationType.Reference); 
-#print('sol=',sol)
+#exu.Print('sol=',sol)
 u = 0
 for i in range(14): #take coordinates of first two bodies
     u += abs(sol[i]+solref[i])
 
-print('solution of 3D slidercrank iftomm benchmark=',u)
+exu.Print('solution of 3D slidercrank iftomm benchmark=',u)
 
-exudynTestGlobals.testError = u - (3.3642838177004832) #2020-02-19: 3.3642838177004832
+exudynTestGlobals.testError = u - (3.36427617809219) #2020-04-22(corrected GenericJoint): 3.36427617809219;2020-02-19: 3.3642838177004832
 
 
 if exudynTestGlobals.useGraphics:

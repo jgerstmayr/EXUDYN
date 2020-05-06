@@ -122,12 +122,12 @@ if calcEig:
 
     staticSolver.ComputeMassMatrix(mbs)
     m = staticSolver.GetSystemMassMatrix()
-    #print("m =",m)
+    #exu.Print("m =",m)
 
     staticSolver.ComputeJacobianODE2RHS(mbs)
     staticSolver.ComputeJacobianAE(mbs)
     K = staticSolver.GetSystemJacobian()
-    #print("K =",K)
+    #exu.Print("K =",K)
     nODE2 = staticSolver.GetODE2size()
 
 
@@ -135,17 +135,17 @@ if calcEig:
 
     [eigvals, eigvecs] = eigh(K2, m) #this gives omega^2 ... squared eigen frequencies (rad/s)
     ev = np.sort(a=abs(eigvals))
-    #print("ev =",ev)
+    #exu.Print("ev =",ev)
     if (len(ev) >= 7):
         f6 = np.sqrt(abs(ev[6]))/(2*np.pi)
-        print("ev=", f6)
+        exu.Print("ev=", f6)
         testRefVal += f6 #first bending eigenmode
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 #TEST
 def UserFunctionInitializeStep(mainSolver, mainSys, sims):
-    #print("t=", mainSolver.it.currentTime)
+    #exu.Print("t=", mainSolver.it.currentTime)
     mainSolver.UpdateCurrentTime(mainSys, sims)
     mainSys.systemData.SetTime(mainSolver.it.currentTime);
     return True
@@ -190,7 +190,7 @@ dynamicSolver.SolveSystem(mbs, simulationSettings)
 #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
 uy=mbs.GetNodeOutput(nLast,exu.OutputVariableType.Position)[1] #y-coordinate of tip
-print("uy=", uy)
+exu.Print("uy=", uy)
 exudynTestGlobals.testError = testRefVal + uy - (2.280183538481952-0.2204849087896498) #2020-01-16: 2.280183538481952-0.2204849087896498
 
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set

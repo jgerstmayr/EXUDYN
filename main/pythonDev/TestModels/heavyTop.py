@@ -25,7 +25,7 @@ import numpy as np
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#print('EXUDYN version='+exu.__version__)
+#exu.Print('EXUDYN version='+exu.__version__)
 
 #background
 #rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax
@@ -52,7 +52,7 @@ rpt = Skew(rp)
 Fg = [0,0,-m*9.81]
 #inertia tensor w.r.t. fixed point
 JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)
-#print(JFP)
+#exu.Print(JFP)
 
 omega0 = [0,150,-4.61538] #arbitrary initial angular velocity
 p0 = [0,0,0] #reference position
@@ -66,14 +66,14 @@ for nodeType in nodeTypeList:
     if nodeType == exu.NodeType.RotationEulerParameters:
         ep0 = eulerParameters0 #no rotation
         ep_t0 = AngularVelocity2EulerParameters_t(omega0, ep0)
-        #print(ep_t0)
+        #exu.Print(ep_t0)
     
         nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, initialVelocities=v0+list(ep_t0)))
     else: #Rxyz
         rot0 = [0,0,0] #no rotation
         #omega0 = [10,0,0]
         rot_t0 = AngularVelocity2RotXYZ_t(omega0, rot0)
-        #print('rot_t0=',rot_t0)
+        #exu.Print('rot_t0=',rot_t0)
     
         nRB = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
     
@@ -107,7 +107,7 @@ for nodeType in nodeTypeList:
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
-#print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -135,7 +135,7 @@ if exudynTestGlobals.useGraphics:
 
 sol = mbs.systemData.GetODE2Coordinates(); 
 solref = mbs.systemData.GetODE2Coordinates(configuration=exu.ConfigurationType.Reference); 
-#print('sol=',sol)
+#exu.Print('sol=',sol)
 u = 0
 for i in range(4):
     u += abs(sol[3+i]+solref[3+i]); #Euler parameters
@@ -143,7 +143,7 @@ for i in range(4):
 for i in range(3):
     u += abs(sol[7+3+i]+solref[7+3+i]); #Euler angles Rxyz
 
-print('solution of heavy top =',u)
+exu.Print('solution of heavy top =',u)
 # EP ref solution MATLAB: at t=0.2
 #  gen alpha (sigma=0.98, h=1e-4): -0.70813,0.43881,0.54593,0.089251 ==> abs sum=1.782121
 #  RK4:                            -0.70828,0.43878,0.54573,0.0894   ==> abs sum=1.78219

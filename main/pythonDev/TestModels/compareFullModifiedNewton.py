@@ -43,7 +43,7 @@ mbs.AddObject(RevoluteJoint2D(markerNumbers=[mG0,mR1]))
 mbs.AddLoad(Force(markerNumber = mR2, loadVector = [0, -massRigid*g, 0]))
 
 mbs.Assemble()
-print(mbs)
+exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 

@@ -10,23 +10,91 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
+import sys, platform
+workingReleasePath = 'C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease'
+#workingReleasePath = '../bin/WorkingRelease'
+if platform.architecture()[0] == '64bit':
+    workingReleasePath += '64'
+if sys.version_info.major == 3 and sys.version_info.minor == 7:
+    workingReleasePath += 'P37'
+if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
+    raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
+
+sys.path.append(workingReleasePath) #for exudyn, itemInterface and exudynUtilities
+
 sys.path.append('TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#include right exudyn module now:
 import exudyn as exu
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
 
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#parse command line arguments:
+# -quiet
+writeToConsole = True  #do not output to console / shell
+copyLog = False         #copy log to final WorkingRelease
+if len(sys.argv) > 1:
+    for i in range(len(sys.argv)-1):
+        #print("arg", i+1, "=", sys.argv[i+1])
+        if sys.argv[i+1] == '-quiet':
+            writeToConsole = False
+        elif sys.argv[i+1] == '-copylog':
+            copyLog = True
+        else:
+            print("ERROR in runTestSuite: unknown command line argument '"+sys.argv[i+1]+"'")
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#choose which tests to run:
 runUnitTests = True
 runTestExamples = True
 runMiniExamples = True
+if platform.architecture()[0] == '64bit':
+    testTolerance = 5e-11 #larger tolerance, because reference values are computed with 32bit version (WHY?)
+else:
+    testTolerance = 3e-14
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#current date and time
+def NumTo2digits(n):
+    if n < 10:
+        return '0'+str(n)
+    return str(n)
+    
+import datetime # for current date
+now=datetime.datetime.now()
+dateStr = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now.day) + ' ' + NumTo2digits(now.hour) + ':' + NumTo2digits(now.minute) + ':' + NumTo2digits(now.second)
+#date and time of exudyn library:
+import os #for retrieving file information
+from datetime import datetime #datetime contains .fromtimestamp(...)
+fileInfo=os.stat(workingReleasePath+'\\exudyn.pyd')
+exuDate = datetime.fromtimestamp(fileInfo.st_mtime) #mtime=modified time; ctime=created time, but contains time of first creation (2019...)
+exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
 
-print('EXUDYN version='+exu.__version__)
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)
+platformString = platform.architecture()[0]#'32bit'
+platformString += 'P'+str(sys.version_info.major) +'.'+ str(sys.version_info.minor)
+
+logFileName = 'TestSuiteLogs/testSuiteLog_V'+exu.__version__+'_'+platformString+'.txt'
+exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
+#exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)
+
+exu.Print('\n+++++++++++++++++++++++++++++++++++++++++++')
+exu.Print('+++++        EXUDYN TEST SUITE        +++++')
+exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
+exu.Print('EXUDYN version      = '+exu.__version__)
+exu.Print('EXUDYN build date   = '+exuDateStr)
+exu.Print('platform            = '+platform.architecture()[0])
+exu.Print('WorkingRelease path = ',workingReleasePath)
+exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
+exu.Print('test tolerance      = ',testTolerance)
+exu.Print('testsuite date (now)= '+dateStr)
+exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
+exu.SetWriteToConsole(writeToConsole) #stop output from now on
 
 #testFileList = ['Examples/fourBarMechanism.py', 
 #                'Examples/sparseMatrixSpringDamperTest.py',
@@ -34,21 +102,27 @@ exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=F
 #                'Examples/ANCF_contact_circle_test.py',
 #                'Examples/sliderCrankFloating.py']
 
-testFileList = ['TestModels/fourBarMechanismTest.py', 
-                'TestModels/sparseMatrixSpringDamperTest.py',
-                'TestModels/springDamperUserFunctionTest.py',
+testFileList = [
                 'TestModels/ANCFcontactCircleTest.py',
-                'TestModels/sliderCrankFloatingTest.py',
-                'TestModels/ANCFmovingRigidBodyTest.py',
                 'TestModels/ANCFcontactFrictionTest.py',
+                'TestModels/ANCFmovingRigidBodyTest.py',
                 'TestModels/ACNFslidingAndALEjointTest.py',
-                'TestModels/scissorPrismaticRevolute2D.py',
+                'TestModels/explicitLieGroupIntegratorTest.py',
+                'TestModels/fourBarMechanismTest.py', 
+                'TestModels/genericJointUserFunctionTest.py',
+                'TestModels/genericODE2test.py',
+                'TestModels/heavyTop.py',
                 'TestModels/manualExplicitIntegrator.py',
                 'TestModels/PARTS_ATEs_moving.py',
+                'TestModels/pendulumFriction.py',
+                'TestModels/rigidBodyCOMtest.py',
+                'TestModels/scissorPrismaticRevolute2D.py',
                 'TestModels/sliderCrank3Dbenchmark.py',
-                'TestModels/explicitLieGroupIntegratorTest.py',
+                'TestModels/sliderCrankFloatingTest.py',
+                'TestModels/sparseMatrixSpringDamperTest.py',
                 'TestModels/sphericalJointTest.py',
-                'TestModels/heavyTop.py']
+                'TestModels/springDamperUserFunctionTest.py'
+                ]
 
 
 
@@ -63,6 +137,9 @@ timeStart= -time.time()
 testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
 rv = False
 if runUnitTests:
+    exu.Print('\n***********************')
+    exu.Print('  RUN MODEL UNIT TESTS ')
+    exu.Print('***********************\n')
     rv = RunAllModelUnitTests(mbs, testInterface)
 SC.Reset()
 
@@ -70,21 +147,21 @@ SC.Reset()
 if runTestExamples:
     cnt = 0
     for file in testFileList:
-        print('\n\n******************************************')
-        print('  START EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
-        print('******************************************')
+        exu.Print('\n\n******************************************')
+        exu.Print('  START EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
+        exu.Print('******************************************')
         SC.Reset()
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
         exec(open(file).read(), globals())
-        if abs(exudynTestGlobals.testError) < 3e-14:
-            print('******************************************')
-            print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
-            print('******************************************')
+        if abs(exudynTestGlobals.testError) < testTolerance:
+            exu.Print('******************************************')
+            exu.Print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+            exu.Print('******************************************')
         else:
-            print('******************************************')
-            print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FAILED')
-            print('  ERROR = ' + str(exudynTestGlobals.testError))
-            print('******************************************')
+            exu.Print('******************************************')
+            exu.Print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FAILED')
+            exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
+            exu.Print('******************************************')
             testsFailed = testsFailed + [cnt]
         
         cnt += 1
@@ -96,31 +173,35 @@ miniExamplesFailed = []
 if runMiniExamples:
     cnt = 0
     for file in miniExamplesFileList:
-        print('\n\n******************************************')
-        print('  START MINI EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
+        exu.Print('\n\n******************************************')
+        exu.Print('  START MINI EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
         SC.Reset()
         testError = -1
         fileDir = 'MiniExamples/'+file
         exec(open(fileDir).read(), globals())
-        if abs(testError) < 3e-14:
-            print('  MINI EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+        if abs(testError) < testTolerance:
+            exu.Print('  MINI EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
         else:
-            print('******************************************')
-            print('  MINI EXAMPLE ' + str(cnt) + ' ("' + file + '") FAILED')
-            print('  ERROR = ' + str(exudynTestGlobals.testError))
-            print('******************************************')
+            exu.Print('******************************************')
+            exu.Print('  MINI EXAMPLE ' + str(cnt) + ' ("' + file + '") FAILED')
+            exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
+            exu.Print('******************************************')
             miniExamplesFailed += [cnt]
+        cnt+=1
     
 
 timeStart += time.time()
         
         
-print('\n\n******************************************')
-print('TEST SUITE RESULTS SUMMARY:')
-print('******************************************')
+exu.Print('\n')
+exu.SetWriteToConsole(True) #final output always written
+
+exu.Print('******************************************')
+exu.Print('TEST SUITE RESULTS SUMMARY:')
+exu.Print('******************************************')
 
 #++++++++++++++++++++++++++++++++++
-print('time elapsed =',round(timeStart,3),'seconds') 
+exu.Print('time elapsed =',round(timeStart,3),'seconds') 
 #10+5 tests:   2019-12-10: 2.4 seconds on Surface Pro
 #10+5 tests:   2019-12-13: 3.0,2.7 seconds on Surface Pro
 #10+6 tests:   2019-12-16: 3.8, 3.7 seconds on i9
@@ -132,26 +213,39 @@ print('time elapsed =',round(timeStart,3),'seconds')
 #10+12tests:   2020-02-03: 7.10 seconds on i9
 #10+14tests:   2020-02-19: 7.60 seconds on Surface Pro
 #10+15+8tests: 2020-02-19: 7.729 seconds on i9
+#10+19+8tests: 2020-04-22: 7.754 seconds on i9
 
 
 if rv == True:
-    print('ALL UNIT TESTS SUCCESSFUL')
+    exu.Print('ALL UNIT TESTS SUCCESSFUL')
 else:
     if runUnitTests:
-        print('UNIT TESTS FAILED: see above section UNIT TESTS for detailed information')
+        exu.Print('UNIT TESTS FAILED: see above section UNIT TESTS for detailed information')
     
 if len(testsFailed) == 0:
     if runTestExamples:
-        print('ALL ' + str(totalTests) + ' EXAMPLE TESTS SUCCESSFUL')
+        exu.Print('ALL ' + str(totalTests) + ' EXAMPLE TESTS SUCCESSFUL')
 else:
-    print(str(len(testsFailed)) + ' EXAMPLE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
+    exu.Print(str(len(testsFailed)) + ' EXAMPLE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
     for i in testsFailed:
-        print('  EXAMPLE ' + str(i) + ' (' + testFileList[i] + ') FAILED')
+        exu.Print('  EXAMPLE ' + str(i) + ' (' + testFileList[i] + ') FAILED')
         
 if len(miniExamplesFailed) == 0:
-    print('ALL ' + str(len(miniExamplesFileList)) + ' MINI EXAMPLE TESTS SUCCESSFUL')
+    exu.Print('ALL ' + str(len(miniExamplesFileList)) + ' MINI EXAMPLE TESTS SUCCESSFUL')
 else:
-    print(str(len(testsFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
+    exu.Print(str(len(testsFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
+exu.Print('******************************************\n')
 
     
+exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+
+
+if copyLog:
+    file=open(logFileName,'r') 
+    strLog = file.read()
+    file.close()
     
+    workingReleaseLog = workingReleasePath+"/testSuiteLog.txt"
+    file = open(workingReleaseLog,'w')
+    file.write(strLog)
+    file.close()

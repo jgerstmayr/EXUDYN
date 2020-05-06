@@ -176,7 +176,7 @@ for case in range(2):
         mbs.AddLoad(Force(markerNumber = mBodyHCOM, loadVector = [0, -mass*g, 0])) 
         mbs.AddLoad(Force(markerNumber = mBodyVCOM, loadVector = [0, -mass*g, 0])) 
 
-    #print(mbs)
+    #exu.Print(mbs)
     mbs.Assemble()
     SC.RenderEngineZoomAll()
     
@@ -186,14 +186,14 @@ for case in range(2):
     #exu.InfoStat()
     solver = exu.MainSolverImplicitSecondOrder()
     solver.SolveSystem(mbs, simulationSettings)
-    #print("jac=",solver.GetSystemJacobian())
-    #print(solver.conv)
-    #print(solver.it)
+    #exu.Print("jac=",solver.GetSystemJacobian())
+    #exu.Print(solver.conv)
+    #exu.Print(solver.it)
     #exu.InfoStat()
     uy=mbs.GetNodeOutput(nMeasure,exu.OutputVariableType.Position)[1] #y-coordinate of node point
-    print("uy=",uy)
+    exu.Print("uy=",uy)
     nit = solver.it.newtonStepsCount
-    print("solver.it.newtonStepsCount=",nit)
+    exu.Print("solver.it.newtonStepsCount=",nit)
     resUy += uy #add up displacements of selected node
     resIt += nit #total iterations
 #    mbs.WaitForUserToContinue()

@@ -19,7 +19,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 testError=1 #set default error, if failed
-print("start mini example for class ObjectConnectorDistance")
+exu.Print("start mini example for class ObjectConnectorDistance")
 try: #puts example in safe environment
     #example with 1m pendulum, 50kg under gravity
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[1,0]))
@@ -42,7 +42,7 @@ try: #puts example in safe environment
     testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] - (-0.9845225086606828)
 
 except BaseException as e:
-    print("An error occured in test example for ObjectConnectorDistance:", e)
+    exu.Print("An error occured in test example for ObjectConnectorDistance:", e)
 else:
-    print("example for ObjectConnectorDistance completed, test error =", testError)
+    exu.Print("example for ObjectConnectorDistance completed, test error =", testError)
 

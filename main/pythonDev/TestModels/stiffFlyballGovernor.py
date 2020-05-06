@@ -92,8 +92,8 @@ iRodSum = iRod+iMass
 refRod = -iRodSum.com
 iRodSum = iRodSum.Translated(refRod)
 
-#print("refRod=", refRod)
-#print("iRodSum=", iRodSum)
+#exu.Print("refRod=", refRod)
+#exu.Print("iRodSum=", iRodSum)
 
 #nodeType = exu.NodeType.RotationEulerParameters
 #nodeType = exu.NodeType.RotationRxyz
@@ -333,15 +333,15 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 
 for i in range(4):
     om=mbs.GetNodeOutput(i,exu.OutputVariableType.AngularVelocity)
-    print("om",i,"=",om)
+    exu.Print("om",i,"=",om)
 
 for i in range(4):
     vel=mbs.GetNodeOutput(i,exu.OutputVariableType.Velocity)
-    print("v",i,"=",vel)
+    exu.Print("v",i,"=",vel)
 
 for i in range(2):
     rot=mbs.GetNodeOutput(i+2,exu.OutputVariableType.RotationMatrix)
-    print("Rot",i+2,"=",rot)
+    exu.Print("Rot",i+2,"=",rot)
 
 plist=[]
 plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[2], variableType = exu.OutputVariableType.Velocity, localPosition = list(pointARodAC), configuration =
@@ -351,12 +351,12 @@ exu.ConfigurationType.Current)]
 plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[3], variableType = exu.OutputVariableType.Velocity, localPosition = pointARodBD, configuration =
 exu.ConfigurationType.Current)]
 for i in range(3):
-    print("vX",i,"=",plist[i])
+    exu.Print("vX",i,"=",plist[i])
 
 #locU = mbs.GetObjectOutput(objectNumber = nj2, variableType =exu.OutputVariableType.DisplacementLocal)
-#print('locU=', locU)
+#exu.Print('locU=', locU)
 #locR = mbs.GetObjectOutput(objectNumber = nj2, variableType =exu.OutputVariableType.Rotation)
-#print('locR=', locR)
+#exu.Print('locR=', locR)
 
 
 #Rxyz initial velocities:

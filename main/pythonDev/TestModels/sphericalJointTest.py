@@ -81,7 +81,7 @@ for i in range(nBodies):
 
 
 mbs.Assemble()
-#print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -110,12 +110,12 @@ SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 #+++++++++++++++++++++++++++++++++++++++++++++
 sol = mbs.systemData.GetODE2Coordinates(); 
 solref = mbs.systemData.GetODE2Coordinates(configuration=exu.ConfigurationType.Reference); 
-#print('sol=',sol)
+#exu.Print('sol=',sol)
 u = 0
 for i in range(14): #take coordinates of first two bodies
     u += abs(sol[i]+solref[i])
 
-print('solution of sphericalJointTest=',u)
+exu.Print('solution of sphericalJointTest=',u)
 
 exudynTestGlobals.testError = u - (4.409004179180698) #2020-04-04: 4.409004179180698
 

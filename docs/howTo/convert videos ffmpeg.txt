@@ -4,3 +4,9 @@ Powershell commands to create video from images:
 
 convert frame rate:
 ./ffmpeg -i input.mkv -r 16 -filter:v "setpts=0.25*PTS" output.mkv
+
+split videos into smaller parts: (-ss startTimeInSeconds -t durationInSeconds):
+ffmpeg -i source-file.mp4 -ss 1200 -t 600 file_part.mp4
+
+make smaller videos (-crf 10: very high quality, -crf 40: very low quality):
+ffmpeg.exe -i source.mp4 -vcodec libx264 -crf 30 output.mp4

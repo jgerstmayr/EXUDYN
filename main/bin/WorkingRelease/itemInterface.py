@@ -377,10 +377,11 @@ class VObjectRigidBody:
         yield 'graphicsData', self.graphicsData
 
 class ObjectRigidBody:
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], nodeNumber = -1, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = -1, visualization = {'show': True, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
+        self.physicsCenterOfMass = physicsCenterOfMass
         self.nodeNumber = nodeNumber
         self.visualization = visualization
 
@@ -389,6 +390,7 @@ class ObjectRigidBody:
         yield 'name', self.name
         yield 'physicsMass', self.physicsMass
         yield 'physicsInertia', self.physicsInertia
+        yield 'physicsCenterOfMass', self.physicsCenterOfMass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
@@ -468,6 +470,53 @@ class ObjectGenericODE2:
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
+
+class VObjectFFRF:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, deformationScaleFactor = 1):
+        self.show = show
+        self.color = color
+        self.triangleMesh = triangleMesh
+        self.showNodes = showNodes
+        self.deformationScaleFactor = deformationScaleFactor
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+        yield 'triangleMesh', self.triangleMesh
+        yield 'showNodes', self.showNodes
+        yield 'deformationScaleFactor', self.deformationScaleFactor
+
+class ObjectFFRF:
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, coordinateIndexPerNode = [], modeBasis = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'deformationScaleFactor': 1}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.massMatrix = massMatrix
+        self.stiffnessMatrix = stiffnessMatrix
+        self.dampingMatrix = dampingMatrix
+        self.forceVector = forceVector
+        self.forceUserFunction = forceUserFunction
+        self.massMatrixUserFunction = massMatrixUserFunction
+        self.coordinateIndexPerNode = coordinateIndexPerNode
+        self.modeBasis = modeBasis
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'FFRF'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'massMatrix', self.massMatrix
+        yield 'stiffnessMatrix', self.stiffnessMatrix
+        yield 'dampingMatrix', self.dampingMatrix
+        yield 'forceVector', self.forceVector
+        yield 'forceUserFunction', self.forceUserFunction
+        yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'coordinateIndexPerNode', self.coordinateIndexPerNode
+        yield 'modeBasis', self.modeBasis
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+        yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
+        yield 'VshowNodes', dict(self.visualization)["showNodes"]
+        yield 'VdeformationScaleFactor', dict(self.visualization)["deformationScaleFactor"]
 
 class VObjectANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):

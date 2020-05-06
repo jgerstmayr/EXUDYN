@@ -36,7 +36,7 @@ class CNode;
 class CObjectBody: public CObject 
 {
 protected:
-	//ResizableArray<Index> nodes; //done in every object; body have single or several nodes
+	//ResizableArray<Index> nodes; //done in every object; body has single or several nodes
 
 public:
     ////! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
@@ -110,10 +110,61 @@ public:
 		return Vector3D();
 	}
 
+	//return center of mass --> necessary for RigidBody
+	virtual Vector3D GetLocalCenterOfMass() const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetLocalCenterOfMass");
+		return Vector3D({ 0., 0., 0. });
+	}
+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// Computation FUNCTIONS
 
 	//! compute object massmatrix to massMatrix ==> only possible for bodies!!!
 	virtual void ComputeMassMatrix(Matrix& massMatrix) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeMassMatrix"); }
+
+}; //CObjectBody
+
+
+
+//! an element with more access functions than CObjectBody; may be slower
+class CObjectSuperElement : public CObjectBody
+{
+//protected:
+
+public:
+	////! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
+	virtual CObjectSuperElement* GetClone() const { return new CObjectSuperElement(*this); }
+
+	virtual CObjectType GetType() const override { return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SuperElement); }
+
+	//virtual void Print(std::ostream& os) const;
+
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// ACCESS FUNCTIONS
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	//basic access function global position, which are available in every superelement
+	virtual Vector3D GetNodePosition(Index localNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetNodePosition");
+		return Vector3D({ 0., 0., 0. });
+	}
+
+	//basic access function local position, which are available in every superelement
+	virtual Vector3D GetNodeLocalPosition(Index localNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetNodeLocalPosition");
+		return Vector3D({ 0., 0., 0. });
+	}
+
+	//basic access function for velocity, which are available in every superelement
+	virtual Vector3D GetNodeVelocity(Index localNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetNodeVelocity");
+		return Vector3D({ 0., 0., 0. });
+	}
+
+	//basic access function for local velocity, which are available in every superelement
+	virtual Vector3D GetNodeLocalVelocity(Index localNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetNodeLocalVelocity");
+		return Vector3D({ 0., 0., 0. });
+	}
 
 };

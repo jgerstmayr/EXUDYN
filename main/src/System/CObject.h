@@ -43,7 +43,8 @@ enum class CObjectType {
 	SingleNoded = 1 << 5,	//!< does not connect nodes ==> limited nodal connectivity
 	MultiNoded = 1 << 6,	//!< connects nodes (e.g. spring-damper or finite element)
 	FiniteElement = 1 << 7, //!< object is flexible, nodal interpolation
-	EndOfEnumList = 1 << 8  //!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+	SuperElement = 1 << 8,  //!< object contains larger set of nodes and more complicated access functions, e.g., FFRF element, etc.
+	EndOfEnumList = 1 << 9  //!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //keep these lists synchronized with PybindModule.cpp lists
 };

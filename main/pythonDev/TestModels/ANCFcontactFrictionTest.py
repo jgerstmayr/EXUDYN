@@ -22,7 +22,7 @@ import exudyn as exu
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-print('DYNAFLEX version='+exu.__version__)
+exu.Print('DYNAFLEX version='+exu.__version__)
 
 #testInterface = TestInterface(dynaflex = df, systemContainer = SC, useGraphics=False)
 #RunAllModelUnitTests(mbs, testInterface)
@@ -48,8 +48,8 @@ A=b*h                   # cross sectional area of ANCF element in m^2
 I=b*h**3/12             # second moment of area of ANCF element in m^4
 f=3*E*I/L**2            # tip load applied to ANCF element in N
 
-print("load f="+str(f))
-print("EI="+str(E*I))
+exu.Print("load f="+str(f))
+exu.Print("EI="+str(E*I))
 
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
@@ -124,7 +124,7 @@ if useCircleContact:
 
 
     for i in range(len(cableList)):
-        #print("cable="+str(cableList[i]))
+        #exu.Print("cable="+str(cableList[i]))
         mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=cableList[i], numberOfSegments = nSegments))
 
         nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments*(1+2*useFriction)))
@@ -135,7 +135,7 @@ if useCircleContact:
 
 
 mbs.Assemble()
-#print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -181,7 +181,7 @@ if solveDynamic:
 
     sol = mbs.systemData.GetODE2Coordinates()
     u = sol[len(sol)-3]
-    print('tip displacement: y='+str(u))
+    exu.Print('tip displacement: y='+str(u))
     exudynTestGlobals.testError = u - (-0.014188649931870346) #2019-12-26: -0.014188649931870346; 2019-12-16: (-0.01418281035370442);
 
 else:
@@ -206,7 +206,7 @@ else:
 
     sol = mbs.systemData.GetODE2Coordinates()
     n = len(sol)
-    print('static tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
+    exu.Print('static tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
 
 if exudynTestGlobals.useGraphics: 
     SC.WaitForRenderEngineStopFlag()

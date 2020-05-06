@@ -241,11 +241,11 @@ for testCases in rangeTests:
         exu.StopRenderer() #safely close rendering window!
     
     u = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position) #tip node
-    print('sol =', abs(u[0]))
+    exu.Print('sol =', abs(u[0]))
     solutionSliderCrankIndex2 += abs(u[0]) #x-position of slider
 
 
-print('solutionSliderCrankIndex2=',solutionSliderCrankIndex2)
+exu.Print('solutionSliderCrankIndex2=',solutionSliderCrankIndex2)
 exudynTestGlobals.testError = solutionSliderCrankIndex2 - 0.5916491633788333 #2020-01-15: 0.5916491633788333(corrected PrismaticJoint); 2019-12-26: 0.5916499441339551; 2019-12-15: 0.591689710999802 (absTol: 1e-8 now; 1e-2 before); before 2019-12-15: 0.5896009710727431
 
 

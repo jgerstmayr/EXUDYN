@@ -266,7 +266,17 @@ public:
         return true;
     }
 
-    //! add vector v to *this vector (for each component); both vectors must have same size
+	//! comparison operator for scalar value; returns true, if all components are equal to value
+	bool operator==(T value) const
+	{
+		for (auto item : (*this))
+		{
+			if (item != value) { return false; }
+		}
+		return true;
+	}
+
+	//! add vector v to *this vector (for each component); both vectors must have same size
     VectorBase& operator+=(const VectorBase& v)
     {
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=: incompatible size of vectors");

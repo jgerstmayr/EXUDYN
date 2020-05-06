@@ -395,11 +395,7 @@ The description of interfaces for solvers starts in Section \ref{sec_MainSolverS
 			\path [arrow] (discontinuousIteration) -- node [near start] {True}(finishDiscIt);
 			\path [arrow] (solveSteps) -- (solveStepsLoop);
 			\path [arrow] (discontinuousIterationFailed) |- (stepReduction);
-			%\path [arrow] (initializeSolverOutput) -- (initializeSolverPreChecks);
-			%\path [arrow] (initializeSolverPreChecks) -- node [near start] {no}(initFailed);
-			%\path [arrow] (initializeSolverPreChecks) -- node [near start] {yes}(initializeSolverData);
-			%\path [arrow] (initializeSolverData) -- (initializeSolverInitialConditions);
-			%\path [arrow] (initializeSolverInitialConditions) -- (finished);
+			\path [arrow] (finishDiscIt) -| (finishStep);
 	\end{tikzpicture}
   \caption{Solver flow chart for SolveSteps(), which is the inner loop of the solver.}
 	\label{fig_solver_solve_steps}
@@ -684,7 +680,7 @@ This section provides general coding rules and conventions, partly applicable to
     \item write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
     \item put a header in every file, according to Doxygen format
     \item put a comment to every (global) function, member function, data member, template parameter
-    \item ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) {i += 1;}
+    \item ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \{i += 1;\}
     \item use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
     \item use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
     \item USE 4-spaces-tab
@@ -709,7 +705,7 @@ The following notation conventions are applied ({\bf no exceptions!}):
 		\item for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
 		\item do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
 		\item for functions use \texttt{ODEComputeCoords()}, for variables avoid 'ODE' at beginning: use nODE or write odeCoords
-		\item do not use '\_' within variable or function names; exception: derivatives, release\_assert
+		\item do not use '\_' within variable or function names; exception: derivatives
 		\item use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
 		\item examples for variable names: secondOrderSize, massMatrix, mThetaTheta
 		\item examples for function/class names: \texttt{SecondOrderSize}, \texttt{EvaluateMassMatrix}, \texttt{Position(const Vector3D\& localPosition)}

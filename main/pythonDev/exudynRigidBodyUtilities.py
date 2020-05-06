@@ -278,6 +278,15 @@ def HT2translation(T):
 def HT2rotationMatrix(T):
     return T[0:3,0:3]
 
+#return inverse homogeneous transformation such that inv(T)*T = np.eye(4)
+def InverseHT(T):
+    Tinv = np.eye(4)
+    Ainv = T[0:3,0:3].T #inverse rotation part
+    Tinv[0:3,0:3] = Ainv
+    r = T[0:3,3]        #translation part
+    Tinv[0:3,3]  = -Ainv @ r       #inverse translation part
+    return Tinv
+
 ################################################################################
 #Test (compared with Robotcs, Vision and Control book of P. Corke:
 #T=HTtranslate([1,0,0]) @ HTrotateX(np.pi/2) @ HTtranslate([0,1,0])
@@ -403,7 +412,7 @@ class InertiaHollowSphere(RigidBodyInertia):
 #adds gravity force, i.e., m*gravity
 def AddRigidBody(mainSys, inertia, nodeType, 
                  position=[0,0,0], velocity=[0,0,0], 
-                 rotationMatrix=np.diag([1,1,1]),
+                 rotationMatrix= [],
                  rotationParameters = [],
                  angularVelocity=[0,0,0],
                  gravity=[0,0,0],
@@ -411,9 +420,12 @@ def AddRigidBody(mainSys, inertia, nodeType,
 
     if len(rotationMatrix) != 0 and len(rotationParameters) != 0:
         raise ValueError('AddRigidBody: either rotationMatrix or rotationParameters must empty!')
+    if len(rotationMatrix) == 0 and len(rotationParameters) == 0:
+        rotationMatrix=np.diag([1,1,1])
         
+    strNodeType = str(nodeType)
     nodeNumber = -1
-    if nodeType == 'NodeType.RotationEulerParameters':
+    if strNodeType == 'NodeType.RotationEulerParameters':
         if len(rotationParameters) == 0:
             ep0 = RotationMatrix2EulerParameters(rotationMatrix)
         else:
@@ -422,7 +434,7 @@ def AddRigidBody(mainSys, inertia, nodeType,
         ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
         nodeNumber = mainSys.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0), 
                                                      initialVelocities=list(velocity)+list(ep_t0)))
-    elif nodeType == 'NodeType.RotationRxyz':
+    elif strNodeType == 'NodeType.RotationRxyz':
         if len(rotationParameters) == 0:
             rot0 = RotationMatrix2RotXYZ(rotationMatrix)
         else:
@@ -433,7 +445,7 @@ def AddRigidBody(mainSys, inertia, nodeType,
 #        print('rot_t0=',rot_t0)
         nodeNumber = mainSys.AddNode(NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0), 
                                                        initialVelocities=list(velocity)+list(rot_t0)))
-    elif nodeType == 'NodeType.RotationRotationVector':
+    elif strNodeType == 'NodeType.RotationRotationVector':
         if len(rotationParameters) == 0:
             #raise ValueError('NodeType.RotationRotationVector not implemented!')
             rot0 = RotationMatrix2RotationVector(rotationMatrix)
@@ -445,9 +457,13 @@ def AddRigidBody(mainSys, inertia, nodeType,
             
         nodeNumber = mainSys.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
                                                            initialVelocities=list(velocity)+list(angularVelocityLocal)))
-        
+    #if NormL2(inertia.com) != 0:
+    #    print("AddRigidBody COM=", inertia.com)
+
     bodyNumber = mainSys.AddObject(ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
-                                                   nodeNumber=nodeNumber, visualization=VObjectRigidBody(graphicsData=graphicsDataList)))
+                                                   physicsCenterOfMass=inertia.com,
+                                                   nodeNumber=nodeNumber, 
+                                                   visualization=VObjectRigidBody(graphicsData=graphicsDataList)))
     
     if NormL2(gravity) != 0.:
         markerNumber = mainSys.AddMarker(MarkerBodyMass(bodyNumber=bodyNumber))

@@ -220,6 +220,7 @@ Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDa
 Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #helper functions for rotation parameters:
 #F,      C,      GetEulerParameters,             ,               ,       ConstSizeVector<nRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to of 4 Euler Parameters from reference and configuration coordinates"  
 #F,      C,      GetEulerParameters_t,           ,               ,       ConstSizeVector<nRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to time derivative of 4 Euler Parameters in given configuration"  
@@ -646,6 +647,8 @@ Fv,     C,      GetOutputVariableBody,          ,               ,       void,   
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'MassPoint';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
@@ -733,6 +736,8 @@ Fv,     C,      GetOutputVariableBody,          ,               ,       void,   
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'MassPoint2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
@@ -749,7 +754,7 @@ V,      V,      graphicsData,                   ,               ,       BodyGrap
 writeFile = True
 
 class = ObjectRigidBody
-classDescription = "A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements $[u_x\;\; u_y\;\; u_z]^T$ of the center of mass and the rotation parameters (Euler parameters) $\mathbf{q}$, the mass $m$, inertia $\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]$ and the residual of all forces and moments $[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T$ are given as ..."
+classDescription = "A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements $[u_x\;\; u_y\;\; u_z]^T$ of the center of mass and the rotation parameters (Euler parameters) $\mathbf{q}$, the mass $m$, inertia $\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]$ and the residual of all forces and moments $[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T$ are given as ...; REMARK: Use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -762,10 +767,11 @@ classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #done automatically: V,      M,      cObjectMassPoint,          ,               ,       CNodePoint*,,                           ,       ,       "pointer to computational object"
-Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,      "objects's unique name"
-V,      CP,     physicsMass,                    ,               ,       UReal,      "0.",                        ,       I,      "$m$mass [SI:kg] of mass point"
-V,      CP,     physicsInertia,                 ,               ,       Vector6D,   "Vector6D({0.,0.,0., 0.,0.,0.})", ,  I,      "$J$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ of rigid body w.r.t. center of mass"
-V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",       ,      I,      "$n0$node number for rigid body node"
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
+V,      CP,     physicsMass,                    ,               ,       UReal,      "0.",                       ,       I,      "$m$mass [SI:kg] of mass point"
+V,      CP,     physicsInertia,                 ,               ,       Vector6D,   "Vector6D({0.,0.,0., 0.,0.,0.})", , I,      "$J$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ of rigid body w.r.t. to the reference point of the body, NOT w.r.t. to center of mass; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass"
+V,      CP,     physicsCenterOfMass,            ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       IO,     "$\LU{b}{\pv}_{COM}$local position of center of mass (COM); if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster"
+V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",     ,       I,      "$n0$node number for rigid body node"
 #
 # add dict interface for functions in a different way!
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix",       CDI,    "Computational function: compute mass matrix" 
@@ -783,6 +789,8 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return parameters.physicsCenterOfMass;", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBody';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
@@ -888,6 +896,8 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   "return GetAngularVelocity(localPosition, configuration);","const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent local (=body-fixed) angular velocity of node, which is the same as the global angular velocity vector in 2D; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBody2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
@@ -954,6 +964,8 @@ Fv,     C,      GetOutputVariableBody,          ,               ,       void,   
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, used for massProportionalLoad, which may NOT be appropriate for GenericODE2" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericODE2';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems();",                ,       CI,     "number of nodes; needed for every object" 
@@ -973,6 +985,89 @@ V,      V,      color,                          ,               4,      Float4, 
 V,      V,      triangleMesh,                   ,               ,       NumpyMatrix,"Matrix()",                 ,       IO,      "a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!"
 V,      V,      showNodes,                      ,               ,       bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+#could be used to visualize nodes: V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
+#file names automatically determined from class name
+writeFile = True
+
+
+class = ObjectFFRF
+classDescription = "This object is used to represent equations modelled by the floating frame of reference formulation (FFRF). It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF."
+cParentClass = CObjectBody
+mainParentClass = MainObjectBody
+visuParentClass = VisualizationObject
+addIncludesC = '#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11/stl.h>//for NumpyMatrix\n#include <pybind11/pybind11.h>\ntypedef py::array_t<Real> NumpyMatrix; \n'
+addPublicC = "    static const Index ffrfNodeNumber = 0; //floating frame of reference (ffrf) node number in body\n"
+outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all ODE2 velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2RHS)'}"
+classType = Object
+equations =
+    An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$ has $n$ nodal coordinates, 
+    \be
+      n = \sum_{i} n_{c_i}.
+    \ee
+    In case that NO \texttt{modalBasis} is supplied, the total number of equations (=coordinates) of the object is $n_c = n$.
+    The first node $n_0$ represents the rigid body motion of the underlying reference frame with $n_{c_0}$ coordinates 
+    (e.g., 6 coordinates for Euler angles and 7 coordinates in case of Euler parameters). 
+    
+    If a {\bf modalBasis} is supplied, the number of columns $m$ of the modalBasis defines the number of mode coordinates.
+    In this case, the number of equations of motion and coordinates of the object is $n_c = m + n_{c_0}$.
+    {\bf Equations of motion}:
+    \be \label{eq_ObjectGenericODE2_EOM}
+      \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
+    \ee
+    Note that the user function $\fv_{user}(t,\qv,\dot \qv)$ may be empty (=0). 
+    
+    In case that a user mass matrix is specified, \eq{eq_ObjectGenericODE2_EOM} is replaced with
+    \be
+      \Mm_{user}(t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
+    \ee
+    CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
+    Use a \texttt{MarkerGenericBodyPosition} to attach a multi-nodal joint or constraint to the FFRF body.
+/end
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#done automatically: V,      M,      cObjectMassPoint,          ,               ,       CNodePoint*,,                           ,       ,       "pointer to computational object"
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
+V,      CP,     nodeNumbers,                    ,               ,       ArrayIndex, "ArrayIndex()",           ,       I,      "$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$node numbers which provide the coordinates for the object (consecutively as provided in this list)"
+V,      CP,     massMatrix,                     ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Mm \in \Rcal^{n_c \times n_c}$mass matrix of object in python numpy format"
+V,      CP,     stiffnessMatrix,                ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Km \in \Rcal^{n_c \times n_c}$body-fixed stiffness matrix of object in python numpy format"
+V,      CP,     dampingMatrix,                  ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Dm \in \Rcal^{n_c \times n_c}$body-fixed damping matrix of object in python numpy format"
+V,      CP,     forceVector,                    ,               ,       NumpyVector,"Vector()",                       ,       I,      "$\fv \in \Rcal^{n_c}$generalized force vector added to RHS"
+V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,             ,       IO,     "$\fv_{user} \in \Rcal^{n_c}$A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy stiffness matrix K: def f(t, q, q\_t): return np.dot(K, q)"
+V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,             ,       IO,     "$\Mm_{user} \in \Rcal^{n_c\times n_c}$A python user function which computes the mass matrix instead of the constant mass matrix; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy stiffness matrix M: def f(t, q, q\_t): return (q[0]+1)*M"
+V,      CP,     coordinateIndexPerNode,         ,               ,       ArrayIndex, "ArrayIndex()",                   ,       IR,     "this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed"
+#always true!: V,      CP,     useFirstNodeAsReferenceFrame,   ,               ,       bool,       "false",                          ,       IO,     "set true, if first node ($n_0$) is used as floating reference frame; all other nodes are interpreted relative to the reference frame; used to implement FFRF (floating frame of reference formulation); NOTE that in this case, nodes $[n_1,\,\ldots,\,n_n]\tp$ are still drawn without the reference frame"
+V,      CP,     modeBasis,                      ,               ,       NumpyMatrix,"Matrix()",                       ,       IO,      "$\tPhi \in \Rcal^{n \times m}$if this matrix is defined, the number of coordinates in the equations of motion is $m$ and this the mode basis matrix transforms $m$ modal displacement coordinates to $n$ nodal displacement coordinates; note that the range of $m$ is restricted to $m \in [1,m]$"
+#
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeODE2RHS,                 ,               ,       void,       ,                           "Vector& ode2Rhs",          CDI,    "Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'" 
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
+Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
+Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
+Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
+Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, used for massProportionalLoad, which may NOT be appropriate for GenericODE2" 
+#
+Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericODE2';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems();",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetODE2Size,                    ,               ,       Index,      ,                ,       CDI,     "number of ODE2 coordinates; needed for object?" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::_None;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+#not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
+Fv,     C,      ParametersHaveChanged,          ,               ,       void,       "InitializeCoordinateIndices();", ,     I,    "This flag is reset upon change of parameters; says that the vector of coordinate indices has changed" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     C,      GetLocalODE2CoordinateIndexPerNode, ,           ,       Index,      "return parameters.coordinateIndexPerNode[localNode];", "Index localNode", CI,    "read access to coordinate index array" 
+#helper functions:
+F,      C,      ComputeObjectCoordinates,       ,               ,       void,       ,                           "Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object coordinates composed from all nodal coordinates; does not include reference coordinates" 
+F,      C,      InitializeCoordinateIndices,    ,               ,       void,       ,                           ,          DI,    "initialize coordinateIndexPerNode array" 
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      color,                          ,               4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      triangleMesh,                   ,               ,       NumpyMatrix,"Matrix()",                 ,       IO,      "a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!"
+V,      V,      showNodes,                      ,               ,       bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
+V,      V,      deformationScaleFactor,         ,               ,       UReal,      1,                    ,       IO,      "a scaling factor, which is applied to the nodal deformations in order to visualize deformations"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #could be used to visualize nodes: V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
 writeFile = True
@@ -1153,6 +1248,8 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   "return EXUmath::unitMatrix3D;",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   "return Vector3D({ 0.,0.,0. });",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   "return Vector3D({ 0.,0.,0. });",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad -- not used for GroundObject" 
+#
 Fv,     M,      GetTypeName,                    ,               ,       const char*,                            "return 'Ground';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(0);\n        return 0;",       "Index localIndex",       CI,     "No nodenumber can be returned for ground object!" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 0;",                ,       CI,     "number of nodes; needed for every object" 
@@ -1745,7 +1842,7 @@ V,      CP,     activeConnector,                ,               ,       bool,   
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return (parameters.offsetUserFunction != false || parameters.offsetUserFunction_t != false);", ,      CI,    "connector is time dependent if user functions are defined" 
+Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
 Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,       "return parameters.velocityLevel;",  ,      CI,     "Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,   "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
@@ -1971,24 +2068,24 @@ equations =
     \noindent {\bf Connector equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
-    the translational index 3 constraints read
+    the translational index 3 constraints read ($UF_{0,1,2}(t, \pv_{par})$ is the translational part of the user function $UF$),
     \be
-      \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} = \Null
+      \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(t, \pv_{par}) = \Null
     \ee
     and the translational index 2 constraints read
     \be
-      \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} = \Null    
+      \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(t, \pv_{par})= \Null    
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
     the translational index 3 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\pv}$
     \bea
-      \LU{J0}{\Delta p_k} &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta p_k} - UF_{k}(t, \pv_{par}) &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
     \bea
-      \LU{J0}{\Delta v_k} &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta v_k} - UF_{t;k}(t, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
 %
@@ -1996,6 +2093,9 @@ equations =
     \noindent {\bf Connector equations for rotational part (\texttt{activeConnector = True})}:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
     Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
+    In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(t, \pv_{par}))$, in which the three components of 
+    $UF_{3,4,5}$ are interpreted as Tait-Bryan angles that are added to the joint frame.
+    
     If {\bf 3 rotation axes are constrained},  $[j_3,\,\ldots,\,j_5] = [1,1,1]\tp$, the index 3 constraint equations read
     \bea
        \vv_{z0}\tp \vv_{y1} &=& 0 \\
@@ -2030,10 +2130,10 @@ V,      CP,     rotationMarker0,                ,               ,       Matrix3D
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
 V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #V,      CP,     forceTorqueUserFunctionParameters, ,            ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "vector of 6 parameters for joint's forceTorqueUserFunction"
-V,      CP,     offsetUserFunctionParameters,   ,               ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "vector of 6 parameters for joint's offsetUserFunction"
+V,      CP,     offsetUserFunctionParameters,   ,               ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "$\pv_{par}$vector of 6 parameters for joint's offsetUserFunction"
 #V,      CP,     forceTorqueUserFunction,        ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "A python function which defines the time-dependent force (indices 0,1,2) and torque (indices 3,4,5) joint coordinates with parameters (t, forceTorqueUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, forceTorqueUserFunctionParameters): return [forceTorqueUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]"
-V,      CP,     offsetUserFunction,             ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offsetUserFunctionParameters): return [offsetUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]"
-V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "time derivative of offsetUserFunction using the same parameters; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators"
+V,      CP,     offsetUserFunction,             ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "$UF(t, \pv_{par})$A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offsetUserFunctionParameters): return [offsetUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]"
+V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "$UF_t(t, \pv_{par})$(NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 

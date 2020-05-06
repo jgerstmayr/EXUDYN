@@ -23,6 +23,7 @@
 
 #ifndef __FAST_EXUDYN_LINALG
 	#define __ASSERT_IN_RELEASE_MODE__ //slows down release, but faster than debug mode (for debugging large scale problems)
+	#define __PYTHON_USERFUNCTION_CATCH__  //performs try/catch in all python user functions
 	#define __EXUDYN_RUNTIME_CHECKS__  //performs several runtime checks, which slows down performance in release or debug mode
 
 	//!check if _checkExpression is true; if no, trow std::exception(_exceptionMessage); _exceptionMessage will be a const char*, e.g. "VectorBase::operator[]: invalid index"

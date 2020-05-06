@@ -61,13 +61,13 @@ mbs.AddLoad(Force(markerNumber = bodyMarker, loadVector = [f, 0, 0]))
 n2=mbs.AddNode(Point(referenceCoordinates = [2*L,0,0], initialCoordinates = [u0,f/k*0.999,0], initialVelocities= [v0,0,0]))
 
 M=np.diag([mass,mass,mass])
-print("M =",M)
+#exu.Print("M =",M)
 K=np.diag([k,k,k])
-print("K =",K)
+#exu.Print("K =",K)
 D=np.diag([d,0,d])
-print("D =",D)
+#exu.Print("D =",D)
 fv=np.array([f,f,0])
-print("fv =",fv)
+#exu.Print("fv =",fv)
 
 fdyn=np.array([0,0,10])
 
@@ -79,15 +79,15 @@ def UFgenericODE2(t, q, q_t):
     #f = np.sin(t*2*np.pi*10)*fdyn
     f = Sweep(t,10,1,100)*fdyn
     return f
-    #print("t =", t, ", f =", f)
+    #exu.Print("t =", t, ", f =", f)
 
 def UFmassGenericODE2(t, q, q_t):
-    return (1+1e-6*t)*M
+    return 1*M
 
 mbs.AddObject(ObjectGenericODE2(nodeNumbers = [n2], massMatrix=M, stiffnessMatrix=K, dampingMatrix=D, forceVector=fv, 
                                 forceUserFunction=UFgenericODE2, massMatrixUserFunction=UFmassGenericODE2))
 
-print(mbs)
+#exu.Print(mbs)
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
@@ -102,51 +102,18 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
 
-#exu.StartRenderer()
-#exu.InfoStat()
 SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
-#exu.InfoStat()
-#SC.WaitForRenderEngineStopFlag()
-#exu.StopRenderer() #safely close rendering window!
 
 u1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
-print("u1 =", u1)
+#exu.Print("u1 =", u1)
 u2 = mbs.GetNodeOutput(n2, exu.OutputVariableType.Coordinates)
-print("u2 =", u2)
-#errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407044113 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution (0.01183198678754692)
+#exu.Print("u2 =", u2)
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#exact solution:
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+u=NormL2(u1) + NormL2(u2)
+exu.Print('solution of genericODE2test=',u)
 
-omega0 = np.sqrt(k/mass)     #recompute for safety
-dRel = d/(2*np.sqrt(k*mass)) #recompute for safety
-omega = omega0*np.sqrt(1-dRel**2)
-C1 = u0-x0 #static solution needs to be considered!
-C2 = (v0+omega0*dRel*C1) / omega #C1 used instead of classical solution with u0, because x0 != 0 !!!
+exudynTestGlobals.testError = u - (0.03604546349898683) #2020-04-22: 0.03604546349898683
 
-refSol = np.zeros((steps+1,2))
-for i in range(0,steps+1):
-    t = tEnd*i/steps
-    refSol[i,0] = t
-    refSol[i,1] = np.exp(-omega0*dRel*t)*(C1*np.cos(omega*t) + C2*np.sin(omega*t))+x0
-
-print('refSol=',refSol[steps,1])
-
-data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
-plt.plot(data[:,0], data[:,1], 'b-') #numerical solution
-plt.plot(data[:,0], data[:,4], 'g--') #numerical solution
-plt.plot(data[:,0], data[:,6], 'k--') #numerical solution
-plt.plot(refSol[:,0], refSol[:,1], 'r-') #exact solution
-
-ax=plt.gca() # get current axes
-ax.grid(True, 'major', 'both')
-ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-plt.tight_layout()
-plt.show() 
 
 
 

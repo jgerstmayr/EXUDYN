@@ -174,6 +174,16 @@ public:
         return true;
     }
 
+	//! comparison operator for scalar value; returns true, if all components are equal to value
+	bool operator==(T value) const
+	{
+		for (auto item : (*this))
+		{
+			if (item != value) { return false; }
+		}
+		return true;
+	}
+
 	//! conversion of SlimArray into std::vector (needed e.g. in pybind)
 	operator std::vector<T>() const
 	{

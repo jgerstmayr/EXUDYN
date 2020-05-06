@@ -21,7 +21,7 @@ from exudynLieGroupIntegration import *
 
 import numpy as np
 
-exu.SetWriteToFile('testOutput.log', flagWriteToFile=False, flagAppend=True)
+#exu.SetWriteToFile('testOutput.log', flagWriteToFile=False, flagAppend=True) #done in TestSuite
 
 SC = exu.SystemContainer()
 #mbs = exu.MainSystem()
@@ -48,7 +48,7 @@ rpt = np.array(Skew(rp))
 Fg = [0,0,-m*9.81]
 #inertia tensor w.r.t. fixed point
 JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)
-#print(JFP)
+#exu.Print(JFP)
 
 omega0 = [0,150,-4.61538] #arbitrary initial angular velocity
 p0 = [0,0,0] #reference position
@@ -62,19 +62,19 @@ nRB = 0
 if nodeType == exu.NodeType.RotationEulerParameters:
     ep0 = eulerParameters0 #no rotation
     ep_t0 = AngularVelocity2EulerParameters_t(omega0, ep0)
-    #print(ep_t0)
+    #exu.Print(ep_t0)
 
     nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, initialVelocities=v0+list(ep_t0)))
 elif nodeType == exu.NodeType.RotationRxyz:
     rot0 = [0,0,0]
     #omega0 = [10,0,0]
     rot_t0 = AngularVelocity2RotXYZ_t(omega0, rot0)
-    #print('rot_t0=',rot_t0)
+    #exu.Print('rot_t0=',rot_t0)
     nRB = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
 elif nodeType == exu.NodeType.RotationRotationVector:
     rot0 = [0,0,0]
     rot_t0 = omega0
-    #print('rot_t0=',rot_t0)
+    #exu.Print('rot_t0=',rot_t0)
     nRB = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p0+rot0, initialVelocities=v0+list(rot_t0)))
 
 
@@ -124,7 +124,7 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 #compute data needed for Lie group integrator:
 if nodeType == exu.NodeType.RotationRotationVector:
     LieGroupExplicitRKInitialize(mbs)
-    #print("constrained coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
+    #exu.Print("constrained coords=",mbs.sys['constrainedToGroundCoordinatesList'] )
 
 #STEP2000, t = 2 sec, timeToGo = 7.99602e-14 sec, Nit/step = 0
 #solver finished after 1.46113 seconds.
@@ -145,7 +145,7 @@ if nodeType == exu.NodeType.RotationRotationVector:
 #-106.16380903826868,
 #-106.163804467377]) +106.1638041640045
 #val *= -1
-#print(val)
+#exu.Print(val)
 
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
@@ -164,7 +164,7 @@ dynamicSolver.SolveSystem(mbs, simulationSettings)
 #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
 omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-component of angular vel
-print("omegay=", omegay)
+exu.Print("omegay=", omegay)
 #400 steps, tEnd=0.01, rotationVector, RK4 LieGroup integrator
 #solution is converged for 14 digits (compared to 800 steps)
 exudynTestGlobals.testError = omegay - (149.8473939540758) #2020-02-11: 149.8473939540758

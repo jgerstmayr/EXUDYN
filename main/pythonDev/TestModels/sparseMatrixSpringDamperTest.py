@@ -64,7 +64,7 @@ mNC1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = 1, coordinate=1))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mNC1]))
 
 mbs.Assemble()
-#print(mbs)
+#exu.Print(mbs)
 
 #useGraphics = True
 if exudynTestGlobals.useGraphics: 
@@ -91,7 +91,7 @@ simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
 SC.StaticSolve(mbs, simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
-print('static tip displacement (y)=', u[1])
+exu.Print('static tip displacement (y)=', u[1])
 exudynTestGlobals.testError = u[1]-(-6.779862983765133) #72 x 6 bodies; CPUtime surface: 0.55 seconds
 
 #sparse solver:
@@ -99,7 +99,7 @@ simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 SC.StaticSolve(mbs, simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
-print('static tip displacement (y)=', u[1])
+exu.Print('static tip displacement (y)=', u[1])
 exudynTestGlobals.testError = u[1]-(-6.779862983766792) #72 x 6 bodies; CPUtime surface: 0.029 seconds
 
 if exudynTestGlobals.useGraphics: 

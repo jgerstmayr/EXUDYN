@@ -112,6 +112,8 @@ public:
 	virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override
 	{ return GetAngularVelocity(localPosition, configuration); }
 
+	virtual Vector3D GetLocalCenterOfMass() const { return Vector3D({ 0., 0., 0. }); }
+
 	//!  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
     {

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-30  22:45:21 (last modfied)
+* @date         2020-04-22  20:14:25 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,6 +112,12 @@ public: // AUTO:
     virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override
     {
         return GetAngularVelocity(localPosition, configuration);
+    }
+
+    //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
+    virtual Vector3D GetLocalCenterOfMass() const override
+    {
+        return Vector3D({0.,0.,0.});
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping

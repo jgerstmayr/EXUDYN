@@ -11,6 +11,7 @@
                 
 ************************************************************************************************ */
 
+#include "Utilities/ExceptionsTemplates.h"
 #include "Main/CSystemData.h"
 
 #include "Main/MainSystem.h"
@@ -155,7 +156,12 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
 		ComputeObjectCoordinates(coordinates, coordinates_t);
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction(t, coordinates, coordinates_t), massMatrix);
+
+		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+		{
+			//user function args:(t, coordinates, coordinates_t)
+			EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction(t, coordinates, coordinates_t), massMatrix);
+		}, "ObjectGenericODE2::massMatrixUserFunction");
 	}
 	else //standard constant matrix
 	{
@@ -204,7 +210,14 @@ void CObjectGenericODE2::ComputeODE2RHS(Vector& ode2Rhs) const
 	if (parameters.forceUserFunction)
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		Vector userForce(parameters.forceUserFunction(t, coordinates, coordinates_t));
+		Vector userForce;
+
+		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+		{
+			//user function args:(t, coordinates, coordinates_t)
+			userForce = (Vector)(parameters.forceUserFunction(t, coordinates, coordinates_t));
+		}, "ObjectGenericODE2::forceUserFunction");
+
 		ode2Rhs -= userForce;
 	}
 
@@ -240,7 +253,6 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 	}
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectGenericODE2::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
@@ -250,7 +262,6 @@ Vector3D CObjectGenericODE2::GetPosition(const Vector3D& localPosition, Configur
 
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectGenericODE2::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {

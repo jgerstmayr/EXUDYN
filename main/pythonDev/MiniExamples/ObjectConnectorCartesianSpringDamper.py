@@ -19,7 +19,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 testError=1 #set default error, if failed
-print("start mini example for class ObjectConnectorCartesianSpringDamper")
+exu.Print("start mini example for class ObjectConnectorCartesianSpringDamper")
 try: #puts example in safe environment
     #example with mass at [1,1,0], 5kg under load 5N in -y direction
     k=5000
@@ -41,7 +41,7 @@ try: #puts example in safe environment
     testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1] - (-0.00099999999997058)
 
 except BaseException as e:
-    print("An error occured in test example for ObjectConnectorCartesianSpringDamper:", e)
+    exu.Print("An error occured in test example for ObjectConnectorCartesianSpringDamper:", e)
 else:
-    print("example for ObjectConnectorCartesianSpringDamper completed, test error =", testError)
+    exu.Print("example for ObjectConnectorCartesianSpringDamper completed, test error =", testError)
 

@@ -35,9 +35,12 @@ def DestinationNr(strDest):
 pyFunctionTypeConversion = {'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
                             'PyFunctionScalar6': 'std::function<Real(Real,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
                             'PyFunctionScalar8': 'std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
-                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>',
-                            'PyFunctionVector6DScalarVector6D': 'std::function<StdVector6D(Real,StdVector6D)>',
-                            'PyFunctionVector3DScalar5Vector3D': 'std::function<StdVector3D(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
+                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
+                            'PyFunctionVector6DScalarVector6D': 'std::function<StdVector(Real,StdVector6D)>', #GenericJoint
+                            'PyFunctionVector3DScalar5Vector3D': 'std::function<StdVector(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
+#StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
+#                            'PyFunctionVector6DScalarVector6D': 'std::function<StdVector6D(Real,StdVector6D)>', #GenericJoint
+#                            'PyFunctionVector3DScalar5Vector3D': 'std::function<StdVector3D(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
                             'PyFunctionVectorScalar2Vector': 'std::function<StdVector(Real, StdVector,StdVector)>', #ObjectGenericODE2
                             'PyFunctionMatrixScalar2Vector': 'std::function<NumpyMatrix(Real, StdVector,StdVector)>' #ObjectGenericODE2
                             }
@@ -116,14 +119,14 @@ def WriteMiniExample(className, miniExample):
     s+= 'nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))\n'
     s+= '\n'
     s+= 'testError=1 #set default error, if failed\n'
-    s+= 'print("start mini example for class ' + className + '")\n'
+    s+= 'exu.Print("start mini example for class ' + className + '")\n'
     s+= 'try: #puts example in safe environment\n'
     s+= miniExample
     s+= '\n'
     s+= 'except BaseException as e:\n'
-    s+= '    print("An error occured in test example for ' + className + ':", e)\n'
+    s+= '    exu.Print("An error occured in test example for ' + className + ':", e)\n'
     s+= 'else:\n'
-    s+= '    print("example for ' + className + ' completed, test error =", testError)\n'
+    s+= '    exu.Print("example for ' + className + ' completed, test error =", testError)\n'
     s+= '\n'
     
     fileExample=open('../../pythonDev/MiniExamples/'+className+'.py','w') 

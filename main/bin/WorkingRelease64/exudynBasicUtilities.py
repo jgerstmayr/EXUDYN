@@ -33,6 +33,13 @@ def NormL2(vector):
         value += x**2
     return value**0.5
 
+#compute sum of all values of vector
+def VSum(vector):
+    value = 0
+    for x in vector:
+        value += x
+    return value
+
 #add two vectors instead using numpy
 def VAdd(v0, v1):
     if len(v0) != len(v1): print("ERROR in VAdd: incompatible vectors!")

@@ -124,8 +124,10 @@ void PyError(std::string error_msg, std::ofstream& file)
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
-	pout << "\nUser ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
-	pout << error_msg << "\n\n";
+	pout << "\n=========================================\n";
+	pout << "User ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
+	pout << error_msg << "\n";
+	pout << "=========================================\n\n";
 
 	if (file.is_open())
 	{
@@ -153,8 +155,10 @@ void SysError(std::string error_msg, std::ofstream& file)
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
-	pout << "\nSYSTEM ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
-	pout << error_msg << "\n\n";
+	pout << "\n=========================================\n";
+	pout << "SYSTEM ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
+	pout << error_msg << "\n";
+	pout << "=========================================\n\n";
 
 	if (file.is_open())
 	{

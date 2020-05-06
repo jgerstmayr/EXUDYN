@@ -34,7 +34,7 @@ def GraphicsDataTest(mbs, testInterface):
     mbs.Assemble()
 
     if testInterface.useGraphics: 
-        testInterface.exu.StartRenderer()
+        testInterface.testinterface.exu.StartRenderer()
         testInterface.SC.WaitForRenderEngineStopFlag()
         testInterface.exu.StopRenderer() #safely close rendering window!
 
@@ -115,14 +115,14 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     #tip displacements:
     u = sol[n-4];v = sol[n-3] #15.12.2019:(-1.040678127615946 -1.444419986874761); 20.10.2019: (-1.0406781266430292 -1.4444199866881322); 17.10.2019: sol= -1.040678126647053 -1.4444199866858678; #28.7.2009: -1.040678126643273, -1.444419986688082
     totalError += u+v - (-1.0391620828192676 -1.4443521331339881)  ###2019-12-26: (-1.0391620828192676 -1.4443521331339881) old (before correct initial accelerations): (-1.040678127615946 -1.444419986874761)
-    print('sol dynamic=',u,v)
-    #print('time integration error =',totalError)
+    testInterface.exu.Print('sol dynamic=',u,v)
+    #testInterface.exu.Print('time integration error =',totalError)
 
     testInterface.SC.StaticSolve(mbs, simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     u = sol[n-4]; v = sol[n-3]; #20.10.2019: -0.3622447299987188 -0.9941447593196007; 17.10.2019: sol= -0.3622447299990847 -0.9941447593206921; #28.7.2019: -0.3622447300008477, -0.994144759326213
-    print('sol static (standardTol)=',u,v)
+    testInterface.exu.Print('sol static (standardTol)=',u,v)
     totalError += u+v - (-0.3622447299987188 -0.9941447593196007)
 
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-14 #in order to converge to MATLAB results
@@ -133,7 +133,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     #tip displacements: paper GerstmIschrik2008: 1Element: u=-0.362244729891,  v=-0.994144758725; 4 Elements: 0.507428715119 1.205533702233
     u = sol[n-4]; v = sol[n-3];                 #2019-12-17: -0.3622447298904951 -0.9941447587249616
-    print('sol static (tol=1e-14)=',u,v)
+    testInterface.exu.Print('sol static (tol=1e-14)=',u,v)
     totalError += u+v - (-0.3622447298904951 -0.9941447587249616)
 
     
@@ -218,7 +218,7 @@ def SpringDamperMesh(mbs, testInterface):
         testInterface.SC.WaitForRenderEngineStopFlag()
 
     u = mbs.GetNodeOutput(nBodies-2, testInterface.exu.OutputVariableType.Position) #tip node
-    print('dynamic tip displacement (y)=', u[1])
+    testInterface.exu.Print('dynamic tip displacement (y)=', u[1])
     dynamicError = u[1]-(-0.6383785907891227)  #2019-12-26: -0.6383785907891227; 2019-12-15: (-0.6349442849103891); before 15.12.2019: (-0.6349442850473246)
     #dynamic tip displacement for                                             s=1000: -0.6386766492418571,s=10000: -0.6386985511667669, s=100000: -0.6387006546281098
     #dynamic tip displacement for index2 Newmark: s=100: -0.6386060431598312, s=1000: -0.638699952155624, s=10000: -0.6387008780175608, s=100000: -0.6387008872717617
@@ -234,7 +234,7 @@ def SpringDamperMesh(mbs, testInterface):
     testInterface.SC.StaticSolve(mbs, simulationSettings)
 
     u = mbs.GetNodeOutput(nBodies-2, testInterface.exu.OutputVariableType.Position) #tip node
-    print('static tip displacement (y)=', u[1])
+    testInterface.exu.Print('static tip displacement (y)=', u[1])
     staticError = u[1]-(-0.44056224799446486)
 
     totalError = abs(staticError) + abs(dynamicError)
@@ -278,7 +278,7 @@ def MathematicalPendulumTest(mbs, testInterface):
         #add loads:
         mbs.AddLoad({'loadType': 'ForceVector',  'markerNumber': bodyMarker,  'loadVector': [0, -mass*g, 0]}) 
 
-    #print(mbs)
+    #testInterface.exu.Print(mbs)
     mbs.Assemble()
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
@@ -304,11 +304,11 @@ def MathematicalPendulumTest(mbs, testInterface):
 
     u = mbs.GetNodeOutput(nodeList[0], testInterface.exu.OutputVariableType.Position) #tip node
     errorConstraint= u[1] - (-0.0714264053422459)  #2019-12-26: -0.0714264053422459; 15.12.2019: -0.07242503089584812; before 15.12.2019: (-0.0724256565815142) #-(-0.7823882479152345) with endtime=10 and 10000 steps
-    print('solution mathematicalPendulum Constraint=',u[1])
+    testInterface.exu.Print('solution mathematicalPendulum Constraint=',u[1])
 
     u = mbs.GetNodeOutput(nodeList[1], testInterface.exu.OutputVariableType.Position) #tip node
     errorSpringDamper= u[1] - (-0.07477852383438113) #2019-12-26: -0.07477852383438113; 15.12.2019: (-0.07579968609949864); before 15.12.2019: (-0.07579967194309412)  #-(-0.7738842923525007)
-    print('solution mathematicalPendulum SpringDamper=',u[1])
+    testInterface.exu.Print('solution mathematicalPendulum SpringDamper=',u[1])
 
     return abs(errorConstraint)+abs(errorSpringDamper)
 
@@ -376,7 +376,7 @@ def RigidPendulumTest(mbs, testInterface):
 
     u = mbs.GetNodeOutput(nRigid, testInterface.exu.OutputVariableType.Position) #tip node
     errorRigidPendulum = u[1] - (-0.4979662392961769) #2019-12-26(new initial acc): -0.4979662392961769; 15.12.2019: (-0.4980200584148534); before 15.12.2019: (-0.4980200584133354) # old test (load at tip)   0*(- 0.4905431986572512) #0*(-0.037344780490849015) #yield-displacement
-    print('solution rigid pendulum=',u[1])
+    testInterface.exu.Print('solution rigid pendulum=',u[1])
 
     return abs(errorRigidPendulum)
 
@@ -474,8 +474,8 @@ def SliderCrank2DTest(mbs, testInterface):
 
     u = mbs.GetNodeOutput(nMass, testInterface.exu.OutputVariableType.Position) #tip node
     errorSliderCrankIndex3 = u[0] - 1.353298442702153 #2019-12-26: 1.353298442702153; 15.12.2019: 1.3513750614337234; before 15.12.2019: 1.3513750614326427 #2019-11-22; previous: 1.3513750614331235 #x-position of slider
-    print('solution SliderCrankIndex3  =',u[0])
-    print('error errorSliderCrankIndex3=',errorSliderCrankIndex3)
+    testInterface.exu.Print('solution SliderCrankIndex3  =',u[0])
+    testInterface.exu.Print('error errorSliderCrankIndex3=',errorSliderCrankIndex3)
 
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -485,8 +485,8 @@ def SliderCrank2DTest(mbs, testInterface):
 
     u = mbs.GetNodeOutput(nMass, testInterface.exu.OutputVariableType.Position) #tip node
     errorSliderCrankIndex2 = u[0] - 1.3550413308333111 #2019-12-26: 1.3550413308333111; 15.12.2019: 1.352878631961969; before 15.12.2019: 1.3528786319585846 #2019-11-22; previous: 1.3528786319585837 #x-position of slider
-    print('solution SliderCrankIndex2  =',u[0])
-    print('error errorSliderCrankIndex2=',errorSliderCrankIndex2)
+    testInterface.exu.Print('solution SliderCrankIndex2  =',u[0])
+    testInterface.exu.Print('error errorSliderCrankIndex2=',errorSliderCrankIndex2)
 
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()
@@ -523,8 +523,8 @@ def SlidingJoint2DTest(mbs, testInterface):
     f=3*E*I/L**2            # tip load applied to ANCF element in N
     g=9.81
 
-    print("load f="+str(f))
-    print("EI="+str(E*I))
+    testInterface.exu.Print("load f="+str(f))
+    testInterface.exu.Print("EI="+str(E*I))
 
     nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
@@ -632,8 +632,8 @@ def SlidingJoint2DTest(mbs, testInterface):
         u = mbs.GetNodeOutput(nRigid, testInterface.exu.OutputVariableType.Position) #tip node
         error = u[1] - (-0.14920151345936586) #2019-12-26: -0.14920151345936586; 15.12.2019: (-0.1489879442762764); before 15.12.2019: (-0.14898795617249422) #2019-11-22; #20.10.2019: (-0.1489879501348149); 17.10.2019:-0.14898795468724652; old? :(-0.14898795002032308) #old error before projected sliding joint: (-0.14898792622401774) #y-position of COM of sliding body
                         
-        print('value SlidingJoint2DTest=',u[1])
-        #print('error SlidingJoint2DTest=',error)
+        testInterface.exu.Print('value SlidingJoint2DTest=',u[1])
+        #testInterface.exu.Print('error SlidingJoint2DTest=',error)
 
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()
@@ -672,7 +672,7 @@ def CartesianSpringDamperTest(mbs, testInterface):
     #add loads:
     mbs.AddLoad({'loadType': 'ForceVector',  'markerNumber': bodyMarker,  'loadVector': [f, 0, 0]}) 
 
-    #print(mbs)
+    #testInterface.exu.Print(mbs)
     mbs.Assemble()
 
     simulationSettings = testInterface.exu.SimulationSettings()
@@ -688,7 +688,7 @@ def CartesianSpringDamperTest(mbs, testInterface):
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCartesianSpringDamper= u[0] - L
     errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407594783 #15.12.2019: 0.011834933407594783; beofre 15.12.2019: 0.011834933407038783 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution
-    print('solution cartesianSpringDamper=',uCartesianSpringDamper)
+    testInterface.exu.Print('solution cartesianSpringDamper=',uCartesianSpringDamper)
 
     return abs(errorCartesianSpringDamper)
 
@@ -755,7 +755,7 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     uCoordinateSpringDamper= u[0] - L
     errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933406690284 #15.12.2019: 0.011834933406690284; beofre 15.12.2019: 0.011834933407047 #for 1000 steps, endtime=1; this is different from CartesianSpringDamper because of offset L (rounding errors around 1e-14)
 
-    print('solution CoordinateSpringDamper=',uCoordinateSpringDamper)
+    testInterface.exu.Print('solution CoordinateSpringDamper=',uCoordinateSpringDamper)
     return abs(errorCoordinateSpringDamper)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -832,8 +832,8 @@ def SwitchingConstraintsTest(mbs, testInterface):
         testInterface.exu.StopRenderer() #safely close rendering window!
 
     u = mbs.systemData.GetODE2Coordinates()
-    print('u =',u)
-    print('sum(u) =',sum(u))
+    testInterface.exu.Print('u =',u)
+    testInterface.exu.Print('sum(u) =',sum(u))
 
     return abs(sum(u)-8.376384072333597) #2020-01-09: 376384072333597; before 13.12.2019: 8.342236349593959
 
@@ -848,80 +848,80 @@ def RunAllModelUnitTests(mbs, testInterface):
     
     errTol = 1e-13
     
-    print("\n\n****************\n GraphicsDataTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n GraphicsDataTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = GraphicsDataTest(mbs, testInterface); totalError += err; totalTests += 1; 
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in GraphicsDataTest = ',err)
+    testInterface.exu.Print('error in GraphicsDataTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n ANCFCable2DBendingTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n ANCFCable2DBendingTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = ANCFCable2DBendingTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in ANCFCable2DBendingTest = ',err)
+    testInterface.exu.Print('error in ANCFCable2DBendingTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n SpringDamperMesh:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n SpringDamperMesh:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = SpringDamperMesh(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in SpringDamperMesh = ',err)
+    testInterface.exu.Print('error in SpringDamperMesh = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n MathematicalPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n MathematicalPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = MathematicalPendulumTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in MathematicalPendulumTest = ',err)
+    testInterface.exu.Print('error in MathematicalPendulumTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n RigidPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n RigidPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = RigidPendulumTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in RigidPendulumTest = ',err)
+    testInterface.exu.Print('error in RigidPendulumTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n SliderCrank2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n SliderCrank2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = SliderCrank2DTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in SliderCrank2DTest = ',err)
+    testInterface.exu.Print('error in SliderCrank2DTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n SlidingJoint2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n SlidingJoint2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = SlidingJoint2DTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in SlidingJoint2DTest = ',err)
+    testInterface.exu.Print('error in SlidingJoint2DTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n CartesianSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n CartesianSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = CartesianSpringDamperTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in CartesianSpringDamperTest = ',err)
+    testInterface.exu.Print('error in CartesianSpringDamperTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n CoordinateSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n CoordinateSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = CoordinateSpringDamperTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in CoordinateSpringDamperTest = ',err)
+    testInterface.exu.Print('error in CoordinateSpringDamperTest = ',err)
     mbs.Reset()
 
-    print("\n\n****************\n SwitchingConstraintsTest: [TEST " + str(totalTests+1) + "]\n****************\n")
+    testInterface.exu.Print("\n\n****************\n SwitchingConstraintsTest: [TEST " + str(totalTests+1) + "]\n****************\n")
     err = SwitchingConstraintsTest(mbs, testInterface); totalError += err; totalTests += 1
     if (abs(err) > errTol): testsFailed+=[totalTests]
-    print('error in SwitchingConstraintsTest = ',err)
+    testInterface.exu.Print('error in SwitchingConstraintsTest = ',err)
     mbs.Reset()
 
 
 
 
-    print('\n\n********************************')
-    print('********************************')
+    testInterface.exu.Print('\n\n********************************')
+    testInterface.exu.Print('********************************')
     rv = True
     if len(testsFailed) == 0:
-        print('  ALL ' + str(totalTests) + ' UNIT TESTS SUCCESSFUL')
+        testInterface.exu.Print('  ALL ' + str(totalTests) + ' UNIT TESTS SUCCESSFUL')
     else:
-        print('  ' + str(len(testsFailed)) + ' UNIT TESTS FAILED: ' + str(testsFailed))
+        testInterface.exu.Print('  ' + str(len(testsFailed)) + ' UNIT TESTS FAILED: ' + str(testsFailed))
         rv = False
 
-    print('********************************')
-    print('********************************\n')
+    testInterface.exu.Print('********************************')
+    testInterface.exu.Print('********************************\n')
 
     return rv
 

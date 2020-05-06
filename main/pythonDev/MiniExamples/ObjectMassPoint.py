@@ -19,7 +19,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 testError=1 #set default error, if failed
-print("start mini example for class ObjectMassPoint")
+exu.Print("start mini example for class ObjectMassPoint")
 try: #puts example in safe environment
     node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
                                  initialCoordinates=[0.5,0,0],
@@ -35,7 +35,7 @@ try: #puts example in safe environment
     #final x-coordinate of position shall be 2
 
 except BaseException as e:
-    print("An error occured in test example for ObjectMassPoint:", e)
+    exu.Print("An error occured in test example for ObjectMassPoint:", e)
 else:
-    print("example for ObjectMassPoint completed, test error =", testError)
+    exu.Print("example for ObjectMassPoint completed, test error =", testError)
 
