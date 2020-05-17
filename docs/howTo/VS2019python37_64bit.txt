@@ -1,0 +1,85 @@
+unified install directories:
+- c:\ProgramData\Anaconda3_64b37 (64bit, Python 3.7, includes Spyder 4)
+- c:\ProgramData\Anaconda3_32b36 (32 bit, Python 3.6, includes Spyder 3)
+- c:\ProgramData\Miniconda3_64b36 (32 bit, Python 3.6)
+
+deprecated:
+- c:\ProgramData\Miniconda3_32b36 (32 bit, Python 3.6)
+- c:\ProgramData\Anaconda3 (64 bit, Python 3.6, includes Spyder)
+
+Install Anaconda 2020.02:
+- https://repo.anaconda.com/archive/
+- Anaconda3-2020.02-Windows-x86_64.exe
+- during install: activate BOTH checks for add to path!!!
+
+Install Visual Studio Professional 2019 (VS2019) using the installer tool; click on "Change"
+- Activate Python development tools:
+  - Native Python development tools
+  - Python 3, 32bit (3.7.5)
+- but DO NOT install:
+  - Python 3.7 (64bit)
+  - Python-Miniconda
+  - Live Share 
+  - Python Web support 
+  ==> the python installation will be taken from the Anaconda2020.02 installation;
+  ==> this will enable that packages are handled via Anaconda2020.02 and not via VS2019
+- Activate "Desktop develoment with C++"
+- missing libraries will be installed on demand when starting VS2019 for first time
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#install other Python versions (3.6 32/64bit) 
+- use Miniconda
+- download according installer from: 
+    https://repo.anaconda.com/miniconda/
+- Miniconda3 with Python 3.6 64bit: 
+    Miniconda3-4.5.4-Windows-x86_64.exe
+- Miniconda3 with Python 3.6 32bit: 
+    Miniconda3-4.5.4-Windows-x86.exe
+Install, but do not include paths (disable both checks, such that main Anaconda is not disturbed ...)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#run different Python 32/64bit environments with different python versions:
+- do not adapt (local user) PYTHONHOME and PYTHONPATH environment variables, as they are set in python.exe or spyder
+## python 3.6 /32/64bit): ##
+- if you follow the rules above:
+    * both python versions run (out of Spyder) with no problem
+    * use sys.path.append(..) to add the (local or global) path to the correct WorkingReleaseXYZ folder
+    * simply import exudyn (and the utilities, etc.)
+## python 3.7 /32/64bit): ##
+- the sys.path.append(...) works only with GLOBAL paths
+alternative:
+- set the PYTHONPATH in a .bat file to, e.g., 
+    setx PYTHONPATH "C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64P37"
+- to run other python 3.6 versions, call
+    setx PYTHONPATH ""
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#NGsolve:
+- follow link: https://ngsolve.org/downloads
+- Install the Microsoft Visual Studio 2017 Redistributables: https://aka.ms/vs/15/release/VC_redist.x64.exe
+- Download the Netgen/NGSolve msi - installer of the latest release: https://github.com/NGSolve/ngsolve/releases
+
+Change system paths:
+- go to system environment (Start->(Search)-> Environment Variables), needs administrator rights
+- your system path should include (AnacondaPath is the path where you installed anaconda):
+    AnacondaPath
+    AnacondaPath\Library\bin
+    AnacondaPath\Library\usr\bin
+    AnacondaPath\Librarymingw-w64\bin
+    AnacondaPath\Scripts
+- alternatively copy/paste using modify/modify text: 
+    C:\ProgramData\Anaconda3_64b37;C:\ProgramData\Anaconda3_64b37\Library\mingw-w64\bin;C:\ProgramData\Anaconda3_64b37\Library\usr\bin;C:\ProgramData\Anaconda3_64b37\Library\bin;C:\ProgramData\Anaconda3_64b37\Scripts
+
+Change local user paths:
+- go to evironment variables of local user (not administrator) and add if it does not exist:
+variable PYTHONPATH: AnacondaPath;[NGsolve-install-dir]\lib\site-packages
+variable PYTHONHOME: AnacondaPath
+
+#end NGsolve
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#during development, sometimes you would like to reload modules, if they have been re-compiled
+#use:
+import importlib
+importlib.reload(exudyn)
+
+

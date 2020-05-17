@@ -68,15 +68,6 @@ sLenum += DefLatexFinishClass()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'ConfigurationType'
-#	py::enum_<ConfigurationType>(m, "ConfigurationType")
-#		.value("_None", ConfigurationType::_None)
-#		.value("Initial", ConfigurationType::Initial)
-#		.value("Current", ConfigurationType::Current)
-#		.value("Reference", ConfigurationType::Reference)
-#		.value("StartOfStep", ConfigurationType::StartOfStep)
-#		.value("Visualization", ConfigurationType::Visualization)
-#		.value("EndOfEnumList", ConfigurationType::EndOfEnumList)
-#		.export_values();
 
 descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.\n\n'
 
@@ -98,11 +89,7 @@ sLenum += DefLatexFinishClass()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'LinearSolverType'
-#	py::enum_<LinearSolverType>(m, "LinearSolverType")
-#		.value("None", LinearSolverType::None)
-#		.value("EXUdense", LinearSolverType::EXUdense)
-#		.value("EigenSparse", LinearSolverType::EigenSparse)
-#		.export_values();
+
 
 descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.\n\n'
 
@@ -454,6 +441,13 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
                                 argList=['objectNumber', 'variableType', 'localPosition', 'configuration'],
                                 defaultArgs=['','','','ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputSuperElement', cName='PyGetObjectOutputVariableSuperElement', 
+                                description="get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!",
+                                argList=['objectNumber', 'variableType', 'meshNodeNumber', 'configuration'],
+                                defaultArgs=['','','','ConfigurationType::Current'],
+                                example = "u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)"
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectParameter', cName='PyGetObjectParameter', 

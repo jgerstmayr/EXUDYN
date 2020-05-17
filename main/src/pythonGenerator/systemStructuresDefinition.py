@@ -369,8 +369,9 @@ classDescription = "Visualization settings for bodies."
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the bodies are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the body(=object) number is shown"
 V,      defaultSize,                , 	             3,    Float3,       "Float3({1.f,1.f,1.f})",    , P,    "global body size of xyz-cube"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,    "default cRGB olor for bodies; 4th value is "
-V,      beams,                      , 	             ,     VSettingsBeams,   ,                       , PS,    "visualization settings for beams (e.g. ANCFCable or other beam elements)"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default cRGB olor for bodies; 4th value is "
+V,      deformationScaleFactor,     , 	             ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc."
+V,      beams,                      , 	             ,     VSettingsBeams,   ,                       , PS,   "visualization settings for beams (e.g. ANCFCable or other beam elements)"
 #
 writeFile=VisualizationSettings.h
 

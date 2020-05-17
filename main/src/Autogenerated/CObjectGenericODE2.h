@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-04-22  20:14:25 (last modfied)
+* @date         2020-05-15  18:40:40 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -75,13 +75,13 @@ public: // AUTO:
 #include "Utilities/BasicDefinitions.h"
 
 //! AUTO: CObjectGenericODE2
-class CObjectGenericODE2: public CObjectBody // AUTO: 
+class CObjectGenericODE2: public CObjectSuperElement // AUTO: 
 {
 protected: // AUTO: 
     CObjectGenericODE2Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE2
 
 public: // AUTO: 
-    static const Index ffrfNodeNumber = 0; //floating frame of reference (ffrf) node number in body, if useFirstNodeAsReferenceFrame=True
+    static const Index rigidBodyNodeNumber  = 0; //floating frame of reference (ffrf) node number in body, if useFirstNodeAsReferenceFrame=True
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -143,7 +143,7 @@ public: // AUTO:
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
     {
-        return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);
+        return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);
     }
 
     //! AUTO:  This flag is reset upon change of parameters; says that the vector of coordinate indices has changed
@@ -163,6 +163,39 @@ public: // AUTO:
 
     //! AUTO:  initialize coordinateIndexPerNode array
     void InitializeCoordinateIndices();
+
+    //! AUTO:  return true, if object has reference frame; return according node
+    virtual bool HasReferenceFrame(Index& referenceFrameNode) const override
+    {
+        referenceFrameNode = rigidBodyNodeNumber; return parameters.useFirstNodeAsReferenceFrame;
+    }
+
+    //! AUTO:  return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used
+    virtual Index GetNumberOfMeshNodes() const override
+    {
+        return GetNumberOfNodes() - (Index)parameters.useFirstNodeAsReferenceFrame;
+    }
+
+    //! AUTO:  return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
+    virtual Vector3D GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
+    virtual Vector3D GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
+    virtual Vector3D GetMeshNodePosition(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
+    virtual Vector3D GetMeshNodeVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file
+    virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const override;
+
+    //! AUTO:  get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes
+    virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const override;
+
+    //! AUTO:  get extended output variables for multi-nodal objects with mesh nodes
+    virtual void GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value) const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

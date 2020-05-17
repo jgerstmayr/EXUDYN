@@ -389,6 +389,65 @@ namespace RigidBodyMath {
 	}
 
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//helper functions mostly for FFRF Object computations
+
+	//!apply transformation A (\in n x n) to vector (which must have a multiple of n components):
+	inline void ApplyTransformation(const Matrix3D& A, Vector& vector)
+	{
+		Index nDim = A.NumberOfColumns();
+		Index nNodes = vector.NumberOfItems() / nDim;
+		CHECKandTHROW(nNodes*nDim == vector.NumberOfItems(), "ApplyTransformation: vector must have appropriate size");
+
+		for (Index i = 0; i < nNodes; i++)
+		{
+			LinkedDataVector vSub(vector, i*nDim, nDim);
+			Vector3D v(vSub, 0);
+			EXUmath::MultMatrixVector(A, v, vSub);
+		}
+	}
+
+	//!apply transformation A (\in n x n) to (temporary) vector (which must have a multiple of n components) and add it to result (which must have same size):
+	inline void ApplyTransformationAndAdd(const Matrix3D& A, const Vector& vector, Vector& result)
+	{
+		Index nDim = A.NumberOfColumns();
+		Index nNodes = vector.NumberOfItems() / nDim;
+		CHECKandTHROW(nNodes*nDim == vector.NumberOfItems(), "ApplyTransformationAndAdd: vector must have appropriate size");
+		CHECKandTHROW(nNodes*nDim == result.NumberOfItems(), "ApplyTransformationAndAdd: result must have appropriate size");
+
+		for (Index i = 0; i < nNodes; i++)
+		{
+			//Vector3D v(vector, i*nDim); //needs copy
+			LinkedDataVector vectorSub(vector, i*nDim, nDim);
+			LinkedDataVector resultSub(result, i*nDim, nDim);
+			EXUmath::MultMatrixVectorAdd(A, vectorSub, resultSub);
+		}
+	}
+
+	//! fill n-times a Matrix3D matrix A into a column matrix of size (3*n x 3)
+	inline void ComputeBlockColumnMatrix(Index n, const Matrix3D& A, Matrix& destination)
+	{
+		destination.SetNumberOfRowsAndColumns(3 * n, 3);
+		for (Index i = 0; i < n; i++)
+		{
+			destination.SetSubmatrix(A, i * 3, 0);
+		}
+	}
+
+	//! compute the skew matrix of all (x,y,z) groups of the vector (3*n) and write into skewMatrix (3*n x 3)
+	inline void ComputeSkewMatrix(const Vector& vector, Matrix& skewMatrix)
+	{
+		Index nn = vector.NumberOfItems() / 3;
+		CHECKandTHROW(nn * 3 == vector.NumberOfItems(), "ComputeSkewMatrix: vector must have length which can be divided by 3");
+
+		skewMatrix.SetNumberOfRowsAndColumns(vector.NumberOfItems(), 3);
+		for (Index i = 0; i < nn; i++)
+		{
+			Index j = i * 3;
+			skewMatrix.SetSubmatrix(RigidBodyMath::Vector2SkewMatrix(Vector3D({ vector[j], vector[j + 1], vector[j + 2] })), j, 0);
+		}
+	}
 
 
 

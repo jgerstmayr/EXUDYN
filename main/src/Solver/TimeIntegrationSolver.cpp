@@ -561,7 +561,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 
 			//EXUmath::MultMatrixVector(systemMassMatrix, solutionODE2_tt, ode2Residuum);
 			//systemMassMatrix.FinalizeMatrix();
-			systemMassMatrix.MultMatrix(solutionODE2_tt, ode2Residuum);
+			systemMassMatrix.MultMatrixVector(solutionODE2_tt, ode2Residuum);
 			ode2Residuum -= tempODE2; //systemResidual contains residual (linear: residual = M*a + K*u+D*v-F
 			//CqT*lambda not included, because lambda0 = 0
 
@@ -667,7 +667,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 					//now compute descent of acceleration vector with jacobian
 					timer.integrationFormula -= EXUstd::GetTimeInSeconds();
 					//EXUmath::MultMatrixVector(systemJacobian, systemResidual, newtonSolution);
-					//systemJacobian.MultMatrix(systemResidual, newtonSolution);
+					//systemJacobian.MultMatrixVector(systemResidual, newtonSolution);
 					systemJacobian.Solve(systemResidual, newtonSolution);
 
 					solutionODE2_tt -= newtonSolutionODE2;  //compute new accelerations; newtonSolution contains the Newton correction
@@ -742,8 +742,8 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 					computationalSystem.ComputeAlgebraicEquations(tempCompData, aeResiduum, useIndex2Constraints);
 					timer.AERHS += EXUstd::GetTimeInSeconds();
 
-					//systemMassMatrix.FinalizeMatrix(); //MultMatrix is faster? if directly applied to triplets ...
-					systemMassMatrix.MultMatrix(solutionODE2_tt, ode2Residuum);
+					//systemMassMatrix.FinalizeMatrix(); //MultMatrixVector is faster? if directly applied to triplets ...
+					systemMassMatrix.MultMatrixVector(solutionODE2_tt, ode2Residuum);
 					//EXUmath::MultMatrixVector(systemMassMatrix, solutionODE2_tt, ode2Residuum);
 					ode2Residuum -= tempODE2; //systemResidual contains residual (linear: residual = M*a + K*u+D*v-F
 
@@ -880,7 +880,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 								computationalSystem.ComputeAlgebraicEquations(tempCompData, aeResiduum, useIndex2Constraints); //temp contains RHS (linear case: temp = F_applied - K*u - D*v)
 								timer.AERHS += EXUstd::GetTimeInSeconds();
 								
-								systemMassMatrix.MultMatrix(solutionODE2_tt, ode2Residuum);
+								systemMassMatrix.MultMatrixVector(solutionODE2_tt, ode2Residuum);
 								//EXUmath::MultMatrixVector(systemMassMatrix, solutionODE2_tt, ode2Residuum);
 								ode2Residuum -= tempODE2; //systemResidual contains residual (linear: residual = M*a + K*u+D*v-F
 

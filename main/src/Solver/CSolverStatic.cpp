@@ -171,7 +171,7 @@ void CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 		}
 		data.tempODE2 *= -currentODE2stabilizer;
 
-		data.systemMassMatrix->MultMatrix(data.tempODE2, data.temp2ODE2);
+		data.systemMassMatrix->MultMatrixVector(data.tempODE2, data.temp2ODE2);
 		for (Index i = 0; i < data.nODE2; i++)
 		{
 			ode2Residual[i] += data.temp2ODE2[i];

@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 381, 
-Number of resolved issues = 324, 
-EXUDYN version = 0.1.324, 
-last change =  2020-05-06
+Number of issues = 399, 
+Number of resolved issues = 333, 
+EXUDYN version = 0.1.333, 
+last change =  2020-05-17
 
 
 <table style = "width:100%">
@@ -38,6 +38,198 @@ last change =  2020-05-06
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0396</td>
+    <td>description         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add latex description for ObjectFFRF</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0395</td>
+    <td>description         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add latex description for MarkerSuperElementPosition</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0394</td>
+    <td>description         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add latex description for ObjectSuperElement</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0393</td>
+    <td>clean up ObjectGenericODE2</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> remove ffrf from ObjectGenericODE2</td>
+    <td>CLEANUP</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0390</td>
+    <td>SlimVector          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check if erasing all <rule of 5> methods in SlimVector work and speed up code performance</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0389</td>
+    <td>MainSystem includes </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file</td>
+    <td>CLEANUP</td>
+    <td></td>
+    <td>2020-05-13</td>
+    <td>2020-07-12</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0388</td>
+    <td>add 1D nodes and objects</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add 1D nodes/objects for drive-train applications; add optional visualization offset position p0, rotation A0 and transformation q->(u3D, theta3d), which transforms the 1D coordinate to 3D translation and rotation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-08</td>
+    <td>2020-07-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0387</td>
+    <td>add velocity markers</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add MarkerVelocityCoordinate and MarkerAngularVelocityCoordinate with option for local frame; this enables to apply forces to single velocities and to couple drives, etc. between 1D objects and 3D objects</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-08</td>
+    <td>2020-07-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0385</td>
+    <td>add solver eigenvalues example</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add Examples/solverFunctionsTestEigenvalues  to test suite</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0384</td>
+    <td>Solver interface    </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> change solver interface such that it stores MainSystem/mbs for user functions; MainSolverXYZ and CSolverXYZ take MainSystem as argument in constructor</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0383</td>
+    <td>pybind11 submodule  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> used for advanced functions, not necessarily included in exudyn or make other module</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0381</td>
+    <td>test pybind11_2020  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> downloaded in Download folder</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0380</td>
     <td>mass matrix update  </td>
@@ -91,7 +283,7 @@ last change =  2020-05-06
     <td>prestep py function </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> Add prestep function as function and pass mbs (MainSystem)</td>
+    <td> Add prestep function as function using mbs (MainSystem)</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-04-10</td>
@@ -118,39 +310,7 @@ last change =  2020-05-06
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0368</td>
-    <td>Implement reduced FFRF</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Implement reduced FFRF in GenericODE2 by adding a transformation matrix</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-04-10</td>
-    <td>2020-06-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0367</td>
-    <td>Implement FFRF      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Implement FFRF in GenericODE2</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-04-10</td>
-    <td>2020-06-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0357</td>
     <td>solver flag prolong solution</td>
     <td>JG</td>
@@ -166,7 +326,7 @@ last change =  2020-05-06
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0355</td>
     <td>generalized alpha   </td>
     <td>JG</td>
@@ -775,22 +935,6 @@ last change =  2020-05-06
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0125</td>
-    <td>LinkedDataMatrix    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Implement LinkedDataMatrix</td>
-    <td>NEW FEATURE</td>
-    <td></td>
-    <td>2019-05-13</td>
-    <td>2019-07-12</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0124</td>
     <td>ConstSizeVector     </td>
     <td>JG</td>
@@ -951,6 +1095,102 @@ last change =  2020-05-06
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0398</td>
+    <td>FEM interface       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add FEMinterface python class for mesh and system matrix import, surface mesh extraction, mode computation, export to ObjectFFRF etc.</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2020-05-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0397</td>
+    <td>tests FFRF          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add TestModels for FFRF and FFRFreducedOrder</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2020-05-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0392</td>
+    <td>MarkerSuperElementRigidReducedOrder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add MarkerSuperElementRigidReducedOrder for reducedOrder objects</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2020-05-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0391</td>
+    <td>add MarkerSuperElementPosition</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add MarkerSuperElementPosition</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2020-05-16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0386</td>
+    <td>add superelement    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add intermediate object, which offers access functions for node-position/velocity,/jacobian; object redirects either to nodes or uses the mode basis (FFRF) to compute position of virtual node</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-07</td>
+    <td>2020-07-06</td>
+    <td>2020-05-15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0382</td>
+    <td>add FFRF object     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> enabling full and reduced set of coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td>2020-05-15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0379</td>
     <td>auto testSuite      </td>
     <td>JG</td>
@@ -1061,6 +1301,38 @@ last change =  2020-05-06
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0368</td>
+    <td>Implement reduced FFRF</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Implement reduced FFRF in GenericODE2 by adding a transformation matrix</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-04-10</td>
+    <td>2020-06-09</td>
+    <td>2020-05-15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0367</td>
+    <td>Implement FFRF      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Implement FFRF in GenericODE2</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-04-10</td>
+    <td>2020-06-09</td>
+    <td>2020-05-06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>internal folder only</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0366</td>
@@ -4289,6 +4561,22 @@ last change =  2020-05-06
     <td>2019-05-14</td>
     <td>2019-07-13</td>
     <td>2019-05-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0125</td>
+    <td>LinkedDataMatrix    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Implement LinkedDataMatrix</td>
+    <td>NEW FEATURE</td>
+    <td></td>
+    <td>2019-05-13</td>
+    <td>2019-07-12</td>
+    <td>2020-05-16</td>
     <td>JG</td>
     <td></td>
     <td></td>

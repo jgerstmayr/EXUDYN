@@ -26,7 +26,7 @@ def PlotLineCode(index):
         return 'k:' #black line
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#+++++   LOAD SOLUTION AND ANIMATION   ++++++++++++++++++++++++++++++++++++
+#+++++       NUMPY BASED UTILITIES     ++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #fill submatrix into given destinationMatrix at destination row 'destRow' and destination column 'destColumn'; all matrices must be numpy arrays 
@@ -55,6 +55,64 @@ def SweepCos(t, t1, f0, f1):
 #frequency sweep in time interval [0,t1], frequency interval [f0,f1] Hz
 def FrequencySweep(t, t1, f0, f1):
     return t*(f1-f0)/t1 + f0
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#erase all entries smaller than treshold
+def RoundMatrix(matrix, treshold = 1e-14):
+    (rows, cols) = matrix.shape
+    for i in range (rows):
+        for j in range(cols):
+            if abs(matrix[i,j]) < treshold:
+                matrix[i,j]=0
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#compute (3 x 3*n) skew matrix from (3*n) vector; used for ObjectFFRF and CMS implementation
+def ComputeSkewMatrix(v):
+    if v.ndim == 1:
+        n = int(len(v)/3) #number of nodes
+        sm = np.zeros((3*n,3))
+
+        for i in range(n):
+            off = 3*i
+            x=v[off+0]
+            y=v[off+1]
+            z=v[off+2]
+            mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+            sm[off:off+3,:] = mLoc[:,:]
+    
+        return sm
+    elif v.ndim==2: #dim=2
+        (nRows,nCols) = v.shape
+        n = int(nRows/3) #number of nodes
+        sm = np.zeros((3*n,3*nCols))
+
+        for j in range(nCols):
+            for i in range(n):
+                off = 3*i
+                x=v[off+0,j]
+                y=v[off+1,j]
+                z=v[off+2,j]
+                mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+                sm[off:off+3,3*j:3*j+3] = mLoc[:,:]
+    else: 
+        print("ERROR: wrong dimension in ComputeSkewMatrix(...)")
+    return sm
+
+#tests for ComputeSkewMatrix
+#x = np.array([1,2,3,4,5,6])
+#print(ComputeSkewMatrix(x))
+#x = np.array([[1,2],[3,4],[5,6],[1,2],[3,4],[5,6]])
+#print(ComputeSkewMatrix(x))
+
+
+
+
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++   LOAD SOLUTION AND ANIMATION   ++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #++++++++++++++++++++++++++++++++++++++++++++
 #read Solution file into dictionary:

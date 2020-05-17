@@ -27,23 +27,27 @@
 #include "Linalg/ConstSizeVector.h"	
 #include "Linalg/ConstSizeMatrix.h"		//includes Matrix.h
 #include "Linalg/ResizableMatrix.h"	
+#include "Linalg/LinkedDataMatrix.h"	
 
 typedef ConstSizeMatrix<9> Matrix3D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<4> Matrix2D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<6*6> Matrix6D;//will be changed to SlimMatrix<...>
 
-typedef ConstSizeMatrixBase<float,9> Matrix3DF; //will be changed to SlimMatrix<...>
+typedef ConstSizeMatrixBase<float, 9> Matrix3DF; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float,4> Matrix2DF; //will be changed to SlimMatrix<...>
 
-//put this into special .h file:
+//makes problems with Index: typedef ConstSizeMatrixBase<Index, 9> Matrix3DI; //will be changed to SlimMatrix<...>
+
 
 namespace EXUmath {
 
 	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	inline static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
 	inline static const Vector3D unitVecX({ 1.,0.,0. });
 	inline static const Vector3D unitVecY({ 0.,1.,0. });
 	inline static const Vector3D unitVecZ({ 0.,0.,1. });
+
 
 	inline Vector3D GetUnitVector(Index i)
 	{
@@ -287,6 +291,21 @@ namespace EXUmath {
 	//! result += matrix*vector (ADD results)
 	inline void MultMatrixVectorAdd(const Matrix& matrix, const Vector& vector, Vector& result) {
 		MultMatrixVectorAddTemplate<Matrix, Vector, Vector>(matrix, vector, result);
+	}
+
+	//! result += matrix*vector (ADD results)
+	inline void MultMatrixVectorAdd(const Matrix& matrix, const Vector3D& vector, Vector& result) {
+		MultMatrixVectorAddTemplate<Matrix, Vector3D, Vector>(matrix, vector, result);
+	}
+
+	//! result += matrix*vector (ADD results)
+	inline void MultMatrixVectorAdd(const Matrix3D& matrix, const Vector& vector, Vector& result) {
+		MultMatrixVectorAddTemplate<Matrix3D, Vector, Vector>(matrix, vector, result);
+	}
+
+	//! result += matrix*vector (ADD results)
+	inline void MultMatrixVectorAdd(const Matrix3D& matrix, const Vector3D& vector, Vector& result) {
+		MultMatrixVectorAddTemplate<Matrix3D, Vector3D, Vector>(matrix, vector, result);
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

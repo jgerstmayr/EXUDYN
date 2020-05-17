@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-04-22  20:14:25 (last modfied)
+* @date         2020-05-08  21:48:27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,7 +24,7 @@
 class CObjectRigidBody2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass point
+    Real physicsMass;                             //!< AUTO: mass [SI:kg] of rigid body
     Real physicsInertia;                          //!< AUTO: inertia [SI:kgm\f$^2\f$] of rigid body w.r.t. center of mass
     Index nodeNumber;                             //!< AUTO: node number for 2D rigid body node
     //! AUTO: default constructor with parameter initialization

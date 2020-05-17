@@ -267,9 +267,9 @@ Index GeneralMatrixEigenSparse::Factorize()
 
 //! multiply matrix with vector: solution = A*x
 //! this leads to memory allocation in case that the matrix is built from triplets
-void GeneralMatrixEigenSparse::MultMatrix(const Vector& x, Vector& solution)
+void GeneralMatrixEigenSparse::MultMatrixVector(const Vector& x, Vector& solution)
 {
-	if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEigenSparse::MultMatrix(...): matrix is already factorized ==> use Solve(...)!"); }
+	if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEigenSparse::MultMatrixVector(...): matrix is already factorized ==> use Solve(...)!"); }
 	Index nRows = NumberOfRows();
 	Index nColumns = NumberOfColumns();
 	solution.SetNumberOfItems(nRows);
@@ -305,17 +305,55 @@ void GeneralMatrixEigenSparse::MultMatrix(const Vector& x, Vector& solution)
 	}
 }
 
+//! multiply matrix with vector and add to solution: solution += A*x
+//! this leads to memory allocation in case that the matrix is built from triplets
+void GeneralMatrixEigenSparse::MultMatrixVectorAdd(const Vector& x, Vector& solution)
+{
+	if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEigenSparse::MultMatrixVector(...): matrix is already factorized ==> use Solve(...)!"); }
+	Index nRows = NumberOfRows();
+	Index nColumns = NumberOfColumns();
+	CHECKandTHROW(solution.NumberOfItems() == nRows, "GeneralMatrixEigenSparse::MultMatrixVectorAdd(...): matrix number of rows must be equal to size of solution vector");
+
+	if (IsMatrixBuiltFromTriplets())
+	{
+		//this function could be optimized, by accessing directly the non zero entries of the sparse matrix:
+		//Eigen::Map<Eigen::VectorXd> xEigen(x.GetDataPointer(), n);
+		//Eigen::Map<Eigen::VectorXd> solutionEigen(solution.GetDataPointer(), n);
+
+		//the following way invokes memory allocation
+		Eigen::VectorXd xEigen(nColumns);
+		Eigen::VectorXd solutionEigen(nRows);
+		for (Index i = 0; i < nColumns; i++)
+		{
+			xEigen[i] = x[i];
+		}
+		solutionEigen = matrix * xEigen;
+
+		for (Index i = 0; i < nRows; i++)
+		{
+			solution[i] += solutionEigen[i];
+		}
+	}
+	else //work on triplets; no memory allocation
+	{
+		for (const auto& item : triplets)
+		{
+			solution[item.row()] += x[item.col()] * item.value();
+		}
+	}
+}
+
 //! multiply transposed(matrix) with vector: solution = A^T*x
 //! this leads to memory allocation in case that the matrix is built from triplets
-void GeneralMatrixEigenSparse::MultMatrixTransposed(const Vector& x, Vector& solution)
+void GeneralMatrixEigenSparse::MultMatrixTransposedVector(const Vector& x, Vector& solution)
 {
-	if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEigenSparse::MultMatrixTransposed(...): matrix is already factorized ==> use Solve(...)!"); }
+	if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEigenSparse::MultMatrixTransposedVector(...): matrix is already factorized ==> use Solve(...)!"); }
 	Index nRows = NumberOfRows();
 	//Index nColumns = NumberOfColumns();
 
 	if (IsMatrixBuiltFromTriplets())
 	{
-		SysError("GeneralMatrixEigenSparse::MultMatrixTransposed(...): currently only possible in triplet mode!");
+		SysError("GeneralMatrixEigenSparse::MultMatrixTransposedVector(...): currently only possible in triplet mode!");
 	}
 	else //work on triplets; 
 	{

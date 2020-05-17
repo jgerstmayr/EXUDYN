@@ -47,6 +47,7 @@ public:
 		case SensorType::Node:  return GetNodeNumber();
 		case SensorType::Object: return GetObjectNumber();
 		case SensorType::Body:  return GetObjectNumber();
+		case SensorType::SuperElement:  return GetObjectNumber();
 		case SensorType::Marker: return GetMarkerNumber();
 		case SensorType::Load:  return GetLoadNumber();
 		default: SysError("Sensor::GetTypeDependentIndex: invalid sensor type");  return 0;

@@ -123,7 +123,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 				computationalSystem.ComputeConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation, data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor, rowOffset, columnOffset);
 
 				Vector Cqv2(data.nAE);
-				data.jacobianAE->MultMatrix(vInitial, Cqv2);
+				data.jacobianAE->MultMatrixVector(vInitial, Cqv2);
 				aeRHS += Cqv2;
 
 				if (IsVerbose(3)) { Verbose(3, STDstring("vInitial = ") + EXUstd::ToString(vInitial) + "\n"); }
@@ -294,8 +294,8 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 	computationalSystem.ComputeAlgebraicEquations(data.tempCompData, aeResidual, simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
 	STOPTIMER(timer.AERHS);
 
-	//systemMassMatrix.FinalizeMatrix(); //MultMatrix is faster? if directly applied to triplets ...
-	data.systemMassMatrix->MultMatrix(solutionODE2_tt, ode2Residual);
+	//systemMassMatrix.FinalizeMatrix(); //MultMatrixVector is faster? if directly applied to triplets ...
+	data.systemMassMatrix->MultMatrixVector(solutionODE2_tt, ode2Residual);
 	//EXUmath::MultMatrixVector(systemMassMatrix, solutionODE2_tt, ode2Residual);
 	ode2Residual -= data.tempODE2; //systemResidual contains residual (linear: residual = M*a + K*u+D*v-F
 

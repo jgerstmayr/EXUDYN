@@ -180,6 +180,9 @@ This section provides functions for adding, reading and modifying objects, which
   GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from objectNumber and OutputVariableType\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}\\ \hline 
+  GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}\\ \hline 
   GetObjectParameter(objectNumber, parameterName) & get objects's parameter from objectNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with objectNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}

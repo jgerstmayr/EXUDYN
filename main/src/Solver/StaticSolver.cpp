@@ -357,7 +357,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 						x -= computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords;
 						Vector stabilizer;
 						//stabilizer = systemMassMatrix * x;
-						systemMassMatrixGM.MultMatrix(x, stabilizer);
+						systemMassMatrixGM.MultMatrixVector(x, stabilizer);
 
 						for (Index i = 0; i < nODE2; i++)
 						{

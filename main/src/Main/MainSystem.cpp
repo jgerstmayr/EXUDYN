@@ -28,6 +28,7 @@
 #include "Main/MainSystemData.h"
 #include "Main/MainSystem.h"
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  SYSTEM FUNCTIONS
@@ -419,7 +420,7 @@ py::object MainSystem::PyCallObjectFunction(Index itemNumber, STDstring function
 }
 
 //! Get specific output variable with variable type
-py::object MainSystem::PyGetObjectOutputVariable(Index itemNumber, OutputVariableType variableType)
+py::object MainSystem::PyGetObjectOutputVariable(Index itemNumber, OutputVariableType variableType) const
 {
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
@@ -449,13 +450,16 @@ py::object MainSystem::PyGetObjectOutputVariable(Index itemNumber, OutputVariabl
 //py::object MainSystem::PyGetObjectOutputBody(Index objectNumber, OutputVariableType variableType,
 //	const Vector3D& localPosition, ConfigurationType configuration) //no conversion from py to Vector3D!
 py::object MainSystem::PyGetObjectOutputVariableBody(Index itemNumber, OutputVariableType variableType,
-		const std::vector<Real>& localPosition, ConfigurationType configuration)
+		const std::vector<Real>& localPosition, ConfigurationType configuration) const
 {
 	if (localPosition.size() == 3)
 	{
 		if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 		{
-			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableBody(variableType, localPosition, configuration);
+			const MainObject* mo = mainSystemData.GetMainObjects().GetItem(itemNumber);
+
+			//return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableBody(variableType, pos, configuration);
+			return mo->GetOutputVariableBody(variableType, localPosition, configuration);
 		}
 		else
 		{
@@ -469,6 +473,21 @@ py::object MainSystem::PyGetObjectOutputVariableBody(Index itemNumber, OutputVar
 		PyError(STDstring("MainSystem::GetOutputVariableBody: invalid localPosition: expected vector with 3 real values"));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
+	}
+}
+
+//! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
+py::object MainSystem::PyGetObjectOutputVariableSuperElement(Index itemNumber, OutputVariableType variableType, 
+	Index meshNodeNumber, ConfigurationType configuration) const
+{
+	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
+	{
+		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableSuperElement(variableType, meshNodeNumber, configuration);
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::PyGetObjectOutputVariableSuperElement: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		return py::int_(EXUstd::InvalidIndex);
 	}
 }
 

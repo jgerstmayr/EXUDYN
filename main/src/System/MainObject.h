@@ -62,9 +62,16 @@ public:
 	virtual py::object GetOutputVariable(OutputVariableType variableType) const;
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
 	virtual py::object GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData) const;
+
+	//put this access function directly to MainObject in order to perform according checks here
+	//virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
+	//{ SysError("Illegal call to MainObject::GetOutputVariableBody"); return py::object(); }
+
 	//! GetOutputVariable for a body with type, local position, configuration (reference, current, ...) and return value; copies values==>slow!
-	virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
-	{ SysError("Illegal call to MainObject::GetOutputVariableBody"); return py::object(); }
+	virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const;
+
+	//! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
+	virtual py::object GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration) const;
 
 	//! Get (read) parameter 'parameterName' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Illegal call to MainObject::GetParameter"); return py::object(); }
@@ -96,10 +103,15 @@ public:
 		GetCObjectBody()->GetODE2LocalToGlobalCoordinates(ltg);
 		return ArrayIndex(ltg); //must be copied, because move constructor avoided for ResizableArray
 	}
-
-	//! 
-	virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const;
 };
+
+//class MainObjectSuperElement : public MainObjectBody
+//{
+//public:
+//	//! Special output function obtaining also node information (for mesh nodes); special type, 
+//	virtual py::object GetOutputVariableSuperElement(OutputVariableType variableType, ?OutputSpecialType? specialType, Index meshNodeNumber,
+//		ConfigurationType configuration, Vector& value) const
+//};
 
 class MainObjectConnector : public MainObject
 {

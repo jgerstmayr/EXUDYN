@@ -716,6 +716,20 @@ public:
 		}
 	}
 
+	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
+	void AddSubmatrixTransposed(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposed size mismatch");
+
+		for (Index i = 0; i < sm.numberOfRows; i++)
+		{
+			for (Index j = 0; j < sm.numberOfColumns; j++)
+			{
+				data[(j + row)*numberOfColumns + column + i] += sm(i, j);
+			}
+		}
+	}
+
 	//! Add submatrix (factor * sm) with possibly smaller size than *this matrix
 	//! the destination rows and columns of the submatrix (sm) relative to row and column are given in LTGrows and LTGcolumns
 	void AddSubmatrix(const MatrixBase<T>& sm, Real factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
@@ -813,6 +827,7 @@ public:
 
 typedef MatrixBase<Real> Matrix;
 typedef MatrixBase<float> MatrixF;
+typedef MatrixBase<Index> MatrixI;
 
 
 namespace EXUmath {

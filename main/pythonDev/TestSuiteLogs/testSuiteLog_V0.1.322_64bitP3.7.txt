@@ -1,0 +1,1154 @@
+
++++++++++++++++++++++++++++++++++++++++++++ 
++++++        EXUDYN TEST SUITE        +++++ 
++++++++++++++++++++++++++++++++++++++++++++ 
+EXUDYN version      = 0.1.322 
+date                = 2020-05-05 21:48:09 
+platform            = 64bit 
+python version      = 3.7.6 
+test tolerance      = 5e-11 
+WorkingRelease path = C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64P37 
++++++++++++++++++++++++++++++++++++++++++++ 
+
+*********************** 
+  RUN MODEL UNIT TESTS  
+***********************
+ 
+
+
+****************
+ GraphicsDataTest:[TEST 1]
+****************
+ 
+error in GraphicsDataTest =  0 
+
+
+****************
+ ANCFCable2DBendingTest:[TEST 2]
+****************
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP1000, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 2
+solver finished after 0.0547457 seconds.
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 2000
+total number of Newton Jacobians:  2000
+sol dynamic= -1.0391620828192676 -1.4443521331339881 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 15
+solver finished after 0.0003781 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 15
+total number of Newton Jacobians:  15
+sol static (standardTol)= -0.3622447299987188 -0.9941447593196007 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 16
+solver finished after 0.0005441 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 16
+total number of Newton Jacobians:  16
+sol static (tol=1e-14)= -0.3622447298904951 -0.9941447587249616 
+error in ANCFCable2DBendingTest =  0.0 
+
+
+****************
+ SpringDamperMesh:[TEST 3]
+****************
+ 
+dynamic tip displacement (y)= -0.6383785907891227 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
+solver finished after 0.0032734 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 4
+total number of Newton Jacobians:  4
+static tip displacement (y)= -0.44056224799446486 
+error in SpringDamperMesh =  0.0 
+
+
+****************
+ MathematicalPendulumTest:[TEST 4]
+****************
+ 
+solution mathematicalPendulum Constraint= -0.0714264053422459 
+solution mathematicalPendulum SpringDamper= -0.07477852383438113 
+error in MathematicalPendulumTest =  0.0 
+
+
+****************
+ RigidPendulumTest:[TEST 5]
+****************
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP1000, t = 0.5 sec, timeToGo = 0 sec, Nit/step = 6.549
+solver finished after 0.0348072 seconds.
+solution rigid pendulum= -0.4979662392962128 
+error in RigidPendulumTest =  3.5915714846623814e-14 
+
+
+****************
+ SliderCrank2DTest:[TEST 6]
+****************
+ 
+solution SliderCrankIndex3  = 1.3532984427022121 
+error errorSliderCrankIndex3= 5.906386491005833e-14 
+solution SliderCrankIndex2  = 1.355041330833312 
+error errorSliderCrankIndex2= 8.881784197001252e-16 
+error in SliderCrank2DTest =  5.995204332975845e-14 
+
+
+****************
+ SlidingJoint2DTest:[TEST 7]
+****************
+ 
+load f=0.012937500000000003 
+EI=0.01725 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP200, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 2.44
+solver finished after 0.0433231 seconds.
+value SlidingJoint2DTest= -0.14920151345936586 
+error in SlidingJoint2DTest =  0.0 
+
+
+****************
+ CartesianSpringDamperTest:[TEST 8]
+****************
+ 
+solution cartesianSpringDamper= 0.011834933407594783 
+error in CartesianSpringDamperTest =  0.0 
+
+
+****************
+ CoordinateSpringDamperTest:[TEST 9]
+****************
+ 
+solution CoordinateSpringDamper= 0.011834933406690284 
+error in CoordinateSpringDamperTest =  0.0 
+
+
+****************
+ SwitchingConstraintsTest: [TEST 10]
+****************
+ 
+u = [-3.48898574  1.69486729  8.         -1.52275876  3.69326129] 
+sum(u) = 8.376384072333595 
+error in SwitchingConstraintsTest =  1.7763568394002505e-15 
+
+
+******************************** 
+******************************** 
+  ALL 10 UNIT TESTS SUCCESSFUL 
+******************************** 
+********************************
+ 
+
+
+****************************************** 
+  START EXAMPLE 0 ("TestModels/ANCFcontactCircleTest.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+tip displacement: x=-0.10206974380788308, y=-0.4842656547442095 
+****************************************** 
+  EXAMPLE 0 ("TestModels/ANCFcontactCircleTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 1 ("TestModels/ANCFcontactFrictionTest.py"): 
+****************************************** 
+DYNAFLEX version=0.1.322 
+load f=129.37500000000003 
+EI=172.50000000000003 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP300, t = 0.15 sec, timeToGo = 0 sec, Nit/step = 3.19
+solver finished after 0.248559 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.249 seconds
+  measured time= 0.243 seconds (=97.9%) 
+  factorization     = 13.6%
+  newtonIncrement   = 1.47%
+  integrationFormula= 0.219%
+  ODE2RHS           = 4.33%
+  AERHS             = 0.185%
+  totalJacobian     = 47.8%
+  jacobianODE2_t    = 23.2%
+  jacobianODE2      = 23.3%
+  jacobianAE        = 0.226%
+  massMatrix        = 1.87%
+  reactionForces    = 0.264%
+  postNewtonStep    = 0%
+  writeSolution     = 29.8%
+  overhead          = 0.442%
+  python            = 0.0074%
+  visualization/user= 0.0413%
+global timings:
+  eigenFactorize = 0ms
+  eigenAnalyzePattern = 0ms
+  computeODE2RHSobject = 0ms
+  computeODE2RHSconnector = 0ms
+  computeODE2RHSmarkerData = 0ms
+  computeLoads = 0ms
+
+Solver iteration statistics:
+total number of steps:        300
+total number of Newton iterations: 957
+total number of Newton Jacobians:  957
+tip displacement: y=-0.014188649931870346 
+****************************************** 
+  EXAMPLE 1 ("TestModels/ANCFcontactFrictionTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 2 ("TestModels/ANCFmovingRigidBodyTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+STEP2, factor = 1, timeToGo = 0 sec, Nit/step = 14
+solver finished after 0.0144746 seconds.
+deflection = -0.06446474690480661 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP200, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 1.17
+solver finished after 0.241453 seconds.
+deflection = -0.06446627698400298 
+****************************************** 
+  EXAMPLE 2 ("TestModels/ANCFmovingRigidBodyTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 3 ("TestModels/ACNFslidingAndALEjointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+
+Python WARNING [file '<string>', line 217]: 
+WARNING: SlidingJoint2D: sliding coordinate < 0; further warnings suppressed!
+
+
+WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
+STEP10, factor = 1, timeToGo = 0 sec, Nit/step = 4.7
+solver finished after 0.132449 seconds.
+select cable coordinate 42 
+static solution of cable1 = -2.197321886974786 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP400, t = 0.8 sec, timeToGo = 0 sec, Nit/step = 4.99
+solver finished after 1.06981 seconds.
+Solver iteration statistics:
+total number of steps:        400
+total number of Newton iterations: 1996
+total number of Newton Jacobians:  1996
+dynamic solution of cable1 = -2.2290811574761897 
+****************************************** 
+  EXAMPLE 3 ("TestModels/ACNFslidingAndALEjointTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 4 ("TestModels/explicitLieGroupIntegratorTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP400, t = 0.01 sec, timeToGo = 0 sec, Nit/step = 0
+solver finished after 0.331365 seconds.
+omegay= 149.8473939540758 
+****************************************** 
+  EXAMPLE 4 ("TestModels/explicitLieGroupIntegratorTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 5 ("TestModels/fourBarMechanismTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP2000, t = 2 sec, timeToGo = 0 sec, Nit/step = 1.8425
+solver finished after 0.0599913 seconds.
+solution of fourbar mechanism = -2.354666317492353 
+****************************************** 
+  EXAMPLE 5 ("TestModels/fourBarMechanismTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 6 ("TestModels/genericJointUserFunctionTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP500, t = 2.5 sec, timeToGo = 3.21691e-15 sec, Nit/step = 7.516
+solver finished after 0.258798 seconds.
+pos= [0.23788404 0.6484885  0.30146022] 
+solution of GenericJointTest= 1.1878327690760053 
+****************************************** 
+  EXAMPLE 6 ("TestModels/genericJointUserFunctionTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 7 ("TestModels/genericODE2test.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP2000, t = 1 sec, timeToGo = 7.65627e-15 sec, Nit/step = 1
+solver finished after 0.13989 seconds.
+solution of genericODE2test= 0.03604546349877444 
+****************************************** 
+  EXAMPLE 7 ("TestModels/genericODE2test.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 8 ("TestModels/heavyTop.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP2000, t = 0.2 sec, timeToGo = 4.10231e-15 sec, Nit/step = 2.8585
+solver finished after 0.144304 seconds.
+solution of heavy top = 33.42312575172991 
+****************************************** 
+  EXAMPLE 8 ("TestModels/heavyTop.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 9 ("TestModels/manualExplicitIntegrator.py"): 
+****************************************** 
+
+
+++++++++++++++++++++++++++
+Start EXUDYN version 0.1.322
+ 
+load f=12.937500000000005 
+EI=17.250000000000007 
+<systemData: 
+  Number of nodes= 6
+  Number of objects = 5
+  Number of markers = 5
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 20
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+mainSystem:
+  variables = {}
+  sys = {}
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+ev= 2.280183538481952 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP5000, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 0
+solver finished after 0.294934 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.295 seconds
+  measured time= 0.0025 seconds (=0.847%) 
+  factorization     = 0%
+  newtonIncrement   = 0%
+  integrationFormula= 0%
+  ODE2RHS           = 0%
+  AERHS             = 0%
+  totalJacobian     = 0%
+  jacobianODE2_t    = 0%
+  jacobianODE2      = 0%
+  jacobianAE        = 0%
+  massMatrix        = 0%
+  reactionForces    = 0%
+  postNewtonStep    = 0%
+  writeSolution     = 37.4%
+  overhead          = 5.07%
+  python            = 17.4%
+  visualization/user= 40.1%
+global timings:
+  eigenFactorize = 0ms
+  eigenAnalyzePattern = 0ms
+  computeODE2RHSobject = 0ms
+  computeODE2RHSconnector = 0ms
+  computeODE2RHSmarkerData = 0ms
+  computeLoads = 0ms
+
+uy= -0.2204849087896498 
+****************************************** 
+  EXAMPLE 9 ("TestModels/manualExplicitIntegrator.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 10 ("TestModels/PARTS_ATEs_moving.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+  solution did not converge with full Newton
+  Newton (time/load step #1): convergence failed after 13 iterations; relative error = 5.34721e+33, time = 0.001
+solver finished after 0.0902107 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 13
+total number of Newton Jacobians:  13
+uy= 83708703951.1923 
+****************************************** 
+  EXAMPLE 10 ("TestModels/PARTS_ATEs_moving.py") FAILED 
+  ERROR = 83708703950.74574 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 11 ("TestModels/pendulumFriction.py"): 
+****************************************** 
+mass= 2.5 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP4000, t = 0.4 sec, timeToGo = 1.96858e-14 sec, Nit/step = 1.55975
+solver finished after 0.283787 seconds.
+p0= [ 0.11878348 -0.38195612  0.        ] 
+solution of pendulumFriction= 0.39999998776982004 
+****************************************** 
+  EXAMPLE 11 ("TestModels/pendulumFriction.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 12 ("TestModels/rigidBodyCOMtest.py"): 
+****************************************** 
+AddRigidBody COM= [ 0.4   0.22 -0.35] 
+inertia6D= [14.2725, 14.0625, 11.21, 4.925, 5.5, -1.2000000000000002] 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 7.8
+solver finished after 0.0514241 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0514 seconds
+  measured time= 0.0492 seconds (=95.7%) 
+  factorization     = 3.08%
+  newtonIncrement   = 13.7%
+  integrationFormula= 0.768%
+  ODE2RHS           = 7.28%
+  AERHS             = 10.3%
+  totalJacobian     = 2.24%
+  jacobianODE2_t    = 0.643%
+  jacobianODE2      = 0.664%
+  jacobianAE        = 0.805%
+  massMatrix        = 6.15%
+  reactionForces    = 22.4%
+  postNewtonStep    = 0%
+  writeSolution     = 33.2%
+  overhead          = 0.783%
+  python            = 0.0156%
+  visualization/user= 0.0587%
+global timings:
+  eigenFactorize = 0ms
+  eigenAnalyzePattern = 0ms
+  computeODE2RHSobject = 0ms
+  computeODE2RHSconnector = 0ms
+  computeODE2RHSmarkerData = 0ms
+  computeLoads = 0ms
+
+solution of rigidBodyCOMtest= 3.409431467726293 
+****************************************** 
+  EXAMPLE 12 ("TestModels/rigidBodyCOMtest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 13 ("TestModels/scissorPrismaticRevolute2D.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP500, t = 10 sec, timeToGo = 0 sec, Nit/step = 3.002
+solver finished after 0.190627 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 1501
+total number of Newton Jacobians:  1501
+uy= 1.1310332041867328 
+solver.it.newtonStepsCount= 1501 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP500, t = 10 sec, timeToGo = 0 sec, Nit/step = 2.434
+solver finished after 0.158221 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 1217
+total number of Newton Jacobians:  1217
+uy= 1.124615700256808 
+solver.it.newtonStepsCount= 1217 
+****************************************** 
+  EXAMPLE 13 ("TestModels/scissorPrismaticRevolute2D.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 14 ("TestModels/sliderCrank3Dbenchmark.py"): 
+****************************************** 
+slider initial position = 0.19999999999999996 
+vCB len= 0.3 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP1000, t = 0.2 sec, timeToGo = 0 sec, Nit/step = 2
+solver finished after 0.187893 seconds.
+solution of 3D slidercrank iftomm benchmark= 3.36427617809219 
+****************************************** 
+  EXAMPLE 14 ("TestModels/sliderCrank3Dbenchmark.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 15 ("TestModels/sliderCrankFloatingTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP5000, t = 0.3 sec, timeToGo = 0 sec, Nit/step = 6.055
+solver finished after 0.244418 seconds.
+sol = 0.2948599898874916 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP5000, t = 0.3 sec, timeToGo = 0 sec, Nit/step = 6.0214
+solver finished after 0.539228 seconds.
+sol = 0.29678917349134193 
+solutionSliderCrankIndex2= 0.5916491633788336 
+****************************************** 
+  EXAMPLE 15 ("TestModels/sliderCrankFloatingTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 16 ("TestModels/sparseMatrixSpringDamperTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 660.519: relTol = 1280.09: contr. = 1280.09
+    update initial residual with current residual; initial residual = 660.519
+    NEWTON STEP 2: residual = 0.0266944: relTol = 4.04143e-05: contr. = 4.04143e-05
+    NEWTON STEP 3: residual = 0.000156096: relTol = 2.36323e-07: contr. = 0.00584751
+    NEWTON STEP 4: residual = 3.70381e-07: relTol = 5.60742e-10: contr. = 0.00237278
+  Newton: convergenced after 4 steps; relative error = 5.60742e-10
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 1 ... REACHED)
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.420174 seconds.
+static tip displacement (y)= -6.779862983765133 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: nonlinear static solver
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 660.468: relTol = 1279.99: contr. = 1279.99
+    update initial residual with current residual; initial residual = 660.468
+    NEWTON STEP 2: residual = 4004.41: relTol = 6.06298: contr. = 6.06298
+    NEWTON STEP 3: residual = 914.957: relTol = 1.38531: contr. = 0.228488
+    NEWTON STEP 4: residual = 4390.82: relTol = 6.64804: contr. = 4.79894
+    NEWTON STEP 5: residual = 3199.8: relTol = 4.84475: contr. = 0.728748
+    NEWTON STEP 6: residual = 2415.28: relTol = 3.65692: contr. = 0.754822
+    NEWTON STEP 7: residual = 313701: relTol = 474.967: contr. = 129.882
+    NEWTON STEP 8: residual = 506764: relTol = 767.279: contr. = 1.61544
+    NEWTON STEP 9: residual = 1.43709e+06: relTol = 2175.87: contr. = 2.83583
+    NEWTON STEP 10: residual = 7.80396e+06: relTol = 11815.8: contr. = 5.43037
+    NEWTON STEP 11: residual = 8.04555e+06: relTol = 12181.6: contr. = 1.03096
+    NEWTON STEP 12: residual = 6.05578e+06: relTol = 9168.92: contr. = 0.752687
+    NEWTON STEP 13: residual = 1.34711e+07: relTol = 20396.2: contr. = 2.2245
+    NEWTON STEP 14: residual = 1.7143e+07: relTol = 25955.9: contr. = 1.27258
+    NEWTON STEP 15: residual = 3.46933e+06: relTol = 5252.84: contr. = 0.202376
+    NEWTON STEP 16: residual = 1.54657e+06: relTol = 2341.62: contr. = 0.445783
+    NEWTON STEP 17: residual = 4.21353e+06: relTol = 6379.61: contr. = 2.72444
+    NEWTON STEP 18: residual = 5.46593e+06: relTol = 8275.85: contr. = 1.29723
+    NEWTON STEP 19: residual = 1.94149e+07: relTol = 29395.7: contr. = 3.55198
+    NEWTON STEP 20: residual = 2.52744e+07: relTol = 38267.4: contr. = 1.30181
+    NEWTON STEP 21: residual = 1.31859e+07: relTol = 19964.4: contr. = 0.521708
+    NEWTON STEP 22: residual = 1.30364e+07: relTol = 19738.1: contr. = 0.98866
+    NEWTON STEP 23: residual = 1.86755e+07: relTol = 28276.2: contr. = 1.43257
+    NEWTON STEP 24: residual = 2.49191e+07: relTol = 37729.5: contr. = 1.33432
+    NEWTON STEP 25: residual = 3.41475e+07: relTol = 51701.9: contr. = 1.37033
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 51701.9, load factor = 1
+  Solve steps: reduce step size to 0.25
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.25, step size = 0.25
+  START discontinuous iteration 0:
+Newton: initial residual = 0.128999; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 41.4215: relTol = 321.1: contr. = 321.1
+    update initial residual with current residual; initial residual = 41.4215
+    NEWTON STEP 2: residual = 236.855: relTol = 5.71817: contr. = 5.71817
+    NEWTON STEP 3: residual = 12.7969: relTol = 0.308943: contr. = 0.0540283
+    NEWTON STEP 4: residual = 11.1956: relTol = 0.270285: contr. = 0.874871
+    NEWTON STEP 5: residual = 14.5911: relTol = 0.352261: contr. = 1.30329
+    NEWTON STEP 6: residual = 17.4927: relTol = 0.422311: contr. = 1.19886
+    NEWTON STEP 7: residual = 19.476: relTol = 0.470191: contr. = 1.11338
+    NEWTON STEP 8: residual = 20.7241: relTol = 0.500323: contr. = 1.06409
+    NEWTON STEP 9: residual = 21.4488: relTol = 0.517819: contr. = 1.03497
+    NEWTON STEP 10: residual = 21.815: relTol = 0.526659: contr. = 1.01707
+    NEWTON STEP 11: residual = 21.9417: relTol = 0.529718: contr. = 1.00581
+    NEWTON STEP 12: residual = 21.9111: relTol = 0.528981: contr. = 0.998608
+    NEWTON STEP 13: residual = 21.7799: relTol = 0.525813: contr. = 0.994012
+    NEWTON STEP 14: residual = 21.5852: relTol = 0.521112: contr. = 0.991059
+    NEWTON STEP 15: residual = 21.353: relTol = 0.515507: contr. = 0.989244
+    NEWTON STEP 16: residual = 21.1: relTol = 0.509399: contr. = 0.988152
+    NEWTON STEP 17: residual = 20.838: relTol = 0.503072: contr. = 0.98758
+    NEWTON STEP 18: residual = 20.5736: relTol = 0.496689: contr. = 0.987311
+    NEWTON STEP 19: residual = 20.3122: relTol = 0.490379: contr. = 0.987296
+    NEWTON STEP 20: residual = 20.0567: relTol = 0.484211: contr. = 0.987423
+    NEWTON STEP 21: residual = 19.8091: relTol = 0.478232: contr. = 0.987652
+    NEWTON STEP 22: residual = 19.5703: relTol = 0.472467: contr. = 0.987944
+    NEWTON STEP 23: residual = 19.341: relTol = 0.466931: contr. = 0.988283
+    NEWTON STEP 24: residual = 19.1213: relTol = 0.461629: contr. = 0.988645
+    NEWTON STEP 25: residual = 18.9113: relTol = 0.456558: contr. = 0.989015
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.456558, load factor = 0.25
+  Solve steps: reduce step size to 0.0625
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.0625, step size = 0.0625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0322496; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 2.58918: relTol = 80.2854: contr. = 80.2854
+    update initial residual with current residual; initial residual = 2.58918
+    NEWTON STEP 2: residual = 14.8261: relTol = 5.72618: contr. = 5.72618
+    NEWTON STEP 3: residual = 9.96932: relTol = 3.85038: contr. = 0.672417
+    NEWTON STEP 4: residual = 6.694: relTol = 2.58538: contr. = 0.67146
+    NEWTON STEP 5: residual = 4.39709: relTol = 1.69826: contr. = 0.65687
+    NEWTON STEP 6: residual = 2.79714: relTol = 1.08032: contr. = 0.636134
+    NEWTON STEP 7: residual = 1.69656: relTol = 0.655252: contr. = 0.606536
+    NEWTON STEP 8: residual = 0.962277: relTol = 0.371654: contr. = 0.567192
+    NEWTON STEP 9: residual = 0.528163: relTol = 0.203989: contr. = 0.548868
+    NEWTON STEP 10: residual = 0.40028: relTol = 0.154597: contr. = 0.757871
+    NEWTON STEP 11: residual = 0.474624: relTol = 0.183311: contr. = 1.18573
+    NEWTON STEP 12: residual = 0.574779: relTol = 0.221993: contr. = 1.21102
+    NEWTON STEP 13: residual = 0.649726: relTol = 0.250939: contr. = 1.13039
+    NEWTON STEP 14: residual = 0.697046: relTol = 0.269215: contr. = 1.07283
+    NEWTON STEP 15: residual = 0.722516: relTol = 0.279052: contr. = 1.03654
+    NEWTON STEP 16: residual = 0.732058: relTol = 0.282738: contr. = 1.01321
+    NEWTON STEP 17: residual = 0.730433: relTol = 0.28211: contr. = 0.997781
+    NEWTON STEP 18: residual = 0.721157: relTol = 0.278527: contr. = 0.9873
+    NEWTON STEP 19: residual = 0.706777: relTol = 0.272974: contr. = 0.98006
+    NEWTON STEP 20: residual = 0.689083: relTol = 0.26614: contr. = 0.974966
+    NEWTON STEP 21: residual = 0.66936: relTol = 0.258522: contr. = 0.971377
+    NEWTON STEP 22: residual = 0.648459: relTol = 0.25045: contr. = 0.968776
+    NEWTON STEP 23: residual = 0.627022: relTol = 0.24217: contr. = 0.966941
+    NEWTON STEP 24: residual = 0.605446: relTol = 0.233837: contr. = 0.96559
+    NEWTON STEP 25: residual = 0.584022: relTol = 0.225563: contr. = 0.964615
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.225563, load factor = 0.0625
+  Solve steps: reduce step size to 0.015625
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.015625, step size = 0.015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.00806241; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 0.161776: relTol = 20.0655: contr. = 20.0655
+    update initial residual with current residual; initial residual = 0.161776
+    NEWTON STEP 2: residual = 0.869805: relTol = 5.3766: contr. = 5.3766
+    NEWTON STEP 3: residual = 0.588352: relTol = 3.63683: contr. = 0.676419
+    NEWTON STEP 4: residual = 0.392209: relTol = 2.4244: contr. = 0.666623
+    NEWTON STEP 5: residual = 0.255482: relTol = 1.57923: contr. = 0.651391
+    NEWTON STEP 6: residual = 0.160626: relTol = 0.99289: contr. = 0.628717
+    NEWTON STEP 7: residual = 0.0955408: relTol = 0.590575: contr. = 0.594804
+    NEWTON STEP 8: residual = 0.0523963: relTol = 0.323882: contr. = 0.548418
+    NEWTON STEP 9: residual = 0.0281976: relTol = 0.1743: contr. = 0.53816
+    NEWTON STEP 10: residual = 0.0244837: relTol = 0.151343: contr. = 0.868291
+    NEWTON STEP 11: residual = 0.0313059: relTol = 0.193514: contr. = 1.27864
+    NEWTON STEP 12: residual = 0.0381059: relTol = 0.235547: contr. = 1.21721
+    NEWTON STEP 13: residual = 0.0429104: relTol = 0.265246: contr. = 1.12608
+    NEWTON STEP 14: residual = 0.0458886: relTol = 0.283655: contr. = 1.0694
+    NEWTON STEP 15: residual = 0.0474774: relTol = 0.293476: contr. = 1.03462
+    NEWTON STEP 16: residual = 0.0480692: relTol = 0.297134: contr. = 1.01246
+    NEWTON STEP 17: residual = 0.0479628: relTol = 0.296477: contr. = 0.997787
+    NEWTON STEP 18: residual = 0.0473781: relTol = 0.292862: contr. = 0.987808
+    NEWTON STEP 19: residual = 0.0464746: relTol = 0.287277: contr. = 0.98093
+    NEWTON STEP 20: residual = 0.0453631: relTol = 0.280407: contr. = 0.976084
+    NEWTON STEP 21: residual = 0.0441222: relTol = 0.272737: contr. = 0.972646
+    NEWTON STEP 22: residual = 0.0428078: relTol = 0.264612: contr. = 0.970209
+    NEWTON STEP 23: residual = 0.0414575: relTol = 0.256265: contr. = 0.968457
+    NEWTON STEP 24: residual = 0.0400987: relTol = 0.247866: contr. = 0.967225
+    NEWTON STEP 25: residual = 0.0387484: relTol = 0.239519: contr. = 0.966324
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.239519, load factor = 0.015625
+  Solve steps: reduce step size to 0.00390625
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.00390625, step size = 0.00390625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0020156; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0101078: relTol = 5.01476: contr. = 5.01476
+    update initial residual with current residual; initial residual = 0.0101078
+    NEWTON STEP 2: residual = 0.0390416: relTol = 3.86254: contr. = 3.86254
+    NEWTON STEP 3: residual = 0.0258453: relTol = 2.55698: contr. = 0.661993
+    NEWTON STEP 4: residual = 0.0166448: relTol = 1.64673: contr. = 0.644015
+    NEWTON STEP 5: residual = 0.0102508: relTol = 1.01415: contr. = 0.615855
+    NEWTON STEP 6: residual = 0.0058421: relTol = 0.577982: contr. = 0.569919
+    NEWTON STEP 7: residual = 0.00288657: relTol = 0.285579: contr. = 0.494098
+    NEWTON STEP 8: residual = 0.00128373: relTol = 0.127005: contr. = 0.444726
+    NEWTON STEP 9: residual = 0.00150329: relTol = 0.148726: contr. = 1.17103
+    NEWTON STEP 10: residual = 0.00224352: relTol = 0.22196: contr. = 1.49241
+    NEWTON STEP 11: residual = 0.00281187: relTol = 0.278189: contr. = 1.25333
+    NEWTON STEP 12: residual = 0.00319097: relTol = 0.315695: contr. = 1.13482
+    NEWTON STEP 13: residual = 0.00342547: relTol = 0.338895: contr. = 1.07349
+    NEWTON STEP 14: residual = 0.00355612: relTol = 0.351821: contr. = 1.03814
+    NEWTON STEP 15: residual = 0.00361385: relTol = 0.357532: contr. = 1.01623
+    NEWTON STEP 16: residual = 0.00362119: relTol = 0.358258: contr. = 1.00203
+    NEWTON STEP 17: residual = 0.00359415: relTol = 0.355583: contr. = 0.992534
+    NEWTON STEP 18: residual = 0.0035441: relTol = 0.350632: contr. = 0.986074
+    NEWTON STEP 19: residual = 0.00347895: relTol = 0.344186: contr. = 0.981616
+    NEWTON STEP 20: residual = 0.00340442: relTol = 0.336812: contr. = 0.978577
+    NEWTON STEP 21: residual = 0.00332433: relTol = 0.328889: contr. = 0.976477
+    NEWTON STEP 22: residual = 0.00324145: relTol = 0.320689: contr. = 0.975067
+    NEWTON STEP 23: residual = 0.00315762: relTol = 0.312396: contr. = 0.974139
+    NEWTON STEP 24: residual = 0.00307411: relTol = 0.304134: contr. = 0.973553
+    NEWTON STEP 25: residual = 0.0029918: relTol = 0.295991: contr. = 0.973225
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.295991, load factor = 0.00390625
+  Solve steps: reduce step size to 0.000976563
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.000976563, step size = 0.000976563
+  START discontinuous iteration 0:
+Newton: initial residual = 0.000503901; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 0.000640098: relTol = 1.27029: contr. = 1.27029
+    update initial residual with current residual; initial residual = 0.000640098
+    NEWTON STEP 2: residual = 0.00141308: relTol = 2.2076: contr. = 2.2076
+    NEWTON STEP 3: residual = 0.00114643: relTol = 1.79103: contr. = 0.811298
+    NEWTON STEP 4: residual = 0.000954611: relTol = 1.49135: contr. = 0.83268
+    NEWTON STEP 5: residual = 0.000816185: relTol = 1.27509: contr. = 0.854992
+    NEWTON STEP 6: residual = 0.000715793: relTol = 1.11826: contr. = 0.876999
+    NEWTON STEP 7: residual = 0.000642436: relTol = 1.00365: contr. = 0.897517
+    NEWTON STEP 8: residual = 0.000588301: relTol = 0.91908: contr. = 0.915734
+    NEWTON STEP 9: residual = 0.000547824: relTol = 0.855844: contr. = 0.931196
+    NEWTON STEP 10: residual = 0.000517073: relTol = 0.807803: contr. = 0.943867
+    NEWTON STEP 11: residual = 0.000493259: relTol = 0.7706: contr. = 0.953945
+    NEWTON STEP 12: residual = 0.000474424: relTol = 0.741175: contr. = 0.961815
+    NEWTON STEP 13: residual = 0.000459167: relTol = 0.71734: contr. = 0.967842
+    NEWTON STEP 14: residual = 0.000446522: relTol = 0.697584: contr. = 0.97246
+    NEWTON STEP 15: residual = 0.000435782: relTol = 0.680805: contr. = 0.975948
+    NEWTON STEP 16: residual = 0.000426464: relTol = 0.666249: contr. = 0.978618
+    NEWTON STEP 17: residual = 0.000418216: relTol = 0.653363: contr. = 0.980659
+    NEWTON STEP 18: residual = 0.000410795: relTol = 0.64177: contr. = 0.982256
+    NEWTON STEP 19: residual = 0.000404018: relTol = 0.631181: contr. = 0.983501
+    NEWTON STEP 20: residual = 0.000397759: relTol = 0.621403: contr. = 0.984508
+    NEWTON STEP 21: residual = 0.000391933: relTol = 0.612302: contr. = 0.985353
+    NEWTON STEP 22: residual = 0.000386459: relTol = 0.603749: contr. = 0.986033
+    NEWTON STEP 23: residual = 0.000381294: relTol = 0.595681: contr. = 0.986636
+    NEWTON STEP 24: residual = 0.000376405: relTol = 0.588043: contr. = 0.987177
+    NEWTON STEP 25: residual = 0.000371756: relTol = 0.580781: contr. = 0.98765
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.580781, load factor = 0.000976563
+  Solve steps: reduce step size to 0.000244141
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.000244141, step size = 0.000244141
+  START discontinuous iteration 0:
+Newton: initial residual = 0.000125975; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 4.99565e-05: relTol = 0.396558: contr. = 0.396558
+    NEWTON STEP 2: residual = 0.00105093: relTol = 8.34234: contr. = 21.0369
+    NEWTON STEP 3: residual = 0.00176806: relTol = 14.035: contr. = 1.68238
+    NEWTON STEP 4: residual = 0.00193101: relTol = 15.3285: contr. = 1.09216
+    NEWTON STEP 5: residual = 0.0246473: relTol = 195.652: contr. = 12.7639
+    NEWTON STEP 6: residual = 0.0181797: relTol = 144.312: contr. = 0.737595
+    NEWTON STEP 7: residual = 0.0136362: relTol = 108.245: contr. = 0.75008
+    NEWTON STEP 8: residual = 0.0104466: relTol = 82.9263: contr. = 0.766095
+    NEWTON STEP 9: residual = 0.00821051: relTol = 65.1756: contr. = 0.785946
+    NEWTON STEP 10: residual = 0.00664517: relTol = 52.7499: contr. = 0.80935
+    NEWTON STEP 11: residual = 0.00555113: relTol = 44.0653: contr. = 0.835362
+    NEWTON STEP 12: residual = 0.00478744: relTol = 38.0031: contr. = 0.862427
+    NEWTON STEP 13: residual = 0.0042546: relTol = 33.7734: contr. = 0.888701
+    NEWTON STEP 14: residual = 0.00388252: relTol = 30.8198: contr. = 0.912547
+    NEWTON STEP 15: residual = 0.00362223: relTol = 28.7535: contr. = 0.932956
+    NEWTON STEP 16: residual = 0.00343962: relTol = 27.3039: contr. = 0.949587
+    NEWTON STEP 17: residual = 0.00331101: relTol = 26.2831: contr. = 0.962611
+    NEWTON STEP 18: residual = 0.00321999: relTol = 25.5605: contr. = 0.972508
+    NEWTON STEP 19: residual = 0.00315515: relTol = 25.0458: contr. = 0.979863
+    NEWTON STEP 20: residual = 0.00310865: relTol = 24.6767: contr. = 0.985263
+    NEWTON STEP 21: residual = 0.00307493: relTol = 24.4091: contr. = 0.989154
+    NEWTON STEP 22: residual = 0.00305019: relTol = 24.2127: contr. = 0.991954
+    NEWTON STEP 23: residual = 0.00303175: relTol = 24.0662: contr. = 0.993953
+    NEWTON STEP 24: residual = 0.00301768: relTol = 23.9546: contr. = 0.99536
+    NEWTON STEP 25: residual = 0.00300672: relTol = 23.8675: contr. = 0.996366
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 23.8675, load factor = 0.000244141
+  Solve steps: reduce step size to 6.10352e-05
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 6.10352e-05, step size = 6.10352e-05
+  START discontinuous iteration 0:
+Newton: initial residual = 3.14938e-05; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 8.32444e-06: relTol = 0.26432: contr. = 0.26432
+    NEWTON STEP 2: residual = 1.36123e-06: relTol = 0.043222: contr. = 0.163522
+    NEWTON STEP 3: residual = 1.36134e-06: relTol = 0.0432256: contr. = 1.00008
+    NEWTON STEP 4: residual = 1.36134e-06: relTol = 0.0432256: contr. = 1
+    NEWTON STEP 5: residual = 1.36142e-06: relTol = 0.0432282: contr. = 1.00006
+    NEWTON STEP 6: residual = 1.36148e-06: relTol = 0.0432302: contr. = 1.00005
+    NEWTON STEP 7: residual = 1.36148e-06: relTol = 0.0432302: contr. = 1
+    NEWTON STEP 8: residual = 1.36156e-06: relTol = 0.0432326: contr. = 1.00006
+    NEWTON STEP 9: residual = 1.36157e-06: relTol = 0.0432331: contr. = 1.00001
+    NEWTON STEP 10: residual = 1.36164e-06: relTol = 0.0432351: contr. = 1.00005
+    NEWTON STEP 11: residual = 1.36169e-06: relTol = 0.0432369: contr. = 1.00004
+    NEWTON STEP 12: residual = 1.36171e-06: relTol = 0.0432375: contr. = 1.00001
+    NEWTON STEP 13: residual = 1.36182e-06: relTol = 0.0432408: contr. = 1.00008
+    NEWTON STEP 14: residual = 1.3618e-06: relTol = 0.0432404: contr. = 0.999991
+    NEWTON STEP 15: residual = 1.36192e-06: relTol = 0.0432441: contr. = 1.00009
+    NEWTON STEP 16: residual = 1.36197e-06: relTol = 0.0432457: contr. = 1.00004
+    NEWTON STEP 17: residual = 1.36195e-06: relTol = 0.0432451: contr. = 0.999986
+    NEWTON STEP 18: residual = 1.362e-06: relTol = 0.0432466: contr. = 1.00003
+    NEWTON STEP 19: residual = 1.36212e-06: relTol = 0.0432506: contr. = 1.00009
+    NEWTON STEP 20: residual = 1.36212e-06: relTol = 0.0432506: contr. = 1
+    NEWTON STEP 21: residual = 1.36214e-06: relTol = 0.0432512: contr. = 1.00001
+    NEWTON STEP 22: residual = 1.36222e-06: relTol = 0.0432536: contr. = 1.00006
+    NEWTON STEP 23: residual = 1.36233e-06: relTol = 0.043257: contr. = 1.00008
+    NEWTON STEP 24: residual = 1.36233e-06: relTol = 0.043257: contr. = 0.999999
+    NEWTON STEP 25: residual = 1.36237e-06: relTol = 0.0432584: contr. = 1.00003
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0432584, load factor = 6.10352e-05
+  Solve steps: reduce step size to 1.52588e-05
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1.52588e-05, step size = 1.52588e-05
+  START discontinuous iteration 0:
+Newton: initial residual = 7.87345e-06; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 2.01212e-06: relTol = 0.255558: contr. = 0.255558
+    NEWTON STEP 2: residual = 5.85122e-07: relTol = 0.0743159: contr. = 0.290798
+    NEWTON STEP 3: residual = 3.20694e-08: relTol = 0.0040731: contr. = 0.054808
+    NEWTON STEP 4: residual = 2.2087e-08: relTol = 0.00280525: contr. = 0.688725
+    NEWTON STEP 5: residual = 2.23243e-08: relTol = 0.00283539: contr. = 1.01074
+    NEWTON STEP 6: residual = 2.65858e-08: relTol = 0.00337664: contr. = 1.19089
+    NEWTON STEP 7: residual = 4.01269e-08: relTol = 0.00509649: contr. = 1.50934
+    NEWTON STEP 8: residual = 6.44071e-08: relTol = 0.00818029: contr. = 1.60508
+    NEWTON STEP 9: residual = 9.5833e-08: relTol = 0.0121717: contr. = 1.48793
+    NEWTON STEP 10: residual = 1.31823e-07: relTol = 0.0167427: contr. = 1.37555
+    NEWTON STEP 11: residual = 1.69651e-07: relTol = 0.0215473: contr. = 1.28696
+    NEWTON STEP 12: residual = 2.08829e-07: relTol = 0.0265232: contr. = 1.23093
+    NEWTON STEP 13: residual = 2.46805e-07: relTol = 0.0313465: contr. = 1.18185
+    NEWTON STEP 14: residual = 2.83972e-07: relTol = 0.0360671: contr. = 1.15059
+    NEWTON STEP 15: residual = 3.19011e-07: relTol = 0.0405173: contr. = 1.12339
+    NEWTON STEP 16: residual = 3.52442e-07: relTol = 0.0447634: contr. = 1.1048
+    NEWTON STEP 17: residual = 3.8345e-07: relTol = 0.0487017: contr. = 1.08798
+    NEWTON STEP 18: residual = 4.12174e-07: relTol = 0.0523498: contr. = 1.07491
+    NEWTON STEP 19: residual = 4.38972e-07: relTol = 0.0557535: contr. = 1.06502
+    NEWTON STEP 20: residual = 4.63898e-07: relTol = 0.0589193: contr. = 1.05678
+    NEWTON STEP 21: residual = 4.87381e-07: relTol = 0.0619019: contr. = 1.05062
+    NEWTON STEP 22: residual = 5.08974e-07: relTol = 0.0646444: contr. = 1.0443
+    NEWTON STEP 23: residual = 1.82185e-07: relTol = 0.0231392: contr. = 0.357946
+    NEWTON STEP 24: residual = 1.00733e-07: relTol = 0.012794: contr. = 0.552916
+    NEWTON STEP 25: residual = 5.06681e-08: relTol = 0.00643532: contr. = 0.502994
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.00643532, load factor = 1.52588e-05
+  Solve steps: reduce step size to 3.8147e-06
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 3.8147e-06, step size = 3.8147e-06
+  START discontinuous iteration 0:
+Newton: initial residual = 1.96836e-06; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 5.02823e-07: relTol = 0.255453: contr. = 0.255453
+    NEWTON STEP 2: residual = 5.05315e-07: relTol = 0.256719: contr. = 1.00496
+    NEWTON STEP 3: residual = 5.29089e-09: relTol = 0.00268797: contr. = 0.0104705
+    NEWTON STEP 4: residual = 3.59148e-08: relTol = 0.018246: contr. = 6.78804
+    NEWTON STEP 5: residual = 3.60217e-08: relTol = 0.0183004: contr. = 1.00298
+    NEWTON STEP 6: residual = 3.60522e-08: relTol = 0.0183158: contr. = 1.00084
+    NEWTON STEP 7: residual = 3.61329e-08: relTol = 0.0183568: contr. = 1.00224
+    NEWTON STEP 8: residual = 3.61706e-08: relTol = 0.018376: contr. = 1.00104
+    NEWTON STEP 9: residual = 3.62562e-08: relTol = 0.0184195: contr. = 1.00237
+    NEWTON STEP 10: residual = 3.63214e-08: relTol = 0.0184526: contr. = 1.0018
+    NEWTON STEP 11: residual = 3.63844e-08: relTol = 0.0184846: contr. = 1.00174
+    NEWTON STEP 12: residual = 3.6476e-08: relTol = 0.0185312: contr. = 1.00252
+    NEWTON STEP 13: residual = 3.6482e-08: relTol = 0.0185342: contr. = 1.00016
+    NEWTON STEP 14: residual = 3.65745e-08: relTol = 0.0185812: contr. = 1.00253
+    NEWTON STEP 15: residual = 3.66351e-08: relTol = 0.018612: contr. = 1.00166
+    NEWTON STEP 16: residual = 3.66394e-08: relTol = 0.0186141: contr. = 1.00012
+    NEWTON STEP 17: residual = 3.67526e-08: relTol = 0.0186716: contr. = 1.00309
+    NEWTON STEP 18: residual = 3.68192e-08: relTol = 0.0187055: contr. = 1.00181
+    NEWTON STEP 19: residual = 3.68386e-08: relTol = 0.0187154: contr. = 1.00053
+    NEWTON STEP 20: residual = 3.69316e-08: relTol = 0.0187626: contr. = 1.00253
+    NEWTON STEP 21: residual = 3.69942e-08: relTol = 0.0187944: contr. = 1.00169
+    NEWTON STEP 22: residual = 3.69883e-08: relTol = 0.0187914: contr. = 0.999841
+    NEWTON STEP 23: residual = 3.71182e-08: relTol = 0.0188574: contr. = 1.00351
+    NEWTON STEP 24: residual = 3.71895e-08: relTol = 0.0188936: contr. = 1.00192
+    NEWTON STEP 25: residual = 3.71992e-08: relTol = 0.0188986: contr. = 1.00026
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0188986, load factor = 3.8147e-06
+  Solve steps: reduce step size to 9.53674e-07
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 9.53674e-07, step size = 9.53674e-07
+  START discontinuous iteration 0:
+Newton: initial residual = 4.9209e-07; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 1.25756e-07: relTol = 0.255555: contr. = 0.255555
+    NEWTON STEP 2: residual = 1.16286e-08: relTol = 0.0236311: contr. = 0.0924697
+    NEWTON STEP 3: residual = 1.65736e-08: relTol = 0.0336799: contr. = 1.42524
+    NEWTON STEP 4: residual = 2.14569e-08: relTol = 0.0436035: contr. = 1.29464
+    NEWTON STEP 5: residual = 2.75093e-08: relTol = 0.055903: contr. = 1.28208
+    NEWTON STEP 6: residual = 3.57967e-08: relTol = 0.0727442: contr. = 1.30126
+    NEWTON STEP 7: residual = 5.58235e-08: relTol = 0.113442: contr. = 1.55946
+    NEWTON STEP 8: residual = 6.89784e-08: relTol = 0.140174: contr. = 1.23565
+    NEWTON STEP 9: residual = 8.70263e-10: relTol = 0.0017685: contr. = 0.0126165
+    NEWTON STEP 10: residual = 9.34378e-10: relTol = 0.00189879: contr. = 1.07367
+    NEWTON STEP 11: residual = 8.70989e-10: relTol = 0.00176998: contr. = 0.932159
+    NEWTON STEP 12: residual = 1.02203e-09: relTol = 0.00207692: contr. = 1.17341
+    NEWTON STEP 13: residual = 1.20186e-09: relTol = 0.00244235: contr. = 1.17595
+    NEWTON STEP 14: residual = 1.27102e-09: relTol = 0.00258289: contr. = 1.05754
+    NEWTON STEP 15: residual = 1.53606e-09: relTol = 0.0031215: contr. = 1.20853
+    NEWTON STEP 16: residual = 1.9431e-09: relTol = 0.00394867: contr. = 1.26499
+    NEWTON STEP 17: residual = 2.22903e-09: relTol = 0.00452971: contr. = 1.14715
+    NEWTON STEP 18: residual = 2.99369e-09: relTol = 0.00608362: contr. = 1.34305
+    NEWTON STEP 19: residual = 3.57111e-09: relTol = 0.00725702: contr. = 1.19288
+    NEWTON STEP 20: residual = 4.69032e-09: relTol = 0.00953142: contr. = 1.31341
+    NEWTON STEP 21: residual = 5.93357e-09: relTol = 0.0120579: contr. = 1.26507
+    NEWTON STEP 22: residual = 7.67449e-09: relTol = 0.0155957: contr. = 1.2934
+    NEWTON STEP 23: residual = 9.83053e-09: relTol = 0.0199771: contr. = 1.28094
+    NEWTON STEP 24: residual = 1.27258e-08: relTol = 0.0258607: contr. = 1.29452
+    NEWTON STEP 25: residual = 1.65655e-08: relTol = 0.0336636: contr. = 1.30173
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0336636, load factor = 9.53674e-07
+  Solve steps: reduce step size to 2.38419e-07
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 2.38419e-07, step size = 2.38419e-07
+  START discontinuous iteration 0:
+Newton: initial residual = 1.23023e-07; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 3.14516e-08: relTol = 0.255657: contr. = 0.255657
+    NEWTON STEP 2: residual = 8.29455e-10: relTol = 0.0067423: contr. = 0.0263725
+    NEWTON STEP 3: residual = 8.05187e-10: relTol = 0.00654503: contr. = 0.970741
+    NEWTON STEP 4: residual = 8.41044e-10: relTol = 0.0068365: contr. = 1.04453
+    NEWTON STEP 5: residual = 7.58534e-10: relTol = 0.00616581: contr. = 0.901896
+    NEWTON STEP 6: residual = 9.23705e-10: relTol = 0.00750842: contr. = 1.21775
+    NEWTON STEP 7: residual = 8.44639e-10: relTol = 0.00686572: contr. = 0.914403
+    NEWTON STEP 8: residual = 6.90326e-10: relTol = 0.00561138: contr. = 0.817303
+    NEWTON STEP 9: residual = 7.56589e-10: relTol = 0.00615: contr. = 1.09599
+    NEWTON STEP 10: residual = 8.14247e-10: relTol = 0.00661868: contr. = 1.07621
+    NEWTON STEP 11: residual = 7.98346e-10: relTol = 0.00648943: contr. = 0.980472
+    NEWTON STEP 12: residual = 8.42815e-10: relTol = 0.00685089: contr. = 1.0557
+    NEWTON STEP 13: residual = 7.98353e-10: relTol = 0.00648948: contr. = 0.947246
+    NEWTON STEP 14: residual = 8.83741e-10: relTol = 0.00718357: contr. = 1.10696
+    NEWTON STEP 15: residual = 8.21723e-10: relTol = 0.00667945: contr. = 0.929823
+    NEWTON STEP 16: residual = 7.25106e-10: relTol = 0.00589409: contr. = 0.882422
+    NEWTON STEP 17: residual = 8.52279e-10: relTol = 0.00692782: contr. = 1.17538
+    NEWTON STEP 18: residual = 8.51547e-10: relTol = 0.00692188: contr. = 0.999142
+    NEWTON STEP 19: residual = 7.64935e-10: relTol = 0.00621784: contr. = 0.898289
+    NEWTON STEP 20: residual = 8.07328e-10: relTol = 0.00656243: contr. = 1.05542
+    NEWTON STEP 21: residual = 7.76433e-10: relTol = 0.00631131: contr. = 0.961733
+    NEWTON STEP 22: residual = 8.15766e-10: relTol = 0.00663103: contr. = 1.05066
+    NEWTON STEP 23: residual = 8.35148e-10: relTol = 0.00678858: contr. = 1.02376
+    NEWTON STEP 24: residual = 7.91316e-10: relTol = 0.00643228: contr. = 0.947515
+    NEWTON STEP 25: residual = 7.87395e-10: relTol = 0.00640041: contr. = 0.995045
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.00640041, load factor = 2.38419e-07
+  Solve steps: reduce step size to 5.96046e-08
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 5.96046e-08, step size = 5.96046e-08
+  START discontinuous iteration 0:
+Newton: initial residual = 3.07557e-08; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 7.86835e-09: relTol = 0.255834: contr. = 0.255834
+    NEWTON STEP 2: residual = 7.47113e-10: relTol = 0.0242919: contr. = 0.0949517
+    NEWTON STEP 3: residual = 8.28078e-10: relTol = 0.0269244: contr. = 1.10837
+    NEWTON STEP 4: residual = 8.68709e-10: relTol = 0.0282455: contr. = 1.04907
+    NEWTON STEP 5: residual = 7.65061e-10: relTol = 0.0248755: contr. = 0.880688
+    NEWTON STEP 6: residual = 8.20706e-10: relTol = 0.0266847: contr. = 1.07273
+    NEWTON STEP 7: residual = 8.34303e-10: relTol = 0.0271268: contr. = 1.01657
+    NEWTON STEP 8: residual = 8.59719e-10: relTol = 0.0279532: contr. = 1.03046
+    NEWTON STEP 9: residual = 8.17294e-10: relTol = 0.0265738: contr. = 0.950651
+    NEWTON STEP 10: residual = 7.31608e-10: relTol = 0.0237877: contr. = 0.895159
+    NEWTON STEP 11: residual = 7.60005e-10: relTol = 0.0247111: contr. = 1.03882
+    NEWTON STEP 12: residual = 7.4673e-10: relTol = 0.0242794: contr. = 0.982533
+    NEWTON STEP 13: residual = 7.9158e-10: relTol = 0.0257377: contr. = 1.06006
+    NEWTON STEP 14: residual = 7.52114e-10: relTol = 0.0244545: contr. = 0.950143
+    NEWTON STEP 15: residual = 8.86785e-10: relTol = 0.0288333: contr. = 1.17906
+    NEWTON STEP 16: residual = 7.50767e-10: relTol = 0.0244107: contr. = 0.846616
+    NEWTON STEP 17: residual = 7.20873e-10: relTol = 0.0234387: contr. = 0.960182
+    NEWTON STEP 18: residual = 7.72423e-10: relTol = 0.0251148: contr. = 1.07151
+    NEWTON STEP 19: residual = 8.4471e-10: relTol = 0.0274652: contr. = 1.09358
+    NEWTON STEP 20: residual = 7.42724e-10: relTol = 0.0241492: contr. = 0.879265
+    NEWTON STEP 21: residual = 7.80574e-10: relTol = 0.0253799: contr. = 1.05096
+    NEWTON STEP 22: residual = 8.76506e-10: relTol = 0.028499: contr. = 1.1229
+    NEWTON STEP 23: residual = 8.30989e-10: relTol = 0.0270191: contr. = 0.948069
+    NEWTON STEP 24: residual = 7.9794e-10: relTol = 0.0259445: contr. = 0.960229
+    NEWTON STEP 25: residual = 8.05674e-10: relTol = 0.026196: contr. = 1.00969
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.026196, load factor = 5.96046e-08
+  Solve steps: reduce step size to 1.49012e-08
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1.49012e-08, step size = 1.49012e-08
+  START discontinuous iteration 0:
+Newton: initial residual = 7.68891e-09; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 2.04128e-09: relTol = 0.265484: contr. = 0.265484
+    NEWTON STEP 2: residual = 8.36855e-10: relTol = 0.108839: contr. = 0.409965
+    NEWTON STEP 3: residual = 8.15911e-10: relTol = 0.106115: contr. = 0.974973
+    NEWTON STEP 4: residual = 7.56097e-10: relTol = 0.098336: contr. = 0.926691
+    NEWTON STEP 5: residual = 7.88733e-10: relTol = 0.102581: contr. = 1.04316
+    NEWTON STEP 6: residual = 8.7002e-10: relTol = 0.113153: contr. = 1.10306
+    NEWTON STEP 7: residual = 7.79828e-10: relTol = 0.101422: contr. = 0.896333
+    NEWTON STEP 8: residual = 7.5491e-10: relTol = 0.0981817: contr. = 0.968047
+    NEWTON STEP 9: residual = 7.48357e-10: relTol = 0.0973294: contr. = 0.991319
+    NEWTON STEP 10: residual = 8.00681e-10: relTol = 0.104135: contr. = 1.06992
+    NEWTON STEP 11: residual = 8.12029e-10: relTol = 0.10561: contr. = 1.01417
+    NEWTON STEP 12: residual = 7.73549e-10: relTol = 0.100606: contr. = 0.952613
+    NEWTON STEP 13: residual = 8.26544e-10: relTol = 0.107498: contr. = 1.06851
+    NEWTON STEP 14: residual = 8.1662e-10: relTol = 0.106207: contr. = 0.987993
+    NEWTON STEP 15: residual = 8.11331e-10: relTol = 0.10552: contr. = 0.993523
+    NEWTON STEP 16: residual = 7.01454e-10: relTol = 0.0912292: contr. = 0.864572
+    NEWTON STEP 17: residual = 7.88225e-10: relTol = 0.102515: contr. = 1.1237
+    NEWTON STEP 18: residual = 8.73525e-10: relTol = 0.113608: contr. = 1.10822
+    NEWTON STEP 19: residual = 7.51477e-10: relTol = 0.0977352: contr. = 0.860281
+    NEWTON STEP 20: residual = 8.34528e-10: relTol = 0.108537: contr. = 1.11052
+    NEWTON STEP 21: residual = 8.2543e-10: relTol = 0.107353: contr. = 0.989098
+    NEWTON STEP 22: residual = 8.38158e-10: relTol = 0.109009: contr. = 1.01542
+    NEWTON STEP 23: residual = 7.18125e-10: relTol = 0.0933975: contr. = 0.856789
+    NEWTON STEP 24: residual = 7.75077e-10: relTol = 0.100804: contr. = 1.07931
+    NEWTON STEP 25: residual = 7.40173e-10: relTol = 0.096265: contr. = 0.954968
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.096265, load factor = 1.49012e-08
+  Solve steps: reduce step size to 1e-08
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1e-08, step size = 1e-08
+  START discontinuous iteration 0:
+Newton: initial residual = 5.15994e-09; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 1.40432e-09: relTol = 0.272159: contr. = 0.272159
+    NEWTON STEP 2: residual = 8.39991e-10: relTol = 0.162791: contr. = 0.598146
+    NEWTON STEP 3: residual = 7.82636e-10: relTol = 0.151675: contr. = 0.93172
+    NEWTON STEP 4: residual = 7.21677e-10: relTol = 0.139861: contr. = 0.92211
+    NEWTON STEP 5: residual = 7.41788e-10: relTol = 0.143759: contr. = 1.02787
+    NEWTON STEP 6: residual = 8.73737e-10: relTol = 0.169331: contr. = 1.17788
+    NEWTON STEP 7: residual = 8.03678e-10: relTol = 0.155753: contr. = 0.919818
+    NEWTON STEP 8: residual = 8.0153e-10: relTol = 0.155337: contr. = 0.997326
+    NEWTON STEP 9: residual = 7.80511e-10: relTol = 0.151264: contr. = 0.973777
+    NEWTON STEP 10: residual = 7.1649e-10: relTol = 0.138856: contr. = 0.917976
+    NEWTON STEP 11: residual = 7.48619e-10: relTol = 0.145083: contr. = 1.04484
+    NEWTON STEP 12: residual = 7.48496e-10: relTol = 0.145059: contr. = 0.999836
+    NEWTON STEP 13: residual = 6.92484e-10: relTol = 0.134204: contr. = 0.925168
+    NEWTON STEP 14: residual = 6.95359e-10: relTol = 0.134761: contr. = 1.00415
+    NEWTON STEP 15: residual = 7.58222e-10: relTol = 0.146944: contr. = 1.0904
+    NEWTON STEP 16: residual = 8.34327e-10: relTol = 0.161693: contr. = 1.10037
+    NEWTON STEP 17: residual = 8.01416e-10: relTol = 0.155315: contr. = 0.960554
+    NEWTON STEP 18: residual = 7.18619e-10: relTol = 0.139269: contr. = 0.896687
+    NEWTON STEP 19: residual = 7.5211e-10: relTol = 0.145759: contr. = 1.0466
+    NEWTON STEP 20: residual = 7.64512e-10: relTol = 0.148163: contr. = 1.01649
+    NEWTON STEP 21: residual = 7.62146e-10: relTol = 0.147704: contr. = 0.996905
+    NEWTON STEP 22: residual = 7.26381e-10: relTol = 0.140773: contr. = 0.953074
+    NEWTON STEP 23: residual = 8.92764e-10: relTol = 0.173018: contr. = 1.22906
+    NEWTON STEP 24: residual = 6.79668e-10: relTol = 0.13172: contr. = 0.761308
+    NEWTON STEP 25: residual = 7.80021e-10: relTol = 0.151169: contr. = 1.14765
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.151169, load factor = 1e-08
+Solve steps: step reduction reached minimum step size; stop solver
+solver finished after 1.52413 seconds.
+static tip displacement (y)= 0.0 
+****************************************** 
+  EXAMPLE 16 ("TestModels/sparseMatrixSpringDamperTest.py") FAILED 
+  ERROR = 6.779862983766792 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 17 ("TestModels/sphericalJointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP1000, t = 1 sec, timeToGo = 0 sec, Nit/step = 6.77
+solver finished after 0.149501 seconds.
+solution of sphericalJointTest= 4.409004179180698 
+****************************************** 
+  EXAMPLE 17 ("TestModels/sphericalJointTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 18 ("TestModels/springDamperUserFunctionTest.py"): 
+****************************************** 
+EXUDYN version=0.1.322 
+resonance frequency = 50.0 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.322 solver: implicit second order time integration
+STEP5000, t = 50 sec, timeToGo = 5.65044e-15 sec, Nit/step = 1.9798
+solver finished after 0.204975 seconds.
+Solver iteration statistics:
+total number of steps:        5000
+total number of Newton iterations: 9899
+total number of Newton Jacobians:  9899
+displacement= 0.5062872273010854 
+****************************************** 
+  EXAMPLE 18 ("TestModels/springDamperUserFunctionTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START MINI EXAMPLE 0 ("ObjectMassPoint.py"): 
+start mini example for class ObjectMassPoint 
+example for ObjectMassPoint completed, test error = 0.0 
+  MINI EXAMPLE 0 ("ObjectMassPoint.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 1 ("ObjectMassPoint2D.py"): 
+start mini example for class ObjectMassPoint2D 
+example for ObjectMassPoint2D completed, test error = 0.0 
+  MINI EXAMPLE 1 ("ObjectMassPoint2D.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 2 ("ObjectRigidBody2D.py"): 
+start mini example for class ObjectRigidBody2D 
+example for ObjectRigidBody2D completed, test error = -4.440892098500626e-16 
+  MINI EXAMPLE 2 ("ObjectRigidBody2D.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 3 ("ObjectConnectorSpringDamper.py"): 
+start mini example for class ObjectConnectorSpringDamper 
+example for ObjectConnectorSpringDamper completed, test error = 0.0 
+  MINI EXAMPLE 3 ("ObjectConnectorSpringDamper.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 4 ("ObjectConnectorCartesianSpringDamper.py"): 
+start mini example for class ObjectConnectorCartesianSpringDamper 
+example for ObjectConnectorCartesianSpringDamper completed, test error = 0.0 
+  MINI EXAMPLE 4 ("ObjectConnectorCartesianSpringDamper.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 5 ("ObjectConnectorCoordinateSpringDamper.py"): 
+start mini example for class ObjectConnectorCoordinateSpringDamper 
+example for ObjectConnectorCoordinateSpringDamper completed, test error = 0.0 
+  MINI EXAMPLE 5 ("ObjectConnectorCoordinateSpringDamper.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 6 ("ObjectConnectorDistance.py"): 
+start mini example for class ObjectConnectorDistance 
+example for ObjectConnectorDistance completed, test error = 0.0 
+  MINI EXAMPLE 6 ("ObjectConnectorDistance.py") FINISHED SUCCESSFUL 
+
+
+****************************************** 
+  START MINI EXAMPLE 7 ("ObjectConnectorCoordinate.py"): 
+start mini example for class ObjectConnectorCoordinate 
+example for ObjectConnectorCoordinate completed, test error = 0.0 
+  MINI EXAMPLE 7 ("ObjectConnectorCoordinate.py") FINISHED SUCCESSFUL 
+
+ 
+****************************************** 
+TEST SUITE RESULTS SUMMARY: 
+****************************************** 
+time elapsed = 8.577 seconds 
+ALL UNIT TESTS SUCCESSFUL 
+2 EXAMPLE TEST(S) OUT OF 19 FAILED:  
+  EXAMPLE 10 (TestModels/PARTS_ATEs_moving.py) FAILED 
+  EXAMPLE 16 (TestModels/sparseMatrixSpringDamperTest.py) FAILED 
+ALL 8 MINI EXAMPLE TESTS SUCCESSFUL 
+******************************************
+ 

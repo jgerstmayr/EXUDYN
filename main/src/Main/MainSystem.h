@@ -165,10 +165,11 @@ public:
 	//! call pybind object function, possibly with arguments
 	py::object PyCallObjectFunction(Index itemNumber, STDstring functionName, py::dict args);
 	//! Get specific output variable with variable type; as this will involve MarkerDataStructure for constraints, this call may be slower than other calls
-	py::object PyGetObjectOutputVariable(Index itemNumber, OutputVariableType variableType);
+	py::object PyGetObjectOutputVariable(Index itemNumber, OutputVariableType variableType) const; 
 	//! Get specific output variable with variable type; ONLY for bodies;
-	py::object PyGetObjectOutputVariableBody(Index itemNumber, OutputVariableType variableType,
-		const std::vector<Real>& localPosition, ConfigurationType configuration);
+	py::object PyGetObjectOutputVariableBody(Index itemNumber, OutputVariableType variableType, const std::vector<Real>& localPosition, ConfigurationType configuration) const;
+	//! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
+	py::object PyGetObjectOutputVariableSuperElement(Index itemNumber, OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration) const;
 
 	//! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object PyGetObjectParameter(Index itemNumber, const STDstring& parameterName) const;

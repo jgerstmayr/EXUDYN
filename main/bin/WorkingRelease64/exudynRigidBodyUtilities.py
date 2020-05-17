@@ -69,6 +69,21 @@ def Skew(vector):
 def Skew2Vec(m):
     return np.array([-m[1][2], m[0][2], -m[0][1]])
 
+#compute (3 x 3*n) skew matrix from (3*n) vector
+def ComputeSkewMatrix(v):
+    n = int(len(v)/3) #number of nodes
+    sm = np.zeros((3*n,3))
+
+    for i in range(n):
+        off = 3*i
+        x=v[off+0]
+        y=v[off+1]
+        z=v[off+2]
+        mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+        sm[off:off+3,:] = mLoc[:,:]
+    
+    return sm
+
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

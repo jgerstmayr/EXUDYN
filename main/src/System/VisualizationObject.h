@@ -18,9 +18,13 @@
 *
 ************************************************************************************************ */
 #pragma once
+#include "Linalg/BasicLinalg.h"
 
 class VisualizationSystem; //predefined to be used in definition of base visualizationItem classes
 class VisualizationSettings; //predefined for update graphics
+//class MatrixI;
+//class Float4;
+//#include "Graphics/VisualizationPrimitives.h"
 
 //! base class for visualization of object
 class VisualizationObject
@@ -40,6 +44,40 @@ public:
 	//! print function, used mainly for debug reasons and to be shown in Python
 	virtual void Print(std::ostream& os) const {
 		os << "VisualizationObject(";
+		os << ")";
+	}
+
+};
+
+//! base class for visualization of object
+class VisualizationObjectSuperElement: public VisualizationObject
+{
+protected:
+	bool show; //true: shall be drawn; false: no not draw; will be initialized in specialized class
+public:
+	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
+	//implementation in VisuNodePoint
+	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber);
+
+	virtual const bool& GetShowNodes() const = 0;
+	//{ 
+	//	CHECKandTHROWstring("ERROR: illegal call to VisualizationObjectSuperElement::GetShowNodes"); 
+	//	return false; 
+	//};
+	virtual const MatrixI& GetTriangleMesh() const = 0;
+	//{ 
+	//	CHECKandTHROWstring("ERROR: illegal call to VisualizationObjectSuperElement::GetAccessFunctionBody"); 
+	//	return EXUmath::unitMatrixI; 
+	//};
+	virtual const Float4& GetColor() const = 0;
+	//{ 
+	//	CHECKandTHROWstring("ERROR: illegal call to VisualizationObjectSuperElement::GetColor"); 
+	//	return Float4({0.f,0.f,0.f,1.f}); 
+	//};
+
+	//! print function, used mainly for debug reasons and to be shown in Python
+	virtual void Print(std::ostream& os) const {
+		os << "VisualizationSuperElement(";
 		os << ")";
 	}
 

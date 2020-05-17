@@ -8,7 +8,7 @@ goal: automatically generate interfaces for structures
 currently: automatic generate structures with ostream and initialization
 """
 
-from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr
+from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex
 import os
 
 # compute destination number of str given from [C|M][P]
@@ -30,6 +30,15 @@ def DestinationNr(strDest):
             destNr = 3
 
     return destNr
+
+#possible types for certain items (object, marker, node, ...)
+possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','SingleNoded','MultiNoded','FiniteElement','SuperElement'],
+                 'Node':['_None','Ground','Position2D','Orientation2D','Point2DSlope1','Position','Orientation','RigidBody',
+                         'RotationEulerParameters','RotationRxyz','RotationRotationVector','RotationLieGroup',
+                         'GenericODE2','GenericData'],
+                 'Marker':['_None','Node','Object','Body','Position','Orientation','Coordinate','BodyLine','BodySurface',
+                           'BodyVolume','BodyMass','BodySurfaceNormal'],
+                 'Load':[], 'Sensor':[]}
 
 #conversion list for python functions; names must always start with 'PyFunction'...
 pyFunctionTypeConversion = {'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
@@ -55,6 +64,8 @@ def IsASetSafelyParameter(parameterType):
         (parameterType == 'Matrix3D') | 
         (parameterType == 'Matrix6D') | 
         (parameterType == 'NumpyMatrix') | 
+        (parameterType == 'NumpyMatrixI') | #for index arrays, mesh, ...
+        (parameterType == 'PyMatrixContainer') | 
         (parameterType == 'NumpyVector') | 
         (parameterType == 'Vector7D') ):
         return True
@@ -147,7 +158,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                  'Vector4D':'std::vector<Real>', 'Vector3D':'std::vector<Real>', 'Vector2D':'std::vector<Real>', 
                  'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 'Matrix6D':'std::array<std::array<Real,6>,6>', 
                  'ArrayIndex':'std::vector<Index>', 'String':'std::string',
-                 'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>',
+                 'NumpyMatrix':'py::array_t<Real>', 
+                 'NumpyMatrixI':'py::array_t<Index>', 
+                 #'MatrixContainer':'PyMatrixContainer', 
+                 'NumpyVector':'py::array_t<Real>',
                  'Float2': 'std::vector<float>', 'Float3': 'std::vector<float>', 'Float4': 'std::vector<float>',  #e.g. for OpenGL vectors
                  'Float9': 'std::vector<float>', 'Float16': 'std::vector<float>', #e.g. for OpenGL rotation matrix and homogenous transformation
                  'Index2': 'std::vector<Index>', 'Index3': 'std::vector<Index>'
@@ -251,6 +265,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #Latex doc:
     sLatex = ''
     sLatexItemList = ''
+
     hasPybindInterface = False
     for parameter in parameterList:
         if (parameter['lineType'] == 'V') & (parameter['cFlags'].find('I') != -1): #only if it is a member variable
@@ -263,7 +278,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         descriptionStr = parseInfo['classDescription']
         
         sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
-        sLatex += descriptionStr + '\n \\\\'
+        sLatex += descriptionStr + '\\vspace{12pt}\n \\\\'
 
 
         cLatex  = '\\vspace{12pt} \\noindent The item {\\bf ' + parseInfo['class'] + "} with type = '"
@@ -285,6 +300,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
         symbolList = ''
         requestedMarkerString = ''
+        itemTypeString = '' #string containing type of item (out of possibleTypes dict)
+        requestedNodeString = ''
+
+
         for parameter in parameterList:
             if (parameter['lineType'].find('V') != -1) & (parameter['cFlags'].find('I') != -1): #also include parent class members!
                 sString = ''
@@ -313,12 +332,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     vLatex += sTemp
                 else:
                     cLatex += sTemp
-                    
-            elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
-                markerType = parameter['defaultValue'].replace('return ','').replace(';','')
-                requestedMarkerString = "  {\\bf Requested marker type} = " + Str2Latex(markerType) + " \\\\ \n"
 
-        sLatex += requestedMarkerString
+            elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
+                requestedMarkerString = GetTypesStringLatex(parameter['defaultValue'],'Marker', possibleTypes['Marker'],' +')
+            elif (parameter['pythonName'] == 'GetRequestedNodeType'):
+                requestedNodeString = GetTypesStringLatex(parameter['defaultValue'],'Node', possibleTypes['Node'],' +')
+            elif (parameter['pythonName'] == 'GetType'):
+                searchType = parseInfo['classType']
+                if parseInfo['classType']=='Object': searchType += 'Type'
+                itemTypeString = GetTypesStringLatex(parameter['defaultValue'],searchType, possibleTypes[parseInfo['classType']])
+                #print(parseInfo['classType']+':'+itemTypeString)
+                
 
         cLatex += '    visualization & V' + parseInfo['class'] + ' & & & parameters for visualization of item \\\\ \\hline\n'
         cLatex += '	  \\end{longtable}\n'
@@ -326,11 +350,27 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         vLatex += '	  \\end{longtable}\n'
         vLatex += '	\\end{center}\n'
         #now assemble visualization and computation tables:
-        sLatex += cLatex+vLatex
 
-        #add additional information auto-generated
-        if len(parseInfo['pythonShortName']) != 0:
-            sLatex += '\n\\noindent{\\bf Short name} for Python: {\\bf ' + parseInfo['pythonShortName'] + '}\n \\vspace{6pt}\\\\'
+        #sLatex += requestedMarkerString
+        if len(requestedMarkerString) + len(itemTypeString) + len(parseInfo['pythonShortName']) !=0:
+            sLatex += '{\\bf Additional information for ' + parseInfo['class'] + '}:\n'
+            sLatex += '\\bi\n'
+            if len(itemTypeString) != 0:
+                sLatex += '  \\item The ' + parseInfo['classType'] + ' has the following types = ' + itemTypeString + '\n'
+            if len(requestedMarkerString) != 0:
+                sLatex += '  \\item Requested marker type = ' + requestedMarkerString + '\n'
+            if len(requestedNodeString) != 0:
+                if requestedNodeString.find('_None') != -1:
+                    sLatex += '  \\item Requested node type: read detailed information of item\n'
+                else:
+                    sLatex += '  \\item Requested node type = ' + requestedNodeString + '\n'
+            if len(parseInfo['pythonShortName']) != 0:
+                sLatex += '  \\item {\\bf Short name} for Python = {\\bf ' + parseInfo['pythonShortName'] + '}'
+
+            sLatex += '\\ei\n'
+
+
+        sLatex += cLatex+vLatex
 
 #        if len(parseInfo['outputVariables']) != 0:
 #            sLatex += '{\\bf Output variables} (chose type, e.g., OutputVariableType.Position): \n\\begin{itemize}\n'
@@ -340,18 +380,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #            
 #            sLatex += '\\end{itemize}\n'
 
-            
-        sLatex += "{\\bf Definition of quantities}:\\\\\n"
+        addLatex = ''
         if len(symbolList) != 0: #automatically generated import parameter symbol list
-            #sLatex += "\\vspace{6pt}\\\\ \n"
-            sLatex += "\\startTable{input parameter}{symbol}{description see tables above}\n"
-            sLatex += symbolList
-            sLatex += "\\finishTable\n"
+            #addLatex += "\\vspace{6pt}\\\\ \n"
+            addLatex += "\\startTable{input parameter}{symbol}{description see tables above}\n"
+            addLatex += symbolList
+            addLatex += "\\finishTable\n"
 
         #process outputVariables, including symbols
         if len(parseInfo['outputVariables']) != 0:
-            sLatex += "{\\bf The following output parameters are available as OutputVariableType in sensors and other functions}:\\\\ \n"
-            sLatex += "\\startTable{output parameter}{symbol}{description}\n"
+            addLatex += "{\\bf The following output parameters are available as OutputVariableType in sensors and other functions}: \n"
+            addLatex += "\\startTable{output parameter}{symbol}{description}\n"
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
@@ -360,19 +399,23 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 [description, latexSymbol] = ExtractLatexSymbol(description)
                 if len(latexSymbol) != 0: 
                     latexSymbol = latexSymbol
-                sLatex += "\\rowTable{" + oVariable +"}{" + latexSymbol + "}{" + description + "}\n"  #this is the line for one outputvariable
-            sLatex += "\\finishTable\n" #outputvariables
+                addLatex += "\\rowTable{" + oVariable +"}{" + latexSymbol + "}{" + description + "}\n"  #this is the line for one outputvariable
+            addLatex += "\\finishTable\n" #outputvariables
 
         if len(parseInfo['equations']) != 0:
-            sLatex += "{\\bf Description of Item}:\n"
-            sLatex +=' \\noindent\n' + parseInfo['equations']
+            addLatex += "{\\bf Description of Item}:\n"
+            addLatex +=' \\noindent\n' + parseInfo['equations']
         if len(parseInfo['miniExample']) != 0:
-            #sLatex +='\\vspace{12pt}\\\\ \n'
-            sLatex +='\\noindent {\\bf Example} for ' + parseInfo['class'] + ':\n'
-            sLatex +='\\pythonstyle\n'
-            sLatex +='\\begin{lstlisting}[language=Python, firstnumber=1]\n'
-            sLatex += parseInfo['miniExample'] + '\n'
-            sLatex +='\\end{lstlisting}\n\n'
+            #addLatex +='\\vspace{12pt}\\\\ \n'
+            addLatex +='\\noindent {\\bf Example} for ' + parseInfo['class'] + ':\n'
+            addLatex +='\\pythonstyle\n'
+            addLatex +='\\begin{lstlisting}[language=Python, firstnumber=1]\n'
+            addLatex += parseInfo['miniExample'] + '\n'
+            addLatex +='\\end{lstlisting}\n\n'
+
+        if len(addLatex) != 0:
+            sLatex += "{\\bf Detailed information on " + parseInfo['class'] + "}:\n"
+            sLatex += addLatex
 
 
     #************************************
@@ -485,6 +528,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     for parameter in parameterList:
         if (parameter['lineType'] == 'V'): #only if it is a member variable
             typeStr = TypeConversion(parameter['type'], typeConversion)
+            if parameter['cFlags'].find('U') != -1:
+                typeStr = 'mutable ' + typeStr #make this variable changable in GetMassMatrix(), ComputeODE2RHS(), ... functions
+                #print(typeStr)
             temp = '    ' + typeStr + ' ' + parameter['cplusplusName']+ ';'
             nChar = len(temp)
             alignment = 50
@@ -666,6 +712,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     parRead = 'EXUmath::Matrix3DToStdArray33(' + destStr + ')'
                 elif parameter['type'] == 'NumpyMatrix':
                     parRead = 'EPyUtils::Matrix2NumPy(' + destStr + ')'
+                elif parameter['type'] == 'NumpyMatrixI':
+                    parRead = 'EPyUtils::MatrixI2NumPy(' + destStr + ')'
                 elif parameter['type'] == 'NumpyVector':
                     parRead = 'EPyUtils::Vector2NumPy(' + destStr + ')'
                     #dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix3DToStdArray33(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
@@ -721,7 +769,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     dictListWrite[i]+='\n'
 
                 if parRead != '':
-                    if parameter['type'].find('Numpy') != -1: #do not add py::cast(...) NumpyMAtrix/Vector
+                    if parameter['type'].find('Numpy') != -1: #do not add py::cast(...) NumpyMatrix/Vector
                         parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return ' + parRead + ';} //! AUTO: get parameter\n        else '
                     else:
                         parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return py::cast(' + parRead + ');} //! AUTO: get parameter\n        else '
@@ -952,7 +1000,9 @@ try: #still close file if crashes
     #types such as UReal shall be used lateron to perform e.g. range checks prior to setting parameters
     typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
                       'Vector':'Vector', 'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
-                      'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
+                      'NumpyVector':'Vector', 
+                      'NumpyMatrix':'Matrix', 
+                      'NumpyMatrixI':'MatrixI', 
                       'String':'std::string'} #convert parameter types to C++/EXUDYN types
     typeConversion.update(pyFunctionTypeConversion)#add the list of python (user) functions
     

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-04-22  20:14:25 (last modfied)
+* @date         2020-05-08  21:48:27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,7 +24,7 @@
 class CObjectRigidBodyParameters // AUTO: 
 {
 public: // AUTO: 
-    Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass point
+    Real physicsMass;                             //!< AUTO: mass [SI:kg] of rigid body
     Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ of rigid body w.r.t. to the reference point of the body, NOT w.r.t. to center of mass; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass
     Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM); if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
     Index nodeNumber;                             //!< AUTO: node number for rigid body node

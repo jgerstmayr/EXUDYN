@@ -254,6 +254,20 @@ public:
         return *this;
     }
 
+	//! copy assignment operator for SlimVector
+	template <Index dataSize>
+	VectorBase& operator=(const SlimVectorBase<T, dataSize>& vector)
+	{
+		SetNumberOfItems(vector.NumberOfItems());
+
+		Index cnt = 0;
+		for (auto item : vector) {
+			(*this)[cnt++] = item;
+		}
+		return *this;
+	}
+
+
     //! comparison operator, component-wise compare; returns true, if all components are equal
     bool operator==(const VectorBase& v) const
     {
@@ -287,6 +301,18 @@ public:
         return *this;
     }
 
+	//! add SlimVector v to *this vector (for each component); both vectors must have same size
+	template <Index dataSize>
+	VectorBase& operator+=(const SlimVectorBase<T, dataSize>& v)
+	{
+		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(SlimVectorBase): incompatible size of vectors");
+		Index cnt = 0;
+		for (auto item : v) {
+			(*this)[cnt++] += item;
+		}
+		return *this;
+	}
+
     //! substract vector v from *this vector (for each component); both vectors must have same size
     VectorBase& operator-=(const VectorBase& v)
     {
@@ -298,7 +324,19 @@ public:
         return *this;
     }
 
-    //! scalar multiply vector *this with scalar (for each component)
+	//! subtract SlimVector v from *this vector (for each component); both vectors must have same size
+	template <Index dataSize>
+	VectorBase& operator-=(const SlimVectorBase<T, dataSize>& v)
+	{
+		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=(SlimVectorBase): incompatible size of vectors");
+		Index cnt = 0;
+		for (auto item : v) {
+			(*this)[cnt++] -= item;
+		}
+		return *this;
+	}
+
+	//! scalar multiply vector *this with scalar (for each component)
     VectorBase& operator*=(T scalar)
     {
         for (auto &item : *this) {

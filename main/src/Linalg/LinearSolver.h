@@ -101,10 +101,13 @@ public:
 	virtual void Solve(const Vector& rhs, Vector& solution) = 0;
 
 	//! multiply matrix with vector: solution = A*x
-	virtual void MultMatrix(const Vector& x, Vector& solution) = 0;
+	virtual void MultMatrixVector(const Vector& x, Vector& solution) = 0;
+
+	//! multiply matrix with vector and add to solution: solution += A*x
+	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution) = 0;
 
 	//! multiply transposed(matrix) with vector: solution = A^T*x
-	virtual void MultMatrixTransposed(const Vector& x, Vector& solution) = 0;
+	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution) = 0;
 
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
 	virtual ResizableMatrix GetEXUdenseMatrix() const = 0;
@@ -218,16 +221,23 @@ public:
 	virtual Index Factorize();
 
 	//! multiply matrix with vector: solution = A*x
-	virtual void MultMatrix(const Vector& x, Vector& solution)
+	virtual void MultMatrixVector(const Vector& x, Vector& solution)
 	{
-		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrix(...): matrix is already factorized ==> use Solve(...)!"); }
+		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixVector(...): matrix is already factorized ==> use Solve(...)!"); }
 		EXUmath::MultMatrixVector(matrix, x, solution);
 	}
 
-	//! multiply transposed(matrix) with vector: solution = A^T*x
-	virtual void MultMatrixTransposed(const Vector& x, Vector& solution)
+	//! multiply matrix with vector and add to solution: solution += A*x
+	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution)
 	{
-		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixTransposed(...): matrix is already factorized ==> use Solve(...)!"); }
+		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixVectorAdd(...): matrix is already factorized ==> use Solve(...)!"); }
+		EXUmath::MultMatrixVectorAdd(matrix, x, solution);
+	}
+
+	//! multiply transposed(matrix) with vector: solution = A^T*x
+	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution)
+	{
+		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixTransposedVector(...): matrix is already factorized ==> use Solve(...)!"); }
 		EXUmath::MultMatrixTransposedVector(matrix, x, solution);
 	}
 
@@ -254,7 +264,7 @@ public:
 //! specialization of GeneralMatrix to Eigen sparse matrix
 //! there are three stages: 
 //! 1) The matrix is defined by Eigen Triplets; the triplets might contain duplicates of entries, e.g. item (2,3) might be filled twice
-//! 2) The EigenSparseMatrix is built from the triplets; it can be used e.g. to perform matrix-vector multiplication (MultMatrix) (matrixBuiltFromTriplets = true)
+//! 2) The EigenSparseMatrix is built from the triplets; it can be used e.g. to perform matrix-vector multiplication (MultMatrixVector) (matrixBuiltFromTriplets = true)
 //! 3) The EigenSparseMatrix is solved (Factorize(...) ) with the 'solver' and can be used to solve with a rhs (matrixIsFactorized = true)
 #ifdef USE_EIGEN_SPARSE_SOLVER
 class GeneralMatrixEigenSparse : public GeneralMatrix
@@ -351,11 +361,15 @@ public:
 
 	//! multiply matrix with vector: solution = A*x
 	//! this leads to memory allocation in case that the matrix is built from triplets
-	virtual void MultMatrix(const Vector& x, Vector& solution);
+	virtual void MultMatrixVector(const Vector& x, Vector& solution);
+
+	//! multiply matrix with vector and add to solution: solution += A*x
+	//! this leads to memory allocation in case that the matrix is built from triplets
+	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution);
 
 	//! multiply transposed(matrix) with vector: solution = A^T*x
 	//! this leads to memory allocation in case that the matrix is built from triplets
-	virtual void MultMatrixTransposed(const Vector& x, Vector& solution);
+	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution);
 
 	//! after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
 	virtual void Solve(const Vector& rhs, Vector& solution);

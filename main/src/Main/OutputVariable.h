@@ -28,7 +28,7 @@
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //keep these lists synchronized with PybindModule.cpp lists
 
-namespace Marker {
+namespace Marker { //==>put into pybindings file in future!
 	//! Markers transfer observable and controllable quantities into object/node/... coordinates
 	//  e.g. the MarkerBodyRigid (+ the according body function) defines how to transform a torque to the body 
 	//  coordinates, or how to measure the orientation of the body;
@@ -40,20 +40,26 @@ namespace Marker {
 		Body = 1 << 0,						//!< 1==Body, 0==other (must be also object!!!)
 		Node = 1 << 1,						//!< 2==Node, 0=other
 		Object = 1 << 2,					//!< 4==Object, 0=other
+		SuperElement = 1 << 3,				//!< Marker only applicable to SuperElements; accesses nodes (virtual nodes) of SuperElements
 		//bits to determine the kind of quantity is involved (relevant for: connector, load, OutputVariable):
 		//keep this list SYNCHRONIZED with AccessFunctionType:
-		Position = 1 << 3,					//!< can measure position, apply Distance constraint
-		Orientation = 1 << 4,				//!< can measure rotation, apply general rigid body constraint (if Position is set)
-		Coordinate = 1 << 5,				//!< access any coordinate (always available)
+		Position = 1 << 4,					//!< can measure position, apply Distance constraint
+		Orientation = 1 << 5,				//!< can measure rotation, apply general rigid body constraint (if Position is set)
+		Coordinate = 1 << 6,				//!< access any coordinate (always available)
 		//bits for geometrical dimension: force applied to volume, displacement of volume (center of mass ...)
 		//BodyPoint = 1 << xx, //default is always point; not necessary for Body+Position!
-		BodyLine = 1 << 6,					//!< represents a line load (vector load applied to line)
-		BodySurface = 1 << 7,				//!< represents a surface load / connector (e.g. for revolute joint with FE-mesh)
-		BodyVolume = 1 << 8,				//!< volume load ==> usually gravity
-		BodyMass = 1 << 9,					//!< volume load ==> usually gravity
-		BodySurfaceNormal = 1 << 10,		//!< for surface pressure (uses scalar load)
-		//Rotv1v2v3 = 1 << 11,				//!< for special joints that need a attached triad; in fact, a marker of orientation type must also provide Rotv1v2v3
-		EndOfEnumList = 1 << 12				//KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+		BodyLine = 1 << 7,					//!< represents a line load (vector load applied to line)
+		BodySurface = 1 << 8,				//!< represents a surface load / connector (e.g. for revolute joint with FE-mesh)
+		BodyVolume = 1 << 9,				//!< volume load ==> usually gravity
+		BodyMass = 1 << 10,					//!< volume load ==> usually gravity
+		BodySurfaceNormal = 1 << 11,		//!< for surface pressure (uses scalar load)
+		//++++for SuperElementMarkers:
+		MultiNodal = 1 << 12,				//!< multinodal marker uses a weighting matrix for transformation of node values to marker value (e.g., list of positions averaged to one position)
+		ReducedCoordinates = 1 << 13,		//!< multinodal marker uses a weighting matrix for transformation of node values to marker value (e.g., list of positions averaged to one position)
+
+		//Rotv1v2v3 = 1 << 1xx,				//!< for special joints that need a attached triad; in fact, a marker of orientation type must also provide Rotv1v2v3
+
+		EndOfEnumList = 1 << 14				//KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 		//available Types are, e.g.
 		//Node: 2+4+16, 2+4+8, 2+16
 		//Body: 1+4+16, 1+4+8, 1+16, 1+4+128, ...
@@ -66,6 +72,7 @@ namespace Marker {
 		if (var & Body) { t += "Body"; }
 		if (var & Node) { t += "Node"; }
 		if ((var & Object) && !(var & Body)) { t += "Object"; }
+		if (var & SuperElement) { t += "SuperElement"; }
 		if (var & Position) { t += "Position"; }
 		if (var & Orientation) { t += "Orientation"; }
 		if (var & Coordinate) { t += "Coordinate"; }
@@ -74,6 +81,9 @@ namespace Marker {
 		if (var & BodyVolume) { t += "Volume"; } //'Body' already added via (var & Body)
 		if (var & BodyMass) { t += "Mass"; } //'Body' already added via (var & Body)
 		if (var & BodySurfaceNormal) { t += "SurfaceNormal"; } //'Body' already added via (var & Body)
+		
+		if (var & MultiNodal) { t += "MultiNodal"; }
+		if (var & ReducedCoordinates) { t += "ReducedCoordinates"; }
 		if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
 
 		return t;
@@ -96,6 +106,7 @@ enum class AccessFunctionType { //determines which connectors/forces can be appl
 	DisplacementVolumeIntegral_q = (Index)Marker::BodyVolume,	//for distributed (body-volume) loads
 	DisplacementMassIntegral_q = (Index)Marker::BodyMass,		//for distributed (body-mass) loads
 	DisplacementSurfaceNormalIntegral_q = (Index)Marker::BodySurfaceNormal, //for surface loads: CAUTION: pressure acts normal to surface!!!
+	SuperElement = (Index)Marker::SuperElement,					//for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
 	//Rotv1v2v3_q = (Index)Marker::Rotv1v2v3,						//for joints, e.g., prismatic or rigid body; in fact, a marker of type orientation must also provide Rotv1v2v3
 	//NOT VALID: EndOfEnumList = (1 << 3) //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
@@ -119,9 +130,10 @@ enum class SensorType {
 	_None = 0, //marks that no type is used
 	Node   = 1 << 0, //!< use OutputVariableType
 	Object = 1 << 1, //!< use OutputVariableType
-	Body   = 1 << 2, //!< use OutputVariableType; additionally has localPosition
-	Marker = 1 << 3, //!< NOT implemented yet, needs OutputVariableType in markers!
-	Load   = 1 << 4, //!< measure prescribed loads, in order to track, e.g., user defined loads or controlled loads
+	Body = 1 << 2, //!< use OutputVariableType; additionally has localPosition
+	SuperElement = 1 << 3, //!< use OutputVariableType; additionally has localPosition
+	Marker = 1 << 4, //!< NOT implemented yet, needs OutputVariableType in markers!
+	Load   = 1 << 5, //!< measure prescribed loads, in order to track, e.g., user defined loads or controlled loads
 };
 
 //! convert SensorType to a string (used for output, type comparison, ...)
@@ -133,6 +145,7 @@ inline const char* GetSensorTypeString(SensorType var)
 	case SensorType::Node: return "Node";
 	case SensorType::Object: return "Object";
 	case SensorType::Body: return "Body";
+	case SensorType::SuperElement: return "SuperElement";
 	case SensorType::Marker: return "Marker";
 	case SensorType::Load: return "Load";
 	default: SysError("GetSensorTypeString: invalid variable type");  return "Invalid";

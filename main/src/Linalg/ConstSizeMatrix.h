@@ -267,48 +267,12 @@ public:
 		return result;
 	}
 
-	template<class TVector, Index dataSize2>
-	friend SlimVectorBase<T, dataSize2> operator*(const ConstSizeMatrixBase& matrix, const TVector& vector)
-	{
-		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"operator*(ConstSizeMatrixBase,TVector): Size mismatch");
-		CHECKandTHROW((matrix.NumberOfRows() <= dataSize),
-			"operator*(ConstSizeMatrixBase,TVector): dataSize too small");
+	//does not work!!!
+	//template<class TVector, Index dataSize2>
+	//friend SlimVectorBase<T, dataSize2> operator*(const ConstSizeMatrixBase& matrix, const TVector& vector)
 
-		SlimVectorBase<T, dataSize2> result(matrix.NumberOfRows());
-
-		for (Index i = 0; i < result.NumberOfItems(); i++)
-		{
-			T resultRow = 0;
-			for (Index j = 0; j < vector.NumberOfItems(); j++)
-			{
-				resultRow += matrix(i, j)*vector[j];
-			}
-			result[i] = resultRow;
-		}
-		return result;
-	}
-
-	friend SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase& matrix, const SlimVectorBase<T, 3>& vector)
-	{
-		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"operator*(ConstSizeMatrixBase,TVector): Size mismatch");
-		CHECKandTHROW((matrix.NumberOfRows() <= dataSize),
-			"operator*(ConstSizeMatrixBase,TVector): dataSize too small");
-
-		SlimVectorBase<T, 3> result; //no initialization for SlimVector
-
-		for (Index i = 0; i < result.NumberOfItems(); i++)
-		{
-			T resultRow = 0;
-			for (Index j = 0; j < vector.NumberOfItems(); j++)
-			{
-				resultRow += matrix(i, j)*vector[j];
-			}
-			result[i] = resultRow;
-		}
-		return result;
-	}
+	//leads to problems, would also be used for 4x3 matrices!!!
+	//friend SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase& matrix, const SlimVectorBase<T, 3>& vector)
 
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -331,7 +295,7 @@ public:
 	//! get fast inverse for 1D, 2D and 3D case
 	virtual ConstSizeMatrixBase<T, dataSize> GetInverse() const
 	{
-		static_assert(dataSize > 3);
+		CHECKandTHROW(dataSize <= 3, "ConstSizeMatrixBase::GetInverse(): only implemented for dimensions (1..3)");
 
 		switch (dataSize)
 		{
@@ -381,6 +345,30 @@ public:
 	}
 
 };
+
+//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
+template<typename T>
+SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const SlimVectorBase<T, 3>& vector)
+{
+	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): Size mismatch");
+	CHECKandTHROW((matrix.NumberOfRows() == 3),
+		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): matrix does not fit");
+
+	SlimVectorBase<T, 3> result; //no initialization for SlimVector
+
+	for (Index i = 0; i < result.NumberOfItems(); i++)
+	{
+		T resultRow = 0;
+		for (Index j = 0; j < vector.NumberOfItems(); j++)
+		{
+			resultRow += matrix(i, j)*vector[j];
+		}
+		result[i] = resultRow;
+	}
+	return result;
+}
+
 
 template<Index dataSize>
 using ConstSizeMatrix = ConstSizeMatrixBase<Real,dataSize>;

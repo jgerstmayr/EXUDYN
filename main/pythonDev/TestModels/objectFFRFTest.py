@@ -1,0 +1,662 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Test for ObjectFFRF with C++ implementation user function for reduced order equations of motion
+# NOTE: this is a development file, with lots of unstructured code; just kept for consistency!
+#
+# Author:   Johannes Gerstmayr 
+# Date:     2020-05-13
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
+
+import sys
+sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
+sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+#sys.path.append('../pythonDev')            
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
+from itemInterface import *
+from exudynUtilities import *
+from exudynFEM import *
+from exudynGraphicsDataUtilities import *
+
+import exudyn as exu
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+import numpy as np
+
+#==> DO NOT USE THIS APPROACH, but use the FEMinterface as in ObjectFFRFreducedOrder !!!!
+
+#this function is replaced by a 0-based function in the new utilities lib
+def CompressedRowToDenseMatrix(sparseData):
+    n = int(np.max(sparseData[:,0])) #rows and columns are 1-based
+    m = np.zeros((n,n))
+    for row in sparseData:
+        m[int(row[0])-1,int(row[1])-1] = row[2] #convert 1-based to 0-based
+    return m
+
+nodeDrawSize = 0.0025
+
+testMode = 1 #0=MarkerGeneric, 1=MarkerSuperElement
+modeNames = ['FFRF_MG','FFRF']
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#read finite element model
+inputFileName = 'TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
+if exudynTestGlobals.useGraphics:
+    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
+#inputFileName = 'C:/DATA/cpp/FFRFrotor_svn/CAErotor/eigenvalues_rotorDisc_mod'
+
+fileInp = inputFileName + '.inp'
+result=ReadNodesFromAbaqusInp(fileInp, typeName='Instance', name='rotor-1', exportElements=True)
+nodes = result[0]
+elements = result[1]['elements']-1 #convert to zero base
+#print("elements=", elements)
+#print("nodes=", nodes)
+
+print("nodes size=", nodes.shape)
+print("elements size=", elements.shape)
+
+minZ = min(nodes[:,2])
+maxZ = max(nodes[:,2])
+midZ = 0.5*(minZ+maxZ)
+
+print("min z =", minZ)
+print("max z =", maxZ)
+
+#nodes[:,2] -=0.05 #offset of z-coordinate, included in Abaqus .inp file
+
+massMatrix = CompressedRowToDenseMatrix(np.loadtxt(inputFileName + 'MASS1.mtx'))
+stiffnessMatrix = 1e-2*CompressedRowToDenseMatrix(np.loadtxt(inputFileName + 'STIF1.mtx'))
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#nLeft = (78-1)
+#nRight = (77-1)
+#nMid = (43-1)
+nLeft = -1
+nRight = -1
+nMid = -1
+nForce = -1 #40; node where fore is attached
+forceZ = 0.1
+
+#nTopRight = 12 #JG, excitation
+nForce = 12 #JG, excitation
+nTopMid = 9  #alternative: 103; JG, fixed node "rotation"
+
+unbalance = 0.1
+massMatrix[nTopMid*3+0,nTopMid*3+0] += unbalance
+massMatrix[nTopMid*3+1,nTopMid*3+1] += unbalance
+massMatrix[nTopMid*3+2,nTopMid*3+2] += unbalance
+
+#find output nodes:
+for i in range(len(nodes)):
+    n = nodes[i]
+    if abs(n[2] - minZ) < 1e-6 and abs(n[1]) < 1e-6 and abs(n[0]) < 1e-6: 
+        nLeft = i
+    if abs(n[2] - maxZ) < 1e-6 and abs(n[1]) < 1e-6 and abs(n[0]) < 1e-6: 
+        nRight = i
+    if abs(n[2] - midZ) < 1e-6 and abs(n[1]) < 1e-6 and abs(n[0]) < 1e-6: 
+        nMid = i
+    #if abs(n[2] - forceZ) < 1e-6 and abs(n[1]) < 1e-6 and abs(n[0]) < 1e-6: 
+    #    nForce = i
+
+
+print("nLeft=", nLeft, ", nRight=", nRight, ", nMid=", nMid, ", nForce=", nForce)
+
+#posX=0.15 #+/- x coordinate of nodes
+posLeft = nodes[nLeft]
+posRight = nodes[nRight]
+
+nNodes = len(nodes)
+nODE2 = nNodes*3
+print("nNodes=", nNodes, ", nODE2=", nODE2)
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+calcEig = True
+if calcEig:
+    from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+
+    [eigvals, eigvecs] = eigh(stiffnessMatrix, massMatrix) #this gives omega^2 ... squared eigen frequencies (rad/s)
+    ev = np.sort(a=abs(eigvals))
+
+    listEig = []
+    for i in range(18):
+        listEig += [np.sqrt(ev[i])/(2*np.pi)]
+    print("eigenvalues =", listEig)
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#eigenvalues of constrained system:
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+calcEigConstrained = False
+if calcEigConstrained:
+
+    constrainedCoordinates = [0]*nODE2
+    constrainedCoordinates[nLeft*3+0] = 1  #X
+    constrainedCoordinates[nLeft*3+1] = 1  #Y
+    constrainedCoordinates[nLeft*3+2] = 1  #Z
+    constrainedCoordinates[nRight*3+1] = 1 #Y
+    constrainedCoordinates[nRight*3+2] = 1 #Z
+
+    nConstrained = sum(constrainedCoordinates)    
+    indexList = []
+    cnt = 0
+    for i in range(nODE2):
+        if constrainedCoordinates[i] == 0:
+            indexList+=[i]
+
+    nODE2C = nODE2-nConstrained
+    massMatrixC = np.zeros((nODE2C,nODE2C))
+    stiffnessMatrixC = np.zeros((nODE2C,nODE2C))
+
+    for i in range(nODE2C):
+        for j in range(nODE2C):
+            massMatrixC[i,j] = massMatrix[indexList[i],indexList[j]]
+            stiffnessMatrixC[i,j] = stiffnessMatrix[indexList[i],indexList[j]]
+
+    from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+
+    [eigvals, eigvecs] = eigh(stiffnessMatrixC, massMatrixC) #this gives omega^2 ... squared eigen frequencies (rad/s)
+    ev = np.sort(a=abs(eigvals))
+
+    listEig = []
+    for i in range(18):
+        listEig += [np.sqrt(ev[i])/(2*np.pi)]
+    print("eigenvalues of constrained system (Hz)=", listEig)
+
+
+#compute (3 x 3*n) skew matrix from (3*n) vector
+def ComputeSkewMatrix(v):
+    n = int(len(v)/3) #number of nodes
+    sm = np.zeros((3*n,3))
+
+    for i in range(n):
+        off = 3*i
+        x=v[off+0]
+        y=v[off+1]
+        z=v[off+2]
+        mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+        sm[off:off+3,:] = mLoc[:,:]
+
+    return sm
+    #Y0=np.array([[0,0,0],[0,0,1],[0,-1,0]])
+    #Y1=np.array([[0,0,-1],[0,0,0],[1,0,0]])
+    #Y2=np.array([[0,1,0],[-1,0,0],[0,0,0]])
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+nNodesFFRF = nNodes
+nODE2FFRF = nNodes*3
+
+useFFRFobject = True #uses ObjectFFRF instead of ObjectGenericODE2 ==> mesh nodes are indexed from 0 .. n_meshNodes-1
+decFFRFobject = 0    #adapt node numbers if useFFRFobject=True
+if useFFRFobject: decFFRFobject = 1
+
+useFFRF = True
+if useFFRF:
+    p0 = [0,0,midZ*0] #reference position
+    v0 = [0,0,0] #initial translational velocity
+    omega0 = [0,0,50*2*pi] #arbitrary initial angular velocity
+    ep0 = np.array(eulerParameters0) #no rotation
+    ep_t0 = AngularVelocity2EulerParameters_t(omega0, ep0)
+    #adjust mass and stiffness matrices
+    nODE2rigid = len(p0)+len(ep0)
+    nODE2rot = len(ep0) #dimension of rotation parameters
+    dim3D = len(p0)     #dimension of position 
+    nODE2FFRF = nODE2rigid + nODE2
+    nNodesFFRF = nNodes+1
+
+    Knew = np.zeros((nODE2FFRF,nODE2FFRF))
+    Mnew = np.zeros((nODE2FFRF,nODE2FFRF))
+
+    FillInSubMatrix(stiffnessMatrix, Knew, nODE2rigid, nODE2rigid)
+    FillInSubMatrix(massMatrix, Mnew, nODE2rigid, nODE2rigid)
+   
+    Dnew = 2e-4*Knew #add little bit of damping
+    fNew = np.zeros(nODE2FFRF)
+
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #FFRF constant matrices:
+    unit3D = np.eye(3)
+    Phit = np.kron(np.ones(nNodes),unit3D).T
+    PhitTM = Phit.T @ massMatrix
+
+    Mtt = Phit.T @ massMatrix @ Phit
+    Mnew[0:3,0:3] = Mtt
+    totalMass = Mtt[0,0] #must be diagonal matrix with mass in diagonal
+
+    xRef = nodes.flatten() #node reference values in single vector (can be added then to q[7:])
+    xRefTilde = ComputeSkewMatrix(xRef) #rfTilde without q
+
+    inertiaLocal = xRefTilde.T @ massMatrix @ xRefTilde
+    if False:
+        print("Phit=", Phit[0:6,:])
+        print("PhitTM=", PhitTM[0:3,0:6])
+        print("xRef=", xRef[0:6])
+        print("xRefTilde=", xRefTilde[0:6,:])
+
+        print("python inertiaLocal=", inertiaLocal)
+        print("python totalMass=", totalMass)
+        print("python Mtt=", Mtt)
+
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #compute gravity term
+    g=np.array([0,-9.81,0]) #gravity vector
+    fGravRigid = list(totalMass*g)+[0,0,0,0]
+    #fGrav = np.array(fGravRigid + list((massMatrix @ Phit) @ g) ) #only local vector, without rotation
+    #print("fGrav=",fGrav)
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+#    mbs.Reset()
+#background
+rect = [-0.3,-0.1,0.3,0.1] #xmin,ymin,xmax,ymax
+background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
+oGround = mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=p0))
+print("goundMarker=", mGround)
+
+nodeList = []
+nRB = -1
+
+if useFFRF:
+    nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+list(ep0), 
+                                      initialVelocities=v0+list(ep_t0)))
+    nodeList += [nRB]
+
+
+    #adjust node numbers:
+    #in all cases, triglist is same; elements = elements  + 1 - decFFRFobject #increase node numbers, because of FFRFnode
+
+    #boundary nodes not adjusted for old constraints in 
+    nLeft += 1
+    nRight += 1
+    nMid += 1
+    nForce += 1
+    nTopMid += 1
+
+for node in nodes:
+    n3 = mbs.AddNode(Point(referenceCoordinates = list(node), visualization=VNodePoint(show = not useFFRF))) #not useFFRF)))
+    nodeList += [n3]
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+print("nForce=", nForce)
+
+#conventional user function:
+def UFforce(t, q, q_t):
+    force = np.zeros(nODE2FFRF)
+    Avec = mbs.GetNodeOutput(nRB,  exu.OutputVariableType.RotationMatrix)
+    A = Avec.reshape((3,3))
+
+    #implementation for Euler Parameters (Glocal_t*theta_t=0)
+    ep = np.array(q[dim3D:nODE2rigid]) + ep0 #add reference values, q are only the change w.r.t. reference values!
+    G = EulerParameters2GLocal(ep)
+    
+    cF_t = np.array(q_t[nODE2rigid:])         #velocities of flexible coordinates
+
+    rF = xRef + np.array(q[nODE2rigid:]) #nodal position
+
+    omega3D = G @ np.array(q_t[dim3D:nODE2rigid])
+    omega3Dtilde = Skew(omega3D)
+    omega = np.array(list(omega3D)*nNodes)
+    omegaTilde = np.kron(np.eye(nNodes),omega3Dtilde)
+
+    #squared angul. vel. matrix:
+    omega3Dtilde2 = Skew(omega3D) @ Skew(omega3D)
+    omegaTilde2 = np.kron(np.eye(nNodes),omega3Dtilde2)
+
+    if True: #for rotordynamics, we assume rigid body motion with constant ang. vel.
+        #these 2 terms are computationally costly:
+        rfTilde = ComputeSkewMatrix(rF) #rfTilde
+        cF_tTilde = ComputeSkewMatrix(cF_t) 
+
+        fTrans = A @ (omega3Dtilde @ PhitTM @ rfTilde @ omega3D + 2*PhitTM @ cF_tTilde @ omega3D)
+        force[0:dim3D] = fTrans
+
+        fRot = -G.T@(omega3Dtilde @ rfTilde.T @ massMatrix @ rfTilde @ omega3D + 
+                        2*rfTilde.T @ massMatrix @ cF_tTilde @ omega3D)
+        force[dim3D:nODE2rigid] = fRot
+    
+    fFlex = -massMatrix @ (omegaTilde2 @ rF + 2*(omegaTilde @ cF_t))
+    force[nODE2rigid:] = fFlex
+
+    #add gravity:
+    if False:
+        fGrav = np.array(fGravRigid + list(PhitTM.T @ (A.T @ g)) ) #only local vector, without rotation
+        force += fGrav
+
+
+    return force
+
+#ffrf mass matrix:
+def UFmassGenericODE2(t, q, q_t):
+    Avec = mbs.GetNodeOutput(nRB,  exu.OutputVariableType.RotationMatrix)
+    A = Avec.reshape((3,3))
+    ep = q[dim3D:nODE2rigid] + ep0 #add reference values, q are only the change w.r.t. reference values!
+    G = EulerParameters2GLocal(ep)
+
+    rF = xRef + q[nODE2rigid:] #nodal position
+    rfTilde = ComputeSkewMatrix(rF) #rfTilde
+
+    #Mtr:
+    Mtr = -A @ PhitTM @ rfTilde @ G
+    Mnew[0:dim3D, dim3D:dim3D+nODE2rot] = Mtr
+    Mnew[dim3D:dim3D+nODE2rot, 0:dim3D] = Mtr.T
+    #Mtf:
+    Mtf = A @ PhitTM
+    Mnew[0:dim3D, nODE2rigid:] = Mtf
+    Mnew[nODE2rigid:, 0:dim3D] = Mtf.T
+    #Mrf:
+    Mrf = -G.T @ rfTilde.T @ massMatrix
+    Mnew[dim3D:dim3D+nODE2rot, nODE2rigid:] = Mrf
+    Mnew[nODE2rigid:, dim3D:dim3D+nODE2rot] = Mrf.T
+    #Mrr:
+    Mnew[dim3D:dim3D+nODE2rot, dim3D:dim3D+nODE2rot] = -Mrf @ rfTilde @ G   #G.T @ rfTilde.T @ massMatrix @ rfTilde @ G
+
+    #print(np.linalg.norm(rF))
+    #omega3D = G @ q_t[dim3D:nODE2rigid]
+    #print(omega3D)
+
+    #print("Mtt Mtr Mtf=",Mnew[0:3,0:10].round(5))
+    #print("Mrr=",Mnew[3:7,3:7].round(5))
+    #print("Mff=",Mnew[7:10,7:13].round(5))
+    #Mnew[:,:] = 0 #for testing
+    return Mnew
+
+
+#convert elements to triangles for drawing:
+trigList = []
+for element in elements:
+    trigList += ConvertHexToTrigs(element)
+trigList = np.array(trigList) 
+#print("trig list=", trigList)
+print("trig list size=", trigList.shape)
+
+stiffnessMatrixFF = exu.MatrixContainer()
+stiffnessMatrixFF.SetWithDenseMatrix(stiffnessMatrix,useDenseMatrix=False)
+massMatrixFF = exu.MatrixContainer()
+massMatrixFF.SetWithDenseMatrix(massMatrix,useDenseMatrix=False)
+emptyMC = exu.MatrixContainer()
+
+#add generic body for FFRF-Object:
+if useFFRFobject:
+    oGenericODE2 = mbs.AddObject(ObjectFFRF(nodeNumbers = nodeList, 
+                                                    #massMatrixFF=Mnew, 
+                                                    stiffnessMatrixFF=stiffnessMatrixFF, 
+                                                    #dampingMatrixFF=Dnew, 
+                                                    massMatrixFF=massMatrixFF,
+                                                    #dampingMatrixFF=emptyMC,
+                                                    #forceVector=fNew, #now is a global vector!
+                                                    #forceUserFunction=UFforce,
+                                                    #computeFFRFterms=True,
+                                                    #massMatrixUserFunction=UFmassGenericODE2,
+                                                    visualization=VObjectFFRF(triangleMesh = trigList, 
+                                                                              color=color4lightred,
+                                                                              showNodes = True)))
+else:
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = nodeList, 
+                                                    massMatrix=Mnew, 
+                                                    stiffnessMatrix=Knew, 
+                                                    dampingMatrix=Dnew, 
+                                                    forceVector=fNew, forceUserFunction=UFforce,
+                                                    useFirstNodeAsReferenceFrame=True,
+                                                    massMatrixUserFunction=UFmassGenericODE2,
+                                                    visualization=VObjectGenericODE2(triangleMesh = trigList, 
+                                                                                     color=color4lightred,
+                                                                                     showNodes = True)))
+
+if nODE2rot == 4: #for euler parameters --> add body to constrain EP
+    epsMass = 1e-3#needed, if not all ffrf terms are included
+    #add rigid body to node for Euler Parameter constraint:
+    nReferenceFrame = mbs.AddObject(ObjectRigidBody(nodeNumber=nRB, physicsMass=epsMass, physicsInertia=[epsMass,epsMass,epsMass,0,0,0])) 
+
+mRB = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nRB))
+print("rigidNodeMarker=", mRB)
+
+
+#mbs.AddLoad(Torque(markerNumber=mRB, loadVector=[0,0,100*2*pi])) #add drive for reference frame
+
+if False: #OPTIONAL: lock rigid body motion of reference frame (for tests):
+    mbs.AddObject(GenericJoint(markerNumbers=[mGround, mRB], constrainedAxes=[1,1,1, 1,1,0]))
+
+
+
+#ground point:
+nGroundLeft = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,minZ], visualization = VNodePointGround(show=False))) #ground node for coordinate constraint
+nGroundRight = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,maxZ], visualization = VNodePointGround(show=False))) #ground node for coordinate constraint
+
+mGroundLeft = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGroundLeft, coordinate=0)) #Ground node ==> no action
+mGroundRight = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGroundRight, coordinate=0)) #Ground node ==> no action
+
+mGroundPosLeft = mbs.AddMarker(MarkerNodePosition(nodeNumber = nGroundLeft)) #Ground node ==> no action
+mGroundPosRight = mbs.AddMarker(MarkerNodePosition(nodeNumber = nGroundRight)) #Ground node ==> no action
+
+print("ground Node/Coordinate Markers =", mGroundLeft, "...", mGroundPosRight)
+
+#++++++++++++++++++++++++++++++++++++++++++
+#find nodes at left and right surface:
+nodeListLeft = []
+nodeListRight = []
+
+for i in range(len(nodes)):
+    n = nodes[i] 
+    if abs(n[2] - minZ) < 1e-6:
+        nodeListLeft += [i+useFFRF] #add 1 for rigid body node, which is first node in GenericODE2 object
+    elif abs(n[2] - maxZ) < 1e-6:
+        nodeListRight += [i+useFFRF]
+
+print("nodeListLeft =",nodeListLeft)
+print("nodeListRight =",nodeListRight)
+
+lenLeft = len(nodeListLeft)
+lenRight = len(nodeListRight)
+weightsLeft = np.array((1./lenLeft)*np.ones(lenLeft))
+weightsRight = np.array((1./lenRight)*np.ones(lenRight))
+
+print("nodeLeft =",nLeft)
+print("nodeRight =",nRight)
+
+#lock FFRF reference frame:
+for i in range(3):
+    mLeft = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nLeft, coordinate=i))
+    print("mLeftCoord=", mLeft)
+
+    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundLeft,mLeft]))
+    if i != 2: #exclude double constraint in z-direction (axis)
+        mRight = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nRight, coordinate=i))
+        print("mRightCoord=", mRight)
+        mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundRight,mRight]))
+
+#lock rotation (also needed in FFRF):
+mTopRight = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nTopMid, coordinate=0)) #x-coordinate of node with y-max
+print("mTopRight=", mTopRight)
+mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundRight,mTopRight]))
+
+addSupports = True
+if addSupports:
+    k = 2e8
+    d = k*0.01
+
+    useSpringDamper = True
+
+    if testMode == 0:
+        mLeft = mbs.AddMarker(MarkerGenericBodyPosition(bodyNumber=oGenericODE2, 
+                                                        nodeNumbers=nodeListLeft, 
+                                                        weightingFactors=weightsLeft, 
+                                                        useFirstNodeAsReferenceFrame=useFFRF))
+        mRight = mbs.AddMarker(MarkerGenericBodyPosition(bodyNumber=oGenericODE2, 
+                                                        nodeNumbers=nodeListRight, 
+                                                        weightingFactors=weightsRight,
+                                                        useFirstNodeAsReferenceFrame=useFFRF))
+    else:
+        mLeft = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=oGenericODE2, 
+                                                        meshNodeNumbers=np.array(nodeListLeft)-1, #these are the meshNodeNumbers
+                                                        weightingFactors=weightsLeft))
+        mRight = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=oGenericODE2, 
+                                                        meshNodeNumbers=np.array(nodeListRight)-1, #these are the meshNodeNumbers 
+                                                        weightingFactors=weightsRight))
+
+    if useSpringDamper:
+        oSJleft = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mLeft, mGroundPosLeft],
+                                            stiffness=[k,k,k], damping=[d,d,d]))
+        oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRight,mGroundPosRight],
+                                            stiffness=[k,k,0], damping=[d,d,d]))
+    else:
+        oSJleft = mbs.AddObject(SphericalJoint(markerNumbers=[mGroundPosLeft,mLeft], visualization=VObjectJointSpherical(jointRadius=nodeDrawSize)))
+        oSJright= mbs.AddObject(SphericalJoint(markerNumbers=[mGroundPosRight,mRight], visualization=VObjectJointSpherical(jointRadius=nodeDrawSize)))
+                                                    
+
+fileDir = 'solution/'
+#mbs.AddSensor(SensorNode(nodeNumber=nMid, 
+#                         fileName=fileDir+'nMidDisplacement'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Displacement))
+
+#mbs.AddSensor(SensorNode(nodeNumber=nMid, 
+#                         fileName=fileDir+'nMidPosition'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Position))
+
+mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid-1, #meshnode is -1
+                         fileName=fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', 
+                         outputVariableType = exu.OutputVariableType.Displacement))
+
+#mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid-1, #meshnode is -1
+#                         fileName=fileDir+'nMidPosition'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Position))
+#
+#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
+#                         fileName=fileDir+'nRigidBodyAngVel'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.AngularVelocity))
+#
+#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
+#                         fileName=fileDir+'nRigidBodyRotation'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Rotation))
+#
+#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
+#                         fileName=fileDir+'nRigidBodyPosition'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Position))
+#
+#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
+#                         fileName=fileDir+'nRigidBodyRotationMatrix'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.RotationMatrix))
+
+#mbs.AddSensor(SensorObject(objectNumber=oSJleft, 
+#                         fileName=fileDir+'jointLeftDisplacement'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Displacement))
+
+#mbs.AddSensor(SensorObject(objectNumber=oSJright, 
+#                         fileName=fileDir+'jointRightDisplacement'+modeNames[testMode]+'.txt', 
+#                         outputVariableType = exu.OutputVariableType.Displacement))
+
+#print("nMidPos =", mbs.GetNode(nMid)['referenceCoordinates'])
+
+#print(mbs)
+mbs.Assemble()
+
+#print("ltg GenericODE2 left =", mbs.systemData.GetObjectLTGODE2(oSJleft))
+#print("ltg GenericODE2 right=", mbs.systemData.GetObjectLTGODE2(oSJright))
+
+simulationSettings = exu.SimulationSettings()
+
+SC.visualizationSettings.nodes.defaultSize = nodeDrawSize
+SC.visualizationSettings.nodes.drawNodesAsPoint = False
+SC.visualizationSettings.connectors.defaultSize = 2*nodeDrawSize
+
+SC.visualizationSettings.nodes.show = True
+SC.visualizationSettings.nodes.showBasis = True #of rigid body node of reference frame
+SC.visualizationSettings.nodes.basisSize = 0.12
+SC.visualizationSettings.bodies.deformationScaleFactor = 10
+
+SC.visualizationSettings.openGL.showFaceEdges = True
+SC.visualizationSettings.openGL.showFaces = True
+
+SC.visualizationSettings.sensors.show = True
+SC.visualizationSettings.sensors.drawSimplified = False
+SC.visualizationSettings.sensors.defaultSize = 0.01
+SC.visualizationSettings.markers.drawSimplified = False
+SC.visualizationSettings.markers.show = True
+SC.visualizationSettings.markers.defaultSize = 0.01
+
+SC.visualizationSettings.loads.drawSimplified = False
+
+SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+SC.visualizationSettings.contour.outputVariableComponent = 2 #z-component
+
+simulationSettings.solutionSettings.solutionInformation = modeNames[testMode]
+
+h=1e-4
+tEnd = 0.001
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.timeIntegration.newton.useModifiedNewton = True
+#simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 10
+#simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True #this improves the FFRF simulation slightly
+
+simulationSettings.solutionSettings.sensorsWritePeriod = h
+
+simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
+simulationSettings.displayStatistics = True
+simulationSettings.displayComputationTime = True
+
+#create animation:
+#simulationSettings.solutionSettings.recordImagesInterval = 0.0002
+#SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
+
+if exudynTestGlobals.useGraphics:
+    exu.StartRenderer()
+    if 'lastRenderState' in vars():
+        SC.SetRenderState(lastRenderState) #load last model view
+    
+    mbs.WaitForUserToContinue() #press space to continue
+
+SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+
+data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', comments='#', delimiter=',')
+result = abs(data).sum()
+#pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
+exu.Print('solution of ObjectFFRFreducedOrder=',result)
+
+exudynTestGlobals.testError = result - (0.006445369560936511) #2020-05-17 (tEnd=0.001, h=1e-4): 0.006445369560936511
+
+    
+if exudynTestGlobals.useGraphics:
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() #safely close rendering window!
+    lastRenderState = SC.GetRenderState() #store model view for next simulation
+
+##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
+#plot results
+cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
+if exudynTestGlobals.useGraphics:
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
+
+    i=1 
+    name = modeNames[i]
+    data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[i]+'test.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,1], cList[i],label='uMid,'+modeNames[i]) #numerical solution, 1 == x-direction
+    #data = np.loadtxt(fileDir+'nRigidBodyAngVel'+modeNames[i]+'.txt', comments='#', delimiter=',')
+    #plt.plot(data[:,0], 1e-3/(2*pi)*data[:,3], cList[i+2], label='omega,'+modeNames[i]) #numerical solution, 3 == omega_z
+    #data = np.loadtxt(fileDir+'nRigidBodyPosition'+modeNames[i]+'.txt', comments='#', delimiter=',')
+    #plt.plot(data[:,0], data[:,2], cList[i+4],label='pRef,'+modeNames[i]) #numerical solution, 1 == x-direction
+
+    ax=plt.gca() # get current axes
+    ax.grid(True, 'major', 'both')
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+    plt.tight_layout()
+    plt.legend()
+    plt.show() 
+
+
+
+
+

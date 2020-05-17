@@ -86,7 +86,21 @@ def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into
 
     return s
 
-def DefaultValue2Python(s): #replace _ and other symbols to fit into latex code
+#parse string s and extract types available in itemType (Object/Node/...) and represent as latex-string
+#possibleTypesList is e.g. Object::Body -> body 
+def GetTypesStringLatex(s, itemType, possibleTypesList, separator = ','):
+    returnStr = ''
+    commaStr = ''
+    for t in possibleTypesList:
+        if s.find(itemType+'::'+t) != -1:
+            #tType = t.split('::')[1] #take only left of '::'
+            returnStr += commaStr+'\\texttt{'+t.replace('_','\_')+'}'
+            commaStr = separator+' '
+
+    return returnStr
+
+#replace '_', certain default values (e.g. Matix() --> []) and other symbols to fit into python itemInterface and for latex
+def DefaultValue2Python(s): 
 
     s = s.replace('true','True') #correct python notation
     s = s.replace('false','False') #correct python notation
@@ -96,6 +110,8 @@ def DefaultValue2Python(s): #replace _ and other symbols to fit into latex code
     s = s.replace('OutputVariableType::_None','0')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
     s = s.replace('Matrix()','[]')  #replace empty matrix with emtpy list
+    s = s.replace('MatrixI()','[]') #replace empty matrix with emtpy list
+    s = s.replace('PyMatrixContainer()','[]')  #initialization in iteminterface with empty array
 
     
     if (s.find('Matrix6D(6,6,') != -1):

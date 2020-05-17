@@ -38,6 +38,8 @@ mbs = SC.AddSystem()
 # -quiet
 writeToConsole = True  #do not output to console / shell
 copyLog = False         #copy log to final WorkingRelease
+if sys.version_info.major == 3 and sys.version_info.minor == 7:
+    copyLog = True #for P3.7 tests always copy log to WorkingRelease
 if len(sys.argv) > 1:
     for i in range(len(sys.argv)-1):
         #print("arg", i+1, "=", sys.argv[i+1])
@@ -121,7 +123,9 @@ testFileList = [
                 'TestModels/sliderCrankFloatingTest.py',
                 'TestModels/sparseMatrixSpringDamperTest.py',
                 'TestModels/sphericalJointTest.py',
-                'TestModels/springDamperUserFunctionTest.py'
+                'TestModels/springDamperUserFunctionTest.py',
+                'TestModels/objectFFRFreducedOrderTest.py',
+                'TestModels/objectFFRFTest.py'
                 ]
 
 
@@ -214,7 +218,7 @@ exu.Print('time elapsed =',round(timeStart,3),'seconds')
 #10+14tests:   2020-02-19: 7.60 seconds on Surface Pro
 #10+15+8tests: 2020-02-19: 7.729 seconds on i9
 #10+19+8tests: 2020-04-22: 7.754 seconds on i9
-
+#10+21+8tests: 2020-05-17: 9.949 seconds on i9
 
 if rv == True:
     exu.Print('ALL UNIT TESTS SUCCESSFUL')

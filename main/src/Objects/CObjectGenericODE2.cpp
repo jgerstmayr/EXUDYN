@@ -12,7 +12,9 @@
 ************************************************************************************************ */
 
 #include "Utilities/ExceptionsTemplates.h"
+
 #include "Main/CSystemData.h"
+#include "Utilities/RigidBodyMath.h"
 
 #include "Main/MainSystem.h"
 #include "Pymodules/PybindUtilities.h"
@@ -39,14 +41,15 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 {
 	CObjectGenericODE2* cObject = (CObjectGenericODE2*)GetCObject();
 
-	if (cObject->GetParameters().nodeNumbers.NumberOfItems() == 0)
+	Index numberOfNodes = cObject->GetParameters().nodeNumbers.NumberOfItems();
+	if (numberOfNodes == 0)
 	{
 		errorString = "ObjectGenericODE2: has 0 nodes, but must have at least 1 node";
 		return false;
 	}
 
 	//check specific node types
-	for (Index nn = 0; nn < cObject->GetParameters().nodeNumbers.NumberOfItems(); nn++)
+	for (Index nn = 0; nn < numberOfNodes; nn++)
 	//for (auto item : cObject->GetParameters().nodeNumbers)
 	{
 		//if (!EXUstd::IsOfType((Node::Type)(Node::GenericODE2 + Node::Position2D + Node::Orientation2D + Node::Point2DSlope1 + Node::Position + Node::Orientation + Node::RigidBody),
@@ -106,7 +109,14 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 	VisualizationObjectGenericODE2* vObject = (VisualizationObjectGenericODE2*)GetVisualizationObject();
 	if (vObject->GetTriangleMesh().NumberOfRows() != 0)
 	{
-		const Matrix& trigs = vObject->GetTriangleMesh();
+		
+		if (vObject->GetTriangleMesh().NumberOfColumns() != 3)
+		{
+			errorString = "ObjectGenericODE2: number of columns in triangleMesh must be 3";
+			return false;
+		}
+
+		const MatrixI& trigs = vObject->GetTriangleMesh();
 		for (Index i = 0; i < trigs.NumberOfRows(); i++)
 		{
 			for (Index j = 0; j < trigs.NumberOfColumns(); j++)
@@ -226,7 +236,8 @@ void CObjectGenericODE2::ComputeODE2RHS(Vector& ode2Rhs) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectGenericODE2::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::_None);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt +
+		(Index)AccessFunctionType::DisplacementMassIntegral_q + (Index)AccessFunctionType::SuperElement);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -304,3 +315,181 @@ void CObjectGenericODE2::InitializeCoordinateIndices()
 		s += GetCNode(i)->GetNumberOfODE2Coordinates();
 	}
 }
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++     MESH NODE FUNCTIONS      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//! for definition see CObjectSuperElement
+void CObjectGenericODE2::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const
+{
+	CObjectSuperElement::GetAccessFunctionSuperElement(accessType, weightingMatrix, meshNodeNumbers, value);
+	//switch ((Index)accessType)
+	//{
+	//case (Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
+	//{
+	//	value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+	//	value.SetAll(0.);
+
+	//	Matrix3D A;
+	//	Index referenceNodeIndex;
+	//	bool hasReferenceFrame = HasReferenceFrame(referenceNodeIndex);
+	//	Index refFrameOffset = 0;
+
+	//	if (hasReferenceFrame)
+	//	{
+	//		A = ((const CNodeODE2*)(GetCNode(referenceNodeIndex)))->GetRotationMatrix();
+	//		refFrameOffset++;
+	//	}
+	//	else
+	//	{
+	//		A = EXUmath::unitMatrix3D;
+	//	}
+
+	//	//Index cOffset = 0; //coordinates offset
+	//	for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	//	{
+	//		Index iNode = meshNodeNumbers[i] + refFrameOffset;
+
+	//		if (GetCNode(iNode)->GetNumberOfODE2Coordinates() >= CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates) { CHECKandTHROWstring("CObjectGenericODE2::GetAccessFunctionSuperElement: MarkerSuperElement only available in case of nodes with equal or less than 7 coordinates!"); }
+
+	//		//use temporary jacobian structure, to get node jacobian
+	//		ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
+	//		((const CNodeODE2*)GetCNode(iNode))->GetPositionJacobian(posJac0);
+
+	//		//assume that the first 3 coordinates of the node are the displacement coordinates!!!
+	//		Matrix3D jac = A;
+	//		if (weightingMatrix.NumberOfColumns() == 1)
+	//		{
+	//			jac *= weightingMatrix(i, 0);
+	//		}
+	//		else
+	//		{
+	//			for (Index j = 0; j < 3; j++)
+	//			{
+	//				for (Index k = 0; k < 3; k++)
+	//				{
+	//					jac(j, k) *= weightingMatrix(i, k); //add weighting to columns, because every column corresponds to local x,y and z direction (weigthing effects needed on local coordinates)
+	//				}
+	//			}
+	//		}
+	//		EXUmath::ApplyTransformation<3>(jac, posJac0); //size=3: always 3D
+
+	//		Index offset = GetLocalODE2CoordinateIndexPerNode(iNode); //gives correct coordinates also in case of referenceFrame node
+	//		//pout << "offsetFFRF" << i << "=" << offset << "\n";
+	//		value.SetSubmatrix(posJac0, 0, offset);
+	//	}
+	//	//pout << "posJac=" << markerData.positionJacobian << "\n";
+
+	//	if (hasReferenceFrame)
+	//	{
+	//		//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
+
+	//		Vector3D localPosition({ 0,0,0 });
+	//		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+	//		{
+	//			if (weightingMatrix.NumberOfColumns() == 1)
+	//			{
+	//				localPosition += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i]); //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+	//			}
+	//			else
+	//			{
+	//				for (Index j = 0; j < 3; j++)
+	//				{
+	//					localPosition[j] += weightingMatrix(i, j) * GetMeshNodeLocalPosition(meshNodeNumbers[i])[j]; //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+	//				}
+	//			}
+	//		}
+
+	//		const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(referenceNodeIndex);
+
+	//		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
+
+	//		//compute: -A*pLocalTilde*GLocal
+	//		cNode->GetGlocal(Glocal);
+	//		EXUmath::ApplyTransformation<3>(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
+	//		EXUmath::ApplyTransformation<3>(A, Glocal);
+
+	//		//now compute remaining jacobian terms for reference frame motion:
+	//		ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
+	//		((const CNodeODE2*)GetCNode(referenceNodeIndex))->GetPositionJacobian(posJac0);
+
+	//		value.SetSubmatrix(posJac0, 0, 0);
+	//		value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
+	//	}
+	//	break;
+	//}
+	//default:
+	//	CHECKandTHROWstring("CObjectGenericODE2:GetAccessFunctionSuperElement illegal accessType");
+	//}
+}
+
+//! get extended output variable types for multi-nodal objects with mesh nodes
+OutputVariableType CObjectGenericODE2::GetOutputVariableTypesSuperElement(Index meshNodeNumber) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableTypesSuperElement: meshNodeNumber out of range ");
+
+	return GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)->GetOutputVariableTypes();
+}
+
+//! get extended output variables for multi-nodal objects with mesh nodes
+void CObjectGenericODE2::GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableSuperElement: meshNodeNumber out of range ");
+	return GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)->GetOutputVariable(variableType, configuration, value);
+}
+
+//! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
+Vector3D CObjectGenericODE2::GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalPosition: meshNodeNumber out of range");
+	
+	return ((CNodeODE2*)(GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)))->GetPosition(configuration);
+}
+
+//! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
+Vector3D CObjectGenericODE2::GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalVelocity: meshNodeNumber out of range ");
+
+	return ((CNodeODE2*)(GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)))->GetVelocity(configuration);
+}
+
+//! return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
+Vector3D CObjectGenericODE2::GetMeshNodePosition(Index meshNodeNumber, ConfigurationType configuration) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodePosition: meshNodeNumber out of range");
+	if (parameters.useFirstNodeAsReferenceFrame)
+	{
+		Matrix3D refRot = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration);
+		Vector3D refPos = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetPosition(configuration);
+
+		return refPos + refRot * GetMeshNodeLocalPosition(meshNodeNumber, configuration); //no "+1", because it is already the mesh function
+	}
+	else
+	{
+		return GetMeshNodeLocalPosition(meshNodeNumber, configuration);
+	}
+}
+
+//! return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
+Vector3D CObjectGenericODE2::GetMeshNodeVelocity(Index meshNodeNumber, ConfigurationType configuration) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeVelocity: meshNodeNumber out of range");
+
+	if (parameters.useFirstNodeAsReferenceFrame)
+	{
+		// \dot R + A * \localOmega x \localPosition
+		return ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetVelocity(configuration) +
+			((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration) *
+			((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetAngularVelocityLocal(configuration).CrossProduct(GetMeshNodeLocalPosition(meshNodeNumber, configuration)) +
+			((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration) * GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
+	}
+	else
+	{
+		return GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
+	}
+}
+

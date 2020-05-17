@@ -15,6 +15,8 @@
 ************************************************************************************************ */
 #pragma once
 
+#include "Linalg/MatrixContainer.h"	
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
@@ -299,14 +301,22 @@ namespace EPyUtils {
 		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
+	//!convert MatrixI to numpy matrix
+	inline py::array_t<Index> MatrixI2NumPy(const MatrixI& matrix)
+	{
+		return py::array_t<Index>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
+	}
+
 	//!convert MatrixF to numpy matrix
 	inline py::array_t<float> MatrixF2NumPy(const MatrixF& matrix)
 	{
 		return py::array_t<float>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
+
 	//!convert numpy matrix to Matrix
-	inline void NumPy2Matrix(const py::array_t<Real>& pyArray, Matrix& m)
+	template<typename T>
+	inline void NumPy2Matrix(const py::array_t<T>& pyArray, MatrixBase<T>& m)
 	{
 		if (pyArray.size() == 0) //process empty arrays, which leads to empty matrix, but has no dimension 2
 		{
@@ -329,12 +339,13 @@ namespace EPyUtils {
 		}
 		else
 		{
-			SysError("failed to convert numpy array to matrix: array must have dimension 2 (rows x columns)");
+			CHECKandTHROWstring("NumPy2Matrix: failed to convert numpy array to matrix: array must have dimension 2 (rows x columns)");
 		}
 	}
 
 	//!convert numpy matrix to Vector
-	inline void NumPy2Vector(const py::array_t<Real>& pyArray, Vector& v)
+	template<typename T>
+	inline void NumPy2Vector(const py::array_t<T>& pyArray, VectorBase<T>& v)
 	{
 		if (pyArray.ndim() == 1)
 		{
@@ -348,7 +359,7 @@ namespace EPyUtils {
 		}
 		else
 		{
-			SysError("failed to convert numpy array to vector: array must have dimension 1 (list / matrix with 1 row, no columns)");
+			CHECKandTHROWstring("failed to convert numpy array to vector: array must have dimension 1 (list / matrix with 1 row, no columns)");
 		}
 	}
 
@@ -356,6 +367,14 @@ namespace EPyUtils {
 	inline Matrix NumPy2Matrix(const py::array_t<Real>& pyArray)
 	{
 		Matrix m;
+		NumPy2Matrix(pyArray, m);
+		return m;
+	}
+
+	//!convert numpy matrix to Matrix
+	inline MatrixI NumPy2MatrixI(const py::array_t<Index>& pyArray)
+	{
+		MatrixI m;
 		NumPy2Matrix(pyArray, m);
 		return m;
 	}
@@ -370,18 +389,30 @@ namespace EPyUtils {
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//numpy conversions
-	inline bool SetNumpyMatrixSafely(const py::dict& d, const char* itemName, Matrix& destination)
+	template<typename T>
+	inline bool SetNumpyMatrixSafelyTemplate(const py::dict& d, const char* itemName, MatrixBase<T>& destination)
 	{
 		if (d.contains(itemName))
 		{
 			py::object other = d[itemName]; //this is necessary to make isinstance work
 
-			NumPy2Matrix(py::cast<py::array_t<Real>>(other), destination);
+			NumPy2Matrix<T>(py::cast<py::array_t<T>>(other), destination);
 			return true;
 		}
 		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy matrix) into Matrix; dictionary:\n" + EXUstd::ToString(d));
 		return false;
 	}
+
+	inline bool SetNumpyMatrixISafely(const py::dict& d, const char* itemName, MatrixI& destination)
+	{
+		return SetNumpyMatrixSafelyTemplate<Index>(d, itemName, destination);
+	}
+
+	inline bool SetNumpyMatrixSafely(const py::dict& d, const char* itemName, Matrix& destination)
+	{
+		return SetNumpyMatrixSafelyTemplate<Real>(d, itemName, destination);
+	}
+
 	inline bool SetNumpyVectorSafely(const py::dict& d, const char* itemName, Vector& destination)
 	{
 		if (d.contains(itemName))
@@ -399,7 +430,12 @@ namespace EPyUtils {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	inline bool SetNumpyMatrixSafely(const py::object& value, Matrix& destination)
 	{
-		NumPy2Matrix(py::cast<py::array_t<Real>>(value), destination);
+		NumPy2Matrix<Real>(py::cast<py::array_t<Real>>(value), destination);
+		return true;
+	}
+	inline bool SetNumpyMatrixISafely(const py::object& value, MatrixI& destination)
+	{
+		NumPy2Matrix<Index>(py::cast<py::array_t<Index>>(value), destination);
 		return true;
 	}
 	inline bool SetNumpyVectorSafely(const py::object& value, Vector& destination)

@@ -81,7 +81,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 
 
 //! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-py::object MainObjectBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
+py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	Vector value;
 	//check if type is valid:
@@ -89,7 +89,42 @@ py::object MainObjectBody::GetOutputVariableBody(OutputVariableType variableType
 	{
 		if ((Index)GetCObject()->GetOutputVariableTypes() & (Index)variableType)
 		{
-			GetCObjectBody()->GetOutputVariableBody(variableType, localPosition, configuration, value);
+			const CObjectBody* cObjectBody = (const CObjectBody*)GetCObject();
+
+			cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value);
+			//now check if it is scalar or a vector-valued:
+			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
+			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
+		}
+		else
+		{
+			PyError(STDstring("Object") + GetTypeName() + " (a body) has no OutputVariableType '" + GetOutputVariableTypeString(variableType) + "'");
+			//PyError(STDstring("Invalid OutputVariableType in MainObjectBody::GetOutputVariableBody: '") + GetOutputVariableTypeString(variableType) + "'");
+			return py::int_(EXUstd::InvalidIndex);
+			//return py::object();
+		}
+	}
+	else
+	{
+		PyError(STDstring("Incalid call to GetOutputVariableBody(...) for Object") + GetTypeName() + ": access to objects of type 'Body' only");
+		return py::int_(EXUstd::InvalidIndex);
+		//return py::object();
+	}
+
+}
+
+//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
+py::object MainObject::GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration) const
+{
+	Vector value;
+	//check if type is valid:
+	if ((Index)GetCObject()->GetType() & (Index)CObjectType::SuperElement) //use '&': might contain also other types
+	{
+		if ((Index)GetCObject()->GetOutputVariableTypes() & (Index)variableType)
+		{
+			const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)GetCObject();
+
+			cObjectSuperElement->GetOutputVariableSuperElement(variableType, meshNodeNumber, configuration, value);
 			//now check if it is scalar or a vector-valued:
 			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
 			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
@@ -104,7 +139,7 @@ py::object MainObjectBody::GetOutputVariableBody(OutputVariableType variableType
 	}
 	else
 	{
-		PyError(STDstring("Incalid call to GetOutputVariableBody(...) for Object") + GetTypeName() + ": access to objects of type 'ObjectBody' only");
+		PyError(STDstring("Incalid call to GetOutputVariableSuperElement(...) for Object") + GetTypeName() + ": access to objects of type 'SuperElement' only");
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}

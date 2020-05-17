@@ -472,51 +472,128 @@ class ObjectGenericODE2:
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
 
 class VObjectFFRF:
-    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, deformationScaleFactor = 1):
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
         self.show = show
         self.color = color
         self.triangleMesh = triangleMesh
         self.showNodes = showNodes
-        self.deformationScaleFactor = deformationScaleFactor
 
     def __iter__(self):
         yield 'show', self.show
         yield 'color', self.color
         yield 'triangleMesh', self.triangleMesh
         yield 'showNodes', self.showNodes
-        yield 'deformationScaleFactor', self.deformationScaleFactor
 
 class ObjectFFRF:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, coordinateIndexPerNode = [], modeBasis = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'deformationScaleFactor': 1}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = [], stiffnessMatrixFF = [], dampingMatrixFF = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, coordinateIndexPerNode = [], objectIsInitialized = False, physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], PHItTM = [], referencePositions = [], tempVector = [], tempCoordinates = [], tempCoordinates_t = [], tempRefPosSkew = [], tempVelSkew = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
-        self.massMatrix = massMatrix
-        self.stiffnessMatrix = stiffnessMatrix
-        self.dampingMatrix = dampingMatrix
+        self.massMatrixFF = massMatrixFF
+        self.stiffnessMatrixFF = stiffnessMatrixFF
+        self.dampingMatrixFF = dampingMatrixFF
         self.forceVector = forceVector
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
+        self.computeFFRFterms = computeFFRFterms
         self.coordinateIndexPerNode = coordinateIndexPerNode
-        self.modeBasis = modeBasis
+        self.objectIsInitialized = objectIsInitialized
+        self.physicsMass = physicsMass
+        self.physicsInertia = physicsInertia
+        self.physicsCenterOfMass = physicsCenterOfMass
+        self.PHItTM = PHItTM
+        self.referencePositions = referencePositions
+        self.tempVector = tempVector
+        self.tempCoordinates = tempCoordinates
+        self.tempCoordinates_t = tempCoordinates_t
+        self.tempRefPosSkew = tempRefPosSkew
+        self.tempVelSkew = tempVelSkew
         self.visualization = visualization
 
     def __iter__(self):
         yield 'objectType', 'FFRF'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
-        yield 'massMatrix', self.massMatrix
-        yield 'stiffnessMatrix', self.stiffnessMatrix
-        yield 'dampingMatrix', self.dampingMatrix
+        yield 'massMatrixFF', self.massMatrixFF
+        yield 'stiffnessMatrixFF', self.stiffnessMatrixFF
+        yield 'dampingMatrixFF', self.dampingMatrixFF
         yield 'forceVector', self.forceVector
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'computeFFRFterms', self.computeFFRFterms
         yield 'coordinateIndexPerNode', self.coordinateIndexPerNode
-        yield 'modeBasis', self.modeBasis
+        yield 'objectIsInitialized', self.objectIsInitialized
+        yield 'physicsMass', self.physicsMass
+        yield 'physicsInertia', self.physicsInertia
+        yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        yield 'PHItTM', self.PHItTM
+        yield 'referencePositions', self.referencePositions
+        yield 'tempVector', self.tempVector
+        yield 'tempCoordinates', self.tempCoordinates
+        yield 'tempCoordinates_t', self.tempCoordinates_t
+        yield 'tempRefPosSkew', self.tempRefPosSkew
+        yield 'tempVelSkew', self.tempVelSkew
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
-        yield 'VdeformationScaleFactor', dict(self.visualization)["deformationScaleFactor"]
+
+class VObjectFFRFreducedOrder:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
+        self.show = show
+        self.color = color
+        self.triangleMesh = triangleMesh
+        self.showNodes = showNodes
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+        yield 'triangleMesh', self.triangleMesh
+        yield 'showNodes', self.showNodes
+
+class ObjectFFRFreducedOrder:
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], referencePositions = [], physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], PHItTM = [], tempUserFunctionForce = [], tempRefPosSkew = [], tempVelSkew = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.massMatrixReduced = massMatrixReduced
+        self.stiffnessMatrixReduced = stiffnessMatrixReduced
+        self.dampingMatrixReduced = dampingMatrixReduced
+        self.forceUserFunction = forceUserFunction
+        self.massMatrixUserFunction = massMatrixUserFunction
+        self.computeFFRFterms = computeFFRFterms
+        self.modeBasis = modeBasis
+        self.referencePositions = referencePositions
+        self.physicsMass = physicsMass
+        self.physicsInertia = physicsInertia
+        self.physicsCenterOfMass = physicsCenterOfMass
+        self.PHItTM = PHItTM
+        self.tempUserFunctionForce = tempUserFunctionForce
+        self.tempRefPosSkew = tempRefPosSkew
+        self.tempVelSkew = tempVelSkew
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'FFRFreducedOrder'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'massMatrixReduced', self.massMatrixReduced
+        yield 'stiffnessMatrixReduced', self.stiffnessMatrixReduced
+        yield 'dampingMatrixReduced', self.dampingMatrixReduced
+        yield 'forceUserFunction', self.forceUserFunction
+        yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'computeFFRFterms', self.computeFFRFterms
+        yield 'modeBasis', self.modeBasis
+        yield 'referencePositions', self.referencePositions
+        yield 'physicsMass', self.physicsMass
+        yield 'physicsInertia', self.physicsInertia
+        yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        yield 'PHItTM', self.PHItTM
+        yield 'tempUserFunctionForce', self.tempUserFunctionForce
+        yield 'tempRefPosSkew', self.tempRefPosSkew
+        yield 'tempVelSkew', self.tempVelSkew
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+        yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
+        yield 'VshowNodes', dict(self.visualization)["showNodes"]
 
 class VObjectANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -1335,7 +1412,7 @@ class MarkerNodeCoordinate:
         yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
-class VMarkerGenericBodyPosition:
+class VMarkerSuperElementPosition:
     def __init__(self, show = True, showMarkerNodes = True):
         self.show = show
         self.showMarkerNodes = showMarkerNodes
@@ -1344,22 +1421,20 @@ class VMarkerGenericBodyPosition:
         yield 'show', self.show
         yield 'showMarkerNodes', self.showMarkerNodes
 
-class MarkerGenericBodyPosition:
-    def __init__(self, name = '', bodyNumber = -1, nodeNumbers = [], weightingFactors = [], useFirstNodeAsReferenceFrame = False, visualization = {'show': True, 'showMarkerNodes': True}):
+class MarkerSuperElementPosition:
+    def __init__(self, name = '', bodyNumber = -1, meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.nodeNumbers = nodeNumbers
+        self.meshNodeNumbers = meshNodeNumbers
         self.weightingFactors = weightingFactors
-        self.useFirstNodeAsReferenceFrame = useFirstNodeAsReferenceFrame
         self.visualization = visualization
 
     def __iter__(self):
-        yield 'markerType', 'GenericBodyPosition'
+        yield 'markerType', 'SuperElementPosition'
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
-        yield 'nodeNumbers', self.nodeNumbers
+        yield 'meshNodeNumbers', self.meshNodeNumbers
         yield 'weightingFactors', self.weightingFactors
-        yield 'useFirstNodeAsReferenceFrame', self.useFirstNodeAsReferenceFrame
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 
@@ -1537,6 +1612,31 @@ class SensorNode:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+class VSensorObject:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorObject:
+    def __init__(self, name = '', objectNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+        self.name = name
+        self.objectNumber = objectNumber
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.outputVariableType = outputVariableType
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'Object'
+        yield 'name', self.name
+        yield 'objectNumber', self.objectNumber
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'outputVariableType', self.outputVariableType
+        yield 'Vshow', dict(self.visualization)["show"]
+
 class VSensorBody:
     def __init__(self, show = True):
         self.show = show
@@ -1564,26 +1664,28 @@ class SensorBody:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
-class VSensorObject:
+class VSensorSuperElement:
     def __init__(self, show = True):
         self.show = show
 
     def __iter__(self):
         yield 'show', self.show
 
-class SensorObject:
-    def __init__(self, name = '', objectNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+class SensorSuperElement:
+    def __init__(self, name = '', bodyNumber = -1, meshNodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
-        self.objectNumber = objectNumber
+        self.bodyNumber = bodyNumber
+        self.meshNodeNumber = meshNodeNumber
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.outputVariableType = outputVariableType
         self.visualization = visualization
 
     def __iter__(self):
-        yield 'sensorType', 'Object'
+        yield 'sensorType', 'SuperElement'
         yield 'name', self.name
-        yield 'objectNumber', self.objectNumber
+        yield 'bodyNumber', self.bodyNumber
+        yield 'meshNodeNumber', self.meshNodeNumber
         yield 'writeToFile', self.writeToFile
         yield 'fileName', self.fileName
         yield 'outputVariableType', self.outputVariableType
