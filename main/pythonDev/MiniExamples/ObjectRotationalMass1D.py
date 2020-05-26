@@ -1,0 +1,42 @@
+#+++++++++++++++++++++++++++++++++++++++++++
+# Mini example for class ObjectRotationalMass1D
+#+++++++++++++++++++++++++++++++++++++++++++
+
+import sys
+sys.path.append('../../bin/WorkingRelease')
+sys.path.append('../TestModels')
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+import exudyn as exu
+from exudynUtilities import *
+from itemInterface import *
+import numpy as np
+
+#create an environment for mini example
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
+nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
+
+testError=1 #set default error, if failed
+exu.Print("start mini example for class ObjectRotationalMass1D")
+try: #puts example in safe environment
+    node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
+                              initialCoordinates=[0.5],   #\psi_0ini
+                              initialVelocities=[0.5]))   #\psi_t0ini
+    rotor = mbs.AddObject(Rotor1D(nodeNumber = node, physicsInertia=1))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result
+    #check result, get current rotor z-rotation at local position [0,0,0]
+    testError = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0]) - 2
+    #final z-angle of rotor shall be 2
+
+except BaseException as e:
+    exu.Print("An error occured in test example for ObjectRotationalMass1D:", e)
+else:
+    exu.Print("example for ObjectRotationalMass1D completed, test error =", testError)
+

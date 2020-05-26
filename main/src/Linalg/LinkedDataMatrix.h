@@ -66,12 +66,27 @@ public:
 	//! link to a sub-matrix; only works, for full rows
 	LinkedDataMatrixBase(const MatrixBase<T>& matrix, Index startRows, Index numberOfRowsLinked)
 	{
-		CHECKandTHROW((startRows >= 0 && startRows < matrix.numberOfRows && numberOfRowsLinked+startRows < matrix.numberOfRows && numberOfRowsLinked >= 0),
+		CHECKandTHROW((startRows >= 0 && startRows < matrix.NumberOfRows() && 
+			numberOfRowsLinked + startRows <= matrix.NumberOfRows() && //use <= because this position is after the last element
+			numberOfRowsLinked >= 0),
 			"LinkedDataMatrix::LinkedDataMatrix(MatrixBase<T>, Index, Index): invalid parameters");
-		this->data = matrix.data[startRows*matrix.numberOfColumns];
+		//this->data = matrix.data[startRows*matrix.NumberOfColumns()];
+		//this->data = &(matrix(startRows, 0));
+		T* matrixData = const_cast<T*>(matrix.GetDataPointer());
+		this->data = &(matrixData[startRows*matrix.NumberOfColumns()]);
 		this->numberOfRows = numberOfRowsLinked;
-		this->numberOfColumns = matrix.numberOfColumns;
+		this->numberOfColumns = matrix.NumberOfColumns();
 	}
+
+	////! link to a sub-matrix; only works, for full rows
+	//LinkedDataMatrixBase(const ResizableMatrixBase<T>& matrix, Index startRows, Index numberOfRowsLinked)
+	//{
+	//	CHECKandTHROW((startRows >= 0 && startRows < matrix.numberOfRows && numberOfRowsLinked + startRows <= matrix.numberOfRows && numberOfRowsLinked >= 0),
+	//		"LinkedDataMatrix::LinkedDataMatrix(ResizableMatrixBase<T>, Index, Index): invalid parameters");
+	//	this->data = matrix.data[startRows*matrix.numberOfColumns];
+	//	this->numberOfRows = numberOfRowsLinked;
+	//	this->numberOfColumns = matrix.numberOfColumns;
+	//}
 
 	//destructor: avoid that data is deleted
 	virtual ~LinkedDataMatrixBase() 

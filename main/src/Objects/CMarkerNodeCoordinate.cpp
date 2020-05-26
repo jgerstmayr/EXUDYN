@@ -66,13 +66,13 @@ void CMarkerNodeCoordinate::ComputeMarkerData(const CSystemData& cSystemData, bo
 		{
 			//must be ODE2
 			markerData.velocityAvailable = true;
-			markerData.value_t = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetCurrentCoordinateVector_t()[parameters.coordinate]; //works for all coordinates
+			markerData.vectorValue_t.SetVector({ ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetCurrentCoordinateVector_t()[parameters.coordinate] }); //works for all coordinates
 		}
 		else
 		{
 			markerData.velocityAvailable = false;
 		}
-		markerData.value = cSystemData.GetCNodes()[parameters.nodeNumber]->GetCurrentCoordinateVector()[parameters.coordinate]; //works for all coordinates
+		markerData.vectorValue.SetVector({ cSystemData.GetCNodes()[parameters.nodeNumber]->GetCurrentCoordinateVector()[parameters.coordinate] }); //works for all coordinates
 
 		if (computeJacobian)
 		{
@@ -85,8 +85,10 @@ void CMarkerNodeCoordinate::ComputeMarkerData(const CSystemData& cSystemData, bo
 	else //ground node
 	{
 		markerData.velocityAvailable = true;
-		markerData.value = 0;
-		markerData.value_t = 0; //set this also for ground markers, because it could be asked for in connector!!!!
+		//markerData.value = 0;
+		//markerData.value_t = 0; //set this also for ground markers, because it could be asked for in connector!!!!
+		markerData.vectorValue.SetVector({ 0. });   //indicates that value is zero
+		markerData.vectorValue_t.SetVector({ 0. }); //set this also for ground markers, because it could be asked for in connector!!!!
 		markerData.jacobian.SetNumberOfRowsAndColumns(0, 0); //this signals the connector/system not to apply any load or Lagrange multiplier
 	}
 }

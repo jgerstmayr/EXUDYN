@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-30  22:45:22 (last modfied)
+* @date         2020-05-24  19:47:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,7 +95,7 @@ public: // AUTO:
     //! AUTO:  Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
-        return "Cable2DShape";
+        return "BodyCable2DShape";
     }
 
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-05-06  10:02:28 (last modfied)
+* @date         2020-05-22  12:59:29 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,8 +27,8 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: markers define contact gap
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 3 \f$\times\f$ nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)
     Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
-    Real contactStiffness;                        //!< AUTO: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per length of the beam axis; specific contact forces (per length) \f$f_N\f$ act in contact normal direction only upon penetration
-    Real contactDamping;                          //!< AUTO: contact damping [SI:N/(m s)/(contact segment)]; the damping is per length of the beam axis; acts in contact normal direction only upon penetration
+    Real contactStiffness;                        //!< AUTO: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_N\f$ act in contact normal direction only upon penetration
+    Real contactDamping;                          //!< AUTO: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
     Real frictionVelocityPenalty;                 //!< AUTO: velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area
     Real frictionStiffness;                       //!< AUTO: CURRENTLY NOT IMPLEMENTED: displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
     Real frictionCoefficient;                     //!< AUTO: friction coefficient \f$\mu\f$ [SI: 1]; tangential specific friction forces (per length) \f$f_T\f$ must fulfill the condition \f$f_T \le \mu f_N\f$

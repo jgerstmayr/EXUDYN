@@ -124,8 +124,11 @@ testFileList = [
                 'TestModels/sparseMatrixSpringDamperTest.py',
                 'TestModels/sphericalJointTest.py',
                 'TestModels/springDamperUserFunctionTest.py',
+                'TestModels/objectGenericODE2Test.py',
                 'TestModels/objectFFRFreducedOrderTest.py',
-                'TestModels/objectFFRFTest.py'
+                'TestModels/objectFFRFTest.py',
+                'TestModels/objectFFRFTest2.py',
+                'TestModels/compareAbaqusAnsysRotorEigenfrequencies.py',
                 ]
 
 
@@ -237,7 +240,7 @@ else:
 if len(miniExamplesFailed) == 0:
     exu.Print('ALL ' + str(len(miniExamplesFileList)) + ' MINI EXAMPLE TESTS SUCCESSFUL')
 else:
-    exu.Print(str(len(testsFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
+    exu.Print(str(len(miniExamplesFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
 exu.Print('******************************************\n')
 
     

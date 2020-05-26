@@ -2,6 +2,8 @@
 
 miniExamplesFileList = ['ObjectMassPoint.py',
 'ObjectMassPoint2D.py',
+'ObjectMass1D.py',
+'ObjectRotationalMass1D.py',
 'ObjectRigidBody2D.py',
 'ObjectConnectorSpringDamper.py',
 'ObjectConnectorCartesianSpringDamper.py',

@@ -258,6 +258,15 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					", contains invalid (global) object number " + EXUstd::ToString(itemIndex));
 				systemIsInteger = false;
 			}
+			if (systemIsConsistent)
+			{
+				if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[itemIndex]->GetCObject()->GetType() & (Index)CObjectType::Body) == 0)
+				{
+					PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+						": expected ObjectType::Body, but received object (object number=" + EXUstd::ToString(itemIndex)+")");
+					systemIsInteger = false;
+				}
+			}
 		}
 
 		itemIndex++;
@@ -613,11 +622,8 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 				}
 			}
 			//if AEcoordinates==0 the function node->GetGlobalAECoordinateIndex() might be invalid!
-			if (node->GetNumberOfAECoordinates()) //this is for algebraic nodes (not used yet, because Lagrange multipliers are not part of nodes)
+			if (node->GetNumberOfAECoordinates()) //this is for algebraic nodes (e.g. Euler Parameters)
 			{
-				//pout << "SYSTEMINFO: found algebraic coordinates = " << node->GetNumberOfAECoordinates() << "\n";
-				//algebraicEquationsInNodes = true; //algebraic coordinates treated with nodes, not with object
-				//assert(0 && "CSystem::AssembleObjectLTGLists: Nodes with algebraic constraints not implemented"); //would not work, because it would lead to double
 				Index gIndex = node->GetGlobalAECoordinateIndex();
 				for (Index i = 0; i < node->GetNumberOfAECoordinates(); i++)
 				{
@@ -1758,25 +1764,11 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 					CHECKandTHROW((factorAE_ODE2 == 1.) && (factorAE_ODE2_t == 1.), "CSystem::JacobianAE(...): for reaction jacobian, factors must be 1.");
 					if (flagAE_ODE2filled && !objectUsesVelocityLevel)
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(ltgAE[ii], ltgODE2[jj]) += temp.localJacobianAE(ii, jj); //factorVelocityLevel
-						//	}
-						//}
 						jacobianGM.AddSubmatrix(temp.localJacobianAE, 1., ltgAE, ltgODE2);
 
 					}
 					else if (flagAE_ODE2_tFilled) //newly added; only add one of the two jacobians!
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE_t.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE_t.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(ltgAE[ii], ltgODE2[jj]) += temp.localJacobianAE_t(ii, jj); //
-						//	}
-						//}
 						jacobianGM.AddSubmatrix(temp.localJacobianAE_t, 1., ltgAE, ltgODE2);
 					}
 					//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag");}
@@ -1786,62 +1778,27 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 					//now add all dependencies; this is the derivative of the constraint equations w.r.t. position and velocity level coordinates, but all transformed to the quantities needed in time integration (usually acceleration)
 					if (flagAE_ODE2filled)
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(nODE2 + ltgAE[ii], ltgODE2[jj]) += factorAE_ODE2 * temp.localJacobianAE(ii, jj); //depends, if velocity or position level is used //factorVelocityLevel
-						//	}
-						//}
 						jacobianGM.AddSubmatrix(temp.localJacobianAE, factorAE_ODE2, ltgAE, ltgODE2, nODE2);//depends, if velocity or position level is used
 
 					}
-					if (flagAE_ODE2_tFilled) //newly added
+					if (flagAE_ODE2_tFilled) //velocity or mixed pos/vel constraints
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE_t.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE_t.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(nODE2 + ltgAE[ii], ltgODE2[jj]) += factorAE_ODE2_t * temp.localJacobianAE_t(ii, jj); //depends, if velocity or position level is used 
-						//	}
-						//}
 						jacobianGM.AddSubmatrix(temp.localJacobianAE_t, factorAE_ODE2_t, ltgAE, ltgODE2, nODE2); //depends, if velocity or position level is used 
 					}
 
 					//this is either the dC/dq or the dC_t/dq_t matrix for reaction forces ==> does not need factor for time integration and may only be added once (e.g. for non-holonomic constraints such as rolling wheel)
 					if (flagAE_ODE2filled && !objectUsesVelocityLevel)
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(ltgODE2[jj], nODE2 + ltgAE[ii]) += temp.localJacobianAE(ii, jj); //this is the dC/dq^T part, which is independent of index reduction
-						//	}
-						//}
 						jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE, 1., ltgODE2, ltgAE, 0, nODE2); //this is the dC/dq^T part, which is independent of index reduction
 					}
 					else if (flagAE_ODE2_tFilled) //newly added
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE_t.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE_t.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(ltgODE2[jj], nODE2 + ltgAE[ii]) += temp.localJacobianAE_t(ii, jj); //this is the dC_t/dq_t^T part, which is independent of index reduction
-						//	}
-						//}
 						jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_t, 1., ltgODE2, ltgAE, 0, nODE2); //this is the dC_t/dq_t^T part, which is independent of index reduction
 					}
 					//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
 
 					if (flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
 					{
-						//for (Index ii = 0; ii < temp.localJacobianAE_AE.NumberOfRows(); ii++)
-						//{
-						//	for (Index jj = 0; jj < temp.localJacobianAE_AE.NumberOfColumns(); jj++)
-						//	{
-						//		jacobian(nODE2 + ltgAE[ii], nODE2 + ltgAE[jj]) += temp.localJacobianAE_AE(ii, jj);
-						//	}
-						//}
 						jacobianGM.AddSubmatrix(temp.localJacobianAE_AE, 1., ltgAE, ltgAE, nODE2, nODE2);
 					}
 				}
@@ -2022,27 +1979,29 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 
 			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
 			
-			if (flagAE_ODE2filled && !objectUsesVelocityLevel)
+			if (!objectUsesVelocityLevel) //for velocity constraints, only Ct_t would be needed!
 			{
-				ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
-
-				//multiply Cq^T * lambda:
-				for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+				if (flagAE_ODE2filled)
 				{
-					for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+					ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
+
+					//multiply Cq^T * lambda:
+					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
 					{
-						result[ltgAE[ii]] += jac(ii, jj) * v[ltgODE2[jj]];  //add terms to existing residual forces
+						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						{
+							result[ltgAE[ii]] += jac(ii, jj) * v[ltgODE2[jj]];  //add terms to existing residual forces
+						}
 					}
 				}
+				else
+				{
+					STDstring str = "CSystem::ComputeConstraintJacobianTimesVector(...) : not implemented for velocity level, objectNr = ";
+					str += EXUstd::ToString(j);
+					PyWarning(str);
+					//CHECKandTHROWstring("CSystem::ComputeConstraintJacobianTimesVector(...): not implemented for velocity level!"); 
+				} //needs different strategies for velocity level constraints!
 			}
-			else 
-			{ 
-				STDstring str = "CSystem::ComputeConstraintJacobianTimesVector(...) : not implemented for velocity level, objectNr = ";
-				str += EXUstd::ToString(j);
-				PyWarning(str);
-				//CHECKandTHROWstring("CSystem::ComputeConstraintJacobianTimesVector(...): not implemented for velocity level!"); 
-			} //needs different strategies for velocity level constraints!
-
 		}
 	}
 

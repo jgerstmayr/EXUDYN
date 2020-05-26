@@ -424,6 +424,62 @@ The item VNodeRigidBody2D has the following parameters:\vspace{-1cm}\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{Node1D}
+A node with one ODE2 coordinate for one dimensional (1D) problems; use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.\vspace{12pt}
+ \\{\bf Additional information for Node1D}:
+\bi
+  \item The Node has the following types = \texttt{GenericODE2}
+\ei
+\vspace{12pt} \noindent The item {\bf Node1D} with type = '1D' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     node's unique name\\ \hline
+    referenceCoordinates &     Vector &      &     [0.] &     reference coordinate of node (in vector form)\\ \hline
+    initialCoordinates &     Vector &      &     [0.] &     initial displacement coordinate (in vector form)\\ \hline
+    initialVelocities &     Vector &      &     [0.] &     initial velocity coordinate (in vector form)\\ \hline
+    visualization & VNode1D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNode1D has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     False &     set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Detailed information on Node1D}:
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$[q_0]\tp\cRef$}{}
+\rowTable{initialCoordinates}{$[q_0]\tp\cIni$}{}
+\rowTable{initialVelocities}{$[\dot q_0]\tp\cIni$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
+\startTable{output parameter}{symbol}{description}
+\rowTable{Coordinates}{$\qv\cConfig = [q_0]\tp\cConfig$}{ODE2 coordinate of node (in vector form)}
+\rowTable{Coordinates\_t}{$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$}{ODE2 velocity coordinate of node (in vector form)}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    The current position/rotation coordinate of the 1D node is computed from
+    \be
+      p_0 = {q_0}\cRef + {q_0}\cCur
+    \ee
+    The coordinate leads to one second order differential equation.
+    The graphical representation and the (internal) position of the node is
+    \be
+      p\cConfig= \vr{{p_0}\cConfig}{0}{0}
+    \ee
+    The (internal) velocity vector is $[{p_0}\cConfig,\,0,\,0]\tp$.
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodePoint2DSlope1}
 A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.\vspace{12pt}
  \\{\bf Additional information for NodePoint2DSlope1}:
@@ -795,6 +851,218 @@ The item VObjectMassPoint2D has the following parameters:\vspace{-1cm}\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectMass1D}
+A 1D (translational) mass which is attached to Node1D. Note, that the mass does not need to have the interpretation as a translational mass.\vspace{12pt}
+ \\{\bf Additional information for ObjectMass1D}:
+\bi
+  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested node type = \texttt{GenericODE2}
+  \item {\bf Short name} for Python = {\bf Mass1D}\ei
+\vspace{12pt} \noindent The item {\bf ObjectMass1D} with type = 'Mass1D' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects's unique name\\ \hline
+    physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number of Node1D providing translation coordinate $c_0$\\ \hline
+    referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     a reference position, used to transform the 1D coordinate to a position\\ \hline
+    referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
+    visualization & VObjectMass1D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectMass1D has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Detailed information on ObjectMass1D}:
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{physicsMass}{$m$}{}
+\rowTable{nodeNumber}{$n0$}{}
+\rowTable{referencePosition}{$\LU{0}{\pv_0}$}{}
+\rowTable{referenceRotation}{$\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
+\startTable{output parameter}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig$}{global position vector; for interpretation see intermediate variables}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig$}{global displacement vector; for interpretation see intermediate variables}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig $}{global velocity vector; for interpretation see intermediate variables}
+\rowTable{RotationMatrix}{$\LU{0b}{\Rot}$}{vector with 9 components of the rotation matrix (row-major format)}
+\rowTable{Rotation}{}{vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix $\LU{0b}{\Rot}$}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig$}{angular velocity of body}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig$}{local (body-fixed) 3D velocity vector of node}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    \vspace{6pt}\\
+    \startTable{intermediate variables}{symbol}{description}
+      \rowTable{position coordinate}{${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$}{position coordinate of node (nodal coordinate $c_0$) in any configuration}
+      \rowTable{displacement coordinate}{${u_0}\cConfig = {c_0}\cConfig$}{displacement coordinate of mass node in any configuration}
+      \rowTable{velocity coordinate}{${u_0}\cConfig$}{velocity coordinate of mass node in any configuration}
+      \rowTable{Position}{$\LU{0}{\pv}\cConfig =\LU{0}{\pv_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$}{(translational) position of mass object in any configuration}
+      \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{q_0}{0}{0}}\cConfig$}{(translational) displacement of mass object in any configuration}
+      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot q_0}{0}{0}}\cConfig$}{(translational) velocity of mass object in any configuration}
+    %
+      \rowTable{residual force}{$f$}{residual of all forces on mass object}
+      \rowTable{applied force}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{3D applied force (loads, connectors, joint reaction forces, ...)}
+      \rowTable{applied torque}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{3D applied torque (loads, connectors, joint reaction forces, ...)}
+    \finishTable
+    %
+    A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
+    However, torques will have no effect and forces will only have effect in 'direction' of the coordinate.
+
+    {\bf Equations of motion}:
+    \be 
+      m \cdot \ddot q_0 = f.
+    \ee
+    Note that $f$ is computed from all connectors and loads upon the object. E.g., a 3D force vector $\LU{0}{\fv}_a$ is 
+    transformed to $f$ as
+    \be
+      f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a
+    \ee
+    Thus, the {\bf position jacobian} reads 
+    \be
+      \Jm_{pos} = \partial \pv\cCur / \partial {q_0}\cCur = 
+       \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}}
+    \ee
+\noindent {\bf Example} for ObjectMass1D:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    node = mbs.AddNode(Node1D(referenceCoordinates = [1], 
+                              initialCoordinates=[0.5],
+                              initialVelocities=[0.5]))
+    mass = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=1))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result, get current mass position at local position [0,0,0]
+    testError = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0] - 2
+    #final x-coordinate of position shall be 2
+
+\end{lstlisting}
+
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectRotationalMass1D}
+A 1D rotational inertia (mass) which is attached to Node1D.\vspace{12pt}
+ \\{\bf Additional information for ObjectRotationalMass1D}:
+\bi
+  \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
+  \item Requested node type = \texttt{GenericODE2}
+  \item {\bf Short name} for Python = {\bf Rotor1D}\ei
+\vspace{12pt} \noindent The item {\bf ObjectRotationalMass1D} with type = 'RotationalMass1D' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects's unique name\\ \hline
+    physicsInertia &     UReal &      &     0. &     inertia components [SI:kgm$^2$] of rotor / rotational mass\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number of Node1D, providing rotation coordinate $\psi_0 = c_0$\\ \hline
+    referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     a constant reference position, used to assign joint constraints accordingly and for drawing\\ \hline
+    referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description\\ \hline
+    visualization & VObjectRotationalMass1D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectRotationalMass1D has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    graphicsData &     BodyGraphicsData &     \tabnewline  &      &     Structure contains data for body visualization; data is defined in special list / dictionary structure\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Detailed information on ObjectRotationalMass1D}:
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{physicsInertia}{$J$}{}
+\rowTable{nodeNumber}{$n0$}{}
+\rowTable{referencePosition}{$\LU{0}{\pv_0}$}{}
+\rowTable{referenceRotation}{$\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
+\startTable{output parameter}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig$}{global position vector; for interpretation see intermediate variables}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig$}{global displacement vector; for interpretation see intermediate variables}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig $}{global velocity vector; for interpretation see intermediate variables}
+\rowTable{RotationMatrix}{$\LU{0b}{\Rot}$}{vector with 9 components of the rotation matrix (row-major format)}
+\rowTable{Rotation}{}{vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix $\LU{0b}{\Rot}$}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig$}{angular velocity of body}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig$}{local (body-fixed) 3D velocity vector of node}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    \vspace{6pt}\\
+    \startTable{intermediate variables}{symbol}{description}
+      \rowTable{position coordinate}{${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $}{total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
+      \rowTable{displacement coordinate}{${\psi_0}\cConfig = {c_0}\cConfig$}{change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
+      \rowTable{velocity coordinate}{${\dot \psi_{0\cConfig}}$}{rotation velocity coordinate of mass node (e.g., Node1D) in any configuration}
+      \rowTable{Position}{$\LU{0}{\pv}\cConfig =\LU{0}{\pv_0}$}{constant (translational) position of mass object in any configuration}
+      \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [0,0,0]\tp$}{(translational) displacement of mass object in any configuration}
+      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [0,0,0]\tp$}{(translational) velocity of mass object in any configuration}
+      \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$}{}
+      \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$}{}
+      \rowTable{RotationMatrix}{$\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$}{transformation of local body ($b$) coordinates to global (0) coordinates}
+    %
+      \rowTable{residual force}{$\tau$}{residual of all forces on mass object}
+      \rowTable{applied force}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{3D applied force (loads, connectors, joint reaction forces, ...)}
+      \rowTable{applied torque}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{3D applied torque (loads, connectors, joint reaction forces, ...)}
+    \finishTable
+    %
+    A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
+    However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
+
+    {\bf Equations of motion}:
+    \be 
+      J \cdot \ddot \psi_0 = \tau.
+    \ee
+    Note that $\tau$ is computed from all connectors and loads upon the object. E.g., a 3D torque vector $\LU{0}{\ttau}_a$ is 
+    transformed to $\tau$ as
+    \be
+      \tau = \LU{b}{[0,\,0,\,1]}\LU{b0}{\Rot_{0}} \LU{0}{\ttau}_a
+    \ee
+    Thus, the {\bf rotation jacobian} reads 
+    \be
+      \Jm_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} = 
+       \LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
+    \ee
+\noindent {\bf Example} for ObjectRotationalMass1D:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
+                              initialCoordinates=[0.5],   #\psi_0ini
+                              initialVelocities=[0.5]))   #\psi_t0ini
+    rotor = mbs.AddObject(Rotor1D(nodeNumber = node, physicsInertia=1))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result
+    #check result, get current rotor z-rotation at local position [0,0,0]
+    testError = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0]) - 2
+    #final z-angle of rotor shall be 2
+
+\end{lstlisting}
+
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectRigidBody}
 A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements $[u_x\;\; u_y\;\; u_z]^T$ of the center of mass and the rotation parameters (Euler parameters) $\mathbf{q}$, the mass $m$, inertia $\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]$ and the residual of all forces and moments $[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T$ are given as ...; REMARK: Use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass.\vspace{12pt}
  \\{\bf Additional information for ObjectRigidBody}:
@@ -981,7 +1249,6 @@ A system of $n$ second order ordinary differential equations (ODE2), having a ma
     forceUserFunction &     PyFunctionVectorScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy stiffness matrix K: def f(t, q, q\_t): return np.dot(K, q)\\ \hline
     massMatrixUserFunction &     PyFunctionMatrixScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the mass matrix instead of the constant mass matrix; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy stiffness matrix M: def f(t, q, q\_t): return (q[0]+1)*M\\ \hline
     coordinateIndexPerNode &     ArrayIndex &      &     [] &     this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed\\ \hline
-    useFirstNodeAsReferenceFrame &     bool &      &     False &     set true, if first node ($n_0$) is used as floating reference frame; all other nodes are interpreted relative to the reference frame; used to implement FFRF (floating frame of reference formulation); NOTE that in this case, nodes $[n_1,\,\ldots,\,n_n]\tp$ are still drawn without the reference frame\\ \hline
     visualization & VObjectGenericODE2 & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1035,7 +1302,7 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectFFRF}
-This object is used to represent equations modelled by the floating frame of reference formulation (FFRF). It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF.\vspace{12pt}
+This object is used to represent equations modelled by the floating frame of reference formulation (FFRF). It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF. Note that temporary matrices and vectors are subject of change in future.\vspace{12pt}
  \\{\bf Additional information for ObjectFFRF}:
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
@@ -1067,8 +1334,8 @@ This object is used to represent equations modelled by the floating frame of ref
     tempVector &     NumpyVector &      &     [] &     temporary vector\\ \hline
     tempCoordinates &     NumpyVector &      &     [] &     temporary vector containing coordinates\\ \hline
     tempCoordinates\_t &     NumpyVector &      &     [] &     temporary vector containing velocity coordinates\\ \hline
-    tempRefPosSkew &     NumpyMatrix &      &     Matrix[] &     matrix with skew symmetric local (deformed) node positions\\ \hline
-    tempVelSkew &     NumpyMatrix &      &     Matrix[] &     matrix with skew symmetric local node velocities\\ \hline
+    tempRefPosSkew &     NumpyMatrix &      &     Matrix[] &     temporary matrix with skew symmetric local (deformed) node positions\\ \hline
+    tempVelSkew &     NumpyMatrix &      &     Matrix[] &     temporary matrix with skew symmetric local node velocities\\ \hline
     visualization & VObjectFFRF & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1115,6 +1382,10 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
  \noindent
     \vspace{6pt}\\
     \startTable{intermediate variables}{symbol}{description}
+      \rowTable{object coordinates}{$\cv = [\cv_r,\,\qv_f]\tp$}{object coordinates}
+      \rowTable{rigid body coordinates}{$\cv_r = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp$}{rigid body coordinates in case of Euler parameters}
+      \rowTable{rotation coordinates}{$\ttheta\cCur = [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\cCur\tp$}{rigid body coordinates in case of Euler parameters}
+      \rowTable{flexible coordinates}{$\qv_f$}{flexible, body-fixed coordinates}
       \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am}_{bd} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
     \finishTable
     %
@@ -1125,26 +1396,44 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
     \be
       n_c = \sum_{i=0}^{n_f} n_{c_i}.
     \ee
-    whereof 
+    whereof the flexible coordinates are
     \be
       n_{c_f} = \sum_{i=1}^{n_f} n_{c_i}.
     \ee
 
-    The total number of equations (=coordinates) of the object is $n_c$.
+    \noindent The total number of equations (=coordinates) of the object is $n_c$.
     The first node $n_0$ represents the rigid body motion of the underlying reference frame with $n_{c_r} = n_{c_0}$ coordinates 
     (e.g., $n_{c_r}=6$ coordinates for Euler angles and $n_{c_r}=7$ coordinates in case of Euler parameters). 
     
-    {\bf Equations of motion}, in case that \texttt{computeFFRFterms = True} (NEEDS TO BE UPDATED):
+    {\bf Equations of motion}, in case that \texttt{computeFFRFterms = True}:
     \be
-      \left(\Mm_{user}(t,\qv,\dot \qv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \qv + 
-            \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \qv = 
-            \fv_Q(\qv,\dot \qv) + \vp{\fv_r}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv_{ff}} + \fv_{user}(t,\qv,\dot \qv)
+      \left(\Mm_{user}(t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
+            \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \cv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \cv = 
+            \fv_Q(\cv,\dot \cv) + \vp{\fv_r}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv_{ff}} + \fv_{user}(t,\cv,\dot \cv)
     \ee
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
-    Note that the user functions $\fv_{user}(t,\qv,\dot \qv)$ and $\Mm_{user}(t,\qv,\dot \qv)$ may be empty (=0). 
+    Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
     
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
+    
+    \noindent If the rigid body node is using Euler parameters $\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, an {\bf additional constraint} (constraint nr.\ 0) is 
+    added automatically for the Euler parameter norm, reading
+    \be
+      1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+    \ee
+
+    %\noindent If \texttt{constrainRigidBodyMotion==True}, {\bf 6 algebraic constraints} (constraint nrs.\ $[1\ldots 6]$) are added to restrict rigid body motion:
+    %of the flexible coordinates, by applying the constraints of a Tisserand frame, giving 3 constraints for the position of the center of mass
+    In order to suppress the rigid body motion of the mesh nodes, you should apply a ObjectConnectorCoordinateVector object with the following constraint
+    equations which impose constraints of a so-called Tisserand frame, giving 3 constraints for the position of the center of mass
+    \be
+        \Phi_t\tp \Mm \cv_f = 0
+    \ee
+    and 3 constraints for the rotation,
+    \be
+        \tilde\xv_{f}\tp \Mm \cv_f = 0
+    \ee
     %
 \newpage
 
@@ -1242,13 +1531,13 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
     
     {\bf Equations of motion}, in case that \texttt{computeFFRFterms = True} (NEEDS TO BE UPDATED FOR FFRF!!!!):
     \be
-      \left(\Mm_{user}(t,\qv,\dot \qv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \qv + 
-            \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \qv = 
-            \fv_Q(\qv,\dot \qv) + \fv_{user}(t,\qv,\dot \qv)
+      \left(\Mm_{user}(t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
+            \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \cv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \cv = 
+            \fv_Q(\cv,\dot \cv) + \fv_{user}(t,\cv,\dot \cv)
     \ee
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
-    Note that the user functions $\fv_{user}(t,\qv,\dot \qv)$ and $\Mm_{user}(t,\qv,\dot \qv)$ may be empty (=0). 
+    Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
     
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
     %
@@ -2021,7 +2310,7 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     \be
       \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - d = 0
     \ee
-    The factor $d$ in velocity level equations is zero, or if parameters.velocityLevel = True, $d=l_\mathrm{off}$.
+    The factor $d$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $d=l_\mathrm{off}$.
     If velocity level constraints are active and the velocity level offsetUserFunction\_t $\mathrm{UF}_t$ is defined, $\dot \cv$ instead becomes ($t$ is current time)
     \be
       \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(t,l_\mathrm{off}) = 0
@@ -2059,6 +2348,112 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
 
 \end{lstlisting}
 
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorCoordinateVector}
+A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects LTG-lists to build the according coordinate mappings.\vspace{12pt}
+ \\{\bf Additional information for ObjectConnectorCoordinateVector}:
+\bi
+  \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
+  \item Requested marker type = \texttt{Coordinate}
+  \item {\bf Short name} for Python = {\bf CoordinateVectorConstraint}\ei
+\vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinateVector} with type = 'ConnectorCoordinateVector' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     constraints's unique name\\ \hline
+    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    scalingMarker0 &     NumpyMatrix &      &     Matrix[] &     linear scaling matrix for coordinate vector of marker 0; matrix provided in python numpy format\\ \hline
+    scalingMarker1 &     NumpyMatrix &      &     Matrix[] &     linear scaling matrix for coordinate vector of marker 1; matrix provided in python numpy format\\ \hline
+    offset &     NumpyVector &      &     [] &     offset added to constraint equation; only active, if no userFunction is defined\\ \hline
+    velocityLevel &     bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored\\ \hline
+    activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    visualization & VObjectConnectorCoordinateVector & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorCoordinateVector has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     RGBA connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Detailed information on ObjectConnectorCoordinateVector}:
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{markerNumbers}{$[m0,m1]\tp$}{}
+\rowTable{scalingMarker0}{$\Xm_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$}{}
+\rowTable{scalingMarker1}{$\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$}{}
+\rowTable{offset}{$\vv_\mathrm{off} \in \Rcal^{n_{ae}}$}{}
+\finishTable
+{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
+\startTable{output parameter}{symbol}{description}
+\rowTable{Displacement}{$\Delta \qv$}{relative scalar displacement of marker coordinates, not including scaling matrices}
+\rowTable{Velocity}{$\Delta \vv$}{difference of scalar marker velocity coordinates, not including scaling matrices}
+\rowTable{ConstraintEquation}{$\cv$}{(residuum of) constraint equations}
+\rowTable{Force}{$\tlambda$}{constraint force vector (vector of Lagrange multipliers), resulting from action of constraint equations}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 coordinate vector}{$\qv_{m0} \in \Rcal^{n_{q_{m0}}}$}{coordinate vector provided by marker $m0$; depending on the marker, the coordinates may or may not include reference coordinates}
+    \rowTable{marker m1 coordinate vector}{$\qv_{m1} \in \Rcal^{n_{q_{m1}}}$}{coordinate vector provided by marker $m1$; depending on the marker, the coordinates may or may not include reference coordinates}
+    \rowTable{marker m0 velocity coordinate vector}{$\dot \qv_{m0} \in \Rcal^{n_{q_{m0}}}$}{velocity coordinate vector provided by marker $m0$}
+    \rowTable{marker m1 velocity coordinate vector}{$\dot \qv_{m1} \in \Rcal^{n_{q_{m1}}}$}{velocity coordinate vector provided by marker $m1$}
+    \rowTable{number of algebraic equations}{$n_{ae}$}{number of algebraic equations must be same as number of rows in $\Xm_{m0}$ and $\Xm_{m1}$}
+    %
+    \rowTable{difference of coordinates}{$\Delta \qv = \qv_{m1} - \qv_{m0}$}{Displacement between marker m0 to marker m1 coordinates}
+    \rowTable{difference of velocity coordinates}{$\Delta \vv= \dot \qv_{m1} - \dot \qv_{m0}$}{}
+    \finishTable
+    %
+    \noindent {\bf Remarks}:
+    The number of algebraic equations depends on the number of rows in $\Xm_{m0}$, which must be same as the 
+    number of rows in $\Xm_{m1}$. 
+    The number of columns in $\Xm_{m0}$ must agree with the length of the coordinate vector
+    $\qv_{m0}$ and the number of columns in $\Xm_{m1}$ must agree with the length of the coordinate vector
+    $\qv_{m1}$. If one marker $k$ is a ground marker (node/object), the length of $\qv_{m,k}$ is zero and also the according matrix
+    $\Xm_{m,k}$ has zero size and will not be considered in the computation of the constraint equations.
+    
+    If the number of rows of $\Xm_{m0}$ plus the number of rows of $\Xm_{m1}$ is
+    larger than the total number of coordinates ( $\qv_{m0}$ and  $\qv_{m1}$), the algebraic equations are 
+    underdetermined and probably not solvable.
+    
+    \noindent {\bf Algebraic constraint equations}:
+    If \texttt{activeConnector = True}, the index 3 algebraic equations
+    \be
+      \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} - \Xm_{m0} \qv_{m0} - \vv_\mathrm{off} = 0
+    \ee
+    If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
+    \be
+      \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} - \Xm_{m0} \qv_{m0} -  \mathrm{UF}(t,\vv_\mathrm{off}) = 0
+    \ee
+    The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
+    \be
+      \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} - \Xm_{m0} \dot \qv_{m0} - \dv_\mathrm{off} = 0
+    \ee
+    The vector $dv$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $\dv=\vv_\mathrm{off}$.
+
+    If velocity level constraints are active and the velocity level \texttt{offsetUserFunction\_t} $\mathrm{UF}_t$ is defined, 
+    $\dot \cv$ instead becomes ($t$ is current time)
+    \be
+      \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} - \Xm_{m0} \dot \qv_{m0} - \mathrm{UF}_t(t,\vv_\mathrm{off}) = 0
+    \ee
+    Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
+    The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
+    it is recommended that $\mathrm{UF}$ and $\mathrm{UF}_t$ does not include initial accelerations.
+
+    If \texttt{activeConnector = False}, the (index 1) algebraic equation reads for ALL cases:
+    \be
+      \cv(\tlambda) = \tlambda = 0
+    \ee
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -2121,8 +2516,8 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
     nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
-    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per length of the beam axis; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
-    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per length of the beam axis; acts in contact normal direction only upon penetration\\ \hline
+    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
+    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration\\ \hline
     circleRadius &     UReal &      &     0. &     radius [SI:m] of contact circle\\ \hline
     offset &     UReal &      &     0. &     offset [SI:m] of contact, e.g. to include thickness of cable element\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
@@ -2163,8 +2558,8 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
     nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData with 3 $\times$ nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
-    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per length of the beam axis; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
-    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per length of the beam axis; acts in contact normal direction only upon penetration\\ \hline
+    contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
+    contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration\\ \hline
     frictionVelocityPenalty &     UReal &      &     0. &     velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area\\ \hline
     frictionStiffness &     UReal &      &     0. &     CURRENTLY NOT IMPLEMENTED: displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area\\ \hline
     frictionCoefficient &     UReal &      &     0. &     friction coefficient $\mu$ [SI: 1]; tangential specific friction forces (per length) $f_T$ must fulfill the condition $f_T \le \mu f_N$\\ \hline
@@ -3020,6 +3415,38 @@ The item VMarkerNodeCoordinate has the following parameters:\vspace{-1cm}\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerNodeRotationCoordinate}
+A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level\vspace{12pt}
+ \\{\bf Additional information for MarkerNodeRotationCoordinate}:
+\bi
+  \item The Marker has the following types = \texttt{Node}, \texttt{Coordinate}
+\ei
+\vspace{12pt} \noindent The item {\bf MarkerNodeRotationCoordinate} with type = 'NodeRotationCoordinate' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     marker's unique name\\ \hline
+    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    rotationCoordinate &     Index &      &     MAXINT &     rotation coordinate: 0=x, 1=y, 2=z\\ \hline
+    visualization & VMarkerNodeRotationCoordinate & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerNodeRotationCoordinate has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+	  \end{longtable}
+	\end{center}
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{MarkerSuperElementPosition}
 A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is inefficient!!!). The marker acts on the mesh nodes, not on the underlying nodes of the object. For a list of $n$ mesh node numbers, referencing to mesh node points $\LU{b}{\pv_i}$ and weights $w_i$, the body-fixed marker position $\LU{b}{\pv_m}$ results in $\LU{b}{\pv_m} = \sum_{i=0}^{n-1}w_i \cdot \LU{b}{\pv_i}$. EXAMPLE for single node marker on body 4, mesh node 10: MarkerSuperElementPosition(bodyNumber=4, meshNodeNumber=[10], weightingFactors=[1])\vspace{12pt}
  \\{\bf Additional information for MarkerSuperElementPosition}:
@@ -3049,6 +3476,37 @@ The item VMarkerSuperElementPosition has the following parameters:\vspace{-1cm}\
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     showMarkerNodes &     bool &      &     True &     set true, if all nodes are shown (similar to marker, but with less intensity)\\ \hline
+	  \end{longtable}
+	\end{center}
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerObjectODE2Coordinates}
+A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.\vspace{12pt}
+ \\{\bf Additional information for MarkerObjectODE2Coordinates}:
+\bi
+  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Coordinate}
+\ei
+\vspace{12pt} \noindent The item {\bf MarkerObjectODE2Coordinates} with type = 'ObjectODE2Coordinates' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     marker's unique name\\ \hline
+    objectNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    visualization & VMarkerObjectODE2Coordinates & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerObjectODE2Coordinates has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
 	  \end{longtable}
 	\end{center}
 \newpage

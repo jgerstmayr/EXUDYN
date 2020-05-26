@@ -205,6 +205,29 @@ class NodeRigidBody2D:
 #add typedef for short usage:
 Rigid2D = NodeRigidBody2D
 
+class VNode1D:
+    def __init__(self, show = False):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class Node1D:
+    def __init__(self, name = '', referenceCoordinates = [0.], initialCoordinates = [0.], initialVelocities = [0.], visualization = {'show': False}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialCoordinates = initialCoordinates
+        self.initialVelocities = initialVelocities
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', '1D'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+
 class VNodePoint2DSlope1:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -367,6 +390,68 @@ class ObjectMassPoint2D:
 #add typedef for short usage:
 MassPoint2D = ObjectMassPoint2D
 
+class VObjectMass1D:
+    def __init__(self, show = True, graphicsData = []):
+        self.show = show
+        self.graphicsData = graphicsData
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'graphicsData', self.graphicsData
+
+class ObjectMass1D:
+    def __init__(self, name = '', physicsMass = 0., nodeNumber = -1, referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
+        self.name = name
+        self.physicsMass = physicsMass
+        self.nodeNumber = nodeNumber
+        self.referencePosition = referencePosition
+        self.referenceRotation = referenceRotation
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'Mass1D'
+        yield 'name', self.name
+        yield 'physicsMass', self.physicsMass
+        yield 'nodeNumber', self.nodeNumber
+        yield 'referencePosition', self.referencePosition
+        yield 'referenceRotation', self.referenceRotation
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+
+#add typedef for short usage:
+Mass1D = ObjectMass1D
+
+class VObjectRotationalMass1D:
+    def __init__(self, show = True, graphicsData = []):
+        self.show = show
+        self.graphicsData = graphicsData
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'graphicsData', self.graphicsData
+
+class ObjectRotationalMass1D:
+    def __init__(self, name = '', physicsInertia = 0., nodeNumber = -1, referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
+        self.name = name
+        self.physicsInertia = physicsInertia
+        self.nodeNumber = nodeNumber
+        self.referencePosition = referencePosition
+        self.referenceRotation = referenceRotation
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'RotationalMass1D'
+        yield 'name', self.name
+        yield 'physicsInertia', self.physicsInertia
+        yield 'nodeNumber', self.nodeNumber
+        yield 'referencePosition', self.referencePosition
+        yield 'referenceRotation', self.referenceRotation
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+
+#add typedef for short usage:
+Rotor1D = ObjectRotationalMass1D
+
 class VObjectRigidBody:
     def __init__(self, show = True, graphicsData = []):
         self.show = show
@@ -441,7 +526,7 @@ class VObjectGenericODE2:
         yield 'showNodes', self.showNodes
 
 class ObjectGenericODE2:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, coordinateIndexPerNode = [], useFirstNodeAsReferenceFrame = False, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, coordinateIndexPerNode = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrix = massMatrix
@@ -451,7 +536,6 @@ class ObjectGenericODE2:
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
         self.coordinateIndexPerNode = coordinateIndexPerNode
-        self.useFirstNodeAsReferenceFrame = useFirstNodeAsReferenceFrame
         self.visualization = visualization
 
     def __iter__(self):
@@ -465,7 +549,6 @@ class ObjectGenericODE2:
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'coordinateIndexPerNode', self.coordinateIndexPerNode
-        yield 'useFirstNodeAsReferenceFrame', self.useFirstNodeAsReferenceFrame
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
@@ -948,6 +1031,41 @@ class ObjectConnectorCoordinate:
 #add typedef for short usage:
 CoordinateConstraint = ObjectConnectorCoordinate
 
+class VObjectConnectorCoordinateVector:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+class ObjectConnectorCoordinateVector:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], scalingMarker0 = [], scalingMarker1 = [], offset = [], velocityLevel = False, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.scalingMarker0 = scalingMarker0
+        self.scalingMarker1 = scalingMarker1
+        self.offset = offset
+        self.velocityLevel = velocityLevel
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorCoordinateVector'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'scalingMarker0', self.scalingMarker0
+        yield 'scalingMarker1', self.scalingMarker1
+        yield 'offset', self.offset
+        yield 'velocityLevel', self.velocityLevel
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+CoordinateVectorConstraint = ObjectConnectorCoordinateVector
+
 class VObjectContactCoordinate:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1412,6 +1530,27 @@ class MarkerNodeCoordinate:
         yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
+class VMarkerNodeRotationCoordinate:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class MarkerNodeRotationCoordinate:
+    def __init__(self, name = '', nodeNumber = -1, rotationCoordinate = -1, visualization = {'show': True}):
+        self.name = name
+        self.nodeNumber = nodeNumber
+        self.rotationCoordinate = rotationCoordinate
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'NodeRotationCoordinate'
+        yield 'name', self.name
+        yield 'nodeNumber', self.nodeNumber
+        yield 'rotationCoordinate', self.rotationCoordinate
+        yield 'Vshow', dict(self.visualization)["show"]
+
 class VMarkerSuperElementPosition:
     def __init__(self, show = True, showMarkerNodes = True):
         self.show = show
@@ -1437,6 +1576,25 @@ class MarkerSuperElementPosition:
         yield 'weightingFactors', self.weightingFactors
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
+
+class VMarkerObjectODE2Coordinates:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class MarkerObjectODE2Coordinates:
+    def __init__(self, name = '', objectNumber = -1, visualization = {'show': True}):
+        self.name = name
+        self.objectNumber = objectNumber
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'ObjectODE2Coordinates'
+        yield 'name', self.name
+        yield 'objectNumber', self.objectNumber
+        yield 'Vshow', dict(self.visualization)["show"]
 
 class VMarkerBodyCable2DShape:
     def __init__(self, show = True):

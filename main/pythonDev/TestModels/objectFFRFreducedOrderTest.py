@@ -177,8 +177,8 @@ simulationSettings.solutionSettings.sensorsWritePeriod = h
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionCMStest.txt"
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+#simulationSettings.displayStatistics = True
+#simulationSettings.displayComputationTime = True
 
 #create animation:
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
@@ -199,9 +199,8 @@ result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of ObjectFFRFreducedOrder=',result)
 
-exudynTestGlobals.testError = result - (0.535452257303538) #2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
-# solution changes, other values: 0.5354522573039218
-exudynTestGlobals.testError *=0.1 #make error smaller, as there are small changes for different runs (scipy?)
+exudynTestGlobals.testError = result - (0.5354530110580623) #2020-05-26(added EP-constraint): 0.5354530110580623; 2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
+exudynTestGlobals.testError *=0.1 #make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
 
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()

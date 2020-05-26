@@ -369,6 +369,29 @@ SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const Sl
 	return result;
 }
 
+//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
+template<typename T>
+SlimVectorBase<T, 3> operator*(const SlimVectorBase<T, 3>& vector, const ConstSizeMatrixBase<T, 9>& matrix)
+{
+	CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
+		"operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): Size mismatch");
+	CHECKandTHROW((matrix.NumberOfColumns() == 3),
+		"operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): matrix does not fit");
+
+	SlimVectorBase<T, 3> result; //no initialization for SlimVector
+
+	for (Index i = 0; i < result.NumberOfItems(); i++)
+	{
+		T resultRow = 0;
+		for (Index j = 0; j < vector.NumberOfItems(); j++)
+		{
+			resultRow += vector[j] * matrix(j, i);
+		}
+		result[i] = resultRow;
+	}
+	return result;
+}
+
 
 template<Index dataSize>
 using ConstSizeMatrix = ConstSizeMatrixBase<Real,dataSize>;

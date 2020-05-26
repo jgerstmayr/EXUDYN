@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 18 14:27:48 2020
+
+@author: c8501049
+"""
+
+import numpy as np
+from scipy.sparse import linalg
+import scipy as sp
+
+import sys
+sys.path.append('../../bin/WorkingRelease')
+sys.path.append('TestModels/testData/')
+sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
+
+import exudyn as exu
+from itemInterface import *
+from exudynUtilities import *
+from exudynFEM import *
+
+numberOfModes = 18
+useSparseSolverRoutine = False
+
+errorResult = 0
+
+testDataDir = "TestModels/testData/"
+if exudynTestGlobals.useGraphics:
+    testDataDir = "testData/"
+
+###############################################################################
+# Ansys - lumped mass matrix formulation - Sparse Matrix - MMF format
+###############################################################################
+
+#read finite element model
+
+for testNumber in range(2):
+    if testNumber == 1:
+        useSparseSolverRoutine = True
+    
+    fem = FEMinterface()
+    #print("read matrices ...")
+    fem.ReadMassMatrixFromAnsys(testDataDir + 'rotorAnsysMassMatrixSparse.txt')
+    fem.ReadStiffnessMatrixFromAnsys(testDataDir + 'rotorAnsysStiffnessMatrixSparse.txt')
+    
+    #print("compute eigenmodes ...")
+    fem.ComputeEigenmodes(numberOfModes, useSparseSolver = useSparseSolverRoutine)
+    
+    if exudynTestGlobals.useGraphics:
+        print('natural frequencies from Ansys model (Lumped Mass Matrix, MMF-Format)', fem.GetEigenFrequenciesHz()[0:numberOfModes])
+    
+    if not useSparseSolverRoutine:
+        f6 = fem.GetEigenFrequenciesHz()[6] - 104.63701055079804 #reference solution
+    else:
+        #compare with dense matrix solution; 
+        #due to random initialization, the results change with every computation ==> approx. 1e-11 repeatability
+        f6 = fem.GetEigenFrequenciesHz()[6] - 104.63701055079804 
+        f6*=1e-6
+    print('natural frequencies from Ansys model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
+    errorResult += f6
+    
+    ###############################################################################
+    # Abaqus
+    ###############################################################################
+    
+    #read finite element model
+    fem = FEMinterface()
+    #print("read matrices ...")
+    fem.ReadMassMatrixFromAbaqus(testDataDir + 'rotorDiscTestMASS1.mtx')
+    fem.ReadStiffnessMatrixFromAbaqus(testDataDir + 'rotorDiscTestSTIF1.mtx')
+    fem.ScaleStiffnessMatrix(1e-2) #in Ansys, the stiffness matrix is already scaled!
+        
+    #print("compute eigenmodes ...")
+    fem.ComputeEigenmodes(numberOfModes, useSparseSolver = useSparseSolverRoutine)
+
+    if exudynTestGlobals.useGraphics:
+        print('natural frequencies from Abaqus model (Lumped Mass Matrix)',fem.GetEigenFrequenciesHz()[0:numberOfModes])
+    
+    if not useSparseSolverRoutine:
+        f6 = fem.GetEigenFrequenciesHz()[6] - 104.6370132606291 #reference solution
+    else:
+        #compare with dense matrix solution; 
+        #due to random initialization, the results change with every computation ==> approx. 1e-11 repeatability
+        f6 = fem.GetEigenFrequenciesHz()[6] - 104.6370132606291 
+        f6*=1e-6
+    print('natural frequencies from Abaqus model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
+    errorResult += f6
+
+if abs(errorResult) < 1e-15:
+    errorResult = 0 #due to randomized sparse solver results, take this treshold!
+    
+exu.Print('solution of compareAbaqusAnsysRotorEigenfrequencies =',errorResult)
+exudynTestGlobals.testError = errorResult #2020-05-22: 0
+
+
+

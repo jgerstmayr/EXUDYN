@@ -36,7 +36,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 			}
 
 
-			algebraicEquations[0] = markerData.GetMarkerData(1).value * parameters.factorValue1 - markerData.GetMarkerData(0).value - offset;
+			algebraicEquations[0] = markerData.GetMarkerData(1).vectorValue[0] * parameters.factorValue1 - markerData.GetMarkerData(0).vectorValue[0] - offset;
 		}
 		else
 		{
@@ -44,14 +44,16 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 				"CObjectConnectorCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
 			algebraicEquations.SetNumberOfItems(1);
-			algebraicEquations[0] = markerData.GetMarkerData(1).value_t * parameters.factorValue1 - markerData.GetMarkerData(0).value_t; //this is the index-reduced equation: does not have offset!!!
+			algebraicEquations[0] = markerData.GetMarkerData(1).vectorValue_t[0] * parameters.factorValue1 - markerData.GetMarkerData(0).vectorValue_t[0]; //this is the index-reduced equation: does not have offset!!!
 			
 			if (parameters.offsetUserFunction_t)
 			{
+				Real offset;
 				UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 				{
-					algebraicEquations[0] -= parameters.offsetUserFunction_t(t, parameters.offset);
+					offset = parameters.offsetUserFunction_t(t, parameters.offset);
 				}, "ObjectConnectorCoordinate::offsetUserFunction_t");
+				algebraicEquations[0] -= offset;
 			}
 			else if (parameters.velocityLevel) { algebraicEquations[0] -= parameters.offset; }
 		}
@@ -123,8 +125,8 @@ JacobianType::Type CObjectConnectorCoordinate::GetAvailableJacobians() const
 //! provide according output variable in "value"
 void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	Real relPos = markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value;
-	Real relVel = markerData.GetMarkerData(1).value_t - markerData.GetMarkerData(0).value_t; //this is the index-reduced equation: does not have offset!!!
+	Real relPos = markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0];
+	Real relVel = markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]; //this is the index-reduced equation: does not have offset!!!
 
 	switch (variableType)
 	{

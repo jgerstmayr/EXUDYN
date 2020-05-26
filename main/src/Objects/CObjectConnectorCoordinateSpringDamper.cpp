@@ -20,10 +20,10 @@ void ComputeConnectorCoordinateSpringDamperProperties(const MarkerDataStructure&
 	Real& relPos, Real& relVel, Real& force)
 {
 	//relative position, spring length and inverse spring length
-	relPos = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value);
+	relPos = (markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0]);
 
 	//unit direction and relative velocity of spring-damper
-	relVel = (markerData.GetMarkerData(1).value_t - markerData.GetMarkerData(0).value_t);
+	relVel = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
 
 	force = 0; //default; necessary, e.g. if computed in GetOutputVariable...
 	if (parameters.activeConnector)

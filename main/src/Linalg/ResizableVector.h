@@ -91,6 +91,18 @@ public:
 		this->data = nullptr;
 	}
 
+	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	void CopyFrom(const VectorBase<T>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	{
+		CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
+		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(...): vectorPosition index mismatch");
+
+		for (Index i = 0; i < numberOfCopiedItems; i++)
+		{
+			(*this)[i + thisPosition] = vector[i + vectorPosition];
+		}
+	}
+
 	void CopyFrom(const VectorBase<T>& vector)
 	{
 		SetNumberOfItems(vector.NumberOfItems());

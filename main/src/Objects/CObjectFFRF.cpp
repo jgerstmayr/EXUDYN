@@ -258,7 +258,7 @@ void CObjectFFRF::InitializeObject()
 
 	//inertiaLocal = xRefTilde.T @ massMatrix @ xRefTilde
 	Matrix xRefTildeTM;
-	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(xRefTilde, xRefTildeTM); //PHItTM = PHIt^T * M
+	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(xRefTilde, xRefTildeTM);
 	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(xRefTildeTM, xRefTilde, physicsInertia);
 
 #ifdef CObjectFFRFInitializeObjectOutput
@@ -412,8 +412,8 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 	ode2Rhs.SetNumberOfItems(nODE2);
 	ode2Rhs.SetAll(0.);
 
-	tempCoordinates.SetNumberOfItems(nODE2);
-	tempCoordinates_t.SetNumberOfItems(nODE2);
+	//tempCoordinates.SetNumberOfItems(nODE2); //delete
+	//tempCoordinates_t.SetNumberOfItems(nODE2);
 	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
 
 	if (parameters.computeFFRFterms)
@@ -541,6 +541,113 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 	}
 
 }
+
+
+
+//! number of AE coordinates; depends on node
+Index CObjectFFRF::GetAlgebraicEquationsSize() const
+{
+	Index nAE = 0;
+	if (((Index)((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & (Index)Node::RotationEulerParameters) != 0) { nAE += 1; }
+	//if (parameters.constrainRigidBodyMotion) { nAE += 6; }
+	return nAE;
+}
+
+//! Compute algebraic equations part of rigid body
+void CObjectFFRF::ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2) const
+{
+	algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
+	Index offset = 0;
+
+	if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
+	{
+		offset = 1; //for Euler parameter constraint
+		if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
+		{
+			algebraicEquations.SetNumberOfItems(1);
+			if (!useIndex2)
+			{
+				//position level constraint:
+
+				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+				algebraicEquations[0] = ep * ep - 1.;
+			}
+			else
+			{
+				//velocity level constraint:
+				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+				LinkedDataVector ep_t = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters_t();
+
+				algebraicEquations[0] = 2. * (ep * ep_t);
+			}
+		}
+	}
+
+	//impossible now: object cannot have constraints without algebraic nodal variables:
+	//if (parameters.constrainRigidBodyMotion)
+	//{ 
+	//	Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+	//	Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+
+	//	LinkedDataVector gTrans(algebraicEquations, offset, ffrfNodeDim);
+	//	LinkedDataVector gRot(algebraicEquations, offset, (nODE2Rigid-ffrfNodeDim));
+	//	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
+
+	//	LinkedDataVector qf(tempCoordinates, nODE2Rigid, nODE2FF);
+	//	RigidBodyMath::ComputeSkewMatrix(referencePositions, tempRefPosSkew); //\tilde x_ref^T
+
+	//	EXUmath::MultMatrixVector(PHItTM, qf, gTrans);
+	//	parameters.massMatrixFF.MultMatrixVector(qf, tempVector); //tempVector =  M_ff * qf
+	//	EXUmath::MultMatrixTransposedVector(tempRefPosSkew, tempVector, gRot); //\tilde x_ref^T * M_ff * qf
+	//}
+
+}
+
+//! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
+void CObjectFFRF::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const
+{
+	//Index offset = 0;
+	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
+	{
+		Index nODE2 = GetODE2Size(); //total number of coordinates
+		Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+		Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+
+		jacobian.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
+		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+		jacobian.SetAll(0.); //many rigid body entries zero ==> for simplicity
+
+		if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
+		{
+			//offset = 1;
+			ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
+
+			//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
+			for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); i++)
+			{
+				jacobian(0, ffrfNodeDim + i) = 2.*ep[i];
+			}
+		}
+	}
+		//impossible now: object cannot have constraints without algebraic nodal variables:
+		//else if (parameters.constrainRigidBodyMotion)
+		//{
+		//	jacobian.SetSubmatrix(PHItTM, offset, nODE2Rigid); //for constraints on translational rigid body motion
+
+		//	RigidBodyMath::ComputeSkewMatrix(referencePositions, tempRefPosSkew); //\tilde x_ref
+		//	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(tempRefPosSkew, tempMatrix); //fill matrix directly into jacobian; jacSub = \tilde x_ref^T M_ff
+
+		//	jacobian.SetSubmatrix(tempMatrix, offset + ffrfNodeDim, nODE2Rigid); //ffrfNodeDim also used for 3 rigid body rotation modes
+		//}
+	else
+	{
+		jacobian.SetNumberOfRowsAndColumns(0, 0);
+		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+	}
+}
+
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectFFRF::GetAccessFunctionTypes() const

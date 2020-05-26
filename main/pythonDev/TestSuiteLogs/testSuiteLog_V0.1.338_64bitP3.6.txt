@@ -1,0 +1,122 @@
+
++++++++++++++++++++++++++++++++++++++++++++ 
++++++        EXUDYN TEST SUITE        +++++ 
++++++++++++++++++++++++++++++++++++++++++++ 
+EXUDYN version      = 0.1.338 
+EXUDYN build date   = 2020-05-25 18:45:50 
+platform            = 64bit 
+WorkingRelease path =  C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64 
+python version      = 3.6.5 
+test tolerance      =  5e-11 
+testsuite date (now)= 2020-05-25 18:51:09 
++++++++++++++++++++++++++++++++++++++++++++ 
+
+*********************** 
+  RUN MODEL UNIT TESTS  
+***********************
+ 
+
+
+****************
+ GraphicsDataTest:[TEST 1]
+****************
+ 
+error in GraphicsDataTest =  0 
+
+
+****************
+ ANCFCable2DBendingTest:[TEST 2]
+****************
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.338 solver: implicit second order time integration
+STEP1000, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 2
+solver finished after 0.0438496 seconds.
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 2000
+total number of Newton Jacobians:  2000
+sol dynamic= -1.0391620828192676 -1.4443521331339881 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.338 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 15
+solver finished after 0.0003423 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 15
+total number of Newton Jacobians:  15
+sol static (standardTol)= -0.3622447299987188 -0.9941447593196007 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.338 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 16
+solver finished after 0.0005718 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 16
+total number of Newton Jacobians:  16
+sol static (tol=1e-14)= -0.3622447298904951 -0.9941447587249616 
+error in ANCFCable2DBendingTest =  0.0 
+
+
+****************
+ SpringDamperMesh:[TEST 3]
+****************
+ 
+dynamic tip displacement (y)= -0.6383785907891227 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.338 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
+solver finished after 0.0019322 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 4
+total number of Newton Jacobians:  4
+static tip displacement (y)= -0.44056224799446486 
+error in SpringDamperMesh =  0.0 
+
+
+****************
+ MathematicalPendulumTest:[TEST 4]
+****************
+ 
+solution mathematicalPendulum Constraint= -0.0714264053422459 
+solution mathematicalPendulum SpringDamper= -0.07477852383438113 
+error in MathematicalPendulumTest =  0.0 
+
+
+****************
+ RigidPendulumTest:[TEST 5]
+****************
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V0.1.338 solver: implicit second order time integration
+STEP1000, t = 0.5 sec, timeToGo = 0 sec, Nit/step = 6.549
+solver finished after 0.0289048 seconds.
+solution rigid pendulum= -0.4979662392962128 
+error in RigidPendulumTest =  3.5915714846623814e-14 
+
+
+****************
+ SliderCrank2DTest:[TEST 6]
+****************
+ 
+solution SliderCrankIndex3  = 1.3532984427022121 
+error errorSliderCrankIndex3= 5.906386491005833e-14 
+solution SliderCrankIndex2  = 1.355041330833312 
+error errorSliderCrankIndex2= 8.881784197001252e-16 
+error in SliderCrank2DTest =  5.995204332975845e-14 
+
+
+****************
+ SlidingJoint2DTest:[TEST 7]
+****************
+ 
+load f=0.012937500000000003 
+EI=0.01725 
+
+=========================================
+User ERROR [file 'TestModels\modelUnitTests.py', line 600]: 
+Object 8 contains inconsistent data:
+ObjectJointSliding2D: Marker 1 must be of type = 'Cable2DCoordinates'
+=========================================
+

@@ -76,9 +76,9 @@ bool MainObjectJointALEMoving2D::CheckPreAssembleConsistency(const MainSystem& m
 		return false;
 	}
 
-	if (mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName() != "Cable2DCoordinates")
+	if (mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName() != "BodyCable2DCoordinates")
 	{
-		errorString = STDstring("ObjectJointALEMoving2D: Marker 1 must be of type = 'Cable2DCoordinates'");
+		errorString = STDstring("ObjectJointALEMoving2D: Marker 1 must be of type = 'BodyCable2DCoordinates'");
 		return false;
 	}
 
@@ -127,7 +127,7 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 			LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
 			LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
 
-			Real L = markerData.GetMarkerData(1).value; //kind of hack ...
+			Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
 			Real slidingCoordinate = ComputeLocalSlidingCoordinate();
 
 			Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
@@ -171,7 +171,7 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 			LinkedDataVector qNode0_t(markerData.GetMarkerData(1).vectorValue_t, 0, ns); //link to velocity coordinates
 			LinkedDataVector qNode1_t(markerData.GetMarkerData(1).vectorValue_t, ns, ns); //link to velocity coordinates
 
-			Real L = markerData.GetMarkerData(1).value; //kind of hack ...
+			Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
 			Real slidingCoordinate = ComputeLocalSlidingCoordinate();
 			Real slidingCoordinate_t = ComputeLocalSlidingCoordinate_t();
 
@@ -224,7 +224,7 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
 		LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
 
-		Real L = markerData.GetMarkerData(1).value; //kind of hack ...
+		Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
 		Real slidingCoordinate = ComputeLocalSlidingCoordinate();
 
 		Vector4D SV = CObjectANCFCable2DBase::ComputeShapeFunctions(slidingCoordinate, L);
@@ -330,7 +330,7 @@ Real CObjectJointALEMoving2D::PostNewtonStep(const MarkerDataStructure& markerDa
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
 
-	Real L = markerDataCurrent.GetMarkerData(1).value; //kind of hack ...
+	Real L = markerDataCurrent.GetMarkerData(1).GetHelper(); //kind of hack ...
 	const Index slidingCoordinateIndex = 2;
 
 	LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...

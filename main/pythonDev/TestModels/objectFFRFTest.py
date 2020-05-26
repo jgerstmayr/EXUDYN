@@ -57,15 +57,15 @@ elements = result[1]['elements']-1 #convert to zero base
 #print("elements=", elements)
 #print("nodes=", nodes)
 
-print("nodes size=", nodes.shape)
-print("elements size=", elements.shape)
+exu.Print("nodes size=", nodes.shape)
+exu.Print("elements size=", elements.shape)
 
 minZ = min(nodes[:,2])
 maxZ = max(nodes[:,2])
 midZ = 0.5*(minZ+maxZ)
 
-print("min z =", minZ)
-print("max z =", maxZ)
+#exu.Print("min z =", minZ)
+#exu.Print("max z =", maxZ)
 
 #nodes[:,2] -=0.05 #offset of z-coordinate, included in Abaqus .inp file
 
@@ -104,7 +104,7 @@ for i in range(len(nodes)):
     #    nForce = i
 
 
-print("nLeft=", nLeft, ", nRight=", nRight, ", nMid=", nMid, ", nForce=", nForce)
+#exu.Print("nLeft=", nLeft, ", nRight=", nRight, ", nMid=", nMid, ", nForce=", nForce)
 
 #posX=0.15 #+/- x coordinate of nodes
 posLeft = nodes[nLeft]
@@ -112,7 +112,7 @@ posRight = nodes[nRight]
 
 nNodes = len(nodes)
 nODE2 = nNodes*3
-print("nNodes=", nNodes, ", nODE2=", nODE2)
+exu.Print("nNodes=", nNodes, ", nODE2=", nODE2)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 calcEig = True
@@ -125,7 +125,7 @@ if calcEig:
     listEig = []
     for i in range(18):
         listEig += [np.sqrt(ev[i])/(2*np.pi)]
-    print("eigenvalues =", listEig)
+    exu.Print("eigenvalues =", listEig)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #eigenvalues of constrained system:
@@ -164,7 +164,7 @@ if calcEigConstrained:
     listEig = []
     for i in range(18):
         listEig += [np.sqrt(ev[i])/(2*np.pi)]
-    print("eigenvalues of constrained system (Hz)=", listEig)
+    exu.Print("eigenvalues of constrained system (Hz)=", listEig)
 
 
 #compute (3 x 3*n) skew matrix from (3*n) vector
@@ -233,21 +233,21 @@ if useFFRF:
 
     inertiaLocal = xRefTilde.T @ massMatrix @ xRefTilde
     if False:
-        print("Phit=", Phit[0:6,:])
-        print("PhitTM=", PhitTM[0:3,0:6])
-        print("xRef=", xRef[0:6])
-        print("xRefTilde=", xRefTilde[0:6,:])
+        exu.Print("Phit=", Phit[0:6,:])
+        exu.Print("PhitTM=", PhitTM[0:3,0:6])
+        exu.Print("xRef=", xRef[0:6])
+        exu.Print("xRefTilde=", xRefTilde[0:6,:])
 
-        print("python inertiaLocal=", inertiaLocal)
-        print("python totalMass=", totalMass)
-        print("python Mtt=", Mtt)
+        exu.Print("python inertiaLocal=", inertiaLocal)
+        exu.Print("python totalMass=", totalMass)
+        exu.Print("python Mtt=", Mtt)
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #compute gravity term
     g=np.array([0,-9.81,0]) #gravity vector
     fGravRigid = list(totalMass*g)+[0,0,0,0]
     #fGrav = np.array(fGravRigid + list((massMatrix @ Phit) @ g) ) #only local vector, without rotation
-    #print("fGrav=",fGrav)
+    #exu.Print("fGrav=",fGrav)
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -258,7 +258,7 @@ rect = [-0.3,-0.1,0.3,0.1] #xmin,ymin,xmax,ymax
 background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
 oGround = mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=p0))
-print("goundMarker=", mGround)
+#exu.Print("goundMarker=", mGround)
 
 nodeList = []
 nRB = -1
@@ -287,7 +287,7 @@ for node in nodes:
 
 
 
-print("nForce=", nForce)
+#exu.Print("nForce=", nForce)
 
 #conventional user function:
 def UFforce(t, q, q_t):
@@ -360,13 +360,13 @@ def UFmassGenericODE2(t, q, q_t):
     #Mrr:
     Mnew[dim3D:dim3D+nODE2rot, dim3D:dim3D+nODE2rot] = -Mrf @ rfTilde @ G   #G.T @ rfTilde.T @ massMatrix @ rfTilde @ G
 
-    #print(np.linalg.norm(rF))
+    #exu.Print(np.linalg.norm(rF))
     #omega3D = G @ q_t[dim3D:nODE2rigid]
-    #print(omega3D)
+    #exu.Print(omega3D)
 
-    #print("Mtt Mtr Mtf=",Mnew[0:3,0:10].round(5))
-    #print("Mrr=",Mnew[3:7,3:7].round(5))
-    #print("Mff=",Mnew[7:10,7:13].round(5))
+    #exu.Print("Mtt Mtr Mtf=",Mnew[0:3,0:10].round(5))
+    #exu.Print("Mrr=",Mnew[3:7,3:7].round(5))
+    #exu.Print("Mff=",Mnew[7:10,7:13].round(5))
     #Mnew[:,:] = 0 #for testing
     return Mnew
 
@@ -376,8 +376,8 @@ trigList = []
 for element in elements:
     trigList += ConvertHexToTrigs(element)
 trigList = np.array(trigList) 
-#print("trig list=", trigList)
-print("trig list size=", trigList.shape)
+#exu.Print("trig list=", trigList)
+#exu.Print("trig list size=", trigList.shape)
 
 stiffnessMatrixFF = exu.MatrixContainer()
 stiffnessMatrixFF.SetWithDenseMatrix(stiffnessMatrix,useDenseMatrix=False)
@@ -418,7 +418,7 @@ if nODE2rot == 4: #for euler parameters --> add body to constrain EP
     nReferenceFrame = mbs.AddObject(ObjectRigidBody(nodeNumber=nRB, physicsMass=epsMass, physicsInertia=[epsMass,epsMass,epsMass,0,0,0])) 
 
 mRB = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nRB))
-print("rigidNodeMarker=", mRB)
+#exu.Print("rigidNodeMarker=", mRB)
 
 
 #mbs.AddLoad(Torque(markerNumber=mRB, loadVector=[0,0,100*2*pi])) #add drive for reference frame
@@ -438,7 +438,7 @@ mGroundRight = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGroundRight, coo
 mGroundPosLeft = mbs.AddMarker(MarkerNodePosition(nodeNumber = nGroundLeft)) #Ground node ==> no action
 mGroundPosRight = mbs.AddMarker(MarkerNodePosition(nodeNumber = nGroundRight)) #Ground node ==> no action
 
-print("ground Node/Coordinate Markers =", mGroundLeft, "...", mGroundPosRight)
+#exu.Print("ground Node/Coordinate Markers =", mGroundLeft, "...", mGroundPosRight)
 
 #++++++++++++++++++++++++++++++++++++++++++
 #find nodes at left and right surface:
@@ -452,31 +452,31 @@ for i in range(len(nodes)):
     elif abs(n[2] - maxZ) < 1e-6:
         nodeListRight += [i+useFFRF]
 
-print("nodeListLeft =",nodeListLeft)
-print("nodeListRight =",nodeListRight)
+#exu.Print("nodeListLeft =",nodeListLeft)
+#exu.Print("nodeListRight =",nodeListRight)
 
 lenLeft = len(nodeListLeft)
 lenRight = len(nodeListRight)
 weightsLeft = np.array((1./lenLeft)*np.ones(lenLeft))
 weightsRight = np.array((1./lenRight)*np.ones(lenRight))
 
-print("nodeLeft =",nLeft)
-print("nodeRight =",nRight)
+#exu.Print("nodeLeft =",nLeft)
+#exu.Print("nodeRight =",nRight)
 
 #lock FFRF reference frame:
 for i in range(3):
     mLeft = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nLeft, coordinate=i))
-    print("mLeftCoord=", mLeft)
+#    exu.Print("mLeftCoord=", mLeft)
 
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundLeft,mLeft]))
     if i != 2: #exclude double constraint in z-direction (axis)
         mRight = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nRight, coordinate=i))
-        print("mRightCoord=", mRight)
+#        exu.Print("mRightCoord=", mRight)
         mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundRight,mRight]))
 
 #lock rotation (also needed in FFRF):
 mTopRight = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nTopMid, coordinate=0)) #x-coordinate of node with y-max
-print("mTopRight=", mTopRight)
+#exu.Print("mTopRight=", mTopRight)
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundRight,mTopRight]))
 
 addSupports = True
@@ -554,13 +554,13 @@ mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid-1,
 #                         fileName=fileDir+'jointRightDisplacement'+modeNames[testMode]+'.txt', 
 #                         outputVariableType = exu.OutputVariableType.Displacement))
 
-#print("nMidPos =", mbs.GetNode(nMid)['referenceCoordinates'])
+#exu.Print("nMidPos =", mbs.GetNode(nMid)['referenceCoordinates'])
 
-#print(mbs)
+#exu.Print(mbs)
 mbs.Assemble()
 
-#print("ltg GenericODE2 left =", mbs.systemData.GetObjectLTGODE2(oSJleft))
-#print("ltg GenericODE2 right=", mbs.systemData.GetObjectLTGODE2(oSJright))
+#exu.Print("ltg GenericODE2 left =", mbs.systemData.GetObjectLTGODE2(oSJleft))
+#exu.Print("ltg GenericODE2 right=", mbs.systemData.GetObjectLTGODE2(oSJright))
 
 simulationSettings = exu.SimulationSettings()
 
@@ -622,7 +622,7 @@ SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', comments='#', delimiter=',')
 result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
-exu.Print('solution of ObjectFFRFreducedOrder=',result)
+exu.Print('solution of ObjectFFRF=',result)
 
 exudynTestGlobals.testError = result - (0.006445369560936511) #2020-05-17 (tEnd=0.001, h=1e-4): 0.006445369560936511
 

@@ -61,14 +61,14 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 		}
 	}
 
-	if (cObject->GetParameters().useFirstNodeAsReferenceFrame)
-	{
-		if (!EXUstd::IsOfType(cObject->GetCNode(0)->GetType(), (Node::Type)(Node::RigidBody)))
-		{
-			errorString = "ObjectGenericODE2: local node 0 must be of type 'Node.RigidBody' because useFirstNodeAsReferenceFrame = True";
-			return false;
-		}
-	}
+	//if (cObject->GetParameters().useFirstNodeAsReferenceFrame)
+	//{
+	//	if (!EXUstd::IsOfType(cObject->GetCNode(0)->GetType(), (Node::Type)(Node::RigidBody)))
+	//	{
+	//		errorString = "ObjectGenericODE2: local node 0 must be of type 'Node.RigidBody' because useFirstNodeAsReferenceFrame = True";
+	//		return false;
+	//	}
+	//}
 
 
 	//now check size of vectors and matrices
@@ -431,14 +431,14 @@ OutputVariableType CObjectGenericODE2::GetOutputVariableTypesSuperElement(Index 
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableTypesSuperElement: meshNodeNumber out of range ");
 
-	return GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)->GetOutputVariableTypes();
+	return GetCNode(meshNodeNumber)->GetOutputVariableTypes();
 }
 
 //! get extended output variables for multi-nodal objects with mesh nodes
 void CObjectGenericODE2::GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value) const
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetOutputVariableSuperElement: meshNodeNumber out of range ");
-	return GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)->GetOutputVariable(variableType, configuration, value);
+	return GetCNode(meshNodeNumber)->GetOutputVariable(variableType, configuration, value);
 }
 
 //! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
@@ -446,7 +446,7 @@ Vector3D CObjectGenericODE2::GetMeshNodeLocalPosition(Index meshNodeNumber, Conf
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalPosition: meshNodeNumber out of range");
 	
-	return ((CNodeODE2*)(GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)))->GetPosition(configuration);
+	return ((CNodeODE2*)(GetCNode(meshNodeNumber)))->GetPosition(configuration);
 }
 
 //! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
@@ -454,24 +454,24 @@ Vector3D CObjectGenericODE2::GetMeshNodeLocalVelocity(Index meshNodeNumber, Conf
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeLocalVelocity: meshNodeNumber out of range ");
 
-	return ((CNodeODE2*)(GetCNode(meshNodeNumber + (Index)parameters.useFirstNodeAsReferenceFrame)))->GetVelocity(configuration);
+	return ((CNodeODE2*)(GetCNode(meshNodeNumber)))->GetVelocity(configuration);
 }
 
 //! return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectGenericODE2::GetMeshNodePosition(Index meshNodeNumber, ConfigurationType configuration) const
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodePosition: meshNodeNumber out of range");
-	if (parameters.useFirstNodeAsReferenceFrame)
-	{
-		Matrix3D refRot = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration);
-		Vector3D refPos = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetPosition(configuration);
+	//if (parameters.useFirstNodeAsReferenceFrame)
+	//{
+	//	Matrix3D refRot = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration);
+	//	Vector3D refPos = ((const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetPosition(configuration);
 
-		return refPos + refRot * GetMeshNodeLocalPosition(meshNodeNumber, configuration); //no "+1", because it is already the mesh function
-	}
-	else
-	{
-		return GetMeshNodeLocalPosition(meshNodeNumber, configuration);
-	}
+	//	return refPos + refRot * GetMeshNodeLocalPosition(meshNodeNumber, configuration); //no "+1", because it is already the mesh function
+	//}
+	//else
+	//{
+	return GetMeshNodeLocalPosition(meshNodeNumber, configuration);
+	//}
 }
 
 //! return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
@@ -479,17 +479,17 @@ Vector3D CObjectGenericODE2::GetMeshNodeVelocity(Index meshNodeNumber, Configura
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectGenericODE2::GetMeshNodeVelocity: meshNodeNumber out of range");
 
-	if (parameters.useFirstNodeAsReferenceFrame)
-	{
-		// \dot R + A * \localOmega x \localPosition
-		return ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetVelocity(configuration) +
-			((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration) *
-			((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetAngularVelocityLocal(configuration).CrossProduct(GetMeshNodeLocalPosition(meshNodeNumber, configuration)) +
-			((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration) * GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
-	}
-	else
-	{
-		return GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
-	}
+	//if (parameters.useFirstNodeAsReferenceFrame)
+	//{
+	//	// \dot R + A * \localOmega x \localPosition
+	//	return ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetVelocity(configuration) +
+	//		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration) *
+	//		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetAngularVelocityLocal(configuration).CrossProduct(GetMeshNodeLocalPosition(meshNodeNumber, configuration)) +
+	//		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(configuration) * GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
+	//}
+	//else
+	//{
+	return GetMeshNodeLocalVelocity(meshNodeNumber, configuration);
+	//}
 }
 

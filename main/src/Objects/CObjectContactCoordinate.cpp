@@ -46,7 +46,7 @@ bool MainObjectContactCoordinate::CheckPreAssembleConsistency(const MainSystem& 
 //! compute gap for given configuration (current, start of step, ...); gap <= 0 means contact, gap > 0 is no contact
 Real CObjectContactCoordinate::ComputeGap(const MarkerDataStructure& markerData) const
 {
-	return (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
+	return (markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0] - parameters.offset);
 }
 
 //! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
@@ -61,7 +61,7 @@ void CObjectContactCoordinate::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataS
 	Real gap = ComputeGap(markerData);
 
 	//velocity in dynamic computation:
-	Real gap_t = (markerData.GetMarkerData(1).value_t - markerData.GetMarkerData(0).value_t);
+	Real gap_t = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
 
 	if (gap_t != 0.) { pout << "error: gap_t=" << gap_t << "\n"; }
 

@@ -231,7 +231,6 @@ namespace EXUmath {
 		//virtual void SetMatrix(const Matrix& otherMatrix);
 
 		//! multiply matrix with vector: solution = A*x
-		//! this leads to memory allocation in case that the matrix is built from triplets
 		virtual void MultMatrixVector(const Vector& x, Vector& solution) const
 		{
 			if (useDenseMatrix) { MultMatrixVectorTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
@@ -239,7 +238,6 @@ namespace EXUmath {
 		}
 
 		//! multiply matrix with vector and add to solution: solution += A*x
-		//! this leads to memory allocation in case that the matrix is built from triplets
 		virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
 		{
 			if (useDenseMatrix) { MultMatrixVectorAddTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
@@ -247,7 +245,6 @@ namespace EXUmath {
 		}
 
 		////! multiply transposed(matrix) with vector: solution = A^T*x
-		////! this leads to memory allocation in case that the matrix is built from triplets
 		//virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution) const;
 
 		//! multiply matrixContainer with matrix: solution = *this * matrix

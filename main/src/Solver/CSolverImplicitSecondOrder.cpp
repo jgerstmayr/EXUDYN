@@ -70,6 +70,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		//|           ||      | + |                                      | = | |
 		//[C_q   0    ][lambda]   [ C_tt + 2(C_q)_t*q_t + (C_q*q_t)_q*q_t]   [0]
 		//==> constraints need to be transformed to acceleration level
+		//==> velocity constraints Ct give: d(Ct)/dt = Ct_t + Ct_qt * q_tt ==> only Ct_t is necessary (if existing) ==> set Ct_qt * q_tt = 0
 		//for now, the following terms are neglegted: C_tt = 0, 2(C_q)_t*q_t = 0
 		//   ==> no explicit dependence of constraints w.r.t. time, or at least requiring this dependence to be zero at initialization
 		//[ M    C_q^T][q_tt  ]   [   -ODE2RHS     ]   [0]
@@ -85,7 +86,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		bool velocityLevel = false;
 
 		//+++++++++++++++++++++++++++++
-		//Jacobian of algebraic euqations
+		//Jacobian of algebraic equations
 		//Real factorAE = EXUstd::Square(stepSize) * newmarkBeta; //Index3
 		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, velocityLevel, fillIntoSystemMatrix);
 

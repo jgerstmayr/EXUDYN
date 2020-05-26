@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-05-15  18:40:40 (last modfied)
+* @date         2020-05-26  08:40:13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -210,11 +210,14 @@ public: // AUTO:
     //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
     virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
 
+    //! AUTO:  Compute algebraic equations part of rigid body
+    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
+
+    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const override;
+
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return JacobianType::_None;
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override;
@@ -263,6 +266,9 @@ public: // AUTO:
 
     //! AUTO:  number of ODE2 coordinates; needed for object?
     virtual Index GetODE2Size() const override;
+
+    //! AUTO:  number of AE coordinates; depends on node
+    virtual Index GetAlgebraicEquationsSize() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override

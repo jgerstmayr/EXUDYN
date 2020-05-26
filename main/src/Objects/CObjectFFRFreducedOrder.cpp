@@ -477,6 +477,95 @@ void CObjectFFRFreducedOrder::ComputeODE2RHS(Vector& ode2Rhs) const
 
 }
 
+//! number of AE coordinates; depends on node
+Index CObjectFFRFreducedOrder::GetAlgebraicEquationsSize() const
+{
+	if (((Index)((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & (Index)Node::RotationEulerParameters) != 0) 
+	{
+		return 1;
+	}
+	return 0;
+}
+
+//! return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+JacobianType::Type CObjectFFRFreducedOrder::GetAvailableJacobians() const
+{
+	if (GetAlgebraicEquationsSize() != 0)
+	{
+		return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);
+	}
+	else
+	{
+		return JacobianType::_None;
+	}
+}
+
+//! Compute algebraic equations part of rigid body
+void CObjectFFRFreducedOrder::ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2) const
+{
+	algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
+
+	if (GetAlgebraicEquationsSize() != 0)
+	{
+		if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
+		{
+			algebraicEquations.SetNumberOfItems(1);
+			if (!useIndex2)
+			{
+				//position level constraint:
+				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+				algebraicEquations[0] = ep * ep - 1.;
+			}
+			else
+			{
+				//velocity level constraint:
+				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+				LinkedDataVector ep_t = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters_t();
+
+				algebraicEquations[0] = 2. * (ep * ep_t);
+			}
+		}
+	}
+
+}
+
+//! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
+void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const
+{
+	//Index offset = 0;
+	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
+	{
+		Index nODE2 = GetODE2Size(); //total number of coordinates
+		Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+		Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+
+		jacobian.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
+		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+		jacobian.SetAll(0.); //only few rigid body entries zero ==> for simplicity
+
+		if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
+		{
+			ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
+
+			//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
+			for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); i++)
+			{
+				jacobian(0, ffrfNodeDim + i) = 2.*ep[i];
+			}
+		}
+	}
+	else
+	{
+		jacobian.SetNumberOfRowsAndColumns(0, 0);
+		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+	}
+}
+
+
+
+
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectFFRFreducedOrder::GetAccessFunctionTypes() const
 {
@@ -693,77 +782,163 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 	{
 	case (Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
 	{
-		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size()); 
-		value.SetAll(0.);
-
-		Matrix valueFF(nDim3D, GetNumberOfMeshNodes() * 3); //flexible part, full coordinates, for testing
-		valueFF.SetAll(0.);
-
-		//++++++++++++++++++++++++++++++++++++++
-		//add action for flexible part:
-		Matrix A;
-		A = ((const CNodeODE2*)(GetCNode(rigidBodyNodeNumber)))->GetRotationMatrix();
-
-		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+		const bool newMode = true;
+		if (newMode)
 		{
-			//assume that the first 3 coordinates of the node are the displacement coordinates!!!
-			Matrix3D jac = A;
-			if (weightingMatrix.NumberOfColumns() == 1)
+			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
+			Index nODE2rigid = cNode->GetNumberOfODE2Coordinates();
+			const Matrix& modeBasis = parameters.modeBasis;
+			Index nModes = modeBasis.NumberOfColumns();
+
+			value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+			value.SetAll(0.);
+
+			//Matrix valueFF(nDim3D, GetNumberOfMeshNodes() * 3); //flexible part, full coordinates, for testing
+			//valueFF.SetAll(0.);
+
+			//++++++++++++++++++++++++++++++++++++++
+			//add action for flexible part:
+			Matrix3D A;
+			A = ((const CNodeODE2*)(GetCNode(rigidBodyNodeNumber)))->GetRotationMatrix();
+
+			for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 			{
-				jac *= weightingMatrix(i, 0);
-			}
-			else
-			{
+				//assume that the first 3 coordinates of the node are the displacement coordinates!!!
+				Matrix3D jac = A;
+				if (weightingMatrix.NumberOfColumns() == 1)
+				{
+					jac *= weightingMatrix(i, 0);
+				}
+				else
+				{
+					for (Index j = 0; j < 3; j++)
+					{
+						for (Index k = 0; k < 3; k++)
+						{
+							jac(j, k) *= weightingMatrix(i, k); //add weighting to columns, because every column corresponds to local x,y and z direction (weigthing effects needed on local coordinates)
+						}
+					}
+				}
+				Index offset = meshNodeNumbers[i] * 3;
 				for (Index j = 0; j < 3; j++)
 				{
 					for (Index k = 0; k < 3; k++)
 					{
-						jac(j, k) *= weightingMatrix(i, k); //add weighting to columns, because every column corresponds to local x,y and z direction (weigthing effects needed on local coordinates)
+						for (Index m = 0; m < nModes; m++)
+						{
+							value(j, nODE2rigid+m) += jac(j,k) * parameters.modeBasis(offset+k, m);
+						}
 					}
 				}
 			}
-			Index offset = meshNodeNumbers[i] * 3;
-			valueFF.SetSubmatrix(jac, 0, offset);
-		}
 
-		//++++++++++++++++++++++++++++++++++++++
-		//add action for REFERENCE FRAME NODE:
-		//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
+			//++++++++++++++++++++++++++++++++++++++
+			//add action for REFERENCE FRAME NODE:
+			//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
 
-		Vector3D localPosition({ 0,0,0 });
-		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
-		{
-			if (weightingMatrix.NumberOfColumns() == 1)
+			Vector3D localPosition({ 0,0,0 });
+			for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 			{
-				localPosition += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i]); //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
-			}
-			else
-			{
-				for (Index j = 0; j < 3; j++)
+				if (weightingMatrix.NumberOfColumns() == 1)
 				{
-					localPosition[j] += weightingMatrix(i, j) * GetMeshNodeLocalPosition(meshNodeNumbers[i])[j]; //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+					localPosition += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i]); //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+				}
+				else
+				{
+					for (Index j = 0; j < 3; j++)
+					{
+						localPosition[j] += weightingMatrix(i, j) * GetMeshNodeLocalPosition(meshNodeNumbers[i])[j]; //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+					}
 				}
 			}
+
+			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
+
+			//compute: -A*pLocalTilde*GLocal
+			cNode->GetGlocal(Glocal);
+			EXUmath::ApplyTransformation<3>(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
+			EXUmath::ApplyTransformation<3>(A, Glocal);
+
+			//now compute remaining jacobian terms for reference frame motion:
+			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
+			cNode->GetPositionJacobian(posJac0);
+
+			value.SetSubmatrix(posJac0, 0, 0);
+			value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
 		}
+		else
+		{
+			value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+			value.SetAll(0.);
 
-		const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
+			Matrix valueFF(nDim3D, GetNumberOfMeshNodes() * 3); //flexible part, full coordinates, for testing
+			valueFF.SetAll(0.);
 
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
+			//++++++++++++++++++++++++++++++++++++++
+			//add action for flexible part:
+			Matrix A;
+			A = ((const CNodeODE2*)(GetCNode(rigidBodyNodeNumber)))->GetRotationMatrix();
 
-		//compute: -A*pLocalTilde*GLocal
-		cNode->GetGlocal(Glocal);
-		EXUmath::ApplyTransformation<3>(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
-		EXUmath::ApplyTransformation<3>(A, Glocal);
+			for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+			{
+				//assume that the first 3 coordinates of the node are the displacement coordinates!!!
+				Matrix3D jac = A;
+				if (weightingMatrix.NumberOfColumns() == 1)
+				{
+					jac *= weightingMatrix(i, 0);
+				}
+				else
+				{
+					for (Index j = 0; j < 3; j++)
+					{
+						for (Index k = 0; k < 3; k++)
+						{
+							jac(j, k) *= weightingMatrix(i, k); //add weighting to columns, because every column corresponds to local x,y and z direction (weigthing effects needed on local coordinates)
+						}
+					}
+				}
+				Index offset = meshNodeNumbers[i] * 3;
+				valueFF.SetSubmatrix(jac, 0, offset);
+			}
 
-		//now compute remaining jacobian terms for reference frame motion:
-		ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
-		cNode->GetPositionJacobian(posJac0);
+			//++++++++++++++++++++++++++++++++++++++
+			//add action for REFERENCE FRAME NODE:
+			//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
 
-		value.SetSubmatrix(posJac0, 0, 0);
-		value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
+			Vector3D localPosition({ 0,0,0 });
+			for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+			{
+				if (weightingMatrix.NumberOfColumns() == 1)
+				{
+					localPosition += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i]); //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+				}
+				else
+				{
+					for (Index j = 0; j < 3; j++)
+					{
+						localPosition[j] += weightingMatrix(i, j) * GetMeshNodeLocalPosition(meshNodeNumbers[i])[j]; //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
+					}
+				}
+			}
 
-		value.SetSubmatrix(valueFF * parameters.modeBasis, 0, cNode->GetNumberOfODE2Coordinates());
+			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(rigidBodyNodeNumber);
 
+			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
+
+			//compute: -A*pLocalTilde*GLocal
+			cNode->GetGlocal(Glocal);
+			EXUmath::ApplyTransformation<3>(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
+			EXUmath::ApplyTransformation<3>(A, Glocal);
+
+			//now compute remaining jacobian terms for reference frame motion:
+			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
+			cNode->GetPositionJacobian(posJac0);
+
+			value.SetSubmatrix(posJac0, 0, 0);
+			value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
+
+			value.SetSubmatrix(valueFF * parameters.modeBasis, 0, cNode->GetNumberOfODE2Coordinates());
+		}
 		break;
 	}
 	default:

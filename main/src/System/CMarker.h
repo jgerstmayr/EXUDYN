@@ -92,7 +92,7 @@ public: //
 	}
 
 	//! dimension, which an according connector would have
-	virtual Index GetDimension() const {
+	virtual Index GetDimension(const CSystemData& cSystemData) const {
 		CHECKandTHROWstring("Invalid call to CMarker::Dimension");
 		return EXUstd::InvalidIndex;
 	}

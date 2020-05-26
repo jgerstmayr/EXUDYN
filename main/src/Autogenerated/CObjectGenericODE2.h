@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-05-15  18:40:40 (last modfied)
+* @date         2020-05-18  09:16:18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -37,7 +37,6 @@ public: // AUTO:
     std::function<StdVector(Real, StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy stiffness matrix K: def f(t, q, q\_t): return np.dot(K, q)
     std::function<NumpyMatrix(Real, StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy stiffness matrix M: def f(t, q, q\_t): return (q[0]+1)*M
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
-    bool useFirstNodeAsReferenceFrame;            //!< AUTO: set true, if first node (\f$n_0\f$) is used as floating reference frame; all other nodes are interpreted relative to the reference frame; used to implement FFRF (floating frame of reference formulation); NOTE that in this case, nodes \f$[n_1,\,\ldots,\,n_n]\tp\f$ are still drawn without the reference frame
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE2Parameters()
     {
@@ -49,7 +48,6 @@ public: // AUTO:
         forceUserFunction = 0;
         massMatrixUserFunction = 0;
         coordinateIndexPerNode = ArrayIndex();
-        useFirstNodeAsReferenceFrame = false;
     };
 };
 
@@ -81,7 +79,6 @@ protected: // AUTO:
     CObjectGenericODE2Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE2
 
 public: // AUTO: 
-    static const Index rigidBodyNodeNumber  = 0; //floating frame of reference (ffrf) node number in body, if useFirstNodeAsReferenceFrame=True
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -167,13 +164,13 @@ public: // AUTO:
     //! AUTO:  return true, if object has reference frame; return according node
     virtual bool HasReferenceFrame(Index& referenceFrameNode) const override
     {
-        referenceFrameNode = rigidBodyNodeNumber; return parameters.useFirstNodeAsReferenceFrame;
+        referenceFrameNode = 0; return false;
     }
 
     //! AUTO:  return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used
     virtual Index GetNumberOfMeshNodes() const override
     {
-        return GetNumberOfNodes() - (Index)parameters.useFirstNodeAsReferenceFrame;
+        return GetNumberOfNodes();
     }
 
     //! AUTO:  return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh

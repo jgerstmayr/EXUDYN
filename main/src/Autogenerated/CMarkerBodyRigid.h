@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-19  19:00:14 (last modfied)
+* @date         2020-05-25  00:47:35 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -81,8 +81,8 @@ public: // AUTO:
         return (Marker::Type)(Marker::Body + Marker::Object + Marker::Position + Marker::Orientation);
     }
 
-    //! AUTO:  return dimension of connector, which an attached connector would have
-    virtual Index GetDimension() const override
+    //! AUTO:  return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker
+    virtual Index GetDimension(const CSystemData& cSystemData) const override
     {
         return 3;
     }
