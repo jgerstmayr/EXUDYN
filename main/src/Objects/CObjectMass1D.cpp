@@ -32,7 +32,9 @@ void CObjectMass1D::ComputeODE2RHS(Vector& ode2Rhs) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectMass1D::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
+		(Index)AccessFunctionType::AngularVelocity_qt + 
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -45,7 +47,13 @@ void CObjectMass1D::GetAccessFunctionBody(AccessFunctionType accessType, const V
 		//[fx,0,0] = A^T*F = F^T*A; global force F acts on local x-coordinate
 		//Vector3D v = parameters.referenceRotation * Vector3D({ 1.,0.,0. });
 		//value.SetMatrix(3, 1, { v[0], v[1], v[2] }); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
-		value.SetMatrix(3, 1, { parameters.referenceRotation(0,0), parameters.referenceRotation(1,0), parameters.referenceRotation(2,0)}); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
+		value.SetMatrix(3, 1, { parameters.referenceRotation(0,0), parameters.referenceRotation(1,0), parameters.referenceRotation(2,0) }); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
+		break;
+	}
+	case AccessFunctionType::AngularVelocity_qt:
+	{
+		//no action (but needed for application of rigid-body joints, similar to ground joints):
+		value.SetMatrix(3, 1, { 0, 0, 0 }); //a 3D torque vector acts on 1 coordinate
 		break;
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:

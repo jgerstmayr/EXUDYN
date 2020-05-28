@@ -207,7 +207,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 						}
 					}
 				}
-
 				if ((Index)item->GetCObject()->GetType() & (Index)CObjectType::Constraint)
 				{
 					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE2) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_function) != 0))
@@ -236,39 +235,87 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//check for valid node/object numbers in markers; special markers can contain node+body!
+	itemIndex = 0;
 	for (auto* item : mainSystem.GetMainSystemData().GetMainMarkers())
 	{
 		if (item->GetCMarker()->GetType() & Marker::Node)
 		{
-			Index itemIndex = item->GetCMarker()->GetNodeNumber();
-			if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfNodes))
+			Index nodeIndex = item->GetCMarker()->GetNodeNumber();
+			if (!EXUstd::IndexIsInRange(nodeIndex, 0, numberOfNodes))
 			{
 				PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-					", contains invalid (global) node number " + EXUstd::ToString(itemIndex));
+					", contains invalid (global) node number " + EXUstd::ToString(nodeIndex));
 				systemIsInteger = false;
+			}
+			if (systemIsInteger)
+			{
+				const CNode* node = mainSystem.GetMainSystemData().GetMainNode(nodeIndex).GetCNode();
+				Node::Type nodeType = node->GetType();
+				Marker::Type markerType = item->GetCMarker()->GetType();
+				if (EXUstd::IsOfType(markerType, Marker::Position))
+				{
+					if (!EXUstd::IsOfType(nodeType, Node::Position) && !EXUstd::IsOfType(nodeType, Node::Position2D))
+					{
+						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							" requires a node with type Position or Position2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this");
+						systemIsInteger = false;
+					}
+				}
+				if (EXUstd::IsOfType(markerType, Marker::Orientation))
+				{
+					if (!EXUstd::IsOfType(nodeType, Node::Orientation) && !EXUstd::IsOfType(nodeType, Node::Orientation2D))
+					{
+						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							" requires a node with type Orientation or Orientation2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this");
+						systemIsInteger = false;
+					}
+				}
 			}
 		}
 		//else //must be object (usually body, but could also be connector)
 		if (item->GetCMarker()->GetType() & Marker::Object) //might also be Marker::Body
 		{
-			Index itemIndex = item->GetCMarker()->GetObjectNumber();
-			if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfObjects))
+			Index objectIndex = item->GetCMarker()->GetObjectNumber();
+			if (!EXUstd::IndexIsInRange(objectIndex, 0, numberOfObjects))
 			{
 				PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-					", contains invalid (global) object number " + EXUstd::ToString(itemIndex));
+					", contains invalid (global) object number " + EXUstd::ToString(objectIndex));
 				systemIsInteger = false;
 			}
 			if (systemIsConsistent)
 			{
-				if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[itemIndex]->GetCObject()->GetType() & (Index)CObjectType::Body) == 0)
+				if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[objectIndex]->GetCObject()->GetType() & (Index)CObjectType::Body) == 0)
 				{
 					PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-						": expected ObjectType::Body, but received object (object number=" + EXUstd::ToString(itemIndex)+")");
+						": expected ObjectType::Body, but received object (object number=" + EXUstd::ToString(objectIndex) + ")");
 					systemIsInteger = false;
 				}
 			}
+			if (systemIsInteger)
+			{
+				const CObject* object = mainSystem.GetMainSystemData().GetMainObjects()[objectIndex]->GetCObject();
+				AccessFunctionType afType = object->GetAccessFunctionTypes();
+				Marker::Type markerType = item->GetCMarker()->GetType();
+				if (EXUstd::IsOfType(markerType, Marker::Position))
+				{
+					if (!EXUstd::IsOfType(afType, AccessFunctionType::TranslationalVelocity_qt))
+					{
+						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							" requires an object with position information, but object number " + EXUstd::ToString(objectIndex) + " does not provide this");
+						systemIsInteger = false;
+					}
+				}
+				if (EXUstd::IsOfType(markerType, Marker::Orientation))
+				{
+					if (!EXUstd::IsOfType(afType, AccessFunctionType::AngularVelocity_qt))
+					{
+						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							" requires an object with orienation (rotation) information, but object number " + EXUstd::ToString(itemIndex) + " does not provide this");
+						systemIsInteger = false;
+					}
+				}
+			}
 		}
-
 		itemIndex++;
 	}
 
@@ -277,21 +324,22 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//check for valid marker numbers in loads; check requested MarkerType; 
+	itemIndex = 0;
 	for (auto* item : mainSystem.GetMainSystemData().GetMainLoads())
 	{
-		Index itemIndex = item->GetCLoad()->GetMarkerNumber();
+		Index markerIndex = item->GetCLoad()->GetMarkerNumber();
 
-		if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfMarkers))
+		if (!EXUstd::IndexIsInRange(markerIndex, 0, numberOfMarkers))
 		{
 			PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-				", contains invalid marker number " + EXUstd::ToString(itemIndex));
+				", contains invalid marker number " + EXUstd::ToString(markerIndex));
 			systemIsInteger = false;
 		}
 		
 		if (systemIsInteger) //only if markerNumber is valid
 		{
 			Marker::Type requestedType = item->GetCLoad()->GetRequestedMarkerType();
-			Marker::Type markerType = mainSystem.GetMainSystemData().GetMainMarkers()[itemIndex]->GetCMarker()->GetType();
+			Marker::Type markerType = mainSystem.GetMainSystemData().GetMainMarkers()[markerIndex]->GetCMarker()->GetType();
 			if ((requestedType & markerType) != requestedType)
 			{
 				PyError(STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +

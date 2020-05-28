@@ -603,8 +603,8 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.solutionSettings.sensorsWritePeriod = h
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+#simulationSettings.displayStatistics = True
+#simulationSettings.displayComputationTime = True
 
 #create animation:
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002

@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 416, 
-Number of resolved issues = 342, 
-EXUDYN version = 0.1.342, 
-last change =  2020-05-26
+Number of issues = 419, 
+Number of resolved issues = 346, 
+EXUDYN version = 0.1.346, 
+last change =  2020-05-29
 
 
 <table style = "width:100%">
@@ -39,15 +39,31 @@ last change =  2020-05-26
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0414</td>
-    <td>ObjectFFRFreducedOrder EP</td>
+    <td>0418</td>
+    <td>read only parameters</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add Euler Parameter constraint to ObjectFFRFreducedOrder</td>
+    <td> raise exception if read only values are attempted to be overwritten==> currently, read only parameters are ignored!</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-05-28</td>
+    <td>2020-07-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0417</td>
+    <td>visualization shortnames</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add shortnames, e.g., VMass1D for visualization objects</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2020-05-26</td>
-    <td>2020-07-25</td>
+    <td>2020-05-27</td>
+    <td>2020-07-26</td>
     <td></td>
     <td></td>
     <td></td>
@@ -519,22 +535,6 @@ last change =  2020-05-26
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0338</td>
-    <td>check accessFunctionTypes</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add automatized marker/force/accessFunctionType checks using the fact that same bits are used in types</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-02-18</td>
-    <td>2020-04-18</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0337</td>
     <td>local force beam    </td>
     <td>JG</td>
@@ -592,22 +592,6 @@ last change =  2020-05-26
     <td></td>
     <td>2020-02-03</td>
     <td>2020-04-03</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0329</td>
-    <td>check markers       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add integrity check if node/body implements necessary access functions for marker</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-02-02</td>
-    <td>2020-04-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1223,6 +1207,22 @@ last change =  2020-05-26
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0416</td>
+    <td>check Markers       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add check (WARNING) if joint is applied to two markers directing to identical nodes or bodies</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-27</td>
+    <td>2020-07-26</td>
+    <td>2020-05-27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not possible for FFRF and generic objects</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0415</td>
     <td>CNodeRigidBody2D bug</td>
     <td>JG</td>
@@ -1233,6 +1233,22 @@ last change =  2020-05-26
     <td>2020-05-26</td>
     <td>2020-07-25</td>
     <td>2020-05-26</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0414</td>
+    <td>ObjectFFRFreducedOrder EP</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Euler Parameter constraint to ObjectFFRFreducedOrder</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-26</td>
+    <td>2020-07-25</td>
+    <td>2020-05-29</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1975,6 +1991,22 @@ last change =  2020-05-26
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0338</td>
+    <td>check accessFunctionTypes</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add automatized marker/force/accessFunctionType checks using the fact that same bits are used in types</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-18</td>
+    <td>2020-04-18</td>
+    <td>2020-05-28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0336</td>
     <td>euler parameters    </td>
     <td>JG</td>
@@ -2033,6 +2065,22 @@ last change =  2020-05-26
     <td>2020-02-03</td>
     <td>2020-04-03</td>
     <td>2020-02-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0329</td>
+    <td>check markers       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add integrity check if node/body implements necessary access functions for marker</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-02</td>
+    <td>2020-04-02</td>
+    <td>2020-05-28</td>
     <td>JG</td>
     <td></td>
     <td></td>

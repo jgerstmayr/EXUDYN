@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-03-30  22:45:21 (last modfied)
+* @date         2020-05-28  00:49:16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -76,7 +76,7 @@ public: // AUTO:
     //! AUTO:  return node type (for node treatment in computation)
     virtual Node::Type GetType() const override
     {
-        return (Node::Type)(Node::Position2D + Node::Orientation2D);
+        return (Node::Type)(Node::Position2D + Node::Orientation2D + Node::RigidBody);
     }
 
     //! AUTO:  return configuration dependent position of node; returns always a 3D Vector

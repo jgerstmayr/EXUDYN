@@ -32,8 +32,7 @@ void CObjectRotationalMass1D::ComputeODE2RHS(Vector& ode2Rhs) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectRotationalMass1D::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + 
-		(Index)AccessFunctionType::DisplacementMassIntegral_q);// +(Index)AccessFunctionType::Rotv1v2v3_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -53,11 +52,11 @@ void CObjectRotationalMass1D::GetAccessFunctionBody(AccessFunctionType accessTyp
 		value.SetMatrix(3, 1, {v[0], v[1], v[2]}); //the 3D torque vector (only z-component) acts on the 3rd coordinate phi_t
 		break;
 	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		value.SetMatrix(3, 1, { 0.,0.,0. }); //no action of gravity!
-		break;
-	}
+	//case AccessFunctionType::DisplacementMassIntegral_q:
+	//{
+	//	value.SetMatrix(3, 1, { 0.,0.,0. }); //no action of gravity!
+	//	break;
+	//}
 	default:
 		SysError("CObjectRotationalMass1D:GetAccessFunctionBody illegal accessType");
 	}

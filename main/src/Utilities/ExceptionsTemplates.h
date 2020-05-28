@@ -38,7 +38,7 @@ void UserFunctionExceptionHandling(Tfunction&& f, const char* functionName)
 
 	catch (const std::exception& ex)
 	{
-		SysError("Internal error python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
+		SysError("Internal error in python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception

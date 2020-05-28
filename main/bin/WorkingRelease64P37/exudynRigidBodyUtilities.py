@@ -372,7 +372,7 @@ class RigidBodyInertia:
         return str(self)
 
 
-#set moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; com=0
+#set moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=0
 #example: InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])
 class InertiaCuboid(RigidBodyInertia):
     def __init__(self, density, sideLengths):
@@ -384,36 +384,58 @@ class InertiaCuboid(RigidBodyInertia):
                                   inertiaTensor=newMass/12.*np.diag([(L2**2 + L3**2),(L1**2 + L3**2),(L1**2 + L2**2)]),
                                   com=np.zeros(3))
 
-#set moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); com=0
+#set moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=0
 class InertiaRodX(RigidBodyInertia):
     def __init__(self, mass, length):
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=mass/12.*np.diag([0.,length**2,length**2]),
                                   com=np.zeros(3))
-#        
-#set moment of inertia and mass of mass point with 'mass'; com=0
+        
+#set moment of inertia and mass of mass point with 'mass'; inertia w.r.t. center of mass, com=0
 class InertiaMassPoint(RigidBodyInertia):
     def __init__(self, mass):
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=np.zeros([3,3]),
                                   com=np.zeros(3))
-#
-#set moment of inertia and mass of sphere with mass and radius; com=0
+
+#set moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=0
 class InertiaSphere(RigidBodyInertia):
     def __init__(self, mass, radius):
         J = 2.*mass/5.*radius**2
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=np.diag([J,J,J]),
                                   com=np.zeros(3))
-#        
-#set moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; com=0
+        
+#set moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
 class InertiaHollowSphere(RigidBodyInertia):
     def __init__(self, mass, radius):
         J = 2.*mass/3.*radius**2
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=np.diag([J,J,J]),
                                   com=np.zeros(3))
-#        
+
+#set moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=0
+class InertiaCylinder(RigidBodyInertia):
+    def __init__(self, density, length, outerRadius, axis, innerRadius=0):
+        m = density*length*np.pi*(outerRadius**2-innerRadius**2)
+        Jaxis = 0.5*m*(outerRadius**2+innerRadius**2)
+        Jtt = 1./12.*m*(3*(outerRadius**2+innerRadius**2)+length**2)
+
+        if axis==0:
+            RigidBodyInertia.__init__(self, mass=m,
+                                      inertiaTensor=np.diag([Jaxis,Jtt,Jtt]),
+                                      com=np.zeros(3))
+        elif axis==1:
+            RigidBodyInertia.__init__(self, mass=m,
+                                      inertiaTensor=np.diag([Jtt,Jaxis,Jtt]),
+                                      com=np.zeros(3))
+        elif axis==2:
+            RigidBodyInertia.__init__(self, mass=m,
+                                      inertiaTensor=np.diag([Jtt,Jtt,Jaxis]),
+                                      com=np.zeros(3))
+        else:
+            raise ValueError("InertiaCylinder: axis must be 0, 1 or 2!")
+        
         
     
 

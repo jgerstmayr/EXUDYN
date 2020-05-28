@@ -83,7 +83,7 @@ mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -1000, 0])) #will b
 
 
 mbs.Assemble()
-exu.Print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -180,7 +180,7 @@ dynamicSolver = exu.MainSolverImplicitSecondOrder()
 simulationSettings.timeIntegration.numberOfSteps = 5000 #1000 steps for test suite/error
 simulationSettings.timeIntegration.endTime = 0.05              #1s for test suite / error
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayComputationTime = True
+#simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #dynamicSolver.SetUserFunctionInitializeStep(mbs, UserFunctionInitializeStep)

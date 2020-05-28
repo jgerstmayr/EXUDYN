@@ -129,6 +129,7 @@ testFileList = [
                 'TestModels/objectFFRFTest.py',
                 'TestModels/objectFFRFTest2.py',
                 'TestModels/compareAbaqusAnsysRotorEigenfrequencies.py',
+                'TestModels/driveTrainTest.py',                
                 ]
 
 

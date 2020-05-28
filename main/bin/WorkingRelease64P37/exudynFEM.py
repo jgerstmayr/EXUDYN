@@ -224,7 +224,8 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
 
 
 
-#convert list of C3D8 Hex element with 8 nodes in nodeNumbers into triangle-List
+#convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List
+#also works for Hex20 elements, but does only take the corner nodes!
 def ConvertHexToTrigs(nodeNumbers):
     localList = [[0,1,2], [0,2,3], [6,5,4], [6,4,7], [0,4,1], [1,4,5], [1,5,2], [2,5,6], [2,6,3], [3,6,7], [3,7,0], [0,7,4]]
 
@@ -369,7 +370,7 @@ def ReadNodalCoordinatesFromAnsysTxt(fileName):
     
     lineCtr = 0
     for line in fileLines:
-        
+        #if lineCtr%10000 == 0: print("read node",lineCtr)
         # remove '\n' from value at line end
         currentLine = line.rsplit()
             
@@ -431,19 +432,32 @@ def ReadElementsFromAnsysTxt(fileName):
     fileLines = file.readlines()
     file.close()
                 
-    # delete first line
+    # delete first line ==> contains text
     del fileLines[0]
         
     # number of mesh nodes
-    numberOfElements = len(fileLines)
+    #numberOfElements = len(fileLines) #do not trust this, could be changed with one additional line
+    numberOfElements = 0
+
+    #check file consistency => first columns should contain element number (1-based)
+    for i in range(len(fileLines)):
+        line = fileLines[i]
+        n = int(line.rsplit()[0])
+        #print("element:", n)
+        if n == i+1: 
+            numberOfElements = n
+        else:
+            raise ValueError("ReadElementsFromAnsysTxt: invalid format in line "+str(i+2)+": expected element number, type and connectivity; be careful with empty lines")
+                
     
     # allocate memory
     elementTypeList = [None]*(numberOfElements)
     elementConnectivityList = [None]*(numberOfElements)
     currentNodeIndexList = []
     
-    lineCtr = 0
-    for line in fileLines:
+    for lineCtr in range(numberOfElements):
+        #if lineCtr%10000 == 0: print("read element",lineCtr)
+        line = fileLines[lineCtr]
         
         # split current line at \n
         currentLine = line.rsplit()
@@ -461,10 +475,14 @@ def ReadElementsFromAnsysTxt(fileName):
         # clear current node index list (nodes that form the current element)
         currentNodeIndexList = []
         
-        # increase line counter
-        lineCtr += 1
-    
-    elementsDict = {'Name':'elements', 'Tet4':[], 'Hex8':elementConnectivityList}
+    #elementsDict = {'Name':'elements', 'Tet4':[], 'Hex8':elementConnectivityList}
+    elementsDict = {'Name':'elements'}
+
+    for lineCtr in range(numberOfElements):
+        line = fileLines[lineCtr]
+        if not(elementTypeList[lineCtr] in elementsDict):
+            elementsDict[elementTypeList[lineCtr]] = []
+        elementsDict[elementTypeList[lineCtr]] += [elementConnectivityList[lineCtr]]
 
     return elementsDict
 
@@ -541,7 +559,7 @@ class ObjectFFRFinterface:
         self.eulerParameters_t0 = AngularVelocity2EulerParameters_t(initialAngularVelocity, eulerParametersRef)
         self.eulerParameters0 = eulerParametersRef
 
-        #rigid body node for ObjectFFRFreducedOrder
+        #rigid body node for ObjectFFRF
         self.nRigidBody = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
                                             initialVelocities=list(initialVelocity)+list(self.eulerParameters_t0)))
 
@@ -912,122 +930,273 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #ABAQUS import functions
 
-    #import Abaqus input file 
+#    #import Abaqus input file 
+#    #node numbers in elements are converted from 1-based indices to python's 0-based indices
+#    #return node numbers
+#    def ImportFromAbaqusInputFileOLD(self, fileName, typeName='Part', name='Part-1'):
+#        fileLines = []
+#        print("read file name=", fileName)
+#        file=open(fileName,'r') 
+#        fileLines = file.readlines()
+#        file.close()
+#        
+#        print("read ", len(fileLines), "lines")
+#    
+#        startPart = False
+#        startReadNodes = False
+#        finishedReadNodes = False
+#        startReadElements = False
+#        finishedReadElements = False
+#        nodes = [] #store list of node values
+#        elements = [] #store list of elements with node numbers
+#        elementTypes = [] #string list of element types
+#
+#        errorOccured = False
+#        lineCnt = 0
+#        for line in fileLines:
+#            #print("line", lineCnt, "=", line)
+#            lineCnt+=1
+#            if errorOccured:
+#                break
+#        
+#            if startReadNodes and not finishedReadNodes:
+#                if line[0] != '*': #check if nodes section has finished
+#                    lineData = line.split(',') #split into values
+#                    if len(lineData) != 4:
+#                        print("ERROR: Expected node number and 3 coordinates, line ", lineCnt)
+#                        errorOccured = True
+#                    else:
+#                        v = []
+#                        for i in range(3):
+#                            v+=[float(lineData[i+1])]
+#                        nodes += [v] #add node data
+#                else:
+#                    startReadNodes = False
+#                    finishedReadNodes = True
+#    
+#            if startReadElements and not finishedReadElements:
+#                if line[0] != '*': #check if nodes section has finished
+#                    lineData = line.split(',') #split into values
+#                    if len(lineData) != 9:
+#                        print("ERROR: Expected element number and 8 indices for C3D8R, line=", lineCnt)
+#                        errorOccured = True
+#                    else:
+#                        v = []
+#                        for i in range(8):
+#                            v+=[float(lineData[i+1])]
+#                        elements += [v] #add node data
+#                        elementTypes += ['Hex8'] #8-noded hexahedral
+#                else:
+#                    startReadElements = False
+#                    finishedReadElements = True
+#    
+#            if startPart and not startReadNodes and not finishedReadNodes:
+#                if line[0:5] == '*Node':
+#                    startReadNodes = True
+#                    startPart = False
+#                else:
+#                    print("ERROR: Expected *Node after *Part, line=", lineCnt)
+#                    errorOccured = True
+#
+#            if finishedReadNodes and not startReadElements:
+#                if line[0:8] == '*Element':
+#                    startReadElements = True
+#                    #check "type=C3D8R" in future
+#
+#            
+#            if line[0:len(typeName)+1] == '*'+typeName:
+#                if not startPart:
+#                    #print("ERROR: only one *Part section allowed, line=", lineCnt)
+#                    #errorOccured = True
+#                
+#                    lineInfo = line.split(',')
+#                    #print(lineInfo)
+#                    if len(lineInfo) != 3:
+#                        print("ERROR: invalid information for part/instance name, line=", lineCnt)
+#                        errorOccured = True
+#                    else:
+#                        nameInfo = lineInfo[1].strip().split('=')
+#                        if nameInfo[0] != 'name':
+#                            print("ERROR: expected 'name=' in line=", lineCnt)
+#                            errorOccured = True
+#                        else:
+#                            if nameInfo[1] != name:
+#                                print("ERROR: expected name='" + name + "' in line=", lineCnt)
+#                                errorOccured = True
+#                            else:
+#                                startPart = True
+#
+#        self.nodes['Position'] = np.array(nodes)
+#        elements = np.array(elements)-1 #convert node indices from 1 to 0-based
+#
+#        elementsDict = {'Name':name, 'Tet4':[], 'Hex8':[]}
+#        for i in range(len(elements)):
+#            if elementTypes[i] in elementsDict:
+#                elementsDict[elementTypes[i]] += [elements[i]]
+#            else:
+#                print("FEMinterface.ImportFromAbaqusInputFile: unknown elementType "+elementTypes[i]+", ignored")
+#
+#        self.elements += [elementsDict]
+#
+#        #convert elements to triangles for drawing:
+#        trigList = []
+#        for element in elements:
+#            trigList += ConvertHexToTrigs(element) #node numbers are already 0-based
+#        trigList = trigList
+#        self.surface += [{'Name':'meshSurface', 'Trigs':trigList}]    # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
+#
+#        return np.array(nodes)
+
+
+
+    #import nodes and elements from Abaqus input file and create surface elements
     #node numbers in elements are converted from 1-based indices to python's 0-based indices
-    #return node numbers
-    def ImportFromAbaqusInputFile(self, fileName, typeName='Part', name='Part-1'):
+    #only works for Hex8, Hex20, Tet4 and Tet10 (C3D4, C3D8, C3D10, C3D20) elements
+    #return node numbers as numpy array
+    def ImportFromAbaqusInputFile(self, fileName, typeName='Part', name='Part-1', verbose=False):
+        #def ImportABAQUS(fileName, typeName, name, verbose = False):
         fileLines = []
-        print("read file name=", fileName)
+        if verbose: print("ImportFromAbaqusInputFile: read file name=", fileName)
         file=open(fileName,'r') 
         fileLines = file.readlines()
         file.close()
         
-        print("read ", len(fileLines), "lines")
+        if verbose: print("read", len(fileLines), "lines")
     
-        startPart = False
-        startReadNodes = False
-        finishedReadNodes = False
-        startReadElements = False
-        finishedReadElements = False
-        nodes = [] #store list of node values
-        elements = [] #store list of elements with node numbers
-        elementTypes = [] #string list of element types
-
-        errorOccured = False
-        lineCnt = 0
-        for line in fileLines:
-            #print("line", lineCnt, "=", line)
-            lineCnt+=1
-            if errorOccured:
-                break
-        
-            if startReadNodes and not finishedReadNodes:
-                if line[0] != '*': #check if nodes section has finished
-                    lineData = line.split(',') #split into values
-                    if len(lineData) != 4:
-                        print("ERROR: Expected node number and 3 coordinates, line ", lineCnt)
-                        errorOccured = True
-                    else:
-                        v = []
-                        for i in range(3):
-                            v+=[float(lineData[i+1])]
-                        nodes += [v] #add node data
-                else:
-                    startReadNodes = False
-                    finishedReadNodes = True
+        lineCnt = 0          #current counter for lines, makes life simpler
+        nLines = len(fileLines)
+        typeNameFound = False
+        elementsDict = {'Name':'elements'} #this is the destination for elements
+        #+++++++++++++++++++++++++++++++++++++++++++++
+        #find *Instance or *Part
+        strTypeName = '*'+typeName
     
-            if startReadElements and not finishedReadElements:
-                if line[0] != '*': #check if nodes section has finished
-                    lineData = line.split(',') #split into values
-                    if len(lineData) != 9:
-                        print("ERROR: Expected element number and 8 indices for C3D8R, line=", lineCnt)
-                        errorOccured = True
-                    else:
-                        v = []
-                        for i in range(8):
-                            v+=[float(lineData[i+1])]
-                        elements += [v] #add node data
-                        elementTypes += ['Hex8'] #8-noded hexahedral
-                else:
-                    startReadElements = False
-                    finishedReadElements = True
-    
-            if startPart and not startReadNodes and not finishedReadNodes:
-                if line[0:5] == '*Node':
-                    startReadNodes = True
-                    startPart = False
-                else:
-                    print("ERROR: Expected *Node after *Part, line=", lineCnt)
-                    errorOccured = True
-
-            if finishedReadNodes and not startReadElements:
-                if line[0:8] == '*Element':
-                    startReadElements = True
-                    #check "type=C3D8R" in future
-
-            
-            if line[0:len(typeName)+1] == '*'+typeName:
-                if not startPart:
-                    #print("ERROR: only one *Part section allowed, line=", lineCnt)
-                    #errorOccured = True
+        while lineCnt < nLines and not typeNameFound:
+            line = fileLines[lineCnt]
+            if line[0:len(strTypeName)] == strTypeName:
+                typeNameFound = True
+                if verbose: print("found ", strTypeName, "in line", lineCnt)
                 
-                    lineInfo = line.split(',')
-                    #print(lineInfo)
-                    if len(lineInfo) != 3:
-                        print("ERROR: invalid information for part/instance name, line=", lineCnt)
-                        errorOccured = True
-                    else:
-                        nameInfo = lineInfo[1].strip().split('=')
-                        if nameInfo[0] != 'name':
-                            print("ERROR: expected 'name=' in line=", lineCnt)
-                            errorOccured = True
-                        else:
-                            if nameInfo[1] != name:
-                                print("ERROR: expected name='" + name + "' in line=", lineCnt)
-                                errorOccured = True
-                            else:
-                                startPart = True
-
-        self.nodes['Position'] = np.array(nodes)
-        elements = np.array(elements)-1 #convert node indices from 1 to 0-based
-
-        elementsDict = {'Name':name, 'Tet4':[], 'Hex8':[]}
-        for i in range(len(elements)):
-            if elementTypes[i] in elementsDict:
-                elementsDict[elementTypes[i]] += [elements[i]]
+            lineCnt += 1
+    
+        if not typeNameFound: raise ValueError("ImportFromAbaqusInputFile: did not find keyword '"+strTypeName+"'")
+    
+        #+++++++++++++++++++++++++++++++++++++++++++++
+        #read *Node keyword
+        if fileLines[lineCnt][0:5] == '*Node':
+            lineCnt += 1
+        else:
+            raise ValueError("ImportFromAbaqusInputFile: expected *Node in line"+str(lineCnt+1)+', but received: '+fileLines[lineCnt])
+        
+        #+++++++++++++++++++++++++++++++++++++++++++++
+        #read nodes:
+        nodeReadFinished = False
+        nodes=[]
+        while lineCnt < nLines and not nodeReadFinished:
+            line = fileLines[lineCnt]
+        
+            if line[0] != '*': #check if nodes section has finished
+                lineData = line.split(',') #split into values
+                if len(lineData) != 4:
+                    raise ValueError("ImportFromAbaqusInputFile: Expected node number and 3 coordinates, line "+str(lineCnt))
+                else:
+                    v = []
+                    for i in range(3):
+                        v+=[float(lineData[i+1])] 
+                    nodes += [v] #add node data
+                    #if verbose: print("node=",v)
+                lineCnt += 1#do not increase counter if * found
             else:
-                print("FEMinterface.ImportFromAbaqusInputFile: unknown elementType "+elementTypes[i]+", ignored")
+                nodeReadFinished = True
 
+        if verbose: print("imported ", len(nodes), "nodes")
+    
+        #+++++++++++++++++++++++++++++++++++++++++++++
+        #read *Element keyword
+        #expect something like: *Element, type= C3D20 
+        availableElementTypesNodes={'C3D20':20, 'C3D8':8}
+        elementTypeConversion={'C3D20':'Hex20', 'C3D8':'Hex8', 'C3D4':'Tet4', 'C3D10':'Tet10'}
+        elementSectionFound = False
+        elementTypeName = ''
+        while lineCnt < nLines and not elementSectionFound:
+            line = fileLines[lineCnt]
+            #print("now=", line)
+            if line[0:len('*Element')] == '*Element':
+                elementSectionFound = True
+                elementTypeName=line.split(',')[1].split('=')[1].strip()
+                if verbose: print("found *Element in line", lineCnt, 'element type=',elementTypeName)
+                
+                if not (elementTypeName in availableElementTypesNodes):
+                    raise ValueError("ImportFromAbaqusInputFile: element type '"+elementTypeName+"' can not yet be imported")
+                
+            lineCnt += 1
+    
+        if not elementSectionFound: 
+            raise ValueError("ImportFromAbaqusInputFile: did not find keyword *Element ")
+    
+        elementType= elementTypeConversion[elementTypeName]
+        if not(elementTypeName in elementsDict):
+            elementsDict[elementType] = []
+    
+        #+++++++++++++++++++++++++++++++++++++++++++++
+        #read elements:
+        elementReadFinished = False
+        nElementNodes = availableElementTypesNodes[elementTypeName] #this is the expected number of nodes for element type
+        elementCnt = 0
+        while lineCnt < nLines and not elementReadFinished:
+            line = fileLines[lineCnt]
+            #print("read element line:",line)
+        
+            if line[0] != '*': #check if element section has finished
+                lineStr = line.strip() #cut spaces at end in order to detect ',' at end
+                while lineStr[-1] == ',' and lineCnt < nLines:
+                    lineCnt += 1
+                    line = fileLines[lineCnt]
+                    if line[0] == '*': 
+                        raise ValueError("ImportFromAbaqusInputFile: while reading elements, got invalid format of line "+str(lineCnt+1))
+                    lineStr += line
+                    #print("   extended line:",lineStr)
+                    
+                lineData = lineStr.strip().split(',') #split into values
+                
+                if len(lineData) != nElementNodes+1:
+                    raise ValueError("ImportFromAbaqusInputFile: Expected element and "+str(nElementNodes)+" node numbers in line "+str(lineCnt))
+                else:
+                    v = []
+                    for i in range(nElementNodes):
+                        v+=[int(lineData[i+1])-1] #changed from float
+                    elementsDict[elementType] += [v]
+                    elementCnt += 1
+            else:
+                elementReadFinished = True
+            lineCnt += 1
+        
+        if verbose: print("imported ", elementCnt, "elements")
+
+        #FEMinterface:
         self.elements += [elementsDict]
+        self.nodes['Position'] = np.array(nodes)
+
 
         #convert elements to triangles for drawing:
         trigList = []
-        for element in elements:
-            trigList += ConvertHexToTrigs(element) #node numbers are already 0-based
-        trigList = trigList
+        if 'Hex8' in elementsDict:
+            for element in elementsDict['Hex8']:
+                trigList += ConvertHexToTrigs(element) #node numbers are already 0-based
+        if 'Hex20' in elementsDict:
+            for element in elementsDict['Hex20']:
+                trigList += ConvertHexToTrigs(element) #node numbers are already 0-based
+
         self.surface += [{'Name':'meshSurface', 'Trigs':trigList}]    # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
 
+        #VolumeToSurfaceElements(verbose) #create surface from imported elements
+
         return np.array(nodes)
+        
+        #return [np.array(nodes), elementsDict]
+
+
+
 
     #read mass matrix from compressed row text format (exported from Abaqus)
     #in order to export system matrices, write the following lines in your Abaqus input file (without '#'):
@@ -1234,6 +1403,20 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
+    #get node numbers on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
+    #using a tolerance for the distance to the plane
+    #if not found, it returns an empty list
+    def GetNodesOnCircle(self, point, normal, r, tolerance = 1e-5):
+        cnt = 0
+        nodeList=[]
+        for nodeTypeName in self.nodes:
+            for nodePoint in self.nodes[nodeTypeName]:
+                if abs(np.dot(nodePoint - point, normal)) <= tolerance:
+                    if abs(np.dot(nodePoint - point, nodePoint - point) - r**2) <= tolerance**2:
+                        nodeList += [cnt]
+                cnt+=1
+        return nodeList
+
     #return surface trigs as node number list (for drawing in EXUDYN)
     def GetSurfaceTriangles(self):
         trigList = []
@@ -1245,83 +1428,109 @@ class FEMinterface:
     #generate surface elements from volume elements
     #stores the surface in self.surface
     #only works for one element list and one type ('Hex8') of elements
-    def VolumeToSurfaceElements(self):
-        print("VolumeToSurfaceElements...")
+    def VolumeToSurfaceElements(self, verbose=False):
+        if verbose: print("create surface from volume elements")
 #        self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
 #        self.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
         nNodes = self.NumberOfNodes()
-        hexQuadIndices = [[0,1,2,3],[7,6,5,4],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0]]
-        surfaceListQuad = [] #list of surface quads
-        nodes2elements = [[]]*nNodes #element to node list
+        hex8QuadIndices = [[0,1,2,3],[7,6,5,4],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0]]
+        hex20QuadIndices = [[0,1,2,3],[7,6,5,4],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0]] #without midnodes, works for now
+        tet4TrigIndices = [[0,1,2],[0,3,1],[1,3,2],[2,3,0]]
+        tet10TrigIndices = [[0,1,2],[0,3,1],[1,3,2],[2,3,0]] #without midnodes, works for now
         
-        for elementDict in self.elements:
-            if 'Hex8' in elementDict:   #only implemented for Hex8
-                elementList = elementDict['Hex8']
-                #first store all elements linked to a certain node
-                #print("build nodes to elements...")
-                #print("nodes2elements=",nodes2elements)
-                cnt = 0
-                for element in elementList:
-                    #print("  element",cnt,"=",element)
-                    for i in element:
-                        #print("    i=",i)
-                        #nodes2elements[int(i)].append(int(cnt))
-                        alist=list(nodes2elements[i])
-                        alist.append(cnt)
-                        nodes2elements[i] = alist
-                        #print("nodes2elements[",i,"]=",nodes2elements[i])
-                    cnt+=1
-                
-                #run through all elements:
-                nElements = len(elementList)
-                elementCnt = 0
-                cnt2=0
-                for element in elementList:
-                    if elementCnt%1000 == 0 and elementCnt>0:
-                        print("process element ",elementCnt,"/",nElements)
-                    for surface in hexQuadIndices:
-                        #test a surface with nodes
-                        actSurface = []
-                        for i in surface:
-                            actSurface += [element[i]]
-                        lenSurface = len(actSurface) #3 or 4 nodes at surface
-                        #print("  actsurface=",actSurface)
-                        #find all potential candidates, which could be opposite
+        elementTypes = ['Hex8','Hex20','Tet4','Tet10']
 
-                        testElements = []
-                        for nn in actSurface:
-                            for elNum in nodes2elements[nn]:
-                                if not (elNum in testElements):
-                                    testElements += [elNum]
-                        
-                        #print("  testElements=",testElements)
-                        foundNeighbor = False
-                        for el in testElements:
-                            if el != elementCnt: #do not compare with itself!!!
-                                testElement = elementList[el]
-                                #print("    testElement=",testElement)
-                                for surface2 in hexQuadIndices:
-                                    cnt2+=1
-                                    #print("      surface2=",surface2)
-                                    #test a surface2 with nodes
-                                    testSurface = []
-                                    for j in surface2:
-                                        testSurface += [testElement[j]]
-                                    #print("      testSurface=",testSurface)
-                                    
-                                    if len(set(testSurface).intersection(actSurface)) == lenSurface:
-                                        #print("        found!")
-                                        foundNeighbor = True
-                                        break;
-                        
-                        if not foundNeighbor:
-                            #print("      not found!")
-                            surfaceListQuad += [actSurface]
-                    elementCnt += 1
-        
-        print("surfaceListQuad length=",len(surfaceListQuad))
+        element2IndexList = {'Hex8': hex8QuadIndices,
+                             'Hex20':hex20QuadIndices,
+                             'Tet4': tet4TrigIndices,
+                             'Tet10':tet10TrigIndices}
         surfaceListTrigs = []
-        for quad in surfaceListQuad:
+        surfaceListQuads = [] #list of surface quads, will be converted to trigs
+        nodes2elements = [[]]*nNodes #element to node list
+
+        #first store all elements linked to a certain node
+        #print("build nodes to elements...")
+        #print("nodes2elements=",nodes2elements)
+
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #preprocess and generate nodes2elements list
+        cnt = 0
+        for elementDict in self.elements:
+            for elementType in elementTypes:
+                if elementType in elementDict:   #only implemented for Hex8
+                    elementList = elementDict[elementType]
+                    for element in elementList:
+                        #print("  element",cnt,"=",element)
+                        for i in element:
+                            #print("    i=",i)
+                            #nodes2elements[int(i)].append(int(cnt))
+                            alist=list(nodes2elements[i])
+                            alist.append(cnt)
+                            nodes2elements[i] = alist
+                            #print("nodes2elements[",i,"]=",nodes2elements[i])
+                        cnt+=1
+
+        
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        for elementDict in self.elements:
+            for elementType in elementTypes:
+                if elementType in elementDict:   #only implemented for Hex8
+                    elementList = elementDict[elementType]
+                    currentIndexList = element2IndexList[elementType]
+                    
+                    #run through all elements:
+                    nElements = len(elementList)
+                    elementCnt = 0
+                    cnt2=0
+                    #now run over all elements:
+                    for element in elementList:
+                        if verbose and elementCnt%10000 == 0 and elementCnt>0:
+                            print("process element ",elementCnt,"/",nElements)
+                        for surface in currentIndexList:
+                            #test a surface with nodes
+                            actSurface = []
+                            for i in surface:
+                                actSurface += [element[i]]
+                            lenSurface = len(actSurface) #3 or 4 nodes at surface
+                            #print("  actsurface=",actSurface)
+                            #find all potential candidates, which could be opposite
+    
+                            testElements = []
+                            for nn in actSurface:
+                                for elNum in nodes2elements[nn]:
+                                    if not (elNum in testElements):
+                                        testElements += [elNum]
+                            
+                            #print("  testElements=",testElements)
+                            foundNeighbor = False
+                            for el in testElements:
+                                if el != elementCnt: #do not compare with itself!!!
+                                    testElement = elementList[el]
+                                    #print("    testElement=",testElement)
+                                    for surface2 in currentIndexList:
+                                        cnt2+=1
+                                        #print("      surface2=",surface2)
+                                        #test a surface2 with nodes
+                                        testSurface = []
+                                        for j in surface2:
+                                            testSurface += [testElement[j]]
+                                        #print("      testSurface=",testSurface)
+                                        
+                                        if len(set(testSurface).intersection(actSurface)) == lenSurface:
+                                            #print("        found!")
+                                            foundNeighbor = True
+                                            break;
+                            
+                            if not foundNeighbor:
+                                #print("      not found!")
+                                if lenSurface == 4:
+                                    surfaceListQuads += [actSurface]
+                                else:
+                                    surfaceListTrigs += [actSurface]
+                        elementCnt += 1
+        
+        if verbose: print("surfaceListQuad length=",len(surfaceListQuad))
+        for quad in surfaceListQuads:
             surfaceListTrigs += [[quad[0],quad[1],quad[2]]]
             surfaceListTrigs += [[quad[0],quad[2],quad[3]]]
 

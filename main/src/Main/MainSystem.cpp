@@ -95,19 +95,46 @@ Index MainSystem::AddMainNode(py::dict d)
 
 Index MainSystem::AddMainNodePyClass(py::object pyObject)
 {
-	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	//return AddMainNode(dictObject);
-	if (py::isinstance<py::dict>(pyObject))
-	{
-		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
-		return AddMainNode(dictObject);
+	py::dict dictObject;
+	Index itemIndex = 0;
 
-	}
-	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	try
 	{
-		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-		return AddMainNode(dictObject);
+		if (py::isinstance<py::dict>(pyObject))
+		{
+			dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		}
+		else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+		{
+			dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		}
+		itemIndex = AddMainNode(dictObject);
 	}
+	catch (const std::exception& ex)
+	{
+		PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
+		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+	}
+	catch (...) //any other exception
+	{
+		PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
+	}
+	return itemIndex;
+
+
+	//if (py::isinstance<py::dict>(pyObject))
+	//{
+	//	py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+	//	return AddMainNode(dictObject);
+
+	//}
+	//else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	//{
+	//	py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+	//	return AddMainNode(dictObject);
+	//}
 }
 
 //! get node's dictionary by name; does not throw a error message
@@ -303,24 +330,38 @@ Index MainSystem::AddMainObject(py::dict d)
 	GetCSystem()->SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainObject(*this, d);
 	InteractiveModeActions();
+
 	return ind;
 };
 
 Index MainSystem::AddMainObjectPyClass(py::object pyObject)
 {
-	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	//return AddMainObject(dictObject);
-	if (py::isinstance<py::dict>(pyObject))
+	py::dict dictObject;
+	Index itemIndex = 0;
+	try
 	{
-		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
-		return AddMainObject(dictObject);
-
+		if (py::isinstance<py::dict>(pyObject))
+		{
+			dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		}
+		else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+		{
+			dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		}
+		itemIndex = AddMainObject(dictObject);
 	}
-	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	catch (const std::exception& ex)
 	{
-		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-		return AddMainObject(dictObject);
+		PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
+		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
+	catch (...) //any other exception
+	{
+		PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) + 
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
+	}
+	return itemIndex;
 }
 
 //! get object's dictionary by name; does not throw a error message
@@ -537,19 +578,33 @@ Index MainSystem::AddMainMarker(py::dict d)
 
 Index MainSystem::AddMainMarkerPyClass(py::object pyObject)
 {
-	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	//return AddMainMarker(dictObject);
-	if (py::isinstance<py::dict>(pyObject))
-	{
-		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
-		return AddMainMarker(dictObject);
+	py::dict dictObject;
+	Index itemIndex = 0;
 
-	}
-	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	try
 	{
-		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-		return AddMainMarker(dictObject);
+		if (py::isinstance<py::dict>(pyObject))
+		{
+			dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		}
+		else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+		{
+			dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		}
+		itemIndex = AddMainMarker(dictObject);
 	}
+	catch (const std::exception& ex)
+	{
+		PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
+		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+	}
+	catch (...) //any other exception
+	{
+		PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
+	}
+	return itemIndex;
 }
 
 //! get object's dictionary by name; does not throw a error message
@@ -680,19 +735,33 @@ Index MainSystem::AddMainLoad(py::dict d)
 
 Index MainSystem::AddMainLoadPyClass(py::object pyObject)
 {
-	//py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-	//return AddMainLoad(dictObject);
-	if (py::isinstance<py::dict>(pyObject))
-	{
-		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
-		return AddMainLoad(dictObject);
+	py::dict dictObject;
+	Index itemIndex = 0;
 
-	}
-	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	try
 	{
-		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-		return AddMainLoad(dictObject);
+		if (py::isinstance<py::dict>(pyObject))
+		{
+			dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		}
+		else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+		{
+			dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		}
+		itemIndex = AddMainLoad(dictObject);
 	}
+	catch (const std::exception& ex)
+	{
+		PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
+		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+	}
+	catch (...) //any other exception
+	{
+		PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
+	}
+	return itemIndex;
 }
 
 //! get object's dictionary by name; does not throw a error message
@@ -837,17 +906,33 @@ Index MainSystem::AddMainSensor(py::dict d)
 
 Index MainSystem::AddMainSensorPyClass(py::object pyObject)
 {
-	if (py::isinstance<py::dict>(pyObject))
-	{
-		py::dict dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
-		return AddMainSensor(dictObject);
+	py::dict dictObject;
+	Index itemIndex = 0;
 
-	}
-	else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+	try
 	{
-		py::dict dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
-		return AddMainSensor(dictObject);
+		if (py::isinstance<py::dict>(pyObject))
+		{
+			dictObject = py::cast<py::dict>(pyObject); //convert py::object to dict
+		}
+		else //must be itemInterface convertable to dict ==> otherwise raises pybind error
+		{
+			dictObject = py::dict(pyObject); //applies dict command to pyObject ==> converts object class to dictionary
+		}
+		itemIndex = AddMainSensor(dictObject);
 	}
+	catch (const std::exception& ex)
+	{
+		PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
+		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+	}
+	catch (...) //any other exception
+	{
+		PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
+	}
+	return itemIndex;
 }
 
 //! get object's dictionary by name; does not throw a error message

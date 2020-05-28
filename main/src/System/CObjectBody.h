@@ -90,19 +90,19 @@ public:
 
 	//! basic access function for rotation of node; returns always a 3D Vector; for rigid bodies, the argument localPosition has no effect
 	virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetRotationMatrix");
 		return Matrix3D();
 	}
 
 	//! basic access function for angular velocity of node; returns always a 3D Vector; for rigid bodies, the argument localPosition has no effect
 	virtual Vector3D GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetAngularVelocity");
 		return Vector3D();
 	}
 
 	//! basic access function for angular velocity of node; returns always a 3D Vector; for rigid bodies, the argument localPosition has no effect
 	virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetDisplacement");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetAngularVelocityLocal");
 		return Vector3D();
 	}
 

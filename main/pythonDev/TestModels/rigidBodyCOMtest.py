@@ -131,7 +131,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.025
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.showBasis = True
 
-simulationSettings.displayComputationTime = True
+#simulationSettings.displayComputationTime = True
 #simulationSettings.displayStatistics = True
 
 

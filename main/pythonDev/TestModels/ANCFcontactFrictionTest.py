@@ -145,7 +145,7 @@ simulationSettings.timeIntegration.endTime = 0.0005*fact
 simulationSettings.solutionSettings.writeSolutionToFile = True
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
 #simulationSettings.solutionSettings.outputPrecision = 4
-simulationSettings.displayComputationTime = True
+#simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
