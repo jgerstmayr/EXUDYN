@@ -111,6 +111,11 @@ private:
 	float contourCurrentMaxValue; //! current maximum value for contour plot
 
 public:
+	GraphicsData()
+	{
+		contourCurrentMinValue = EXUstd::MAXFLOAT;
+		contourCurrentMaxValue = EXUstd::MINFLOAT;
+	}
 	//! Aquire lock for data, such that computation / visualization thread does not access data at the same time
 	void LockData() 
 	{ 

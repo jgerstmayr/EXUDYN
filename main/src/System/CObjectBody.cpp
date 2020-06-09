@@ -83,13 +83,13 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 		value.SetAll(0.);
 
 		Matrix3D A;
-		Index referenceNodeIndex;
-		bool hasReferenceFrame = HasReferenceFrame(referenceNodeIndex);
+		Index localReferenceNodeIndex; //local node number!!!
+		bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
 		Index refFrameOffset = 0;
 
 		if (hasReferenceFrame)
 		{
-			A = ((const CNodeODE2*)(GetCNode(referenceNodeIndex)))->GetRotationMatrix();
+			A = ((const CNodeODE2*)(GetCNode(localReferenceNodeIndex)))->GetRotationMatrix();
 			refFrameOffset++;
 		}
 		else
@@ -155,7 +155,7 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 				}
 			}
 
-			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(referenceNodeIndex);
+			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(localReferenceNodeIndex);
 
 			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
 
@@ -166,11 +166,16 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 
 			//now compute remaining jacobian terms for reference frame motion:
 			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
-			((const CNodeODE2*)GetCNode(referenceNodeIndex))->GetPositionJacobian(posJac0);
+			((const CNodeODE2*)GetCNode(localReferenceNodeIndex))->GetPositionJacobian(posJac0);
 
 			value.SetSubmatrix(posJac0, 0, 0);
 			value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
 		}
+		break;
+	}
+	case (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
+	{
+		CHECKandTHROWstring("CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity_qt not implemented; cannot compute jacobian for orientation");
 		break;
 	}
 	default:

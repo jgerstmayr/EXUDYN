@@ -86,7 +86,7 @@ mbs.AddLoad(Torque(markerNumber = mANCFrigid, loadVector = [0, 0, E*I*0.25*mypi]
 
 
 mbs.Assemble()
-exu.Print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -101,7 +101,7 @@ simulationSettings.staticSolver.verboseMode = 1
 #simulationSettings.staticSolver.newton.absoluteTolerance = 1e-8
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6 #1e-5 works for 64 elements
 simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
-simulationSettings.displayComputationTime = True
+#simulationSettings.displayComputationTime = True
 
     
 exu.StartRenderer()
@@ -110,8 +110,8 @@ simulationSettings.staticSolver.numberOfLoadSteps = 100
 simulationSettings.staticSolver.adaptiveStep = True
 
 staticSolver = exu.MainSolverStatic()
-staticSolver.SolveSystem(mbs, simulationSettings)
-print(staticSolver.timer)
+#staticSolver.SolveSystem(mbs, simulationSettings)
+#print(staticSolver.timer)
 
 import numpy as np
 from scipy.linalg import eigh, eig #eigh for symmetric matrices, positive definite
@@ -126,14 +126,15 @@ staticSolver.InitializeSolver(mbs, simulationSettings)
 
 nODE2 = staticSolver.GetODE2size()
 
+#raise ValueError("")
 #compute mass matrix:
-staticSolver.ComputeMassMatrix(mbs, simulationSettings)
+staticSolver.ComputeMassMatrix(mbs, 1)#simulationSettings)
 m = staticSolver.GetSystemMassMatrix()
 #print("m =",m)
 
 #compute stiffness matrix (systemJacobian is larger!)
-staticSolver.ComputeJacobianODE2RHS(mbs, simulationSettings)
-staticSolver.ComputeJacobianAE(mbs, simulationSettings)
+staticSolver.ComputeJacobianODE2RHS(mbs, 1)
+staticSolver.ComputeJacobianAE(mbs, 1)
 K = staticSolver.GetSystemJacobian()
 #print("K =",K)
 
@@ -166,7 +167,7 @@ print('omega analytical =',omega)
 #SC.StaticSolve(mbs, simulationSettings)
 
 
-#SC.WaitForRenderEngineStopFlag()
+SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
 
 

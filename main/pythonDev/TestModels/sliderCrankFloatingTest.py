@@ -22,8 +22,9 @@ import exudyn as exu
 from exudynUtilities import *
 from itemInterface import *
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+if exudynTestGlobals.useGraphics: 
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

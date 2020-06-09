@@ -28,20 +28,26 @@ This section will show:
 %
 \mysubsubsection{What is \codeName ?}
 \codeName\ is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
-It is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components.
+It is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
-The formulation is mostly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
+The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see Section \ref{sec_items}.
 \vspace{6pt}\\
 %
 \mysubsubsection{Who is developing \codeName ?}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
-In the first phase most of the core code has been (and still is) written by Johannes Gerstmayr, implementing ideas of earlier developments of HOTINT. 15 years of development led to a lot of lessions learned.
+In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT. 15 years of development led to a lot of lessions learned and after 20 years, a code must be re-designed.
 
-Some specific codes regarding pybind interface and parallelization have been written by Stefan Holzinger, who also supports the upload to GitLab.
-Important discussions with researchers from the community where important for the design and development of \codeName , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who influenced the design of the code. During a Comet-K2 cooperation project, several discussions with the TMECH/LCM group in Linz influenced the code development.
+Some specific codes regarding Pybind11 (by Jakob Wenzel, \texttt{https://github.com/pybind/pybind11}, thanks a lot!!!) interface and parallelization have been written by Stefan Holzinger, who also supported the upload to GitLab.
 
-The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' will support the further development of the code.
+Important discussions with researchers from the community were important for the design and development of \codeName , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who influenced the design of the code. During a Comet-K2 cooperation project, several discussions with the TMECH/LCM group in Linz influenced the code development.
+
+The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
+
+The following people have contributed to the examples -- thanks a lot!
+\bi
+	\item Stefan Holzinger, Michael Pieber, Joachim Sch{\"o}berl, Dominik Sponring, David Wibmer, Andreas Zw{\"o}lfer
+\ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -55,7 +61,7 @@ We recommend to use
 	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anacondo 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer}
 %Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
-If you plan to use 64bit and newer Python versions, we recommend to use VS2019 to compile your code, which offers Python 3.7 compatibility.
+If you plan to use 64bit and newer Python versions, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with eigen and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
 However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 {\bf both} in the exudyn module and in Spyder).
 
 The simplest way to start is, to copy the files (and possibly further files that are needed)
@@ -187,7 +193,8 @@ Within this file, the first column shows the simulation time and the following c
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item Why does type auto completion does not work for mbs (Main system)?
 	\bi
-	\item[$\ra$] most python environments only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.\\
+	\item[$\ra$] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better. However, note that absolute paths need to be used for module import.
+	\item[$\ra$] most python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.\\
 	WORKAROUND: type \texttt{mbs=MainSystem()} {\bf before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 	\ei
 	%

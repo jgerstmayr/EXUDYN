@@ -419,6 +419,7 @@
     <ClCompile Include="..\src\Objects\CMarkerNodeRotationCoordinate.cpp" />
     <ClCompile Include="..\src\Objects\CMarkerObjectODE2Coordinates.cpp" />
     <ClCompile Include="..\src\Objects\CMarkerSuperElementPosition.cpp" />
+    <ClCompile Include="..\src\Objects\CMarkerSuperElementRigid.cpp" />
     <ClCompile Include="..\src\Objects\CNode1D.cpp" />
     <ClCompile Include="..\src\Objects\CNodeGenericData.cpp" />
     <ClCompile Include="..\src\Objects\CNodeGenericODE2.cpp" />

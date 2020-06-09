@@ -5,9 +5,11 @@ miniExamplesFileList = ['ObjectMassPoint.py',
 'ObjectMass1D.py',
 'ObjectRotationalMass1D.py',
 'ObjectRigidBody2D.py',
+'ObjectGenericODE2.py',
 'ObjectConnectorSpringDamper.py',
 'ObjectConnectorCartesianSpringDamper.py',
 'ObjectConnectorCoordinateSpringDamper.py',
 'ObjectConnectorDistance.py',
-'ObjectConnectorCoordinate.py']
+'ObjectConnectorCoordinate.py',
+'MarkerSuperElementPosition.py']
 

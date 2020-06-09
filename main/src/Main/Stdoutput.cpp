@@ -47,6 +47,7 @@ OutputBuffer outputBuffer; //this is my customized output buffer, which can redi
 std::ostream pout(&outputBuffer);  // link ostream pout to buffer; pout behaves the same as std::cout
 
 bool globalPyRuntimeErrorFlag = false; //this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
+bool deactivateGlobalPyRuntimeErrorFlag = false; //this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
 std::atomic_flag outputBufferAtomicFlag;   //!< flag, which is used to lock access to outputBuffer
 
 std::atomic_flag queuedPythonExecutableCodeAtomicFlag;  //!< flag for executable python code
@@ -119,7 +120,7 @@ void PyError(std::string error_msg)
 //! additional output to file
 void PyError(std::string error_msg, std::ofstream& file) 
 {
-	globalPyRuntimeErrorFlag = true; //stop graphics, etc.
+	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; } //stop graphics, etc.
 	STDstring fileName;
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
@@ -150,6 +151,7 @@ void SysError(std::string error_msg)
 //! additional output to file
 void SysError(std::string error_msg, std::ofstream& file) 
 {
+	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; }//stop graphics, etc.
 	globalPyRuntimeErrorFlag = true; //stop graphics, etc.
 	STDstring fileName;
 	Index lineNumber;
@@ -208,11 +210,41 @@ void PyProcessExecuteQueue() //call python function and execute string as python
 	queuedPythonExecutableCodeAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr
 	if (queuedPythonExecutableCodeStr.size())
 	{
-		py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-		py::exec(queuedPythonExecutableCodeStr.c_str(), scope);
+		STDstring execStr = queuedPythonExecutableCodeStr;
 		queuedPythonExecutableCodeStr.clear();
+		queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+		deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
+
+		try //catch exceptions; user may want to continue after a illegal python command 
+		{
+			py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
+			py::exec(execStr.c_str(), scope);
+		}
+		//mostly catches python errors:
+		catch (const pybind11::error_already_set& ex)
+		{
+			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!");
+			deactivateGlobalPyRuntimeErrorFlag = false;
+			throw; //avoid multiple exceptions trown again (don't know why!)!
+			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		}
+		catch (const std::exception& ex)
+		{
+			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!!");
+			deactivateGlobalPyRuntimeErrorFlag = false;
+			throw; //avoid multiple exceptions trown again (don't know why!)!
+			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		}
+		catch (...) //any other exception
+		{
+			PyWarning("Error when executing '" + STDstring(execStr) + "'\nmaybe a module is missing and check your python code!!");
+		}
+		deactivateGlobalPyRuntimeErrorFlag = false; 
 	}
-	queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+	else
+	{
+		queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+	}
 }
 
 ////this solution does not work!

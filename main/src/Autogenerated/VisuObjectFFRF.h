@@ -1,15 +1,15 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectFFRF
-* @brief        This object is used to represent equations modelled by the floating frame of reference formulation (FFRF). It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF.
+* @brief        This object is used to represent equations modelled by the floating frame of reference formulation (FFRF). It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF. Note that temporary matrices and vectors are subject of change in future.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-05-13  14:31:02 (last modfied)
+* @date         2020-06-01  20:10:12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once

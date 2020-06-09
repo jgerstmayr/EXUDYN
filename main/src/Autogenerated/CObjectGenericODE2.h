@@ -4,12 +4,12 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-05-18  09:16:18 (last modfied)
+* @date         2020-06-07  12:56:53 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once
@@ -62,7 +62,7 @@ public: // AUTO:
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once
@@ -161,10 +161,10 @@ public: // AUTO:
     //! AUTO:  initialize coordinateIndexPerNode array
     void InitializeCoordinateIndices();
 
-    //! AUTO:  return true, if object has reference frame; return according node
-    virtual bool HasReferenceFrame(Index& referenceFrameNode) const override
+    //! AUTO:  return true, if object has reference frame; return according LOCAL node number
+    virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override
     {
-        referenceFrameNode = 0; return false;
+        localReferenceFrameNode = 0; return false;
     }
 
     //! AUTO:  return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used

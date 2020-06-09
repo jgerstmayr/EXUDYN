@@ -35,6 +35,7 @@
 #include "Graphics/GlfwClient.h"
 
 extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
+//extern bool deactivateGlobalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
 #define rendererOut std::cout //defines the type of output for renderer: pout could be problematic because of parallel threads; std::cout does not work in Spyder
 
 
@@ -100,31 +101,33 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		basicVisualizationSystemContainer->ContinueSimulation();
 	}
 
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//visualization update keys:
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == 0)
 	{
 		visSettings->general.graphicsUpdateInterval = 0.02f;
 		rendererOut << "Visualization update: 20ms\n";
 	}
 
-	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == 0)
 	{
 		visSettings->general.graphicsUpdateInterval = 0.2f;
 		rendererOut << "Visualization update: 200ms\n";
 	}
 
-	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == 0)
 	{
 		visSettings->general.graphicsUpdateInterval = 1.f;
 		rendererOut << "Visualization update: 1s\n";
 	}
 
-	if (key == GLFW_KEY_4 && action == GLFW_PRESS)
+	if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == 0)
 	{
 		visSettings->general.graphicsUpdateInterval = 10.f;
 		rendererOut << "Visualization update: 10s\n";
 	}
 
-	if (key == GLFW_KEY_5 && action == GLFW_PRESS)
+	if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == 0)
 	{
 		visSettings->general.graphicsUpdateInterval = 100.f;
 		rendererOut << "Visualization update: 100s\n";
@@ -195,22 +198,45 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	}
 	if (key == GLFW_KEY_X && action == GLFW_PRESS)
 	{
-		//open window to execute a python command ... (THREADSAFE???)
+		//open window to execute a python command ... 
+		//trys to catch errors made by user in this window
 		std::string str = R"(
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 
+commandString = ''
+commandSet = False
 singleCommandMainwin = tk.Tk()
-def OnSingleCommandReturn(event):
-    exec(singleCommandEntry.get(), globals())
-    singleCommandMainwin.destroy()
+def OnSingleCommandReturn(event): #set command string, but do not execute
+    commandString = singleCommandEntry.get()
+    print(commandString) #printout the command
+    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
+    try:
+        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
+        if locals()['tempEXUDYNexecute']!=None:
+            print(locals()['tempEXUDYNexecute'])
+        singleCommandMainwin.destroy()
+    except:
+        print("Execution of command failed. check your code!")
 
 tk.Label(singleCommandMainwin, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
 singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
 singleCommandEntry.grid(row=1, column=0)
 singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
-
 singleCommandMainwin.mainloop()
+
+#does not work, commandString is erased at this time ...?
+#print("commandString2=",commandString) #printout the command
+#print("commandSet2=",commandSet) #printout the command
+
+#if commandSet:
+#    exec(commandString, globals()) #OLD version
+#    print(commandString) #printout the command
+#    exec("locals()['tempEXUDYNexecute'] ={commandString}", globals(), locals())
+#    if locals()['tempEXUDYNexecute']!=None:
+#        print(locals()['tempEXUDYNexecute'])
+#from time import sleep
+#sleep(1)
 )";
 		PyQueueExecutableString(str);
 		UpdateGraphicsDataNow();
@@ -231,7 +257,7 @@ singleCommandMainwin.mainloop()
 root = tk.Tk()
 root.title("Help on keyboard commands and mouse")
 scrollW = tk.Scrollbar(root)
-textW = tk.Text(root, height = 30, width = 60)
+textW = tk.Text(root, height = 30, width = 90)
 scrollW.pack(side = tk.RIGHT, fill = tk.Y)
 textW.pack(side = tk.LEFT, fill = tk.Y)
 scrollW.config(command = textW.yview)
@@ -246,8 +272,13 @@ Key(s) action:
 1,2,3,4 or 5          ... visualization update speed
 '.' or KEYPAD '+'     ... zoom in
 ',' or KEYPAD '-'     ... zoom out
-0 or KEYPAD '0'       ... reset rotation
-CURSOR UP, DOWN, etc. ... move scene
+CTRL+1                ... set view to 1/2-plane
+SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
+CTRL+2                ... set view to 1/3-plane
+SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
+CTRL+3,4,5,6          ... other views (with optional SHIFT key)
+CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements)
+KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
 A      ... zoom all
 C      ... show/hide connectors
 CTRL+C ... show/hide connector numbers
@@ -262,8 +293,8 @@ CTRL+N ... show/hide node numbers
 S      ... show/hide sensors
 CTRL+S ... show/hide sensor numbers
 Q      ... stop simulation
-X      ... execute command
-V      ... visualization settings
+X      ... execute command; dialog may appear behind the visualization window! may crash!
+V      ... visualization settings; dialog may appear behind the visualization window!
 ESCAPE ... close render window
 SPACE ... continue simulation
 """
@@ -277,7 +308,13 @@ tk.mainloop()
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//process keys for move, rotate, zoom
 	float rotStep = visSettings->window.keypressRotationStep; //degrees
-	float transStep = visSettings->window.keypressRotationStep * state->zoom; //degrees
+	float transStep = visSettings->window.keypressTranslationStep * state->zoom; //degrees
+	if (mods == GLFW_MOD_CONTROL) //only for rotStep and transStep
+	{
+		rotStep *= 0.1f;
+		transStep *= 0.1f;
+	}
+		
 	float zoomStep = visSettings->window.zoomStepFactor;
 	Float3 incRot({ 0.f,0.f,0.f });
 	if (key == GLFW_KEY_KP_2 && action == GLFW_PRESS) { incRot[0] = rotStep; }
@@ -298,14 +335,135 @@ tk.mainloop()
 		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
 	}
 
-	if ((key == GLFW_KEY_KP_0 || key == GLFW_KEY_0) && action == GLFW_PRESS) //reset all rotations
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//standard view:
+	//if ((key == GLFW_KEY_KP_0 || key == GLFW_KEY_0) && action == GLFW_PRESS) //reset all rotations
+	//{
+	//	glMatrixMode(GL_MODELVIEW);
+	//	glLoadIdentity();	//start with identity
+	//	glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+	//	rendererOut << "Reset OpenGL modelview\n";
+	//}
+
+	//change view:
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) 
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();	//start with identity
+		//glRotated(180, 0.0, 1.0, 0.0);
 		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "Reset OpenGL modelview\n";
+		rendererOut << "View 1: 1-2-plane\n";
 	}
 
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) 
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(-90, 1.0, 0.0, 0.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 2: 1-3-plane\n";
+	}
+
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) 
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(-90, 0.0, 1.0, 0.0);
+		glRotated(-90, 1.0, 0.0, 0.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 3: 2-3-plane\n";
+	}
+
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT) 
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(180, 0.0, 1.0, 0.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 1: 1-2-plane mirrored about vertical axis\n";
+	}
+
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT) 
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(-90, 1.0, 0.0, 0.0);
+		glRotated(180, 0.0, 0.0, 1.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 2: 1-3-plane mirrored about vertical axis\n";
+	}
+
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT) 
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(-90, 0.0, 1.0, 0.0);
+		glRotated(-90, 1.0, 0.0, 0.0);
+		glRotated(180, 0.0, 0.0, 1.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 3: 2-3-plane mirrored about vertical axis\n";
+	}
+
+	//second group of views:
+	if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(180, 0.0, 1.0, 0.0);
+		glRotated(90, 0.0, 0.0, 1.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 1: 2-1-plane\n";
+	}
+
+	if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(90, 0.0, 1.0, 0.0);
+		glRotated(90, 0.0, 0.0, 1.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 2: 3-1-plane\n";
+	}
+
+	if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(90, 0.0, 1.0, 0.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 3: 3-2-plane\n";
+	}
+
+	if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(90, 0.0, 0.0, 1.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 1: 2-1-plane mirrored about vertical axis\n";
+	}
+
+	if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(-90, 1.0, 0.0, 0.0);
+		glRotated(-90, 0.0, 1.0, 0.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 2: 3-1-plane mirrored about vertical axis\n";
+	}
+
+	if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();	//start with identity
+		glRotated(-90, 0.0, 1.0, 0.0);
+		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		rendererOut << "View 3: 3-2-plane mirrored about vertical axis\n";
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS) { state->centerPoint[1] -= transStep; }
@@ -876,7 +1034,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		glTranslated(-factor*ratio*1.05, factor, 0.f);
 
 		float scale = 2.f*visSettings->general.textSize*zoom / ((float)height);
-		Float3 poff({ 0.f,0.05f*zoom,0.f }); //offset
+		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front
+		Float3 poff({ 0.f,0.05f*zoom,hOff }); //offset
 
 		DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
 	}
@@ -889,9 +1048,11 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		glTranslated(-factor * ratio*1.05, factor, 0.f);
 
 		float d = 0.05f*zoom;
+		float hOff = 0.9f*(float)zFactor * 2.f*state->maxSceneSize;   //quads in front
+		float hOff2 = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //lines in front
 
 		float scale = 2.f*visSettings->general.textSize*zoom / ((float)height);
-		Float3 p0({ 0.f,-2*d,0.f }); //offset
+		Float3 p0({ 0.f,-2*d,hOff2 }); //offset
 
 		float minVal = 0;
 		float maxVal = 1;
@@ -916,25 +1077,45 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		{
 			float value = i / n * range + minVal;
 			const float sizeX = 0.06f*zoom;
-			const float sizeY = 0.05f*zoom * n/12.f;
+			const float sizeY = 0.05f*zoom * n / 12.f;
+			const float sizeY2 = 0.05f*zoom * n / 12.f; //avoid spaces between fields
 
+			bool drawFacesContourPlot = true;
+			Float4 color0 = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, value);
+			glDepthMask(GL_FALSE); //draw lines always in front
+
+			if (drawFacesContourPlot)
+			{
+				Float4 color0 = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, value);
+				glBegin(GL_TRIANGLES);
+				glColor3f(color0[0], color0[1], color0[2]);
+				glVertex3f(p0[0], p0[1], hOff);
+				glVertex3f(p0[0] + sizeX, p0[1], hOff);
+				glVertex3f(p0[0] + sizeX, p0[1] - sizeY2, hOff);
+
+				glVertex3f(p0[0], p0[1], hOff);
+				glVertex3f(p0[0] + sizeX, p0[1] - sizeY2, hOff);
+				glVertex3f(p0[0], p0[1] - sizeY2, hOff);
+				glEnd();
+			}
 			if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
 			glLineWidth(visSettings->openGL.lineWidth);
-
+			if (drawFacesContourPlot) { color0 = Float4({ 0.1f,0.1f,0.1f,1.f }); }
 			glBegin(GL_LINE_STRIP);
-			Float4 color0 = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, value);
 			glColor3f(color0[0], color0[1], color0[2]);
-			glVertex3f(p0[0], p0[1], 0.);
-			glVertex3f(p0[0] + sizeX, p0[1], 0.);
-			glVertex3f(p0[0] + sizeX, p0[1] - sizeY, 0.);
-			glVertex3f(p0[0], p0[1] - sizeY, 0.);
-			glVertex3f(p0[0], p0[1], 0.);
+			if (i != 0) { glVertex3f(p0[0] + sizeX, p0[1] - sizeY2, hOff2); }
+			glVertex3f(p0[0], p0[1] - sizeY2, hOff2);
+			glVertex3f(p0[0], p0[1], hOff2);
+			glVertex3f(p0[0] + sizeX, p0[1], hOff2);
+			glVertex3f(p0[0] + sizeX, p0[1] - sizeY2, hOff2);
 			glEnd();
 			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
 
+			glDepthMask(GL_TRUE);
+
 			char str[20];
 			std::sprintf(str, "% .2g", value);
-			DrawString(str, scale*0.8f, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0. }), textColor);
+			DrawString(str, scale*0.8f, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0}), textColor);
 			//DrawString(EXUstd::ToString(value).c_str(), scale*0.8, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0. }), textColor);
 
 			p0 += Float3({ 0.f,-sizeY,0.f });
@@ -956,7 +1137,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		float d = visSettings->general.coordinateSystemSize*zoom;
 		//float a = d * 0.05f; //distance of text
 
-		Float3 p0({ 0.f,0.f,0.f });
+		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front
+		Float3 p0({ 0.f,0.f,hOff });
 		Float3 v1({ d,  0.f,0.f });
 		Float3 v2({ 0.f,  d,0.f });
 		Float3 v3({ 0.f,0.f,  d }); //check why z-coordinates are flipped ...

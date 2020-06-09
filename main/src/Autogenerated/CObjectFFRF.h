@@ -4,12 +4,12 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-05-26  08:33:20 (last modfied)
+* @date         2020-06-07  12:56:53 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once
@@ -63,7 +63,7 @@ public: // AUTO:
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once
@@ -318,10 +318,10 @@ public: // AUTO:
     //! AUTO:  initialize coordinateIndexPerNode array
     void InitializeObject();
 
-    //! AUTO:  always true, because ObjectFFRF
-    virtual bool HasReferenceFrame(Index& referenceFrameNode) const override
+    //! AUTO:  always true, because ObjectFFRF; return according LOCAL node number
+    virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override
     {
-        referenceFrameNode = rigidBodyNodeNumber; return true;
+        localReferenceFrameNode = rigidBodyNodeNumber; return true;
     }
 
     //! AUTO:  return the number of mesh nodes, which is 1 less than the number of nodes (but different in other SuperElements)

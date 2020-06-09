@@ -317,6 +317,7 @@ V,      maxValue,                       , 	             1,    float,        "1",
 #V,      currentMinValue,                , 	             1,    float,        "0",                    , P,      "minimum value for contour plot; set manually, if automaticRange == False"
 #V,      currentMaxValue,                , 	             1,    float,        "1",                    , P,      "maximum value for contour plot; set manually, if automaticRange == False"
 V,      automaticRange,                 , 	             ,     bool,         true,                   , P,      "if true, the contour plot value range is chosen automatically to the maximum range"
+V,      reduceRange,                    , 	             ,     bool,         true,                   , P,      "if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)"
 V,      showColorBar,                   , 	             ,     bool,         true,                   , P,      "show the colour bar with minimum and maximum values for the contour plot"
 V,      colorBarTiling,                 , 	             1,    Index,        "12",                   , P,      "number of tiles (segements) shown in the colorbar for the contour plot"
 #

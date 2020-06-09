@@ -44,6 +44,7 @@ class NodePoint:
 
 #add typedef for short usage:
 Point = NodePoint
+VPoint = VNodePoint
 
 class VNodePoint2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -76,6 +77,7 @@ class NodePoint2D:
 
 #add typedef for short usage:
 Point2D = NodePoint2D
+VPoint2D = VNodePoint2D
 
 class VNodeRigidBodyEP:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -108,6 +110,7 @@ class NodeRigidBodyEP:
 
 #add typedef for short usage:
 RigidEP = NodeRigidBodyEP
+VRigidEP = VNodeRigidBodyEP
 
 class VNodeRigidBodyRxyz:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -140,6 +143,7 @@ class NodeRigidBodyRxyz:
 
 #add typedef for short usage:
 RigidRxyz = NodeRigidBodyRxyz
+VRigidRxyz = VNodeRigidBodyRxyz
 
 class VNodeRigidBodyRotVecLG:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -172,6 +176,7 @@ class NodeRigidBodyRotVecLG:
 
 #add typedef for short usage:
 RigidRotVecLG = NodeRigidBodyRotVecLG
+VRigidRotVecLG = VNodeRigidBodyRotVecLG
 
 class VNodeRigidBody2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -204,6 +209,7 @@ class NodeRigidBody2D:
 
 #add typedef for short usage:
 Rigid2D = NodeRigidBody2D
+VRigid2D = VNodeRigidBody2D
 
 class VNode1D:
     def __init__(self, show = False):
@@ -259,6 +265,7 @@ class NodePoint2DSlope1:
 
 #add typedef for short usage:
 Point2DS1 = NodePoint2DSlope1
+VPoint2DS1 = VNodePoint2DSlope1
 
 class VNodeGenericODE2:
     def __init__(self, show = False):
@@ -333,6 +340,7 @@ class NodePointGround:
 
 #add typedef for short usage:
 PointGround = NodePointGround
+VPointGround = VNodePointGround
 
 #+++++++++++++++++++++++++++++++
 #OBJECT
@@ -362,6 +370,7 @@ class ObjectMassPoint:
 
 #add typedef for short usage:
 MassPoint = ObjectMassPoint
+VMassPoint = VObjectMassPoint
 
 class VObjectMassPoint2D:
     def __init__(self, show = True, graphicsData = []):
@@ -389,6 +398,7 @@ class ObjectMassPoint2D:
 
 #add typedef for short usage:
 MassPoint2D = ObjectMassPoint2D
+VMassPoint2D = VObjectMassPoint2D
 
 class VObjectMass1D:
     def __init__(self, show = True, graphicsData = []):
@@ -420,6 +430,7 @@ class ObjectMass1D:
 
 #add typedef for short usage:
 Mass1D = ObjectMass1D
+VMass1D = VObjectMass1D
 
 class VObjectRotationalMass1D:
     def __init__(self, show = True, graphicsData = []):
@@ -451,6 +462,7 @@ class ObjectRotationalMass1D:
 
 #add typedef for short usage:
 Rotor1D = ObjectRotationalMass1D
+VRotor1D = VObjectRotationalMass1D
 
 class VObjectRigidBody:
     def __init__(self, show = True, graphicsData = []):
@@ -482,6 +494,7 @@ class ObjectRigidBody:
 
 #add typedef for short usage:
 RigidBody = ObjectRigidBody
+VRigidBody = VObjectRigidBody
 
 class VObjectRigidBody2D:
     def __init__(self, show = True, graphicsData = []):
@@ -511,6 +524,7 @@ class ObjectRigidBody2D:
 
 #add typedef for short usage:
 RigidBody2D = ObjectRigidBody2D
+VRigidBody2D = VObjectRigidBody2D
 
 class VObjectGenericODE2:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
@@ -526,7 +540,7 @@ class VObjectGenericODE2:
         yield 'showNodes', self.showNodes
 
 class ObjectGenericODE2:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, coordinateIndexPerNode = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrix = massMatrix
@@ -535,7 +549,6 @@ class ObjectGenericODE2:
         self.forceVector = forceVector
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
-        self.coordinateIndexPerNode = coordinateIndexPerNode
         self.visualization = visualization
 
     def __iter__(self):
@@ -548,7 +561,6 @@ class ObjectGenericODE2:
         yield 'forceVector', self.forceVector
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
-        yield 'coordinateIndexPerNode', self.coordinateIndexPerNode
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
@@ -568,7 +580,7 @@ class VObjectFFRF:
         yield 'showNodes', self.showNodes
 
 class ObjectFFRF:
-    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = [], stiffnessMatrixFF = [], dampingMatrixFF = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, coordinateIndexPerNode = [], objectIsInitialized = False, physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], PHItTM = [], referencePositions = [], tempVector = [], tempCoordinates = [], tempCoordinates_t = [], tempRefPosSkew = [], tempVelSkew = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixFF = [], stiffnessMatrixFF = [], dampingMatrixFF = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, objectIsInitialized = False, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrixFF = massMatrixFF
@@ -578,18 +590,7 @@ class ObjectFFRF:
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
-        self.coordinateIndexPerNode = coordinateIndexPerNode
         self.objectIsInitialized = objectIsInitialized
-        self.physicsMass = physicsMass
-        self.physicsInertia = physicsInertia
-        self.physicsCenterOfMass = physicsCenterOfMass
-        self.PHItTM = PHItTM
-        self.referencePositions = referencePositions
-        self.tempVector = tempVector
-        self.tempCoordinates = tempCoordinates
-        self.tempCoordinates_t = tempCoordinates_t
-        self.tempRefPosSkew = tempRefPosSkew
-        self.tempVelSkew = tempVelSkew
         self.visualization = visualization
 
     def __iter__(self):
@@ -603,18 +604,7 @@ class ObjectFFRF:
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'computeFFRFterms', self.computeFFRFterms
-        yield 'coordinateIndexPerNode', self.coordinateIndexPerNode
         yield 'objectIsInitialized', self.objectIsInitialized
-        yield 'physicsMass', self.physicsMass
-        yield 'physicsInertia', self.physicsInertia
-        yield 'physicsCenterOfMass', self.physicsCenterOfMass
-        yield 'PHItTM', self.PHItTM
-        yield 'referencePositions', self.referencePositions
-        yield 'tempVector', self.tempVector
-        yield 'tempCoordinates', self.tempCoordinates
-        yield 'tempCoordinates_t', self.tempCoordinates_t
-        yield 'tempRefPosSkew', self.tempRefPosSkew
-        yield 'tempVelSkew', self.tempVelSkew
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
@@ -634,7 +624,7 @@ class VObjectFFRFreducedOrder:
         yield 'showNodes', self.showNodes
 
 class ObjectFFRFreducedOrder:
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], referencePositions = [], physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], PHItTM = [], tempUserFunctionForce = [], tempRefPosSkew = [], tempVelSkew = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], referencePositions = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrixReduced = massMatrixReduced
@@ -645,13 +635,6 @@ class ObjectFFRFreducedOrder:
         self.computeFFRFterms = computeFFRFterms
         self.modeBasis = modeBasis
         self.referencePositions = referencePositions
-        self.physicsMass = physicsMass
-        self.physicsInertia = physicsInertia
-        self.physicsCenterOfMass = physicsCenterOfMass
-        self.PHItTM = PHItTM
-        self.tempUserFunctionForce = tempUserFunctionForce
-        self.tempRefPosSkew = tempRefPosSkew
-        self.tempVelSkew = tempVelSkew
         self.visualization = visualization
 
     def __iter__(self):
@@ -666,17 +649,14 @@ class ObjectFFRFreducedOrder:
         yield 'computeFFRFterms', self.computeFFRFterms
         yield 'modeBasis', self.modeBasis
         yield 'referencePositions', self.referencePositions
-        yield 'physicsMass', self.physicsMass
-        yield 'physicsInertia', self.physicsInertia
-        yield 'physicsCenterOfMass', self.physicsCenterOfMass
-        yield 'PHItTM', self.PHItTM
-        yield 'tempUserFunctionForce', self.tempUserFunctionForce
-        yield 'tempRefPosSkew', self.tempRefPosSkew
-        yield 'tempVelSkew', self.tempVelSkew
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
+
+#add typedef for short usage:
+CMSobject = ObjectFFRFreducedOrder
+VCMSobject = VObjectFFRFreducedOrder
 
 class VObjectANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -723,6 +703,7 @@ class ObjectANCFCable2D:
 
 #add typedef for short usage:
 Cable2D = ObjectANCFCable2D
+VCable2D = VObjectANCFCable2D
 
 class VObjectALEANCFCable2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -773,6 +754,7 @@ class ObjectALEANCFCable2D:
 
 #add typedef for short usage:
 ALECable2D = ObjectALEANCFCable2D
+VALECable2D = VObjectALEANCFCable2D
 
 class VObjectGround:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], graphicsData = []):
@@ -838,6 +820,7 @@ class ObjectConnectorSpringDamper:
 
 #add typedef for short usage:
 SpringDamper = ObjectConnectorSpringDamper
+VSpringDamper = VObjectConnectorSpringDamper
 
 class VObjectConnectorCartesianSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -876,6 +859,7 @@ class ObjectConnectorCartesianSpringDamper:
 
 #add typedef for short usage:
 CartesianSpringDamper = ObjectConnectorCartesianSpringDamper
+VCartesianSpringDamper = VObjectConnectorCartesianSpringDamper
 
 class VObjectConnectorRigidBodySpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -916,6 +900,7 @@ class ObjectConnectorRigidBodySpringDamper:
 
 #add typedef for short usage:
 RigidBodySpringDamper = ObjectConnectorRigidBodySpringDamper
+VRigidBodySpringDamper = VObjectConnectorRigidBodySpringDamper
 
 class VObjectConnectorCoordinateSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -958,6 +943,7 @@ class ObjectConnectorCoordinateSpringDamper:
 
 #add typedef for short usage:
 CoordinateSpringDamper = ObjectConnectorCoordinateSpringDamper
+VCoordinateSpringDamper = VObjectConnectorCoordinateSpringDamper
 
 class VObjectConnectorDistance:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -990,6 +976,7 @@ class ObjectConnectorDistance:
 
 #add typedef for short usage:
 DistanceConstraint = ObjectConnectorDistance
+VDistanceConstraint = VObjectConnectorDistance
 
 class VObjectConnectorCoordinate:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1030,6 +1017,7 @@ class ObjectConnectorCoordinate:
 
 #add typedef for short usage:
 CoordinateConstraint = ObjectConnectorCoordinate
+VCoordinateConstraint = VObjectConnectorCoordinate
 
 class VObjectConnectorCoordinateVector:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
@@ -1065,6 +1053,7 @@ class ObjectConnectorCoordinateVector:
 
 #add typedef for short usage:
 CoordinateVectorConstraint = ObjectConnectorCoordinateVector
+VCoordinateVectorConstraint = VObjectConnectorCoordinateVector
 
 class VObjectContactCoordinate:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1229,6 +1218,7 @@ class ObjectJointGeneric:
 
 #add typedef for short usage:
 GenericJoint = ObjectJointGeneric
+VGenericJoint = VObjectJointGeneric
 
 class VObjectJointSpherical:
     def __init__(self, show = True, jointRadius = 0.1, color = [-1.,-1.,-1.,-1.]):
@@ -1261,6 +1251,7 @@ class ObjectJointSpherical:
 
 #add typedef for short usage:
 SphericalJoint = ObjectJointSpherical
+VSphericalJoint = VObjectJointSpherical
 
 class VObjectJointRevolute2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1291,6 +1282,7 @@ class ObjectJointRevolute2D:
 
 #add typedef for short usage:
 RevoluteJoint2D = ObjectJointRevolute2D
+VRevoluteJoint2D = VObjectJointRevolute2D
 
 class VObjectJointPrismatic2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1327,6 +1319,7 @@ class ObjectJointPrismatic2D:
 
 #add typedef for short usage:
 PrismaticJoint2D = ObjectJointPrismatic2D
+VPrismaticJoint2D = VObjectJointPrismatic2D
 
 class VObjectJointSliding2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1365,6 +1358,7 @@ class ObjectJointSliding2D:
 
 #add typedef for short usage:
 SlidingJoint2D = ObjectJointSliding2D
+VSlidingJoint2D = VObjectJointSliding2D
 
 class VObjectJointALEMoving2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1407,6 +1401,7 @@ class ObjectJointALEMoving2D:
 
 #add typedef for short usage:
 ALEMovingJoint2D = ObjectJointALEMoving2D
+VALEMovingJoint2D = VObjectJointALEMoving2D
 
 #+++++++++++++++++++++++++++++++
 #MARKER
@@ -1577,6 +1572,34 @@ class MarkerSuperElementPosition:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 
+class VMarkerSuperElementRigid:
+    def __init__(self, show = True, showMarkerNodes = True):
+        self.show = show
+        self.showMarkerNodes = showMarkerNodes
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'showMarkerNodes', self.showMarkerNodes
+
+class MarkerSuperElementRigid:
+    def __init__(self, name = '', bodyNumber = -1, referencePosition = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
+        self.name = name
+        self.bodyNumber = bodyNumber
+        self.referencePosition = referencePosition
+        self.meshNodeNumbers = meshNodeNumbers
+        self.weightingFactors = weightingFactors
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'SuperElementRigid'
+        yield 'name', self.name
+        yield 'bodyNumber', self.bodyNumber
+        yield 'referencePosition', self.referencePosition
+        yield 'meshNodeNumbers', self.meshNodeNumbers
+        yield 'weightingFactors', self.weightingFactors
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
+
 class VMarkerObjectODE2Coordinates:
     def __init__(self, show = True):
         self.show = show
@@ -1665,6 +1688,7 @@ class LoadForceVector:
 
 #add typedef for short usage:
 Force = LoadForceVector
+VForce = VLoadForceVector
 
 class VLoadTorqueVector:
     def __init__(self, show = True):
@@ -1693,6 +1717,7 @@ class LoadTorqueVector:
 
 #add typedef for short usage:
 Torque = LoadTorqueVector
+VTorque = VLoadTorqueVector
 
 class VLoadMassProportional:
     def __init__(self, show = True):
@@ -1719,6 +1744,7 @@ class LoadMassProportional:
 
 #add typedef for short usage:
 Gravity = LoadMassProportional
+VGravity = VLoadMassProportional
 
 class VLoadCoordinate:
     def __init__(self, show = True):

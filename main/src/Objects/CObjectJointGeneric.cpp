@@ -209,8 +209,8 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 				const Matrix3D& A1off = parameters.rotationMarker1;
 				Matrix3D A1all = (A1*A1off);
 
-				const Matrix3D& A0_t = markerData.GetMarkerData(0).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(0).angularVelocityLocal);
-				const Matrix3D& A1_t = markerData.GetMarkerData(1).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(1).angularVelocityLocal);
+				Matrix3D A0_t = markerData.GetMarkerData(0).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(0).angularVelocityLocal);
+				Matrix3D A1_t = markerData.GetMarkerData(1).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(1).angularVelocityLocal);
 				Matrix3D A0all_t = (A0_t*A0off);
 				Matrix3D A1all_t = (A1_t*A1off);
 
@@ -236,6 +236,13 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 					algebraicEquations[3] = vz0_t * vy1 + vz0 * vy1_t;
 					algebraicEquations[4] = vz0_t * vx1 + vz0 * vx1_t;
 					algebraicEquations[5] = vx0_t * vy1 + vx0 * vy1_t;
+
+					////alternative approach:
+					//Vector3D dOmega = A0all * markerData.GetMarkerData(0).angularVelocityLocal - A1all * markerData.GetMarkerData(1).angularVelocityLocal;
+					//
+					//algebraicEquations[3] = dOmega[0];
+					//algebraicEquations[4] = dOmega[1];
+					//algebraicEquations[5] = dOmega[2];
 				}
 				else if (constrainedRotations == 2) //Revolute joint
 				{

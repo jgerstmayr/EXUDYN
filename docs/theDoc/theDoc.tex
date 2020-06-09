@@ -179,8 +179,10 @@ Johannes Gerstmayr\vspace{2cm}
 %\headsep1cm 
 %\chapter*{Contents}
 %
-\tableofcontents
 
+%add additional entry for bookmarks in pdfs
+\clearpage\phantomsection\pdfbookmark{\contentsname}{toc} 
+\tableofcontents
 
 %%++++++++++++++++++++++++++++++++++++++++++++++
 \clearpage
@@ -268,7 +270,11 @@ As written in the introduction, the coordinates can have the types:
   \item AE $\ldots$ algebraic equations coordinates
   \item Data $\ldots$ data coordinates (history variables)
 \ei
-Finally, time is defined as 'time' or $t$.
+Time is usually defined as 'time' or $t$.
+The cross product or vector product '$\times$' is often replaced by the skew symmetric matrix using the tilde '$\tilde{\;\;}$' symbol,
+\be
+  \av \times \bv = \tilde \av \, \bv = -\tilde \bv \, \av
+\ee
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \noindent The following table contains the common notation: \vspace{-12pt}
@@ -417,12 +423,20 @@ The following table includes the keyboard shortcuts available in the window.
 	\hline
   \bf Key(s) & action & \bf remarks \\ \hline
   \bf 1,2,3,4 or 5 & visualization update speed & the entered digit controls the visualization update, which can be changed from 1=1 update per 20ms to 5=1 update per 100s\\ \hline
-  \bf '.' or KEYPAD '+' & zoom in & zoom one step into scene (additionally press CTRL to perform small zoom step)\\ \hline
-  \bf ',' or KEYPAD '-' & zoom out & zoom one step out of scene (additionally press CTRL to perform small zoom step)\\ \hline
+  \bf '.' or KEYPAD + & zoom in & zoom one step into scene (additionally press CTRL to perform small zoom step)\\ \hline
+  \bf ',' or KEYPAD - & zoom out & zoom one step out of scene (additionally press CTRL to perform small zoom step)\\ \hline
 	%
-  \bf 0 or KEYPAD '0'& reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
+  %\bf 0 or KEYPAD 0& reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
+  \bf CTRL+1 or SHIFT+CTRL+1& change view& set view in 1/2-plane (+SHIFT: view from opposite side) \\ \hline
+  \bf CTRL+2 or SHIFT+CTRL+2& change view& set view in 1/3-plane (+SHIFT: view from opposite side) \\ \hline
+  \bf CTRL+3 or SHIFT+CTRL+3& change view& set view in 2/3-plane (+SHIFT: view from opposite side) \\ \hline
+  \bf CTRL+4 or SHIFT+CTRL+4& change view& set view in 2/1-plane (+SHIFT: view from opposite side) \\ \hline
+  \bf CTRL+5 or SHIFT+CTRL+5& change view& set view in 3/1-plane (+SHIFT: view from opposite side) \\ \hline
+  \bf CTRL+6 or SHIFT+CTRL+6& change view& set view in 3/2-plane (+SHIFT: view from opposite side) \\ \hline
+
   \bf A & zoom all & set zoom such that the whole scene is visible \\ \hline
-  \bf CURSOR UP, DOWN, ... & move scene& use coursor keys to move the scene up, down, left, and right \\ \hline
+  \bf CURSOR UP, DOWN, ... & move scene& use coursor keys to move the scene up, down, left, and right (use CTRL for small movements)\\ \hline
+  \bf KEYPAD 2/8,4/6,1/9 & rotate scene & about 1, 2 and 3-axis (use CTRL for small rotations) \\ \hline
 	%
   \bf C & show/hide connectors & pressing this key switches the visibility of connectors \\ \hline
   \bf CTRL+C & show/hide connector numbers & pressing this key switches the visibility of connector numbers \\ \hline
@@ -444,9 +458,10 @@ The following table includes the keyboard shortcuts available in the window.
   %
 	\bf Q & stop simulation & simulation is stopped and cannot be recovered \\ \hline
 	%
-	\bf X & execute command & open dialog to enter a python command (in global python scope) \\ \hline
+	\bf X & execute command & open dialog to enter a python command (in global python scope); dialog may appear behind the visualization window! User errors may lead to crash -- be careful! 
+	Examples: '\texttt{print(mbs)}', '\texttt{x=5}', '\texttt{mbs.GetObject(0)}',etc.\\ \hline
 	%
-	\bf V & visualization settings & open dialog to modify visualization settings \\ \hline
+	\bf V & visualization settings & open dialog to modify visualization settings; dialog may appear behind the visualization window! \\ \hline
 	%
   \bf ESCAPE & close render window & stops the simulation and closes the render window \\ \hline
   \bf SPACE & continue simulation & if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'\\ \hline

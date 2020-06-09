@@ -37,6 +37,13 @@ def CompressedRowSparseToDenseMatrix(sparseData):
         m[int(row[0]),int(row[1])] += row[2]  #+= for double entries
     return m
 
+#resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
+def MapSparseMatrixIndices(matrix, sorting):
+    for row in matrix:
+        row[0] = sorting[int(row[0])]
+        row[1] = sorting[int(row[1])]
+
+
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute diadic product of vector v and a 3D unit matrix =^= diadic(v,I_3x3); used for ObjectFFRF and CMS implementation
 def VectorDiadicUnitMatrix3D(v):
@@ -289,8 +296,8 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 # LUMPM, ON, , 0
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++   
-def ReadMatrixFromAnsysMMF(fileName):
-    
+def ReadMatrixFromAnsysMMF(fileName, verbose=False):
+    if verbose: print("Start read matrix")
     # read file
     fileLines = []
     file=open(fileName,'r') 
@@ -298,27 +305,72 @@ def ReadMatrixFromAnsysMMF(fileName):
     file.close()
     
     # delete text infos
-    while fileLines[0][0] == '%':
-        del fileLines[0]
+    offset = 0 #compute offset of comments and others
+    while fileLines[offset][0] == '%':
+        offset += 1
+        #del fileLines[0]
     
     # delete size information in fileLines
-    del fileLines[0]
-    
+    #del fileLines[0]
+    offset += 1
+
     # put CSR data into this list
     dataList = []
     
     # read row and col indices as well as corresponding matrix values
+    lineCnt = 0
     for line in fileLines:
-        rowStr = line.rsplit()
-        
-        row=[int(rowStr[0])-1, int(rowStr[1])-1, float(rowStr[2])] #convert to 0-based format
-        dataList+=[row]
-        if row[0] != row[1]:
-            dataList+=[[row[1],row[0],row[2]]]
+        if lineCnt%500000 == 0 and lineCnt !=0: 
+            if verbose: print("parse line",lineCnt," / ", len(fileLines))
+        if lineCnt>=offset:
+            rowStr = line.rsplit()
+            
+            row=[int(rowStr[0])-1, int(rowStr[1])-1, float(rowStr[2])] #convert to 0-based format
+            dataList+=[row]
+            if row[0] != row[1]: #Ansys only stores half of matrix==>add symmetric terms except diagonal terms!
+                dataList+=[[row[1],row[0],row[2]]]
+        lineCnt+=1
                     
     return np.array(dataList)
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: read sorting vector for ANSYS mass and stiffness matrices and return sorting vector as np.array
+#  the file contains sorting for nodes and applies this sorting to the DOF (assuming 3 DOF per node!)
+#  the resulting sorted vector is already converted to 0-based indices
+def ReadMatrixDOFmappingVectorFromAnsysTxt(fileName):
+    fileLines = []
+    file=open(fileName,'r') 
+    fileLines = file.readlines()
+    file.close()
+    nLines = len(fileLines)
 
+    #read leading comments
+    lineOffset = 0
+    while lineOffset < nLines and fileLines[lineOffset][0] == '%':
+        lineOffset+=1
+
+    #check header:
+    rowStr = fileLines[lineOffset].rsplit()
+    nDOF = int(rowStr[0])
+    if int(rowStr[1]) != 1:
+        raise ValueError("ReadMatrixDOFmappingVectorFromAnsysTxt: invalid value in line " + str(lineOffset+1) + ", expected 1 column")
+
+    if int(rowStr[0]) != nLines-lineOffset-1:
+        raise ValueError("ReadMatrixDOFmappingVectorFromAnsysTxt: number of lines do not match the number of DOF: nDOF="+str(nDOF)+", #data lines=", arg_str(nLines-lineOffset-1))
+
+    lineOffset+=1
+
+    #read now the mapping of the DOF line by line
+    dataList = []
+    lineCnt = 0
+    for line in fileLines:
+        if lineCnt>=lineOffset:
+            dataList += [(int(line)-1)*3+0] #convert to 0-base and apply for x,y and z coordinate of node ...
+            dataList += [(int(line)-1)*3+1] #convert to 0-base and apply for x,y and z coordinate of node ...
+            dataList += [(int(line)-1)*3+2] #convert to 0-base and apply for x,y and z coordinate of node ...
+        lineCnt+=1
+                    
+    return np.array(dataList)    
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -342,7 +394,7 @@ def ReadMatrixFromAnsysMMF(fileName):
 #   coordinates as .txt file.
 #   
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def ReadNodalCoordinatesFromAnsysTxt(fileName):
+def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
     
     # read file
     fileLines = []
@@ -424,7 +476,7 @@ def ReadNodalCoordinatesFromAnsysTxt(fileName):
 #   as .txt file.
 #   
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def ReadElementsFromAnsysTxt(fileName):
+def ReadElementsFromAnsysTxt(fileName, verbose=False):
     
     # read file
     fileLines = []
@@ -456,6 +508,8 @@ def ReadElementsFromAnsysTxt(fileName):
     currentNodeIndexList = []
     
     for lineCtr in range(numberOfElements):
+        if lineCtr%10000 == 0 and lineCtr !=0: 
+            if verbose: print("read element",lineCtr," / ", numberOfElements)
         #if lineCtr%10000 == 0: print("read element",lineCtr)
         line = fileLines[lineCtr]
         
@@ -478,6 +532,7 @@ def ReadElementsFromAnsysTxt(fileName):
     #elementsDict = {'Name':'elements', 'Tet4':[], 'Hex8':elementConnectivityList}
     elementsDict = {'Name':'elements'}
 
+    if verbose: print("create element dictionaries...")
     for lineCtr in range(numberOfElements):
         line = fileLines[lineCtr]
         if not(elementTypeList[lineCtr] in elementsDict):
@@ -892,10 +947,11 @@ class ObjectFFRFreducedOrderInterface:
         force[self.nODE2rigid:] = (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D + 
                                    2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D) #identical to FFRF up to 1e-16
 
-        #add gravity:
-        if False:
-            force[0:self.dim3D] += totalMass*np.array(self.gravity)
-            force[self.nODE2rigid:] += self.mPhitTPsi.T @ (A.T @ g)
+        #add gravity (needs to be tested):
+        if True:
+            force[0:self.dim3D] += self.totalMass*np.array(self.gravity)
+            force[self.dim3D:self.nODE2rigid] += G.T @ (Skew(self.chiU) @ (self.totalMass*A.T @ np.array(self.gravity)))
+            force[self.nODE2rigid:] += self.mPhitTPsi.T @ (A.T @ np.array(self.gravity))
 
             #force[nODE2rigid:] += modeBasis.T @ PhitTM.T @ (A.T @ g)
 
@@ -921,10 +977,40 @@ class FEMinterface:
 
         self.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'}
         self.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
-        self.ffrfReducedOrderTerms = () # 
+        #self.ffrfReducedOrderTerms = () # 
 
         #some additional information, needed for checks and easier operation
         self.coordinatesPerNodeType = {'Position':3, 'Position2D':2, 'RigidBodyRxyz':6, 'RigidBodyEP':7} #number of coordinates for a certain node type
+
+
+    #save all data (nodes, elements, ...) to a data filename. use filename without ending ==> ".npy" will be added
+    #this function is much faster than the text-based import functions
+    def SaveToFile(self, fileName):
+        with open(fileName, 'wb') as f:
+            np.save(f, self.nodes, allow_pickle=True)
+            np.save(f, self.elements, allow_pickle=True)
+            np.save(f, self.massMatrix)
+            np.save(f, self.stiffnessMatrix)
+            np.save(f, self.surface, allow_pickle=True)
+            np.save(f, self.nodeSets, allow_pickle=True)
+            np.save(f, self.elementSets, allow_pickle=True)
+            np.save(f, self.modeBasis, allow_pickle=True)
+            np.save(f, self.eigenValues, allow_pickle=True)
+
+    #load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
+    #use filename without ending ==> ".npy" will be added
+    #this function is much faster than the text-based import functions
+    def LoadFromFile(self, fileName):
+        with open(fileName, 'rb') as f:
+            self.nodes = np.load(f, allow_pickle=True).all()
+            self.elements = list(np.load(f, allow_pickle=True))
+            self.massMatrix = np.load(f)
+            self.stiffnessMatrix = np.load(f)
+            self.surface = list(np.load(f, allow_pickle=True))
+            self.nodeSets =  list(np.load(f, allow_pickle=True))
+            self.elementSets = list(np.load(f, allow_pickle=True))
+            self.modeBasis = np.load(f, allow_pickle=True).all()
+            self.eigenValues = list(np.load(f, allow_pickle=True))
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1787,21 +1873,41 @@ class FEMinterface:
     # Ansys    
     
     #read mass matrix from CSV format (exported from Ansys)
-    def ReadMassMatrixFromAnsys(self, fileName):
-        self.massMatrix = ReadMatrixFromAnsysMMF(fileName)
-            
+    def ReadMassMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
+        if sparse:
+            self.massMatrix = ReadMatrixFromAnsysMMF(fileName, verbose)
+        else:
+            M = np.loadtxt(fileName,delimiter=',')
+            self.massMatrix = ConvertDenseToCompressedRowMatrix(M)
+
+        sorting = ReadMatrixDOFmappingVectorFromAnsysTxt(dofMappingVectorFile)
+        if len(sorting) < max(self.massMatrix[:,0]):
+            raise ValueError("ReadMassMatrixFromAnsys: dofMappingVectorFile and matrix size do not fit")
+
+        MapSparseMatrixIndices(self.massMatrix, sorting)
+
     #read stiffness matrix from CSV format (exported from Ansys)
-    def ReadStiffnessMatrixFromAnsys(self, fileName):
-        self.stiffnessMatrix = ReadMatrixFromAnsysMMF(fileName) 
+    def ReadStiffnessMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
+        if sparse:
+            self.stiffnessMatrix = ReadMatrixFromAnsysMMF(fileName, verbose) 
+        else:
+            K = np.loadtxt(fileName,delimiter=',')
+            self.stiffnessMatrix = ConvertDenseToCompressedRowMatrix(K)
+
+        sorting = ReadMatrixDOFmappingVectorFromAnsysTxt(dofMappingVectorFile)
+        if len(sorting) < max(self.stiffnessMatrix[:,0]):
+            raise ValueError("ReadStiffnessMatrixFromAnsys: dofMappingVectorFile and matrix size do not fit")
+
+        MapSparseMatrixIndices(self.stiffnessMatrix, sorting)
                     
     #read nodal coordinates (exported from Ansys as .txt-File)
-    def ReadNodalCoordinatesFromAnsys(self, fileName):
-        nodes = ReadNodalCoordinatesFromAnsysTxt(fileName)
+    def ReadNodalCoordinatesFromAnsys(self, fileName, verbose=False):
+        nodes = ReadNodalCoordinatesFromAnsysTxt(fileName, verbose)
         self.nodes['Position'] = np.array(nodes)
         
     #read elements (exported from Ansys as .txt-File)
-    def ReadElementsFromAnsys(self, fileName):
-        self.elements += [ReadElementsFromAnsysTxt(fileName)]
+    def ReadElementsFromAnsys(self, fileName, verbose=False):
+        self.elements += [ReadElementsFromAnsysTxt(fileName, verbose)]
         self.VolumeToSurfaceElements() #generate surface elements
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

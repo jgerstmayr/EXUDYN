@@ -119,10 +119,10 @@ exu.Print('displacement=',u[0])
 exudynTestGlobals.testError = u[0] - (0.5062872273010898) #2019-12-18: 0.5062872273010898; #2019-12-15: 0.5062872272996835; 2019-12-13:0.5062872273014417; 2019-12-01: 0.5152217339585201
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 if exudynTestGlobals.useGraphics:
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
     data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     plt.plot(data[:,0], data[:,1], 'r-') #numerical solution
     

@@ -17,11 +17,12 @@ from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 from itemInterface import *
 import exudyn as exu
 import numpy as np
-import time
+#import time #not needed
 
 #plots
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+if exudynTestGlobals.useGraphics: 
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

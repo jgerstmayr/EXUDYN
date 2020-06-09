@@ -1,15 +1,15 @@
 /** ***********************************************************************************************
 * @class        VisualizationNodePoint
-* @brief        A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for second order differential equations.
+* @brief        A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for second order differential equations (ODE2).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2019-09-12 (last modfied)
+* @date         2020-06-01  20:10:11 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once

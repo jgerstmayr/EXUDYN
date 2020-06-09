@@ -126,9 +126,20 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 			float maxVal = visualizationSystemContainer.settings.contour.maxValue;
 			if (visualizationSystemContainer.settings.contour.automaticRange)
 			{
+				float storedMinVal = graphicsData.GetContourCurrentMinValue(); //store range, for reduceRange option
+				float storedMaxVal = graphicsData.GetContourCurrentMaxValue();
+
 				//std::cout << "compute automatic range\n";
-				minVal = EXUstd::MAXFLOAT;
-				maxVal = EXUstd::MINFLOAT;
+				if (visualizationSystemContainer.settings.contour.reduceRange)
+				{
+					minVal = EXUstd::MAXFLOAT;
+					maxVal = EXUstd::MINFLOAT;
+				}
+				else
+				{
+					minVal = storedMinVal;
+					maxVal = storedMaxVal;
+				}
 				//normalize contour plot values
 				for (auto item : graphicsData.glLines)
 				{
@@ -172,7 +183,13 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				if (minVal == EXUstd::MAXFLOAT) { minVal = 0; } //introduce standard range if no items found!
 				if (maxVal == EXUstd::MINFLOAT) { maxVal = 1; }
 
+				if (!visualizationSystemContainer.settings.contour.reduceRange)
+				{
+					if (minVal > storedMinVal) { minVal = storedMinVal; }
+					if (maxVal < storedMaxVal) { maxVal = storedMaxVal; }
+				}
 			}
+
 			//transfer computed or set values to renderer (color bar, etc.)
 			graphicsData.GetContourCurrentMinValue() = minVal;
 			graphicsData.GetContourCurrentMaxValue() = maxVal;

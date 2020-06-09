@@ -1,15 +1,15 @@
 /** ***********************************************************************************************
 * @class        VisualizationNodeRigidBodyRxyz
-* @brief        A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: \f$[u_x,u_y,u_z]\f$) and three rotation coordinates (angles \f$[\varphi_x,\varphi_y,\varphi_z]\f$ for rotations around x,y, and z-axis); all coordinates lead to second order differential equations; The rotation matrix \f$\Am=\Rm_x \Rm_y \Rm_z\f$, transforming local (body-fixed) 3D positions \f$\pv_{loc} = [p^x_{loc}\;\;p^y_{loc}\;\;p^z_{loc}]^T\f$ to global 3D positions \f$\pv_{glob} = [p^x_{glob}\;\;p^y_{glob}\;\;p^z_{glob}]^T\f$, \f[ \pv_{glob} = \Am \pv_{loc}, \f] is defined according to ... ; the transformation matrix \f$\mathbf{G}\f$ between time derivatives of Euler angles and angular velocities is defined as ... .
+* @brief        A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; all coordinates lead to second order differential equations; NOTE that this node has a singularity if the second rotation parameter reaches \f$\psi_1 = (2k-1) \pi/2\f$, with \f$k \in \Ncal\f$ or \f$-k \in \Ncal\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-02-04  17:40:40 (last modfied)
+* @date         2020-06-01  20:10:11 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #pragma once

@@ -334,13 +334,13 @@ void CObjectGenericODE2::GetAccessFunctionSuperElement(AccessFunctionType access
 	//	value.SetAll(0.);
 
 	//	Matrix3D A;
-	//	Index referenceNodeIndex;
-	//	bool hasReferenceFrame = HasReferenceFrame(referenceNodeIndex);
+	//	Index localReferenceNodeIndex;
+	//	bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
 	//	Index refFrameOffset = 0;
 
 	//	if (hasReferenceFrame)
 	//	{
-	//		A = ((const CNodeODE2*)(GetCNode(referenceNodeIndex)))->GetRotationMatrix();
+	//		A = ((const CNodeODE2*)(GetCNode(localReferenceNodeIndex)))->GetRotationMatrix();
 	//		refFrameOffset++;
 	//	}
 	//	else
@@ -403,7 +403,7 @@ void CObjectGenericODE2::GetAccessFunctionSuperElement(AccessFunctionType access
 	//			}
 	//		}
 
-	//		const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(referenceNodeIndex);
+	//		const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(localReferenceNodeIndex);
 
 	//		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
 

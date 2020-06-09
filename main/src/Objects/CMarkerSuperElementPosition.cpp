@@ -44,8 +44,8 @@ bool MainMarkerSuperElementPosition::CheckPreAssembleConsistency(const MainSyste
 	}
 
 	const CObjectSuperElement& cObjectSuperElement = (const CObjectSuperElement&)(*cObjectPtr); //now possible
-	Index rigidBodyNodeNumber;
-	bool useFirstNodeAsReferenceFrame = cObjectSuperElement.HasReferenceFrame(rigidBodyNodeNumber);
+	Index localRigidBodyNodeNumber;
+	bool useFirstNodeAsReferenceFrame = cObjectSuperElement.HasReferenceFrame(localRigidBodyNodeNumber);
 
 	//there must be at least one node
 	if (meshNodeNumbers.NumberOfItems() == 0)
@@ -133,11 +133,6 @@ void CMarkerSuperElementPosition::ComputeMarkerData(const CSystemData& cSystemDa
 		markerData.positionJacobian.SetAll(0.);
 
 		Index nw = parameters.weightingFactors.NumberOfItems();
-		//Matrix weightingMatrix(nw, 1);
-		//for (Index i = 0; i < nw; i++)
-		//{
-		//	weightingMatrix(i, 0) = parameters.weightingFactors[i];
-		//}
 		LinkedDataMatrix weightingMatrix(parameters.weightingFactors.GetDataPointer(), nw, 1);
 
 		cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),

@@ -10,7 +10,7 @@ A 3D point node for point masses or solid finite elements which has 3 displaceme
  \\{\bf Additional information for NodePoint}:
 \bi
   \item The Node has the following types = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf Point}\ei
+  \item {\bf Short name} for Python = {\bf Point}  \item {\bf Short name} for Python (visualization object) = {\bf VPoint}\ei
 \vspace{12pt} \noindent The item {\bf NodePoint} with type = 'Point' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -68,7 +68,7 @@ A 2D point node for point masses or solid finite elements which has 2 displaceme
  \\{\bf Additional information for NodePoint2D}:
 \bi
   \item The Node has the following types = \texttt{Position2D}, \texttt{Position}
-  \item {\bf Short name} for Python = {\bf Point2D}\ei
+  \item {\bf Short name} for Python = {\bf Point2D}  \item {\bf Short name} for Python (visualization object) = {\bf VPoint2D}\ei
 \vspace{12pt} \noindent The item {\bf NodePoint2D} with type = 'Point2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -130,7 +130,7 @@ A 3D rigid body node based on Euler parameters for rigid bodies or beams; the no
  \\{\bf Additional information for NodeRigidBodyEP}:
 \bi
   \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationEulerParameters}
-  \item {\bf Short name} for Python = {\bf RigidEP}\ei
+  \item {\bf Short name} for Python = {\bf RigidEP}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidEP}\ei
 \vspace{12pt} \noindent The item {\bf NodeRigidBodyEP} with type = 'RigidBodyEP' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -215,7 +215,7 @@ A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beam
  \\{\bf Additional information for NodeRigidBodyRxyz}:
 \bi
   \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRxyz}
-  \item {\bf Short name} for Python = {\bf RigidRxyz}\ei
+  \item {\bf Short name} for Python = {\bf RigidRxyz}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidRxyz}\ei
 \vspace{12pt} \noindent The item {\bf NodeRigidBodyRxyz} with type = 'RigidBodyRxyz' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -289,7 +289,7 @@ A 3D rigid body node based on rotation vector and Lie group methods for rigid bo
  \\{\bf Additional information for NodeRigidBodyRotVecLG}:
 \bi
   \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRotationVector}, \texttt{RotationLieGroup}
-  \item {\bf Short name} for Python = {\bf RigidRotVecLG}\ei
+  \item {\bf Short name} for Python = {\bf RigidRotVecLG}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidRotVecLG}\ei
 \vspace{12pt} \noindent The item {\bf NodeRigidBodyRotVecLG} with type = 'RigidBodyRotVecLG' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -368,7 +368,7 @@ A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degr
  \\{\bf Additional information for NodeRigidBody2D}:
 \bi
   \item The Node has the following types = \texttt{Position2D}, \texttt{Orientation2D}, \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}
-  \item {\bf Short name} for Python = {\bf Rigid2D}\ei
+  \item {\bf Short name} for Python = {\bf Rigid2D}  \item {\bf Short name} for Python (visualization object) = {\bf VRigid2D}\ei
 \vspace{12pt} \noindent The item {\bf NodeRigidBody2D} with type = 'RigidBody2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -485,7 +485,7 @@ A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coo
  \\{\bf Additional information for NodePoint2DSlope1}:
 \bi
   \item The Node has the following types = \texttt{Position2D}, \texttt{Orientation2D}, \texttt{Point2DSlope1}, \texttt{Position}, \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf Point2DS1}\ei
+  \item {\bf Short name} for Python = {\bf Point2DS1}  \item {\bf Short name} for Python (visualization object) = {\bf VPoint2DS1}\ei
 \vspace{12pt} \noindent The item {\bf NodePoint2DSlope1} with type = 'Point2DSlope1' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -616,7 +616,7 @@ A 3D point node fixed to ground. The node can be used as NodePoint, but it does 
  \\{\bf Additional information for NodePointGround}:
 \bi
   \item The Node has the following types = \texttt{Ground}, \texttt{Position2D}, \texttt{Position}, \texttt{GenericODE2}
-  \item {\bf Short name} for Python = {\bf PointGround}\ei
+  \item {\bf Short name} for Python = {\bf PointGround}  \item {\bf Short name} for Python (visualization object) = {\bf VPointGround}\ei
 \vspace{12pt} \noindent The item {\bf NodePointGround} with type = 'PointGround' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -666,7 +666,7 @@ A 3D mass point which is attached to a position-based node, usually NodePoint.\v
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
   \item Requested node type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf MassPoint}\ei
+  \item {\bf Short name} for Python = {\bf MassPoint}  \item {\bf Short name} for Python (visualization object) = {\bf VMassPoint}\ei
 \vspace{12pt} \noindent The item {\bf ObjectMassPoint} with type = 'MassPoint' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -765,7 +765,7 @@ A 2D mass point which is attached to a position-based 2D node.\vspace{12pt}
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
   \item Requested node type = \texttt{Position2D} + \texttt{Position}
-  \item {\bf Short name} for Python = {\bf MassPoint2D}\ei
+  \item {\bf Short name} for Python = {\bf MassPoint2D}  \item {\bf Short name} for Python (visualization object) = {\bf VMassPoint2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectMassPoint2D} with type = 'MassPoint2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -857,7 +857,7 @@ A 1D (translational) mass which is attached to Node1D. Note, that the mass does 
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
   \item Requested node type = \texttt{GenericODE2}
-  \item {\bf Short name} for Python = {\bf Mass1D}\ei
+  \item {\bf Short name} for Python = {\bf Mass1D}  \item {\bf Short name} for Python (visualization object) = {\bf VMass1D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectMass1D} with type = 'Mass1D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -961,7 +961,7 @@ A 1D rotational inertia (mass) which is attached to Node1D.\vspace{12pt}
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
   \item Requested node type = \texttt{GenericODE2}
-  \item {\bf Short name} for Python = {\bf Rotor1D}\ei
+  \item {\bf Short name} for Python = {\bf Rotor1D}  \item {\bf Short name} for Python (visualization object) = {\bf VRotor1D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectRotationalMass1D} with type = 'RotationalMass1D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1069,7 +1069,7 @@ A 3D rigid body which is attached to a 3D rigid body node. Equations of motion w
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
   \item Requested node type = \texttt{Position} + \texttt{Orientation} + \texttt{RigidBody}
-  \item {\bf Short name} for Python = {\bf RigidBody}\ei
+  \item {\bf Short name} for Python = {\bf RigidBody}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidBody}\ei
 \vspace{12pt} \noindent The item {\bf ObjectRigidBody} with type = 'RigidBody' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1122,7 +1122,7 @@ A 2D rigid body which is attached to a rigid body 2D node. The body obtains coor
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{SingleNoded}
   \item Requested node type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Position} + \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf RigidBody2D}\ei
+  \item {\bf Short name} for Python = {\bf RigidBody2D}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidBody2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectRigidBody2D} with type = 'RigidBody2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1298,6 +1298,45 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
       \Mm_{user}(t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
     \ee
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation.
+\noindent {\bf Example} for ObjectGenericODE2:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
+    nMass0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    nMass1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+
+    mass = 0.5 * np.eye(3)      #mass of nodes
+    stif = 5000 * np.eye(3)     #stiffness of nodes
+    damp = 50 * np.eye(3)      #damping of nodes
+    Z = 0. * np.eye(3)          #matrix with zeros
+    #build mass, stiffness and damping matrices (:
+    M = np.block([[mass,         0.*np.eye(3)],
+                  [0.*np.eye(3), mass        ] ])
+    K = np.block([[2*stif, -stif],
+                  [ -stif,  stif] ])
+    D = np.block([[2*damp, -damp],
+                  [ -damp,  damp] ])
+    
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                                                   massMatrix=M, 
+                                                   stiffnessMatrix=K,
+                                                   dampingMatrix=D))
+    
+    mNode1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass1))
+    mbs.AddLoad(Force(markerNumber = mNode1, loadVector = [10, 0, 0])) #static solution=10*(1/5000+1/5000)=0.0004
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.generalizedAlpha.spectralRadius=1
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0] - (1.0039999999354785)
+
+\end{lstlisting}
+
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1444,7 +1483,7 @@ This object is used to represent modally reduced flexible bodies using the float
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
   \item Requested node type: read detailed information of item
-\ei
+  \item {\bf Short name} for Python = {\bf CMSobject}  \item {\bf Short name} for Python (visualization object) = {\bf VCMSobject}\ei
 \vspace{12pt} \noindent The item {\bf ObjectFFRFreducedOrder} with type = 'FFRFreducedOrder' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1549,7 +1588,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1; the element h
  \\{\bf Additional information for ObjectANCFCable2D}:
 \bi
   \item Requested node type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Point2DSlope1} + \texttt{Position} + \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf Cable2D}\ei
+  \item {\bf Short name} for Python = {\bf Cable2D}  \item {\bf Short name} for Python (visualization object) = {\bf VCable2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectANCFCable2D} with type = 'ANCFCable2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1603,7 +1642,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially 
  \\{\bf Additional information for ObjectALEANCFCable2D}:
 \bi
   \item Requested node type: read detailed information of item
-  \item {\bf Short name} for Python = {\bf ALECable2D}\ei
+  \item {\bf Short name} for Python = {\bf ALECable2D}  \item {\bf Short name} for Python (visualization object) = {\bf VALECable2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectALEANCFCable2D} with type = 'ALEANCFCable2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1702,7 +1741,7 @@ An simple spring-damper element with additional force; connects to position-base
 \bi
   \item The Object has the following types = \texttt{Connector}
   \item Requested marker type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf SpringDamper}\ei
+  \item {\bf Short name} for Python = {\bf SpringDamper}  \item {\bf Short name} for Python (visualization object) = {\bf VSpringDamper}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorSpringDamper} with type = 'ConnectorSpringDamper' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1825,7 +1864,7 @@ An 3D spring-damper element acting accordingly in three (global) directions (x,y
 \bi
   \item The Object has the following types = \texttt{Connector}
   \item Requested marker type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf CartesianSpringDamper}\ei
+  \item {\bf Short name} for Python = {\bf CartesianSpringDamper}  \item {\bf Short name} for Python (visualization object) = {\bf VCartesianSpringDamper}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorCartesianSpringDamper} with type = 'ConnectorCartesianSpringDamper' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -1930,7 +1969,7 @@ An 3D spring-damper element acting on relative displacements and relative rotati
 \bi
   \item The Object has the following types = \texttt{Connector}
   \item Requested marker type = \texttt{Position} + \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf RigidBodySpringDamper}\ei
+  \item {\bf Short name} for Python = {\bf RigidBodySpringDamper}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidBodySpringDamper}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorRigidBodySpringDamper} with type = 'ConnectorRigidBodySpringDamper' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2023,7 +2062,7 @@ A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects 
 \bi
   \item The Object has the following types = \texttt{Connector}
   \item Requested marker type = \texttt{Coordinate}
-  \item {\bf Short name} for Python = {\bf CoordinateSpringDamper}\ei
+  \item {\bf Short name} for Python = {\bf CoordinateSpringDamper}  \item {\bf Short name} for Python (visualization object) = {\bf VCoordinateSpringDamper}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinateSpringDamper} with type = 'ConnectorCoordinateSpringDamper' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2139,7 +2178,7 @@ Connector which enforces constant or prescribed distance between two bodies/node
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf DistanceConstraint}\ei
+  \item {\bf Short name} for Python = {\bf DistanceConstraint}  \item {\bf Short name} for Python (visualization object) = {\bf VDistanceConstraint}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorDistance} with type = 'ConnectorDistance' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2240,7 +2279,7 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Coordinate}
-  \item {\bf Short name} for Python = {\bf CoordinateConstraint}\ei
+  \item {\bf Short name} for Python = {\bf CoordinateConstraint}  \item {\bf Short name} for Python (visualization object) = {\bf VCoordinateConstraint}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinate} with type = 'ConnectorCoordinate' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2357,7 +2396,7 @@ A constraint which constrains the coordinate vectors of two markers Marker[Node|
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Coordinate}
-  \item {\bf Short name} for Python = {\bf CoordinateVectorConstraint}\ei
+  \item {\bf Short name} for Python = {\bf CoordinateVectorConstraint}  \item {\bf Short name} for Python (visualization object) = {\bf VCoordinateVectorConstraint}\ei
 \vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinateVector} with type = 'ConnectorCoordinateVector' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2590,7 +2629,7 @@ A generic joint in 3D; constrains components of the absolute position and rotati
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Position} + \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf GenericJoint}\ei
+  \item {\bf Short name} for Python = {\bf GenericJoint}  \item {\bf Short name} for Python (visualization object) = {\bf VGenericJoint}\ei
 \vspace{12pt} \noindent The item {\bf ObjectJointGeneric} with type = 'JointGeneric' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2735,7 +2774,7 @@ A spherical joint, which constrains the relative translation between two positio
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf SphericalJoint}\ei
+  \item {\bf Short name} for Python = {\bf SphericalJoint}  \item {\bf Short name} for Python (visualization object) = {\bf VSphericalJoint}\ei
 \vspace{12pt} \noindent The item {\bf ObjectJointSpherical} with type = 'JointSpherical' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2827,7 +2866,7 @@ A revolute joint in 2D; constrains the absolute 2D position of two points given 
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf RevoluteJoint2D}\ei
+  \item {\bf Short name} for Python = {\bf RevoluteJoint2D}  \item {\bf Short name} for Python (visualization object) = {\bf VRevoluteJoint2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectJointRevolute2D} with type = 'JointRevolute2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2862,7 +2901,7 @@ A prismatic joint in 2D; allows the relative motion of two bodies, using two Rig
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{Position} + \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf PrismaticJoint2D}\ei
+  \item {\bf Short name} for Python = {\bf PrismaticJoint2D}  \item {\bf Short name} for Python (visualization object) = {\bf VPrismaticJoint2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectJointPrismatic2D} with type = 'JointPrismatic2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -2901,7 +2940,7 @@ A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1)
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{\_None}
   \item Requested node type = \texttt{GenericData}
-  \item {\bf Short name} for Python = {\bf SlidingJoint2D}\ei
+  \item {\bf Short name} for Python = {\bf SlidingJoint2D}  \item {\bf Short name} for Python (visualization object) = {\bf VSlidingJoint2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectJointSliding2D} with type = 'JointSliding2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -3068,7 +3107,7 @@ A specialized axially moving joint (without rotation) in 2D between a ALE Cable2
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
   \item Requested marker type = \texttt{\_None}
   \item Requested node type: read detailed information of item
-  \item {\bf Short name} for Python = {\bf ALEMovingJoint2D}\ei
+  \item {\bf Short name} for Python = {\bf ALEMovingJoint2D}  \item {\bf Short name} for Python (visualization object) = {\bf VALEMovingJoint2D}\ei
 \vspace{12pt} \noindent The item {\bf ObjectJointALEMoving2D} with type = 'JointALEMoving2D' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -3448,7 +3487,7 @@ The item VMarkerNodeRotationCoordinate has the following parameters:\vspace{-1cm
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{MarkerSuperElementPosition}
-A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is inefficient!!!). The marker acts on the mesh nodes, not on the underlying nodes of the object. For a list of $n$ mesh node numbers, referencing to mesh node points $\LU{b}{\pv_i}$ and weights $w_i$, the body-fixed marker position $\LU{b}{\pv_m}$ results in $\LU{b}{\pv_m} = \sum_{i=0}^{n-1}w_i \cdot \LU{b}{\pv_i}$. EXAMPLE for single node marker on body 4, mesh node 10: MarkerSuperElementPosition(bodyNumber=4, meshNodeNumber=[10], weightingFactors=[1])\vspace{12pt}
+A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.\vspace{12pt}
  \\{\bf Additional information for MarkerSuperElementPosition}:
 \bi
   \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}
@@ -3462,8 +3501,8 @@ A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericO
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
     bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
-    meshNodeNumbers &     ArrayIndex &      &     [] &     mesh node numbers of superelement which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
-    weightingFactors &     Vector &      &     [] &     weighting factors per node to compute the final local position\\ \hline
+    meshNodeNumbers &     ArrayIndex &      &     [] &     a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
+    weightingFactors &     Vector &      &     [] &     a list of $n_m$ weighting factors per node to compute the final local position\\ \hline
     visualization & VMarkerSuperElementPosition & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -3478,6 +3517,208 @@ The item VMarkerSuperElementPosition has the following parameters:\vspace{-1cm}\
     showMarkerNodes &     bool &      &     True &     set true, if all nodes are shown (similar to marker, but with less intensity)\\ \hline
 	  \end{longtable}
 	\end{center}
+{\bf Detailed information on MarkerSuperElementPosition}:
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{bodyNumber}{$n_b$}{}
+\rowTable{meshNodeNumbers}{$[k_0,\,\ldots,\,k_{n_m-1}]\tp$}{}
+\rowTable{weightingFactors}{$[w_{0},\,\ldots,\,w_{n_m-1}]\tp$}{}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    \vspace{6pt}\\
+    {\bf Definition of marker quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
+    \rowTable{mesh node number}{$i = k_i$}{abbreviation}
+    \rowTable{mesh node points}{$\LU{0}{\pv}_{i}$}{position of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node velocities}{$\LU{0}{\vv}_{i}$}{velocity of mesh node $i$ in object $n_b$}
+    \rowTable{marker position}{$\LU{0}{\pv}_{m} = \sum_{i=0}^{n-1}w_i \cdot \LU{0}{\pv_i}$}{current global position which is provided by marker}
+    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \sum_{i=0}^{n-1}w_i \cdot \LU{0}{\vv_i}$}{current global velocity which is provided by marker}
+    \finishTable
+%
+    \vspace{6pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \noindent {\bf Marker quantities}:\\
+    The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
+    object velocity coordinates $\dot \qv_{n_b}$,
+    \be
+      \Jm_{m,pos} = \frac{\partial \LU{0}{\vv}_{m}}{\partial \dot \qv_{n_b}}
+      = \sum_{i=0}^{n-1}w_i \cdot \Jm_{i,pos}
+    \ee
+    in which $\Jm_{i,pos}$ denotes the position jacobian of mesh node $i$,
+    \be
+      \Jm_{i,pos} = \frac{\partial \LU{0}{\vv}_{i}}{\partial \dot \qv_{n_b}}
+    \ee
+    The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for \texttt{ObjectGenericODE2}, because the jacobian only affects one single node.
+    In \texttt{ObjectFFRFreducedOrder}, the jacobian may affect all reduced coordinates.
+
+    Note that $\Jm_{m,pos}$ is actually computed by the
+    \texttt{ObjectSuperElement} within the function \texttt{GetAccessFunctionSuperElement}.
+\noindent {\bf Example} for MarkerSuperElementPosition:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
+    #==>further examples see objectGenericODE2Test.py, objectFFRFTest2.py, etc.
+    nMass0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    nMass1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [1,0,0]))
+
+    mass = 0.5 * np.eye(3)      #mass of nodes
+    stif = 5000 * np.eye(3)     #stiffness of nodes
+    damp = 50 * np.eye(3)      #damping of nodes
+    Z = 0. * np.eye(3)          #matrix with zeros
+    #build mass, stiffness and damping matrices (:
+    M = np.block([[mass,         0.*np.eye(3)],
+                  [0.*np.eye(3), mass        ] ])
+    K = np.block([[2*stif, -stif],
+                  [ -stif,  stif] ])
+    D = np.block([[2*damp, -damp],
+                  [ -damp,  damp] ])
+    
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                                                   massMatrix=M, 
+                                                   stiffnessMatrix=K,
+                                                   dampingMatrix=D))
+    
+    #EXAMPLE for single node marker on super element body, mesh node 1; compare results to ObjectGenericODE2 example!!! 
+    mSuperElement = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=oGenericODE2, meshNodeNumbers=[1], weightingFactors=[1]))
+    mbs.AddLoad(Force(markerNumber = mSuperElement, loadVector = [10, 0, 0])) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.generalizedAlpha.spectralRadius=1
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0] - (1.0039999999354785)
+
+\end{lstlisting}
+
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MarkerSuperElementRigid}
+A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that the can represent rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.\vspace{12pt}
+ \\{\bf Additional information for MarkerSuperElementRigid}:
+\bi
+  \item The Marker has the following types = \texttt{Object}, \texttt{Body}, \texttt{Position}, \texttt{Orientation}
+\ei
+\vspace{12pt} \noindent The item {\bf MarkerSuperElementRigid} with type = 'SuperElementRigid' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     marker's unique name\\ \hline
+    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     local marker SuperElement reference position used to compute average displacement and average rotation; currently, this must be the center of weighted nodes of the marker\\ \hline
+    meshNodeNumbers &     ArrayIndex &      &     [] &     a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
+    weightingFactors &     Vector &      &     [] &     a list of $n_m$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces\\ \hline
+    visualization & VMarkerSuperElementRigid & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VMarkerSuperElementRigid has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    showMarkerNodes &     bool &      &     True &     set true, if all nodes are shown (similar to marker, but with less intensity)\\ \hline
+	  \end{longtable}
+	\end{center}
+{\bf Detailed information on MarkerSuperElementRigid}:
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{bodyNumber}{$n_b$}{}
+\rowTable{referencePosition}{$\LU{r}{\pv_{0,ref}}$}{}
+\rowTable{meshNodeNumbers}{$[k_0,\,\ldots,\,k_{n_m-1}]\tp$}{}
+\rowTable{weightingFactors}{$[w_{0},\,\ldots,\,w_{n_m-1}]\tp$}{}
+\finishTable
+{\bf Description of Item}:
+ \noindent
+    \vspace{6pt}\\
+    {\bf Definition of marker quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
+    \rowTable{mesh node number}{$i = k_i$}{abbreviation}
+    \rowTable{mesh node local position}{$\LU{r}{\pv}_{i}$}{current local (within reference frame $r$) position of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node local reference position}{$\LU{r}{\pv}_{ref,i}$}{local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node local displacement}{$\LU{r}{\uv}_{i}$}{current local (within reference frame $r$) displacement of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node local velocity}{$\LU{r}{\vv}_{i}$}{current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$}
+
+    \rowTable{super element reference position}{$\LU{0}{\pv}_r$}{current reference position of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
+    \rowTable{super element rotation matrix}{$\LU{0r}{\Rot}$}{current rigid body transformation matrix of super element's floating frame (r), which is the identity matrix, if the object does not provide a reference frame (such as GenericODE2)}
+    \rowTable{super element angular velocity}{$\LU{r}{\tomega_r}$}{current local angular velocity of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
+
+    \rowTable{marker reference position}{$\LU{0}{\pv}_{0} = \LU{0}{\pv}_r + \LU{0r}{\Rot} \LU{r}{\pv_{0,ref}}$}{current global marker reference position; note that $\LU{0}{\pv}_{0} = \LU{0r}{\Im} \LU{r}{\pv_{0,ref}}$, if the object does not provide a reference frame (such as GenericODE2)}
+
+    \rowTable{marker position}{$\LU{0}{\pv}_{m} = \LU{0}{\pv}_{0} + \LU{0r}{\Rot} \sum_{i=0}^{n-1}w_i \cdot \LU{r}{\uv_i}$}{current global position which is provided by marker}
+    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} +
+    \LU{0r}{\Rot} \left(\sum_{i=0}^{n-1}(w_i \cdot \LU{r}{\vv_i}) + \LU{r}{\tilde \tomega_r} \sum_{i=0}^{n-1}(w_i \LU{r}{\uv_i}) \right)$}{current global velocity which is provided by marker}
+%
+    \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m} = \frac{\sum_{i=0}^{n-1}w_i \LU{r}{\pv_{ref,i}} \times \LU{r}{\uv_i}}{\sum_{i=0}^{n-1}w_i |\LU{r}{\pv_{i,ref}}|^2}$}{current local (within reference frame $r$) linearized rotation parameters}
+    \rowTable{marker rotation matrix}{$\LU{0b}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1} {\theta_2}{1}{-\theta_0} {-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
+%    
+    \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m} = \LU{r}{\dot \ttheta}_{m} = \frac{\sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\vv_i}}{\sum_{i=0}^{n-1}w_i |\LU{r}{\pv_{i,ref}}|^2}$}{local (within reference frame $r$) angular velocity due to mesh node velocity only}
+    \rowTable{marker inertial angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current inertial angular velocity}
+    \finishTable
+%
+    \vspace{6pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \noindent {\bf Marker quantities}:\\
+    The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
+    object velocity coordinates $\dot \qv_{n_b}$,
+    \be
+      \Jm_{m,pos} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
+      = ...
+    \ee
+    %in which $\Jm_{i,pos}$ denotes the position jacobian of mesh node $i$,
+    %\be
+    %  \Jm_{i,pos} = \frac{\partial \LU{0}{\vv}_{i}}{\dot \qv_{n_b}}
+    %\ee
+    %The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for \texttt{ObjectGenericODE2}, because the jacobian only affects one single node.
+    In \texttt{ObjectFFRFreducedOrder}, the jacobian may affect all reduced coordinates.
+    
+    The marker also provides a 'rotation' jacobian, which is the derivative of the marker angular velocity $\LU{0}{\tomega}_{m}$ w.r.t.\ the 
+    object velocity coordinates $\dot \qv_{n_b}$,
+    \be
+      \Jm_{m,rot} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
+                  = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
+                  = \LU{0r}{\Rot} (\Gm_{local} + \frac{\sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \Jm_{i,pos}}{\sum_{i=0}^{n-1}w_i |\LU{r}{\pv_{i,ref}}|^2})
+    \ee
+    with the matrix $\Gm_{local} = \frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot \qv_{n_b}}$.\vspace{6pt}\\
+    \noindent {\bf Alternative computation of rotation (under development)}:\\
+    In the alternative mode, where the weighting matrix $\Wm$ has the interpretation of an inertia tensor of built from nodes using weights $=$ node mass, and the local angular momentum reads
+    \be
+       \Wm \LU{r}{\tomega}_{m} = \sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\vv_i} = 
+       -\sum_{i=0}^{n-1} \left( w_i \LU{r}{\tilde \pv_{i,ref}} \LU{r}{\tilde \pv_{i,ref}} \right) \LU{r}{\tomega}_{m}
+    \ee
+    and the marker local rotations and marker local angular velocity are defined as
+    \be
+        \LU{r}{\ttheta}_{m} = \Wm^{-1} \sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\uv_i}, \quad
+        \LU{r}{\tomega}_{m} = \Wm^{-1} \sum_{i=0}^{n-1} w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\vv_i},
+    \ee
+    with the weighting matrix (which must be invertable)
+    \be
+        \Wm = -\sum_{i=0}^{n-1} w_i \LU{r}{\tilde \pv_{i,ref}} \LU{r}{\tilde \pv_{i,ref}}
+    \ee
+    and in the alternative mode, the angular velocity is defined as
+    \be
+      \Jm_{m,rot} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
+                  = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
+                  = \LU{0r}{\Rot} (\Gm_{local} + \Wm^{-1} \sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \Jm_{i,pos})
+    \ee
+
+    Note that $\Jm_{m,rot}$ is computed by the \texttt{ObjectSuperElement} within the function \texttt{GetAccessFunctionSuperElement}.
+    
+    \noindent {\bf EXAMPLE for marker on body 4, mesh nodes 10,11,12,13}:\\
+    \texttt{MarkerSuperElementRigid(bodyNumber = 4, meshNodeNumber = [10, 11, 12, 13], weightingFactors = [0.25, 0.25, 0.25, 0.25], referencePosition=[0,0,0])}
+    
+    \noindent For detailed examples, see \texttt{TestModels}.
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -3584,7 +3825,7 @@ Load with (3D) force vector; attached to position-based marker.\vspace{12pt}
  \\{\bf Additional information for LoadForceVector}:
 \bi
   \item Requested marker type = \texttt{Position}
-  \item {\bf Short name} for Python = {\bf Force}\ei
+  \item {\bf Short name} for Python = {\bf Force}  \item {\bf Short name} for Python (visualization object) = {\bf VForce}\ei
 \vspace{12pt} \noindent The item {\bf LoadForceVector} with type = 'ForceVector' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -3618,7 +3859,7 @@ Load with (3D) torque vector; attached to rigidbody-based marker.\vspace{12pt}
  \\{\bf Additional information for LoadTorqueVector}:
 \bi
   \item Requested marker type = \texttt{Orientation}
-  \item {\bf Short name} for Python = {\bf Torque}\ei
+  \item {\bf Short name} for Python = {\bf Torque}  \item {\bf Short name} for Python (visualization object) = {\bf VTorque}\ei
 \vspace{12pt} \noindent The item {\bf LoadTorqueVector} with type = 'TorqueVector' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}
@@ -3652,7 +3893,7 @@ Load attached to BodyMass-based marker, applying a 3D vector load (e.g. the vect
  \\{\bf Additional information for LoadMassProportional}:
 \bi
   \item Requested marker type = \texttt{Body} + \texttt{BodyMass}
-  \item {\bf Short name} for Python = {\bf Gravity}\ei
+  \item {\bf Short name} for Python = {\bf Gravity}  \item {\bf Short name} for Python (visualization object) = {\bf VGravity}\ei
 \vspace{12pt} \noindent The item {\bf LoadMassProportional} with type = 'MassProportional' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
 \begin{center}

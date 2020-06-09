@@ -3,15 +3,30 @@
 #
 # Details:  Test for ObjectFFRFreducedOrder with python user function for reduced order equations of motion
 #
-# Author:   Johannes Gerstmayr 
-# Date:     2020-05-13
+# Author:   Johannes Gerstmayr, Andreas Zwölfer
+# Date:     2020-05-26
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
+# import sys
+# sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
+import sys, platform
+workingReleasePath = 'C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease' #absolute path for python 3.7
+#workingReleasePath = '../EXUDYN_git/main/bin/WorkingRelease'
+#workingReleasePath = '../bin/WorkingRelease'
+if platform.architecture()[0] == '64bit':
+    workingReleasePath += '64'
+if sys.version_info.major == 3 and sys.version_info.minor == 7:
+    workingReleasePath += 'P37'
+if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
+    raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
+
+sys.path.append(workingReleasePath) #for exudyn, itemInterface and exudynUtilities
+
+
+
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 #sys.path.append('../pythonDev')            
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
@@ -53,7 +68,7 @@ nodes= femConrod.ImportFromAbaqusInputFile(fileName=inputFileDir+fileName+'.inp'
 
 femConrod.ReadMassMatrixFromAbaqus(inputFileDir+fileName+'_MASS1.mtx')
 femConrod.ReadStiffnessMatrixFromAbaqus(inputFileDir+fileName+'_STIF1.mtx')
-#femConrod.ScaleStiffnessMatrix(1e-2)
+femConrod.ScaleStiffnessMatrix(1e-2)
 
 nModesConrod = nModes
 femConrod.ComputeEigenmodes(nModesConrod, excludeRigidBodyModes = 6, useSparseSolver = True)
@@ -99,7 +114,7 @@ nodes= femCrank.ImportFromAbaqusInputFile(fileName=inputFileDir+fileName+'.inp',
 
 femCrank.ReadMassMatrixFromAbaqus(inputFileDir+fileName+'_MASS1.mtx')
 femCrank.ReadStiffnessMatrixFromAbaqus(inputFileDir+fileName+'_STIF1.mtx')
-#femCrank.ScaleStiffnessMatrix(1e-2)
+femCrank.ScaleStiffnessMatrix(1e-2)
 
 nModesCrank = nModes
 femCrank.ComputeEigenmodes(nModesCrank, excludeRigidBodyModes = 6, useSparseSolver = True)
@@ -178,7 +193,7 @@ def UFLoad(t, load):
     else:
         return [0,0,0]
 
-mbs.AddLoad(Torque(markerNumber=mRBcrank, loadVector=[0,0,2*2*pi], loadVectorUserFunction=UFLoad)) 
+mbs.AddLoad(Torque(markerNumber=mRBcrank, loadVector=[0,0,2*0.2*2*pi], loadVectorUserFunction=UFLoad)) 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #joint Crank - ground:
@@ -321,7 +336,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
 
-h=0.5e-5
+h=8*0.5e-5
 tEnd = 0.1
 #if exudynTestGlobals.useGraphics:
 #    tEnd = 0.1
@@ -345,8 +360,9 @@ simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.displayComputationTime = True
 
 #create animation:
-simulationSettings.solutionSettings.recordImagesInterval = 0.00025
-SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
+if False:
+    simulationSettings.solutionSettings.recordImagesInterval = 0.00025
+    SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
 if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
@@ -382,10 +398,16 @@ if True and exudynTestGlobals.useGraphics:
 #    plt.plot(data[:,0], data[:,2], cList[0],label='uMid conrod,CMS'+str(nModes)) #numerical solution, 1 == x-direction
 
     data = np.loadtxt(fileDir+'sliderCrankMidDisplLocalCMS'+str(nModes)+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
-    plt.plot(data[:,0], data[:,1], cList[1],label='uMidLocal conrod,CMS'+str(nModes)) #numerical solution, 1 == x-direction
+    plt.plot(data[:,0], data[:,1], cList[1],label='uxMidLocal conrod,CMS'+str(nModes)) #numerical solution, 1 == x-direction
+
+    data = np.loadtxt(fileDir+'sliderCrankMidDisplLocalCMS'+str(nModes)+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+    plt.plot(data[:,0], data[:,2], cList[2],label='uyMidLocal conrod,CMS'+str(nModes)) #numerical solution, 1 == x-direction
+
+    data = np.loadtxt(fileDir+'sliderCrankMidDisplLocalCMS'+str(nModes)+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+    plt.plot(data[:,0], data[:,3], cList[3],label='uzMidLocal conrod,CMS'+str(nModes)) #numerical solution, 1 == x-direction
 
 #    data = np.loadtxt(fileDir+'sliderCrankAngVelCMS'+str(nModes)+'.txt', comments='#', delimiter=',') #new result from this file
-#    plt.plot(data[:,0], data[:,3], cList[2],label='ang. vel. crank,CMS'+str(nModes)) #numerical solution, 1 == x-direction
+#    plt.plot(data[:,0], data[:,3], cList[4],label='ang. vel. crank,CMS'+str(nModes)) #numerical solution, 1 == x-direction
 
 
     ax=plt.gca() # get current axes

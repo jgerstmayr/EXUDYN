@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 419, 
-Number of resolved issues = 346, 
-EXUDYN version = 0.1.346, 
-last change =  2020-05-29
+Number of issues = 424, 
+Number of resolved issues = 356, 
+EXUDYN version = 0.1.356, 
+last change =  2020-06-09
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2020-05-29
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0418</td>
-    <td>read only parameters</td>
+    <td>0423</td>
+    <td>fix MarkerSuperElementRigidBody</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> raise exception if read only values are attempted to be overwritten==> currently, read only parameters are ignored!</td>
-    <td>CHECK</td>
+    <td> fix velocity level for MarkerSuperElementRigidBody (check constraint equations)</td>
+    <td>BUG</td>
     <td></td>
-    <td>2020-05-28</td>
-    <td>2020-07-27</td>
+    <td>2020-06-09</td>
+    <td>2020-08-08</td>
     <td></td>
     <td></td>
     <td></td>
@@ -55,15 +55,15 @@ last change =  2020-05-29
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0417</td>
-    <td>visualization shortnames</td>
+    <td>0419</td>
+    <td>visualization user function</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add shortnames, e.g., VMass1D for visualization objects</td>
+    <td> add possibility of user function for visualization: is called on cSystem side to generate graphicsData lists or via a thread-safe callback</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2020-05-27</td>
-    <td>2020-07-26</td>
+    <td>2020-05-29</td>
+    <td>2020-07-28</td>
     <td></td>
     <td></td>
     <td></td>
@@ -76,22 +76,6 @@ last change =  2020-05-29
     <td>JG</td>
     <td>RAISED  </td>
     <td> implement coordinate vector constraint user function; can be used as generic joint</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-25</td>
-    <td>2020-07-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0411</td>
-    <td>MarkerSuperElementPosition</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> cleanup MarkerSuperElementPosition Matrix objects and test</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-05-25</td>
@@ -119,22 +103,6 @@ last change =  2020-05-29
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0408</td>
-    <td>ObjectConnectorRelativeRotation</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add connector with drive functionality, which constrains relative rotation (or translation) in the local frame of one Marker; use gear ratio + offset; enables gears, drives, etc.</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-22</td>
-    <td>2020-07-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0406</td>
     <td>add NGsolve test    </td>
     <td>JG</td>
@@ -144,38 +112,6 @@ last change =  2020-05-29
     <td></td>
     <td>2020-05-22</td>
     <td>2020-07-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0405</td>
-    <td>MarkerSuperElementReducedOrderRigidBody</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Implement averaging multinode marker for position and orientation for reduced order elements</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-21</td>
-    <td>2020-07-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0404</td>
-    <td>MarkerSuperElementRigidBody</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Implement averaging multinode maker for position and orientation</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-21</td>
-    <td>2020-07-20</td>
     <td></td>
     <td></td>
     <td></td>
@@ -236,22 +172,6 @@ last change =  2020-05-29
     <td>JG</td>
     <td>RAISED  </td>
     <td> add latex description for ObjectFFRF</td>
-    <td>DESCRIPTION</td>
-    <td></td>
-    <td>2020-05-16</td>
-    <td>2020-07-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0395</td>
-    <td>description         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add latex description for MarkerSuperElementPosition</td>
     <td>DESCRIPTION</td>
     <td></td>
     <td>2020-05-16</td>
@@ -406,7 +326,7 @@ last change =  2020-05-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0372</td>
     <td>add manual solver example</td>
     <td>JG</td>
@@ -422,7 +342,7 @@ last change =  2020-05-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0371</td>
     <td>prestep py function </td>
     <td>JG</td>
@@ -438,7 +358,7 @@ last change =  2020-05-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0369</td>
     <td>add RevoluteJoint   </td>
     <td>JG</td>
@@ -1207,6 +1127,86 @@ last change =  2020-05-29
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0422</td>
+    <td>contour maxValue    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add second mode to contour auto range, which does not reduce the range</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-06-07</td>
+    <td>2020-08-06</td>
+    <td>2020-06-07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0421</td>
+    <td>standard views      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add key shortcuts for standard views</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-06-07</td>
+    <td>2020-08-06</td>
+    <td>2020-06-07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0420</td>
+    <td>SuperElement gravity</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add gravity to superelements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-06-03</td>
+    <td>2020-08-02</td>
+    <td>2020-06-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0418</td>
+    <td>read only parameters</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> raise exception if read only values are attempted to be overwritten==> currently, read only parameters are ignored!</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-05-28</td>
+    <td>2020-07-27</td>
+    <td>2020-06-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0417</td>
+    <td>visualization shortnames</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add shortnames, e.g., VMass1D for visualization objects</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-27</td>
+    <td>2020-07-26</td>
+    <td>2020-06-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0416</td>
     <td>check Markers       </td>
     <td>JG</td>
@@ -1271,6 +1271,22 @@ last change =  2020-05-29
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0411</td>
+    <td>MarkerSuperElementPosition</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> cleanup MarkerSuperElementPosition Matrix objects and test</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-25</td>
+    <td>2020-07-24</td>
+    <td>2020-06-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0409</td>
     <td>MarkerObjectCoordinates</td>
     <td>JG</td>
@@ -1281,6 +1297,22 @@ last change =  2020-05-29
     <td>2020-05-24</td>
     <td>2020-07-23</td>
     <td>2020-05-25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0408</td>
+    <td>ObjectConnectorRelativeRotation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add connector with drive functionality, which constrains relative rotation (or translation) in the local frame of one Marker; use gear ratio + offset; enables gears, drives, etc.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-22</td>
+    <td>2020-07-21</td>
+    <td>2020-06-01</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1301,6 +1333,38 @@ last change =  2020-05-29
     <td></td>
     <td></td>
     <td>only possible as ConnectorCoordinateVector constraint externally</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0405</td>
+    <td>MarkerSuperElementReducedOrderRigidBody</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Implement averaging multinode marker for position and orientation for reduced order elements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-21</td>
+    <td>2020-07-20</td>
+    <td>2020-06-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0404</td>
+    <td>MarkerSuperElementRigidBody</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Implement averaging multinode maker for position and orientation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-21</td>
+    <td>2020-07-20</td>
+    <td>2020-06-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0402</td>
@@ -1361,6 +1425,22 @@ last change =  2020-05-29
     <td>2020-05-16</td>
     <td>2020-07-15</td>
     <td>2020-05-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0395</td>
+    <td>description         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add latex description for MarkerSuperElementPosition</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2020-06-01</td>
     <td>JG</td>
     <td></td>
     <td></td>

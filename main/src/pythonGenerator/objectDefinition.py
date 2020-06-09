@@ -1185,6 +1185,42 @@ equations =
     \ee
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation.
 /end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+miniExample =
+    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
+    nMass0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    nMass1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+
+    mass = 0.5 * np.eye(3)      #mass of nodes
+    stif = 5000 * np.eye(3)     #stiffness of nodes
+    damp = 50 * np.eye(3)      #damping of nodes
+    Z = 0. * np.eye(3)          #matrix with zeros
+    #build mass, stiffness and damping matrices (:
+    M = np.block([[mass,         0.*np.eye(3)],
+                  [0.*np.eye(3), mass        ] ])
+    K = np.block([[2*stif, -stif],
+                  [ -stif,  stif] ])
+    D = np.block([[2*damp, -damp],
+                  [ -damp,  damp] ])
+    
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                                                   massMatrix=M, 
+                                                   stiffnessMatrix=K,
+                                                   dampingMatrix=D))
+    
+    mNode1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass1))
+    mbs.AddLoad(Force(markerNumber = mNode1, loadVector = [10, 0, 0])) #static solution=10*(1/5000+1/5000)=0.0004
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.generalizedAlpha.spectralRadius=1
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0] - (1.0039999999354785)
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
 V,      CP,     nodeNumbers,                    ,               ,       ArrayIndex, "ArrayIndex()",           ,       I,      "$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$node numbers which provide the coordinates for the object (consecutively as provided in this list)"
@@ -1221,7 +1257,7 @@ Fv,     C,      GetLocalODE2CoordinateIndexPerNode, ,           ,       Index,  
 F,      C,      ComputeObjectCoordinates,       ,               ,       void,       ,                           "Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object coordinates composed from all nodal coordinates; does not include reference coordinates" 
 F,      C,      InitializeCoordinateIndices,    ,               ,       void,       ,                           ,          DI,    "initialize coordinateIndexPerNode array" 
 #superelement functions:
-Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "referenceFrameNode = 0; return false;", "Index& referenceFrameNode", CI,    "return true, if object has reference frame; return according node" 
+Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "localReferenceFrameNode = 0; return false;", "Index& localReferenceFrameNode", CI,    "return true, if object has reference frame; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return GetNumberOfNodes();", , IC, "return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used" 
 Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -1376,7 +1412,7 @@ F,      C,      ComputeObjectCoordinates,       ,               ,       void,   
 F,      C,      InitializeObject,               ,               ,       void,       ,                           ,          DI,    "initialize coordinateIndexPerNode array" 
 #F,      C,      HasModeBasis,                   ,               ,       bool,       "return parameters.modeBasis.NumberOfColumns()!=0;",                           ,          CI,    "return true, if a modal basis is provided and the object is treated as modally reduced FFRF-formulation" 
 #superelement, mesh functions:
-Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "referenceFrameNode = rigidBodyNodeNumber; return true;", "Index& referenceFrameNode", CI,    "always true, because ObjectFFRF" 
+Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "localReferenceFrameNode = rigidBodyNodeNumber; return true;", "Index& localReferenceFrameNode", CI,    "always true, because ObjectFFRF; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return GetNumberOfNodes()-1;", , IC, "return the number of mesh nodes, which is 1 less than the number of nodes (but different in other SuperElements)" 
 Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -1409,6 +1445,7 @@ classDescription = "This object is used to represent modally reduced flexible bo
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
+pythonShortName = CMSobject
 addIncludesC = '#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11/stl.h>//for NumpyMatrix\n#include <pybind11/pybind11.h>\ntypedef py::array_t<Real> NumpyMatrix; \n#include "Pymodules/PyMatrixContainer.h"//for some FFRF matrices\n'
 addPublicC = "    static const Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)\n    static const Index rigidBodyNodeNumber = 0; //node number of rigid body node (usually = 0)\n    static const Index genericNodeNumber = 1;//node number for modal coordinates\n"
 outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all ODE2 velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2RHS)'}"
@@ -1510,7 +1547,7 @@ F,      C,      ComputeObjectCoordinates,       ,               ,       void,   
 F,      C,      ComputeObjectCoordinates_t,     ,               ,       void,       ,                           "Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object velocity coordinates composed from all nodal coordinates" 
 F,      C,      GetMeshNodeCoordinates,         ,               ,       Vector3D,   ,                           "Index nodeNumber, const Vector& coordinates",          CDI,    "compute coordinates for nodeNumber (without reference coordinates) from modeBasis (=multiplication of according part of mode Basis with modal coordinates)"
 #superelement, mesh functions:
-Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "referenceFrameNode = rigidBodyNodeNumber; return true;", "Index& referenceFrameNode", CI,    "always true, because FFRF-based object" 
+Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "localReferenceFrameNode = rigidBodyNodeNumber; return true;", "Index& localReferenceFrameNode", CI,    "always true, because FFRF-based object; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return parameters.referencePositions.NumberOfItems()/3;", , IC, "return the number of mesh nodes, which is given according to the node reference positions" 
 Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -3299,11 +3336,11 @@ V,      CP,     localPosition,                  ,               3,      Vector3D
 Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
 Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Body + Marker::Object + Marker::Position + Marker::Orientation);", ,       CI,     "return marker type (for node treatment in computation)" 
 Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
+Fv,     C,      GetPosition,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
+Fv,     C,      GetVelocity,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 Fv,     C,      GetRotationMatrix,              ,               ,       void,       ,                           "const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix" 
 Fv,     C,      GetAngularVelocity,             ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector" 
 Fv,     C,      GetAngularVelocityLocal,        ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
-Fv,     C,      GetPosition,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
-Fv,     C,      GetVelocity,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 #DONE in ComputeMarkerData: Fv,     C,      GetPositionJacobian,            ,               ,       void,       ,                           "const CSystemData& cSystemData, Matrix& jacobian", CDI,     "return current position Jacobian of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
@@ -3353,11 +3390,11 @@ V,      CP,     nodeNumber,                     ,               ,       Index,  
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "general access to node number" 
 Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Node + Marker::Position+ Marker::Orientation);", ,       CI,     "return marker type (for node treatment in computation)" 
 Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
+Fv,     C,      GetPosition,                    ,               ,      void,   ,                               "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
+Fv,     C,      GetVelocity,                    ,               ,      void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 Fv,     C,      GetRotationMatrix,              ,               ,      void,   ,                           "const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix" 
 Fv,     C,      GetAngularVelocity,             ,               ,      void,   ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector" 
 Fv,     C,      GetAngularVelocityLocal,        ,               ,      void,   ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
-Fv,     C,      GetPosition,                    ,               ,      void,   ,                               "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
-Fv,     C,      GetVelocity,                    ,               ,      void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 #DONE in ComputeMarkerData: Fv,     C,      GetPositionJacobian,            ,               ,       void,       ,                           "const CSystemData& cSystemData, Matrix& jacobian", CDI,     "return current position Jacobian of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'NodeRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
@@ -3425,17 +3462,87 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerSuperElementPosition
-classDescription = "A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is inefficient!!!). The marker acts on the mesh nodes, not on the underlying nodes of the object. For a list of $n$ mesh node numbers, referencing to mesh node points $\LU{b}{\pv_i}$ and weights $w_i$, the body-fixed marker position $\LU{b}{\pv_m}$ results in $\LU{b}{\pv_m} = \sum_{i=0}^{n-1}w_i \cdot \LU{b}{\pv_i}$. EXAMPLE for single node marker on body 4, mesh node 10: MarkerSuperElementPosition(bodyNumber=4, meshNodeNumber=[10], weightingFactors=[1])"
+classDescription = "A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
 classType = Marker
+equations =
+    \vspace{6pt}\\
+    {\bf Definition of marker quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
+    \rowTable{mesh node number}{$i = k_i$}{abbreviation}
+    \rowTable{mesh node points}{$\LU{0}{\pv}_{i}$}{position of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node velocities}{$\LU{0}{\vv}_{i}$}{velocity of mesh node $i$ in object $n_b$}
+    \rowTable{marker position}{$\LU{0}{\pv}_{m} = \sum_{i=0}^{n-1}w_i \cdot \LU{0}{\pv_i}$}{current global position which is provided by marker}
+    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \sum_{i=0}^{n-1}w_i \cdot \LU{0}{\vv_i}$}{current global velocity which is provided by marker}
+    \finishTable
+%
+    \vspace{6pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \noindent {\bf Marker quantities}:\\
+    The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
+    object velocity coordinates $\dot \qv_{n_b}$,
+    \be
+      \Jm_{m,pos} = \frac{\partial \LU{0}{\vv}_{m}}{\partial \dot \qv_{n_b}}
+      = \sum_{i=0}^{n-1}w_i \cdot \Jm_{i,pos}
+    \ee
+    in which $\Jm_{i,pos}$ denotes the position jacobian of mesh node $i$,
+    \be
+      \Jm_{i,pos} = \frac{\partial \LU{0}{\vv}_{i}}{\partial \dot \qv_{n_b}}
+    \ee
+    The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for \texttt{ObjectGenericODE2}, because the jacobian only affects one single node.
+    In \texttt{ObjectFFRFreducedOrder}, the jacobian may affect all reduced coordinates.
+
+    Note that $\Jm_{m,pos}$ is actually computed by the
+    \texttt{ObjectSuperElement} within the function \texttt{GetAccessFunctionSuperElement}.
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+miniExample =
+    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
+    #==>further examples see objectGenericODE2Test.py, objectFFRFTest2.py, etc.
+    nMass0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    nMass1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [1,0,0]))
+
+    mass = 0.5 * np.eye(3)      #mass of nodes
+    stif = 5000 * np.eye(3)     #stiffness of nodes
+    damp = 50 * np.eye(3)      #damping of nodes
+    Z = 0. * np.eye(3)          #matrix with zeros
+    #build mass, stiffness and damping matrices (:
+    M = np.block([[mass,         0.*np.eye(3)],
+                  [0.*np.eye(3), mass        ] ])
+    K = np.block([[2*stif, -stif],
+                  [ -stif,  stif] ])
+    D = np.block([[2*damp, -damp],
+                  [ -damp,  damp] ])
+    
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                                                   massMatrix=M, 
+                                                   stiffnessMatrix=K,
+                                                   dampingMatrix=D))
+    
+    #EXAMPLE for single node marker on super element body, mesh node 1; compare results to ObjectGenericODE2 example!!! 
+    mSuperElement = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=oGenericODE2, meshNodeNumbers=[1], weightingFactors=[1]))
+    mbs.AddLoad(Force(markerNumber = mSuperElement, loadVector = [10, 0, 0])) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.generalizedAlpha.spectralRadius=1
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
+
+    #check result at default integration time
+    testError = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0] - (1.0039999999354785)
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "marker's unique name"
-V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",     ,       I,      "body number to which marker is attached to"
-V,      CP,     meshNodeNumbers,                ,               ,       ArrayIndex, "ArrayIndex()",             ,       I,      "mesh node numbers of superelement which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers"
-V,      CP,     weightingFactors,               ,               ,       Vector,     "Vector()",                 ,       I,      "weighting factors per node to compute the final local position"
+V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",     ,       I,      "$n_b$body number to which marker is attached to"
+V,      CP,     meshNodeNumbers,                ,               ,       ArrayIndex, "ArrayIndex()",             ,       I,      "$[k_0,\,\ldots,\,k_{n_m-1}]\tp$a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers"
+V,      CP,     weightingFactors,               ,               ,       Vector,     "Vector()",                 ,       I,      "$[w_{0},\,\ldots,\,w_{n_m-1}]\tp$a list of $n_m$ weighting factors per node to compute the final local position"
 #V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,      "if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates"
 #
 Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
@@ -3454,6 +3561,131 @@ V,      V,      showMarkerNodes,                ,               ,       bool,   
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = MarkerSuperElementRigid
+classDescription = "A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that the can represent rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition."
+cParentClass = CMarker
+mainParentClass = MainMarker
+visuParentClass = VisualizationMarker
+classType = Marker
+equations =
+    \vspace{6pt}\\
+    {\bf Definition of marker quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
+    \rowTable{mesh node number}{$i = k_i$}{abbreviation}
+    \rowTable{mesh node local position}{$\LU{r}{\pv}_{i}$}{current local (within reference frame $r$) position of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node local reference position}{$\LU{r}{\pv}_{ref,i}$}{local (within reference frame $r$) reference position of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node local displacement}{$\LU{r}{\uv}_{i}$}{current local (within reference frame $r$) displacement of mesh node $k_i$ in object $n_b$}
+    \rowTable{mesh node local velocity}{$\LU{r}{\vv}_{i}$}{current local (within reference frame $r$) velocity of mesh node $k_i$ in object $n_b$}
+
+    \rowTable{super element reference position}{$\LU{0}{\pv}_r$}{current reference position of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
+    \rowTable{super element rotation matrix}{$\LU{0r}{\Rot}$}{current rigid body transformation matrix of super element's floating frame (r), which is the identity matrix, if the object does not provide a reference frame (such as GenericODE2)}
+    \rowTable{super element angular velocity}{$\LU{r}{\tomega_r}$}{current local angular velocity of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2)}
+
+    \rowTable{marker reference position}{$\LU{0}{\pv}_{0} = \LU{0}{\pv}_r + \LU{0r}{\Rot} \LU{r}{\pv_{0,ref}}$}{current global marker reference position; note that $\LU{0}{\pv}_{0} = \LU{0r}{\Im} \LU{r}{\pv_{0,ref}}$, if the object does not provide a reference frame (such as GenericODE2)}
+
+    \rowTable{marker position}{$\LU{0}{\pv}_{m} = \LU{0}{\pv}_{0} + \LU{0r}{\Rot} \sum_{i=0}^{n-1}w_i \cdot \LU{r}{\uv_i}$}{current global position which is provided by marker}
+    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} +
+    \LU{0r}{\Rot} \left(\sum_{i=0}^{n-1}(w_i \cdot \LU{r}{\vv_i}) + \LU{r}{\tilde \tomega_r} \sum_{i=0}^{n-1}(w_i \LU{r}{\uv_i}) \right)$}{current global velocity which is provided by marker}
+%
+    \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m} = \frac{\sum_{i=0}^{n-1}w_i \LU{r}{\pv_{ref,i}} \times \LU{r}{\uv_i}}{\sum_{i=0}^{n-1}w_i |\LU{r}{\pv_{i,ref}}|^2}$}{current local (within reference frame $r$) linearized rotation parameters}
+    \rowTable{marker rotation matrix}{$\LU{0b}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1} {\theta_2}{1}{-\theta_0} {-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
+%    
+    \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m} = \LU{r}{\dot \ttheta}_{m} = \frac{\sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\vv_i}}{\sum_{i=0}^{n-1}w_i |\LU{r}{\pv_{i,ref}}|^2}$}{local (within reference frame $r$) angular velocity due to mesh node velocity only}
+    \rowTable{marker inertial angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current inertial angular velocity}
+    \finishTable
+%
+    \vspace{6pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \noindent {\bf Marker quantities}:\\
+    The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
+    object velocity coordinates $\dot \qv_{n_b}$,
+    \be
+      \Jm_{m,pos} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
+      = ...
+    \ee
+    %in which $\Jm_{i,pos}$ denotes the position jacobian of mesh node $i$,
+    %\be
+    %  \Jm_{i,pos} = \frac{\partial \LU{0}{\vv}_{i}}{\dot \qv_{n_b}}
+    %\ee
+    %The jacobian $\Jm_{i,pos}$ usually contains mostly zeros for \texttt{ObjectGenericODE2}, because the jacobian only affects one single node.
+    In \texttt{ObjectFFRFreducedOrder}, the jacobian may affect all reduced coordinates.
+    
+    The marker also provides a 'rotation' jacobian, which is the derivative of the marker angular velocity $\LU{0}{\tomega}_{m}$ w.r.t.\ the 
+    object velocity coordinates $\dot \qv_{n_b}$,
+    \be
+      \Jm_{m,rot} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
+                  = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
+                  = \LU{0r}{\Rot} (\Gm_{local} + \frac{\sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \Jm_{i,pos}}{\sum_{i=0}^{n-1}w_i |\LU{r}{\pv_{i,ref}}|^2})
+    \ee
+    with the matrix $\Gm_{local} = \frac{\partial \LU{r}{\tomega}_{r}}{\partial \dot \qv_{n_b}}$.\vspace{6pt}\\
+    \noindent {\bf Alternative computation of rotation (under development)}:\\
+    In the alternative mode, where the weighting matrix $\Wm$ has the interpretation of an inertia tensor of built from nodes using weights $=$ node mass, and the local angular momentum reads
+    \be
+       \Wm \LU{r}{\tomega}_{m} = \sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\vv_i} = 
+       -\sum_{i=0}^{n-1} \left( w_i \LU{r}{\tilde \pv_{i,ref}} \LU{r}{\tilde \pv_{i,ref}} \right) \LU{r}{\tomega}_{m}
+    \ee
+    and the marker local rotations and marker local angular velocity are defined as
+    \be
+        \LU{r}{\ttheta}_{m} = \Wm^{-1} \sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\uv_i}, \quad
+        \LU{r}{\tomega}_{m} = \Wm^{-1} \sum_{i=0}^{n-1} w_i \LU{r}{\tilde \pv_{ref,i}} \LU{r}{\vv_i},
+    \ee
+    with the weighting matrix (which must be invertable)
+    \be
+        \Wm = -\sum_{i=0}^{n-1} w_i \LU{r}{\tilde \pv_{i,ref}} \LU{r}{\tilde \pv_{i,ref}}
+    \ee
+    and in the alternative mode, the angular velocity is defined as
+    \be
+      \Jm_{m,rot} = \frac{\partial \LU{0}{\tomega}_{m}}{\partial \dot \qv_{n_b}}
+                  = \frac{\partial \LU{0r}{\Rot}(\LU{r}{\tomega_{r}} + \LU{r}{\tomega}_{m})}{\partial \dot \qv_{n_b}}
+                  = \LU{0r}{\Rot} (\Gm_{local} + \Wm^{-1} \sum_{i=0}^{n-1}w_i \LU{r}{\tilde \pv_{ref,i}} \Jm_{i,pos})
+    \ee
+
+    Note that $\Jm_{m,rot}$ is computed by the \texttt{ObjectSuperElement} within the function \texttt{GetAccessFunctionSuperElement}.
+    
+    \noindent {\bf EXAMPLE for marker on body 4, mesh nodes 10,11,12,13}:\\
+    \texttt{MarkerSuperElementRigid(bodyNumber = 4, meshNodeNumber = [10, 11, 12, 13], weightingFactors = [0.25, 0.25, 0.25, 0.25], referencePosition=[0,0,0])}
+    
+    \noindent For detailed examples, see \texttt{TestModels}.
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "marker's unique name"
+V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",     ,       I,      "$n_b$body number to which marker is attached to"
+V,      CP,     referencePosition,              ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\LU{r}{\pv_{0,ref}}$local marker SuperElement reference position used to compute average displacement and average rotation; currently, this must be the center of weighted nodes of the marker"
+V,      CP,     meshNodeNumbers,                ,               ,       ArrayIndex, "ArrayIndex()",             ,       I,      "$[k_0,\,\ldots,\,k_{n_m-1}]\tp$a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers"
+V,      CP,     weightingFactors,               ,               ,       Vector,     "Vector()",                 ,       I,      "$[w_{0},\,\ldots,\,w_{n_m-1}]\tp$a list of $n_m$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces"
+#V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,      "if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates"
+#
+Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
+#Fv,     C,      GetNodeNumbers,                 ,               ,       ArrayIndex, "return parameters.nodeNumbers;", ,  CI,    "access to node numbers" 
+Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Body + Marker::Object + Marker::Position + Marker::Orientation + Marker::SuperElement);", ,       CI,     "return marker type (for node treatment in computation)" 
+#Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                ,       CI,     "return dimension of connector, which an attached connector would have" 
+Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
+Fv,     C,      GetPosition,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
+Fv,     C,      GetVelocity,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
+Fv,     C,      GetRotationMatrix,              ,               ,       void,       ,                           "const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix" 
+Fv,     C,      GetAngularVelocity,             ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAngularVelocityLocal,        ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
+Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,                           "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'SuperElementRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#helper functions:
+F,      C,      GetFloatingFrameNodeData,       ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return parameters of underlying floating frame node (or default values for case that no frame exists)" 
+F,      C,      GetWeightedRotations,           ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedRotations, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted (linearized) rotation from local mesh displacements" 
+F,      C,      GetWeightedAngularVelocity,     ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted angular velocity from local mesh velocities" 
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      showMarkerNodes,                ,               ,       bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerObjectODE2Coordinates

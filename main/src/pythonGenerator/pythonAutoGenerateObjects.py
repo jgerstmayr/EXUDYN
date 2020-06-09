@@ -366,6 +366,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     sLatex += '  \\item Requested node type = ' + requestedNodeString + '\n'
             if len(parseInfo['pythonShortName']) != 0:
                 sLatex += '  \\item {\\bf Short name} for Python = {\\bf ' + parseInfo['pythonShortName'] + '}'
+                sLatex += '  \\item {\\bf Short name} for Python (visualization object) = {\\bf V' + parseInfo['pythonShortName'] + '}'
 
             sLatex += '\\ei\n'
 
@@ -441,7 +442,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         vDefaultDictEmpty = True
         
         for parameter in parameterList:
-            if (parameter['lineType'].find('V') != -1) & (parameter['cFlags'].find('I') != -1): #only if it is a variable; also include Vp variables - i.e. 'name'
+            if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('I') != -1) and (parameter['cFlags'].find('R') == -1): #only if it is a variable; also include Vp variables - i.e. 'name'
                 sString = ''
                 if (parameter['type'] == 'String'):
                     sString="'"
@@ -498,7 +499,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         sPythonClass = vPythonClass + sPythonClass #visualization class must be first, otherwise the main class cannot be initialized
         if (len(parseInfo['pythonShortName'])):
             sPythonClass += '#add typedef for short usage:\n'
-            sPythonClass += parseInfo['pythonShortName'] + ' = ' + parseInfo['class'] + '\n\n'
+            sPythonClass += parseInfo['pythonShortName'] + ' = ' + parseInfo['class'] + '\n'
+            sPythonClass += 'V'+parseInfo['pythonShortName'] + ' = V' + parseInfo['class'] + '\n\n'
         
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #member variables:

@@ -258,6 +258,9 @@
     <ClCompile Include="..\src\Objects\CObjectRotationalMass1D.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerSuperElementRigid.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\linalg\LinkedDataVector.h">

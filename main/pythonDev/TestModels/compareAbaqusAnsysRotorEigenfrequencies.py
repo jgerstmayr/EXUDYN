@@ -41,42 +41,44 @@ for testNumber in range(2):
         useSparseSolverRoutine = True
     
     fem = FEMinterface()
-    #print("read matrices ...")
-    fem.ReadMassMatrixFromAnsys(testDataDir + 'rotorAnsysMassMatrixSparse.txt')
-    fem.ReadStiffnessMatrixFromAnsys(testDataDir + 'rotorAnsysStiffnessMatrixSparse.txt')
+    #exu.Print("read matrices ...")
+    fem.ReadMassMatrixFromAnsys(fileName=testDataDir + 'rotorAnsysMassMatrixSparse.txt', 
+                                dofMappingVectorFile=testDataDir + 'rotorAnsysMatrixDofMappingVector.txt')
+    fem.ReadStiffnessMatrixFromAnsys(fileName=testDataDir + 'rotorAnsysStiffnessMatrixSparse.txt',
+                                dofMappingVectorFile=testDataDir + 'rotorAnsysMatrixDofMappingVector.txt')
     
-    #print("compute eigenmodes ...")
+    #exu.Print("compute eigenmodes ...")
     fem.ComputeEigenmodes(numberOfModes, useSparseSolver = useSparseSolverRoutine)
     
     if exudynTestGlobals.useGraphics:
-        print('natural frequencies from Ansys model (Lumped Mass Matrix, MMF-Format)', fem.GetEigenFrequenciesHz()[0:numberOfModes])
+        exu.Print('natural frequencies from Ansys model (Lumped Mass Matrix, MMF-Format)', fem.GetEigenFrequenciesHz()[0:numberOfModes])
     
     if not useSparseSolverRoutine:
-        f6 = fem.GetEigenFrequenciesHz()[6] - 104.63701055079804 #reference solution
+        f6 = fem.GetEigenFrequenciesHz()[6] - 104.63701055079783 #reference solution
     else:
         #compare with dense matrix solution; 
         #due to random initialization, the results change with every computation ==> approx. 1e-11 repeatability
-        f6 = fem.GetEigenFrequenciesHz()[6] - 104.63701055079804 
+        f6 = fem.GetEigenFrequenciesHz()[6] - 104.6370105507865 
         f6*=1e-6
-    print('natural frequencies from Ansys model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
+    exu.Print('natural frequencies from Ansys model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
     errorResult += f6
-    
+
     ###############################################################################
     # Abaqus
     ###############################################################################
     
     #read finite element model
     fem = FEMinterface()
-    #print("read matrices ...")
-    fem.ReadMassMatrixFromAbaqus(testDataDir + 'rotorDiscTestMASS1.mtx')
-    fem.ReadStiffnessMatrixFromAbaqus(testDataDir + 'rotorDiscTestSTIF1.mtx')
+    #exu.Print("read matrices ...")
+    fem.ReadMassMatrixFromAbaqus(fileName=testDataDir + 'rotorDiscTestMASS1.mtx')
+    fem.ReadStiffnessMatrixFromAbaqus(fileName=testDataDir + 'rotorDiscTestSTIF1.mtx')
     fem.ScaleStiffnessMatrix(1e-2) #in Ansys, the stiffness matrix is already scaled!
         
-    #print("compute eigenmodes ...")
+    #exu.Print("compute eigenmodes ...")
     fem.ComputeEigenmodes(numberOfModes, useSparseSolver = useSparseSolverRoutine)
 
     if exudynTestGlobals.useGraphics:
-        print('natural frequencies from Abaqus model (Lumped Mass Matrix)',fem.GetEigenFrequenciesHz()[0:numberOfModes])
+        exu.Print('natural frequencies from Abaqus model (Lumped Mass Matrix)',fem.GetEigenFrequenciesHz()[0:numberOfModes])
     
     if not useSparseSolverRoutine:
         f6 = fem.GetEigenFrequenciesHz()[6] - 104.6370132606291 #reference solution
@@ -85,13 +87,14 @@ for testNumber in range(2):
         #due to random initialization, the results change with every computation ==> approx. 1e-11 repeatability
         f6 = fem.GetEigenFrequenciesHz()[6] - 104.6370132606291 
         f6*=1e-6
-    print('natural frequencies from Abaqus model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
+    exu.Print('natural frequencies from Abaqus model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
     errorResult += f6
 
-if abs(errorResult) < 1e-15:
+exu.Print('error of compareAbaqusAnsysRotorEigenfrequencies (due to sparse solver)=',errorResult)
+if abs(errorResult) < 1e-15: #usually of size 1e-17
     errorResult = 0 #due to randomized sparse solver results, take this treshold!
     
-exu.Print('solution of compareAbaqusAnsysRotorEigenfrequencies =',errorResult)
+exu.Print('solution of compareAbaqusAnsysRotorEigenfrequencies (with treshold)=',errorResult)
 exudynTestGlobals.testError = errorResult #2020-05-22: 0
 
 

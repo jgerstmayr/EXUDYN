@@ -26,6 +26,7 @@ sys.path.append('TestModels')            #for modelUnitTest as this example may 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
+import numpy as np
 import exudyn as exu
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
@@ -160,7 +161,12 @@ if runTestExamples:
         exu.Print('******************************************')
         SC.Reset()
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
-        exec(open(file).read(), globals())
+        try:
+            exec(open(file).read(), globals())
+        except Exception as e:
+            exu.Print('EXAMPLE ' + str(cnt) + ' ("' + file + '") raised exception:\n'+str(e))
+            print('EXAMPLE ' + str(cnt) + ' ("' + file + '") raised exception:\n'+str(e))
+
         if abs(exudynTestGlobals.testError) < testTolerance:
             exu.Print('******************************************')
             exu.Print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
@@ -203,6 +209,7 @@ timeStart += time.time()
         
 exu.Print('\n')
 exu.SetWriteToConsole(True) #final output always written
+exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=True) #write also to file (needed?)
 
 exu.Print('******************************************')
 exu.Print('TEST SUITE RESULTS SUMMARY:')
