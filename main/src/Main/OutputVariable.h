@@ -169,26 +169,27 @@ enum class OutputVariableType {
 	Rotation = 1 << 9,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
 	Coordinates = 1 << 10,			//!< single object or node coordinate(s) as output
 	Coordinates_t = 1 << 11,		//!< single object or node velocity coordinate(s) as output
-	SlidingCoordinate = 1 << 12,	//!< scalar coordinate in sliding joint
-	Director1 = 1 << 13,			//!< direction or (axial) slope vector 1 (in 2D-elements)
-	Director2 = 1 << 14,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
-	Director3 = 1 << 15,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
-	Force = 1 << 16,				//!< force e.g. in connector/constraint or section force in beam
-	Torque = 1 << 17,				//!< torque e.g. in connector/constraint or section moment/torque in beam
-	Strain = 1 << 18,				//!< strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
-	Stress = 1 << 19,				//!< stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
-	Curvature = 1 << 20,			//!< curvature (components) in beam or shell
-	DisplacementLocal = 1 << 21,	//!< local displacement vector (used e.g. in joints)
-	VelocityLocal = 1 << 22,		//!< local velocity vector (used e.g. in joints)
-	ForceLocal = 1 << 23,			//!< local force e.g. in connector/constraint or section force in beam
-	TorqueLocal = 1 << 24,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
-	ConstraintEquation = 1 << 25,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
+	Coordinates_tt = 1 << 12,		//!< single object or node velocity coordinate(s) as output
+	SlidingCoordinate = 1 << 13,	//!< scalar coordinate in sliding joint
+	Director1 = 1 << 14,			//!< direction or (axial) slope vector 1 (in 2D-elements)
+	Director2 = 1 << 15,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
+	Director3 = 1 << 16,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
+	Force = 1 << 17,				//!< force e.g. in connector/constraint or section force in beam
+	Torque = 1 << 18,				//!< torque e.g. in connector/constraint or section moment/torque in beam
+	Strain = 1 << 19,				//!< strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
+	Stress = 1 << 20,				//!< stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
+	Curvature = 1 << 21,			//!< curvature (components) in beam or shell
+	DisplacementLocal = 1 << 22,	//!< local displacement vector (used e.g. in joints)
+	VelocityLocal = 1 << 23,		//!< local velocity vector (used e.g. in joints)
+	ForceLocal = 1 << 24,			//!< local force e.g. in connector/constraint or section force in beam
+	TorqueLocal = 1 << 25,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
+	ConstraintEquation = 1 << 26,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!
 
     //SecondPiolaKirchoffStress = (1 << 7), GreenStrain = (1 << 8),
     //BeamStrain = (1 << 9), BeamCurvature = (1 << 10), //are both 3D-vectors containing axial and transverse components
     //FramePosition = (1 << 11), FrameOrientation = (1 << 12), //position and orientation of the reference point
-    EndOfEnumList = 1 << 26 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+    EndOfEnumList = 1 << 27 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
 
 //! OutputVariable string conversion
@@ -215,6 +216,7 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 	//case OutputVariableType::ScalarAngularAcceleration: return "ScalarAngularAcceleration";
 	case OutputVariableType::Coordinates: return "Coordinates";
 	case OutputVariableType::Coordinates_t: return "Coordinates_t";
+	case OutputVariableType::Coordinates_tt: return "Coordinates_tt";
 	case OutputVariableType::SlidingCoordinate: return "SlidingCoordinate";
 	case OutputVariableType::Director1: return "Director1";
 	case OutputVariableType::Director2: return "Director2";

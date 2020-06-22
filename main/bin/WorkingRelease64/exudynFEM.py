@@ -27,8 +27,10 @@ def CompressedRowToDenseMatrix(sparseData):
         m[int(row[0])-1,int(row[1])-1] += row[2] #convert 1-based to 0-based; += for double entries
     return m
 
-#convert zero-based sparse matrix data to dense numpy matrix
-#sparseData format (per row): [row, column, value] ==> converted into dense format
+#**function: convert zero-based sparse matrix data to dense numpy matrix
+#**input: 
+#  sparseData: format (per row): [row, column, value] ==> converted into dense format
+#**output: a dense matrix as np.array
 def CompressedRowSparseToDenseMatrix(sparseData):
     #does not work, if there are no entry in highest rows and columns
     n = int(max(np.max(sparseData[:,0]),np.max(sparseData[:,1])))+1 #rows and columns indices are 0-based ==> add 1 for size!
@@ -37,7 +39,7 @@ def CompressedRowSparseToDenseMatrix(sparseData):
         m[int(row[0]),int(row[1])] += row[2]  #+= for double entries
     return m
 
-#resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
+#**function: resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
 def MapSparseMatrixIndices(matrix, sorting):
     for row in matrix:
         row[0] = sorting[int(row[0])]
@@ -45,14 +47,14 @@ def MapSparseMatrixIndices(matrix, sorting):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#compute diadic product of vector v and a 3D unit matrix =^= diadic(v,I_3x3); used for ObjectFFRF and CMS implementation
+#**function: compute diadic product of vector v and a 3D unit matrix = diadic(v,I$_{3x3}$); used for ObjectFFRF and CMS implementation
 def VectorDiadicUnitMatrix3D(v):
     return np.kron(np.array(v), np.eye(3)).T
 
 #print("diadicTest=", VectorDiadicUnitMatrix3D(np.array([1,2,3,4,5,6])))
 
 #+++++++++++++++++++++++++++
-#compare cyclic two lists, reverse second list; return True, if any cyclic shifted lists are same, False otherwise
+#**function: compare cyclic two lists, reverse second list; return True, if any cyclic shifted lists are same, False otherwise
 def CyclicCompareReversed(list1, list2):
     revList1 = np.flip(list1,0)
     for i in range(len(list2)):
@@ -60,7 +62,7 @@ def CyclicCompareReversed(list1, list2):
     return False
 
 
-#add entry to compressedRowSparse matrix, avoiding duplicates
+#**function: add entry to compressedRowSparse matrix, avoiding duplicates
 #value is either added to existing entry (avoid duplicates) or a new entry is appended
 def AddEntryToCompressedRowSparseArray(sparseData, row, column, value):
     n = len(sparseData[:,0])
@@ -79,13 +81,13 @@ def AddEntryToCompressedRowSparseArray(sparseData, row, column, value):
     np.insert(sparseData, n, np.array((row, column, value)), 0)
     return sparseData
 
-#compute rows and columns of a compressed sparse matrix and return as tuple: (rows,columns)
+#**function: compute rows and columns of a compressed sparse matrix and return as tuple: (rows,columns)
 def CSRtoRowsAndColumns(sparseMatrixCSR):
     rows = sparseMatrixCSR[:,0].max()
     columns = sparseMatrixCSR[:,1].max()
     return (rows, columns)
 
-#convert internal compressed CSR to scipy.sparse csr matrix
+#**function: convert internal compressed CSR to scipy.sparse csr matrix
 def CSRtoScipySparseCSR(sparseMatrixCSR):
     from scipy.sparse import csr_matrix
     X = csr_matrix((sparseMatrixCSR[:,2],(sparseMatrixCSR[:,0].astype(int),sparseMatrixCSR[:,1].astype(int))))
@@ -93,14 +95,14 @@ def CSRtoScipySparseCSR(sparseMatrixCSR):
     return X
 
 
-#convert scipy.sparse csr matrix to internal compressed CSR 
+#**function: convert scipy.sparse csr matrix to internal compressed CSR 
 def ScipySparseCSRtoCSR(scipyCSR):
     from scipy.sparse import csr_matrix
     data=scipyCSR.tocoo()
     sparseData = [data.row,data.col,data.data]
     return np.array(sparseData).T
 
-#resort indices of given CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns
+#**function: resort indices of given CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns
 #needed for import from NGsolve
 def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
     #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
@@ -119,6 +121,7 @@ def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
 
 
 
+#DEPRECATED!
 #read abaqus nodes information to numpy array
 #typeName is Part or Instance; name is part's or instance's name
 #if exportElement=False: returns np.array(nodes) with nodal coordinates
@@ -231,7 +234,7 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
 
 
 
-#convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List
+#**function: convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List
 #also works for Hex20 elements, but does only take the corner nodes!
 def ConvertHexToTrigs(nodeNumbers):
     localList = [[0,1,2], [0,2,3], [6,5,4], [6,4,7], [0,4,1], [1,4,5], [1,5,2], [2,5,6], [2,6,3], [3,6,7], [3,7,0], [0,7,4]]
@@ -244,7 +247,7 @@ def ConvertHexToTrigs(nodeNumbers):
 
 
 
-#convert numpy.array dense matrix to (internal) compressed row format
+#**function: convert numpy.array dense matrix to (internal) compressed row format
 def ConvertDenseToCompressedRowMatrix(denseMatrix):
     sparseMatrix = []
     (nRows,nColumns) = denseMatrix.shape
@@ -258,15 +261,14 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# function
-#   This function reads either the mass or stiffness matrix from an Ansys
-#   Matrix Market Format (MMF). The corresponding matrix can either be exported 
-#   as dense matrix or sparse matrix.
+#**function:This function reads either the mass or stiffness matrix from an Ansys
+#           Matrix Market Format (MMF). The corresponding matrix can either be exported 
+#           as dense matrix or sparse matrix.
 #
 #**input: fileName of MMF file
 #**output: internal compressed row sparse matrix (as (nrows x 3) numpy array)
 #
-# Author: Stefan Holzinger
+#**author: Stefan Holzinger
 #
 # Note:
 #   A MMF file can be created in Ansys by placing the following APDL code inside
@@ -374,15 +376,14 @@ def ReadMatrixDOFmappingVectorFromAnsysTxt(fileName):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# function
-#   This function reads the nodal coordinates exported from Ansys.
+#**function: This function reads the nodal coordinates exported from Ansys.
 #
 #**input: fileName (file name ending must be .txt!)
 #**output: nodal coordinates as numpy array
 #
-# Author: Stefan Holzinger
+#**author: Stefan Holzinger
 #
-# Note:
+#**notes:
 #   The nodal coordinates can be exported from Ansys by creating a named selection
 #   of the body whos mesh should to exported by choosing its geometry. Next, 
 #   create a second named selcetion by using a worksheet. Add the named selection
@@ -456,15 +457,14 @@ def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# function
-#   This function reads the nodal coordinates exported from Ansys.
+#**function: This function reads the nodal coordinates exported from Ansys.
 #
 #**input: fileName (file name ending must be .txt!)
 #**output: element connectivity as numpy array
 #
-# Author: Stefan Holzinger
+#**author: Stefan Holzinger
 #
-# Note:
+#**notes:
 #   The elements can be exported from Ansys by creating a named selection
 #   of the body whos mesh should to exported by choosing its geometry. Next, 
 #   create a second named selcetion by using a worksheet. Add the named selection
@@ -555,11 +555,14 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++          ObjectFFRF                               ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#compute terms necessary for ObjectFFRF
+#**class: compute terms necessary for ObjectFFRF
 #class used internally in FEMinterface to compute ObjectFFRF object 
 #this class holds all data for ObjectFFRF user functions
 class ObjectFFRFinterface:
-    def __init__(self, femInterface, constrainRigidBodyModes = True):
+    #**classFunction: initialize ObjectFFRFinterface with FEMinterface class
+    #  initializes the ObjectFFRFinterface with nodes, modes, surface description and systemmatrices from FEMinterface
+    #  data is then transfered to mbs object with classFunction AddObjectFFRF(...)
+    def __init__(self, femInterface):
         self.modeBasis = femInterface.modeBasis['matrix']
         self.nodeArray = femInterface.GetNodePositionsAsArray()
         self.trigList = femInterface.GetSurfaceTriangles()
@@ -591,21 +594,24 @@ class ObjectFFRFinterface:
         #not needed, but may be interesting for checks:
         self.inertiaLocal = self.xRefTilde.T @ self.massMatrixCSR @ self.xRefTilde #LARGE MATRIX COMPUTATION
 
-        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        #compute gravity term
-        #g=np.array([0,-9.81,0]) #gravity vector
-        #fGravRigid = list(totalMass*g)+[0,0,0,0]
-        #self.fGrav = np.array(fGravRigid + list((massMatrix @ Phit) @ g) ) #only local vector, without rotation ==> must be computed in user function!
-        #exu.Print("fGrav=",fGrav)
-        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+    #**classFunction: add according nodes, objects and constraints for FFRF object to MainSystem mbs
+    #**input:
+    #  exu: the exudyn module
+    #  mbs: a MainSystem object
+    #  positionRef: reference position of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+    #  eulerParametersRef: reference euler parameters of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+    #  initialVelocity: initial velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+    #  initialAngularVelocity: initial angular velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+    #  constrainRigidBodyMotion: set True in order to add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes
+    #  color: provided as list of 4 RGBA values
     #add object to mbs as well as according nodes
     def AddObjectFFRF(self, exu, mbs, 
                       positionRef=[0,0,0], eulerParametersRef=[1,0,0,0], 
                       initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
                       gravity=[0,0,0],
-                      #UFforce=0, UFmassMatrix=0, #defined without user functions now
-                      constrainRigidBodyMotion=True, #add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes
+                      constrainRigidBodyMotion=True, 
                       color=[0.1,0.9,0.1,1.]):
 
         self.gravity = gravity
@@ -630,8 +636,6 @@ class ObjectFFRFinterface:
         massMatrixMC = exu.MatrixContainer()
         #massMatrixMC.SetWithSparseMatrixCSR(self.nODE2FF, self.nODE2FF, self.massMatrixSparse,useDenseMatrix=False)
         massMatrixMC.SetWithDenseMatrix(CompressedRowSparseToDenseMatrix(self.massMatrixSparse),useDenseMatrix=False)
-
-        #emptyMC = exu.MatrixContainer()
 
         #add body for FFRF-Object:
         self.oFFRF = mbs.AddObject(ObjectFFRF(nodeNumbers = [self.nRigidBody] + self.nodeList, 
@@ -670,8 +674,7 @@ class ObjectFFRFinterface:
 
         return dictReturn
 
-
-    #conventional FFRF force user function:
+    #**classFunction: optional forceUserFunction for ObjectFFRF (per default, this user function is ignored)
     def UFforce(self, exu, mbs, t, q, q_t):
         print("UFforce: not tested and not integrated in to FFRFinterface!")
 
@@ -717,7 +720,7 @@ class ObjectFFRFinterface:
 
         return force
 
-    #ffrf mass matrix:
+    #**classFunction: optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
     def UFmassGenericODE2(self, exu, mbs, t, q, q_t):
         print("UFmassGenericODE2: not tested and not integrated into FFRFinterface!")
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
@@ -753,10 +756,17 @@ class ObjectFFRFinterface:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++          ObjectFFRFreducedOrderTerms              ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#compute terms necessary for ObjectFFRFreducedOrder
-#class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
-#this class holds all data for ObjectFFRFreducedOrder user functions
+#**class: compute terms necessary for ObjectFFRFreducedOrder
+#  class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
+#  this class holds all data for ObjectFFRFreducedOrder user functions
 class ObjectFFRFreducedOrderInterface:
+    #**classFunction: initialize ObjectFFRFreducedOrderInterface with FEMinterface class
+    #  initializes the ObjectFFRFreducedOrderInterface with nodes, modes, surface description and reduced system matrices from FEMinterface
+    #  data is then transfered to mbs object with classFunction AddObjectFFRFreducedOrderWithUserFunctions(...)
+    #**input: 
+    #  femInterface: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness
+    #  roundMassMatrix: use this value to set entries of reduced mass matrix to zero which are below the treshold
+    #  roundStiffNessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
     def __init__(self, femInterface, roundMassMatrix = 1e-13, roundStiffNessMatrix = 1e-13):
  
         self.modeBasis = femInterface.modeBasis['matrix']
@@ -819,7 +829,18 @@ class ObjectFFRFreducedOrderInterface:
         #FillInSubMatrix(self.massMatrixReduced, self.massMatrixFFRFreduced, self.nODE2rigid, self.nODE2rigid)
         self.massMatrixFFRFreduced[self.nODE2rigid:,self.nODE2rigid:] = self.massMatrixReduced
 
-    #add object to mbs as well as according nodes
+    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs
+    #**input:
+    #  exu: the exudyn module
+    #  mbs: a MainSystem object
+    #  positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  eulerParametersRef: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+    #  UFforce: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFmassMatrix: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  color: provided as list of 4 RGBA values
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
                                                   positionRef=[0,0,0], eulerParametersRef=[1,0,0,0], 
                                                   initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
@@ -879,7 +900,7 @@ class ObjectFFRFreducedOrderInterface:
 
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #CMS mass matrix user function; qReduced contains the rigid body node and the modal coordinates in one vector!
+    #**classFunction: CMS mass matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
     def UFmassFFRFreducedOrder(self, exu, mbs, t, qReduced, qReduced_t):
 
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
@@ -914,7 +935,7 @@ class ObjectFFRFreducedOrderInterface:
         return self.massMatrixFFRFreduced
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #CMS force user function; qReduced contains the rigid body node and the modal coordinates in one vector!
+    #**classFunction: CMS force matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
     def UFforceFFRFreducedOrder(self, exu, mbs, t, qReduced, qReduced_t):
         force = np.zeros(self.nODE2FFRFreduced)
 
@@ -963,8 +984,13 @@ class ObjectFFRFreducedOrderInterface:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   FEMinterface - finite element interface class   ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#general interface to different FEM / mesh imports and export to EXUDYN functions
+#**class: general interface to different FEM / mesh imports and export to EXUDYN functions
+#         use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve, ABAQUS, ANSYS, ..) and store it in a unique format
+#         do mesh operations, compute eigenmodes and reduced basis, etc.
+#         load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
+#         export to EXUDYN objects
 class FEMinterface:
+    #**classFunction: initalize all data of the FEMinterface by, e.g., \texttt{fem = FEMinterface()}
     def __init__(self):
         self.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
         self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
@@ -983,8 +1009,8 @@ class FEMinterface:
         self.coordinatesPerNodeType = {'Position':3, 'Position2D':2, 'RigidBodyRxyz':6, 'RigidBodyEP':7} #number of coordinates for a certain node type
 
 
-    #save all data (nodes, elements, ...) to a data filename. use filename without ending ==> ".npy" will be added
-    #this function is much faster than the text-based import functions
+    #**classFunction: save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions
+    #**input: use filename without ending ==> ".npy" will be added
     def SaveToFile(self, fileName):
         with open(fileName, 'wb') as f:
             np.save(f, self.nodes, allow_pickle=True)
@@ -997,9 +1023,9 @@ class FEMinterface:
             np.save(f, self.modeBasis, allow_pickle=True)
             np.save(f, self.eigenValues, allow_pickle=True)
 
-    #load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
-    #use filename without ending ==> ".npy" will be added
+    #**classFunction: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
     #this function is much faster than the text-based import functions
+    #**input: use filename without ending ==> ".npy" will be added
     def LoadFromFile(self, fileName):
         with open(fileName, 'rb') as f:
             self.nodes = np.load(f, allow_pickle=True).all()
@@ -1135,7 +1161,7 @@ class FEMinterface:
 
 
 
-    #import nodes and elements from Abaqus input file and create surface elements
+    #**classFunction: import nodes and elements from Abaqus input file and create surface elements
     #node numbers in elements are converted from 1-based indices to python's 0-based indices
     #only works for Hex8, Hex20, Tet4 and Tet10 (C3D4, C3D8, C3D10, C3D20) elements
     #return node numbers as numpy array
@@ -1284,8 +1310,7 @@ class FEMinterface:
 
 
 
-    #read mass matrix from compressed row text format (exported from Abaqus)
-    #in order to export system matrices, write the following lines in your Abaqus input file (without '#'):
+    #**classFunction: read mass matrix from compressed row text format (exported from Abaqus); in order to export system matrices, write the following lines in your Abaqus input file:
     #*STEP
     #*MATRIX GENERATE, STIFFNESS, MASS
     #*MATRIX OUTPUT, STIFFNESS, MASS, FORMAT=COORDINATE
@@ -1295,7 +1320,7 @@ class FEMinterface:
         self.massMatrix[:,0] -= 1 #convert 1-based indices to 0-based indices
         self.massMatrix[:,1] -= 1
 
-    #read stiffness matrix from compressed row text format (exported from Abaqus)
+    #**classFunction: read stiffness matrix from compressed row text format (exported from Abaqus)
     def ReadStiffnessMatrixFromAbaqus(self, fileName, type='SparseRowColumnValue'):
         self.stiffnessMatrix = np.loadtxt(fileName)
         self.stiffnessMatrix[:,0] -= 1 #convert 1-based indices to 0-based indices
@@ -1305,19 +1330,18 @@ class FEMinterface:
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #NETGEN/NGsolve import functions
-    #The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer 
+    #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
+    #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer 
     #  of NETGEN/NGsolve; Thank's a lot!
     #  download NGsolve at: https://ngsolve.org/
     #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
     #  note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
-
-    #import mesh from NGsolve and setup mechanical problem with 
-    #    Young's modulus 'youngsModulus'
-    #    Poisson's ratio 'poissonsRatio'
-    #    density 'density'
-    #mesh = ngs.mesh (NGsolve mesh)
-    #verbose=True: print out some status information
+    #**input:
+    #    mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+    #    youngsModulus: Young's modulus used for mechanical model
+    #    poissonsRatio: Poisson's ratio used for mechanical model
+    #    density: density used for mechanical model
+    #    verbose: set True to print out some status information
     def ImportMeshFromNGsolve(self, mesh, density, youngsModulus, poissonsRatio, verbose = False):
         import ngsolve as ngs
         meshOrder = 1#currently only order 1 possible, but will change!
@@ -1427,28 +1451,28 @@ class FEMinterface:
     #general FEMinterface functionality
 
 
-    #get sparse mass matrix in according format
+    #**classFunction: get sparse mass matrix in according format
     def GetMassMatrix(self, sparse=True):
         if sparse:
             return self.massMatrix
         else:
             return CompressedRowSparseToDenseMatrix(self.massMatrix)
 
-    #get sparse stiffness matrix in according format
+    #**classFunction: get sparse stiffness matrix in according format
     def GetStiffnessMatrix(self, sparse=True):
         if sparse:
             return self.stiffnessMatrix
         else:
             return CompressedRowSparseToDenseMatrix(self.stiffnessMatrix)
 
-    #get total number of nodes
+    #**classFunction: get total number of nodes
     def NumberOfNodes(self):
         nNodes = 0
         for nodeTypeName in self.nodes:
             nNodes += len(self.nodes[nodeTypeName])
         return nNodes
 
-    #get node points as array; only possible, if there exists only one type of Position nodes
+    #**classFunction: get node points as array; only possible, if there exists only one type of Position nodes
     def GetNodePositionsAsArray(self):
         if len(self.nodes) != 1:
             raise ValueError("ERROR: GetNodePositionsAsArray() only possible for one type of Position nodes!")
@@ -1456,14 +1480,14 @@ class FEMinterface:
         nodeTypeName = list(self.nodes)[0]
         return self.nodes[nodeTypeName]
 
-    #get number of total nodal coordinates
+    #**classFunction: get number of total nodal coordinates
     def NumberOfCoordinates(self):
         nCoordinates = 0
         for nodeTypeName in self.nodes:
             nCoordinates += len(self.nodes[nodeTypeName]) * self.coordinatesPerNodeType[nodeTypeName]
         return nCoordinates
 
-    #get node number for node at given point, e.g. p=[0.1,0.5,-0.2], using a tolerance (+/-) if coordinates are available only with reduced accuracy
+    #**classFunction: get node number for node at given point, e.g. p=[0.1,0.5,-0.2], using a tolerance (+/-) if coordinates are available only with reduced accuracy
     #if not found, it returns an invalid index
     def GetNodeAtPoint(self, point, tolerance = 1e-5, raiseException = True):
         cnt = 0
@@ -1477,7 +1501,7 @@ class FEMinterface:
             raise ValueError("ERROR: GetNodeAtPoint: node point not found!")
         return -1 #invalid index, only if no exception raised
 
-    #get node numbers in plane defined by point p and (normalized) normal vector n using a tolerance for the distance to the plane
+    #**classFunction: get node numbers in plane defined by point p and (normalized) normal vector n using a tolerance for the distance to the plane
     #if not found, it returns an empty list
     def GetNodesInPlane(self, point, normal,  tolerance = 1e-5):
         cnt = 0
@@ -1489,7 +1513,7 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #get node numbers on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
+    #**classFunction: get node numbers on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
     #using a tolerance for the distance to the plane
     #if not found, it returns an empty list
     def GetNodesOnCircle(self, point, normal, r, tolerance = 1e-5):
@@ -1503,7 +1527,7 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #return surface trigs as node number list (for drawing in EXUDYN)
+    #**classFunction: return surface trigs as node number list (for drawing in EXUDYN)
     def GetSurfaceTriangles(self):
         trigList = []
         for surface in self.surface:
@@ -1511,7 +1535,7 @@ class FEMinterface:
                 trigList += surface['Trigs']
         return trigList
 
-    #generate surface elements from volume elements
+    #**classFunction: generate surface elements from volume elements
     #stores the surface in self.surface
     #only works for one element list and one type ('Hex8') of elements
     def VolumeToSurfaceElements(self, verbose=False):
@@ -1642,7 +1666,7 @@ class FEMinterface:
     #+++++++++++      COMPUTATIONAL FUNCTIONS            ++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
-    #get gyroscopic matrix in according format; rotationAxis=[0,1,2] =^= [x,y,z]
+    #**classFunction: get gyroscopic matrix in according format; rotationAxis=[0,1,2] = [x,y,z]
     def GetGyroscopicMatrix(self, rotationAxis=2, sparse=True):
         if sparse:
             raise ValueError("GetGyroscopicMatrix: not implemented for sparse matrices!")
@@ -1668,16 +1692,16 @@ class FEMinterface:
 
 
 
-    #scale (=multiply) mass matrix with factor
+    #**classFunction: scale (=multiply) mass matrix with factor
     def ScaleMassMatrix(self, factor):
         self.massMatrix[:,2] *= factor
 
-    #scale (=multiply) stiffness matrix with factor
+    #**classFunction: scale (=multiply) stiffness matrix with factor
     def ScaleStiffnessMatrix(self, factor):
         self.stiffnessMatrix[:,2] *= factor
 
         
-    #modify stiffness matrix to add elastic support (joint, etc.) to a node; nodeNumber zero based (as everywhere in the code...)
+    #**classFunction: modify stiffness matrix to add elastic support (joint, etc.) to a node; nodeNumber zero based (as everywhere in the code...)
     #springStiffness must have length according to the node size
     def AddElasticSupportAtNode(self, nodeNumber, springStiffness=[1e8,1e8,1e8]):
         if len(self.nodes) != 1:
@@ -1694,7 +1718,7 @@ class FEMinterface:
             self.stiffnessMatrix = AddEntryToCompressedRowSparseArray(self.stiffnessMatrix, nCoordinate+i,nCoordinate+i,springStiffness[i])
         #np.vstack((self.stiffnessMatrix, np.array(supports))) #append supports to sparse matrix
 
-    #modify mass matrix by adding a mass to a certain node, modifying directly the mass matrix
+    #**classFunction: modify mass matrix by adding a mass to a certain node, modifying directly the mass matrix
     def AddNodeMass(self, nodeNumber, addedMass):
         if len(self.nodes) != 1:
             print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
@@ -1710,7 +1734,7 @@ class FEMinterface:
             self.massMatrix = AddEntryToCompressedRowSparseArray(self.massMatrix, nCoordinate+i,nCoordinate+i,addedMass)
         #np.vstack((self.massMatrix, np.array(supports))) #append supports to sparse matrix
 
-    #compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix
+    #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix
     #store mode vector in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis
     #if excludeRigidBodyModes > 0, then the computed modes is nModes + excludeRigidBodyModes, from which excludeRigidBodyModes smallest eigenvalues are excluded
     def ComputeEigenmodes(self, nModes, excludeRigidBodyModes = 0, useSparseSolver = True):
@@ -1750,21 +1774,21 @@ class FEMinterface:
                               'type':'NormalNodes'}
             self.eigenValues = abs(eigVals[excludeRigidBodyModes:excludeRigidBodyModes + nModes])
 
-    #returns list of eigenvalues in Hz of previously computed eigenmodes
+    #**classFunction: return list of eigenvalues in Hz of previously computed eigenmodes
     def GetEigenFrequenciesHz(self):
         return np.sqrt(self.eigenValues)/(2.*np.pi)
 
 
-    #compute Campbell diagram for given mechanical system
-    #**description
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute Campbell diagram for given mechanical system
     #create a first order system Axd + Bx = 0 with x= [q,qd]' and compute eigenvalues
     #takes mass M, stiffness K and gyroscopic matrix G from FEMinterface
     #currently only uses dense matrices, so it is limited to approx. 5000 unknowns!
     #**input:
     #  terminalFrequency: frequency in Hz, up to which the campbell diagram is computed
-    #  nEigenfrequencies gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0
-    #  frequencySteps gives the number of increments (gives frequencySteps+1 total points in campbell diagram)
-    #  rotationAxis:[0,1,2] =^= [x,y,z] provides rotation axis
+    #  nEigenfrequencies: gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0
+    #  frequencySteps: gives the number of increments (gives frequencySteps+1 total points in campbell diagram)
+    #  rotationAxis:[0,1,2] = [x,y,z] provides rotation axis
     #  plotDiagram: if True, plots diagram for nEigenfrequencies befor terminating
     #  verbose: if True, shows progress of computation
     #**output: [listFrequencies, campbellFrequencies]
@@ -1848,7 +1872,7 @@ class FEMinterface:
 
         return [listFrequencies, campbellFrequencies]
 
-    #perform some consistency checks
+    #**classFunction: perform some consistency checks
     def CheckConsistency(self):
         nNodes = self.NumberOfNodes()
         #nNodes = len(self.nodes['Position']) #old
@@ -1872,7 +1896,7 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # Ansys    
     
-    #read mass matrix from CSV format (exported from Ansys)
+    #**classFunction: read mass matrix from CSV format (exported from Ansys)
     def ReadMassMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
         if sparse:
             self.massMatrix = ReadMatrixFromAnsysMMF(fileName, verbose)
@@ -1886,7 +1910,7 @@ class FEMinterface:
 
         MapSparseMatrixIndices(self.massMatrix, sorting)
 
-    #read stiffness matrix from CSV format (exported from Ansys)
+    #**classFunction: read stiffness matrix from CSV format (exported from Ansys)
     def ReadStiffnessMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
         if sparse:
             self.stiffnessMatrix = ReadMatrixFromAnsysMMF(fileName, verbose) 
@@ -1900,12 +1924,12 @@ class FEMinterface:
 
         MapSparseMatrixIndices(self.stiffnessMatrix, sorting)
                     
-    #read nodal coordinates (exported from Ansys as .txt-File)
+    #**classFunction: read nodal coordinates (exported from Ansys as .txt-File)
     def ReadNodalCoordinatesFromAnsys(self, fileName, verbose=False):
         nodes = ReadNodalCoordinatesFromAnsysTxt(fileName, verbose)
         self.nodes['Position'] = np.array(nodes)
         
-    #read elements (exported from Ansys as .txt-File)
+    #**classFunction: read elements (exported from Ansys as .txt-File)
     def ReadElementsFromAnsys(self, fileName, verbose=False):
         self.elements += [ReadElementsFromAnsysTxt(fileName, verbose)]
         self.VolumeToSurfaceElements() #generate surface elements

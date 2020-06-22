@@ -292,7 +292,7 @@ VSettingsContour has the following items:
     minValue &     float &     1 &     0 &     minimum value for contour plot; set manually, if automaticRange == False\\ \hline
     maxValue &     float &     1 &     1 &     maximum value for contour plot; set manually, if automaticRange == False\\ \hline
     automaticRange &     bool &      &     True &     if true, the contour plot value range is chosen automatically to the maximum range\\ \hline
-    reduceRange &     bool &      &     True &     if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts\\ \hline
+    reduceRange &     bool &      &     True &     if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)\\ \hline
     showColorBar &     bool &      &     True &     show the colour bar with minimum and maximum values for the contour plot\\ \hline
     colorBarTiling &     Index &     1 &     12 &     number of tiles (segements) shown in the colorbar for the contour plot\\ \hline
 	  \end{longtable}

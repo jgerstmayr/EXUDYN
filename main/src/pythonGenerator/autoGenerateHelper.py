@@ -32,6 +32,9 @@ def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit in
     s = s.replace('$','\\f$') #$ must be written as \f$ in doxygen
     s = s.replace('\\be','\\f[') #$ must be written as \f$ in doxygen
     s = s.replace('\\ee','\\f]') #$ must be written as \f$ in doxygen
+    s = s.replace('\\bi','') #not needed in doxygen
+    s = s.replace('\\ei','') #not needed in doxygen
+    s = s.replace('\item[]','') #not needed in doxygen
 
     return s
 

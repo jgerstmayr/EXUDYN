@@ -130,9 +130,11 @@ testFileList = [
                 'TestModels/objectFFRFTest.py',
                 'TestModels/objectFFRFTest2.py',
                 'TestModels/compareAbaqusAnsysRotorEigenfrequencies.py',
-                'TestModels/driveTrainTest.py',                
+                'TestModels/driveTrainTest.py',
+                'TestModels/rollingCoinTest.py',
+                'TestModels/rollingCoinPenaltyTest.py',
+                'TestModels/mecanumWheelRollingDiscTest.py',
                 ]
-
 
 
 #testFileList = ['Examples/fourBarMechanism.py']

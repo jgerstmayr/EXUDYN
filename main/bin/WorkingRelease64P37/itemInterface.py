@@ -1055,6 +1055,53 @@ class ObjectConnectorCoordinateVector:
 CoordinateVectorConstraint = ObjectConnectorCoordinateVector
 VCoordinateVectorConstraint = VObjectConnectorCoordinateVector
 
+class VObjectConnectorRollingDiscPenalty:
+    def __init__(self, show = True, discWidth = 0.1, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.discWidth = discWidth
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'discWidth', self.discWidth
+        yield 'color', self.color
+
+class ObjectConnectorRollingDiscPenalty:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.nodeNumber = nodeNumber
+        self.dryFrictionAngle = dryFrictionAngle
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.dryFriction = dryFriction
+        self.dryFrictionProportionalZone = dryFrictionProportionalZone
+        self.rollingFrictionViscous = rollingFrictionViscous
+        self.activeConnector = activeConnector
+        self.discRadius = discRadius
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorRollingDiscPenalty'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'dryFrictionAngle', self.dryFrictionAngle
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'dryFriction', self.dryFriction
+        yield 'dryFrictionProportionalZone', self.dryFrictionProportionalZone
+        yield 'rollingFrictionViscous', self.rollingFrictionViscous
+        yield 'activeConnector', self.activeConnector
+        yield 'discRadius', self.discRadius
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdiscWidth', dict(self.visualization)["discWidth"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RollingDiscPenalty = ObjectConnectorRollingDiscPenalty
+VRollingDiscPenalty = VObjectConnectorRollingDiscPenalty
+
 class VObjectContactCoordinate:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1252,6 +1299,41 @@ class ObjectJointSpherical:
 #add typedef for short usage:
 SphericalJoint = ObjectJointSpherical
 VSphericalJoint = VObjectJointSpherical
+
+class VObjectJointRollingDisc:
+    def __init__(self, show = True, discWidth = 0.1, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.discWidth = discWidth
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'discWidth', self.discWidth
+        yield 'color', self.color
+
+class ObjectJointRollingDisc:
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.constrainedAxes = constrainedAxes
+        self.activeConnector = activeConnector
+        self.discRadius = discRadius
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointRollingDisc'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'constrainedAxes', self.constrainedAxes
+        yield 'activeConnector', self.activeConnector
+        yield 'discRadius', self.discRadius
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdiscWidth', dict(self.visualization)["discWidth"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RollingDiscJoint = ObjectJointRollingDisc
+VRollingDiscJoint = VObjectJointRollingDisc
 
 class VObjectJointRevolute2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):

@@ -218,6 +218,9 @@ public:
 	//! read single velocity coordinate in current configuration
 	virtual const Real& GetCurrentCoordinate_t(Index i) const;
 
+	//! read single acceleration coordinate in current configuration
+	virtual const Real& GetCurrentCoordinate_tt(Index i) const;
+
 	//! read globally stored current coordinates (displacements)
 	virtual LinkedDataVector GetCurrentCoordinateVector() const override;
 

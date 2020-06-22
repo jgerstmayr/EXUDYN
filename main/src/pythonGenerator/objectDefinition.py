@@ -52,7 +52,7 @@ cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
 pythonShortName = Point
-outputVariables = "{'Position':'$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Coordinates':'$\cv\cConfig = \uv\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig$ coordinate vector of node', 'Coordinates_t':'$\dot\cv\cConfig = \vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig$ velocity coordinates vector of node'}"
+outputVariables = "{'Position':'$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\av\cConfig = \ddot \qv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'$\cv\cConfig = \uv\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig$ coordinate vector of node', 'Coordinates_t':'$\dot\cv\cConfig = \vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\tp\cConfig$ acceleration coordinates vector of node'}"
 classType = Node
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
@@ -2233,7 +2233,7 @@ V,      CP,     activeConnector,                ,               ,       bool,   
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
@@ -2340,7 +2340,7 @@ V,      CP,     activeConnector,                ,               ,       bool,   
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
 Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,       "return parameters.velocityLevel;",  ,      CI,     "Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,   "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
@@ -2446,7 +2446,7 @@ Fv,     C,      GetMarkerNumbers,               ,               ,       "const A
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
 Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return false;", ,      CI,    "connector is time dependent if user functions are defined" 
 #Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,       "return parameters.velocityLevel;",  ,      CI,     "Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
@@ -2468,6 +2468,181 @@ Fv,     V,      IsConnector,                    ,               ,       Bool,   
 V,      V,      color,                          ,               ,       Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
 writeFile = True
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectConnectorRollingDiscPenalty
+classDescription = "A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing."
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = RollingDiscPenalty
+addProtectedC = "    static const Index nDataVariables = 3; //number of data variables for tangential and normal contact\n"
+outputVariables = "{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'VelocityLocal':'$\LU{D}{\vv}_{G}$current velocity of the trail (contact) point in disc coordinates; this is the velocity with which the contact moves over the ground plane', 'ForceLocal':'$\LU{J1}{\fv}$disc-ground force in special marker 1 joint coordinates, $f_0$ being the lateral force, $f_1$ being the longitudinal force and $f_2$ being the normal force'}"
+classType = Object
+#add input quantities
+#add equations
+equations =
+    \vspace{6pt}\\
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference position; currently unused}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
+    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
+    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
+    \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2]\tp$}{data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction)}
+%
+    %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
+    %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
+    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
+%
+    \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}}$}{normalized normal vector to the ground, currently [0,0,1]}
+    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground (normal projection)}
+    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
+    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
+    %\rowTable{ground vector}{$\LU{0}{\dv}$}{vector from ground to the disc center point , currently [0,0,\LU{0}{\pv}_{m1,z}]}
+    \rowTable{wheel axis vector}{$\LU{0}{\wv}_1 =\LU{0,m1}{\Rot} \cdot [1,0,0]\tp $}{normalized disc axis vector, currently $[1,0,0]\tp$ in local coordinates}
+    \rowTable{longitudinal vector}{$\LU{0}{\wv}_2$}{vector in longitudinal (motion) direction}
+    \rowTable{lateral vector}{$\LU{0}{\wv}_l = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2 = [-\wv_{2,y}, \wv_{2,x}, 0]$}{vector in lateral direction, lies in ground plane}
+    \rowTable{contact point vector}{$\LU{0}{\wv}_3$}{normalized vector from disc center point in direction of contact point C}
+%
+    \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
+    \finishTable
+    \vspace{6pt}
+    \noindent {\bf Geometric relations}:\\
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \noindent The main geometrical setup is shown in the following figure:
+    \begin{center}
+        \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
+    \end{center}
+    First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
+    %Using the point B which is the disc center point projeced to ground plane,
+    %\be
+    %  \LU{0}{\pv}_{B} = \vr{\LU{0}{\pv}_{m1,x}}{\LU{0}{\pv}_{m1,y}}{0}
+    %\ee
+    %This provides the vector $\dv$,
+    %\be
+    %  \LU{0}{\dv} = \vr{0}{0}{\LU{0}{\pv}_{m1,z}}
+    %\ee
+    With the helper vector,
+    \be
+      \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
+    \ee
+    we obtain a disc coordinate system, representing the longitudinal direction,
+    \be
+      \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv} 
+    \ee
+    and the vector to the contact point,
+    \be
+      \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
+    \ee
+    The contact point can be computed from
+    \be
+      \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3
+    \ee
+    The velocity of the contact point at the disc is computed from,
+    \be
+      \LU{0}{\vv}_{C} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
+    \ee
+    The connector forces at the contact point $C$ are computed as follows. 
+    The normal contact force reads
+    \be
+      f_n = k_c \cdot \LU{0}{\pv}_{C,z} + d_c \cdot \LU{0}{\vv}_{C,z}
+    \ee
+    The tangential forces are computed from the inplane velocity $\vv_t = [\LU{0}{\vv}_{C,x},\, \LU{0}{\vv}_{C,y}]\tp$
+    \be
+      \fv_t = \tmu \cdot \phi(|\vv_t|,v_\mu) \cdot f_n \cdot \ev_t
+    \ee
+    with the regularization function:
+    \be
+      \phi(v, v_\mu) = 
+        \left\{ 
+        	\begin{array}{ccl}
+        		(2-\frac{v}{v_\mu})\frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
+        		1 & \mathrm{if} & v > v_\mu \\
+        	\end{array}
+        	\right.
+    \ee
+    and the direction of tangential slip
+    \be
+      \ev_t = \frac{\vv_t}{|\vv_t|}
+    \ee
+    The friction coefficient matrix $\tmu$ is computed from
+    \be
+      \tmu = \mp{\mu_x}{0}{0}{\mu_y}
+    \ee
+    where for isotropic behaviour of surface and wheel, it will give a diagonal matrix with the friction coefficient in the diagonal.
+    In case that the dry friction angle $\alpha_t$ is not zero, the $\tmu$ changes to
+    \be
+      \tmu = \mp{\cos(\alpha_t)}{\sin(\alpha_t)}{-\sin(\alpha_t)}{\cos(\alpha_t)} \mp{\mu_x}{0}{0}{\mu_y} \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
+    \ee
+    Finally, the connector forces read in joint coordinates
+    \be
+      \LU{J1}{\fv} = \vr{f_{t,x}}{f_{t,y}}{f_n}
+    \ee
+    and in global coordinates, they are computed from
+    \be
+      \LU{0}{\fv} = f_{t,x}\wv_l + f_{t,y} \wv_2 + f_n \vv_{PN}
+    \ee
+    The moment caused by the contact forces are given as
+    \be
+      \LU{0}{\fv} = (r\cdot \LU{0}{\wv}_3) \times \LU{0}{\fv}
+    \ee
+    if \texttt{activeConnector = False}, 
+    \be
+      \LU{J1}{\fv} = \Null
+    \ee
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
+V,      CP,     markerNumbers,                  ,               2,      ArrayIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",     ,       I,      "$n_d$node number of a NodeGenericData (size=3) for 3 dataCoordinates"
+#
+#V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction"
+V,      CP,     dryFrictionAngle,               ,               ,       Real,       "0.",                       ,       IO,     "$\alpha_t$angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle"
+V,      CP,     contactStiffness,               ,               ,       Real,       "0.",                       ,       I,      "$k_c$normal contact stiffness [SI:N/m]"
+V,      CP,     contactDamping,                 ,               ,       Real,       "0.",                       ,       IO,     "$d_c$normal contact damping [SI:N/(m s)]"
+V,      CP,     dryFriction,                    ,               ,       Vector2D,   "Vector2D({0,0})",          ,       IO,     "$[\mu_x,\mu_y]\tp$dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$"
+V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",                       ,       IO,     "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
+V,      CP,     rollingFrictionViscous,         ,               ,       Real,       "0.",                       ,       IO,     "$\mu_r$rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!"
+V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     discRadius,                     ,               ,       Real,       "0",                        ,       I,      "defines the disc radius"
+V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       ,       "normal to the contact / rolling plane; cannot be changed at the moment"
+#
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",                 ,       CI,     "data (history) variable simplifies contact switching for implicit time integration and Newton method" 
+#
+#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,    				   ,               ,       Real,       ,             				"const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags",       DI,  	"function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+#
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,      CI,     "connector uses penalty formulation" 
+Fv,     C,      ComputeODE2RHS,                 ,               ,       void,       ,                           "Vector& ode2Rhs, const MarkerDataStructure& markerData",          CDI,     "Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'" 
+Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of ODE2 RHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value",          DC, "provide according output variable in 'value'" 
+F,      C,      ComputeContactForces,           ,               ,       void,       , "const MarkerDataStructure& markerData, const CObjectConnectorRollingDiscPenaltyParameters& parameters, bool computeCurrent, Vector3D& pC, Vector3D& vC, Vector3D& wLateral, Vector3D& w2, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity", CDI,    "compute contact kinematics and contact forces" 
+F,      C,      ComputeSlipForce,               ,               ,       Vector2D,   , "const CObjectConnectorRollingDiscPenaltyParameters& parameters, 	const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce", CDI,    "compute slip force vector for specific states" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,      CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorRollingDiscPenalty';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,       ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,       "return true;",             ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      discWidth,                      ,               ,       float,      "0.1f",                     ,       IO,    "width of disc for drawing"
+V,      V,      color,                          ,               ,       Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})",,IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
 
 
 
@@ -2744,7 +2919,7 @@ V,      CP,     offsetUserFunction_t,           ,               ,       PyFuncti
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
@@ -2832,7 +3007,7 @@ V,      CP,     activeConnector,                ,               ,       bool,   
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,       CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,       CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,       CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
@@ -2854,6 +3029,136 @@ writeFile = True
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectJointRollingDisc
+classDescription = "A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly)."
+cParentClass = CObjectConstraint
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = RollingDiscJoint
+addProtectedC = "    static const Index nConstraints = 3;\n"
+outputVariables = "{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'VelocityLocal':'$\LU{D}{\vv}_{G}$current velocity of the trail (contact) point in disc coordinates; this is the velocity with which the contact moves over the ground plane', 'ForceLocal':'$\LU{D}{\fv} = [-\zv^T \wv_l, \, -\zv^T \wv_2, \, -\zv_z]\tp$contact forces acting on disc, in special disc coordinates, $f_x$ being the lateral force, $f_y$ being the longitudinal force and $f_z$ being the normal force'}"
+classType = Object
+#add input quantities
+#add equations
+equations =
+    \vspace{6pt}\\
+    {\bf Definition of quantities}:
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference position; currently unused}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
+    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
+    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
+%
+    %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
+    %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
+    \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
+%
+    \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}}$}{normalized normal vector to the ground plane, currently [0,0,1]}
+    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground (normal projection)}
+    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
+    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
+    %\rowTable{ground vector}{$\LU{0}{\dv}$}{vector from ground to the disc center point , currently [0,0,\LU{0}{\pv}_{m1,z}]}
+    \rowTable{wheel axis vector}{$\LU{0}{\wv}_1 =\LU{0,m1}{\Rot} \cdot [1,0,0]\tp $}{normalized disc axis vector, currently $[1,0,0]\tp$ in local coordinates}
+    \rowTable{longitudinal vector}{$\LU{0}{\wv}_2$}{vector in longitudinal (motion) direction}
+    \rowTable{lateral vector}{$\LU{0}{\wv}_l = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2 = [-\wv_{2,y}, \wv_{2,x}, 0]$}{vector in lateral direction, lies in ground plane}
+    \rowTable{contact point vector}{$\LU{0}{\wv}_3$}{normalized vector from disc center point in direction of contact point C}
+%
+    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
+    \finishTable
+    \vspace{6pt}
+    \noindent {\bf Geometric relations}:\\
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \noindent The main geometrical setup is shown in the following figure:
+    \begin{center}
+        \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
+    \end{center}
+    First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
+    %Using the point B which is the disc center point projeced to ground plane,
+    %\be
+    %  \LU{0}{\pv}_{B} = \vr{\LU{0}{\pv}_{m1,x}}{\LU{0}{\pv}_{m1,y}}{0}
+    %\ee
+    %This provides the vector $\dv$,
+    %\be
+    %  \LU{0}{\dv} = \vr{0}{0}{\LU{0}{\pv}_{m1,z}}
+    %\ee
+    With the helper vector,
+    \be
+      \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
+    \ee
+    we obtain a disc coordinate system, representing the longitudinal direction,
+    \be
+      \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv} 
+    \ee
+    and the vector to the contact point,
+    \be
+      \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
+    \ee
+    The contact point can be computed from
+    \be
+      \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3
+    \ee
+    The velocity of the contact point at the disc is computed from,
+    \be
+      \LU{0}{\vv}_{C} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
+    \ee
+    \vspace{6pt}
+    \noindent {\bf Connector constraint equations (\texttt{activeConnector = True})}:\\
+    %The holonomic, index 3 constraint for the normal direction reads
+    %\be
+    %  \LU{0}{\pv}_{C,z} = 0
+    %\ee
+    The non-holonomic, index 2 constraints for the tangential motion follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
+    \be
+      \vp{\LU{0}{\vv}_{C,x}}{\LU{0}{\vv}_{C,y}}= \Null
+    \ee
+    In the index 2 (velocity level) case, the constraint for the normal direction reads
+    \be
+      \LU{0}{\vv}_{C,z} = 0
+    \ee
+    if \texttt{activeConnector = False}, 
+    \be
+      \zv = \Null
+    \ee
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
+V,      CP,     markerNumbers,                  ,               2,      ArrayIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction"
+V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     discRadius,                     ,               ,       Real,       "0",                        ,       I,      "defines the disc radius"
+V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       ,       "normal to the contact / rolling plane; cannot be changed at the moment"
+#
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
+Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
+Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,       "return true;",             ,       CI,     "Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)" 
+#Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 3;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRollingDisc';",   ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI, "return if connector is active-->speeds up computation" 
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      discWidth,                      ,               ,       float,  "0.1f",                          ,       IO,    "width of disc for drawing"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectJointRevolute2D
 classDescription = "A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers"
 cParentClass = CObjectConstraint
@@ -2869,7 +3174,7 @@ V,      CP,     activeConnector,                ,               ,       bool,   
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
@@ -2909,7 +3214,7 @@ V,      CP,     activeConnector,                ,               ,       bool,   
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
@@ -3071,7 +3376,7 @@ Fv,     C,      GetDataVariablesSize,           ,               ,       Index,  
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::AE_AE + JacobianType::AE_AE_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
@@ -3232,7 +3537,7 @@ Fv,     C,      GetDataVariablesSize,           ,               ,       Index,  
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",             ,      CI,     "constraint also implements velocity level equations" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t",                         CDI,      "compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::AE_AE + JacobianType::AE_AE_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"

@@ -57,6 +57,12 @@ const Real& CNodeODE2::GetCurrentCoordinate_t(Index i) const
 	return computationalData->currentState.ODE2Coords_t[globalODE2CoordinateIndex + i];
 }
 
+const Real& CNodeODE2::GetCurrentCoordinate_tt(Index i) const
+{
+	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_tt: index out of range");
+	return computationalData->currentState.ODE2Coords_tt[globalODE2CoordinateIndex + i];
+}
+
 //! get vector with current coordinates; corresponds to displacements
 LinkedDataVector CNodeODE2::GetCurrentCoordinateVector() const
 {

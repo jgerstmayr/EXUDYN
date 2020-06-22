@@ -15,7 +15,7 @@ from exudynBasicUtilities import NormL2
 
 eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle is zero (rotation axis arbitrary)
 
-# compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); if vector0 == [0,0,0], then any normal basis is returned
+#**function: compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); if vector0 == [0,0,0], then any normal basis is returned
 def ComputeOrthonormalBasis(vector0):
     v = np.array([vector0[0],vector0[1],vector0[2]])
 
@@ -38,7 +38,7 @@ def ComputeOrthonormalBasis(vector0):
     #print("basis=", v,n1,n2)
     return [v, n1, n2]
 
-# compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
+#**function: compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
 def GramSchmidt(vector0, vector1):
 
     v0 = np.array([vector0[0],vector0[1],vector0[2]])
@@ -57,19 +57,18 @@ def GramSchmidt(vector0, vector1):
     return [v0, v1, n2]
 
 
-# compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
-# this function should be replaced with a ExuDyn function!!!
+#**function: compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
 def Skew(vector):
     skewsymmetricMatrix = np.array([[ 0.,       -vector[2], vector[1]], 
                                     [ vector[2], 0.,       -vector[0]],
                                     [-vector[1], vector[0], 0.]])
     return skewsymmetricMatrix
 
-#convert skew symmetric matrix m to vector
+#**function: convert skew symmetric matrix m to vector
 def Skew2Vec(m):
     return np.array([-m[1][2], m[0][2], -m[0][1]])
 
-#compute (3 x 3*n) skew matrix from (3*n) vector
+#**function: compute (3 x 3*n) skew matrix from (3*n) vector
 def ComputeSkewMatrix(v):
     n = int(len(v)/3) #number of nodes
     sm = np.zeros((3*n,3))
@@ -91,28 +90,36 @@ def ComputeSkewMatrix(v):
 #helper functions for RIGID BODY KINEMATICS:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#convert Euler parameters (ep) to G-matrix (=\partial(omega) / \partial(ep_t))
+#**function: convert Euler parameters (ep) to G-matrix (=$\partial \tomega  / \partial \pv_t$)
+#**input: vector of 4 eulerParameters as list or np.array
+#**output: 3x4 matrix G as np.array
 def EulerParameters2G(eulerParameters):
     ep = eulerParameters
     return np.array([[-2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2]],
                      [-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1]],
                      [-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0]] ])
 
-#convert Euler parameters (ep) to local G-matrix (=\partial(omegaLocal) / \partial(ep_t))
+#**function: convert Euler parameters (ep) to local G-matrix (=$\partial \LU{b}{\tomega} / \partial \pv_t$)
+#**input: vector of 4 eulerParameters as list or np.array
+#**output: 3x4 matrix G as np.array
 def EulerParameters2GLocal(eulerParameters):
     ep = eulerParameters
     return np.array([[-2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2]],
                      [-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1]],
                      [-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0]] ])
 
-#compute rotation matrix from eulerParameters    
+#**function: compute rotation matrix from eulerParameters    
+#**input: vector of 4 eulerParameters as list or np.array
+#**output: 3x3 rotation matrix as np.array
 def EulerParameters2RotationMatrix(eulerParameters):
     ep = eulerParameters
     return np.array([[-2.0*ep[3]*ep[3] - 2.0*ep[2]*ep[2] + 1.0, -2.0*ep[3]*ep[0] + 2.0*ep[2]*ep[1], 2.0*ep[3]*ep[1] + 2.0*ep[2]*ep[0]],
                      [ 2.0*ep[3]*ep[0] + 2.0*ep[2]*ep[1], -2.0*ep[3]*ep[3] - 2.0*ep[1]*ep[1] + 1.0, 2.0*ep[3]*ep[2] - 2.0*ep[1]*ep[0]],
                      [-2.0*ep[2]*ep[0] + 2.0*ep[3]*ep[1], 2.0*ep[3]*ep[2] + 2.0*ep[1]*ep[0], -2.0*ep[2]*ep[2] - 2.0*ep[1]*ep[1] + 1.0] ])
 
-#compute Euler parameters from given rotation matrix
+#**function: compute Euler parameters from given rotation matrix
+#**input: 3x3 rotation matrix as list of lists or as np.array
+#**output: vector of 4 eulerParameters as np.array
 def RotationMatrix2EulerParameters(rotationMatrix):
     A=rotationMatrix
     trace = A[0][0] + A[1][1] + A[2][2] + 1.0
@@ -146,8 +153,12 @@ def RotationMatrix2EulerParameters(rotationMatrix):
 
     return np.array([ep0,ep1,ep2,ep3])
 
-#compute time derivative of Euler parameters from (global) angular velocity vector
-#note that omega=G*ep_t ==> G^T*omega = G^T*G*ep_t ==> G^T*G=4*(I4 - ep*ep^T)*ep_t = 4*(I4)*ep_t
+#**function: compute time derivative of Euler parameters from (global) angular velocity vector
+#note that for Euler parameters $\pv$, we have $\tomega=\Gm \pv_t$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \pv_t$ ==> $\Gm^T \Gm=4(\Im_{4x4} - \pv\cdot \pv^T)\pv_t = 4 (\Im_{4x4}) \pv_t$
+#**input: 
+#  angularVelocity: 3D vector of angular velocity in global frame, as lists or as np.array
+#  eulerParameters: vector of 4 eulerParameters as np.array or list
+#**output: vector of time derivatives of 4 eulerParameters as np.array
 def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
     
     GT = np.transpose(EulerParameters2G(eulerParameters))
@@ -157,7 +168,9 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            ROTATION VECTOR
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# rotaton matrix from rotation vector
+#**function: rotaton matrix from rotation vector
+#**input: 3D rotation vector as list or np.array
+#**output: 3x3 rotation matrix as np.array
 def RotationVector2RotationMatrix(rotationVector):
     rotationAngle = np.linalg.norm(rotationVector)
     I = np.diag([1, 1, 1])
@@ -170,7 +183,9 @@ def RotationVector2RotationMatrix(rotationVector):
         R = R0 + R1
     return R
 
-#compute rotation vector from rotation matrix
+#**function: compute rotation vector from rotation matrix
+#**input: 3x3 rotation matrix as list of lists or as np.array
+#**output: vector of 3 components of rotation vector as np.array
 def RotationMatrix2RotationVector(rotationMatrix):
     # compute a  rotation vector from given rotation matrix according to 
     # 2015 - Sonneville - A geometrical local frame approach for flexible multibody systems, p45
@@ -188,7 +203,9 @@ def RotationMatrix2RotationVector(rotationMatrix):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#compute rotation matrix from consecutive xyz rotations (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rot_x, rot_y, rot_z]
+#**function: compute rotation matrix from consecutive xyz rotations (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]
+#**input: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+#**output: 3x3 rotation matrix as np.array
 def RotXYZ2RotationMatrix(rot):
     c0 = np.cos(rot[0])
     s0 = np.sin(rot[0])
@@ -201,7 +218,9 @@ def RotXYZ2RotationMatrix(rot):
                   [s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2,-s0 * c1],
                   [-c0 * s1*c2 + s0 * s2,c0*s1*s2 + s0 * c2,c0*c1 ]]);
 
-#convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az; 
+#**function: convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az; 
+#**input:  3x3 rotation matrix as list of lists or np.array
+#**output: vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
 def RotationMatrix2RotXYZ(rotationMatrix):
     R=rotationMatrix
     #rot=np.array([0,0,0])
@@ -211,7 +230,11 @@ def RotationMatrix2RotXYZ(rotationMatrix):
     rot[2] = np.arctan2(-R[0][1], R[0][0])
     return np.array(rot);
 
-#compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
+#**function: compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
+#**input:  
+#  angularVelocity: global angular velocity vector as list or np.array
+#  rotation: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+#**output: time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
 def AngularVelocity2RotXYZ_t(angularVelocity, rotation):
     psi = rotation[0]
     theta = rotation[1]
@@ -228,26 +251,32 @@ def AngularVelocity2RotXYZ_t(angularVelocity, rotation):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#compute rotation matrix w.r.t. X-axis (first axis)
+#**function: compute rotation matrix w.r.t. X-axis (first axis)
+#**input: angle around X-axis in radiant
+#**output: 3x3 rotation matrix as np.array
 def RotationMatrixX(angleRad):
     return np.array([[1, 0, 0],
                      [0, np.cos(angleRad),-np.sin(angleRad)],
                      [0, np.sin(angleRad), np.cos(angleRad)] ])
 
-#compute rotation matrix w.r.t. Y-axis (second axis)
+#**function: compute rotation matrix w.r.t. Y-axis (second axis)
+#**input: angle around Y-axis in radiant
+#**output: 3x3 rotation matrix as np.array
 def RotationMatrixY(angleRad):
     return np.array([ [ np.cos(angleRad), 0, np.sin(angleRad)],
                       [0,        1, 0],
                       [-np.sin(angleRad),0, np.cos(angleRad)] ])
 
-#compute rotation matrix w.r.t. Z-axis (third axis)
+#**function: compute rotation matrix w.r.t. Z-axis (third axis)
+#**input: angle around Z-axis in radiant
+#**output: 3x3 rotation matrix as np.array
 def RotationMatrixZ(angleRad):
     return np.array([ [np.cos(angleRad),-np.sin(angleRad), 0],
                       [np.sin(angleRad), np.cos(angleRad), 0],
                       [0,	    0,        1] ]);
 
     
-#compute homogeneous transformation matrix from rotation matrix A and translation vector r
+#**function: compute homogeneous transformation matrix from rotation matrix A and translation vector r
 def HomogeneousTransformation(A, r):
     T = np.zeros((4,4))
     T[0:3,0:3] = A
@@ -257,43 +286,43 @@ def HomogeneousTransformation(A, r):
 
 HT = HomogeneousTransformation #shortcut
 
-#homogeneous transformation for translation with vector r
+#**function: homogeneous transformation for translation with vector r
 def HTtranslate(r):
     T = np.eye(4)
     T[0:3,3] = r
     return T
 
-#identity homogeneous transformation:
+#**function: identity homogeneous transformation:
 def HT0():
     return np.eye(4)
 
-#homogeneous transformation for rotation around axis X (first axis)
+#**function: homogeneous transformation for rotation around axis X (first axis)
 def HTrotateX(angle):
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixX(angle)
     return T
     
-#homogeneous transformation for rotation around axis X (first axis)
+#**function: homogeneous transformation for rotation around axis X (first axis)
 def HTrotateY(angle):
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixY(angle)
     return T
     
-#homogeneous transformation for rotation around axis X (first axis)
+#**function: homogeneous transformation for rotation around axis X (first axis)
 def HTrotateZ(angle):
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixZ(angle)
     return T
 
-#return translation part of homogeneous transformation
+#**function: return translation part of homogeneous transformation
 def HT2translation(T):
     return T[0:3,3]
 
-#return rotation matrix of homogeneous transformation
+#**function: return rotation matrix of homogeneous transformation
 def HT2rotationMatrix(T):
     return T[0:3,0:3]
 
-#return inverse homogeneous transformation such that inv(T)*T = np.eye(4)
+#**function: return inverse homogeneous transformation such that inv(T)*T = np.eye(4)
 def InverseHT(T):
     Tinv = np.eye(4)
     Ainv = T[0:3,0:3].T #inverse rotation part
@@ -441,7 +470,7 @@ class InertiaCylinder(RigidBodyInertia):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#adds a node (with str(exu.NodeType. ...)) and body for a given rigid body
+#**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body
 #either the initial rotation is given by the rotationMatrix (while rotationParameters=[]) or by rotationParameters (while rotationMatrix=[]) (non empty)
 #position ... initial position, etc.
 #all quantities (esp. velocity and angular velocity) are given in global coordinates!

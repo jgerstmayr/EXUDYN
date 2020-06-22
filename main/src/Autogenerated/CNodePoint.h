@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:11 (last modfied)
+* @date         2020-06-09  17:21:01 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,8 +106,10 @@ public: // AUTO:
             (Index)OutputVariableType::Position +
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::Acceleration +
             (Index)OutputVariableType::Coordinates +
-            (Index)OutputVariableType::Coordinates_t );
+            (Index)OutputVariableType::Coordinates_t +
+            (Index)OutputVariableType::Coordinates_tt );
     }
 
 };

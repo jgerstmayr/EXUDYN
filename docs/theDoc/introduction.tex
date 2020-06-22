@@ -580,6 +580,16 @@ The openGL graphics thread runs the following loop:
 	\item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 \ei
 
+\mysubsubsection{Color and RGBA}
+Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
+\bi
+  \item red (R) channel 
+	\item green (G) channel  
+	\item blue (B) channel 
+	\item alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
+\ei
+E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 10 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
+
 \mysubsubsection{Generating animations}
 %
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.

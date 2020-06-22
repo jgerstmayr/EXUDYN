@@ -20,7 +20,7 @@
 %\input{docincludes}
 \usepackage{docincludes} %exudyn definitions
 \usepackage{xcolor}
-
+\usepackage{enumitem} %for adjustable indentation in itemize (leftmargin=...)
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %configurations subscripts
 \newcommand{\cIni}{_\mathrm{ini}} %initial
@@ -160,13 +160,15 @@ numberstyle=\ttm    						% line number style
 {\Large {\it Flexible Multibody Dynamics Systems with Python and C++}}\vspace{1cm}\\
 {\Huge {\bf \codeName}} \vspace{0.5cm}\\
 %{\small (flEXible mUltibody DYNamics )} \vspace{1cm}\\
-{\small (flexible multibody dynamics )} \vspace{1cm}\\
-{\Large \it User documentation} \vspace{1cm}\\
+{\Large \bf USER DOCUMENTATION} \vspace{1cm}\\
 %\vspace{6cm}
-\vspace{1cm}
-\includegraphics[height=12cm]{intro1.png}\\
-\vspace{0.5cm}
-{\tiny \input{version}}\\
+\vspace{0.2cm}
+\begin{center}
+	\includegraphics[height=11cm]{intro2.png}\\
+	{\tiny (mesh and FEM-model generated with NETGEN and NGsolve -- 647058 total coordinates)}
+\end{center}
+\vspace{0.2cm}
+{\small \input{version}}\\
 \vspace{1.5cm}
 University of Innsbruck, Department of Mechatronics, \today,\vspace{0.25cm}\\
 Johannes Gerstmayr\vspace{2cm}
@@ -246,6 +248,13 @@ Understanding the usage of functions for the '\texttt{MainSystem}' provided by \
 
 \input{manual_interfaces}
 
+\mysection{Python utility functions}
+This chapter describes in every subsection the functions and classes of the utility modules. These modules help to create multibody systems with the EXUDYN core module. Functions are implemented in Python and can be easily changed, extended and also verified by the user. The are much slower than the functions available in the C++ core. Some matrix computations with larger matrices implemented in numpy and scipy, however, are parallelized and therefore very efficient.
+
+Functions have been implemented, if not otherwise noted, by Johannes Gerstmayr.
+
+\input{pythonUtilitiesDescription}
+
 
 \mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec_item_reference_manual}
 This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors.
@@ -299,6 +308,8 @@ The cross product or vector product '$\times$' is often replaced by the skew sym
     Position & $\LU{0}{\pv} = [p_0,\, p_1,\, p_2]\tp$ & global position vector with 3 position coordinates $p_i$ in any configuration\\ \hline
     Velocity & $\LU{0}{\vv} = \LU{0}{\dot \uv} = [v_0,\, v_1,\, v_2]\tp$ & global velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
     AngularVelocity & $\LU{0}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & global angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline
+    Acceleration & $\LU{0}{\av} = \LU{0}{\ddot \uv} = [a_0,\, a_1,\, a_2]\tp$ & global acceleration vector with 3 displacement coordinates $a_i$ in any configuration\\ \hline
+    AngularAcceleration & $\LU{0}{\talpha} = \LU{0}{\dot \tomega} = [\alpha_0,\, \ldots,\, \alpha_2]\tp$ & global angular acceleration vector with $3$ coordinates $\alpha_i$ in any configuration\\ \hline
 %
     VelocityLocal & $\LU{b}{\vv} = [v_0,\, v_1,\, v_2]\tp$ & local (body-fixed) velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
     AngularVelocityLocal & $\LU{b}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & local (body-fixed) angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline
@@ -355,7 +366,9 @@ in which $\LU{0,m0}{\Rot}$ is the transformation matrix of (the body or node of)
 \newpage
 
 \mysubsection{GraphicsData}
-Some items may include a 'graphicsData' structure. GraphicsData contains a list of graphicsData items, i.e.\ graphicsData = [graphicsItem1, graphicsItem2, ...]. Every single graphicsItem may be defined as one of the following structures using a specific 'type':
+Some items may include a 'graphicsData' dictionary structure. 
+GraphicsData dictionaries can be created with functions provided in the utilities module \texttt{exudynGraphicsDataUtilities.py}.
+GraphicsData contains a list of graphicsData items, i.e.\ graphicsData = [graphicsItem1, graphicsItem2, ...]. Every single graphicsItem may be defined as one of the following structures using a specific 'type':
 \begin{center}
   \footnotesize
   \begin{longtable}{| p{3cm} | p{2cm} | p{3cm} | p{7.5cm} |} 

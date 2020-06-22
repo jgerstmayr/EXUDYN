@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-19  16:27:41 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,12 +108,6 @@ public: // AUTO:
 
     //! AUTO:  constraints uses Lagrance multiplier formulation
     virtual bool IsPenaltyConnector() const override
-    {
-        return false;
-    }
-
-    //! AUTO:  constraint also implements velocity level equations
-    virtual bool HasVelocityEquations() const override
     {
         return false;
     }

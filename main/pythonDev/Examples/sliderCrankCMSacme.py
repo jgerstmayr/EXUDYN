@@ -310,7 +310,7 @@ SC.visualizationSettings.nodes.defaultSize = nodeDrawSize
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.connectors.defaultSize = 2*nodeDrawSize
 
-SC.visualizationSettings.nodes.show = True
+SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.nodes.showBasis = True #of rigid body node of reference frame
 SC.visualizationSettings.nodes.basisSize = 0.01
 SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
@@ -329,6 +329,7 @@ SC.visualizationSettings.loads.drawSimplified = False
 SC.visualizationSettings.loads.defaultSize  = 0.04
 SC.visualizationSettings.loads.defaultRadius= 0.001
 
+SC.visualizationSettings.contour.reduceRange = False
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
 SC.visualizationSettings.contour.outputVariableComponent = 0 #y-component
 
@@ -359,10 +360,13 @@ simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.displayStatistics = True
 #simulationSettings.displayComputationTime = True
 
+SC.visualizationSettings.window.renderWindowSize = [1920,1080]
+SC.visualizationSettings.openGL.multiSampling = 4
+
 #create animation:
-if False:
+if True:
     simulationSettings.solutionSettings.recordImagesInterval = 0.00025
-    SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
+    SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
 
 if exudynTestGlobals.useGraphics:
     exu.StartRenderer()

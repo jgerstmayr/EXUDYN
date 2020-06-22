@@ -3,12 +3,12 @@
 +++++        EXUDYN TEST SUITE        +++++ 
 +++++++++++++++++++++++++++++++++++++++++++ 
 EXUDYN version      = 0.1.356 
-EXUDYN build date   = 2020-06-09 09:21:35 
+EXUDYN build date   = 2020-06-10 18:18:33 
 platform            = 64bit 
 WorkingRelease path =  C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64P37 
 python version      = 3.7.7 
 test tolerance      =  5e-11 
-testsuite date (now)= 2020-06-09 11:16:50 
+testsuite date (now)= 2020-06-11 11:48:36 
 +++++++++++++++++++++++++++++++++++++++++++ 
 
 *********************** 
@@ -31,7 +31,7 @@ error in GraphicsDataTest =  0
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP1000, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 2
-solver finished after 0.0584603 seconds.
+solver finished after 0.0621844 seconds.
 Solver iteration statistics:
 total number of steps:        1000
 total number of Newton iterations: 2000
@@ -40,7 +40,7 @@ sol dynamic= -1.0391620828192676 -1.4443521331339881
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 15
-solver finished after 0.0002308 seconds.
+solver finished after 0.0004636 seconds.
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 15
@@ -49,7 +49,7 @@ sol static (standardTol)= -0.3622447299987188 -0.9941447593196007
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 16
-solver finished after 0.0002299 seconds.
+solver finished after 0.0004541 seconds.
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 16
@@ -66,7 +66,7 @@ dynamic tip displacement (y)= -0.6383785907891227
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
-solver finished after 0.0011558 seconds.
+solver finished after 0.0010853 seconds.
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 4
@@ -91,7 +91,7 @@ error in MathematicalPendulumTest =  0.0
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP1000, t = 0.5 sec, timeToGo = 0 sec, Nit/step = 6.549
-solver finished after 0.0194794 seconds.
+solver finished after 0.0190373 seconds.
 solution rigid pendulum= -0.4979662392962128 
 error in RigidPendulumTest =  3.5915714846623814e-14 
 
@@ -116,7 +116,7 @@ EI=0.01725
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP200, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 2.44
-solver finished after 0.0437217 seconds.
+solver finished after 0.044922 seconds.
 value SlidingJoint2DTest= -0.14920151345936586 
 error in SlidingJoint2DTest =  0.0 
 
@@ -174,7 +174,7 @@ EI=172.50000000000003
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP300, t = 0.15 sec, timeToGo = 0 sec, Nit/step = 3.19
-solver finished after 0.264768 seconds.
+solver finished after 0.269748 seconds.
 Solver iteration statistics:
 total number of steps:        300
 total number of Newton iterations: 957
@@ -191,12 +191,12 @@ tip displacement: y=-0.014188649931870346
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: nonlinear static solver
 STEP2, factor = 1, timeToGo = 0 sec, Nit/step = 14
-solver finished after 0.0165622 seconds.
+solver finished after 0.0165175 seconds.
 deflection = -0.06446474690480661 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP200, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 1.17
-solver finished after 0.254011 seconds.
+solver finished after 0.256712 seconds.
 deflection = -0.06446627698400298 
 ****************************************** 
   EXAMPLE 2 ("TestModels/ANCFmovingRigidBodyTest.py") FINISHED SUCCESSFUL 
@@ -215,13 +215,13 @@ WARNING: SlidingJoint2D: sliding coordinate < 0; further warnings suppressed!
 
 WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
 STEP10, factor = 1, timeToGo = 0 sec, Nit/step = 4.7
-solver finished after 0.0311342 seconds.
+solver finished after 0.0301165 seconds.
 select cable coordinate 42 
 static solution of cable1 = -2.197321886974786 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP400, t = 0.8 sec, timeToGo = 0 sec, Nit/step = 4.99
-solver finished after 1.08277 seconds.
+solver finished after 1.1203 seconds.
 Solver iteration statistics:
 total number of steps:        400
 total number of Newton iterations: 1996
@@ -238,7 +238,7 @@ dynamic solution of cable1 = -2.2290811574761897
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP400, t = 0.01 sec, timeToGo = 0 sec, Nit/step = 0
-solver finished after 0.267917 seconds.
+solver finished after 0.3005 seconds.
 omegay= 149.8473939540758 
 ****************************************** 
   EXAMPLE 4 ("TestModels/explicitLieGroupIntegratorTest.py") FINISHED SUCCESSFUL 
@@ -251,7 +251,7 @@ omegay= 149.8473939540758
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP2000, t = 2 sec, timeToGo = 0 sec, Nit/step = 1.8425
-solver finished after 0.0686166 seconds.
+solver finished after 0.0593671 seconds.
 solution of fourbar mechanism = -2.354666317492353 
 ****************************************** 
   EXAMPLE 5 ("TestModels/fourBarMechanismTest.py") FINISHED SUCCESSFUL 
@@ -263,8 +263,8 @@ solution of fourbar mechanism = -2.354666317492353
 ****************************************** 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP500, t = 2.5 sec, timeToGo = 3.5116e-15 sec, Nit/step = 7.516
-solver finished after 0.282372 seconds.
+STEP500, t = 2.5 sec, timeToGo = 3.25603e-15 sec, Nit/step = 7.516
+solver finished after 0.261827 seconds.
 pos= [0.23788404 0.6484885  0.30146022] 
 solution of GenericJointTest= 1.1878327690760053 
 ****************************************** 
@@ -277,8 +277,8 @@ solution of GenericJointTest= 1.1878327690760053
 ****************************************** 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP2000, t = 1 sec, timeToGo = 8.58501e-15 sec, Nit/step = 1
-solver finished after 0.156886 seconds.
+STEP2000, t = 1 sec, timeToGo = 7.77918e-15 sec, Nit/step = 1
+solver finished after 0.142086 seconds.
 solution of genericODE2test= 0.03604546349877444 
 ****************************************** 
   EXAMPLE 7 ("TestModels/genericODE2test.py") FINISHED SUCCESSFUL 
@@ -290,8 +290,8 @@ solution of genericODE2test= 0.03604546349877444
 ****************************************** 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP2000, t = 0.2 sec, timeToGo = 4.6715e-15 sec, Nit/step = 2.8585
-solver finished after 0.163348 seconds.
+STEP2000, t = 0.2 sec, timeToGo = 4.46764e-15 sec, Nit/step = 2.8585
+solver finished after 0.156281 seconds.
 solution of heavy top = 33.42312575172991 
 ****************************************** 
   EXAMPLE 8 ("TestModels/heavyTop.py") FINISHED SUCCESSFUL 
@@ -314,7 +314,7 @@ ev= 2.280183538481949
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP5000, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 0
-solver finished after 1.92625 seconds.
+solver finished after 1.9071 seconds.
 uy= -0.2204849087896498 
 ****************************************** 
   EXAMPLE 9 ("TestModels/manualExplicitIntegrator.py") FINISHED SUCCESSFUL 
@@ -327,7 +327,7 @@ uy= -0.2204849087896498
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP50, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 2
-solver finished after 0.498486 seconds.
+solver finished after 0.570556 seconds.
 Solver iteration statistics:
 total number of steps:        50
 total number of Newton iterations: 100
@@ -344,8 +344,8 @@ uy= 0.44656762760262225
 mass= 2.5 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP4000, t = 0.4 sec, timeToGo = 1.52854e-14 sec, Nit/step = 1.55975
-solver finished after 0.220284 seconds.
+STEP4000, t = 0.4 sec, timeToGo = 1.60018e-14 sec, Nit/step = 1.55975
+solver finished after 0.230595 seconds.
 p0= [ 0.11878348 -0.38195612  0.        ] 
 solution of pendulumFriction= 0.39999998776982004 
 ****************************************** 
@@ -361,7 +361,7 @@ inertia6D= [14.2725, 14.0625, 11.21, 4.925, 5.5, -1.2000000000000002]
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 7.8
-solver finished after 0.0405 seconds.
+solver finished after 0.03699 seconds.
 solution of rigidBodyCOMtest= 3.409431467726293 
 ****************************************** 
   EXAMPLE 12 ("TestModels/rigidBodyCOMtest.py") FINISHED SUCCESSFUL 
@@ -374,7 +374,7 @@ solution of rigidBodyCOMtest= 3.409431467726293
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP500, t = 10 sec, timeToGo = 0 sec, Nit/step = 3.002
-solver finished after 0.170877 seconds.
+solver finished after 0.15803 seconds.
 Solver iteration statistics:
 total number of steps:        500
 total number of Newton iterations: 1501
@@ -384,7 +384,7 @@ solver.it.newtonStepsCount= 1501
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP500, t = 10 sec, timeToGo = 0 sec, Nit/step = 2.434
-solver finished after 0.192007 seconds.
+solver finished after 0.167789 seconds.
 Solver iteration statistics:
 total number of steps:        500
 total number of Newton iterations: 1217
@@ -404,7 +404,7 @@ vCB len= 0.3
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP1000, t = 0.2 sec, timeToGo = 0 sec, Nit/step = 2
-solver finished after 0.196594 seconds.
+solver finished after 0.20012 seconds.
 solution of 3D slidercrank iftomm benchmark= 3.36427617809219 
 ****************************************** 
   EXAMPLE 14 ("TestModels/sliderCrank3Dbenchmark.py") FINISHED SUCCESSFUL 
@@ -417,12 +417,12 @@ solution of 3D slidercrank iftomm benchmark= 3.36427617809219
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP5000, t = 0.3 sec, timeToGo = 0 sec, Nit/step = 6.055
-solver finished after 0.247279 seconds.
+solver finished after 0.253984 seconds.
 sol = 0.2948599898874916 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP5000, t = 0.3 sec, timeToGo = 0 sec, Nit/step = 6.0214
-solver finished after 0.566136 seconds.
+solver finished after 0.622139 seconds.
 sol = 0.29678917349134193 
 solutionSliderCrankIndex2= 0.5916491633788336 
 ****************************************** 
@@ -459,7 +459,7 @@ Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
 STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
 +++++++++++++++ STEP FINISHED ++++++++++++++
 
-solver finished after 0.440886 seconds.
+solver finished after 0.445969 seconds.
 static tip displacement (y)= -6.779862983765133 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: nonlinear static solver
@@ -487,7 +487,7 @@ Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
 STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
 +++++++++++++++ STEP FINISHED ++++++++++++++
 
-solver finished after 0.0155679 seconds.
+solver finished after 0.0159528 seconds.
 static tip displacement (y)= -6.779862983767654 
 ****************************************** 
   EXAMPLE 16 ("TestModels/sparseMatrixSpringDamperTest.py") FINISHED SUCCESSFUL 
@@ -500,7 +500,7 @@ static tip displacement (y)= -6.779862983767654
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP1000, t = 1 sec, timeToGo = 0 sec, Nit/step = 6.77
-solver finished after 0.161872 seconds.
+solver finished after 0.141936 seconds.
 solution of sphericalJointTest= 4.409004179180698 
 ****************************************** 
   EXAMPLE 17 ("TestModels/sphericalJointTest.py") FINISHED SUCCESSFUL 
@@ -514,8 +514,8 @@ EXUDYN version=0.1.356
 resonance frequency = 50.0 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP5000, t = 50 sec, timeToGo = 4.94341e-15 sec, Nit/step = 1.9798
-solver finished after 0.179297 seconds.
+STEP5000, t = 50 sec, timeToGo = 4.30559e-15 sec, Nit/step = 1.9798
+solver finished after 0.156161 seconds.
 Solver iteration statistics:
 total number of steps:        5000
 total number of Newton iterations: 9899
@@ -538,7 +538,7 @@ nTopMid= 103
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP50, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 3.02
-solver finished after 0.374266 seconds.
+solver finished after 0.400717 seconds.
 solution of ObjectGenericODE2= -2.27374015224399e-05 
 ****************************************** 
   EXAMPLE 19 ("TestModels/objectGenericODE2Test.py") FINISHED SUCCESSFUL 
@@ -550,8 +550,8 @@ solution of ObjectGenericODE2= -2.27374015224399e-05
 ****************************************** 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP100, t = 0.01 sec, timeToGo = 2.85944e-16 sec, Nit/step = 7.99
-solver finished after 0.548189 seconds.
+STEP100, t = 0.01 sec, timeToGo = 2.95732e-16 sec, Nit/step = 7.99
+solver finished after 0.567839 seconds.
 solution of ObjectFFRFreducedOrder= 0.5354530110582258 
 ****************************************** 
   EXAMPLE 20 ("TestModels/objectFFRFreducedOrderTest.py") FINISHED SUCCESSFUL 
@@ -568,7 +568,7 @@ eigenvalues = [1.0926017486385539e-05, 1.112266148156073e-05, 1.3015252912481907
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP10, t = 0.001 sec, timeToGo = 0 sec, Nit/step = 5.4
-solver finished after 0.988774 seconds.
+solver finished after 1.0046 seconds.
 solution of ObjectFFRF= 0.0064453695609377765 
 ****************************************** 
   EXAMPLE 21 ("TestModels/objectFFRFTest.py") FINISHED SUCCESSFUL 
@@ -580,8 +580,8 @@ solution of ObjectFFRF= 0.0064453695609377765
 ****************************************** 
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
-STEP25, t = 0.0025 sec, timeToGo = 2.86327e-16 sec, Nit/step = 7.36
-solver finished after 1.23162 seconds.
+STEP25, t = 0.0025 sec, timeToGo = 2.928e-16 sec, Nit/step = 7.36
+solver finished after 1.26235 seconds.
 solution of ObjectFFRFtest2= 0.03553746369388033 
 ****************************************** 
   EXAMPLE 22 ("TestModels/objectFFRFTest2.py") FINISHED SUCCESSFUL 
@@ -608,7 +608,7 @@ solution of compareAbaqusAnsysRotorEigenfrequencies (with treshold)= -1.02316897
 +++++++++++++++++++++++++++++++
 EXUDYN V0.1.356 solver: implicit second order time integration
 STEP1000, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 6.414
-solver finished after 0.748506 seconds.
+solver finished after 0.772601 seconds.
 phiCrank 0.8813172426357343 
 phiFlyWheel 0.881317335328856 
 solution of driveTrainTest= -9.269312173376676e-08 
@@ -704,7 +704,7 @@ example for MarkerSuperElementPosition completed, test error = 0.0
 ****************************************** 
 TEST SUITE RESULTS SUMMARY: 
 ****************************************** 
-time elapsed = 14.55 seconds 
+time elapsed = 15.666 seconds 
 ALL UNIT TESTS SUCCESSFUL 
 ALL 25 EXAMPLE TESTS SUCCESSFUL 
 ALL 12 MINI EXAMPLE TESTS SUCCESSFUL 

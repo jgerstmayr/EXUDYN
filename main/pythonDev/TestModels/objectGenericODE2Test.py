@@ -62,7 +62,7 @@ nModes = 8
 fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = False)
 exu.Print("eigen freq.=", fem.GetEigenFrequenciesHz()[0:6+nModes].round(4)) #mode 0 is rigid body mode (free rotation)!
 exu.Print("eigen freq. first mode =", fem.GetEigenFrequenciesHz()[1])       #mode1 with supports: 57.6317863976366Hz;  free-free mode6: sparse: 104.63701326020315, dense: 104.63701326063597
-accumulatedError += fem.GetEigenFrequenciesHz()[1]/57.63178639764625 - 1.#check mode (with supports)
+accumulatedError += 1e-2*(fem.GetEigenFrequenciesHz()[1]/57.63178639764625 - 1.)   #check mode (with supports); this is subject to small variations between 32 and 64bit! ==>*1e-2
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create generic object for rotor:

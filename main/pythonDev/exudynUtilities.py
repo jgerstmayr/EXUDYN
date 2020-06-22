@@ -17,7 +17,9 @@ from exudynGraphicsDataUtilities import *
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#helper functions for matplotlib
+#**function: helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
+#**input: index in range(0:28)
+#**output: a color and line style code for matplotlib plot
 def PlotLineCode(index):
     CC = ['r-','g-','b-','k-','c-','m-','y-','r:','g:','b:','k:','c:','m:','y:','r--','g--','b--','k--','c--','m--','y--','r-.','g-.','b-.','k-.','c-.','m-.','y-.']
     if index < len(CC):
@@ -29,7 +31,14 @@ def PlotLineCode(index):
 #+++++       NUMPY BASED UTILITIES     ++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#fill submatrix into given destinationMatrix at destination row 'destRow' and destination column 'destColumn'; all matrices must be numpy arrays 
+#**function: fill submatrix into given destinationMatrix; all matrices must be numpy arrays 
+#**input: 
+#  subMatrix: input matrix, which is filled into destinationMatrix
+#  destinationMatrix: the subMatrix is entered here
+#  destRow: row destination of subMatrix
+#  destColumn: column destination of subMatrix
+#**notes: may be erased in future!
+#**output: destinationMatrix is changed after function call
 def FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn):
     nRows = subMatrix.shape[0]
     nColumns = subMatrix.shape[1]
@@ -42,22 +51,42 @@ def FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#sweep in time interval [0,t1], frequency interval [f0,f1] Hz; use sin function
+#**function: compute sin sweep at given time t
+#**input: 
+#  t: evaluate of sweep at time t
+#  t1: end time of sweep frequency range
+#  f0: start of frequency interval [f0,f1] in Hz
+#  f1: end of frequency interval [f0,f1] in Hz
+#**output: evaluation of sin sweep (in range -1..+1)
 def SweepSin(t, t1, f0, f1):
     k = (f1-f0)/t1
     return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
-#sweep in time interval [0,t1], frequency interval [f0,f1] Hz; use cos function
+#**function: compute cos sweep at given time t
+#**input: 
+#  t: evaluate of sweep at time t
+#  t1: end time of sweep frequency range
+#  f0: start of frequency interval [f0,f1] in Hz
+#  f1: end of frequency interval [f0,f1] in Hz
+#**output: evaluation of cos sweep (in range -1..+1)
 def SweepCos(t, t1, f0, f1):
     k = (f1-f0)/t1
     return np.cos(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
-#frequency sweep in time interval [0,t1], frequency interval [f0,f1] Hz
+#**function: frequency according to given sweep functions SweepSin, SweepCos
+#**input: 
+#  t: evaluate of frequency at time t
+#  t1: end time of sweep frequency range
+#  f0: start of frequency interval [f0,f1] in Hz
+#  f1: end of frequency interval [f0,f1] in Hz
+#**output: frequency in Hz
 def FrequencySweep(t, t1, f0, f1):
     return t*(f1-f0)/t1 + f0
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#erase all entries smaller than treshold
+#**function: set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix
+#**input: matrix as np.array, treshold as positive value
+#**output: changes matrix
 def RoundMatrix(matrix, treshold = 1e-14):
     (rows, cols) = matrix.shape
     for i in range (rows):
@@ -66,7 +95,9 @@ def RoundMatrix(matrix, treshold = 1e-14):
                 matrix[i,j]=0
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#compute (3 x 3*n) skew matrix from (3*n) vector; used for ObjectFFRF and CMS implementation
+#**function: compute (3 x 3*n) skew matrix from (3*n) vector; used for ObjectFFRF and CMS implementation
+#**input: a vector v in np.array format, containing 3*n components
+#**output: (3 x 3*n) skew matrix in np.array format
 def ComputeSkewMatrix(v):
     if v.ndim == 1:
         n = int(len(v)/3) #number of nodes
@@ -105,6 +136,48 @@ def ComputeSkewMatrix(v):
 #print(ComputeSkewMatrix(x))
 
 
+#**function: check if input is list or array with according length; if length==-1, the length is not checked; raises Exception if the check fails
+#**input: 
+#  vector: a vector in np.array or list format
+#  length: desired length of vector; if length=-1, it is ignored
+#**output: None
+def CheckInputVector(vector, length=-1):
+    try:
+        v = np.array(vector)
+    except:
+        raise ValueError("CheckInputVector: expected vector/list of length "+str(length)+
+                         ", but received '"+str(vector)+"'")
+    if v.ndim != 1:
+        raise ValueError("CheckInputVector: expected 1D vector/list of length "+str(length)+
+                         ", but received '"+str(vector)+"'")
+    if v.shape[0] != length:
+        raise ValueError("CheckInputVector: expected vector/list of length "+str(length)+
+                         ", but received vector with length "+str(v.shape[0])+", vector='"+str(vector)+"'")
+        
+#**function: check if input is list or array with according length and positive indices; if length==-1, the length is not checked; raises Exception if the check fails
+#**input: 
+#  indexArray: a vector in np.array or list format
+#  length: desired length of vector; if length=-1, it is ignored
+#**output: None
+def CheckInputIndexArray(indexArray, length=-1):
+    try:
+        v = np.array(indexArray)
+    except:
+        raise ValueError("CheckInputIndexArray: expected vector/list of length "+str(length)+
+                         ", but received '"+str(indexArray)+"'")
+    if v.ndim != 1:
+        raise ValueError("CheckInputIndexArray: expected 1D vector/list of length "+str(length)+
+                         ", but received '"+str(indexArray)+"'")
+    if v.shape[0] != length:
+        raise ValueError("CheckInputIndexArray: expected vector/list of length "+str(length)+
+                         ", but received vector with length "+str(v.shape[0])+", indexArray='"+str(indexArray)+"'")
+    
+    cnt=0
+    for i in indexArray:
+        if i!=int(i) or i < 0:
+            raise ValueError("CheckInputIndexArray: expected array/list of positive indices (int), but received '"+str(i)+
+                             "' at position " + str(cnt)+", indexArray='"+str(indexArray)+"'")
+        cnt+=1   
 
 
 
@@ -115,7 +188,9 @@ def ComputeSkewMatrix(v):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#read Solution file into dictionary:
+#**function: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
+#**input: fileName: string containing directory and filename of stored coordinatesSolutionFile
+#**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with binary values showing the exported columns [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData],'nColumns': the number of data columns and 'nRows': the number of data rows
 def LoadSolutionFile(fileName):
     data = np.loadtxt(fileName, comments='#', delimiter=',')
 
@@ -139,7 +214,7 @@ def LoadSolutionFile(fileName):
     return dict({'data': data, 'columnsExported': columnsExported,'nColumns': nColumns,'nRows': nRows})
     
 #++++++++++++++++++++++++++++++++++++++++++++
-#load selected row of solution into specific state
+#**function: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state
 def SetSolutionState(exu, mbs, solution, row, configuration):
     if row < solution['nRows']:
         rowData = solution['data'][row]
@@ -159,14 +234,28 @@ def SetSolutionState(exu, mbs, solution, row, configuration):
         print("ERROR in SetVisualizationState: invalid row (out of range)")
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#load selected row of solution into visualization state
+#**function: load selected row of solution dictionary into visualization state and redraw
+#**input: 
+#  exu: the exudyn library
+#  mbs: the system, where the state is applied to
+#  solution: solution dictionary previously loaded with LoadSolutionFile
+#  row: the according row of the solution file which is visualized
+#**output: renders the scene in mbs and changes the visualization state in mbs
 def SetVisualizationState(exu, mbs, solution, row):
     SetSolutionState(exu, mbs, solution, row, exu.ConfigurationType.Visualization)
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#consecutively load the rows of a solution file and visualize the result
-#timeout (in seconds) is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
-#rowIncrement can be set larger than one in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+#**function: consecutively load the rows of a solution file and visualize the result
+#**input: 
+#  exu: the exudyn library
+#  SC: the system container, where the mbs lives in
+#  mbs: the system used for animation
+#  solution: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
+#  rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+#  timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+#  createImages: creates consecutively images from the animation, which can be converted into an animation
+#  runLoop: if True, the animation is played in a loop until 'q' is pressed in render window
+#**output: renders the scene in mbs and changes the visualization state in mbs continuously
 def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, createImages = False, runLoop = False):
     nRows = solution['nRows']
     if (rowIncrement < 1) | (rowIncrement > nRows):
@@ -199,13 +288,18 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
     
 from itemInterface import *    
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#inputs:
-# mbs: exudyn.MainSystem()
-# positionOfNode0: 
-#
-# cableTemplate: e.g. ObjectANCFCable2D object with according properties; physicsLength and nodeNumbers will be filled automatically
-#output:
-#[...]
+#**function: generate cable elements along straight line with certain discretization
+#**input:
+#  mbs: the system where ANCF cables are added
+#  positionOfNode0: 3D position (list or np.array) for starting point of line
+#  positionOfNode1: 3D position (list or np.array) for end point of line
+#  numberOfElements: for discretization of line
+#  cableTemplate: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically
+#  massProportionalLoad: a 3D list or np.array, containing the gravity vector or zero
+#  fixedConstraintsNode0: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)
+#  fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
+#  vALE: used for ObjectALEANCFCable2D objects
+#**output: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                 vALE=0, ConstrainAleCoordinate=True):
@@ -285,7 +379,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     return [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
 
-
+#**function: generate a sliding joint from a list of cables, marker to a sliding body, etc.
 def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,localMarkerIndexOfStartCable=0,slidingCoordinateStartPosition=0):
 
     cableMarkerList = []#list of Cable2DCoordinates markers
@@ -311,6 +405,7 @@ def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,loc
 
 
 
+#**function: generate an ALE sliding joint from a list of cables, marker to a sliding body, etc.
 def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,AleNode,
                             localMarkerIndexOfStartCable=0,AleSlidingOffset=0,
                             activeConnector=True, penaltyStiffness=0):

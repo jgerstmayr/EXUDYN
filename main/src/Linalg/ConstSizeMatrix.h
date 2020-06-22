@@ -399,6 +399,52 @@ SlimVectorBase<T, 3> operator*(const SlimVectorBase<T, 3>& vector, const ConstSi
 	return result;
 }
 
+//multiplication must be defined outside and with "4" ConstSizeMatrixBase<T, 4>
+template<typename T>
+SlimVectorBase<T, 2> operator*(const ConstSizeMatrixBase<T, 4>& matrix, const SlimVectorBase<T, 2>& vector)
+{
+	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 2>): Size mismatch");
+	CHECKandTHROW((matrix.NumberOfRows() == 2),
+		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 2>): matrix does not fit");
+
+	SlimVectorBase<T, 2> result; //no initialization for SlimVector
+
+	for (Index i = 0; i < result.NumberOfItems(); i++)
+	{
+		T resultRow = 0;
+		for (Index j = 0; j < vector.NumberOfItems(); j++)
+		{
+			resultRow += matrix(i, j)*vector[j];
+		}
+		result[i] = resultRow;
+	}
+	return result;
+}
+
+//multiplication must be defined outside and with "4" ConstSizeMatrixBase<T, 4>
+template<typename T>
+SlimVectorBase<T, 2> operator*(const SlimVectorBase<T, 2>& vector, const ConstSizeMatrixBase<T, 4>& matrix)
+{
+	CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
+		"operator*(SlimVectorBase<T, 2>,ConstSizeMatrixBase): Size mismatch");
+	CHECKandTHROW((matrix.NumberOfColumns() == 2),
+		"operator*(SlimVectorBase<T, 2>,ConstSizeMatrixBase): matrix does not fit");
+
+	SlimVectorBase<T, 2> result; //no initialization for SlimVector
+
+	for (Index i = 0; i < result.NumberOfItems(); i++)
+	{
+		T resultRow = 0;
+		for (Index j = 0; j < vector.NumberOfItems(); j++)
+		{
+			resultRow += vector[j] * matrix(j, i);
+		}
+		result[i] = resultRow;
+	}
+	return result;
+}
+
 
 template<Index dataSize>
 using ConstSizeMatrix = ConstSizeMatrixBase<Real,dataSize>;

@@ -41,7 +41,9 @@ color4list = [color4red, color4green, color4blue,
               color4grey]
 
 #************************************************
-#generate graphics dictionary data for rectangle
+#**function: generate graphics data for 2D rectangle
+#**input: minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]): 
 
     rect = [xMin, yMin,xMax,yMax]
@@ -50,7 +52,9 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
     return dataRect
 
 #************************************************
-#generate graphics dictionary data for rectangle
+#**function: generate graphics data for orthogonal cube drawn with lines
+#**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
 
     dataRect = {'type':'Line', 'color': color, 'data':[xMin,yMin,zMin, xMin,yMax,zMin, xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMax,yMin,zMin, 
@@ -59,14 +63,18 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
 
     return dataRect
 
-#generate graphics for cube with min and max dimensions
+#**function: generate graphics data for orthogonal 3D cube with min and max dimensions
+#**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
     
     pList = [[xMin,yMin,zMin], [xMax,yMin,zMin], [xMax,yMax,zMin], [xMin,yMax,zMin],
              [xMin,yMin,zMax], [xMax,yMin,zMax], [xMax,yMax,zMax], [xMin,yMax,zMax]]
     return GraphicsDataCube(pList, color)
 
-#generate graphics for cube with center point and size
+#**function: generate graphics data forfor orthogonal 3D cube with center point and size
+#**input: center point and size of cube (as 3D list or np.array); color provided as list of 4 RGBA values
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataOrthoCubePoint(centerPoint, size, color=[0.,0.,0.,1.]): 
     
     xMin = centerPoint[0] - 0.5*size[0]
@@ -78,9 +86,12 @@ def GraphicsDataOrthoCubePoint(centerPoint, size, color=[0.,0.,0.,1.]):
 
     return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color)
 
-#draw general cube with endpoints, according to given vertex definition
-#pList is a list of points [[x0,y0,z0],[x1,y11,z1],...]
-#faces includes the list with active faces (1); set index to zero, if face is not shown
+#**function: generate graphics data for general cube with endpoints, according to given vertex definition
+#**input: 
+#  pList: is a list of points [[x0,y0,z0],[x1,y11,z1],...]
+#  color: provided as list of 4 RGBA values
+#  faces: includes the list of six binary values (0/1), denoting active faces (value=1); set index to zero to hide face
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1]): 
 # bottom: (z goes upwards from node 1 to node 5)
 # ^y
@@ -124,7 +135,9 @@ def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1]):
 
     return data
 
-#switch order of three items in a list; mostly used for reverting normals in triangles
+#**function: switch order of three items in a list; mostly used for reverting normals in triangles
+#**input: 3D vector as list or as np.array
+#**output: interchanged 2nd and 3rd component of list
 def SwitchTripletOrder(vector):
     v=copy.deepcopy(vector) #copy, such that vector is not changed
     a = v[2]
@@ -132,7 +145,13 @@ def SwitchTripletOrder(vector):
     v[1] = a
     return v
 
-#draw a sphere with point p and radius
+#**function: generate graphics data for a sphere with point p and radius
+#**input:
+#  point: center of sphere (3D list or np.array)
+#  radius: positive value
+#  color: provided as list of 4 RGBA values
+#  nTiles: used to determine resolution of sphere >=3; use larger values for finer resolution
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataSphere(point, radius, color=[0.,0.,0.,1.], nTiles = 8):
     if nTiles < 3: print("WARNING: GraphicsDataSphere: nTiles < 3: set nTiles=3")
     
@@ -182,13 +201,21 @@ def GraphicsDataSphere(point, radius, color=[0.,0.,0.,1.], nTiles = 8):
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
     return data
             
-#draw a meshed cylinder with given axis, radius and color; nFaces gives the number of tiles (minimum=3)
-#the range of angles is given in rad [0..2 * pi]
-#lastFace: if angleRange != [0,2*pi], then the open cylinder is shown with lastFace = True
+#**function: generate graphics data for a cylinder with given axis, radius and color; nFaces gives the number of tiles (minimum=3)
+#**input:
+#  pAxis: axis point of one face of cylinder (3D list or np.array)
+#  vAxis: vector representing the cylinder's axis (3D list or np.array)
+#  radius: positive value representing radius of cylinder
+#  color: provided as list of 4 RGBA values
+#  nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution
+#  angleRange: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]
+#  lastFace: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True
+#  cutPlain: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16, 
-                         angleRange=[0,2*np.pi], #generate just a part of cylinder, using range
-                         lastFace = True, #add closing face (otherwise cylinder is open)
-                         cutPlain = True):  #if true, a plain cut through cylinder is made; otherwise it is the cake shape ...
+                         angleRange=[0,2*np.pi], 
+                         lastFace = True, 
+                         cutPlain = True):  
 
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
     
@@ -294,15 +321,20 @@ def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16,
 
     return data
 
-#create a planar Link, oriented in x-direction, 
-#joint0 center position = p0
-#joint1 center position = p1
-#axis0 = rotation axis of p0, if drawn as a cylinder; [0,0,0] otherwise
-#axis1 = rotation axis of p1, if drawn as a cylinder; [0,0,0] otherwise
-#radius = [radius0, radius1] .. the two radii of the joints to draw by a cylinder or sphere    
-#width = [width0, width1] .. the two width of the joints to draw by a cylinder; ignored for sphere    
-#thickness ... the thickness of the link in z-direction or diameter (cylinder)
-def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1], thickness=0.05, width=[0.05,0.05], color=[0.,0.,0.,1.], nTiles = 16):
+#**function: generate graphics data for a planar Link between the two joint positions, having two axes
+#**input:
+#  p0: joint0 center position
+#  p1: joint1 center position
+#  axis0: direction of rotation axis at p0, if drawn as a cylinder; [0,0,0] otherwise
+#  axis1: direction of rotation axis of p1, if drawn as a cylinder; [0,0,0] otherwise
+#  radius: list of two radii [radius0, radius1], being the two radii of the joints drawn by a cylinder or sphere    
+#  width: list of two widths [width0, width1], being the two widths of the joints drawn by a cylinder; ignored for sphere    
+#  thickness: the thickness of the link (shaft) between the two joint positions; thickness in z-direction or diameter (cylinder)
+#  color: provided as list of 4 RGBA values
+#  nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1], 
+                          thickness=0.05, width=[0.05,0.05], color=[0.,0.,0.,1.], nTiles = 16):
     linkAxis = VSub(p1,p0)
     linkAxis0 = Normalize(linkAxis)
     a0=copy.deepcopy(axis0)
@@ -347,5 +379,89 @@ def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1], 
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
     return data
 
+
+#**function: generate graphics data from STL file (text format!) and use color for visualization
+#**input:
+#  fileName: string containing directory and filename of STL-file (in text / SCII format) to load
+#  color: provided as list of 4 RGBA values
+#  verbose: if True, useful information is provided during reading
+#**output: interchanged 2nd and 3rd component of list
+def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False): 
+#file format, just one triangle, using GOMinspect:
+#solid solidName
+#facet normal -0.979434 0.000138 -0.201766
+# outer loop
+#    vertex 9.237351 7.700452 -9.816338
+#    vertex 9.237478 10.187849 -9.815249
+#    vertex 9.706021 10.170116 -12.089709
+# endloop
+#endfacet
+#...
+#endsolid solidName
+    if verbose: print("read STL file: "+fileName)
+
+    fileLines = []
+    try: #still close file if crashes
+        file=open(fileName,'r') 
+        fileLines = file.readlines()
+    finally:
+        file.close()    
+
+    colors=[]
+    points = []
+    normals = []
+    triangles = []
+
+    nLines = len(fileLines)
+    lineCnt = 0
+    if fileLines[lineCnt][0:5] != 'solid':
+        raise ValueError("GraphicsDataFromSTLfileTxt: expected 'solid ...' in first line, but received: " + fileLines[lineCnt])
+    lineCnt+=1
+
+    while lineCnt < nLines and fileLines[lineCnt].strip().split()[0] != 'endsolid':
+        if lineCnt%100000 == 0 and lineCnt !=0: 
+            if verbose: print("  read line",lineCnt," / ", len(fileLines))
+
+        normalLine = fileLines[lineCnt].split()
+        if normalLine[0] != 'facet' or normalLine[1] != 'normal':
+            raise ValueError("GraphicsDataFromSTLfileTxt: expected 'facet normal ...' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+        if len(normalLine) != 5:
+            raise ValueError("GraphicsDataFromSTLfileTxt: expected 'facet normal n0 n1 n2' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+        
+        normal = [-float(normalLine[2]),-float(normalLine[3]),-float(normalLine[4])]
+
+        lineCnt+=1
+        loopLine = fileLines[lineCnt].strip()
+        if loopLine != 'outer loop':
+            raise ValueError("GraphicsDataFromSTLfileTxt: expected 'outer loop' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+
+        ind = int(len(points)/3) #index for points of this triangle
+        #get 3 vertices:
+        lineCnt+=1
+        for i in range(3):
+            readLine = fileLines[lineCnt].strip().split()
+            if readLine[0] != 'vertex':
+                raise ValueError("GraphicsDataFromSTLfileTxt: expected 'vertex ...' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+            if len(readLine) != 4:
+                raise ValueError("GraphicsDataFromSTLfileTxt: expected 'vertex v0 v1 v2' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+            
+            points+=[float(readLine[1]),float(readLine[2]),float(readLine[3])]
+            normals+=normal
+            colors+=color
+            lineCnt+=1
+            
+        triangles+=[ind,ind+2,ind+1] #indices of points; flip indices to match definition in EXUDYN
+
+        loopLine = fileLines[lineCnt].strip()
+        if loopLine != 'endloop':
+            raise ValueError("GraphicsDataFromSTLfileTxt: expected 'endloop' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+        lineCnt+=1
+        loopLine = fileLines[lineCnt].strip()
+        if loopLine != 'endfacet':
+            raise ValueError("GraphicsDataFromSTLfileTxt: expected 'endfacet' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
+        lineCnt+=1
+    
+    data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    return data
 
 

@@ -141,8 +141,8 @@ public:
 	//! Return true, if connector does not use algebraic equations ==> springs, damper, etc.
 	virtual bool IsPenaltyConnector() const { return false; }
 
-	//! Return true, if constraint implements velocity level equations (e.g. for Index reduction)
-	virtual bool HasVelocityEquations() const { return false; }
+	//NOT USED ANY MORE ==> UsesVelocityLevel//! Return true, if constraint implements velocity level equations (e.g. for Index reduction)
+	//virtual bool HasVelocityEquations() const { return false; }
 
 	//! Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)
 	virtual bool UsesVelocityLevel() const { return false; }
