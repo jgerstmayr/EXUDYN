@@ -36,7 +36,7 @@
 
 //class CSystem;
 class VisualizationSystemContainer; //for UpdateGraphics(...) function
-
+class MainSystem; //for backlink
 
 class VisualizationSystem //: public VisualizationSystemBase
 {
@@ -46,8 +46,14 @@ public: //declared as public for direct access via pybind
 	//VisualizationSettings settings;		//!< general settings for visualization
 	PostProcessData* postProcessData;	//!< link to postProcessData of CSystem ==> communication between the two threads
 	CSystemData* systemData;			//!< REMOVE: this is a temporary access, before visualization objects are introduced
+
 	//RendererState rendererState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	const float contourPlotFlag = -2.f;	//!< this is the value of transparency used to identify contour plot values in GraphicsData items
+
+	//additional data for user functions
+	MainSystem* mainSystemUF;						//!< REMOVE: this is a temporary access to mainSystem for user functions
+	VisualizationSettings* visualizationSettingsUF; //!< REMOVE: set when setting postProcessData->requestUserFunctionDrawing; this is a temporary access to visualizationSettings for user functions
+
 
 public:
 	GraphicsData& GetGraphicsData() { return graphicsData; }
@@ -64,6 +70,8 @@ public:
 
 	//! links to systemData of cSystem (should be REMOVED)
 	void LinkToSystemData(CSystemData* systemDataInit);
+	//! back link to mainSystem for user functions; (should be REMOVED)
+	void LinkToMainSystem(MainSystem* mainSystemInit);
 	//! link to postProcessData, which is the communication way of graphics to the computational system
 	void LinkPostProcessData(PostProcessData* postProcessDataInit);
 
@@ -79,7 +87,7 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//GRAPHICS FUNCTIONS
 
-	//! OpenGL renderer sends message that graphics shall be updated; update is only done, if current state has higher counter than already existing state
+	//! OpenGL renderer calls UpdateGraphicsData (different thread) to update graphics data; update is only done, if current state has higher counter than already existing state
 	virtual void UpdateGraphicsData(VisualizationSystemContainer& visualizationSystemContainer);
 
 	//! Renderer reports to CSystem that simulation shall be interrupted

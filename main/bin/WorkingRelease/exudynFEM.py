@@ -612,6 +612,7 @@ class ObjectFFRFinterface:
                       initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
                       gravity=[0,0,0],
                       constrainRigidBodyMotion=True, 
+                      massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                       color=[0.1,0.9,0.1,1.]):
 
         self.gravity = gravity
@@ -637,10 +638,18 @@ class ObjectFFRFinterface:
         #massMatrixMC.SetWithSparseMatrixCSR(self.nODE2FF, self.nODE2FF, self.massMatrixSparse,useDenseMatrix=False)
         massMatrixMC.SetWithDenseMatrix(CompressedRowSparseToDenseMatrix(self.massMatrixSparse),useDenseMatrix=False)
 
+        if (massProportionalDamping != 0 or massProportionalDamping != 0):
+            dampingMatrixMC = exu.MatrixContainer()
+            dampingMatrixMC.SetWithDenseMatrix(massProportionalDamping*CompressedRowSparseToDenseMatrix(self.massMatrixSparse)+
+                                               stiffnessProportionalDamping*CompressedRowSparseToDenseMatrix(self.stiffnessMatrixSparse),useDenseMatrix=False)
+        else:
+            dampingMatrixMC=[]
+        
         #add body for FFRF-Object:
         self.oFFRF = mbs.AddObject(ObjectFFRF(nodeNumbers = [self.nRigidBody] + self.nodeList, 
                                                             massMatrixFF=massMatrixMC,
                                                             stiffnessMatrixFF=stiffnessMatrixMC, 
+                                                            dampingMatrixFF=dampingMatrixMC,
                                                             #dampingMatrixFF=emptyMC,
                                                             #forceVector=fNew,
                                                             #forceUserFunction=UFforce,
@@ -800,8 +809,6 @@ class ObjectFFRFreducedOrderInterface:
         self.PhitTM = self.Phit.T @ massMatrixCSR #LARGE MATRIX COMPUTATION
         self.xRef = nodeArray.flatten()          #node reference values in single vector (can be added then to q[7:])
         self.xRefTilde = ComputeSkewMatrix(self.xRef) #rfTilde without q    
-
-        #not needed, but may be interesting for checks:
         self.inertiaLocal = self.xRefTilde.T @ massMatrixCSR @ self.xRefTilde #LARGE MATRIX COMPUTATION
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -840,12 +847,15 @@ class ObjectFFRFreducedOrderInterface:
     #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
     #  UFforce: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  UFmassMatrix: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
+    #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
     #  color: provided as list of 4 RGBA values
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
                                                   positionRef=[0,0,0], eulerParametersRef=[1,0,0,0], 
                                                   initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
                                                   gravity=[0,0,0],
                                                   UFforce=0, UFmassMatrix=0,
+                                                  massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                                                   color=[0.1,0.9,0.1,1.]):
 
         self.gravity = gravity
@@ -865,6 +875,13 @@ class ObjectFFRFreducedOrderInterface:
 
         stiffnessMatrixMC = exu.MatrixContainer()
         stiffnessMatrixMC.SetWithDenseMatrix(self.stiffnessMatrixReduced,useDenseMatrix=False)
+
+        if (massProportionalDamping != 0 or stiffnessProportionalDamping != 0):
+            dampingMatrixMC = exu.MatrixContainer()
+            dampingMatrixMC.SetWithDenseMatrix(massProportionalDamping*self.massMatrixReduced+stiffnessProportionalDamping*self.stiffnessMatrixReduced,useDenseMatrix=False)
+        else:
+            dampingMatrixMC=[]
+
         massMatrixMC = exu.MatrixContainer()
         factMass = 1.
         if UFmassMatrix != 0:
@@ -876,6 +893,7 @@ class ObjectFFRFreducedOrderInterface:
         self.oFFRFreducedOrder = mbs.AddObject(ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
                                                             stiffnessMatrixReduced=stiffnessMatrixMC, 
                                                             massMatrixReduced=massMatrixMC,
+                                                            dampingMatrixReduced=dampingMatrixMC,
                                                             modeBasis=self.modeBasis,
                                                             referencePositions = self.xRef,
                                                             forceUserFunction=UFforce,
@@ -1003,6 +1021,7 @@ class FEMinterface:
 
         self.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'}
         self.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
+        self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':'Stress'}
         #self.ffrfReducedOrderTerms = () # 
 
         #some additional information, needed for checks and easier operation
@@ -1012,7 +1031,10 @@ class FEMinterface:
     #**classFunction: save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions
     #**input: use filename without ending ==> ".npy" will be added
     def SaveToFile(self, fileName):
-        with open(fileName, 'wb') as f:
+        fileExtension = ''
+        if len(fileName) < 4 or fileName[-4:]!='.npy':
+            fileExtension = '.npy'
+        with open(fileName+fileExtension, 'wb') as f:
             np.save(f, self.nodes, allow_pickle=True)
             np.save(f, self.elements, allow_pickle=True)
             np.save(f, self.massMatrix)
@@ -1022,12 +1044,16 @@ class FEMinterface:
             np.save(f, self.elementSets, allow_pickle=True)
             np.save(f, self.modeBasis, allow_pickle=True)
             np.save(f, self.eigenValues, allow_pickle=True)
+            np.save(f, self.postProcessingModes, allow_pickle=True)
 
     #**classFunction: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
     #this function is much faster than the text-based import functions
     #**input: use filename without ending ==> ".npy" will be added
     def LoadFromFile(self, fileName):
-        with open(fileName, 'rb') as f:
+        fileExtension = ''
+        if len(fileName) < 4 or fileName[-4:]!='.npy':
+            fileExtension = '.npy'
+        with open(fileName+fileExtension, 'rb') as f:
             self.nodes = np.load(f, allow_pickle=True).all()
             self.elements = list(np.load(f, allow_pickle=True))
             self.massMatrix = np.load(f)
@@ -1037,6 +1063,7 @@ class FEMinterface:
             self.elementSets = list(np.load(f, allow_pickle=True))
             self.modeBasis = np.load(f, allow_pickle=True).all()
             self.eigenValues = list(np.load(f, allow_pickle=True))
+            self.postProcessingModes = np.load(f, allow_pickle=True).all()
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

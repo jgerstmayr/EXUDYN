@@ -223,7 +223,7 @@ sL+=sL1
                             		}""", 
                                 argList=['mainSystem','solverName','simulationSettings'],
                                 description="Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
-                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs,'GeneralizedAlpha',simSettings)",
+                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)",
                                 isLambdaFunction = True
                                 ); sL+=sL1
 
@@ -280,6 +280,11 @@ s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderEngineStopFlag', cName='SetRenderEngineStopFlag', 
                                 description="set the current stop simulation flag; set to false, in order to continue a previously user-interrupted simulation"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
+                                description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step",
+                                example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB \\TAB return False \\\\ \\TAB return True \\\\ mbs.SetPreStepUserFunction(PreStepUserFunction)'); s+=s1; sL+=sL1
+                                                      
 
 #++++++++++++++++
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,8 +126,16 @@ public: // AUTO:
         d["offset"] = (Real)cObjectConnectorCoordinate->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
         d["factorValue1"] = (Real)cObjectConnectorCoordinate->GetParameters().factorValue1; //! AUTO: cast variables into python (not needed for standard types) 
         d["velocityLevel"] = (bool)cObjectConnectorCoordinate->GetParameters().velocityLevel; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offsetUserFunction"] = (std::function<Real(Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offsetUserFunction_t"] = (std::function<Real(Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectConnectorCoordinate->GetParameters().offsetUserFunction)
+            {d["offsetUserFunction"] = (std::function<Real(Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction;}
+        else
+            {d["offsetUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t)
+            {d["offsetUserFunction_t"] = (std::function<Real(Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t;}
+        else
+            {d["offsetUserFunction_t"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorCoordinate->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorCoordinate->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 

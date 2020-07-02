@@ -765,6 +765,16 @@ The following list covers changes in the python interface and functionality:
 	  %\item $\ra$ 
 	%\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.360 $\ra$ Version 0.1.361}
+	\item[] Changes in the python interface:
+	\bi \ttfamily
+	  \item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
+		\texttt{simulationSettings.staticSolver.preStepPyExecute}
+		are deprecated, DON'T USE any more
+	  \item Use \texttt{mbs.SetPreStepUserFunction(...)} instead!
+	\ei
+  %\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 0.1.352 $\ra$ Version 0.1.353}
 	\item[] Changes in the renderer screen:
 	\bi \ttfamily

@@ -401,6 +401,7 @@
     <ClCompile Include="..\src\Graphics\VisualizationSystem.cpp" />
     <ClCompile Include="..\src\Graphics\VisualizationSystemContainer.cpp" />
     <ClCompile Include="..\src\Graphics\VisualizationSystemData.cpp" />
+    <ClCompile Include="..\src\Graphics\VisualizationUserFunctions.cpp" />
     <ClCompile Include="..\src\Linalg\LinearSolver.cpp" />
     <ClCompile Include="..\src\Linalg\Matrix.cpp" />
     <ClCompile Include="..\src\Linalg\Vector.cpp" />

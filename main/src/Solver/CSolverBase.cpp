@@ -554,6 +554,9 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 	return !conv.stepReductionFailed; //return success (true) or fail (false)
 }
 
+
+bool cSolverBaseInitializeStepPreStepFunctionWarned = false;
+
 //! initialize static step / time step: do some outputs, checks, etc.
 void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -587,11 +590,30 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 	}
 
 	STARTTIMER(timer.python);
+	if (computationalSystem.GetPythonUserFunctions().preStepFunction)
+	{
+		bool rvPreStep;
+		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+		{
+			rvPreStep = computationalSystem.GetPythonUserFunctions().preStepFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
+				it.currentTime);
+		}, "CSolverBase::InitializeStep: PythonPreStepUserFunction failed (check code; check return value)");
+		if (!rvPreStep)
+		{
+			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPreStepUserFunction returned False; simulation is stopped after current step\n\n")); }
+			computationalSystem.GetPostProcessData()->stopSimulation = true;
+		}
+	}
+
 	if (!IsStaticSolver())
 	{
 		if (simulationSettings.timeIntegration.preStepPyExecute.size()) //if this string is not empty, execute the commands
 		{
-			//py::exec(timeint.preStepPyExecute.c_str()); //will only work, if all variables of the preStepPyExecute string are defined in the global scope
+			if (!cSolverBaseInitializeStepPreStepFunctionWarned)
+			{
+				cSolverBaseInitializeStepPreStepFunctionWarned = true;
+				PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
+			}
 
 			py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
 			py::exec(simulationSettings.timeIntegration.preStepPyExecute.c_str(), scope);
@@ -601,11 +623,17 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 	{
 		if (simulationSettings.staticSolver.preStepPyExecute.size()) //if this string is not empty, execute the commands
 		{
+			if (!cSolverBaseInitializeStepPreStepFunctionWarned)
+			{
+				cSolverBaseInitializeStepPreStepFunctionWarned = true;
+				PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
+			}
 			py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
 			py::exec(simulationSettings.staticSolver.preStepPyExecute.c_str(), scope);
 		}
 	}
 	PyProcessExecuteQueue(); //execute incoming python tasks if available
+	computationalSystem.GetPostProcessData()->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
 	STOPTIMER(timer.python);
 }
 //! finish static step / time step; write output of results to file
@@ -869,7 +897,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	while (!conv.linearSolverFailed && !conv.newtonConverged && 
 		!stopNewton && it.newtonSteps < newton.maxIterations)
 	{
-		if (data.nSys > 200) { PyProcessExecuteQueue(); } //do this task regularly, specifically in large scale systems
+		if (data.nSys > 200) { PyProcessExecuteQueue(); computationalSystem.GetPostProcessData()->ProcessUserFunctionDrawing(); } //do this task regularly, specifically in large scale systems
 
 		it.newtonSteps++; it.newtonStepsCount++;
 		if (IsVerbose(3)) { Verbose(3, "  Newton: STEP "  + EXUstd::ToString(it.newtonSteps) + ":\n"); }

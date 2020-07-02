@@ -41,7 +41,9 @@ fem.ReadMassMatrixFromAbaqus(inputFileName+'MASS1.mtx')
 fem.ReadStiffnessMatrixFromAbaqus(inputFileName+'STIF1.mtx')
 fem.ScaleStiffnessMatrix(1e-2) #for larger deformations, stiffness is reduced to 1%
 
-nodeNumberUnbalance = 9  #on disc, max y-value
+#nodeNumberUnbalance = 9  #on disc, max y-value
+nodeNumberUnbalance = fem.GetNodeAtPoint(point=[0. , 0.19598444, 0.15])
+print("nodeNumberUnbalance =",nodeNumberUnbalance)
 unbalance = 0.1
 fem.AddNodeMass(nodeNumberUnbalance, unbalance)
 #print(fem.GetMassMatrix()[8*3:11*3,:])

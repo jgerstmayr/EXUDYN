@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,7 +119,11 @@ public: // AUTO:
         d["markerNumber"] = (Index)cLoadForceVector->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["loadVector"] = (std::vector<Real>)cLoadForceVector->GetParameters().loadVector; //! AUTO: cast variables into python (not needed for standard types) 
         d["bodyFixed"] = (bool)cLoadForceVector->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
-        d["loadVectorUserFunction"] = (std::function<StdVector(Real,StdVector3D)>)cLoadForceVector->GetParameters().loadVectorUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cLoadForceVector->GetParameters().loadVectorUserFunction)
+            {d["loadVectorUserFunction"] = (std::function<StdVector(Real,StdVector3D)>)cLoadForceVector->GetParameters().loadVectorUserFunction;}
+        else
+            {d["loadVectorUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationLoadForceVector->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 

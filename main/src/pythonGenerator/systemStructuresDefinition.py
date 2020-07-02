@@ -136,7 +136,7 @@ V,  minimumStepSize,	    ,  		, UReal, 		           1e-8,   ,  P, "lower limit o
 V,  verboseMode,	      ,  	  , Index, 			        0  ,    ,   P, "0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
 V,  verboseModeFile,	    ,  	  , Index, 			        0  ,    ,   P, "same behaviour as verboseMode, but outputs all solver information to file"
 V,  generalizedAlpha,    ,     , GeneralizedAlphaSettings,  ,   ,   PS, "parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)"
-V,  preStepPyExecute,		 , 	 	, String, 			        ""	, 		,   P, "Python code to be executed prior to every step and after last step, e.g. for postprocessing"
+V,  preStepPyExecute,		 , 	 	, String, 			        ""	, 		,   P, "DEPRECATED, use preStepFunction in simulation settings; Python code to be executed prior to every step and after last step, e.g. for postprocessing"
 #
 writeFile=SimulationSettings.h
 
@@ -149,19 +149,19 @@ classDescription = "Settings for static solver linear or nonlinear (Newton)."
 V,    newton,               ,           ,   NewtonSettings,         ,       ,PS   , "parameters for Newton method (e.g. in static solver or time integration)"
 #
 #not needed: V,  useLoadSteps,	         ,  		     ,      bool, 					false,   P		, "flag (true/false); false = 1 load step, true = use predefined (or adaptive) load steps"
-V,  numberOfLoadSteps,      ,  		     ,      Index, 					1,       ,P		, "number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once"
-V,  loadStepDuration,       ,  		     ,      UReal, 					1,       ,P		, "quasi-time for all load steps (added to current time in load steps)"
-V,  loadStepStart,	         ,  		     ,      UReal, 					0,       ,P		, "a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user"
-V,  loadStepGeometric,	    ,  		     ,      bool, 					  false,    ,P		, "if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$"
-V,  loadStepGeometricRange, ,  		     ,      UReal, 				1000,       ,P		, "if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric"
-V,  useLoadFactor,          ,  		     ,      bool, 					  true,     ,P		, "true: compute a load factor $\in [0,1]$ from static step time; all loads are scaled by the load factor; false: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction"
-V,  stabilizerODE2term,     ,  		     ,      UReal, 				   0,       ,P		, "add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$"
-V,  adaptiveStep,			    , 	 	     ,      bool, 			       true, 		 ,P, "true: use step reduction if step fails; false: fixed step size"
-V,  minimumStepSize,	       ,  		     ,      UReal, 					1e-8,    ,P		, "lower limit of step size, before nonlinear solver stops"
+V,  numberOfLoadSteps,      ,  		   ,      Index, 					1,       ,P		, "number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once"
+V,  loadStepDuration,       ,  		   ,      UReal, 					1,       ,P		, "quasi-time for all load steps (added to current time in load steps)"
+V,  loadStepStart,	        ,  		      ,      UReal, 					0,       ,P		, "a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user"
+V,  loadStepGeometric,	     ,  		      ,      bool, 					  false,    ,P		, "if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$"
+V,  loadStepGeometricRange, ,  		   ,      UReal, 				1000,       ,P		, "if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric"
+V,  useLoadFactor,          ,  		   ,      bool, 					  true,     ,P		, "true: compute a load factor $\in [0,1]$ from static step time; all loads are scaled by the load factor; false: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction"
+V,  stabilizerODE2term,     ,  		   ,      UReal, 				   0,       ,P		, "add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$"
+V,  adaptiveStep,			   , 	 	      ,      bool, 			       true, 		 ,P, "true: use step reduction if step fails; false: fixed step size"
+V,  minimumStepSize,	      ,  		   ,      UReal, 					1e-8,    ,P		, "lower limit of step size, before nonlinear solver stops"
 #
-V,  verboseMode,	         ,  		     ,      Index, 					1,       ,P		, "0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse"
-V,  verboseModeFile,	       ,  	        ,      Index, 			     0,       ,P, "same behaviour as verboseMode, but outputs all solver information to file"
-V,  preStepPyExecute,		     , 	 	     ,      String, 			     ""	, 		 ,P, "Python code to be executed prior to every load step and after last step, e.g. for postprocessing"
+V,  verboseMode,	           ,  		   ,      Index, 					1,       ,P		, "0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse"
+V,  verboseModeFile,	     ,  	        ,       Index, 			     0,       ,P, "same behaviour as verboseMode, but outputs all solver information to file"
+V,  preStepPyExecute,		   , 	 	     ,       String, 			     ""	, 		 ,P, "Python code to be executed prior to every load step and after last step, e.g. for postprocessing"
 #
 writeFile=SimulationSettings.h
 
@@ -173,9 +173,9 @@ writePybindIncludes = True
 classDescription = "General Settings for simulation; according settings for solution and solvers are given in subitems of this structure"
 #V|F, pythonName, 		             cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
 V,  timeIntegration,                ,  		        , TimeIntegrationSettings, 	  , , PS		, "time integration parameters"
-V,  solutionSettings,				       , 	 	        , SolutionSettings,  	          , , PS		, "settings for solution files"
-V,  staticSolver,				         , 	 	        , StaticSolverSettings,  		  , , PS	   , "static solver parameters"
-V,  linearSolverType,				       , 	 	        , LinearSolverType,    "LinearSolverType::EXUdense", , P	   , "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)"
+V,  solutionSettings,				     , 	 	        , SolutionSettings,  	        , , PS   , "settings for solution files"
+V,  staticSolver,				        , 	 	        , StaticSolverSettings,  		  , , PS	   , "static solver parameters"
+V,  linearSolverType,				     , 	 	        , LinearSolverType,    "LinearSolverType::EXUdense", , P	   , "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)"
 V,  cleanUpMemory,                  , 	           , bool,                false   , , P		, "true: solvers will free memory at exit (recommended for large systems); false: keep allocated memory for repeated computations to increase performance"
 V,  displayStatistics,              , 	           , bool,                false   , , P		, "display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."
 V,  displayComputationTime,         , 	           , bool,                false   , , P		, "display computation time statistics at end of solving"

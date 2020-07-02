@@ -38,7 +38,7 @@ initialRotation = RotationMatrixY(phi0)
 omega0 = [0,0,1800/180*np.pi]                   #initial angular velocity around z-axis
 v0 = Skew(omega0) @ initialRotation @ [0,0,r]   #initial angular velocity of center point
 #v0 = [0,0,0]                                   #initial translational velocity
-print("v0=",v0)#," = ", [0,10*np.pi*r*np.sin(phi0),0])
+#print("v0=",v0)#," = ", [0,10*np.pi*r*np.sin(phi0),0])
 
 #inertia for infinitely small ring:
 inertiaRing = RigidBodyInertia(mass=1, inertiaTensor= np.diag([0.5*m*r**2, 0.25*m*r**2, 0.25*m*r**2]))

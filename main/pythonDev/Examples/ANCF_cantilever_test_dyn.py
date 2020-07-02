@@ -91,9 +91,15 @@ print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-s = "mbs.SetObjectParameter(" + str(ccy) + ", 'offset', 0.1*np.sin(2*np.pi*20*mbs.systemData.GetTime()))\n"
-print(s)
-simulationSettings.timeIntegration.preStepPyExecute = s
+#s = "mbs.SetObjectParameter(" + str(ccy) + ", 'offset', 0.1*np.sin(2*np.pi*20*mbs.systemData.GetTime()))\n"
+#print(s)
+#simulationSettings.timeIntegration.preStepPyExecute = s
+
+def UFexcitation(mbs, t):
+    mbs.SetObjectParameter(ccy, 'offset', 0.1*np.sin(2*np.pi*20*t))
+    return True #True, means that everything is alright, False=stop simulation
+
+mbs.SetPreStepUserFunction(UFexcitation)
 
 
 fact = 20000

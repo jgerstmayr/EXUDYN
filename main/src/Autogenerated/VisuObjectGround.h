@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-26  09:45:09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,7 @@
 class VisualizationObjectGround: public VisualizationObject // AUTO: 
 {
 protected: // AUTO: 
+    std::function<py::object(const MainSystem&, Index)> graphicsDataUserFunction;//!< AUTO: A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
     Float4 color;                                 //!< AUTO: RGB node color; if R==-1, use default color
     BodyGraphicsData graphicsData;                //!< AUTO: Structure contains data for body visualization; data is defined in special list / dictionary structure
 
@@ -30,12 +31,29 @@ public: // AUTO:
     VisualizationObjectGround()
     {
         show = true;
+        graphicsDataUserFunction = 0;
         color = Float4({-1.f,-1.f,-1.f,-1.f});
     };
 
     // AUTO: access functions
     //! AUTO:  Update visualizationSystem -> graphicsData for item; index shows item Number in CData
     virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override;
+
+    //! AUTO:  user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements
+    virtual void CallUserFunction(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber) override;
+
+    //! AUTO:  return true, if object has a user function to be called during redraw
+    virtual bool HasUserFunction() override
+    {
+        return graphicsDataUserFunction!=0;
+    }
+
+    //! AUTO:  Write (Reference) access to:A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
+    void SetGraphicsDataUserFunction(const std::function<py::object(const MainSystem&, Index)>& value) { graphicsDataUserFunction = value; }
+    //! AUTO:  Read (Reference) access to:A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
+    const std::function<py::object(const MainSystem&, Index)>& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
+    //! AUTO:  Read (Reference) access to:A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
+    std::function<py::object(const MainSystem&, Index)>& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
 
     //! AUTO:  Write (Reference) access to:RGB node color; if R==-1, use default color
     void SetColor(const Float4& value) { color = value; }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,8 +130,16 @@ public: // AUTO:
         d["rotationMarker1"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointGeneric->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["offsetUserFunctionParameters"] = (std::vector<Real>)cObjectJointGeneric->GetParameters().offsetUserFunctionParameters; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offsetUserFunction"] = (std::function<StdVector(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offsetUserFunction_t"] = (std::function<StdVector(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectJointGeneric->GetParameters().offsetUserFunction)
+            {d["offsetUserFunction"] = (std::function<StdVector(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction;}
+        else
+            {d["offsetUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectJointGeneric->GetParameters().offsetUserFunction_t)
+            {d["offsetUserFunction_t"] = (std::function<StdVector(Real,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t;}
+        else
+            {d["offsetUserFunction_t"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectJointGeneric->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VaxesRadius"] = (float)visualizationObjectJointGeneric->GetAxesRadius(); //! AUTO: cast variables into python (not needed for standard types) 

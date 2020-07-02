@@ -41,7 +41,8 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
                  'Load':[], 'Sensor':[]}
 
 #conversion list for python functions; names must always start with 'PyFunction'...
-pyFunctionTypeConversion = {'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
+pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&, Index)>',
+                            'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
                             'PyFunctionScalar6': 'std::function<Real(Real,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
                             'PyFunctionScalar8': 'std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
                             'PyFunctionVector3DScalarVector3D': 'std::function<StdVector(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
@@ -725,9 +726,21 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #                    dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix3DToStdArray33(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
                 else:
                     parRead = '(' + typeCastStr + ')' + destStr
-                
+
+                isPyFunction = False                
+                if parameter['type'].find('PyFunction') != -1: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
+                    isPyFunction = True
+                    
                 if len(parRead) != 0:
-                    dictListRead[i] +='        d["' + pyName + '"] = ' + parRead + '; //! AUTO: cast variables into python (not needed for standard types) \n'
+                    dictListRead[i] +='        '
+                    if isPyFunction: 
+                        dictListRead[i]+='if ('+destStr+')\n            {' #avoid that 'None' is returned in dict due to empty user function
+                    dictListRead[i] +='d["' + pyName + '"] = ' + parRead + ';'
+                    if isPyFunction: 
+                        dictListRead[i]+='}\n        else\n'
+                        dictListRead[i]+='            {d["' + pyName + '"] = 0;}\n'
+                            
+                    dictListRead[i] +=' //! AUTO: cast variables into python (not needed for standard types) \n'
                                                     
                 #if (parameter['cFlags'].find('C') == -1) & (parameter['cFlags'].find('R') == -1): #'C' ... const access or 'R' means both read only!
                 if (parameter['cFlags'].find('R') == -1): #'R' means read only!
@@ -742,7 +755,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         dictListWrite[i]+='PyWriteBodyGraphicsData(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsData*/'
                     else:
                         dictStr = 'd["' + pyName + '"]'
-                        if parameter['type'].find('PyFunction') != -1: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
+                        if isPyFunction: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
                             dictListWrite[i]+='if (EPyUtils::CheckForValidFunction(d["'+pyName+'"])) { '
                             dictStr = '(py::function)'+dictStr
 
@@ -752,7 +765,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                             dictListWrite[i]+=destStr + ' = (OutputVariableType)py::cast<Index>'
                             
                         dictListWrite[i]+='(' + dictStr + '); /* AUTO:  read out dictionary and cast to C++ type*/'
-                        if parameter['type'].find('PyFunction') != -1: 
+                        if isPyFunction: 
                             dictListWrite[i]+='}'
 
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):

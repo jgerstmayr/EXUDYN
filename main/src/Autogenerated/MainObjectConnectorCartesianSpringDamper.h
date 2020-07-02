@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,7 +125,11 @@ public: // AUTO:
         d["stiffness"] = (std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().stiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["damping"] = (std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().damping; //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = (std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
-        d["springForceUserFunction"] = (std::function<StdVector(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction)
+            {d["springForceUserFunction"] = (std::function<StdVector(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction;}
+        else
+            {d["springForceUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorCartesianSpringDamper->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 

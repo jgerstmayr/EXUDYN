@@ -146,7 +146,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 
 
-fact = 3800
+fact = 2000
 deltaT = 0.0005*fact
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = deltaT
@@ -163,7 +163,7 @@ simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
 simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 1e-5
 simulationSettings.timeIntegration.newton.maxDiscontinuousIterations = 2 #only two for selection of correct sliding cable element
 
-useIndex2 = True
+useIndex2 = False
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = useIndex2
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = useIndex2
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
@@ -219,7 +219,16 @@ def gondulaReset(oRigid, oSlidingJoint, maxL, vSliding):
 
 
 maxL = 0.9999*L
-simulationSettings.timeIntegration.preStepPyExecute = "gondulaReset(" + str(oRigid) + ", " + str(slidingJoint) + ", " + str(maxL) + ", " + str(vSliding) + ")\n"
+#deprecated:
+#simulationSettings.timeIntegration.preStepPyExecute = "gondulaReset(" + str(oRigid) + ", " + str(slidingJoint) + ", " + str(maxL) + ", " + str(vSliding) + ")\n"
+
+#new user function executed at every beginning of time steps
+def UFgondulaReset(mbs, t):
+    gondulaReset(oRigid, slidingJoint, maxL, vSliding)
+    return True #True, means that everything is alright, False=stop simulation
+
+mbs.SetPreStepUserFunction(UFgondulaReset)
+
 
 exu.StartRenderer()
 SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)

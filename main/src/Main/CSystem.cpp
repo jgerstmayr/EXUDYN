@@ -2113,8 +2113,39 @@ void PostProcessData::WaitForUserToContinue()
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10)); //give thread time to finish the stop simulation command
 			PyProcessExecuteQueue(); //use time to execute incoming python tasks
+			ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
 		}
 		simulationPaused = false; //in case that visualization system was closed in the meantime
 		SetVisualizationMessage(str);
 	}
+}
+
+void PostProcessData::ProcessUserFunctionDrawing()
+{
+	requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+	if (requestUserFunctionDrawing)
+	{
+		//std::cout << "requestUserFunctionDrawing ...\n";
+		if (visualizationSystem->visualizationSettingsUF->bodies.show)
+		{
+			Index cnt = 0;
+			for (auto item : visualizationSystem->vSystemData.GetVisualizationObjects())
+			{
+				if (item->GetShow() && !(item->IsConnector()) && item->HasUserFunction())
+				{
+					//pout << "mainSystem=" << mainSystem << "\n";
+					//std::cout << "enter CallUserFunction ...\n";
+					//item->CallUserFunction(visualizationSystemContainer.GetVisualizationSettings(), this, *mainSystem, cnt);
+					item->CallUserFunction(*visualizationSystem->visualizationSettingsUF, 
+						visualizationSystem, 
+						*visualizationSystem->mainSystemUF, 
+						cnt);
+					//std::cout << "READY!\n";
+				}
+				cnt++; //synchronize itemNumber with item!!!
+			}
+		}
+		requestUserFunctionDrawing = false;
+	}
+	requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
 }

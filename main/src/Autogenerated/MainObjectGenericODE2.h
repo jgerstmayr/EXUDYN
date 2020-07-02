@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-26  11:36:43 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,6 +124,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectGenericODE2->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::SetNumpyMatrixISafely(d, "VtriangleMesh", visualizationObjectGenericODE2->GetTriangleMesh()); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowNodes")) { visualizationObjectGenericODE2->GetShowNodes() = py::cast<bool>(d["VshowNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { if (EPyUtils::CheckForValidFunction(d["VgraphicsDataUserFunction"])) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -137,14 +138,27 @@ public: // AUTO:
         d["stiffnessMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().stiffnessMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().dampingMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["forceVector"] = EPyUtils::Vector2NumPy(cObjectGenericODE2->GetParameters().forceVector); //! AUTO: cast variables into python (not needed for standard types) 
-        d["forceUserFunction"] = (std::function<StdVector(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
-        d["massMatrixUserFunction"] = (std::function<NumpyMatrix(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectGenericODE2->GetParameters().forceUserFunction)
+            {d["forceUserFunction"] = (std::function<StdVector(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction;}
+        else
+            {d["forceUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectGenericODE2->GetParameters().massMatrixUserFunction)
+            {d["massMatrixUserFunction"] = (std::function<NumpyMatrix(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction;}
+        else
+            {d["massMatrixUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectGenericODE2->GetParameters().coordinateIndexPerNode; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectGenericODE2->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectGenericODE2->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VtriangleMesh"] = EPyUtils::MatrixI2NumPy(visualizationObjectGenericODE2->GetTriangleMesh()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowNodes"] = (bool)visualizationObjectGenericODE2->GetShowNodes(); //! AUTO: cast variables into python (not needed for standard types) 
+        if (visualizationObjectGenericODE2->GetGraphicsDataUserFunction())
+            {d["VgraphicsDataUserFunction"] = (std::function<py::object(const MainSystem&, Index)>)visualizationObjectGenericODE2->GetGraphicsDataUserFunction();}
+        else
+            {d["VgraphicsDataUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -164,6 +178,7 @@ public: // AUTO:
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectGenericODE2->GetColor());} //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::MatrixI2NumPy(visualizationObjectGenericODE2->GetTriangleMesh());} //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectGenericODE2->GetShowNodes());} //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return py::cast((std::function<py::object(const MainSystem&, Index)>)visualizationObjectGenericODE2->GetGraphicsDataUserFunction());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE2::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -184,6 +199,7 @@ public: // AUTO:
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectGenericODE2->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::SetNumpyMatrixISafely(value, visualizationObjectGenericODE2->GetTriangleMesh()); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { visualizationObjectGenericODE2->GetShowNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE2::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

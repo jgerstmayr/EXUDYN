@@ -35,7 +35,7 @@ mypi = 3.141592653589793
 L=2                   # length of ANCF element in m
 #L=mypi                 # length of ANCF element in m
 E=2.07e11              # Young's modulus of ANCF element in N/m^2
-rho=7800               # density of ANCF element in kg/m^3
+rho=7800*10               # density of ANCF element in kg/m^3
 b=0.1                  # width of rectangular ANCF element in m
 h=0.1                  # height of rectangular ANCF element in m
 A=b*h                  # cross sectional area of ANCF element in m^2
@@ -87,16 +87,21 @@ else: #treat n elements
     lElem = L / nElements
     for i in range(nElements):
         nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
-        elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[nc0+i,nc0+i+1]))
+        elem=mbs.AddObject(Cable2D(physicsLength=lElem, 
+                                   physicsMassPerLength=rho*A, 
+                                   physicsBendingStiffness=E*I, 
+                                   physicsAxialStiffness=E*A, 
+                                   #useReducedOrderIntegration=True,
+                                   nodeNumbers=[nc0+i,nc0+i+1]))
         cableList+=[elem]
 
     mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))
     mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=1))
-    mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=3))
+    mANCF3 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=3))
     
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF0]))
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF1]))
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF2]))
+    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF3]))
 
     #mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=nLast)) #force
     #mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -1e8, 0])) #will be changed in load steps
@@ -104,11 +109,11 @@ else: #treat n elements
     #mbs.AddLoad(Torque(markerNumber = mANCFrigid, loadVector = [0, 0, E*I*0.25*mypi]))
     mANCFnode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nLast)) #local position L = beam tip
     mbs.AddLoad(Torque(markerNumber = mANCFnode, loadVector = [0, 0, 0.5*E*I*mypi]))
-
+    #mbs.AddLoad(Force(markerNumber = mANCFnode, loadVector = [0, 1e3, 0]))
 
 
 mbs.Assemble()
-print(mbs)
+#print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 #simulationSettings.solutionSettings.coordinatesSolutionFileName = 'ANCFCable2Dbending' + str(nElements) + '.txt'
@@ -119,20 +124,13 @@ simulationSettings.timeIntegration.endTime = 0.002*fact
 simulationSettings.solutionSettings.writeSolutionToFile = True
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
 simulationSettings.displayComputationTime = False
+simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*1000 #10000
-simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10*100
-
-simulationSettings.timeIntegration.newton.useModifiedNewton = False
-simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
-simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
-simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 6.055454452393343e-06*0.1 #eps^(1/3)
-simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1000
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
-simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
+simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-
+simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
@@ -141,22 +139,26 @@ SC.visualizationSettings.nodes.defaultSize = 0.05
 
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
 
-solveDynamic = False
+solveDynamic = True
 if solveDynamic: 
     exu.StartRenderer()
-    #simulationSettings.timeIntegration.preStepPyExecute = "print('test call for integration')\n"
-    #simulationSettings.timeIntegration.preStepPyExecute = "v=mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[2,0,0],'configuration':'Current'})\nprint('angVel='+str(v))\n"
     
-    simulationSettings.timeIntegration.preStepPyExecute = """
-loadDict = mbs.GetLoad(0)
-t = mbs.systemData.GetCurrentTime()
-if t > 1: t=1
-loadDict['loadVector'] = [0, 0, E*I*3.141592653589793*t]
-mbs.ModifyLoad(0, loadDict)"""
+    def UFchangeLoad(mbs, t):
+        tt=t
+        if tt > 1: 
+            tt=1
+        #mbs.SetLoadParameter(0, 'loadVector', [0, 1e6*tt, 0]) #for force
+        mbs.SetLoadParameter(0, 'loadVector', [0, 0, 2*0.5*E*I*mypi*tt])
+        
+        #print('t=',tt,'p=',mbs.GetNodeOutput(nLast, exu.OutputVariableType.Position))
+        return True #True, means that everything is alright, False=stop simulation
+    
+    mbs.SetPreStepUserFunction(UFchangeLoad)
+
+    
 
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
-    #v = mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[L/2,0,0],'configuration':'Current'})
-    #print('angular vel='+str(v))
+
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

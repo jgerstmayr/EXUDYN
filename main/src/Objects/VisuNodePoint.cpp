@@ -778,6 +778,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 		{
 			for (Index j = 0; j < 3; j++)
 			{
+				colors[j] = currentColor; //set back to default if some values are invalid
 				Index meshNodeIndex = (Index)GetTriangleMesh()(i, j);
 				if (scaleFactor == 1.)
 				{

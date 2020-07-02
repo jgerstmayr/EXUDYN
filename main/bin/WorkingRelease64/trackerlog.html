@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 428, 
-Number of resolved issues = 360, 
-EXUDYN version = 0.1.360, 
-last change =  2020-06-22
+Number of issues = 433, 
+Number of resolved issues = 366, 
+EXUDYN version = 0.1.366, 
+last change =  2020-07-02
 
 
 <table style = "width:100%">
@@ -38,6 +38,54 @@ last change =  2020-06-22
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0431</td>
+    <td>auto create dirs    </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> automatically create dictionaries if they do not exist</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-07-01</td>
+    <td>2020-08-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0430</td>
+    <td>stress modes FEMinterface</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add into FEMinterface and allow storing that data</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-07-01</td>
+    <td>2020-08-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0428</td>
+    <td>implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> EXTENSION</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-06-26</td>
+    <td>2020-08-25</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0424</td>
     <td>show modes          </td>
@@ -64,22 +112,6 @@ last change =  2020-06-22
     <td></td>
     <td>2020-06-09</td>
     <td>2020-08-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0419</td>
-    <td>visualization user function</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add possibility of user function for visualization: is called on cSystem side to generate graphicsData lists or via a thread-safe callback</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-29</td>
-    <td>2020-07-28</td>
     <td></td>
     <td></td>
     <td></td>
@@ -348,22 +380,6 @@ last change =  2020-06-22
     <td>JG</td>
     <td>RAISED  </td>
     <td> add manual for solver and example; also add new prestep user function</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-04-10</td>
-    <td>2020-06-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0371</td>
-    <td>prestep py function </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add prestep function as function using mbs (MainSystem)</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-04-10</td>
@@ -663,22 +679,6 @@ last change =  2020-06-22
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0284</td>
-    <td>utilities docu      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add documentation for exudynUtilities.py</td>
-    <td>DOCU</td>
-    <td></td>
-    <td>2019-12-07</td>
-    <td>2020-02-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0283</td>
     <td>cylinder with hole  </td>
     <td>JG</td>
@@ -720,22 +720,6 @@ last change =  2020-06-22
     <td></td>
     <td>2019-09-10</td>
     <td>2019-11-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0259</td>
-    <td>output variable connector</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add consistent output variables for connectors</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-08-30</td>
-    <td>2019-10-29</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1127,6 +1111,38 @@ last change =  2020-06-22
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0432</td>
+    <td>FFRF object bug     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> wrong results in ObjectFFRF in case of refpos!=0</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-07-02</td>
+    <td>2020-08-31</td>
+    <td>2020-07-02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0429</td>
+    <td>add stress modes    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add additional modes in ObjectFFRFreducedOrder to visualize stresses and strains</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-07-01</td>
+    <td>2020-08-30</td>
+    <td>2020-07-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0427</td>
     <td>RollingDiscPenalty  </td>
     <td>JG</td>
@@ -1217,6 +1233,22 @@ last change =  2020-06-22
     <td>2020-06-03</td>
     <td>2020-08-02</td>
     <td>2020-06-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0419</td>
+    <td>visualization user function</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add possibility of user function for visualization: is called on cSystem side to generate graphicsData lists or via a thread-safe callback</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-29</td>
+    <td>2020-07-28</td>
+    <td>2020-06-26</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1701,6 +1733,22 @@ last change =  2020-06-22
     <td></td>
     <td></td>
     <td>changed std::function return type from StdVector3D(=std::array) to StdVector(=std::vector), which works automatically with numpy arrays</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0371</td>
+    <td>prestep py function </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add prestep function as function using mbs (MainSystem)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-04-10</td>
+    <td>2020-06-09</td>
+    <td>2020-06-24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0370</td>
@@ -2791,6 +2839,22 @@ last change =  2020-06-22
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0284</td>
+    <td>utilities docu      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add documentation for exudynUtilities.py</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2019-12-07</td>
+    <td>2020-02-05</td>
+    <td>2020-06-24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0282</td>
     <td>relativ paths import</td>
     <td>JG</td>
@@ -3121,6 +3185,22 @@ last change =  2020-06-22
     <td>2019-09-12</td>
     <td>2019-11-11</td>
     <td>2019-10-10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0259</td>
+    <td>output variable connector</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add consistent output variables for connectors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-08-30</td>
+    <td>2019-10-29</td>
+    <td>2020-06-24</td>
     <td>JG</td>
     <td></td>
     <td></td>

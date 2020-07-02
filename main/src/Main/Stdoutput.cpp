@@ -197,7 +197,7 @@ void PyWarning(std::string warning_msg, std::ofstream& file)
 	}
 }
 
-//! put executable string into queue, which is called from other thread
+//! put executable string into queue, which is called from main thread
 void PyQueueExecutableString(STDstring str) //call python function and execute string as python code
 {
 	queuedPythonExecutableCodeAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr

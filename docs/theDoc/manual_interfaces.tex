@@ -18,10 +18,10 @@ These are the access functions to the \codeName\ module.
   SetWriteToConsole(flag) & set flag to write (true) or not write to console; default = true\\ \hline 
   SetWriteToFile(filename, flagWriteToFile = true, flagAppend = false) & set flag to write (true) or not write to console; default value of flagWriteToFile = false; flagAppend appends output to file, if set true; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    exu.SetWriteToConsole(False) \#no output to console\tabnewline
+    \texttt{exu.SetWriteToConsole(False) \#no output to console\tabnewline
     exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)\tabnewline
     exu.Print('print this to file')\tabnewline
-    exu.SetWriteToFile('', False) \#terminate writing to file which closes the file}\\ \hline 
+    exu.SetWriteToFile('', False) \#terminate writing to file which closes the file}}\\ \hline 
   SetPrintDelayMilliSeconds(delayMilliSeconds) & add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0\\ \hline 
   Print() & this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false\\ \hline 
   variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
@@ -46,26 +46,26 @@ The SystemContainer is the top level of structures in \codeName. The container h
   RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
   GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    SC = exu.SystemContainer()\tabnewline
+    \texttt{SC = exu.SystemContainer()\tabnewline
     renderState = SC.GetRenderState() \tabnewline
-    print(renderState['zoom'])}\\ \hline 
+    print(renderState['zoom'])}}\\ \hline 
   SetRenderState(renderState) & Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    SC = exu.SystemContainer()\tabnewline
-    SC.GetRenderState(renderState)}\\ \hline 
+    \texttt{SC = exu.SystemContainer()\tabnewline
+    SC.GetRenderState(renderState)}}\\ \hline 
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
   TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    simSettings = exu.SimulationSettings()\tabnewline
+    \texttt{simSettings = exu.SimulationSettings()\tabnewline
     simSettings.timeIntegration.numberOfSteps = 1000\tabnewline
     simSettings.timeIntegration.endTime = 2\tabnewline
     simSettings.timeIntegration.verboseMode = 1\tabnewline
-    SC.TimeIntegrationSolve(mbs,'GeneralizedAlpha',simSettings)}\\ \hline 
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)}}\\ \hline 
   StaticSolve(mainSystem, simulationSettings) & Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    simSettings = exu.SimulationSettings()\tabnewline
+    \texttt{simSettings = exu.SimulationSettings()\tabnewline
     simSettings.staticSolver.newton.relativeTolerance = 1e-6\tabnewline
-    SC.StaticSolve(mbs, simSettings)}\\ \hline 
+    SC.StaticSolve(mbs, simSettings)}}\\ \hline 
   visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
     EXAMPLE:\tabnewline
     SC = exu.SystemContainer()\tabnewline
@@ -91,9 +91,17 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   SendRedrawSignal() & this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated\\ \hline 
   GetRenderEngineStopFlag() & get the current stop simulation flag; true=user wants to stop simulation\\ \hline 
   SetRenderEngineStopFlag() & set the current stop simulation flag; set to false, in order to continue a previously user-interrupted simulation\\ \hline 
+  SetPreStepUserFunction() & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{def PreStepUserFunction(mbs, t):\tabnewline
+     \phantom{XXXX} print(mbs.systemData.NumberOfNodes())\tabnewline
+     \phantom{XXXX} if(t>1): \tabnewline
+     \phantom{XXXX} \phantom{XXXX} return False \tabnewline
+     \phantom{XXXX} return True \tabnewline
+     mbs.SetPreStepUserFunction(PreStepUserFunction)}}\\ \hline 
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    print(mbs)}\\ \hline 
+    \texttt{print(mbs)}}\\ \hline 
   systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\ \hline  
   interactiveMode & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\ \hline  
   variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\ \hline  
@@ -114,32 +122,32 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
 {\bf function/structure name} & {\bf description}\\ \hline
   AddNode(pyObject) & add a node with nodeDefinition from Python node class; returns (global) node number of newly added node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \tabnewline
+    \texttt{item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \tabnewline
     mbs.AddNode(item) \tabnewline
     nodeDict = \{'nodeType': 'Point', \tabnewline
     'referenceCoordinates': [1.0, 0.0, 0.0], \tabnewline
     'initialCoordinates': [0.0, 2.0, 0.0], \tabnewline
     'name': 'example node'\} \tabnewline
-     mbs.AddNode(nodeDict)}\\ \hline 
+     mbs.AddNode(nodeDict)}}\\ \hline 
   GetNodeNumber(nodeName) & get node's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    n = mbs.GetNodeNumber('example node')}\\ \hline 
+    \texttt{n = mbs.GetNodeNumber('example node')}}\\ \hline 
   GetNode(nodeNumber) & get node's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    nodeDict = mbs.GetNode(0)}\\ \hline 
+    \texttt{nodeDict = mbs.GetNode(0)}}\\ \hline 
   ModifyNode(nodeNumber, nodeDict) & modify node's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.ModifyNode(nodeNumber, nodeDict)}\\ \hline 
+    \texttt{mbs.ModifyNode(nodeNumber, nodeDict)}}\\ \hline 
   GetNodeDefaults(typeName) & get node's default values for a certain nodeType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    nodeType = 'Point'\tabnewline
-    nodeDict = mbs.GetNodeDefaults(nodeType)}\\ \hline 
+    \texttt{nodeType = 'Point'\tabnewline
+    nodeDict = mbs.GetNodeDefaults(nodeType)}}\\ \hline 
   GetNodeOutput(nodeNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.GetNodeOutput(nodeNumber=0, variableType='exu.OutputVariable.Displacement')}\\ \hline 
+    \texttt{mbs.GetNodeOutput(nodeNumber=0, variableType='exu.OutputVariable.Displacement')}}\\ \hline 
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.GetNodeODE2Index(nodeNumber=0)}\\ \hline 
+    \texttt{mbs.GetNodeODE2Index(nodeNumber=0)}}\\ \hline 
   GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from nodeNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetNodeParameter(nodeNumber, parameterName, value) & set parameter 'parameterName' of node with nodeNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
@@ -156,33 +164,33 @@ This section provides functions for adding, reading and modifying objects, which
 {\bf function/structure name} & {\bf description}\\ \hline
   AddObject(pyObject) & add a object with objectDefinition from Python object class; returns (global) object number of newly added object\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \tabnewline
+    \texttt{item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \tabnewline
     mbs.AddObject(item) \tabnewline
     objectDict = \{'objectType': 'MassPoint', \tabnewline
     'physicsMass': 10, \tabnewline
     'nodeNumber': 0, \tabnewline
     'name': 'example object'\} \tabnewline
-     mbs.AddObject(objectDict)}\\ \hline 
+     mbs.AddObject(objectDict)}}\\ \hline 
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    n = mbs.GetObjectNumber('heavy object')}\\ \hline 
+    \texttt{n = mbs.GetObjectNumber('heavy object')}}\\ \hline 
   GetObject(objectNumber) & get object's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    objectDict = mbs.GetObject(0)}\\ \hline 
+    \texttt{objectDict = mbs.GetObject(0)}}\\ \hline 
   ModifyObject(objectNumber, objectDict) & modify object's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.ModifyObject(objectNumber, objectDict)}\\ \hline 
+    \texttt{mbs.ModifyObject(objectNumber, objectDict)}}\\ \hline 
   GetObjectDefaults(typeName) & get object's default values for a certain objectType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    objectType = 'MassPoint'\tabnewline
-    objectDict = mbs.GetObjectDefaults(objectType)}\\ \hline 
+    \texttt{objectType = 'MassPoint'\tabnewline
+    objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
   GetObjectOutput(objectNumber, variableType) & get object's current output variable from objectNumber and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
   GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from objectNumber and OutputVariableType\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}\\ \hline 
+    \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}\\ \hline 
+    \texttt{u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectParameter(objectNumber, parameterName) & get objects's parameter from objectNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with objectNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
@@ -199,25 +207,25 @@ This section provides functions for adding, reading and modifying markers. Marke
 {\bf function/structure name} & {\bf description}\\ \hline
   AddMarker(pyObject) & add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = MarkerNodePosition(name='my marker',nodeNumber=1) \tabnewline
+    \texttt{item = MarkerNodePosition(name='my marker',nodeNumber=1) \tabnewline
     mbs.AddMarker(item)\tabnewline
     markerDict = \{'markerType': 'NodePosition', \tabnewline
      'nodeNumber': 0, \tabnewline
      'name': 'position0'\}\tabnewline
-     mbs.AddMarker(markerDict)}\\ \hline 
+     mbs.AddMarker(markerDict)}}\\ \hline 
   GetMarkerNumber(markerName) & get marker's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    n = mbs.GetMarkerNumber('my marker')}\\ \hline 
+    \texttt{n = mbs.GetMarkerNumber('my marker')}}\\ \hline 
   GetMarker(markerNumber) & get marker's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    markerDict = mbs.GetMarker(0)}\\ \hline 
+    \texttt{markerDict = mbs.GetMarker(0)}}\\ \hline 
   ModifyMarker(markerNumber, markerDict) & modify marker's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.ModifyMarker(markerNumber, markerDict)}\\ \hline 
+    \texttt{mbs.ModifyMarker(markerNumber, markerDict)}}\\ \hline 
   GetMarkerDefaults(typeName) & get marker's default values for a certain markerType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    markerType = 'NodePosition'\tabnewline
-    markerDict = mbs.GetMarkerDefaults(markerType)}\\ \hline 
+    \texttt{markerType = 'NodePosition'\tabnewline
+    markerDict = mbs.GetMarkerDefaults(markerType)}}\\ \hline 
   GetMarkerParameter(markerNumber, parameterName) & get markers's parameter from markerNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetMarkerParameter(markerNumber, parameterName, value) & set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
@@ -234,26 +242,26 @@ This section provides functions for adding, reading and modifying operating load
 {\bf function/structure name} & {\bf description}\\ \hline
   AddLoad(pyObject) & add a load with loadDefinition from Python load class; returns (global) load number of newly added load\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \tabnewline
+    \texttt{item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \tabnewline
     mbs.AddLoad(item)\tabnewline
     loadDict = \{'loadType': 'ForceVector',\tabnewline
      'markerNumber': 0,\tabnewline
      'loadVector': [1.0, 0.0, 0.0],\tabnewline
      'name': 'heavy load'\} \tabnewline
-     mbs.AddLoad(loadDict)}\\ \hline 
+     mbs.AddLoad(loadDict)}}\\ \hline 
   GetLoadNumber(loadName) & get load's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    n = mbs.GetLoadNumber('heavy load')}\\ \hline 
+    \texttt{n = mbs.GetLoadNumber('heavy load')}}\\ \hline 
   GetLoad(loadNumber) & get load's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    loadDict = mbs.GetLoad(0)}\\ \hline 
+    \texttt{loadDict = mbs.GetLoad(0)}}\\ \hline 
   ModifyLoad(loadNumber, loadDict) & modify load's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.ModifyLoad(loadNumber, loadDict)}\\ \hline 
+    \texttt{mbs.ModifyLoad(loadNumber, loadDict)}}\\ \hline 
   GetLoadDefaults(typeName) & get load's default values for a certain loadType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    loadType = 'ForceVector'\tabnewline
-    loadDict = mbs.GetLoadDefaults(loadType)}\\ \hline 
+    \texttt{loadType = 'ForceVector'\tabnewline
+    loadDict = mbs.GetLoadDefaults(loadType)}}\\ \hline 
   GetLoadValues(loadNumber) & Get current load values, specifically if user-defined loads are used; can be scalar or vector-valued return value\\ \hline 
   GetLoadParameter(loadNumber, parameterName) & get loads's parameter from loadNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetLoadParameter(loadNumber, parameterName, value) & set parameter 'parameterName' of load with loadNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
@@ -271,26 +279,26 @@ This section provides functions for adding, reading and modifying operating sens
 {\bf function/structure name} & {\bf description}\\ \hline
   AddSensor(pyObject) & add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \tabnewline
+    \texttt{item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \tabnewline
     mbs.AddSensor(item)\tabnewline
     sensorDict = \{'sensorType': 'Node',\tabnewline
      'nodeNumber': 0,\tabnewline
      'fileName': 'sensor.txt',\tabnewline
      'name': 'test sensor'\} \tabnewline
-     mbs.AddSensor(sensorDict)}\\ \hline 
+     mbs.AddSensor(sensorDict)}}\\ \hline 
   GetSensorNumber(sensorName) & get sensor's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    n = mbs.GetSensorNumber('test sensor')}\\ \hline 
+    \texttt{n = mbs.GetSensorNumber('test sensor')}}\\ \hline 
   GetSensor(sensorNumber) & get sensor's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    sensorDict = mbs.GetSensor(0)}\\ \hline 
+    \texttt{sensorDict = mbs.GetSensor(0)}}\\ \hline 
   ModifySensor(sensorNumber, sensorDict) & modify sensor's dictionary by index\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.ModifySensor(sensorNumber, sensorDict)}\\ \hline 
+    \texttt{mbs.ModifySensor(sensorNumber, sensorDict)}}\\ \hline 
   GetSensorDefaults(typeName) & get sensor's default values for a certain sensorType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    sensorType = 'Node'\tabnewline
-    sensorDict = mbs.GetSensorDefaults(sensorType)}\\ \hline 
+    \texttt{sensorType = 'Node'\tabnewline
+    sensorDict = mbs.GetSensorDefaults(sensorType)}}\\ \hline 
   GetSensorValues(sensorNumber, configuration = ConfigurationType.Current) & get sensors's values for configuration; can be a scalar or vector-valued return value!\\ \hline 
   GetSensorParameter(sensorNumber, parameterName) & get sensors's parameter from sensorNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetSensorParameter(sensorNumber, parameterName, value) & set parameter 'parameterName' of sensor with sensorNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
@@ -312,31 +320,31 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
 {\bf function/structure name} & {\bf description}\\ \hline
   NumberOfLoads() & return number of loads in system\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    print(mbs.systemData.NumberOfLoads())}\\ \hline 
+    \texttt{print(mbs.systemData.NumberOfLoads())}}\\ \hline 
   NumberOfMarkers() & return number of markers in system\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    print(mbs.systemData.NumberOfMarkers())}\\ \hline 
+    \texttt{print(mbs.systemData.NumberOfMarkers())}}\\ \hline 
   NumberOfNodes() & return number of nodes in system\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    print(mbs.systemData.NumberOfNodes())}\\ \hline 
+    \texttt{print(mbs.systemData.NumberOfNodes())}}\\ \hline 
   NumberOfObjects() & return number of objects in system\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    print(mbs.systemData.NumberOfObjects())}\\ \hline 
+    \texttt{print(mbs.systemData.NumberOfObjects())}}\\ \hline 
   GetTime(configurationType = exu.ConfigurationType.Current) & get configuration dependent time.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.GetTime(exu.ConfigurationType.Initial)}\\ \hline 
+    \texttt{mbs.systemData.GetTime(exu.ConfigurationType.Initial)}}\\ \hline 
   SetTime(newTime, configurationType = exu.ConfigurationType.Current) & set configuration dependent time; use this access with care, e.g. in user-defined solvers.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetTime(10., exu.ConfigurationType.Initial)}\\ \hline 
+    \texttt{mbs.systemData.SetTime(10., exu.ConfigurationType.Initial)}}\\ \hline 
   GetCurrentTime() & DEPRICATED; get current (simulation) time; time is updated in time integration solvers and in static solver; use this function e.g. during simulation to define time-dependent loads\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.GetCurrentTime()}\\ \hline 
+    \texttt{mbs.systemData.GetCurrentTime()}}\\ \hline 
   SetVisualizationTime() & DEPRICATED; set time for render window (visualization)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetVisualizationTime(1.3)}\\ \hline 
+    \texttt{mbs.systemData.SetVisualizationTime(1.3)}}\\ \hline 
   Info() & print detailed system information for every item; for short information use print(mbs)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.Info()}\\ \hline 
+    \texttt{mbs.systemData.Info()}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -351,40 +359,40 @@ This section provides access functions to global coordinate vectors. Assigning i
 {\bf function/structure name} & {\bf description}\\ \hline
   GetODE2Coordinates(configuration = exu.ConfigurationType.Current) & get ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    uCurrent = mbs.systemData.GetODE2Coordinates()}\\ \hline 
+    \texttt{uCurrent = mbs.systemData.GetODE2Coordinates()}}\\ \hline 
   SetODE2Coordinates(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetODE2Coordinates(uCurrent)}\\ \hline 
+    \texttt{mbs.systemData.SetODE2Coordinates(uCurrent)}}\\ \hline 
   GetODE2Coordinates\_t(configuration = exu.ConfigurationType.Current) & get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    vCurrent = mbs.systemData.GetODE2Coordinates\_t()}\\ \hline 
+    \texttt{vCurrent = mbs.systemData.GetODE2Coordinates\_t()}}\\ \hline 
   SetODE2Coordinates\_t(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetODE2Coordinates\_t(vCurrent)}\\ \hline 
+    \texttt{mbs.systemData.SetODE2Coordinates\_t(vCurrent)}}\\ \hline 
   GetODE1Coordinates(configuration = exu.ConfigurationType.Current) & get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    qCurrent = mbs.systemData.GetODE1Coordinates()}\\ \hline 
+    \texttt{qCurrent = mbs.systemData.GetODE1Coordinates()}}\\ \hline 
   SetODE1Coordinates(coordinates, configuration = exu.ConfigurationType.Current) & set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetODE1Coordinates(qCurrent)}\\ \hline 
+    \texttt{mbs.systemData.SetODE1Coordinates(qCurrent)}}\\ \hline 
   GetAECoordinates(configuration = exu.ConfigurationType.Current) & get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    lambdaCurrent = mbs.systemData.GetAECoordinates()}\\ \hline 
+    \texttt{lambdaCurrent = mbs.systemData.GetAECoordinates()}}\\ \hline 
   SetAECoordinates(coordinates, configuration = exu.ConfigurationType.Current) & set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetAECoordinates(lambdaCurrent)}\\ \hline 
+    \texttt{mbs.systemData.SetAECoordinates(lambdaCurrent)}}\\ \hline 
   GetDataCoordinates(configuration = exu.ConfigurationType.Current) & get system data coordinates for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    dataCurrent = mbs.systemData.GetDataCoordinates()}\\ \hline 
+    \texttt{dataCurrent = mbs.systemData.GetDataCoordinates()}}\\ \hline 
   SetDataCoordinates(coordinates, configuration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetDataCoordinates(dataCurrent)}\\ \hline 
+    \texttt{mbs.systemData.SetDataCoordinates(dataCurrent)}}\\ \hline 
   GetSystemState(configuration = exu.ConfigurationType.Current) & get system state for given configuration (default: exu.Configuration.Current); state vectors do not include the non-state derivatives ODE1\_t and ODE2\_tt and the time; function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    sysStateList = mbs.systemData.GetSystemState()}\\ \hline 
+    \texttt{sysStateList = mbs.systemData.GetSystemState()}}\\ \hline 
   SetSystemState(systemStateList, configuration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1\_t and ODE2\_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    mbs.systemData.SetDataCoordinates(sysStateList, configurationType = exu.ConfigurationType.Initial)}\\ \hline 
+    \texttt{mbs.systemData.SetDataCoordinates(sysStateList, configurationType = exu.ConfigurationType.Initial)}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -399,16 +407,16 @@ This section provides access functions the LTG-lists for every object (body, con
 {\bf function/structure name} & {\bf description}\\ \hline
   GetObjectLTGODE2(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)}\\ \hline 
+    \texttt{ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)}}\\ \hline 
   GetObjectLTGODE1(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    ltgObject4 = mbs.systemData.GetObjectLTGODE1(4)}\\ \hline 
+    \texttt{ltgObject4 = mbs.systemData.GetObjectLTGODE1(4)}}\\ \hline 
   GetObjectLTGAE(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)}\\ \hline 
+    \texttt{ltgObject4 = mbs.systemData.GetObjectLTGODE2(4)}}\\ \hline 
   GetObjectLTGData(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    ltgObject4 = mbs.systemData.GetObjectLTGData(4)}\\ \hline 
+    \texttt{ltgObject4 = mbs.systemData.GetObjectLTGData(4)}}\\ \hline 
 \end{longtable}
 \end{center}
 \section{Type definitions}

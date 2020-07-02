@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,8 +139,16 @@ public: // AUTO:
         d["stiffnessMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().stiffnessMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().dampingMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
         d["forceVector"] = EPyUtils::Vector2NumPy(cObjectFFRF->GetParameters().forceVector); //! AUTO: cast variables into python (not needed for standard types) 
-        d["forceUserFunction"] = (std::function<StdVector(Real, StdVector,StdVector)>)cObjectFFRF->GetParameters().forceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
-        d["massMatrixUserFunction"] = (std::function<NumpyMatrix(Real, StdVector,StdVector)>)cObjectFFRF->GetParameters().massMatrixUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectFFRF->GetParameters().forceUserFunction)
+            {d["forceUserFunction"] = (std::function<StdVector(Real, StdVector,StdVector)>)cObjectFFRF->GetParameters().forceUserFunction;}
+        else
+            {d["forceUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectFFRF->GetParameters().massMatrixUserFunction)
+            {d["massMatrixUserFunction"] = (std::function<NumpyMatrix(Real, StdVector,StdVector)>)cObjectFFRF->GetParameters().massMatrixUserFunction;}
+        else
+            {d["massMatrixUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["computeFFRFterms"] = (bool)cObjectFFRF->GetParameters().computeFFRFterms; //! AUTO: cast variables into python (not needed for standard types) 
         d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode(); //! AUTO: cast variables into python (not needed for standard types) 
         d["objectIsInitialized"] = (bool)cObjectFFRF->GetObjectIsInitialized(); //! AUTO: cast variables into python (not needed for standard types) 

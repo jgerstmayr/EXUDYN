@@ -27,7 +27,10 @@
 //#include "Graphics/VisualizationSystemData.h"
 #include "Graphics/VisualizationSystemContainer.h"
 
+#include <pybind11/functional.h> //! AUTO: for function handling ... otherwise gives a python error (no compilation error in C++ !)
+
 //#include "Utilities/BasicFunctions.h"
+
 
 //!Interface to a CSystem, used in Python
 // This class mirrors all functionality accessible in Python
@@ -113,6 +116,9 @@ public:
 	void AssembleCoordinates() { cSystem->AssembleCoordinates(*this); }
 	void AssembleLTGLists() { cSystem->AssembleLTGLists(*this); }
 	void AssembleInitializeSystemCoordinates() { cSystem->AssembleInitializeSystemCoordinates(*this); }
+
+	//! set user function to be called by solvers at beginning of step (static or dynamic step)
+	void PySetPreStepUserFunction(const py::object& value);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   NODES

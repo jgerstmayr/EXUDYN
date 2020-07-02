@@ -55,10 +55,10 @@ v0Car = [0,-v0,0]                  #initial velocity of car center point
 
 #inertia for infinitely small ring:
 inertiaWheel = InertiaCylinder(density=rhoWheel, length=wWheel, outerRadius=rWheel, axis=0)
-print(inertiaWheel)
+#exu.Print(inertiaWheel)
 
 inertiaCar = InertiaCuboid(density=mCar/(lCar*wCar*hCar),sideLengths=[wCar, lCar, hCar])
-print(inertiaCar)
+#exu.Print(inertiaCar)
 
 graphicsCar = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], 
                                          color=color4steelblue)

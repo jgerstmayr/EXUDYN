@@ -71,6 +71,9 @@ void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData&
 //! python function to read BodyGraphicsData from dictionary, e.g. for body or ground graphics
 bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsData& data);
 
+//! python function to read BodyGraphicsData from py::object, which must be a list of graphicsData dictionaries
+bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data);
+
 //! python function to write BodyGraphicsData to dictionary, e.g. for testing; 
 py::dict PyGetBodyGraphicsDataDictionary(const BodyGraphicsData& data);
 

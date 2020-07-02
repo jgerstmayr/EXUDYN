@@ -1048,6 +1048,9 @@ Fv,     C,      GetType,                        ,               ,       CObjectT
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      CallUserFunction,               ,               ,       void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
+Fv,     V,      HasUserFunction,                ,               ,       bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+V,      V,      graphicsDataUserFunction,       ,               ,       PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates"
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
 writeFile = True
@@ -1153,6 +1156,9 @@ Fv,     C,      GetType,                        ,               ,       CObjectT
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      CallUserFunction,               ,               ,       void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
+Fv,     V,      HasUserFunction,                ,               ,       bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+V,      V,      graphicsDataUserFunction,       ,               ,       PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates"
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
 writeFile = True
@@ -1271,6 +1277,9 @@ Vp,     V,      show,                           ,               ,       bool,   
 V,      V,      color,                          ,               4,      Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})", ,  IO,      "RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 V,      V,      triangleMesh,                   ,               ,       NumpyMatrixI,"MatrixI()",               ,       IO,      "a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!"
 V,      V,      showNodes,                      ,               ,       bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
+Fv,     V,      CallUserFunction,               ,               ,       void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
+Fv,     V,      HasUserFunction,                ,               ,       bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+V,      V,      graphicsDataUserFunction,       ,               ,       PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization"
 #
 #done in VisualizationObjectSuperElement:
 #Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
@@ -1452,21 +1461,45 @@ outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all O
 classType = Object
 equations =
     \vspace{6pt}\\
+
+, 'Stress':'allows to compute linearized, corotational nodal stresses (in mesh nodes, in body frame) based on modal stress values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Stress', 'Strain':'allows to compute linearized, corotational nodal strains (in mesh nodes, in body frame) based on modal strain values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Strain'
+    The object additionally provides the following output variables for mesh nodes (use \\texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
+    \startTable{mesh node output variables}{symbol}{description}
+      \rowTable{Position}{$\LU{0}{\rv}_{n_i}$}{position of node with mesh node number $n_i$ in global coordinates}
+      \rowTable{Position}{$\LU{0}{\rv}_{n_i}$}{position of node with mesh node number $n_i$ in global coordinates}
+      \rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv}_{f,i}$}{local nodal mesh displacement in reference (body) frame}
+      \rowTable{VelocityLocal (mesh node $i$)}{$\LU{b}{\dot \uv}_{f,i}$}{local nodal mesh velocity in reference (body) frame}
+      \rowTable{Displacement (mesh node $i$)}{$\LU{0}{\uv}_{i,config} = \LU{0}{\qv}_{t,config} + \LU{0b}{\Am}_{config} \LU{b}{\pv}_{f,i,config} - (\LU{0}{\qv}_{t,ref} + \LU{0b}{\Am}_{ref} \LU{b}{\rv}_{f,i})$}{nodal mesh displacement in global coordinates}
+      \rowTable{Position (mesh node $i$)}{$\LU{0}{\pv}_{i} = \LU{0}{\pv}_t + \LU{0b}{\Am} \LU{b}{\pv}_{f,i}$}{nodal mesh displacement in global coordinates}
+      \rowTable{Velocity (mesh node $i$)}{$\LU{0}{\dot \uv}_{i} = \LU{0}{\dot \qv}_t + \LU{0b}{\Am} (\LU{b}{\dot \uv}_{f,i} + \LU{b}{\tilde \tomega} \LU{b}{\dot \uv}_{f,i})$}{nodal mesh velocity in global coordinates}
+      \rowTable{Stress (mesh node $i$)}{$\LU{b}{\tsigma}_{i} = (\tpsi_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized stress components of mesh node $i$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\tpsi_{OV}$ is provided and \texttt{outputVariableTypeModeBasis==exu.OutputVariableType.Stress}}
+      \rowTable{Strain (mesh node $i$)}{$\LU{b}{\teps}_{i} = (\tpsi_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized stress components of mesh node $i$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\tpsi_{OV}$ is provided and \texttt{outputVariableTypeModeBasis==exu.OutputVariableType.Strain}}
+    \finishTable
+%
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am}_{bd} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
+      \rowTable{coordinate vector}{$\qv = [\LU{0}{\qv}_t,\,\tpsi,\,\tzeta]$}{vector of object coordinates; $\qv_t$ and $\tpsi$ are the translation and rotation part of displacements of the reference frame, provided by the rigid body node (node number 0)}
+      \rowTable{reference frame position}{$\LU{0}{\pv}_{t,config} = \LU{0}{\qv}_{t,config} + \LU{0}{\qv}_{t,ref}$}{reference frame position in any configuration except reference}
+      \rowTable{reference frame rotation}{$\ttheta_{config} = \ttheta_{config} + \ttheta_{ref}$}{reference frame rotation parameters in any configuration except reference}
+%
+      \rowTable{vector of modal coordinates}{$\tzeta = [\zeta_0,\,\ldots,\zeta_{n_m-1}]\tp$}{vector of modal coordinates}
+      \rowTable{vector of mesh coordinates}{$\LU{b}{\qv}_f = \tpsi \tzeta$}{vector of alternating x,y, an z coordinates of local (in body frame) mesh displacements reconstructed from modal coordinates $\tzeta$}
+      %\rowTable{local mesh displacement vector}{$\LU{b}{\uv}_f = \mr{\LU{b}{\qv}_{f,0}}{\LU{b}{\qv}_{f,1}}{\LU{b}{\qv}_{f,2}} {\vdots}{\vdots}{\vdots} {\LU{b}{\qv}_{f,n_c-3}}{\LU{b}{\qv}_{f,n_c-2}}{\LU{b}{\qv}_{f,n_c-1}}\tp$}{vector nodal mesh displacement vectors in local coordinates (body frame)}
+      \rowTable{local mesh displacements}{$\LU{b}{\uv}_{f,i} = \vr{\LU{b}{\qv}_{f,i\cdot 3}}{\LU{b}{\qv}_{f,i\cdot 3+1}}{\LU{b}{\qv}_{f,i\cdot 3+2}}$}{nodal mesh displacement in local coordinates (body frame)}
+      \rowTable{local mesh position}{$\LU{b}{\pv}_{f,i} = \vr{\LU{b}{\qv}_{f,i\cdot 3}}{\LU{b}{\qv}_{f,i\cdot 3+1}}{\LU{b}{\qv}_{f,i\cdot 3+2}} + \vr{\LU{b}{\rv}_{f,i\cdot 3}}{\LU{b}{\rv}_{f,i\cdot 3+1}}{\LU{b}{\rv}_{f,i\cdot 3+2}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
     \finishTable
     %
-    Quantities:
+    Some definitions:
         \bi
-          \item object has two nodes
+          \item body frame (b) = reference frame
           \item $n_n$ ... number of mesh nodes
-          \item $n_c = 3 n_n$ ... number of mesh coordinates
+          \item $n_c = 3 \cdot n_n$ ... number of mesh coordinates
           \item $n_{rigid}$ ... number of rigid body node coordinates: 6 in case of Euler angles and 7 in case of Euler parameters
           \item $n_{ODE2} = n_c + n_{rigid}$ ... total number of object coordinates
           
           \item $n_m$ ... number of modal coordinates; computed from number of columns in modeBasis
-          \item $\tPhi$ ... mode basis, containing eigenmodes and static modes
-          \item $\xv_{f} $ ... node reference coordinates for mesh nodes
+          \item $\tpsi$ ... mode basis, containing eigenmodes and static modes
+          \item $\LU{b}{\rv}_{f} $ ... node reference coordinates for mesh nodes
         \ei
     
     {\bf Equations of motion}, in case that \texttt{computeFFRFterms = True} (NEEDS TO BE UPDATED FOR FFRF!!!!):
@@ -1492,8 +1525,10 @@ V,      CP,     forceUserFunction,              ,               ,       PyFuncti
 V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,       ,       IO,     "$\Mm_{user} \in \Rcal^{n_c\times n_c}$A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; this function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy matrix M: def f(t, q, q\_t): return (q[0]+1)*M"
 V,      CP,     computeFFRFterms,               ,               ,       bool,       "true",                     ,       IO,     "flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector"
 #
-V,      CP,     modeBasis,                      ,               ,       NumpyMatrix,"Matrix()",                 ,       I,      "$\tPhi \in \Rcal^{n_{c_f} \times n_{m}}$mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$"
-V,      CP,     referencePositions,             ,               ,       NumpyVector,"Vector()",                 ,       I,      "$\xv_{f} \in \Rcal^{n_f}$vector containing the reference positions of all flexible nodes, needed for graphics"
+V,      CP,     modeBasis,                      ,               ,       NumpyMatrix,"Matrix()",                 ,       I,      "$\tpsi \in \Rcal^{n_{c_f} \times n_{m}}$mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$"
+V,      CP,     outputVariableModeBasis,        ,               ,       NumpyMatrix,"Matrix()",                 ,       IO,     "$\tpsi_{OV} \in \Rcal^{n_{n} \times (n_{m}\cdot s_{OV})}$mode basis, which transforms reduced coordinates to output variables per mode; $s_{OV}$ is the size of the output variable, e.g., 6 for stress modes ($S_{xx},...,S_{xy}$)"
+V,      CP,     outputVariableTypeModeBasis,    ,               ,       OutputVariableType, "OutputVariableType::_None", , IO,  "this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress" 
+V,      CP,     referencePositions,             ,               ,       NumpyVector,"Vector()",                 ,       I,      "$\LU{b}{\rv}_{f} \in \Rcal^{n_f}$vector containing the reference positions of all flexible nodes, needed for graphics"
 #auto-computed quantities:
 #V,      C,      objectIsInitialized,            ,               ,       bool,       "false",                    ,       IO,     "flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed"
 V,      C,      physicsMass,                    ,               ,       UReal,      "0.",                       ,       IR,     "$m$total mass [SI:kg] of FFRF object, auto-computed from mass matrix $\Mm$"
@@ -1757,7 +1792,10 @@ Fv,     M,      CallFunction,                   ,               ,       py::obje
 #
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
-Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      UpdateGraphics,                 ,               ,      void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      CallUserFunction,               ,               ,      void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
+Fv,     V,      HasUserFunction,                ,               ,      bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+V,      V,      graphicsDataUserFunction,       ,               ,      PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function"
 V,      V,      color,                          ,               ,      Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,  "RGB node color; if R==-1, use default color" 
 V,      V,      graphicsData,                   ,               ,      BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name

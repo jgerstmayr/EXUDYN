@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -117,7 +117,11 @@ public: // AUTO:
         d["loadType"] = (std::string)GetTypeName();
         d["markerNumber"] = (Index)cLoadCoordinate->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["load"] = (Real)cLoadCoordinate->GetParameters().load; //! AUTO: cast variables into python (not needed for standard types) 
-        d["loadUserFunction"] = (std::function<Real(Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cLoadCoordinate->GetParameters().loadUserFunction)
+            {d["loadUserFunction"] = (std::function<Real(Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction;}
+        else
+            {d["loadUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationLoadCoordinate->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 

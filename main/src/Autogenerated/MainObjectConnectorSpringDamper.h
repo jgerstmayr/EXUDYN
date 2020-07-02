@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -128,7 +128,11 @@ public: // AUTO:
         d["damping"] = (Real)cObjectConnectorSpringDamper->GetParameters().damping; //! AUTO: cast variables into python (not needed for standard types) 
         d["force"] = (Real)cObjectConnectorSpringDamper->GetParameters().force; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorSpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["springForceUserFunction"] = (std::function<Real(Real,Real,Real,Real,Real,Real)>)cObjectConnectorSpringDamper->GetParameters().springForceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectConnectorSpringDamper->GetParameters().springForceUserFunction)
+            {d["springForceUserFunction"] = (std::function<Real(Real,Real,Real,Real,Real,Real)>)cObjectConnectorSpringDamper->GetParameters().springForceUserFunction;}
+        else
+            {d["springForceUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorSpringDamper->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectConnectorSpringDamper->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 

@@ -20,20 +20,25 @@
 #pragma once
 #include "Linalg/BasicLinalg.h"
 
-class VisualizationSystem; //predefined to be used in definition of base visualizationItem classes
-class VisualizationSettings; //predefined for update graphics
-//class MatrixI;
-//class Float4;
-//#include "Graphics/VisualizationPrimitives.h"
+class VisualizationSystem;		//predefined to be used in definition of base visualizationItem classes
+class VisualizationSettings;	//predefined for update graphics
+class MainSystem;				//for user functions
 
 //! base class for visualization of object
 class VisualizationObject
 {
 protected:
-	bool show; //true: shall be drawn; false: no not draw; will be initialized in specialized class
+	bool show; //true: shall be drawn; false: do not draw; will be initialized in specialized class
 public:
 	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) {};
+	
+	//! overide this class to realize a user function for object
+	virtual void CallUserFunction(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber) {};
+
+	//! this function needs to be overwritten, if the object has a graphics user function
+	virtual bool HasUserFunction() { return false; };
+
 	//! decides whether to draw the item
 	virtual bool GetShow() const { return show; }
 	virtual void SetShow(bool value) { show = value; }

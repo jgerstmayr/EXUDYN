@@ -70,8 +70,17 @@ simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-6
 simulationSettings.timeIntegration.verboseMode = 1
 
 #execute this python code in the same scope as this file at beginning of every time step:
-s = "if mbs.systemData.GetCurrentTime() > 0.3: mbs.SetObjectParameter(" + str(oRJoint) + ", 'activeConnector', False)\n" + "if mbs.systemData.GetCurrentTime() > 0.1: mbs.SetObjectParameter(" + str(oConstraint0) + ", 'activeConnector', False);mbs.SetObjectParameter(" + str(oConstraint1) + ", 'activeConnector', False)\n"
-simulationSettings.timeIntegration.preStepPyExecute = s
+#s = "if mbs.systemData.GetCurrentTime() > 0.3: mbs.SetObjectParameter(" + str(oRJoint) + ", 'activeConnector', False)\n" + "if mbs.systemData.GetCurrentTime() > 0.1: mbs.SetObjectParameter(" + str(oConstraint0) + ", 'activeConnector', False);mbs.SetObjectParameter(" + str(oConstraint1) + ", 'activeConnector', False)\n"
+#simulationSettings.timeIntegration.preStepPyExecute = s
+def UFswitchConnector(mbs, t):
+    if t > 0.3: 
+        mbs.SetObjectParameter(oRJoint, 'activeConnector', False)
+    if t > 0.1: 
+        mbs.SetObjectParameter(oConstraint0, 'activeConnector', False)
+        mbs.SetObjectParameter(oConstraint1, 'activeConnector', False)
+    return True #True, means that everything is alright, False=stop simulation
+
+mbs.SetPreStepUserFunction(UFswitchConnector)
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
@@ -87,7 +96,7 @@ SC.visualizationSettings.openGL.multiSampling = 1
 exu.StartRenderer()
 
 SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
-print('end time =',mbs.systemData.GetCurrentTime()) #time after time integration ...
+print('end time =',mbs.systemData.GetTime()) #time after time integration ...
 #print('solution =',mbs.systemData.GetODE2Coordinates()) #solution coordinates after time integration ...
 
 mbs.WaitForUserToContinue()

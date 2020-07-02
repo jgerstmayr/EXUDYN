@@ -39,6 +39,7 @@ void MainSystem::Reset()
 {
 	mainSystemData.Reset(); //
 	GetCSystem()->GetSystemData().Reset();
+	GetCSystem()->GetPythonUserFunctions().Reset();
 	GetCSystem()->Initialize();
 	visualizationSystem.Reset();
 	interactiveMode = false;
@@ -54,6 +55,13 @@ void MainSystem::InteractiveModeActions()
 	}
 }
 
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+void MainSystem::PySetPreStepUserFunction(const py::object& value)
+{
+	cSystem->GetPythonUserFunctions().preStepFunction = py::cast<std::function <bool(const MainSystem& mainSystem, Real t)>>(value);
+	cSystem->GetPythonUserFunctions().mainSystem = this;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  VISUALIZATION FUNCTIONS
@@ -65,6 +73,7 @@ void MainSystem::InteractiveModeActions()
 bool MainSystem::LinkToRenderEngine()
 {
 	visualizationSystem.LinkToSystemData(&GetCSystem()->GetSystemData());
+	visualizationSystem.LinkToMainSystem(this);
 	visualizationSystem.LinkPostProcessData(GetCSystem()->GetPostProcessData());
 	return true; // visualizationSystem.LinkToRenderEngine(*GetCSystem());
 }

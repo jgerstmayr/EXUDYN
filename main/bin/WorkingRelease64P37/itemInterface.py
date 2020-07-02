@@ -465,16 +465,18 @@ Rotor1D = ObjectRotationalMass1D
 VRotor1D = VObjectRotationalMass1D
 
 class VObjectRigidBody:
-    def __init__(self, show = True, graphicsData = []):
+    def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
         self.show = show
+        self.graphicsDataUserFunction = graphicsDataUserFunction
         self.graphicsData = graphicsData
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
         yield 'graphicsData', self.graphicsData
 
 class ObjectRigidBody:
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = -1, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = -1, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
@@ -490,6 +492,7 @@ class ObjectRigidBody:
         yield 'physicsCenterOfMass', self.physicsCenterOfMass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
 #add typedef for short usage:
@@ -497,16 +500,18 @@ RigidBody = ObjectRigidBody
 VRigidBody = VObjectRigidBody
 
 class VObjectRigidBody2D:
-    def __init__(self, show = True, graphicsData = []):
+    def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
         self.show = show
+        self.graphicsDataUserFunction = graphicsDataUserFunction
         self.graphicsData = graphicsData
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
         yield 'graphicsData', self.graphicsData
 
 class ObjectRigidBody2D:
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = -1, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = -1, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
@@ -520,6 +525,7 @@ class ObjectRigidBody2D:
         yield 'physicsInertia', self.physicsInertia
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
 #add typedef for short usage:
@@ -527,20 +533,22 @@ RigidBody2D = ObjectRigidBody2D
 VRigidBody2D = VObjectRigidBody2D
 
 class VObjectGenericODE2:
-    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, graphicsDataUserFunction = 0):
         self.show = show
         self.color = color
         self.triangleMesh = triangleMesh
         self.showNodes = showNodes
+        self.graphicsDataUserFunction = graphicsDataUserFunction
 
     def __iter__(self):
         yield 'show', self.show
         yield 'color', self.color
         yield 'triangleMesh', self.triangleMesh
         yield 'showNodes', self.showNodes
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
 
 class ObjectGenericODE2:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrix = massMatrix
@@ -565,6 +573,7 @@ class ObjectGenericODE2:
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
 
 class VObjectFFRF:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
@@ -624,7 +633,7 @@ class VObjectFFRFreducedOrder:
         yield 'showNodes', self.showNodes
 
 class ObjectFFRFreducedOrder:
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], referencePositions = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrixReduced = massMatrixReduced
@@ -634,6 +643,8 @@ class ObjectFFRFreducedOrder:
         self.massMatrixUserFunction = massMatrixUserFunction
         self.computeFFRFterms = computeFFRFterms
         self.modeBasis = modeBasis
+        self.outputVariableModeBasis = outputVariableModeBasis
+        self.outputVariableTypeModeBasis = outputVariableTypeModeBasis
         self.referencePositions = referencePositions
         self.visualization = visualization
 
@@ -648,6 +659,8 @@ class ObjectFFRFreducedOrder:
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'computeFFRFterms', self.computeFFRFterms
         yield 'modeBasis', self.modeBasis
+        yield 'outputVariableModeBasis', self.outputVariableModeBasis
+        yield 'outputVariableTypeModeBasis', self.outputVariableTypeModeBasis
         yield 'referencePositions', self.referencePositions
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
@@ -757,18 +770,20 @@ ALECable2D = ObjectALEANCFCable2D
 VALECable2D = VObjectALEANCFCable2D
 
 class VObjectGround:
-    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], graphicsData = []):
+    def __init__(self, show = True, graphicsDataUserFunction = 0, color = [-1.,-1.,-1.,-1.], graphicsData = []):
         self.show = show
+        self.graphicsDataUserFunction = graphicsDataUserFunction
         self.color = color
         self.graphicsData = graphicsData
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
         yield 'color', self.color
         yield 'graphicsData', self.graphicsData
 
 class ObjectGround:
-    def __init__(self, name = '', referencePosition = [0.,0.,0.], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
+    def __init__(self, name = '', referencePosition = [0.,0.,0.], visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
         self.name = name
         self.referencePosition = referencePosition
         self.visualization = visualization
@@ -778,6 +793,7 @@ class ObjectGround:
         yield 'name', self.name
         yield 'referencePosition', self.referencePosition
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 

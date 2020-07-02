@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-06-24  22:25:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,7 +130,11 @@ public: // AUTO:
         d["dryFriction"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().dryFriction; //! AUTO: cast variables into python (not needed for standard types) 
         d["dryFrictionProportionalZone"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().dryFrictionProportionalZone; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["springForceUserFunction"] = (std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
+        if (cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction)
+            {d["springForceUserFunction"] = (std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)>)cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction;}
+        else
+            {d["springForceUserFunction"] = 0;}
+ //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorCoordinateSpringDamper->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectConnectorCoordinateSpringDamper->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 

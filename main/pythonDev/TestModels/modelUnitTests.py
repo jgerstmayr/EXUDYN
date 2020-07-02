@@ -807,10 +807,15 @@ def SwitchingConstraintsTest(mbs, testInterface):
 
     #execute this python code in the same scope as this file at beginning of every time step:
     #2019-12-18: subtract deltaT=1e-8 in order to avoid round off effects in 1e-16 regime
-
-    s = "if mbs.systemData.GetTime() > (0.3 + 1e-8): mbs.SetObjectParameter(" + str(oRJoint) + ", 'activeConnector', False)\n" + "if mbs.systemData.GetTime() > (0.1 + 1e-8): mbs.SetObjectParameter(" + str(oConstraint0) + ", 'activeConnector', False);mbs.SetObjectParameter(" + str(oConstraint1) + ", 'activeConnector', False)\n"
-    #s = "if mbs.systemData.GetCurrentTime() > (0.3 + 1e-8): mbs.SetObjectParameter(" + str(oRJoint) + ", 'activeConnector', False)\n" + "if mbs.systemData.GetCurrentTime() > (0.1 + 1e-8): mbs.SetObjectParameter(" + str(oConstraint0) + ", 'activeConnector', False);mbs.SetObjectParameter(" + str(oConstraint1) + ", 'activeConnector', False)\n"
-    simulationSettings.timeIntegration.preStepPyExecute = s
+    def UFswitchConnector(mbs, t):
+        if t > (0.3 + 1e-8): 
+            mbs.SetObjectParameter(oRJoint, 'activeConnector', False)
+        if t > (0.1 + 1e-8): 
+            mbs.SetObjectParameter(oConstraint0, 'activeConnector', False)
+            mbs.SetObjectParameter(oConstraint1, 'activeConnector', False)
+        return True #True, means that everything is alright, False=stop simulation
+    
+    mbs.SetPreStepUserFunction(UFswitchConnector)
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1

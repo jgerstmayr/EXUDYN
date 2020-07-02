@@ -133,15 +133,19 @@ SC.visualizationSettings.bodies.showNumbers = False
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.025
 
-simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
+simulationSettings.solutionSettings.solutionInformation = "ANCF test halfcircle"
 
 solveDynamic = False
 if solveDynamic: 
     exu.StartRenderer()
-    #simulationSettings.timeIntegration.preStepPyExecute = "print('test call for integration')\n"
-    #simulationSettings.timeIntegration.preStepPyExecute = "v=mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[2,0,0],'configuration':'Current'})\nprint('angVel='+str(v))\n"
+    simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-9*0.25
     
-    simulationSettings.timeIntegration.preStepPyExecute = "mbs.SetLoadParameter(0,'loadVector',[0, 0, E*I*3.141592653589793*mbs.systemData.GetCurrentTime()])"
+    def UFchangeLoad(mbs, t):
+        mbs.SetLoadParameter(0,'loadVector',[0, 0, E*I*3.141592653589793*t])
+        return True #True, means that everything is alright, False=stop simulation
+    
+    mbs.SetPreStepUserFunction(UFchangeLoad)
+    #simulationSettings.timeIntegration.preStepPyExecute = "mbs.SetLoadParameter(0,'loadVector',[0, 0, E*I*3.141592653589793*mbs.systemData.GetCurrentTime()])"
 
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
     #v = mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[L/2,0,0],'configuration':'Current'})

@@ -204,7 +204,6 @@ Index CObjectFFRF::GetODE2Size() const
 
 void CObjectFFRF::InitializeObject()
 {
-//#define CObjectFFRFInitializeObjectOutput
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//initialize coordinate indices
 	coordinateIndexPerNode.SetNumberOfItems(parameters.nodeNumbers.NumberOfItems());
@@ -242,7 +241,7 @@ void CObjectFFRF::InitializeObject()
 	Matrix xRefTilde(nODE2FF, ffrfNodeDim);
 	for (Index i = 0; i < nM; i++)
 	{
-		Vector3D x = GetMeshNodePosition(i, ConfigurationType::Reference);
+		Vector3D x = GetMeshNodeLocalPosition(i, ConfigurationType::Reference); //previously: GetMeshNodePosition ==> leads to wrong results, if reference position is wrong ...!
 
 		for (Index j = 0; j < ffrfNodeDim; j++)
 		{
@@ -261,13 +260,14 @@ void CObjectFFRF::InitializeObject()
 	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(xRefTilde, xRefTildeTM);
 	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(xRefTildeTM, xRefTilde, physicsInertia);
 
+//#define CObjectFFRFInitializeObjectOutput
 #ifdef CObjectFFRFInitializeObjectOutput
 	pout << "PHIt = " << PHIt.GetSubmatrix(0, 0, 6, 3) << "\n";
 	pout << "PHItTM = " << PHItTM.GetSubmatrix(0, 0, 3, 6) << "\n";
 	pout << "xRefTilde size = " << xRefTilde.NumberOfRows() << "," << xRefTilde.NumberOfColumns() << "\n";
 	pout << "xRefTilde = " << xRefTilde.GetSubmatrix(0, 0, 6, 3) << "\n";
-	pout << "inertiaLocal = " << inertiaLocal << "\n";
-	pout << "parameters.physicsMass = " << parameters.physicsMass << "\n";
+	pout << "inertiaLocal = " << physicsInertia << "\n";
+	pout << "parameters.physicsMass = " << physicsMass << "\n";
 	pout << "Mtt = " << Mtt << "\n";
 #endif
 
@@ -439,8 +439,13 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 
 		if (parameters.dampingMatrixFF.NumberOfRows() != 0)
 		{
-			//EXUmath::MultMatrixVectorAdd(parameters.localDampingMatrix, coordinatesFF_t, ode2RhsFF);
 			parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, ode2RhsFF);
+
+			//delete:
+			//Vector test = ode2RhsFF;
+			//test *= 0;
+			//parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, test);
+			//pout << "|damping term|=" << test.GetL2Norm() << "\n";
 		}
 
 		if (parameters.forceVector.NumberOfItems() != 0)

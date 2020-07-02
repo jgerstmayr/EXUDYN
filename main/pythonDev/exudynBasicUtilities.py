@@ -117,8 +117,38 @@ def Tilde2Vec(m):
     return [-m[1][2], m[0][2], -m[0][1]]
 
 
+gaussIntegrationPoints=[[0],
+                        [-(1. / 3.)**0.5, (1. / 3.)**0.5],
+                        [-(3. / 5.)**0.5, 0., (3. / 5.)**0.5],
+                        [-(3. / 7. + (120.)**0.5 / 35.)**0.5, -(3. / 7. - (120.)**0.5 / 35.)**0.5, (3. / 7. - (120.)**0.5 / 35.)**0.5, (3. / 7. + (120.)**0.5 / 35.)**0.5],
+                        [-0.906179845938664, -0.5384693101056831, 0., 0.5384693101056831, 0.906179845938664],
+                        ]
 
+gaussIntegrationWeights=[[2],
+                         [1., 1.],
+                         [5. / 9., 8. / 9., 5. / 9.],
+                         [1. / 2. - 5. / (3.*(120.)**0.5), 1. / 2. + 5. / (3.*(120.)**0.5), 1. / 2. + 5. / (3.*(120.)**0.5), 1. / 2. - 5. / (3.*(120.)**0.5)],
+                         [0.23692688505618914, 0.47862867049936636, 0.5688888888888889, 0.47862867049936636, 0.23692688505618914],
+                         ]
 
+#numerically integrate a scalar function with integration Order in interval [a,b]
+def GaussIntegrate(functionOfX, integrationOrder, a, b):
+    cnt = 0
+    value = 0*functionOfX(0) #initialize value with correct shape
+    if integrationOrder > 9:
+        raise ValueError("GaussIntegrate: maximum implemented integration order is 9!")
+    if integrationOrder%2 != 1 or integrationOrder < 1:
+        raise ValueError("GaussIntegrate: integration order must be odd (1,3,5,...) and > 0")
+    
+    points = gaussIntegrationPoints[int(integrationOrder/2)]
+    weights = gaussIntegrationWeights[int(integrationOrder/2)]
+    
+    for p in points:
+        x = 0.5*(b - a)*p + 0.5*(b + a)
+        value += 0.5*(b - a)*weights[cnt]*functionOfX(x);
+        cnt += 1
+
+    return value
 
 
 

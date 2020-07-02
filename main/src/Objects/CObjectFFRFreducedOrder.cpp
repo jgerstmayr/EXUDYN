@@ -47,7 +47,7 @@ bool MainObjectFFRFreducedOrder::CheckPreAssembleConsistency(const MainSystem& m
 	//Index nODE2test = cObject->GetODE2Size(); //NOT AVAILABLE YET
 	
 	Index nODE2Rigid = cObject->GetCNode(cObject->rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
-	Index nODE2FF = cObject->GetCNode(cObject->genericNodeNumber)->GetNumberOfODE2Coordinates();
+	Index nODE2FF = cObject->GetCNode(cObject->genericNodeNumber)->GetNumberOfODE2Coordinates(); //number of modal coordinates
 	Index nODE2 = nODE2Rigid+nODE2FF; //total number of coordinates
 
 	if (numberOfNodes != 2)
@@ -179,6 +179,27 @@ bool MainObjectFFRFreducedOrder::CheckPreAssembleConsistency(const MainSystem& m
 		}
 	}
 
+	if (cObject->GetParameters().outputVariableTypeModeBasis == OutputVariableType::Stress ||
+		cObject->GetParameters().outputVariableTypeModeBasis == OutputVariableType::Strain)
+	{
+		if (cObject->GetParameters().outputVariableModeBasis.NumberOfColumns() < nODE2FF * 6)
+		{
+			errorString = "ObjectFFRFreducedOrder: if outputVariableTypeModeBasis is set, the outputVariableModeBasis must have >= (6 * number of modal coordinates) columns; number of modal coordinates of object is " + EXUstd::ToString(nODE2FF);
+			return false;
+
+		}
+		if (cObject->GetParameters().outputVariableModeBasis.NumberOfRows() != numberOfMeshNodes)
+		{
+			errorString = "ObjectFFRFreducedOrder: if outputVariableTypeModeBasis is set, the outputVariableModeBasis must have number of mesh nodes rows; number of mesh nodes is " + EXUstd::ToString(numberOfMeshNodes);
+			return false;
+
+		}
+	}
+	else if (cObject->GetParameters().outputVariableTypeModeBasis != OutputVariableType::_None)
+	{
+		errorString = "ObjectFFRFreducedOrder: if outputVariableTypeModeBasis may be of type Stress, Strain or _None";
+		return false;
+	}
 
 	return true;
 }
@@ -328,8 +349,9 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix) const
 #endif
 		//++++++++++++++++++++++++++++++++
 		//Mff:
+		//currently, this matrix is zero if CMS user function is used!
 		massMatrix.AddSubmatrix(parameters.massMatrixReduced.GetEXUdenseMatrix(), nODE2Rigid, nODE2Rigid); //inefficient ...==> add functionality for sparse matrices!
-		
+
 #ifdef CObjectFFRFreducedOrderComputeMassMatrixOutput
 		pout << "Mtt Mtr Mtf=" << massMatrix.GetSubmatrix(0, 0, 3, 10) << "\n";
 		pout << "Mrr        =" << massMatrix.GetSubmatrix(3, 3, 4, 4) << "\n";
@@ -950,12 +972,22 @@ OutputVariableType CObjectFFRFreducedOrder::GetOutputVariableTypesSuperElement(I
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetOutputVariableSuperElement: meshNodeNumber out of range ");
 	//independent of meshNodeNumber!!!
-	return (OutputVariableType)(
+	OutputVariableType ovt = (OutputVariableType)(
 		(Index)OutputVariableType::Position +
 		(Index)OutputVariableType::Displacement +
 		(Index)OutputVariableType::Velocity +
 		(Index)OutputVariableType::DisplacementLocal +
 		(Index)OutputVariableType::VelocityLocal);
+	if (parameters.outputVariableTypeModeBasis == OutputVariableType::Stress) 
+	{
+		ovt = (OutputVariableType)((Index)ovt + (Index)OutputVariableType::Stress);
+	}
+	else if (parameters.outputVariableTypeModeBasis == OutputVariableType::Strain)
+	{
+		ovt = (OutputVariableType)((Index)ovt + (Index)OutputVariableType::Strain);
+	}
+
+	return ovt;
 }
 
 //! get extended output variables for multi-nodal objects with mesh nodes
@@ -969,6 +1001,46 @@ void CObjectFFRFreducedOrder::GetOutputVariableSuperElement(OutputVariableType v
 
 	case OutputVariableType::DisplacementLocal:	value.CopyFrom(GetMeshNodeLocalPosition(meshNodeNumber, configuration) - GetMeshNodeLocalPosition(meshNodeNumber, ConfigurationType::Reference));	break;
 	case OutputVariableType::VelocityLocal:	value.CopyFrom(GetMeshNodeLocalVelocity(meshNodeNumber, configuration));	break;
+	case OutputVariableType::Stress:
+	{
+		value.SetNumberOfItems(6);
+		value.SetAll(0);
+		const Matrix& PsiS = parameters.outputVariableModeBasis;
+
+		//stresses are based on modal displacements only
+		LinkedDataVector coordinates = ((CNodeODE2*)GetCNode(genericNodeNumber))->GetCoordinateVector(configuration);
+
+		Index nModes = parameters.modeBasis.NumberOfColumns();
+
+		for (Index i = 0; i < 6; i++) //stress component
+		{
+			for (Index j = 0; j < nModes; j++) //iteration over all modes / modal coordinates
+			{
+				value[i] += PsiS(meshNodeNumber, j * 6 + i) * coordinates[j];
+			}
+		}
+		break;
+	}
+	case OutputVariableType::Strain:
+	{
+		value.SetNumberOfItems(6);
+		value.SetAll(0);
+		const Matrix& PsiS = parameters.outputVariableModeBasis;
+
+		//stresses are based on modal displacements only
+		LinkedDataVector coordinates = ((CNodeODE2*)GetCNode(genericNodeNumber))->GetCoordinateVector(configuration);
+
+		Index nModes = parameters.modeBasis.NumberOfColumns();
+
+		for (Index i = 0; i < 6; i++) //strain component
+		{
+			for (Index j = 0; j < nModes; j++) //iteration over all modes / modal coordinates
+			{
+				value[i] += PsiS(meshNodeNumber, j*6+i) * coordinates[j];
+			}
+		}
+		break;
+	}
 	default:
 		SysError("CObjectFFRFreducedOrder::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

@@ -267,6 +267,9 @@
     <ClCompile Include="..\src\Objects\CObjectConnectorRollingDiscPenalty.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics\VisualizationUserFunctions.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\linalg\LinkedDataVector.h">

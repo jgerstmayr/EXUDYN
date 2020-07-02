@@ -23,6 +23,9 @@
 //#include "Graphics/VisualizationSystem.h"
 #include "Graphics/VisualizationSystemContainer.h"  //includes everything needed
 
+#include "Main/MainSystemData.h"	//for backlink to main system
+#include "Main/MainSystem.h"		//for backlink to main system
+
 #ifdef USE_GLFW_GRAPHICS
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
 #endif
@@ -34,6 +37,10 @@ void VisualizationSystem::Reset()
 	graphicsData.FlushData();
 	graphicsData.GetUpdateGraphicsDataNow() = false;
 
+	postProcessData->requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+	postProcessData->requestUserFunctionDrawing = false;
+	postProcessData->requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+
 	GetVisualizationSystemData().Reset();
 }
 
@@ -42,9 +49,15 @@ void VisualizationSystem::LinkToSystemData(CSystemData* systemDataInit)
 	systemData = systemDataInit;
 }
 
+void VisualizationSystem::LinkToMainSystem(MainSystem* mainSystemInit)
+{
+	mainSystemUF = mainSystemInit;
+}
+
 void VisualizationSystem::LinkPostProcessData(PostProcessData* postProcessDataInit)
 {
 	postProcessData = postProcessDataInit;
+	postProcessData->visualizationSystem = this;
 }
 
 //! Renderer reports to simulation that simulation shall be interrupted
@@ -53,7 +66,8 @@ void VisualizationSystem::StopSimulation()
 	postProcessData->stopSimulation = true;
 }
 
-//! OpenGL renderer sends message that graphics shall be updated ==> update graphics data
+bool visualizationSystemUpdateGraphicsDataTimeoutWarned = false;
+//! OpenGL renderer calls UpdateGraphicsData (different thread) to update graphics data
 void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visualizationSystemContainer)
 {
 	postProcessData->accessState.test_and_set(std::memory_order_acquire); //computation thread must be interrupted before further update
@@ -79,6 +93,45 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 		Index cnt;
 		postProcessData->visualizationTime = systemData->GetCData().GetVisualization().GetTime(); //update time, synchronized with the state shown 
+
+		//++++++++++++++++++++++++++++++++++++++++++++++
+		//call object user functions
+		bool systemHasUserFunction = false;
+		for (auto item : vSystemData.GetVisualizationObjects())
+		{
+			if (item->GetShow() && ((!(item->IsConnector()) && visualizationSystemContainer.settings.bodies.show) ||
+				(item->IsConnector() && visualizationSystemContainer.settings.connectors.show) ))
+			{
+				if (item->HasUserFunction()) { systemHasUserFunction = true; break; };
+			}
+		}
+		if (systemHasUserFunction)
+		{
+			postProcessData->requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+			postProcessData->requestUserFunctionDrawing = true;
+			postProcessData->requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+
+			visualizationSettingsUF = &visualizationSystemContainer.settings;
+			Index timeout = 100; //avoid complete hang up, if computation stucks ==> graphics data will be inconsistent ...
+			Index cnt = 0;
+			while (postProcessData->requestUserFunctionDrawing && cnt++ < timeout)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(2)); //wait for computation thread to complete computation of user function's graphicsData
+			}
+			//this will wait in case to complete the current drawing in python (and could possibly hang up ...)
+			postProcessData->requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+			postProcessData->requestUserFunctionDrawing = false;
+			postProcessData->requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+
+			if (cnt >= timeout && !visualizationSystemUpdateGraphicsDataTimeoutWarned)
+			{
+				visualizationSystemUpdateGraphicsDataTimeoutWarned = true;
+				//std::cout << "timeout for user function drawing, reduce complexity of user function drawing. Further warnings suppressed!\n";
+				PyQueueExecutableString("print('timeout for user function drawing, reduce complexity of user function drawing. Further warnings suppressed!')");
+			}
+			//(requestUserFunctionDrawing = false; set in other thread ....)
+
+		}
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
 		//visualize nodes:
@@ -113,7 +166,10 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 			cnt = 0;
 			for (auto item : vSystemData.GetVisualizationObjects())
 			{
-				if (item->GetShow() && !(item->IsConnector())) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+				if (item->GetShow() && !(item->IsConnector())) 
+				{ 
+					item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); 
+				}
 				cnt++; //synchronize itemNumber with item!!!
 			}
 		}
