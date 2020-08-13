@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINSENSOR__H
+#define MAINSENSOR__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -33,6 +34,7 @@ class MainSensor
 protected:
 	STDstring name;
 public:
+	virtual ~MainSensor() {} //added for correct deletion of derived classes
 	virtual MainSensor* GetClone() const { return new MainSensor(*this); }
 
 	virtual STDstring& GetName() { return name; }
@@ -66,3 +68,4 @@ public:
 
 };
 
+#endif

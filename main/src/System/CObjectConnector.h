@@ -20,7 +20,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef COBJECTCONNECTOR__H
+#define COBJECTCONNECTOR__H
 
 
 #include "Main/MarkerData.h" 
@@ -163,3 +164,4 @@ public:
 };
 
 
+#endif

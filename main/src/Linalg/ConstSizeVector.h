@@ -35,7 +35,8 @@
 *   cout << "v6=" << v << "\n";
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef CONSTSIZEVECTORBASE__H
+#define CONSTSIZEVECTORBASE__H
 
 #include "Linalg/Vector.h"
 
@@ -262,3 +263,5 @@ typedef ConstSizeVector<4> CSVector4D;
 template<Index dataSize>
 using ConstSizeVectorF = ConstSizeVectorBase<float, dataSize>;
 
+
+#endif

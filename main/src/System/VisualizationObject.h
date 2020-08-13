@@ -17,7 +17,9 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONOBJECT__H
+#define VISUALIZATIONOBJECT__H
+
 #include "Linalg/BasicLinalg.h"
 
 class VisualizationSystem;		//predefined to be used in definition of base visualizationItem classes
@@ -30,6 +32,7 @@ class VisualizationObject
 protected:
 	bool show; //true: shall be drawn; false: do not draw; will be initialized in specialized class
 public:
+	virtual ~VisualizationObject() {} //added for correct deletion of derived classes
 	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) {};
 	
@@ -52,6 +55,11 @@ public:
 		os << ")";
 	}
 
+	//! the ostream operator<< is only defined in base class and calls the Print(...) method of the derived class; this calls the correct method also in the ResizableArray<CObject*>
+	friend std::ostream& operator<<(std::ostream& os, const VisualizationObject& item) {
+		item.Print(os);
+		return os;
+	}
 };
 
 //! base class for visualization of object
@@ -86,11 +94,13 @@ public:
 		os << ")";
 	}
 
+
 };
 
-//! the ostream operator<< is only defined in base class and calls the Print(...) method of the derived class; this calls the correct method also in the ResizableArray<CObject*>
-inline std::ostream& operator<<(std::ostream& os, const VisualizationObject& item) {
-	item.Print(os);
-	return os;
-}
+////! the ostream operator<< is only defined in base class and calls the Print(...) method of the derived class; this calls the correct method also in the ResizableArray<CObject*>
+//inline std::ostream& operator<<(std::ostream& os, const VisualizationObject& item) {
+//	item.Print(os);
+//	return os;
+//}
 
+#endif

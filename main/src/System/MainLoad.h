@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINLOAD__H
+#define MAINLOAD__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -34,6 +35,7 @@ class MainLoad
 protected:
 	STDstring name;
 public:
+	virtual ~MainLoad() {} //added for correct deletion of derived classes
 	virtual MainLoad* GetClone() const { return new MainLoad(*this); }
 
 	virtual STDstring& GetName() { return name; }
@@ -67,3 +69,4 @@ public:
 
 };
 
+#endif

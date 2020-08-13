@@ -13,7 +13,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef BASICFUNCTIONS__H
+#define BASICFUNCTIONS__H
 
 //for chrono / datetime:
 #include <iostream>
@@ -216,3 +217,4 @@ namespace EXUstd {
 
 } //namespace EXUstd
 
+#endif

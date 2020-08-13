@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-08-11  21:25:32 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
+
+#ifndef COBJECTCONTACTCIRCLECABLE2DPARAMETERS__H
+#define COBJECTCONTACTCIRCLECABLE2DPARAMETERS__H
 
 #include <ostream>
 
@@ -60,7 +62,6 @@ public: // AUTO:
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 
@@ -74,7 +75,7 @@ protected: // AUTO:
     CObjectContactCircleCable2DParameters parameters; //! AUTO: contains all parameters for CObjectContactCircleCable2D
 
 public: // AUTO: 
-    static const Index maxNumberOfSegments = 12; //maximum number of contact segments
+    static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -158,3 +159,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

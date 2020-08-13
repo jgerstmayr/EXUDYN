@@ -122,7 +122,7 @@ if addSupports:
     k = 2e8*100     #joint stiffness
     d = k*0.01  #joint damping
 
-    useSpringDamper = True
+    useGenericJoint = True
 
 #    mLeft = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=objFFRF['oFFRFreducedOrder'], 
 #                                                    meshNodeNumbers=np.array(nodeListLeft), #these are the meshNodeNumbers
@@ -146,7 +146,7 @@ if addSupports:
                                                   referencePosition=pLeft,
                                                   meshNodeNumbers=np.array(nodeListLeft), #these are the meshNodeNumbers
                                                   weightingFactors=weightsLeft))
-    if useSpringDamper:
+    if useGenericJoint:
 #        oSJleft = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mLeftRigid, mGroundPosLeft],
 #                                            stiffness=[k,k,k], damping=[d,d,d]))
 #        oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRight,mGroundPosRight],

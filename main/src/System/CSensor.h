@@ -12,7 +12,8 @@
 				- weblink: missing
 				
 ************************************************************************************************ */
-#pragma once
+#ifndef CSENSOR__H
+#define CSENSOR__H
 
 #include <ostream>
 
@@ -28,6 +29,7 @@ class CSensor
 protected: 
 
 public: 
+	virtual ~CSensor() {} //added for correct deletion of derived classes
 
 	//! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
 	virtual CSensor* GetClone() const { return new CSensor(*this); }
@@ -130,4 +132,4 @@ public:
 };
 
 
-
+#endif

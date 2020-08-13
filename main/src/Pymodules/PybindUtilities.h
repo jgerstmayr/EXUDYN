@@ -13,7 +13,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef PYBINDUTILITIES__H
+#define PYBINDUTILITIES__H
 
 #include "Linalg/MatrixContainer.h"	
 
@@ -324,7 +325,7 @@ namespace EPyUtils {
 		}
 		else if (pyArray.ndim() == 2)
 		{
-			auto mat = pyArray.unchecked<2>();
+			auto mat = pyArray.template unchecked<2>(); //template keyword needed for gcc, see: https://github.com/pybind/pybind11/issues/1412
 			Index nrows = mat.shape(0);
 			Index ncols = mat.shape(1);
 
@@ -349,7 +350,7 @@ namespace EPyUtils {
 	{
 		if (pyArray.ndim() == 1)
 		{
-			auto pyVec = pyArray.unchecked<1>();
+			auto pyVec = pyArray.template unchecked<1>();//template keyword needed for gcc, see: https://github.com/pybind/pybind11/issues/1412
 			v.SetNumberOfItems(pyVec.shape(0));
 
 			for (Index i = 0; i < v.NumberOfItems(); i++)
@@ -448,3 +449,4 @@ namespace EPyUtils {
 
 } //namespace HPyUtils
 
+#endif

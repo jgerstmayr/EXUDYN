@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-01  20:10:12 (last modfied)
+* @date         2020-08-11  21:25:32 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
+
+#ifndef CMARKERBODYCABLE2DSHAPEPARAMETERS__H
+#define CMARKERBODYCABLE2DSHAPEPARAMETERS__H
 
 #include <ostream>
 
@@ -48,7 +50,6 @@ public: // AUTO:
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 
@@ -59,7 +60,7 @@ public: // AUTO:
 class CMarkerBodyCable2DShape: public CMarker // AUTO: 
 {
 protected: // AUTO: 
-    static const Index maxNumberOfSegments = 12; //maximum number of contact segments
+    static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
     CMarkerBodyCable2DShapeParameters parameters; //! AUTO: contains all parameters for CMarkerBodyCable2DShape
 
 public: // AUTO: 
@@ -97,3 +98,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

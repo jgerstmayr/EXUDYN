@@ -91,7 +91,7 @@ bool MatrixBase<T>::Invert()
 {
 	if (numberOfRows*numberOfColumns == 0) return true; //no need to invert; but this is no error!
 
-	//throw std::exception("MatrixBase::Invert(): only valid for quadratic matrices");
+	//throw EXUexception("MatrixBase::Invert(): only valid for quadratic matrices");
 	CHECKandTHROW(numberOfColumns == numberOfRows && data != NULL, "MatrixBase::Invert(): only valid for quadratic matrices");
 
 	static ResizableMatrix m; //memory allocation only once, if size does not change; not THREAD safe!

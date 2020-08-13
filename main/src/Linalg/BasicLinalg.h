@@ -10,12 +10,14 @@
 *
 ************************************************************************************************ */
 
-#pragma once
+#ifndef BASICLINALG__H
+#define BASICLINALG__H
 
 //BasicLinalg provides consistent includes for BasicDefinitions, arrays, vectors and matrices
 #include <initializer_list> //for initializer_list in constructor
 #include <ostream>
-#include <stdlib.h> // for initialization with std::vector
+//#include <stdlib.h> //only works in MSVC for initialization with std::vector
+#include <array>
 #include <vector>
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //defines Real
@@ -362,4 +364,4 @@ namespace EXUmath {
 }
 
 
-
+#endif

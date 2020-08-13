@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-25  00:20:17 (last modfied)
+* @date         2020-08-11  21:25:32 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
+
+#ifndef COBJECTGROUNDPARAMETERS__H
+#define COBJECTGROUNDPARAMETERS__H
 
 #include <ostream>
 
@@ -47,7 +49,6 @@ public: // AUTO:
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 
@@ -58,7 +59,7 @@ public: // AUTO:
 class CObjectGround: public CObjectBody // AUTO: 
 {
 protected: // AUTO: 
-    static const Index nODE2Coordinates = 0;
+    static constexpr Index nODE2Coordinates = 0;
     CObjectGroundParameters parameters; //! AUTO: contains all parameters for CObjectGround
 
 public: // AUTO: 
@@ -167,3 +168,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

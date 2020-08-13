@@ -1,0 +1,150 @@
+Setup tools under windows in oder to generate python module from source files:
+
+Description for testSetupTools example
+
+====================================================================
+requirements:
+- installed Anaconda (tested with Python 3.6, 64bit on Anaconda3, 5.1.0)
+- close Spyder or any other python application during these tasks:
+- NOT NEEDED: conda install -c anaconda vs2015_runtime
+  ==> takes a while!
+- NOT NEEDED?: pip install pybind11
+- ??pip install cmake
+
+====================================================================
+steps to build and bind the example on Windows (go to 64 bit anaconda):
+- close Spyder or any other python application during this task!
+- cd C:\ProgramData\Anaconda3_64b36\Scripts
+- open Anaconda prompt (go to anaconda/Scripts folder and call activate.bat):
+  - go to folder with setup.py
+  - run: python setup.py install ==> this is not the correct way, but does the job
+  - #####run: pip install ./python_example ==> does not work!
+
+==> the package will be installed in the site-packages path. This depends on system and installation
+==> if anaconda is installed with admin rights, it will be placed e.g. into 
+    'C:\\ProgramData\\Anaconda3\\lib\\site-packages
+
+====================================================================
+python setup.py bdist_wininst
+will create an executable installer, foo-1.0.win32.exe, in the current directory.
+
+====================================================================
+UBUNTU / linux:
+use pip3 and python3 for any python3.x version !!!
+
+use to install library in local site-packages (still needs sudo?):
+sudo python3 setup.py install --user
+
+remove local folders and files:
+sudo rm -r build dist exudyn.egg-info tmp .eggs
+
+uninstall from packages:
+sudo pip3 uninstall exudyn
+
+
+====================================================================
+add glfw library:
+
+for GLFW:
+sudo apt-get update
+sudo apt-get install libglfw3
+sudo apt-get install libglfw3-dev
+
+#for OpenGL headers (gets necessary includes in usr/include/GL):
+sudo apt-get install mesa-common-dev
+
+#for OpenGL libs:
+sudo apt-get install freeglut3
+sudo apt-get install freeglut3-dev
+
+#recommendation:
+#sudo apt-get install cmake libx11-dev xorg-dev libglu1-mesa-dev freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+
+#DONE:
+#sudo apt-get install libx11-dev xorg-dev libglu1-mesa-dev freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+
+#libglfw.so and libGL.so [.x...] should be available under:
+/usr/lib/x86_64-linux-gnu
+
+====================================================================
+use wheel:
+pip install wheel    (if needed)
+
+(python setup.py install ==> not needed, bdist_wheel does everything)
+
+RUN:
+python setup.py bdist_wheel
+
+==>creates dist/exu-0.0.1-cp36-cp36m-win_amd64.whl
+
+in order to install this wheel, use:
+pip install --use-wheel --no-index --find-links=path/to/my_wheels Unidecode
+
+
+
+
+====================================================================
+debugging python programs:
+sudo apt-get install gdb
+gdb python3
+==> in (gdb) call:
+run example.py
+
+- add debug information to build:
+CFLAGS='-Wall -O0 -g' python setup.py build
+
+- or for installation use:
+CFLAGS='-Wall -O0 -g' sudo python3 setup.py install
+
+debug in python:
+python3 -m pdb test.py
+
+
+
+
+
+
+
+the following notes are made during solving problems when adapting for linux/UBUNTU:
+====================================================================
+====================================================================
+====================================================================
+import error:
+>>> import exudyn as e
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: /usr/local/lib/python3.6/dist-packages/exudyn-0.1.368-py3.6-linux-x86_64.egg/exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol: _ZN27CObjectContactCircleCable2D19maxNumberOfSegmentsE
+
+with gcc-8.4.0:
+johannes@exugen:~/cpp/testGCCexudynNoGLFW$ python3
+Python 3.6.9 (default, Apr 18 2020, 01:56:04) 
+[GCC 8.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import exudyn
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: /home/johannes/.local/lib/python3.6/site-packages/exudyn-0.1.368-py3.6-linux-x86_64.egg/exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol: _ZTVN10__cxxabiv117__class_type_infoE
+
+
+====================================================================
+install different gcc versions:
+
+(python version + gcc version: shown on startup of python3)
+
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt install gcc-8
+==> installs gcc-8.4.0 on ubuntu 18.04
+(sudo apt install gcc-7 g++-7 gcc-8 g++-8 gcc-9 g++-9)
+
+modify setup.py:
+import os
+os.environ["CC"] = "gcc-8"
+os.environ["CXX"] = "gcc-8"
+====================================================================
+
+
+
+
+
+

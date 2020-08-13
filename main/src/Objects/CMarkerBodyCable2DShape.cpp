@@ -79,7 +79,11 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 		markerData.vectorValue[i * 2 + 1] = pos[1];		//y-position
 
 		Vector2D vel = cable->MapCoordinates(SV, q0Vel, q1Vel);
+#ifdef __GNUC__
+		Vector2D rx(0); //suppress warnings
+#else
 		Vector2D rx;
+#endif
 		if (isALE)
 		{
 			Vector4D SVx = cable->ComputeShapeFunctions_x(x, L); //could be precomputed and stored!

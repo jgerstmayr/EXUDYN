@@ -9,10 +9,10 @@
 *
 ************************************************************************************************ */
 
-#pragma once
+#ifndef MATRIXCONTAINER__H
+#define MATRIXCONTAINER__H
 
 #include "Linalg/BasicLinalg.h"	
-
 
 
 namespace EXUmath {
@@ -194,6 +194,8 @@ namespace EXUmath {
 		MatrixContainer(const Matrix& matrix) { denseMatrix = matrix; useDenseMatrix = true; }
 		MatrixContainer(const SparseTripletMatrix& matrix) { sparseTripletMatrix = matrix; useDenseMatrix = false; }
 
+		virtual ~MatrixContainer() {} //added for correct deletion of derived classes
+
 		//! returns true, if matrix container uses dense matrix mode
 		virtual bool UseDenseMatrix() const { return useDenseMatrix; }
 
@@ -295,4 +297,4 @@ namespace EXUmath {
 }
 
 
-
+#endif

@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef COBJECTBODY__H
+#define COBJECTBODY__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -224,3 +225,5 @@ public:
 	// - 
 	// - 
 };
+
+#endif

@@ -200,7 +200,7 @@ def TypeConversion(typeStr, typeConversion):
 
 #************************************************
 #convert type to known C++ type or keep it (in case of special class)
-def GenerateHeader(classStr, descriptionStr, addModifiedDate = True):
+def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnce = True):
 
     now=datetime.datetime.now()
     monthZero = '' #add leading zero for month
@@ -243,7 +243,15 @@ def GenerateHeader(classStr, descriptionStr, addModifiedDate = True):
     s+='                - weblink: https://github.com/jgerstmayr/EXUDYN\n'
     s+='                \n'
     s+='************************************************************************************************ */\n'
-    s+='#pragma once\n'
+    
+    if addIfdefOnce:
+        #only works for MSVC:
+        #        s+='#ifdef _MSC_VER\n'
+        #        s+='#pragma once\n'
+        #        s+='#endif\n'
+        s+='\n'
+        s+='#ifndef '+classStr.upper()+'__H\n'
+        s+='#define '+classStr.upper()+'__H\n'
     s+='\n'
     s+='#include <ostream>\n'
     s+='\n'

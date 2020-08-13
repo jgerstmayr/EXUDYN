@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef CSYSTEM__H
+#define CSYSTEM__H
 
 #include <atomic>
 #include "Main/CSystemData.h"
@@ -175,6 +176,7 @@ protected:
 	bool systemIsConsistent;				//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
 
 public:
+	virtual ~CSystem() {} //added for correct deletion of derived classes
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ACCESS FUNCTIONS for member variables
@@ -208,7 +210,7 @@ public:
 	{ 
 		systemIsConsistent = flag; 
 		cSystemData.GetCData().SetSystemIsConsistent(flag);
-		if (flag = false) { postProcessData.postProcessDataReady = flag; }	//do not draw system anymore
+		if (flag == false) { postProcessData.postProcessDataReady = flag; }	//do not draw system anymore
 	}
 
 	//merged with SetSystemIsConsistent //! Function called e.g. by AddNode/Object/..., ModifyNode/Object/... to signal that the system has changed and consistency is not guaranteed
@@ -365,4 +367,4 @@ public:
 };
 
 
-
+#endif

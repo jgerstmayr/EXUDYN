@@ -15,8 +15,8 @@
 * 				
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifndef ALLMATRIXUNITTESTS__H
+#define ALLMATRIXUNITTESTS__H
 
 //! Helper class for forcing of const access functions
 class ConstCompareAllMatrixUnitTest
@@ -360,3 +360,4 @@ const lest::test matrix_specific_test[] =
     }
 };
 
+#endif

@@ -11,7 +11,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef EXCEPTIONTEMPLATES__H
+#define EXCEPTIONTEMPLATES__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //defines Real
@@ -36,7 +37,7 @@ void UserFunctionExceptionHandling(Tfunction&& f, const char* functionName)
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		SysError("Internal error in python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
@@ -66,7 +67,7 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 		SysError("Error in solver function '" + STDstring(functionName) + "' originating from python code (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		SysError("EXUDYN raised internal error in '" + STDstring(functionName) + "':\n" + STDstring(ex.what()));
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
@@ -79,3 +80,5 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 	f();
 #endif
 }
+
+#endif

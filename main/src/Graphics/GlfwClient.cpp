@@ -10,14 +10,24 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+//#include <string>
+using namespace std::string_literals; // enables s-suffix for std::string literals
+
+
+//void testtest()
+//{
+//	std::cout << "test";
+//}
+//
 #ifdef USE_GLFW_GRAPHICS
 
 #include <ostream>
-#include <stdlib.h>
+//#include <stdlib.h> //only works in MSVC for initialization with std::vector
+#include <array>
+#include <vector>
 #include <stdio.h>
 #include <fstream> //for image save to file
 
@@ -200,6 +210,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	{
 		//open window to execute a python command ... 
 		//trys to catch errors made by user in this window
+		//std::string str =
 		std::string str = R"(
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
@@ -224,19 +235,6 @@ singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
 singleCommandEntry.grid(row=1, column=0)
 singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
 singleCommandMainwin.mainloop()
-
-#does not work, commandString is erased at this time ...?
-#print("commandString2=",commandString) #printout the command
-#print("commandSet2=",commandSet) #printout the command
-
-#if commandSet:
-#    exec(commandString, globals()) #OLD version
-#    print(commandString) #printout the command
-#    exec("locals()['tempEXUDYNexecute'] ={commandString}", globals(), locals())
-#    if locals()['tempEXUDYNexecute']!=None:
-#        print(locals()['tempEXUDYNexecute'])
-#from time import sleep
-#sleep(1)
 )";
 		PyQueueExecutableString(str);
 		UpdateGraphicsDataNow();
@@ -559,8 +557,8 @@ void GlfwRenderer::ZoomAll()
 
 		if (graphicsDataList->NumberOfItems() == 0 ||
 			((*graphicsDataList)[0]->glCirclesXY.NumberOfItems() == 0 && (*graphicsDataList)[0]->glLines.NumberOfItems() == 0
-				&& (*graphicsDataList)[0]->glPoints.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0)
-			&& (*graphicsDataList)[0]->glTriangles.NumberOfItems() == 0)
+				&& (*graphicsDataList)[0]->glPoints.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0
+			&& (*graphicsDataList)[0]->glTriangles.NumberOfItems() == 0))
 		{
 			maxSceneSize = 1;
 			center = Float3({ 0,0,0 });
@@ -740,7 +738,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 		Index timeOut = visSettings->window.startupTimeout / 10;
 
 		Index i = 0;
-		while(i++ < timeOut && !rendererActive || rendererError > 0) //wait 5 seconds for thread to answer; usually 150ms in Release and 500ms in debug mode
+		while(i++ < timeOut && !(rendererActive || rendererError > 0)) //wait 5 seconds for thread to answer; usually 150ms in Release and 500ms in debug mode
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
@@ -1284,7 +1282,7 @@ void GlfwRenderer::RenderGraphicsData()
 		{
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW POINTS
-			GLfloat lineWidth = 0.5f; //has no action so far
+			//GLfloat lineWidth = 0.5f; //has no action so far
 			GLfloat d = visSettings->general.pointSize; //point drawing parameter --> put into settings!
 			glLineWidth(visSettings->openGL.lineWidth);
 			if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
@@ -1463,19 +1461,4 @@ void GlfwRenderer::RenderGraphicsData()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif //USE_GLFW_GRAPHICS
-
-

@@ -76,7 +76,7 @@ void CObjectConnectorRollingDiscPenalty::ComputeContactForces(const MarkerDataSt
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 	Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
-	const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
+	//const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
 
 	Vector3D vAxisLocal({ 1,0,0 });
 	Vector3D w1 = A1 * vAxisLocal;
@@ -272,7 +272,7 @@ Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructur
 	Real currentGap = pC * parameters.planeNormal;
 
 	//delete: Real previousState = currentState;
-	if (currentGap > 0 && dataGapState <= 0 || currentGap <= 0 && dataGapState > 0) //action: state1=dataGapState, error = |currentGap*k|
+	if ((currentGap > 0 && dataGapState <= 0) || (currentGap <= 0 && dataGapState > 0)) //action: state1=dataGapState, error = |currentGap*k|
 	{
 		discontinuousError += fabs(currentGap * parameters.contactStiffness);
 

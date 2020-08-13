@@ -13,7 +13,6 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
 
 #include <pybind11/pybind11.h> //for integrated python connectivity (==>put functionality into separate file ...!!!)
 #include <pybind11/eval.h>

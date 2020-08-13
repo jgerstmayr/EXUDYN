@@ -14,7 +14,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 #include "Main/CSystem.h"
 #include "Graphics/VisualizationSystemContainer.h"

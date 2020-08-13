@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONSENSOR__H
+#define VISUALIZATIONSENSOR__H
 
 class VisualizationSystem; //predefined to be used in definition of base visualizationItem classes
 class VisualizationSettings; //predefined for update graphics
@@ -29,6 +30,7 @@ class VisualizationSensor
 protected:
 	bool show; //true: shall be drawn; false: no not draw; will be initialized in specialized class
 public:
+	virtual ~VisualizationSensor() {} //added for correct deletion of derived classes
 	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) {};
 	//! decides whether to draw the item
@@ -50,3 +52,4 @@ inline std::ostream& operator<<(std::ostream& os, const VisualizationSensor& ite
 	return os;
 }
 
+#endif

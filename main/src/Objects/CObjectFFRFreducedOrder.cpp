@@ -46,9 +46,9 @@ bool MainObjectFFRFreducedOrder::CheckPreAssembleConsistency(const MainSystem& m
 
 	//Index nODE2test = cObject->GetODE2Size(); //NOT AVAILABLE YET
 	
-	Index nODE2Rigid = cObject->GetCNode(cObject->rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
+	//Index nODE2Rigid = cObject->GetCNode(cObject->rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
 	Index nODE2FF = cObject->GetCNode(cObject->genericNodeNumber)->GetNumberOfODE2Coordinates(); //number of modal coordinates
-	Index nODE2 = nODE2Rigid+nODE2FF; //total number of coordinates
+	//Index nODE2 = nODE2Rigid+nODE2FF; //total number of coordinates
 
 	if (numberOfNodes != 2)
 	{
@@ -395,7 +395,7 @@ void CObjectFFRFreducedOrder::ComputeODE2RHS(Vector& ode2Rhs) const
 
 		Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix();
 
-		const Index GMaxSize = CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D; //12
+		//const Index GMaxSize = CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D; //12
 
 
 		if (parameters.stiffnessMatrixReduced.NumberOfRows() != 0)
@@ -566,8 +566,8 @@ void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
 	{
 		Index nODE2 = GetODE2Size(); //total number of coordinates
-		Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
-		Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+		//Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+		//Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
 
 		jacobian.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
 		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!

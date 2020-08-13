@@ -12,7 +12,8 @@
 				- weblink: missing
 				
 ************************************************************************************************ */
-#pragma once
+#ifndef CSYSTEMSTATE__H
+#define CSYSTEMSTATE__H
 
 #include <ostream>
 
@@ -92,7 +93,7 @@ public: //
 	const Vector& GetDataCoords() const { return dataCoords; }
 	//const std::vector<Real> GetDataCoordsStdVec() const { return dataCoords; }
 
-	virtual void Print(std::ostream& os) const
+	void Print(std::ostream& os) const
 	{
 		os << "  CSystemState:\n";
 		os << "    ODE1Coords = " << ODE1Coords << "\n";
@@ -110,3 +111,5 @@ public: //
 	}
 
 };
+
+#endif

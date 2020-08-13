@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINNODE__H
+#define MAINNODE__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -34,6 +35,7 @@ class MainNode
 protected:
 	STDstring name;
 public:
+	virtual ~MainNode() {} //added for correct deletion of derived classes
 	virtual MainNode* GetClone() const { return new MainNode(*this); }
 
 	virtual STDstring& GetName() { return name; }
@@ -74,3 +76,4 @@ public:
 	virtual void SetParameter(const STDstring& parameterName, const py::object& value) { SysError("Invalid call to MainNode::SetParameter(...)"); }
 };
 
+#endif

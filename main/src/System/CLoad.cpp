@@ -15,7 +15,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 #include "Utilities/ExceptionsTemplates.h"
 //#include "Main/CSystemData.h"

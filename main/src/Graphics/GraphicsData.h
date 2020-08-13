@@ -13,7 +13,8 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
+#ifndef GRAPHICSDATA__H
+#define GRAPHICSDATA__H
 
 #include <ostream>
 
@@ -113,8 +114,8 @@ private:
 public:
 	GraphicsData()
 	{
-		contourCurrentMinValue = EXUstd::MAXFLOAT;
-		contourCurrentMaxValue = EXUstd::MINFLOAT;
+		contourCurrentMinValue = EXUstd::_MAXFLOAT;
+		contourCurrentMaxValue = EXUstd::_MINFLOAT;
 	}
 	//! Aquire lock for data, such that computation / visualization thread does not access data at the same time
 	void LockData() 
@@ -230,7 +231,8 @@ public:
 
 		int len = (int)text.size();
 		glText.text = new char[len + 1]; //will be deleted in destructor of GraphicsData
-		strcpy_s(glText.text, len + 1, text.c_str());
+		//strcpy_s(glText.text, len + 1, text.c_str()); //not working with gcc
+		strcpy(glText.text, text.c_str());
 
 		return glTexts.Append(glText);
 	}
@@ -256,4 +258,4 @@ public:
 
 };
 
-
+#endif

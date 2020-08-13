@@ -116,7 +116,7 @@ def Tilde2Vec(m):
     print('Tilde2Vec is deprecated; use Skew(...)')
     return [-m[1][2], m[0][2], -m[0][1]]
 
-
+#integration points per integration order (1, 3, ...); for interval [-1,1]
 gaussIntegrationPoints=[[0],
                         [-(1. / 3.)**0.5, (1. / 3.)**0.5],
                         [-(3. / 5.)**0.5, 0., (3. / 5.)**0.5],
@@ -124,6 +124,7 @@ gaussIntegrationPoints=[[0],
                         [-0.906179845938664, -0.5384693101056831, 0., 0.5384693101056831, 0.906179845938664],
                         ]
 
+#integration weights per integration order (1, 3, ...); for interval [-1,1]
 gaussIntegrationWeights=[[2],
                          [1., 1.],
                          [5. / 9., 8. / 9., 5. / 9.],

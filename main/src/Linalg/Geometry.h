@@ -6,10 +6,8 @@
 * @copyright	This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 *
 ************************************************************************************************ */
-
-#pragma once
-
-//#include "Linalg/BasicLinalg.h"	
+#ifndef GEOMETRY__H
+#define GEOMETRY__H
 
 namespace HGeometry {
 
@@ -150,4 +148,4 @@ namespace HGeometry {
 }
 
 
-
+#endif

@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef CNODE__H
+#define CNODE__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -115,7 +116,8 @@ public:
     // CONSTRUCTOR, DESTRUCTOR, INITIALIZATION
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	CNode();
-    virtual CNode* GetClone() const { return new CNode(*this); }
+	virtual ~CNode() {} //added for correct deletion of derived classes
+	virtual CNode* GetClone() const { return new CNode(*this); }
 
     virtual void Print(std::ostream& os) const {
         os << "CNode";
@@ -440,3 +442,4 @@ public:
 //
 //};
 
+#endif

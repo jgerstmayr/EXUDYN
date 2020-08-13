@@ -14,7 +14,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 //includes follow includes list of CSystemData.h up to CNode
 #include "Linalg/BasicLinalg.h"		//includes Vector.h

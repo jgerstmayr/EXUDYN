@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-22  09:46:58 (last modfied)
+* @date         2020-08-11  21:25:32 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
+
+#ifndef COBJECTJOINTROLLINGDISCPARAMETERS__H
+#define COBJECTJOINTROLLINGDISCPARAMETERS__H
 
 #include <ostream>
 
@@ -54,7 +56,6 @@ public: // AUTO:
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 
@@ -65,7 +66,7 @@ public: // AUTO:
 class CObjectJointRollingDisc: public CObjectConstraint // AUTO: 
 {
 protected: // AUTO: 
-    static const Index nConstraints = 3;
+    static constexpr Index nConstraints = 3;
     CObjectJointRollingDiscParameters parameters; //! AUTO: contains all parameters for CObjectJointRollingDisc
 
 public: // AUTO: 
@@ -141,3 +142,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

@@ -28,7 +28,8 @@
 * cout << v1 << "\n";                //write "[1.1, 2.7, 3.0]" to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef SLIMVECTORBASE__H
+#define SLIMVECTORBASE__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -119,7 +120,7 @@ public:
 		}
 	}
 
-	virtual ~SlimVectorBase() { }; //rule of 5
+	~SlimVectorBase() { }; //rule of 5
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // BASIC FUNCTIONS
@@ -609,3 +610,4 @@ vec[0] * v.vec[1] - vec[1] * v.vec[0]);
 
 */
 
+#endif

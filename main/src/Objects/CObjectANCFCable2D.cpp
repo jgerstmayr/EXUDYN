@@ -272,7 +272,7 @@ void CObjectANCFCable2DBase::ComputeODE2RHS(Vector& ode2Rhs) const
 		Vector2D rxx = MapCoordinates(SVxx, q0, q1);
 
 		Real rxNorm2 = rx.GetL2NormSquared();				//g
-		Real rxNorm = sqrt(rxNorm2);				
+		//Real rxNorm = sqrt(rxNorm2);				
 		Real rxCrossRxx = rx.CrossProduct2D(rxx);			//f
 		Real curvature = rxCrossRxx / rxNorm2;				//kappa = (rx x rxx)/rx^2       //WRONG (Andreas/Matlab?): kappa = sqrt(cross2d(rp, rpp) ^ 2) / (rp'*rp);        // material measure of curvature
 
@@ -422,7 +422,7 @@ void CObjectANCFCable2DBase::ComputeODE2RHStemplate(VectorBase<TReal>& ode2Rhs, 
 		SlimVectorBase<TReal, 2> rxx = MapCoordinates<TReal>(SVxx, qANCF);
 
 		TReal rxNorm2 = rx.GetL2NormSquared();				//g
-		TReal rxNorm = sqrt(rxNorm2);
+		//TReal rxNorm = sqrt(rxNorm2);
 		TReal rxCrossRxx = rx.CrossProduct2D(rxx);			//f
 		TReal curvature = rxCrossRxx / rxNorm2;				//kappa = (rx x rxx)/rx^2       //WRONG (Andreas/Matlab?): kappa = sqrt(cross2d(rp, rpp) ^ 2) / (rp'*rp);        // material measure of curvature
 
@@ -524,8 +524,8 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
-		const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
+		//const Index dim = 2;  //2D finite element
+		//const Index ns = 4;   //number of shape functions
 
 		Real x = localPosition[0]; //only x-coordinate
 		Vector4D SV = ComputeShapeFunctions(x, L);
@@ -594,7 +594,7 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 	}
 	case AccessFunctionType::AngularVelocity_qt:
 	{
-		const Index dim = 2;  //2D finite element
+		//const Index dim = 2;  //2D finite element
 		const Index ns = 4;   //number of shape functions
 
 		Real xLoc = localPosition[0]; //only x-coordinate
@@ -618,8 +618,8 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
-		const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
+		//const Index dim = 2;  //2D finite element
+		//const Index ns = 4;   //number of shape functions
 
 		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
 		value.SetAll(0.);
@@ -834,7 +834,7 @@ Real CObjectANCFCable2DBase::ComputeCurvature(Real x, ConfigurationType configur
 	Vector2D rxx = ComputeSlopeVector_x(x, configuration);
 
 	Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2RHS(...)
-	Real rxNorm = sqrt(rxNorm2);
+	//Real rxNorm = sqrt(rxNorm2);
 	Real rxCrossRxx = rx.CrossProduct2D(rxx);
 	return rxCrossRxx / rxNorm2; //curvature
 }

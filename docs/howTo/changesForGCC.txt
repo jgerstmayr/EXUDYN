@@ -1,0 +1,148 @@
+===============================================
+GENERAL:
+#pragma once
+==>
+#ifdef _MSC_VER
+#pragma once
+#endif
+
+#ifndef RELEASEASSERT__H
+#define RELEASEASSERT__H
+...
+code
+#endif
+
+#ifdef __GNUC__
+...
+#endif
+===============================================
+
+throw std::exception(...) ==> can only be called in MSVC
+==> alternative: use std::runtime_error
+EXUexception std::runtime_error
+
+===============================================
+BasicDefinitions:
+MINFLOAT / MAXFLOAT
+change to ==> _MINFLOAT, _MAXFLOAT because reserved word in gcc
+
+
+===============================================
+add to Vector.h (needed for EXUstd::Minimum(...) ):
+#include "Utilities/BasicFunctions.h" //defines Real
+
+===============================================
+ReleaseAssert.h:
+
+#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw std::exception("unexpected EXUDYN internal error"))
+==>not accepted by GCC
+==>maybe inclusion of exception helps?
+
+#include <exception>
+
+===============================================
+ReleaseAssert.h:
+
+
+NDEBUG
+==>already defined in GCC
+	#ifndef NDEBUG
+		#define NDEBUG //used to avoid range checks e.g. in Eigen
+	#endif
+
+
+===============================================
+BasicLinalg.h, SlimArray.h, etc.:
+==>include std template headers separately:
+
+//gcc does not recognize: #include <stdlib.h> // for initialization with std::vector
+#include <vector>
+#include <array>
+
+===============================================
+GENERAL: SlimArray.h, ResizableArray.h, etc.:
+remove Sort() as it is built upon QuickSort, which is not implemented yet!
+
+===============================================
+Linalg/LinkedDataMatrix.h:45:27: error: class ‘LinkedDataMatrixBase<T>’ does not have any field named ‘MatrixBase’
+==> add <T> to MatrixBase in LinkedDataMatrixBase constructor
+
+===============================================
+GraphicsData.h and VisualizationSystemContainer.cpp:
+strcpy_s not working with gcc ==> use strcopy instead
+
+===============================================
+missing virtual destructors in base classes:
+warning: deleting object of polymorphic class type ‘CLoad’ which has non-virtual destructor might cause undefined behavior [-Wdelete-non-virtual-dtor]
+==> added virtual constructors to all base classes with virtual functions
+CLoad
+CMarker
+MainLoad
+VisualizationLoad
+....
+
+added virtual to 
+~ResizableArray() {
+
+===============================================
+removed virtual from some classes which have no derived class:
+MarkerDataStructure
+~SlimVectorBase() (remove virtual only in the destructor, no other virtual functions)
+
+
+===============================================
+initialization order in constructors:
+In instantiation of ‘VectorBase<T>::VectorBase() [with T = double]’:
+src/Main/CSystemState.h:23:7:   required from here
+src/Linalg/Vector.h:64:11: warning: ‘VectorBase<double>::numberOfItems’ will be initialized after [-Wreorder]
+     Index numberOfItems; //!< currently used number of Reals; represents size of VectorBase (equivalent to numberOfPReals in VectorX)
+
+==> change:
+    VectorBase(): numberOfItems(0), data(nullptr) {};
+==> to:
+    VectorBase(): data(nullptr), numberOfItems(0) {};
+
+
+
+===============================================
+Vector.h: include missing file (namespace, function EXUstd::Minimum)
+#include "Utilities/BasicFunctions.h"   //for Minimum
+
+===============================================
+
+===============================================
+
+===============================================
+
+===============================================
+
+===============================================
+VARIOUS, some bugs (not necessary for GCC):
+
+CSystem.h, line 213:
+if (flag == false) { postProcessData.postProcessDataReady = flag; }	//do not draw system anymore
+==> flag == false
+
+
+CObjectConnectorRollingDiscPenalty.cpp:
+==>corrected line 275 (no brackets!!!):
+if ((currentGap > 0 && dataGapState <= 0) || (currentGap <= 0 && dataGapState > 0)) //action: state1=dataGapState, error = |currentGap*k|
+
+CObjectContactCoordinate.cpp:
+==>corrected line 149 (no brackets!!!):
+if ((currentGap > 0 && currentState <= 0) || (currentGap <= 0 && currentState > 0)) //action: state1=currentGapState, error = |currentGap*k|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

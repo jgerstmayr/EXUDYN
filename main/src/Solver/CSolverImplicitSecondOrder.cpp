@@ -11,7 +11,6 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
 
 #include <pybind11/pybind11.h> //for integrated python connectivity (==>put functionality into separate file ...!!!)
 #include <pybind11/eval.h>
@@ -239,7 +238,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 //! OUTPUT: data.systemResidual is updated
 void CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
+	//const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 
 	LinkedDataVector ode2Residual(data.systemResidual, 0, data.nODE2); //link ODE2 coordinates
 	LinkedDataVector aeResidual(data.systemResidual, data.startAE, data.nAE); //link ae coordinates

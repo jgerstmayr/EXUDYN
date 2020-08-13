@@ -15,6 +15,8 @@
 * 				
 *
 ************************************************************************************************ */
+#ifndef ALLARRAYUNITTESTS__H
+#define ALLARRAYUNITTESTS__H
 
 #pragma once
 
@@ -449,4 +451,4 @@ const lest::test objectContainer_specific_test[] =
     },
 };
 
-
+#endif

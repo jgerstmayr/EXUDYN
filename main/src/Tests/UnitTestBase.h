@@ -17,8 +17,8 @@
 * 				
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifndef UNITTESTBASE__H
+#define UNITTESTBASE__H
 
 #include "Utilities/BasicDefinitions.h"
 #ifdef PERFORM_UNIT_TESTS
@@ -53,3 +53,5 @@ namespace UnitTestFlags {
 };
 
 #endif
+
+#endif //include header once

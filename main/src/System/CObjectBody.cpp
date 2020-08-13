@@ -16,7 +16,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 #include "Main/CSystemData.h"
 #include "Utilities/RigidBodyMath.h"

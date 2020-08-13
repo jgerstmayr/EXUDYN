@@ -12,7 +12,8 @@
 				- weblink: missing
 				
 ************************************************************************************************ */
-#pragma once
+#ifndef CSYSTEMDATA__H
+#define CSYSTEMDATA__H
 
 //#include <ostream>
 
@@ -223,4 +224,4 @@ public: //
 
 };
 
-
+#endif

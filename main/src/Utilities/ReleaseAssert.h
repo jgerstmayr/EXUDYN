@@ -14,46 +14,59 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef RELEASEASSERT__H
+#define RELEASEASSERT__H
 
 #include <assert.h>
+#include <exception>
+#include <stdexcept>
 
 //now defined in preprocessor of Release / ReleaseFast
 //#define __FAST_EXUDYN_LINALG //use this to avoid any range checks in linalg; TEST: with __FAST_EXUDYN_LINALG: 2.3s time integration of contact problem, without: 2.9s
 
-#ifndef __FAST_EXUDYN_LINALG
-	#define __ASSERT_IN_RELEASE_MODE__ //slows down release, but faster than debug mode (for debugging large scale problems)
-	#define __PYTHON_USERFUNCTION_CATCH__  //performs try/catch in all python user functions
-	#define __EXUDYN_RUNTIME_CHECKS__  //performs several runtime checks, which slows down performance in release or debug mode
-
-	//!check if _checkExpression is true; if no, trow std::exception(_exceptionMessage); _exceptionMessage will be a const char*, e.g. "VectorBase::operator[]: invalid index"
-	//!linalg matrix/vector access functions, memory allocation, array classes and solvers will throw exceptions if the errors are not recoverable
-	//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, no checks are performed
-	#define CHECKandTHROW(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw std::exception(_exceptionMessage))
-	#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw std::exception("unexpected EXUDYN internal error"))
-	//always throw:
-	#define CHECKandTHROWstring(_exceptionMessage) (throw std::exception(_exceptionMessage))
+//gcc cannot call std::exception() ==> use runtime_error
+#ifdef _MSC_VER
+#define EXUexception std::exception
 #else
-	//no checks in __FAST_EXUDYN_LINALG mode
-	#define CHECKandTHROW(_checkExpression,_exceptionMessage)
-	#define CHECKandTHROWcond(_checkExpression)
-	#define CHECKandTHROWstring(_exceptionMessage)
+#define EXUexception std::runtime_error
 #endif
 
-//#define CHECKandTHROW(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : {throw std::exception(_exceptionMessage);}
+#ifndef __FAST_EXUDYN_LINALG
+#define __ASSERT_IN_RELEASE_MODE__ //slows down release, but faster than debug mode (for debugging large scale problems)
+#define __PYTHON_USERFUNCTION_CATCH__  //performs try/catch in all python user functions
+#define __EXUDYN_RUNTIME_CHECKS__  //performs several runtime checks, which slows down performance in release or debug mode
+
+//!check if _checkExpression is true; if no, trow std::exception(_exceptionMessage); _exceptionMessage will be a const char*, e.g. "VectorBase::operator[]: invalid index"
+//!linalg matrix/vector access functions, memory allocation, array classes and solvers will throw exceptions if the errors are not recoverable
+//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, no checks are performed
+
+#define CHECKandTHROW(_checkExpression,_exceptionMessage) ((_checkExpression) ? 0 : throw EXUexception(_exceptionMessage))
+#define CHECKandTHROWcond(_checkExpression) ((_checkExpression) ? 0 : throw EXUexception("unexpected EXUDYN internal error"))
+//always throw:
+#define CHECKandTHROWstring(_exceptionMessage) (throw EXUexception(_exceptionMessage))
+#else
+	//no checks in __FAST_EXUDYN_LINALG mode
+#define CHECKandTHROW(_checkExpression,_exceptionMessage)
+#define CHECKandTHROWcond(_checkExpression)
+#define CHECKandTHROWstring(_exceptionMessage)
+#endif
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //a specific flag _MYDEBUG is used as the common _NDEBUG flag does not work in Visual Studio
 //use following statements according to msdn.microsoft in order to detect memory leaks and show line number/file where first new to leaked memory has been called
 //works only, if dbg_new is used instead of all 'new' commands!
 #ifdef _MYDEBUG
-	#define dbg_new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-	#undef NDEBUG
+#define dbg_new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#undef NDEBUG
 #else
-	#define dbg_new new
-	#define NDEBUG //used to avoid range checks e.g. in Eigen
+#define dbg_new new
+#ifndef NDEBUG
+#define NDEBUG //used to avoid range checks e.g. in Eigen
+#endif
 #endif
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 #undef release_assert
 
@@ -97,3 +110,5 @@
 	#endif  /* _MYDEBUG */
 
 #endif  /* __ASSERT_IN_RELEASE_MODE__ */
+
+#endif

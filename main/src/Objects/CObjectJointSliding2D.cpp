@@ -68,7 +68,7 @@ bool MainObjectJointSliding2D::CheckPreAssembleConsistency(const MainSystem& mai
 		return false;
 	}
 
-	if (mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName() != "BodyCable2DCoordinates")
+	if (STDstring(mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName()) != STDstring("BodyCable2DCoordinates"))
 	{
 		errorString = STDstring("ObjectJointSliding2D: Marker 1 must be of type = 'BodyCable2DCoordinates'");
 		return false;
@@ -285,7 +285,7 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 		{
 			//marker0: contains position jacobian
 			const Index forceXindex = 0;
-			const Index forceYindex = 1;
+			//const Index forceYindex = 1;
 			//const Index slidingCoordinateIndex = 2;
 
 			//compute ANCF position:
@@ -316,8 +316,8 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 			//algebraicEquations[1] = vPos * normalVector;
 			//algebraicEquations[2] = vPos * slopeVector; //index1
 
-			Real forceX = GetCurrentAEcoordinate(forceXindex);
-			Real forceY = GetCurrentAEcoordinate(forceYindex);
+			//Real forceX = GetCurrentAEcoordinate(forceXindex);
+			//Real forceY = GetCurrentAEcoordinate(forceYindex);
 
 			jacobian_AE.SetScalarMatrix(3, 0.);
 

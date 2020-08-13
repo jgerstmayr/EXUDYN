@@ -228,9 +228,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         WriteMiniExample(parseInfo['class'], parseInfo['miniExample'])
 
     sComp = "" #computation
-    sComp = GenerateHeader(compClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False)
+    sComp = GenerateHeader(compClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False, addIfdefOnce = False)
     sMain = "" #main object
-    sMain = GenerateHeader(mainClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False)
+    sMain = GenerateHeader(mainClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False, addIfdefOnce = False)
     #make list of strings to enable iteration
     sList = [sParamComp, sParamMain, sComp, sMain, sVisu]
     nClasses = 5 #number of different classes
@@ -934,6 +934,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #    
     for i in range(nClasses):
         sList[i]+='};\n\n\n' #class
+
+    sList[2] += '\n#endif //#ifdef include once...\n'
+    sList[3] += '\n#endif //#ifdef include once...\n'
+    sList[4] += '\n#endif //#ifdef include once...\n'
 
     s = [sList[0]+sList[2], sList[1]+sList[3], sList[4], sLatex, sLatexItemList, classTypeStr, sPythonClass]
 

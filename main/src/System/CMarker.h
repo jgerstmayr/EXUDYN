@@ -12,7 +12,8 @@
 				- weblink: missing
 				
 ************************************************************************************************ */
-#pragma once
+#ifndef CMARKER__H
+#define CMARKER__H
 
 #include <ostream>
 
@@ -27,7 +28,8 @@ protected: //
 
 public: // 
 
-  // access functions
+	virtual ~CMarker() {} //added for correct deletion of derived classes
+	// access functions
   //! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
 	virtual CMarker* GetClone() const { return new CMarker(*this); }
 
@@ -112,4 +114,4 @@ public: //
 };
 
 
-
+#endif

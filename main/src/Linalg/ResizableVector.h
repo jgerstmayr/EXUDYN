@@ -27,7 +27,8 @@
 *  	cout << "length=" << v1.NumberOfItems() << "\n";  //write "length=3" to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef RESIZABLEVECTORBASE__H
+#define RESIZABLEVECTORBASE__H
 
 #include "Linalg/Vector.h"
 
@@ -173,3 +174,4 @@ public:
 typedef ResizableVectorBase<Real> ResizableVector;
 typedef ResizableVectorBase<float> ResizableVectorF; //always float, used for graphics
 
+#endif

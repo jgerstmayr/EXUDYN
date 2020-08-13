@@ -30,7 +30,8 @@
 * cout << v1 << "\n";			//write m1 to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef CONSTSIZEMATRIX__H
+#define CONSTSIZEMATRIX__H
 
 #include <initializer_list> //for initializer_list in constructor
 #include <ostream>          //ostream for matrix output as text
@@ -484,4 +485,6 @@ using ConstSizeMatrixF = ConstSizeMatrixBase<float, dataSize>;
 //	}
 //	return result;
 //}
+
+#endif
 

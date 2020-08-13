@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef COBJECT__H
+#define COBJECT__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -107,6 +108,7 @@ public:
     // CONSTRUCTOR, DESTRUCTOR, INITIALIZATION
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     CObject() {DefaultInitialization();}
+	virtual ~CObject() {/* delete SpecialObjectFunctions */} //added for correct deletion of derived classes
 
     //! sets object back to default state
     virtual void DefaultInitialization() {cSystemData = 0;};
@@ -221,4 +223,4 @@ inline std::ostream& operator<<(std::ostream& os, const CObject& object) {
 }
 
 
-
+#endif

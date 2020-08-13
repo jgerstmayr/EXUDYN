@@ -28,11 +28,13 @@
 * cout << a2 << "\n";               //write "[42, 5, 7]" to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef SLIMARRAY__H
+#define SLIMARRAY__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
 #include <vector>
+#include <array>
 
 template <class T, Index dataSize> class SlimArray;
 template <class T> class ResizableArray;
@@ -241,9 +243,8 @@ public:
         return EXUstd::InvalidIndex;
     }
 
-    //! Sort items in ascending order, using external Quicksort(...) function
-    // USE TRAITS TO ENABLE Sort, Find, etc. for all arrays, etc.?
-    void Sort() { EXUstd::QuickSort(*this); }
+    //! Sort items in ascending order, using external Quicksort(...) function; not available, because EXUstd::QuickSort not tested
+    //void Sort() { EXUstd::QuickSort(*this); }
 
     //! set items according to initializer list: SlimArray<3> ({1.0, 3.14, 5.5});
     void Set(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11
@@ -276,3 +277,4 @@ std::ostream& operator<<(std::ostream& os, const SlimArray<T, dataSize>& array)
 
 }
 
+#endif

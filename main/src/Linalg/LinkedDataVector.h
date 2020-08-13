@@ -28,7 +28,8 @@
 *  	cout << v1 << "\n";		        //write "[1 2 3 14 5 6]" to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef LINKEDDATAVECTORBASE__H
+#define LINKEDDATAVECTORBASE__H
 
 #include "Linalg/Vector.h"
 #include "Linalg/SlimVector.h"
@@ -202,3 +203,4 @@ protected: //functions cannot be called from outside
 typedef LinkedDataVectorBase<Real> LinkedDataVector;
 typedef LinkedDataVectorBase<float> LinkedDataVectorF; //always float, used for graphics
 
+#endif

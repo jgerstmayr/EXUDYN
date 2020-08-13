@@ -35,5 +35,7 @@ RUNNING Exudyn in SPYDER:
 	2) preferences->Run: Set "Execute in an external system terminal" ==> in this way multiple runs are possible with graphics
 
 
+3) Anaconda3-5.2.0-Windows-x86_64.exe: in Microsoft Surface book 2: spyder crashes on startup if installed in parallel to VS2017 python
+==> use Anaconda3-5.1.0-Windows-x86_64.exe instead (works!)
 
 

@@ -20,7 +20,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINSYSTEM__H
+#define MAINSYSTEM__H
 
 #include "Main/MainSystemData.h"
 #include "Main/MainObjectFactory.h"
@@ -51,6 +52,7 @@ private:
 	bool interactiveMode; //!< if this is true, every AddItem(...), ModifyItem(...), etc. causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
 public:
 	//MainSystem() {};
+	virtual ~MainSystem() {} //added for correct deletion of derived classes
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   MEMBER VARIABLE ACCESS
@@ -258,4 +260,4 @@ public:
 
 };
 
-
+#endif

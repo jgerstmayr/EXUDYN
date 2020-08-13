@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONSYSTEMDATA__H
+#define VISUALIZATIONSYSTEMDATA__H
 
 #include "Utilities/ResizableArray.h"
 
@@ -84,4 +85,4 @@ public:
 
 };
 
-
+#endif

@@ -48,7 +48,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 			
 			if (parameters.offsetUserFunction_t)
 			{
-				Real offset;
+				Real offset=0;
 				UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 				{
 					offset = parameters.offsetUserFunction_t(t, parameters.offset);

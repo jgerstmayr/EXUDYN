@@ -20,7 +20,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 #include <chrono> //sleep_for()
 #include <thread>
@@ -119,7 +118,7 @@ Index MainSystem::AddMainNodePyClass(py::object pyObject)
 		}
 		itemIndex = AddMainNode(dictObject);
 	}
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
@@ -359,7 +358,7 @@ Index MainSystem::AddMainObjectPyClass(py::object pyObject)
 		}
 		itemIndex = AddMainObject(dictObject);
 	}
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
@@ -602,7 +601,7 @@ Index MainSystem::AddMainMarkerPyClass(py::object pyObject)
 		}
 		itemIndex = AddMainMarker(dictObject);
 	}
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
@@ -759,7 +758,7 @@ Index MainSystem::AddMainLoadPyClass(py::object pyObject)
 		}
 		itemIndex = AddMainLoad(dictObject);
 	}
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
@@ -930,7 +929,7 @@ Index MainSystem::AddMainSensorPyClass(py::object pyObject)
 		}
 		itemIndex = AddMainSensor(dictObject);
 	}
-	catch (const std::exception& ex)
+	catch (const EXUexception& ex)
 	{
 		PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));

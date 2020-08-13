@@ -22,7 +22,8 @@
 * LinkedDataMatrix linkedMatrix(1, 2, m, 1, 0);	//linkedMatrix with 1 row and 2 columns, linked to row 1, column 0 of matrix, containing [3,4]
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef LINKEDDATAMATRIX__H
+#define LINKEDDATAMATRIX__H
 
 #include <initializer_list> //for initializer_list in constructor
 #include <ostream>          //ostream for matrix output as text
@@ -41,7 +42,7 @@ public:
 	//!!keep these constructors, because derived function Init() may not be called from parent class Matrix!!!
 
 	//! Default constructor: no memory allocation yet; matrix of dimension 0 x 0
-	LinkedDataMatrixBase() : MatrixBase() {}
+	LinkedDataMatrixBase() : MatrixBase<T>() {}
 
 	//! link to existing matrix
 	LinkedDataMatrixBase(const MatrixBase<T>& m)
@@ -154,3 +155,4 @@ public:
 typedef LinkedDataMatrixBase<Real> LinkedDataMatrix;
 typedef LinkedDataMatrixBase<float> LinkedDataMatrixF;
 
+#endif

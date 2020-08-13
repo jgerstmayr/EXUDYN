@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONLOAD__H
+#define VISUALIZATIONLOAD__H
 
 class VisualizationSystem; //predefined to be used in definition of base visualizationItem classes
 class VisualizationSettings; //predefined for update graphics
@@ -29,6 +30,7 @@ class VisualizationLoad
 protected:
 	bool show; //true: shall be drawn; false: no not draw; will be initialized in specialized class
 public:
+	virtual ~VisualizationLoad() {} //added for correct deletion of derived classes
 	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) {};
 	//! decides whether to draw the item
@@ -50,3 +52,4 @@ inline std::ostream& operator<<(std::ostream& os, const VisualizationLoad& item)
 	return os;
 }
 
+#endif

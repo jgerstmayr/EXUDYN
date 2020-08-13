@@ -33,7 +33,8 @@
 * cout << a2 << "\n";                //write "[42, 5, 7]" to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef OBJECTCONTAINER__H
+#define OBJECTCONTAINER__H
 
 #include "Utilities/BasicFunctions.h"
 #include "Utilities/SlimArray.h"
@@ -398,3 +399,4 @@ inline ObjectContainer<Vector>::ObjectContainer(std::initializer_list<Vector> li
     }
 }
 
+#endif
