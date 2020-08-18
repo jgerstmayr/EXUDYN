@@ -5,10 +5,7 @@ date:   2020-07-16
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 * preliminary steps (if needed):
-<<<<<<< HEAD
 sudo apt-get update
-=======
->>>>>>> 2bb72c282089e6c7ab07fa3df2c3b7ee3d86c711
 sudo apt install python3-pip
 pip3 install pybind11
 pip3 install numpy
@@ -36,11 +33,6 @@ problems with gcc:
 ===============================================
 sudo apt install python3-pip
 pip3 install pybind11
-<<<<<<< HEAD
-=======
-==> see file ubuntuPythonSetup.txt
-
->>>>>>> 2bb72c282089e6c7ab07fa3df2c3b7ee3d86c711
 
 
 ===============================================

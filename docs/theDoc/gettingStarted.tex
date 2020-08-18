@@ -85,11 +85,17 @@ First, open an Anaconda prompt:
 	\item $\ra$ type \texttt{exit()} to close python
 \ei
 
-{\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits, e.g.\ for Windows this may read (version number 1.0.3 may be different):
+{\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
+
+For Windows this may read (version number 1.0.6 may be different):
 \bi
-  \item[] \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.3-cp36-cp36m-win32.whl
-  \item[] \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.3-cp36-cp36m-win\_amd64.whl
-  \item[] \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.3-cp37-cp37m-win\_amd64.whl
+  \item[] \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win32.whl
+  \item[] \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win\_amd64.whl
+  \item[] \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp37-cp37m-win\_amd64.whl
+\ei
+For UBUNTU18.04 this may read (version number 1.0.6 may be different):
+\bi
+  \item[] \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.6-cp36-cp36m-linux\_x86\_64.whl
 \ei
 
 The {\bf uncommon and old way} ($\ra$ not recommended for \codeName\ versions $\ge$ 1.0.0) is to use Python's \texttt{sys} module to link to your \texttt{exudyn} (previously \texttt{WorkingRelease}) directory, for example:\vspace{6pt}\\
@@ -139,15 +145,16 @@ To uninstall exudyn under Windows, run:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under UBUNTU?}
 
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python3.6 is already installed, otherwise use \texttt{sudo apt install python3}):
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python {\bf 3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \texttt{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
 
 \noindent First update ...
 \begin{lstlisting}[firstnumber=1]
 sudo apt-get update
 \end{lstlisting}
 
-\noindent Install necessary python libraries; \texttt{matplotlib} and\texttt{scipy} are not required for installation but used in \codeName\ examples:
+\noindent Install necessary python libraries and pip3; \texttt{matplotlib} and\texttt{scipy} are not required for installation but used in \codeName\ examples:
 \begin{lstlisting}[firstnumber=1]
+sudo dpkg --configure -a
 sudo apt install python3-pip
 pip3 install numpy
 pip3 install matplotlib
@@ -161,14 +168,27 @@ pip3 install pybind11
 
 \noindent If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefinitions.h}), you must install the according GLFW and OpenGL libs:
 \begin{lstlisting}[firstnumber=1]
-sudo apt-get install mesa-common-dev libx11-dev xorg-dev libglu1-mesa-dev freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+sudo apt-get install freeglut3 freeglut3-dev
+sudo apt-get install mesa-common-dev
+sudo apt-get install libglfw3 libglfw3-dev
+sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
 \end{lstlisting}
 
-\noindent With all of these libs, you can run the setup.py installer, which takes some minutes for compilation:
+\noindent With all of these libs, you can run the setup.py installer (go to \texttt{Exudyn\_git/main} folder), which takes some minutes for compilation (the --user option is used to install in local user folder):
 \begin{lstlisting}[firstnumber=1]
 sudo python3 setup.py install --user
 \end{lstlisting}
 
+\noindent Congratulation! {\bf Now, run a test example} (will also open an OpenGL window if successful):
+\bi
+  \item[] \texttt{python3 pythonDev/Examples/rigid3Dexample.py}
+\ei
+
+\noindent You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same python version (e.g., 3.6):
+\bi
+  \item[] \texttt{sudo pip3 install wheel}
+  \item[] \texttt{sudo python3 setup.py bdist\_wheel}
+\ei
 \noindent To uninstall under UBUNTU, run:
 \bi
   \item[] \texttt{sudo pip3 uninstall exudyn}
