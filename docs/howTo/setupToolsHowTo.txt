@@ -3,6 +3,7 @@ Setup tools under windows in oder to generate python module from source files:
 Description for testSetupTools example
 
 ====================================================================
+<<<<<<< HEAD
 WINDOWS:
 requirements:
 - installed Anaconda (tested with Python 3.6, 64bit on Anaconda3, 5.1.0)
@@ -30,10 +31,35 @@ pip install dist/exudyn-1.0.3-cp36-cp36m-win_amd64.whl
 python setup.py install 
 
 #build WINDOWS installer (not fully tested):
+=======
+requirements:
+- installed Anaconda (tested with Python 3.6, 64bit on Anaconda3, 5.1.0)
+- close Spyder or any other python application during these tasks:
+- NOT NEEDED: conda install -c anaconda vs2015_runtime
+  ==> takes a while!
+- NOT NEEDED?: pip install pybind11
+- ??pip install cmake
+
+====================================================================
+steps to build and bind the example on Windows (go to 64 bit anaconda):
+- close Spyder or any other python application during this task!
+- cd C:\ProgramData\Anaconda3_64b36\Scripts
+- open Anaconda prompt (go to anaconda/Scripts folder and call activate.bat):
+  - go to folder with setup.py
+  - run: python setup.py install ==> this is not the correct way, but does the job
+  - #####run: pip install ./python_example ==> does not work!
+
+==> the package will be installed in the site-packages path. This depends on system and installation
+==> if anaconda is installed with admin rights, it will be placed e.g. into 
+    'C:\\ProgramData\\Anaconda3\\lib\\site-packages
+
+====================================================================
+>>>>>>> 2bb72c282089e6c7ab07fa3df2c3b7ee3d86c711
 python setup.py bdist_wininst
 will create an executable installer, foo-1.0.win32.exe, in the current directory.
 
 ====================================================================
+<<<<<<< HEAD
 UBUNTU / linux (tested with clean UBUNTU 18.04 installation, "Normal installation" and option enabled to 
     "Install third-party software for graphics ....", 
 	agree to "update" after first boot,
@@ -110,6 +136,61 @@ steps to build and bind the pybind example on Windows (go to 64 bit anaconda):
 
 - in visual studio, anaconda lies in a folder similar to this:
   C:\Program Files (x86)\Microsoft Visual Studio\Shared\Anaconda3_86\Scripts
+=======
+UBUNTU / linux:
+use pip3 and python3 for any python3.x version !!!
+
+use to install library in local site-packages (still needs sudo?):
+sudo python3 setup.py install --user
+
+remove local folders and files:
+sudo rm -r build dist exudyn.egg-info tmp .eggs
+
+uninstall from packages:
+sudo pip3 uninstall exudyn
+
+
+====================================================================
+add glfw library:
+
+for GLFW:
+sudo apt-get update
+sudo apt-get install libglfw3
+sudo apt-get install libglfw3-dev
+
+#for OpenGL headers (gets necessary includes in usr/include/GL):
+sudo apt-get install mesa-common-dev
+
+#for OpenGL libs:
+sudo apt-get install freeglut3
+sudo apt-get install freeglut3-dev
+
+#recommendation:
+#sudo apt-get install cmake libx11-dev xorg-dev libglu1-mesa-dev freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+
+#DONE:
+#sudo apt-get install libx11-dev xorg-dev libglu1-mesa-dev freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+
+#libglfw.so and libGL.so [.x...] should be available under:
+/usr/lib/x86_64-linux-gnu
+
+====================================================================
+use wheel:
+pip install wheel    (if needed)
+
+(python setup.py install ==> not needed, bdist_wheel does everything)
+
+RUN:
+python setup.py bdist_wheel
+
+==>creates dist/exu-0.0.1-cp36-cp36m-win_amd64.whl
+
+in order to install this wheel, use:
+pip install --use-wheel --no-index --find-links=path/to/my_wheels Unidecode
+
+
+
+>>>>>>> 2bb72c282089e6c7ab07fa3df2c3b7ee3d86c711
 
 ====================================================================
 debugging python programs:
@@ -171,6 +252,7 @@ os.environ["CC"] = "gcc-8"
 os.environ["CXX"] = "gcc-8"
 ====================================================================
 
+<<<<<<< HEAD
 #history on UBUNTU18.04 for new installation, proved to work:
 
 sudo apt-get update
@@ -320,6 +402,8 @@ Solver iteration statistics:
 total number of steps:        20000
 total number of Newton iterations: 75967
 total number of Newton Jacobians:  151
+=======
+>>>>>>> 2bb72c282089e6c7ab07fa3df2c3b7ee3d86c711
 
 
 
