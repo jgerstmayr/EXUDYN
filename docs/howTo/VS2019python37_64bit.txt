@@ -1,12 +1,27 @@
-unified install directories:
+unified install directories (if not installed in visual studio dir):
 - c:\ProgramData\Anaconda3_64b37 (64bit, Python 3.7, includes Spyder 4)
-- c:\ProgramData\Anaconda3_32b36 (32 bit, Python 3.6, includes Spyder 3)
-- c:\ProgramData\Miniconda3_64b36 (32 bit, Python 3.6)
+- c:\ProgramData\Anaconda3_32b36 (32 bit, Python 3.6, includes Spyder 3); options: install for all users; use as default Python 3.6 system
+- c:\ProgramData\Anaconda3_64b36 (64 bit, Python 3.6, includes Spyder 3); options: install for all users; use as default Python 3.6 system
+- ALTERNATIVELY: c:\ProgramData\Miniconda3_64b36 (32 bit, Python 3.6)
 
-deprecated:
-- c:\ProgramData\Miniconda3_32b36 (32 bit, Python 3.6)
-- c:\ProgramData\Anaconda3 (64 bit, Python 3.6, includes Spyder)
+Install Visual Studio Professional 2017 (VS2017) using the installer tool; click on "Change"
+- Activate Python development tools:
+  - Native Python development tools
+  - Python 3.6, 64bit (needed for compilation)
+  - Python 3.6, 32bit (needed for compilation)
+- but DO NOT install:
+  - Anaconda 3, Python 3.6, 32/64 bit
+  - Python 3.7 (64bit)
+  - Python-Miniconda
+  - Live Share 
+  - Python Web support 
+  ==> the python installation will be taken from the Anaconda2020.02 installation;
+  ==> this will enable that packages are handled via Anaconda2020.02 and not via VS2019
+- Activate "Desktop develoment with C++"
+- missing libraries will be installed on demand when starting VS2019 for first time
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+THE FOLLOWING WORKS, BUT MAKES PROBLEMS with sparse solvers in EIGEN:
 Install Anaconda 2020.02:
 - https://repo.anaconda.com/archive/
 - Anaconda3-2020.02-Windows-x86_64.exe
@@ -25,6 +40,7 @@ Install Visual Studio Professional 2019 (VS2019) using the installer tool; click
   ==> this will enable that packages are handled via Anaconda2020.02 and not via VS2019
 - Activate "Desktop develoment with C++"
 - missing libraries will be installed on demand when starting VS2019 for first time
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #install other Python versions (3.6 32/64bit) 
 - use Miniconda

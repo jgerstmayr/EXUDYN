@@ -12,7 +12,8 @@
 				- weblink: missing
 				
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINSYSTEMDATA__H
+#define MAINSYSTEMDATA__H
 
 #include <ostream>
 
@@ -458,4 +459,4 @@ public: //
 
 };
 
-
+#endif

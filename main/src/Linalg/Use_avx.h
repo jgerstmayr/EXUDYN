@@ -1,6 +1,19 @@
-#pragma once
-#include <immintrin.h> // AVX/AVX2 intrinsic header
+/** ***********************************************************************************************
+* @brief		Definitions for replacement of Real with AVX (SIMD) structures and commands
 
+* @author		Holzinger Stefan, Gerstmayr Johannes
+* @date			2018-05-02 (created)
+* @copyright	This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+* @note			Bug reports, support and further information:
+* 				- email: johannes.gerstmayr@uibk.ac.at
+* 				- weblink: missing
+*
+*
+************************************************************************************************ */
+#ifndef USE_AVX__H
+#define USE_AVX__H
+
+#include <immintrin.h> // AVX/AVX2 intrinsic header
 
 // boundary for memory alignment
 #define alignmentBytes 32
@@ -109,4 +122,5 @@ INLINE PReal operator*= (PReal &a, PReal b) { return a = a*b; }
 INLINE PReal operator/= (PReal &a, PReal b) { return a = a / b; }
 
 
+#endif
 

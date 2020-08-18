@@ -9,19 +9,15 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-#from TestModels.modelUnitTests import RunAllModelUnitTests, TestInterface
-from exudynUtilities import *
-from itemInterface import *
+from exudyn.itemInterface import *
+from exudyn.utilities import *
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-print('EXUDYN version='+exu.__version__)
+print('EXUDYN version='+exu.GetVersionString())
 
 #background
 #rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax

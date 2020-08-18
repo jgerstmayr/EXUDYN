@@ -11,7 +11,8 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
+#ifndef COBJECTANCFCABLE2DBASE__H
+#define COBJECTANCFCABLE2DBASE__H
 
 #include <ostream>
 
@@ -172,3 +173,4 @@ public:
 };
 
 
+#endif

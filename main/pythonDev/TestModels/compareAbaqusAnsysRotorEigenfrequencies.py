@@ -10,25 +10,23 @@ from scipy.sparse import linalg
 import scipy as sp
 
 import sys
-sys.path.append('../../bin/WorkingRelease')
 sys.path.append('TestModels/testData/')
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
-
 import exudyn as exu
-from itemInterface import *
-from exudynUtilities import *
-from exudynFEM import *
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.FEM import *
 
 numberOfModes = 18
 useSparseSolverRoutine = False
 
 errorResult = 0
 
-testDataDir = "TestModels/testData/"
-if exudynTestGlobals.useGraphics:
-    testDataDir = "testData/"
+testDataDir = "testData/"
+#if exudynTestGlobals.useGraphics:
+#    testDataDir = "testData/"
 
 ###############################################################################
 # Ansys - lumped mass matrix formulation - Sparse Matrix - MMF format

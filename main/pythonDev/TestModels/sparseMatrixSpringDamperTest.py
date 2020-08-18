@@ -9,14 +9,14 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
-from itemInterface import *     # conversion of data to exudyn dictionaries C interface
 import exudyn as exu           #c++ bibliothek, liest Dictionaries
-#from exudynUtilities import * # graphics and mathematical routines
+from exudyn.itemInterface import *     # conversion of data to exudyn dictionaries C interface
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

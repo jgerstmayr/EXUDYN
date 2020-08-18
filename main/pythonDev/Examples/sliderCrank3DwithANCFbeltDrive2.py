@@ -33,7 +33,7 @@ import matplotlib.ticker as ticker
 
 import exudyn as exu 
 import numpy as np
-from itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorCartesianSpringDamper, 
+from exudyn.itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorCartesianSpringDamper, 
                            LoadTorqueVector, VObjectJointPrismatic2D, ObjectJointPrismatic2D, Torque, 
                            MassPoint2D, RigidBody2D, NodePoint2D, RevoluteJoint2D, CoordinateConstraint, 
                            ObjectGround, ObjectContactFrictionCircleCable2D, NodeGenericData, 
@@ -41,8 +41,8 @@ from itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorCartesia
                            VObjectJointRevolute2D, VObjectRigidBody2D, NodePointGround, MarkerNodePosition, 
                            MarkerNodeCoordinate, Force, SensorBody, NodeRigidBody2D, ObjectRigidBody2D, 
                            MarkerBodyRigid, ObjectJointRevolute2D, SensorLoad)
-from exudynUtilities import AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid
-from exudynGraphicsDataUtilities import GraphicsDataRigidLink, GraphicsDataOrthoCube
+from exudyn.utilities import AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid
+from exudyn.graphicsDataUtilities import GraphicsDataRigidLink, GraphicsDataOrthoCube
 #import visHelper
 #visHelper.init()
 
@@ -164,7 +164,7 @@ vishelperInit()
 
 
 
-print("Exudyn used:", exu.__version__)
+print("Exudyn used:", exu.GetVersionString())
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

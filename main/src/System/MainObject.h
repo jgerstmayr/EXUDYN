@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINOBJECT__H
+#define MAINOBJECT__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -37,6 +38,7 @@ protected:
 	STDstring name;
 
 public:
+	virtual ~MainObject() {} //added for correct deletion of derived classes
 	virtual MainObject* GetClone() const { return new MainObject(*this); }
 
 	//! get string of object --> for handling and for python
@@ -128,3 +130,4 @@ public:
 	//virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const;
 };
 
+#endif

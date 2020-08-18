@@ -11,17 +11,16 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-#sys.path.append('../pythonDev')            
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
-from itemInterface import *
-from exudynUtilities import *
-from exudynFEM import *
-from exudynGraphicsDataUtilities import *
 
 import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.FEM import *
+from exudyn.graphicsDataUtilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -122,7 +121,7 @@ if addSupports:
     k = 2e8*100     #joint stiffness
     d = k*0.01  #joint damping
 
-    useSpringDamper = True
+    useGenericJoint = True
 
 #    mLeft = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=objFFRF['oFFRFreducedOrder'], 
 #                                                    meshNodeNumbers=np.array(nodeListLeft), #these are the meshNodeNumbers
@@ -146,7 +145,7 @@ if addSupports:
                                                   referencePosition=pLeft,
                                                   meshNodeNumbers=np.array(nodeListLeft), #these are the meshNodeNumbers
                                                   weightingFactors=weightsLeft))
-    if useSpringDamper:
+    if useGenericJoint:
 #        oSJleft = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mLeftRigid, mGroundPosLeft],
 #                                            stiffness=[k,k,k], damping=[d,d,d]))
 #        oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRight,mGroundPosRight],

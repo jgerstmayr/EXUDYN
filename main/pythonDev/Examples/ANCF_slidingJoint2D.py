@@ -9,15 +9,10 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
-from itemInterface import *
-
-
 
 import exudyn as exu
+from exudyn.itemInterface import *
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -218,7 +213,7 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.timeIntegration.pauseAfterEachStep = False
+simulationSettings.pauseAfterEachStep = False
 simulationSettings.displayStatistics = True
 
 #SC.visualizationSettings.nodes.showNumbers = True

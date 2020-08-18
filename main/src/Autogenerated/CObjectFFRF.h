@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-07  12:56:53 (last modfied)
+* @date         2020-08-11  21:25:31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
+
+#ifndef COBJECTFFRFPARAMETERS__H
+#define COBJECTFFRFPARAMETERS__H
 
 #include <ostream>
 
@@ -66,7 +68,6 @@ public: // AUTO:
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 
@@ -94,8 +95,8 @@ protected: // AUTO:
     mutable ResizableMatrix tempMatrix2;          //!< AUTO: other temporary matrix
 
 public: // AUTO: 
-    static const Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
-    static const Index rigidBodyNodeNumber  = 0; //number of rigid body node (usually = 0)
+    static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
+    static constexpr Index rigidBodyNodeNumber  = 0; //number of rigid body node (usually = 0)
     //! AUTO: default constructor with parameter initialization
     CObjectFFRF()
     {
@@ -362,3 +363,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

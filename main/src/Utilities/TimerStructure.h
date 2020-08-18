@@ -11,7 +11,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef TIMERSTRUCTURE__H
+#define TIMERSTRUCTURE__H
 
 //for chrono / datetime:
 #include "Utilities/BasicFunctions.h" //defines Real
@@ -110,3 +111,4 @@ public:
 	}
 };
 
+#endif

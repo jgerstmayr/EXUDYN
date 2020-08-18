@@ -32,18 +32,21 @@
 * cout << v1 << "\n";               //write v1 to cout
 * @endcode
 ************************************************************************************************ */
-
-#pragma once
+#ifndef VECTORBASE__H
+#define VECTORBASE__H
 
 #include <initializer_list> //for initializer_list in constructor
 #include <ostream>
-#include <stdlib.h> // for initialization with std::vector
+//#include <stdlib.h> //only works in MSVC for initialization with std::vector
+#include <array>
 #include <vector>
-#include <cmath> //for sqrt
+
+//#include <cmath> //for sqrt
 #include <utility> //for sqrt
 
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h" //defines Real
+//#include "Utilities/ReleaseAssert.h"
+//#include "Utilities/BasicDefinitions.h" //defines Real
+#include "Utilities/BasicFunctions.h"   //for Minimum
 
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index vector_new_counts; //global counter of item allocations; is increased every time a new is called
@@ -70,7 +73,8 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //! Default constructor: no memory allocation!
-    VectorBase(): numberOfItems(0), data(nullptr) {};
+	VectorBase() : data(nullptr), numberOfItems(0) {};
+
 
     //! Allocate numberOfItemsInit Reals in memory; no data initialization (data[...] = undefined!)!!!
 	VectorBase(Index numberOfItemsInit);
@@ -489,7 +493,7 @@ public:
 	//! Returns the minimum of all components of a vector in range [0, numberOfItems]
 	T Minimum() const
 	{
-		T min = EXUstd::MAXFLOAT;
+		T min = EXUstd::_MAXFLOAT;
 		for (auto item : *this) { min = EXUstd::Minimum(min, item); }
 		return min;
 	}
@@ -497,7 +501,7 @@ public:
 	//! Returns the minimum of all components of a vector in range [0, numberOfItems]
 	T Maximum() const
 	{
-		T max = EXUstd::MINFLOAT;
+		T max = EXUstd::_MINFLOAT;
 		for (auto item : *this) { max = EXUstd::Maximum(max, item); }
 		return max;
 	}
@@ -516,7 +520,7 @@ VectorBase<T>::VectorBase(Index numberOfItemsInit, T initializationValue)
 {
 	AllocateMemory(numberOfItemsInit);
 
-	Index cnt = 0;
+	//Index cnt = 0;
 	for (auto &value : *this) {
 		value = initializationValue;
 	}
@@ -561,3 +565,4 @@ typedef VectorBase<Real> Vector;
 typedef VectorBase<float> VectorF; //always float, used for graphics
 typedef std::vector<Real> StdVector; //needed for user functions
 
+#endif

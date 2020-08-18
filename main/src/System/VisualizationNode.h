@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONNODE__H
+#define VISUALIZATIONNODE__H
 
 class VisualizationSystem; //predefined to be used in definition of base visualizationItem classes
 class VisualizationSettings; //predefined for update graphics
@@ -28,6 +29,7 @@ class VisualizationNode
 protected:
 	bool show; //true: shall be drawn; false: no not draw; will be initialized in specialized class
 public:
+	virtual ~VisualizationNode() {} //added for correct deletion of derived classes
 	//! Compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	//  itemNumber: number according to itemNumber in CData
 	//  future: remove direct links to VisualizationSystem and CSystemData
@@ -51,3 +53,4 @@ inline std::ostream& operator<<(std::ostream& os, const VisualizationNode& item)
 	return os;
 }
 
+#endif

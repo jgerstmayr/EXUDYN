@@ -11,17 +11,16 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-#sys.path.append('../pythonDev')            
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
-from itemInterface import *
-from exudynUtilities import *
-from exudynFEM import *
-from exudynGraphicsDataUtilities import *
 
 import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.FEM import *
+from exudyn.graphicsDataUtilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -31,9 +30,9 @@ import numpy as np
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
-inputFileName = 'TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
-if exudynTestGlobals.useGraphics:
-    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
+inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
+#if exudynTestGlobals.useGraphics:
+#    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
 

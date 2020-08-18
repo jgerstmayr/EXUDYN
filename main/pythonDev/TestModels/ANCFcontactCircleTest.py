@@ -10,14 +10,13 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
-from itemInterface import *
-
-
 import exudyn as exu
+from exudyn.itemInterface import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 

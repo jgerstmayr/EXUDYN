@@ -15,9 +15,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-		ReleaseFast|Any CPU = ReleaseFast|Any CPU
-		ReleaseFast|x64 = ReleaseFast|x64
-		ReleaseFast|x86 = ReleaseFast|x86
+		ReleaseP37|Any CPU = ReleaseP37|Any CPU
+		ReleaseP37|x64 = ReleaseP37|x64
+		ReleaseP37|x86 = ReleaseP37|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -26,9 +26,9 @@ Global
 		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.Release|x64.ActiveCfg = Release|Any CPU
 		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.Release|x86.ActiveCfg = Release|Any CPU
-		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.ReleaseFast|Any CPU.ActiveCfg = ReleaseFast|Any CPU
-		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.ReleaseFast|x64.ActiveCfg = ReleaseFast|Any CPU
-		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.ReleaseFast|x86.ActiveCfg = ReleaseFast|Any CPU
+		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.ReleaseP37|Any CPU.ActiveCfg = ReleaseP37|Any CPU
+		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.ReleaseP37|x64.ActiveCfg = ReleaseP37|Any CPU
+		{B54EC0EB-2813-43B2-9799-52A0CF2A77AF}.ReleaseP37|x86.ActiveCfg = ReleaseP37|Any CPU
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Debug|Any CPU.Build.0 = Debug|Win32
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Debug|x64.ActiveCfg = Debug|x64
@@ -39,9 +39,11 @@ Global
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x64.ActiveCfg = Release|x64
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x64.Build.0 = Release|x64
 		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.Release|x86.ActiveCfg = Release|Win32
-		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseFast|Any CPU.ActiveCfg = ReleaseFast|Win32
-		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseFast|x64.ActiveCfg = ReleaseFast|x64
-		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseFast|x86.ActiveCfg = ReleaseFast|Win32
+		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseP37|Any CPU.ActiveCfg = ReleaseP37|Win32
+		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseP37|x64.ActiveCfg = ReleaseP37|x64
+		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseP37|x64.Build.0 = ReleaseP37|x64
+		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseP37|x86.ActiveCfg = ReleaseP37|Win32
+		{D5187A72-DC28-419F-A3E9-24E5204AC07F}.ReleaseP37|x86.Build.0 = ReleaseP37|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,22 +10,17 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-#sys.path.append('../pythonDev')            
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
-from itemInterface import *
 import exudyn as exu
-from exudynUtilities import *
-from exudynLieGroupIntegration import *
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.lieGroupIntegration import *
 
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
-#exu.SetWriteToFile('testOutput.log', flagWriteToFile=True, flagAppend=True)
-
 SC = exu.SystemContainer()
-#mbs = exu.MainSystem()
 mbs = SC.AddSystem()
 
 color = [0.1,0.1,0.8,1]

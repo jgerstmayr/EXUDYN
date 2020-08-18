@@ -11,14 +11,6 @@
 *
 ************************************************************************************************ */
 
-#pragma once
-
-//#include <initializer_list> //for initializer_list in constructor
-//#include <ostream>
-//#include <stdlib.h> // for initialization with std::vector
-//#include <vector>
-//#include "Utilities/ReleaseAssert.h"
-//#include "Utilities/BasicDefinitions.h" //defines Real
 #include "Linalg/Vector.h" 
 #include "Linalg/SlimVector.h" 
 

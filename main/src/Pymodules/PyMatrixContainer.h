@@ -1,5 +1,5 @@
 /** ***********************************************************************************************
-* @class			PyMatrixContainer
+* @class		PyMatrixContainer
 * @brief		Pybind11 interface to MatrixContainer
 *
 * @author		Gerstmayr Johannes
@@ -11,7 +11,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef PYMATRIXCONTAINER__H
+#define PYMATRIXCONTAINER__H
 
 #include "Linalg/MatrixContainer.h"	
 
@@ -140,3 +141,4 @@ namespace EPyUtils {
 
 } //namespace EPyUtils
 
+#endif

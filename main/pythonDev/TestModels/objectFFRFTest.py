@@ -12,17 +12,16 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-#sys.path.append('../pythonDev')            
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
-from itemInterface import *
-from exudynUtilities import *
-from exudynFEM import *
-from exudynGraphicsDataUtilities import *
 
 import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.FEM import *
+from exudyn.graphicsDataUtilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -45,9 +44,10 @@ modeNames = ['FFRF_MG','FFRF']
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #read finite element model
-inputFileName = 'TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
-if exudynTestGlobals.useGraphics:
-    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
+inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
+#if exudynTestGlobals.useGraphics:
+#    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
+
 #inputFileName = 'C:/DATA/cpp/FFRFrotor_svn/CAErotor/eigenvalues_rotorDisc_mod'
 
 fileInp = inputFileName + '.inp'

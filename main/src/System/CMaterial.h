@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef CMATERIAL__H
+#define CMATERIAL__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -28,7 +29,9 @@
 class CMaterial
 {
 public:
-    //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
+
+	virtual ~CMaterial() {} //added for correct deletion of derived classes
+	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
     virtual CMaterial* GetClone() const { return new CMaterial(*this); }
 
     //add a default material ...
@@ -38,4 +41,4 @@ public:
     }
 };
 
-
+#endif

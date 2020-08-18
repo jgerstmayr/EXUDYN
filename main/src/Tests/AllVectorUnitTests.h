@@ -15,8 +15,8 @@
 * 				
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifndef ALLVECTORUNITTESTS__H
+#define ALLVECTORUNITTESTS__H
 
 const lest::test vector_specific_test[] =
 {
@@ -554,3 +554,4 @@ const lest::test resizableVector_specific_test[] =
     },
 };
 
+#endif

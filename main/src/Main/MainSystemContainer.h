@@ -15,7 +15,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINSYSTEMCONTAINER__H
+#define MAINSYSTEMCONTAINER__H
 
 //! This is the extension of SystemContainer, which contains all objects needed for management and in the Python world.
 //  The System objects have their corresponding python object, which contains a pointer to the system (main) objects.
@@ -100,7 +101,7 @@ public:
 			A[9] = (float)R(2, 1);
 			A[10]= (float)R(2, 2);
 		}
-		catch (const std::exception& ex)
+		catch (const EXUexception& ex)
 		{
 			SysError("EXUDYN raised internal error in SetRenderState(...):\n" + STDstring(ex.what()) + "\nCheck dictionary format.\n");
 		}
@@ -161,3 +162,5 @@ public:
 	}
 
 };
+
+#endif

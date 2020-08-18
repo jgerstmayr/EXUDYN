@@ -18,7 +18,7 @@ Currently, the module structure is simple:
 	\ei
   \item C++ parts, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
 	\bi
-	  \item \texttt{exudyn}\footnote{note that there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+	  \item \texttt{exudyn}\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
 	  \item \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
 	  \item \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
 		loads can added to the system, see Section \ref{sec_item_reference_manual};
@@ -764,6 +764,20 @@ The following list covers changes in the python interface and functionality:
 	%\bi \ttfamily
 	  %\item $\ra$ 
 	%\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 0.1.368 $\ra$ Version 1.0.0}
+	\item[] {\bf Major changes} in the python interface, as the utilities moved into the exudyn package:
+	\bi \ttfamily
+	  \item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
+	  \item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
+	  \item \texttt{from exudynBasicUtilities import *} $\ra$ \texttt{from exudyn.basicUtilities import *}
+	  \item \texttt{from exudynFEM import *} $\ra$ \texttt{from exudyn.FEM import *}
+	  \item \texttt{from exudynGraphicsDataUtilities import *} $\ra$ \texttt{from exudyn.graphicsDataUtilities import *}
+	  \item \texttt{from exudynGUI import *} $\ra$ \texttt{from exudyn.GUI import *}
+	  \item \texttt{from exudynLieGroupIntegration import *} $\ra$ \texttt{from exudyn.lieGroupIntegration import *}
+	  \item \texttt{from exudynRigidBodyUtilities import *} $\ra$ \texttt{from exudyn.rigidBodyUtilities import *}
+	  \item \texttt{from exudynRobotics import *} $\ra$ \texttt{from exudyn.robotics import *}
+	\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 0.1.360 $\ra$ Version 0.1.361}
 	\item[] Changes in the python interface:

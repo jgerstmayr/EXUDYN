@@ -62,7 +62,7 @@ bool MainObjectContactCircleCable2D::CheckPreAssembleConsistency(const MainSyste
 		return false;
 	}
 
-	if (mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName() != "BodyCable2DShape")
+	if (STDstring(mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName()) != STDstring("BodyCable2DShape"))
 	{
 		errorString = STDstring("ObjectContactCircleCable2D: Marker 1 must be of type = 'BodyCable2DShape'");
 		return false;

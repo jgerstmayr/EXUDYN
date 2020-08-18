@@ -17,7 +17,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef CSOLVERIMPLICITSECONDORDERTIMEINT__H
+#define CSOLVERIMPLICITSECONDORDERTIMEINT__H
 
 #include "Solver/CSolverBase.h" 
 
@@ -178,3 +179,4 @@ public:
 
 };
 
+#endif

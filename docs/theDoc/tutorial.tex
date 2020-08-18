@@ -16,17 +16,18 @@ The python source code of this section can be found in the file:
 \ei
 This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 \vspace{6pt}\\
-To start up, we set the system path to the directory of the library (needs to be adjusted; can be relative or absolute path):
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
-  import sys 
-  sys.path.append('../../bin/WorkingRelease') #chose path of WorkingRelease!!!
-\end{lstlisting}
+%To start up, we set the system path to the directory of the library (needs to be adjusted; can be relative or absolute path):
+%\pythonstyle
+%\begin{lstlisting}[language=Python, firstnumber=1]
+  %import sys 
+  %sys.path.append('../../bin/WorkingRelease') #chose path of WorkingRelease!!!
+%\end{lstlisting}
 %
 We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
+\pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=3]
   import exudyn as exu
-  from itemInterface import *
+  from exudyn.itemInterface import *
   import numpy as np #for postprocessing
 \end{lstlisting}
 %

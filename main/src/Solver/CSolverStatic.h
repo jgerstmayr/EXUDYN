@@ -17,7 +17,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef CSOLVERSTATIC__H
+#define CSOLVERSTATIC__H
 
 #include "Solver/CSolverBase.h" 
 
@@ -74,3 +75,4 @@ public:
 
 };
 
+#endif

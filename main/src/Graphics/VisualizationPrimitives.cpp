@@ -14,7 +14,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //includes stdoutput.h

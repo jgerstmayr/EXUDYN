@@ -11,18 +11,18 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
-from itemInterface import *
-from exudynUtilities import *
 import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-exu.Print('DYNAFLEX version='+exu.__version__)
+exu.Print('DYNAFLEX version='+exu.GetVersionString())
 
 #testInterface = TestInterface(dynaflex = df, systemContainer = SC, useGraphics=False)
 #RunAllModelUnitTests(mbs, testInterface)

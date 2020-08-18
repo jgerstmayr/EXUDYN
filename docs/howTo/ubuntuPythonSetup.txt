@@ -1,0 +1,73 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+this file describes all necessary steps for setup of python with UBUNTU 18.04.4LTS
+author: Johannes Gerstmayr
+date:   2020-07-16
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+* preliminary steps (if needed):
+sudo apt-get update
+sudo apt install python3-pip
+pip3 install pybind11
+pip3 install numpy
+pip3 install matplotlib
+pip3 install scipy
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+running setup tools on UBUNTU (tested on: 20.04):
+
+- needs superuser rights, check if this can be changed:
+sudo python3 setup.py install
+
+- before new build, remove all files:
+sudo rm -r build dist exudyn.egg-info tmp
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+problems with gcc:
+
+- different options:
+  * /std:c++17 ==> -std=c++17
+  * /openmp ==> -fopenmp
+
+===============================================
+sudo apt install python3-pip
+pip3 install pybind11
+
+
+===============================================
+==>update compiler:
+sudo apt update
+sudo apt install build-essential
+sudo apt-get install manpages-dev
+gcc --version ==> 7.5.0
+
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt install gcc-7 g++-7 gcc-8 g++-8 gcc-9 g++-9
+
+==> question: how to activate gcc-8 or 9 for setuptools:
+import os
+os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux
+os.environ["CXX"] = "gcc-8"
+
+
+===============================================
+#using CMAKE:
+
+(sudo apt-get install python3-dev) - already installed with common UBUNTU18.04
+sudo apt-get install cmake
+
+==>IMPORTANT:
+the project requires to have the pybind11 repo including CMakelists.txt in the same folder as build
+
+#to build the library, run:
+mkdir build
+cd build
+cmake ..
+(make check -j 4) ==> does not work!
+make -j 4
+cd ..
+sudo pip3 install .   (takes very long ...?)
+
+===============================================

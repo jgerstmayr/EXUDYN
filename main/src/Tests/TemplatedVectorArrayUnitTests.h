@@ -15,8 +15,8 @@
 * 				
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifndef TEMPLATEDVECTORARRAYUNITTESTS__H
+#define TEMPLATEDVECTORARRAYUNITTESTS__H
 
 
 //works with lest_cpp03.hpp
@@ -410,4 +410,4 @@ const lest::test vectorarray_templated_tests[] =
     },
 };
 
-
+#endif

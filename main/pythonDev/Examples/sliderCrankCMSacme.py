@@ -9,19 +9,15 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
-
-import sys
-#sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64P37') #for exudyn, itemInterface and exudynUtilities
-sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64') #for exudyn, itemInterface and exudynUtilities
            
 #from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
-from itemInterface import *
-from exudynUtilities import *
-from exudynFEM import *
-from exudynGraphicsDataUtilities import *
-
 import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.FEM import *
+from exudyn.graphicsDataUtilities import *
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 

@@ -16,7 +16,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONBASICS__H
+#define VISUALIZATIONBASICS__H
 
 
 namespace EXUvis {
@@ -57,3 +58,4 @@ namespace EXUvis {
 	}
 } //namespace EXUvis
 
+#endif

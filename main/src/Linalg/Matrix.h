@@ -34,7 +34,8 @@
 * cout << v1 << "\n";			//write m1 to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef MATRIX__H
+#define MATRIX__H
 
 #include <initializer_list> //for initializer_list in constructor
 #include <ostream>          //ostream for matrix output as text
@@ -995,3 +996,5 @@ namespace EXUmath {
 
 	void MatrixTests();
 } //namespace EXUmath
+
+#endif

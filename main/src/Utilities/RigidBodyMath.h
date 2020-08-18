@@ -1,5 +1,6 @@
 /** ***********************************************************************************************
-* @brief		Functions and objects for rigid body kinematics and dynamics calculations;
+* @brief		namespace RigidBodyMath
+*				Functions and objects for rigid body kinematics and dynamics calculations;
 *				Uses namespace RigidBodyMath;
 *				Abbreviations: EP = Euler Parameters, TB = Tait Bryan; EA = Euler Angles (ZXZ)
 *
@@ -10,8 +11,8 @@
 * 
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifndef RIGIDBODYMATH__H
+#define RIGIDBODYMATH__H
 
 #include "Linalg/BasicLinalg.h" 
 
@@ -274,32 +275,6 @@ namespace RigidBodyMath {
 			   rot_t[1]*c1, 0, 0 });
 	}
 
-	//********************************************************************************
-	//Rotation vector; see paper Holzinger, Gerstmayr; Multibody System Dynamics 2020, submitted
-
-	//! convert Euler angles (Tait-Bryan angles) to rotation matrix
-	template<class TVector>
-	inline Matrix3D RotationVector2RotationMatrix(const TVector& rot)
-	{
-		Vector3D v;
-		v.CopyFrom(rot);
-		Real angle = rot.GetL2Norm();
-		Real cAngle = cos(angle);
-		Real sAngle = sin(angle);
-
-		if (angle == 0) {
-			return EXUmath::unitMatrix3D;
-		}
-		else
-		{
-			Matrix3D mat(EXUmath::unitMatrix3D);
-			Matrix3D vTilde(Vector2SkewMatrix(v));
-
-			mat += (sin(angle) / angle)*vTilde;
-			mat += ((1. - cAngle) / (angle * angle))*vTilde*vTilde;
-			return mat;
-		}
-	}
 
 	//inline Matrix3D RotationVector2RotationMatrix(const Vector3D& rot) { return RotationVector2RotationMatrixTemplate(rot); }
 	//inline Matrix3D RotationVector2RotationMatrix(const CSVector4D& rot) { return RotationVector2RotationMatrixTemplate(rot); } //for NodeRigidBody compatibility functions
@@ -346,6 +321,32 @@ namespace RigidBodyMath {
 	inline Matrix3D EP2RotationMatrix_t(const CSVector4D& ep, const CSVector4D& ep_t) { return EP2RotationMatrix_tTemplate<CSVector4D>(ep, ep_t); }
 
 
+	//********************************************************************************
+	//Rotation vector; see paper Holzinger, Gerstmayr; Multibody System Dynamics 2020, submitted
+
+	//! convert rotation vector to rotation matrix
+	template<class TVector>
+	inline Matrix3D RotationVector2RotationMatrix(const TVector& rot)
+	{
+		Vector3D v;
+		v.CopyFrom(rot);
+		Real angle = rot.GetL2Norm();
+		Real cAngle = cos(angle);
+		//Real sAngle = sin(angle);
+
+		if (angle == 0) {
+			return EXUmath::unitMatrix3D;
+		}
+		else
+		{
+			Matrix3D mat(EXUmath::unitMatrix3D);
+			Matrix3D vTilde(Vector2SkewMatrix(v));
+
+			mat += (sin(angle) / angle)*vTilde;
+			mat += ((1. - cAngle) / (angle * angle))*vTilde*vTilde;
+			return mat;
+		}
+	}
 	//********************************************************************************
 	//simple functions for ROTATION MATRICES
 
@@ -453,5 +454,4 @@ namespace RigidBodyMath {
 
 }
 
-
-
+#endif

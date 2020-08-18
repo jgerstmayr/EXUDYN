@@ -10,36 +10,28 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 
-#import sys
-#sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-##sys.path.append('../pythonDev')  
-#
-#import sys
-##sys.path.append('../EXUDYN_git/main/bin/WorkingRelease64') #for exudyn, itemInterface and exudynUtilities
-
 import sys, platform
-workingReleasePath = 'C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease' #absolute path for python 3.7
-if platform.architecture()[0] == '64bit':
-    workingReleasePath += '64'
-if sys.version_info.major == 3 and sys.version_info.minor == 7:
-    workingReleasePath += 'P37'
-if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
-    raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
-sys.path.append(workingReleasePath) #for exudyn, itemInterface and exudynUtilities
+
+#workingReleasePath = 'C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease' #absolute path for python 3.7
+#if platform.architecture()[0] == '64bit':
+#    workingReleasePath += '64'
+#if sys.version_info.major == 3 and sys.version_info.minor == 7:
+#    workingReleasePath += 'P37'
+#if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
+#    raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
+#sys.path.append(workingReleasePath) #for exudyn, itemInterface and from exudyn.utilities import *
           
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
-from itemInterface import *
-from exudynUtilities import *
-from exudynFEM import *
-from exudynGraphicsDataUtilities import *
-
 import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+from exudyn.FEM import *
+from exudyn.graphicsDataUtilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+import numpy as np
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-
-import numpy as np
 
 # stress shape mode import flags
 generateStressModesFromPyAnsys = False #True: needs pyansys installed...

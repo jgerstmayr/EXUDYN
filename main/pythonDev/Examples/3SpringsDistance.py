@@ -10,11 +10,9 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -122,6 +120,6 @@ else:
 
     SC.StaticSolve(mbs, simulationSettings)
 
- SC.WaitForRenderEngineStopFlag()
+SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
 

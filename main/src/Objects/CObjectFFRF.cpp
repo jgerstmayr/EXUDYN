@@ -42,7 +42,7 @@ bool MainObjectFFRF::CheckPreAssembleConsistency(const MainSystem& mainSystem, S
 	CObjectFFRF* cObject = (CObjectFFRF*)GetCObject();
 
 	Index numberOfNodes = cObject->GetNumberOfNodes();
-	Index numberOfMeshNodes = cObject->GetNumberOfMeshNodes();
+	//Index numberOfMeshNodes = cObject->GetNumberOfMeshNodes();
 
 	//Index nODE2test = cObject->GetODE2Size(); //NOT AVAILABLE YET
 	Index nODE2 = 0; //total number of coordinates
@@ -562,11 +562,11 @@ Index CObjectFFRF::GetAlgebraicEquationsSize() const
 void CObjectFFRF::ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2) const
 {
 	algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
-	Index offset = 0;
+	//Index offset = 0;
 
 	if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
 	{
-		offset = 1; //for Euler parameter constraint
+		//offset = 1; //for Euler parameter constraint
 		if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
 		{
 			algebraicEquations.SetNumberOfItems(1);
@@ -615,8 +615,8 @@ void CObjectFFRF::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& 
 	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
 	{
 		Index nODE2 = GetODE2Size(); //total number of coordinates
-		Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
-		Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+		//Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+		//Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
 
 		jacobian.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
 		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!

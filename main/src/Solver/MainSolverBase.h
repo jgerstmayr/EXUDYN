@@ -12,7 +12,8 @@
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
+#ifndef MAINSOLVERBASE__H
+#define MAINSOLVERBASE__H
 
 #include <ostream>
 
@@ -56,6 +57,7 @@ public: //
 	MainSolverBase() {
 		isInitialized = false;
 	}
+	virtual ~MainSolverBase() {} //added for correct deletion of derived classes
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++
 	// must be overwritten:
@@ -347,4 +349,4 @@ public: //
 
 };
 
-
+#endif

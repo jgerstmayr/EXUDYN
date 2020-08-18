@@ -27,7 +27,7 @@ bool MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency(const MainSys
 	
 	Index coordinate = cMarker->GetRotationCoordinateNumber();
 	Index nodeNumber = cMarker->GetNodeNumber();
-	Index nodeNumberOfCoordinates = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
+	//Index nodeNumberOfCoordinates = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
 	//check if coordinate < 3 and if is rigid body!
 	//nodenumber already checked in CSystem

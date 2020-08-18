@@ -16,8 +16,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
-
+#ifndef VISUALIZATIONSYSTEMCONTAINER__H
+#define VISUALIZATIONSYSTEMCONTAINER__H
 
 #include "Linalg/BasicLinalg.h"		//includes all Matrix and Vector classes
 
@@ -231,5 +231,4 @@ public:
 
 };
 
-
-
+#endif

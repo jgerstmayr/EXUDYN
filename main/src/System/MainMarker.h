@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINMARKER__H
+#define MAINMARKER__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -34,6 +35,7 @@ class MainMarker
 protected:
 	STDstring name;
 public:
+	virtual ~MainMarker() {} //added for correct deletion of derived classes
 	virtual MainMarker* GetClone() const { return new MainMarker(*this); }
 
 	virtual STDstring& GetName() { return name; }
@@ -64,3 +66,4 @@ public:
 
 };
 
+#endif

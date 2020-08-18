@@ -392,7 +392,7 @@ This section provides access functions to global coordinate vectors. Assigning i
     \texttt{sysStateList = mbs.systemData.GetSystemState()}}\\ \hline 
   SetSystemState(systemStateList, configuration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1\_t and ODE2\_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{mbs.systemData.SetDataCoordinates(sysStateList, configurationType = exu.ConfigurationType.Initial)}}\\ \hline 
+    \texttt{mbs.systemData.SetDataCoordinates(sysStateList, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
 \end{longtable}
 \end{center}
 

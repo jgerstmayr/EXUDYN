@@ -11,13 +11,16 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
+#ifndef GLFWCLIENT__H
+#define GLFWCLIENT__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
 #include <ostream>
-#include <stdlib.h>
+//#include <stdlib.h> //only works in MSVC for initialization with std::vector
+#include <array>
+#include <vector>
 #include <stdio.h>
 #include <thread>
 
@@ -216,3 +219,4 @@ extern GlfwRenderer glfwRenderer; //this is the (static) location of the rendere
 
 
 #endif //USE_GLFW_GRAPHICS
+#endif //include once

@@ -236,14 +236,13 @@ if True:
 if False:
     import sys
     #C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64P37
-    sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64P37') #for exudyn, itemInterface and exudynUtilities
-    #import exudynBasicUtilities
+    sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64P37') #for exudyn, itemInterface and from exudyn.utilities import *
     import exudyn as exu
     
-    from itemInterface import *
-    from exudynUtilities import *
-    from exudynRigidBodyUtilities import *
-    from exudynFEM import *
+    from exudyn.itemInterface import *
+    from exudyn.utilities import *
+    from exudyn.rigidBodyUtilities import *
+    from exudyn.FEM import *
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
 

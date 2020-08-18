@@ -15,8 +15,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
-
 
 #include "Graphics/VisualizationSystemData.h"
 

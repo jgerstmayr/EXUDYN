@@ -12,7 +12,8 @@
 				- weblink: missing
 				
 ************************************************************************************************ */
-#pragma once
+#ifndef CDATA__H
+#define CDATA__H
 
 #include <ostream>
 
@@ -35,7 +36,8 @@ private:
 
 public: // 
 
-  // access functions
+	virtual ~CData() {} //added for correct deletion of derived classes
+	// access functions
   //! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
   //virtual CData* GetClone() const { return new CData(*this); }
 
@@ -89,3 +91,4 @@ public: //
 };
 
 
+#endif

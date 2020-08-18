@@ -7,9 +7,9 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifdef _MSC_VER
 #pragma warning(disable : 4996) //warning deprecated of Eigen2020
+#endif
 
 //BasicLinalg provides consistent includes for BasicDefinitions, arrays, vectors and matrices
 #include "Linalg/LinearSolver.h"	
@@ -373,11 +373,12 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 	CHECKandTHROW(IsMatrixIsFactorized(), "GeneralMatrixEigenSparse::Solve( ...): matrix is not factorized!");
 
 	//will only work for Real==double!!! ==> make type check!
-	Real test;
+	Real test=0;
 	Real* testPtr = &test;
 	double* testDouble = static_cast<double*>(testPtr); // this will not compile in case of Real==float, for which the following functions need to be changed (use VectorXf)!
 
-	Index n = NumberOfRows(); //must be same as number of columns
+	//n must be same as number of columns:
+	Index n = NumberOfRows()+(Index)(*testDouble);  //add (Index)(*testDouble) to suppress gcc warning
 	Eigen::VectorXd b = Eigen::Map<Eigen::VectorXd>(rhs.GetDataPointer(), n);
 
 	//Eigen::VectorXd b(n);

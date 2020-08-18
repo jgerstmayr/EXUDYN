@@ -1,0 +1,327 @@
+Setup tools under windows in oder to generate python module from source files:
+
+Description for testSetupTools example
+
+====================================================================
+WINDOWS:
+requirements:
+- installed Anaconda (tested with Python 3.6, 64bit on Anaconda3, 5.1.0)
+- close Spyder or any other python application during these tasks:
+- NOT NEEDED if according Visual Studio version is installed: conda install -c anaconda vs2015_runtime
+  ==> takes a while!
+- NOT NEEDED: pip install pybind11
+- precompiled glfw library is provided in exudyn repo (glfw3.lib); opengl32.lib needed from visual studio
+
+#build WINDOWS wheel (does not need admin rights!):
+- make sure that wheel is installed in your python distribution: pip install wheel
+- open Anaconda prompt (either from START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat):
+- got to your setup.py directory and build wheel distribution: 
+
+cd C:\DATA\cpp\EXUDYN_git\main
+python setup.py bdist_wheel
+
+#creates,e.g.:
+  dist/exu-0.0.1-cp36-cp36m-win_amd64.whl
+
+#in order to install this wheel, use:
+pip install dist/exudyn-1.0.3-cp36-cp36m-win_amd64.whl
+
+#just for completeness: install python lib (==> not needed, bdist_wheel does everything):
+python setup.py install 
+
+#build WINDOWS installer (not fully tested):
+python setup.py bdist_wininst
+will create an executable installer, foo-1.0.win32.exe, in the current directory.
+
+====================================================================
+UBUNTU / linux (tested with clean UBUNTU 18.04 installation, "Normal installation" and option enabled to 
+    "Install third-party software for graphics ....", 
+	agree to "update" after first boot,
+	"VirtualBox Guest Additions installation" for better usage of virtual box ):
+
+#preliminary steps (not all may be necessary on your specific installation)
+sudo apt-get update
+sudo dpkg --configure -a
+sudo apt install python3-pip
+pip3 install pybind11
+pip3 install numpy
+
+#needed for some examples:
+pip3 install matplotlib
+pip3 install scipy
+
+####
+#add glfw library (if graphics activated: main/src/Utilities/BasicDefinitions.h: #define USE_GLFW_GRAPHICS):
+#install OpenGL libs and OpenGL headers (gets necessary includes in usr/include/GL)::
+sudo apt-get install freeglut3 freeglut3-dev
+sudo apt-get install mesa-common-dev
+
+#install glfw libs:
+sudo apt-get install libglfw3 libglfw3-dev
+
+#install X11 libs:
+sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+
+#(recommendation, usually not needed:)
+sudo apt-get install cmake libx11-dev xorg-dev libglu1-mesa-dev freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+#### end graphics
+
+
+
+#libglfw.so and libGL.so [.x...] should be available under:
+/usr/lib/x86_64-linux-gnu
+
+use pip3 and python3 for any python3.x version !!!
+
+#change to exudyn_git/main
+#install exudyn with sudo (run in main directory, where setup.py is located):
+sudo python3 setup.py install
+
+#use to install exudyn in local site-packages (still needs sudo?):
+sudo python3 setup.py install --user
+
+#test exudyn, e.g. by typing (still in main folder):
+python3 pythonDev/Examples/rigid3Dexample.py
+
+use prebuilt objects: ?not tested?
+CC="ccache gcc" python setup.py install
+
+remove local folders and files:
+sudo rm -r build dist exudyn.egg-info tmp .eggs
+
+uninstall from packages:
+sudo pip3 uninstall exudyn
+
+#see also: "history on UBUNTU18.04 for new installation" in this file
+====================================================================
+
+====================================================================
+steps to build and bind the pybind example on Windows (go to 64 bit anaconda):
+- close Spyder or any other python application during this task!
+- cd C:\ProgramData\Anaconda3_64b36\Scripts
+- open Anaconda prompt (go to anaconda/Scripts folder and call activate.bat):
+  - go to folder with setup.py
+  - run: python setup.py install ==> this is not the correct way, but does the job
+  - #####run: pip install ./python_example ==> does not work!
+
+==> the package will be installed in the site-packages path. This depends on system and installation
+==> if anaconda is installed with admin rights, it will be placed e.g. into 
+    'C:\\ProgramData\\Anaconda3\\lib\\site-packages
+
+- in visual studio, anaconda lies in a folder similar to this:
+  C:\Program Files (x86)\Microsoft Visual Studio\Shared\Anaconda3_86\Scripts
+
+====================================================================
+debugging python programs:
+sudo apt-get install gdb
+gdb python3
+==> in (gdb) call:
+run example.py
+
+- add debug information to build:
+CFLAGS='-Wall -O0 -g' python setup.py build
+
+- or for installation use:
+CFLAGS='-Wall -O0 -g' sudo python3 setup.py install
+
+debug in python:
+python3 -m pdb test.py
+
+
+
+
+
+
+
+the following notes are made during solving problems when adapting for linux/UBUNTU:
+====================================================================
+====================================================================
+====================================================================
+import error:
+>>> import exudyn as e
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: /usr/local/lib/python3.6/dist-packages/exudyn-0.1.368-py3.6-linux-x86_64.egg/exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol: _ZN27CObjectContactCircleCable2D19maxNumberOfSegmentsE
+
+with gcc-8.4.0:
+johannes@exugen:~/cpp/testGCCexudynNoGLFW$ python3
+Python 3.6.9 (default, Apr 18 2020, 01:56:04) 
+[GCC 8.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import exudyn
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: /home/johannes/.local/lib/python3.6/site-packages/exudyn-0.1.368-py3.6-linux-x86_64.egg/exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol: _ZTVN10__cxxabiv117__class_type_infoE
+
+
+====================================================================
+install different gcc versions:
+
+(python version + gcc version: shown on startup of python3)
+
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt install gcc-8
+==> installs gcc-8.4.0 on ubuntu 18.04
+(sudo apt install gcc-7 g++-7 gcc-8 g++-8 gcc-9 g++-9)
+
+modify setup.py:
+import os
+os.environ["CC"] = "gcc-8"
+os.environ["CXX"] = "gcc-8"
+====================================================================
+
+#history on UBUNTU18.04 for new installation, proved to work:
+
+sudo apt-get update
+sudo apt install python3-pip
+sudo dpkg --configure -a
+sudo apt install python3-pip
+pip3 install pybind11
+pip3 install numpy
+pip3 install matplotlib
+pip3 install scipy
+
+sudo apt-get install freeglut3
+sudo apt-get install freeglut3-dev
+sudo apt-get install libglfw3
+sudo apt-get install libglfw3-dev
+sudo apt-get install mesa-common-dev
+sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+
+sudo python3 setup.py install
+python3 pythonDev/Examples/rigid3Dexample.py 
+
+
+====================================================================
+====================================================================
+====================================================================
+performance:
+
+**exudynCPP compiled with setuptools (+installed as wheel):
+runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/ANCF_cantilever_test_dyn.py', wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
+load f=1293750.0000000002
+<systemData: 
+  Number of nodes= 18
+  Number of objects = 20
+  Number of markers = 4
+  Number of loads = 0
+  Number of sensors = 0
+  Number of ODE2 coordinates = 68
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 3
+  Number of data coordinates   = 0
+
+mainSystem:
+  variables = {}
+  sys = {}
+>
+
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.3 solver: implicit second order time integration
+STEP6149, t = 0.153725 sec, timeToGo = 4.50538 sec, Nit/step = 3.71979
+STEP12294, t = 0.30735 sec, timeToGo = 2.50731 sec, Nit/step = 3.76021
+STEP18524, t = 0.4631 sec, timeToGo = 0.478102 sec, Nit/step = 3.80091
+STEP20000, t = 0.5 sec, timeToGo = 6.64801e-13 sec, Nit/step = 3.79835
+solver finished after 6.52268 seconds.
+====================
+CPU-time statistics:
+  total time   = 6.52 seconds
+  measured time= 5.55 seconds (=85.2%) 
+  factorization     = 0.268%
+  newtonIncrement   = 14.3%
+  integrationFormula= 1.3%
+  ODE2RHS           = 17.1%
+  AERHS             = 0.574%
+  totalJacobian     = 0.601%
+  jacobianODE2_t    = 0.312%
+  jacobianODE2      = 0.265%
+  jacobianAE        = 0.00233%
+  massMatrix        = 5.64%
+  reactionForces    = 0.826%
+  postNewtonStep    = 0%
+  writeSolution     = 57.8%
+  overhead          = 0.0462%
+  python            = 1.47%
+  visualization/user= 0.103%
+global timings:
+  eigenFactorize = 0ms
+  eigenAnalyzePattern = 0ms
+  computeODE2RHSobject = 0ms
+  computeODE2RHSconnector = 0ms
+  computeODE2RHSmarkerData = 0ms
+  computeLoads = 0ms
+
+Solver iteration statistics:
+total number of steps:        20000
+total number of Newton iterations: 75967
+total number of Newton Jacobians:  151
+
+
+
+====================================================================
+**exudynCPP compiled inside VS2017:
+
+runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/ANCF_cantilever_test_dyn.py', wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
+Reloaded modules: exudyn, exudyn.exudynCPP, exudyn.itemInterface
+load f=1293750.0000000002
+<systemData: 
+  Number of nodes= 18
+  Number of objects = 20
+  Number of markers = 4
+  Number of loads = 0
+  Number of sensors = 0
+  Number of ODE2 coordinates = 68
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 3
+  Number of data coordinates   = 0
+
+mainSystem:
+  variables = {}
+  sys = {}
+>
+
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.3 solver: implicit second order time integration
+STEP5973, t = 0.149325 sec, timeToGo = 4.69711 sec, Nit/step = 3.75322
+STEP11938, t = 0.29845 sec, timeToGo = 2.70143 sec, Nit/step = 3.74962
+STEP17880, t = 0.447 sec, timeToGo = 0.711434 sec, Nit/step = 3.79004
+STEP20000, t = 0.5 sec, timeToGo = 6.89227e-13 sec, Nit/step = 3.79835
+solver finished after 6.76229 seconds.
+====================
+CPU-time statistics:
+  total time   = 6.76 seconds
+  measured time= 5.78 seconds (=85.4%) 
+  factorization     = 0.298%
+  newtonIncrement   = 13.9%
+  integrationFormula= 1.26%
+  ODE2RHS           = 17.9%
+  AERHS             = 0.608%
+  totalJacobian     = 0.616%
+  jacobianODE2_t    = 0.314%
+  jacobianODE2      = 0.279%
+  jacobianAE        = 0.00237%
+  massMatrix        = 5.66%
+  reactionForces    = 0.927%
+  postNewtonStep    = 0%
+  writeSolution     = 57.3%
+  overhead          = 0.0355%
+  python            = 1.45%
+  visualization/user= 0.0956%
+global timings:
+  eigenFactorize = 0ms
+  eigenAnalyzePattern = 0ms
+  computeODE2RHSobject = 0ms
+  computeODE2RHSconnector = 0ms
+  computeODE2RHSmarkerData = 0ms
+  computeLoads = 0ms
+
+Solver iteration statistics:
+total number of steps:        20000
+total number of Newton iterations: 75967
+total number of Newton Jacobians:  151
+
+
+
+
+

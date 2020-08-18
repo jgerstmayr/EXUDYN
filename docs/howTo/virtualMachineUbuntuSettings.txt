@@ -1,0 +1,33 @@
+===============================================
+GENERAL:
+
+install UBUNTU18.04 iso with Oracle VM VirtualBox 6.1.12
+
+===============================================
+- install guest additions:
+chose unter devices->insert guest addtions
+==>should be mounted on startup
+==>if already mounted on startup, it will ask  if it should run automatically (otherwise restart machine)
+
+otherwise:
+sudo sh ./VBoxLinuxAdditions.run --nox11
+
+==> font scaling with:
+install "gnome tweaks" (use Ubuntu software installer)
+sudo apt-get update
+sudo apt-get install gnome-tweaks
+==> allows only 100% and 200% scaling ...
+
+
+add shared folder:
+- add shared folder
+- must restart (even virtual box) ==> check mount permanently
+
+to access shared folder without superuser rights:
+Run 
+  sudo adduser $USER vboxsf 
+from terminal. which enables user access without superuser rights
+
+
+
+

@@ -25,7 +25,8 @@
 * m.SetNumberOfRowsAndColumns(7,4); //needs 28 items ==> memory allocated!
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef RESIZABLEMATRIX__H
+#define RESIZABLEMATRIX__H
 
 #include <initializer_list> //for initializer_list in constructor
 #include <ostream>          //ostream for matrix output as text
@@ -200,3 +201,4 @@ public:
 typedef ResizableMatrixBase<Real> ResizableMatrix;
 typedef ResizableMatrixBase<float> ResizableMatrixF;
 
+#endif

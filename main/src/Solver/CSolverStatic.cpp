@@ -11,7 +11,6 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
 
 #define useCSolverStatic
 #ifdef useCSolverStatic

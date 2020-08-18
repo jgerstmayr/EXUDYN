@@ -11,7 +11,8 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
+#ifndef MARKERDATA__H
+#define MARKERDATA__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -57,20 +58,21 @@ private:
 	LinkedDataVector lagrangeMultipliers; //for constraint equation evaluation; WORKAROUND, in order not to access system coordinates in ComputeAlgebraicEquations
 public:
 	//! get number of marker Data structures ==> for conventional connectors it is 2, but could be different for complex joints (e.g. sliding joint)
-	virtual Index GetNumberOfMarkerData() const { return numberOfMarkerData; }
+	Index GetNumberOfMarkerData() const { return numberOfMarkerData; }
 	//! read access to markerData
-	virtual const MarkerData& GetMarkerData(const Index& i) const { return markerData[i]; }
+	const MarkerData& GetMarkerData(const Index& i) const { return markerData[i]; }
 	//! write access to markerData
-	virtual MarkerData& GetMarkerData(const Index& i) { return markerData[i]; }
+	MarkerData& GetMarkerData(const Index& i) { return markerData[i]; }
 
 	//! write access to time t
-	virtual void SetTime(Real time) { t = time; }
+	void SetTime(Real time) { t = time; }
 	//! write access to time t
-	virtual Real GetTime() const { return t; }
+	Real GetTime() const { return t; }
 
 	//! read access to lagrangeMultipliers
-	virtual const LinkedDataVector& GetLagrangeMultipliers() const { return lagrangeMultipliers; }
+	const LinkedDataVector& GetLagrangeMultipliers() const { return lagrangeMultipliers; }
 	//! write access to lagrangeMultipliers
-	virtual LinkedDataVector& GetLagrangeMultipliers() { return lagrangeMultipliers; }
+	LinkedDataVector& GetLagrangeMultipliers() { return lagrangeMultipliers; }
 };
 
+#endif

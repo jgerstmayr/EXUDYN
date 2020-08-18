@@ -811,7 +811,7 @@ sL += DefLatexStartClass(pyClassStr+': Access coordinates', 'This section provid
                                 description="set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]",
                                 argList=['systemStateList','configuration'],
                                 defaultArgs=['','exu.ConfigurationType::Current'], #exu will be removed for binding
-                                example = "mbs.systemData.SetDataCoordinates(sysStateList, configurationType = exu.ConfigurationType.Initial)"
+                                example = "mbs.systemData.SetDataCoordinates(sysStateList, configuration = exu.ConfigurationType.Initial)"
                                 ); s+=s1; sL+=sL1
 
 

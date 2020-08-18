@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
+
+#ifndef SIMULATIONSETTINGS__H
+#define SIMULATIONSETTINGS__H
 
 #include <ostream>
 
@@ -105,7 +107,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,8 +115,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -168,7 +168,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -176,8 +176,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -275,7 +273,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -283,8 +281,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -344,7 +340,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -352,8 +348,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -373,7 +367,7 @@ public: // AUTO:
   Index verboseMode;                              //!< AUTO: 0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   Index verboseModeFile;                          //!< AUTO: same behaviour as verboseMode, but outputs all solver information to file
   GeneralizedAlphaSettings generalizedAlpha;      //!< AUTO: parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)
-  std::string preStepPyExecute;                   //!< AUTO: Python code to be executed prior to every step and after last step, e.g. for postprocessing
+  std::string preStepPyExecute;                   //!< AUTO: DEPRECATED, use preStepFunction in simulation settings; Python code to be executed prior to every step and after last step, e.g. for postprocessing
 
 
 public: // AUTO: 
@@ -422,7 +416,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -430,8 +424,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -510,7 +502,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -518,8 +510,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -582,3 +572,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

@@ -126,7 +126,7 @@ TimeIntegrationSettings has the following items:
     verboseMode &     Index &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
     verboseModeFile &     Index &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
     generalizedAlpha &     GeneralizedAlphaSettings &      &      &     parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)\\ \hline
-    preStepPyExecute &     String &      &     '' &     Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
+    preStepPyExecute &     String &      &     '' &     DEPRECATED, use preStepFunction in simulation settings; Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
 	  \end{longtable}
 	\end{center}
 

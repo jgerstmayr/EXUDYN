@@ -47,8 +47,8 @@ bool MainMarkerSuperElementRigid::CheckPreAssembleConsistency(const MainSystem& 
 	}
 
 	const CObjectSuperElement& cObjectSuperElement = (const CObjectSuperElement&)(*cObjectPtr); //now possible
-	Index localRigidBodyNodeNumber;
-	bool useFirstNodeAsReferenceFrame = cObjectSuperElement.HasReferenceFrame(localRigidBodyNodeNumber);
+	//Index localRigidBodyNodeNumber;
+	//bool useFirstNodeAsReferenceFrame = cObjectSuperElement.HasReferenceFrame(localRigidBodyNodeNumber);
 
 	//there must be at least one node
 	if (meshNodeNumbers.NumberOfItems() == 0)
@@ -373,7 +373,7 @@ void CMarkerSuperElementRigid::ComputeMarkerData(const CSystemData& cSystemData,
 
 	if (computeJacobian)
 	{
-		const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
+		//const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
 		const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
 
 		//will be done in AccessFunctions ...

@@ -26,7 +26,7 @@ bool MainObjectConnectorCoordinateVector::CheckPreAssembleConsistency(const Main
 	
 	Index m0Columns = cObject->GetParameters().scalingMarker0.NumberOfColumns();
 	Index m0Rows = cObject->GetParameters().scalingMarker0.NumberOfRows();
-	Index m1Columns = cObject->GetParameters().scalingMarker1.NumberOfColumns();
+	//Index m1Columns = cObject->GetParameters().scalingMarker1.NumberOfColumns();
 	Index m1Rows = cObject->GetParameters().scalingMarker1.NumberOfRows();
 	Index offsetLength = cObject->GetParameters().offset.NumberOfItems();
 
@@ -246,9 +246,6 @@ JacobianType::Type CObjectConnectorCoordinateVector::GetAvailableJacobians() con
 //! provide according output variable in "value"
 void CObjectConnectorCoordinateVector::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	Real relPos = markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0];
-	Real relVel = markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]; //this is the index-reduced equation: does not have offset!!!
-
 	switch (variableType)
 	{
 	case OutputVariableType::Displacement: 

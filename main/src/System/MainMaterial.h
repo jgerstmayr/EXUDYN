@@ -18,7 +18,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINMATERIAL__H
+#define MAINMATERIAL__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -33,6 +34,7 @@ class MainMaterial
 protected:
 	STDstring name;
 public:
+	virtual ~MainMaterial() {} //added for correct deletion of derived classes
 	virtual MainMaterial* GetClone() const { return new MainMaterial(*this); }
 
 	virtual STDstring& GetName() { return name; }
@@ -47,3 +49,4 @@ public:
 	virtual void SetCMaterial(CMaterial* pCMaterial) { SysError("Invalid call to MainMaterial::SetCMaterial"); }
 };
 
+#endif

@@ -14,7 +14,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 //++++++++++++++++ sleep_for():
 #include <iostream>
@@ -145,21 +144,21 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		//GetRequestedNodeType() must be implemented for all objects with nodes
 		for (Index i = 0; i < item->GetCObject()->GetNumberOfNodes(); i++)
 		{
-			Index itemIndex = item->GetCObject()->GetNodeNumber(i);
-			if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfNodes))
+			Index nodeItemIndex = item->GetCObject()->GetNodeNumber(i);
+			if (!EXUstd::IndexIsInRange(nodeItemIndex, 0, numberOfNodes))
 			{
 				PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
-					EXUstd::ToString(i) + " contains invalid (global) node number " + EXUstd::ToString(itemIndex));
+					EXUstd::ToString(i) + " contains invalid (global) node number " + EXUstd::ToString(nodeItemIndex));
 				systemIsInteger = false;
 			}
 			else //check if right nodeTypes are used
 			{
-				CNode* cNode = mainSystem.GetMainSystemData().GetMainNodes()[itemIndex]->GetCNode();
+				CNode* cNode = mainSystem.GetMainSystemData().GetMainNodes()[nodeItemIndex]->GetCNode();
 				//if ((item->GetRequestedNodeType() & cNode->GetType()) != item->GetRequestedNodeType())
 				if (!EXUstd::IsOfType(cNode->GetType(), item->GetRequestedNodeType()))
 				{
 					PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local node " +
-						EXUstd::ToString(i) + " (global index = " + EXUstd::ToString(itemIndex) + ")" + 
+						EXUstd::ToString(i) + " (global index = " + EXUstd::ToString(nodeItemIndex) + ")" +
 						" contains invalid node type " + Node::GetTypeString(cNode->GetType()) +
 						" while the requested node type was '" + Node::GetTypeString(item->GetRequestedNodeType()) + "'");
 					systemIsInteger = false;
@@ -187,17 +186,17 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				}
 				for (Index i = 0; i < connector->GetMarkerNumbers().NumberOfItems(); i++)
 				{
-					Index itemIndex = connector->GetMarkerNumbers()[i];
-					if (!EXUstd::IndexIsInRange(itemIndex, 0, numberOfMarkers))
+					Index markerItemIndex = connector->GetMarkerNumbers()[i];
+					if (!EXUstd::IndexIsInRange(markerItemIndex, 0, numberOfMarkers))
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
-							EXUstd::ToString(i) + " contains invalid (global) marker number " + EXUstd::ToString(itemIndex));
+							EXUstd::ToString(i) + " contains invalid (global) marker number " + EXUstd::ToString(markerItemIndex));
 						systemIsInteger = false;
 					}
 					else
 					{
 						//now check Marker::Type flags
-						CMarker* marker = mainSystem.GetMainSystemData().GetMainMarkers()[itemIndex]->GetCMarker();
+						CMarker* marker = mainSystem.GetMainSystemData().GetMainMarkers()[markerItemIndex]->GetCMarker();
 						if ((connector->GetRequestedMarkerType() & marker->GetType()) != connector->GetRequestedMarkerType()) //marker must contain all requested flags
 						{
 							PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + ", local marker " +
@@ -957,7 +956,7 @@ TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, global
 //! return true, if object has localODE2Rhs, false otherwise
 bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Rhs)
 {
-	Index i = 0;
+	//Index i = 0;
 	//std::cout << "ComputeODE2RHS" << i++ << ": " << (Index)object->GetType() << "\n";
 	if (!((Index)object->GetType() & (Index)CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
 	{
@@ -1030,21 +1029,32 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 	STARTGLOBALTIMER(TScomputeLoads);
 
 	Index nLoads = cSystemData.GetCLoads().NumberOfItems();
-	Vector3D loadVector3D;
-	Vector1D loadVector1D; //scalar loads...
+	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
+	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
+	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
+	bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
+
 	Real currentTime = cSystemData.GetCData().currentState.time;
 	for (Index j = 0; j < nLoads; j++)
 	{
-		if (cSystemData.GetCLoads()[j]->IsVector()) { loadVector3D = cSystemData.GetCLoads()[j]->GetLoadVector(currentTime); }
-		else { loadVector1D = Vector1D(cSystemData.GetCLoads()[j]->GetLoadValue(currentTime)); }
+		if (cSystemData.GetCLoads()[j]->IsVector()) 
+		{ 
+			loadVector3D = cSystemData.GetCLoads()[j]->GetLoadVector(currentTime); 
+			loadVector3Ddefined = true;
+		}
+		else 
+		{ 
+			loadVector1D = Vector1D(cSystemData.GetCLoads()[j]->GetLoadValue(currentTime)); 
+			loadVector1Ddefined = true;
+		}
 
 		Index markerNumber = cSystemData.GetCLoads()[j]->GetMarkerNumber();
 		CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
 		LoadType loadType = cSystemData.GetCLoads()[j]->GetType();
 
-		ArrayIndex* ltg = nullptr;		//for objects
-		Index nodeCoordinate;	//starting index for nodes (consecutively numbered)
-		bool applyLoad = false; //loads are not applied to ground objects/nodes
+		ArrayIndex* ltg = nullptr;	//for objects
+		Index nodeCoordinate = 99999;//initialize with arbitrary value for gcc; starting index for nodes (consecutively numbered)
+		bool applyLoad = false;		//loads are not applied to ground objects/nodes
 
 		//loads only applied to Marker::Body or Marker::Node
 		if (marker->GetType() & Marker::Body) //code for body markers
@@ -1091,6 +1101,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 			if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
 			{
 				const bool computeJacobian = true;
+				CHECKandTHROW(loadVector3Ddefined, "ComputeLoads(...): illegal force vector format (expected 3D load)");
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 				if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).positionJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dPos/dq)^T * Force
@@ -1101,6 +1112,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 			else if (loadType == LoadType::Torque)
 			{
 				const bool computeJacobian = true;
+				CHECKandTHROW(loadVector3Ddefined, "ComputeLoads(...): illegal force vector format (expected 3D torque)");
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 				if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).rotationJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
@@ -1110,6 +1122,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 			else if (loadType == LoadType::Coordinate)
 			{
 				const bool computeJacobian = true;
+				CHECKandTHROW(loadVector1Ddefined, "ComputeLoads(...): illegal force vector format (expected 1D load)");
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
 				//pout << "jacobian=" << temp.markerDataStructure.GetMarkerData(0).jacobian << "\n";
@@ -1780,7 +1793,7 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 		if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented"); }
 		//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 		Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-		Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+		//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 
 		if (!fillIntoSystemMatrix) //FUTURE: delete the whole if ... else... clause!
 		{
@@ -1894,7 +1907,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 {
 	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 
 	CHECKandTHROW(reactionForces.NumberOfItems() == nAE, "CSystem::ComputeODE2ProjectedReactionForces: reactionForces size mismatch!");
 	CHECKandTHROW(ode2ReactionForces.NumberOfItems() == nODE2, "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
@@ -2003,7 +2016,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 {
 	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
 
 	CHECKandTHROW(v.NumberOfItems() == nODE2, "CSystem::ComputeConstraintJacobianTimesVector: v size mismatch!");
 	result.SetNumberOfItems(nAE);

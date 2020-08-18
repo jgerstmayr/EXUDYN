@@ -12,7 +12,8 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
+#ifndef CLOAD__H
+#define CLOAD__H
 
 #include <ostream>
 
@@ -32,6 +33,8 @@ public: //
   //  markerNumber = 0;
   //  //loadVector = Vector({0.,0.,0.});
   //};
+
+  virtual ~CLoad() {} //added for correct deletion of derived classes
 
   // access functions
   //! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
@@ -80,3 +83,4 @@ public: //
   }
 };
 
+#endif

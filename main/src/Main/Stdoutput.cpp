@@ -228,7 +228,7 @@ void PyProcessExecuteQueue() //call python function and execute string as python
 			throw; //avoid multiple exceptions trown again (don't know why!)!
 			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 		}
-		catch (const std::exception& ex)
+		catch (const EXUexception& ex)
 		{
 			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!!");
 			deactivateGlobalPyRuntimeErrorFlag = false;

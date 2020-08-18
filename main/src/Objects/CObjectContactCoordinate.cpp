@@ -126,7 +126,7 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
 
-	Real startofStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[0];	//state0
+	//Real startofStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[0];	//state0
 	Real& currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0];			//state1
 
 	
@@ -146,7 +146,7 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 	//C			C		<=		no			0
 
 	//delete: Real previousState = currentState;
-	if (currentGap > 0 && currentState <= 0 || currentGap <= 0 && currentState > 0) //action: state1=currentGapState, error = |currentGap*k|
+	if ((currentGap > 0 && currentState <= 0) || (currentGap <= 0 && currentState > 0)) //action: state1=currentGapState, error = |currentGap*k|
 	{
 		discontinuousError = fabs(currentGap * parameters.contactStiffness);
 		currentState = currentGap;

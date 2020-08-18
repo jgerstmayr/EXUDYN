@@ -10,6 +10,9 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import sys
+sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
+
 import mkl
 mkl.set_num_threads(20)
 
@@ -69,7 +72,7 @@ def Normalize(v):
 #++++++++++++++++++++++++++++++++++++
 startTotal = timeit.default_timer()
 #parameters
-meshSize = 0.0015 #standard: 0.005
+meshSize = 0.0025 #standard: 0.005; 0.0015 does not always work
 
 #crank:
 b1 = 0.012 #width of journal bearing
@@ -357,14 +360,13 @@ if True:
 if True:
     import sys
     #C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64P37
-    sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64P37') #for exudyn, itemInterface and exudynUtilities
-    #import exudynBasicUtilities
+    #sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64P37') #for exudyn, itemInterface and from exudyn.utilities import *
     import exudyn as exu
     
-    from itemInterface import *
-    from exudynUtilities import *
-    from exudynRigidBodyUtilities import *
-    from exudynFEM import *
+    from exudyn.itemInterface import *
+    from exudyn.utilities import *
+    from exudyn.rigidBodyUtilities import *
+    from exudyn.FEM import *
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
 

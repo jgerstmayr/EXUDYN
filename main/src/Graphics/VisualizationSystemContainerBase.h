@@ -16,8 +16,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
-
+#ifndef VISUALIZATIONSYSTEMBASE__H
+#define VISUALIZATIONSYSTEMBASE__H
 
 //! A generic visualization class, which is used by Renderer class GLFW and Visualization
 //! Used to send signals from Renderer class GLFW, e.g. for update of graphics data
@@ -34,7 +34,7 @@ public:
 	virtual bool SaveImageRequest() = 0;		//! signal renderer that a frame shall be recorded
 	virtual bool GetAndResetZoomAllRequest() = 0;//! get zoom all request and reset to false
 	virtual std::string GetComputationMessage() = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
-	virtual ~VisualizationSystemContainerBase() {}
+	virtual ~VisualizationSystemContainerBase() {} //added for correct deletion of derived classes
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//HELPER FUNCTIONS
@@ -78,3 +78,4 @@ public:
 
 };
 
+#endif

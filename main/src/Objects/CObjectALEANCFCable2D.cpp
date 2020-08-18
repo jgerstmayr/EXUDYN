@@ -270,8 +270,8 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
-		const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
+		//const Index dim = 2;  //2D finite element
+		//const Index ns = 4;   //number of shape functions
 
 		Real x = localPosition[0]; //only x-coordinate
 		Vector4D SV = ComputeShapeFunctions(x, L);
@@ -290,7 +290,7 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 	}
 	case AccessFunctionType::AngularVelocity_qt:
 	{
-		const Index dim = 2;  //2D finite element
+		//const Index dim = 2;  //2D finite element
 		const Index ns = 4;   //number of shape functions
 
 		Real xLoc = localPosition[0]; //only x-coordinate
@@ -314,8 +314,8 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
-		const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
+		//const Index dim = 2;  //2D finite element
+		//const Index ns = 4;   //number of shape functions
 
 		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
 		value.SetAll(0.);

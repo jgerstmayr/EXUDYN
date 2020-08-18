@@ -55,34 +55,125 @@ The following people have contributed to the examples:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{How to link \codeName\ with Python (recommended for beginners)?}
+\mysubsubsection{How to install \codeName ?}
 
 In order to run \codeName , you need an appropriate Python installation.
 We recommend to use
 \bi
-  \item Anaconda, 32bit, Python 3.6.5 (alternatively 64bit)\footnote{Anaconda 32/64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe} or \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
+  \item Anaconda, 32bit, Python 3.6.5 or Anaconda 64bit, Python 3.6.5)\footnote{Anaconda 32/64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe} or \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
 	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anacondo 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer}
 %Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
-If you plan to use 64bit and newer Python versions, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with eigen and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
-However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 {\bf both} in the exudyn module and in Spyder).
+If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
+However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 bit {\bf both} in the \codeName\ module and in Spyder).
 
-The simplest way to start is, to copy the files (and possibly further files that are needed)
+%The simplest way to start is, to copy the files (and possibly further files that are needed)
+%\bi
+  %\item \texttt{exudynUtilities.py}
+  %\item \texttt{itemInterface.py}
+  %\item \texttt{exudyn.pyd}
+%\ei
+%to your working directory and directly import the modules as described in tutorials and examples.
+The {\bf standard way to install} the python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}) provided at the directory wheels in the \codeName\ repository. 
+First, open an Anaconda prompt:
 \bi
-  \item \texttt{exudynUtilities.py}
-  \item \texttt{itemInterface.py}
-  \item \texttt{exudyn.pyd}
+  \item[] EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
+	\item[] You can check your python version then, by running \texttt{python}\footnote{\texttt{python3} under UBUNTU 18.04}, the output reads like:
+	\bi
+	  \item \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
+	\ei
+	\item $\ra$ type \texttt{exit()} to close python
 \ei
-to your working directory and directly import the modules as described in tutorials and examples.
-The second way ({\bf recommended}) is to use Python's \texttt{sys} module to link to your \texttt{WorkingRelease} directory, for example:\vspace{6pt}\\
+
+{\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits, e.g.\ for Windows this may read (version number 1.0.3 may be different):
+\bi
+  \item[] \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.3-cp36-cp36m-win32.whl
+  \item[] \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.3-cp36-cp36m-win\_amd64.whl
+  \item[] \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.3-cp37-cp37m-win\_amd64.whl
+\ei
+
+The {\bf uncommon and old way} ($\ra$ not recommended for \codeName\ versions $\ge$ 1.0.0) is to use Python's \texttt{sys} module to link to your \texttt{exudyn} (previously \texttt{WorkingRelease}) directory, for example:\vspace{6pt}\\
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
   import sys
-  sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
+  sys.path.append('C:/DATA/cpp/EXUDYN_git/bin/EXUDYN32bitsPython36')
 \end{lstlisting}
-The path \texttt{C:/DATA/cpp/EXUDYN\_git/main/bin/WorkingRelease} needs to be adapted to the location of your \texttt{WorkingRelease} where the \texttt{exudyn.pyd} files are located. In case of 64bit, it must be changed to \texttt{.... /bin/WorkingRelease64}.
+%  sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
+%
+The folder \texttt{EXUDYN32bitsPython36} needs to be adapted to the location of the according \codeName\ package.
+%In case of 64bit, it must be changed to \texttt{.... /bin/WorkingRelease64}.
 
-In the future, there will also be a possibility to install the module using pip commands -- we are happy, if somebody could do this!
+%In the future, there will also be a possibility to install the module using pip commands -- we are happy, if somebody could do this!
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Build and install \codeName\ under Windows 10?}
+
+Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
+\bi
+  \item install your Anaconda distribution including Spyder
+  \item close all Python programs (e.g. Spyder, Jupyter, ...)
+	\item run an Anaconda prompt (may need to be run as administrator)
+	\item if you cannot run Anaconda prompt directly, do:
+	\bi
+	  \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary)
+		\item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts})
+	  \item run 'activate.bat'
+	\ei
+	\item go to 'main' of your cloned github folder of exudyn
+	\item run: \texttt{python setup.py install}
+	\item read the output; if there are errors, try to solve them by installing appropriate modules
+\ei
+You can also create your own wheels, doing the above steps to activate the according python version and then calling (requires installation of Microsoft Visual Studio; recommended: VS2017):
+\bi
+  \item[] \texttt{python setup.py bdist\_wheel}
+\ei
+This will add a wheel in the \texttt{dist} folder.
+
+To uninstall exudyn under Windows, run:
+\bi
+  \item[] \texttt{pip uninstall exudyn}
+\ei
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Build and install \codeName\ under UBUNTU?}
+
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python3.6 is already installed, otherwise use \texttt{sudo apt install python3}):
+
+\noindent First update ...
+\begin{lstlisting}[firstnumber=1]
+sudo apt-get update
+\end{lstlisting}
+
+\noindent Install necessary python libraries; \texttt{matplotlib} and\texttt{scipy} are not required for installation but used in \codeName\ examples:
+\begin{lstlisting}[firstnumber=1]
+sudo apt install python3-pip
+pip3 install numpy
+pip3 install matplotlib
+pip3 install scipy
+\end{lstlisting}
+
+\noindent Install pybind11 (needed for running the setup.py file derived from the pybind11 example):
+\begin{lstlisting}[firstnumber=1]
+pip3 install pybind11
+\end{lstlisting}
+
+\noindent If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefinitions.h}), you must install the according GLFW and OpenGL libs:
+\begin{lstlisting}[firstnumber=1]
+sudo apt-get install mesa-common-dev libx11-dev xorg-dev libglu1-mesa-dev freeglut3 freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
+\end{lstlisting}
+
+\noindent With all of these libs, you can run the setup.py installer, which takes some minutes for compilation:
+\begin{lstlisting}[firstnumber=1]
+sudo python3 setup.py install --user
+\end{lstlisting}
+
+\noindent To uninstall under UBUNTU, run:
+\bi
+  \item[] \texttt{sudo pip3 uninstall exudyn}
+\ei
+
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{How to install \codeName\ and using the C++ code (advanced)?}
@@ -101,7 +192,7 @@ In order to make full usage of the C++ code and extending it, you can use:
 		\item adapt \texttt{pytest.py} for your applications
 		\item extend the C++ source code
 		\item link it to your own code
-		\item NOTE: on some systems, you might need to replace '$/$' with '$\backslash$'
+		\item NOTE: on Linux systems, you mostly need to replace '$/$' with '$\backslash$'
 	\ei
 	\item Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
 \ei
@@ -130,22 +221,25 @@ In order to start, run the python interpreter Spyder.
 For the following example, either 
 \bi
 	\item open Spyder and copy the example provided in Listing \ref{lst:firstexample} into a new file, or
-	\item open \texttt{myFirstExample.py} from your \texttt{WorkingRelease} directory
+	\item open \texttt{myFirstExample.py} from your \texttt{EXUDYN32bitsPython36}\footnote{or any other directory according to your python version} directory
 \ei
 Hereafter, press the play button or \texttt{F5} in Spyder.
 %\lstinputlisting[language=Python]{../../main/bin/WorkingRelease/myFirstExample.py}
-\pythonexternal[language=Python, frame=single, float, label=lst:firstexample, caption=My first example]{../../main/bin/WorkingRelease/myFirstExample.py}
+\pythonexternal[language=Python, frame=single, float, label=lst:firstexample, caption=My first example]{../../main/pythonDev/Examples/myFirstExample.py}
 
 If successful, the IPython Console of Spyder will print something like:
 \plainlststyle
 {\ttfamily \footnotesize
 \begin{lstlisting}
-  runfile('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease/myFirstExample.py', 
-	  wdir='C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
-  Assemble nodes:
-  Set initial system coordinates (for ODE2, ODE1 and Data coordinates) ...
-  Time integration finished after 0.0011442 seconds.
+runfile('C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36/myFirstExample.py', 
+  wdir='C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36')
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.1 solver: implicit second order time integration
+STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
+solver finished after 0.0007824 seconds.
 \end{lstlisting}
+  %runfile('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease/myFirstExample.py', 
+	  %wdir='C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
 }
 
 If you check your current directory (where \texttt{myFirstExample.py} lies), you will find a new file \texttt{coordinatesSolution.txt}, which contains the results of your computation (with default values for time integration).

@@ -13,7 +13,8 @@
 * 				
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef PYBINDTESTS__H
+#define PYBINDTESTS__H
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //PYBIND TESTS
@@ -138,3 +139,5 @@ void CreateTestSystem(Index systemNumber, Index arg0, Index arg1)
 //Numpy-access to test Vector
 //py::array_t<Real> GetNumpyTest() { return py::array_t<Real>(test.NumberOfItems(), test.GetDataPointer()); }
 //void SetNumpyTest(const std::vector<Real>& v) { test = v; }
+
+#endif

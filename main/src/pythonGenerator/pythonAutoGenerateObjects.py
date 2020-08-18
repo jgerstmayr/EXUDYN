@@ -115,12 +115,12 @@ def WriteMiniExample(className, miniExample):
     s+= '#+++++++++++++++++++++++++++++++++++++++++++\n\n'
 
     s+= 'import sys\n'
-    s+= "sys.path.append('../../bin/WorkingRelease')\n"
-    s+= "sys.path.append('../TestModels')\n"
-    s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
+    #s+= "sys.path.append('../../bin/WorkingRelease')\n"
+    s+= "sys.path.append('../TestModels')\n\n"
     s+= 'import exudyn as exu\n'
-    s+= 'from exudynUtilities import *\n'
-    s+= 'from itemInterface import *\n'
+    s+= 'from exudyn.itemInterface import *\n'
+    s+= 'from exudyn.utilities import *\n\n'
+    s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
     s+= 'import numpy as np\n'
     s+= '\n'
     s+= '#create an environment for mini example\n'
@@ -141,7 +141,7 @@ def WriteMiniExample(className, miniExample):
     s+= '    exu.Print("example for ' + className + ' completed, test error =", testError)\n'
     s+= '\n'
     
-    fileExample=open('../../pythonDev/MiniExamples/'+className+'.py','w') 
+    fileExample=open('../../pythonDev/TestModels/MiniExamples/'+className+'.py','w') 
     fileExample.write(s)
     fileExample.close()
 
@@ -228,9 +228,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         WriteMiniExample(parseInfo['class'], parseInfo['miniExample'])
 
     sComp = "" #computation
-    sComp = GenerateHeader(compClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False)
+    sComp = GenerateHeader(compClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False, addIfdefOnce = False)
     sMain = "" #main object
-    sMain = GenerateHeader(mainClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False)
+    sMain = GenerateHeader(mainClassStr, Str2Doxygen(parseInfo['classDescription']), addModifiedDate=False, addIfdefOnce = False)
     #make list of strings to enable iteration
     sList = [sParamComp, sParamMain, sComp, sMain, sVisu]
     nClasses = 5 #number of different classes
@@ -935,6 +935,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     for i in range(nClasses):
         sList[i]+='};\n\n\n' #class
 
+    sList[2] += '\n#endif //#ifdef include once...\n'
+    sList[3] += '\n#endif //#ifdef include once...\n'
+    sList[4] += '\n#endif //#ifdef include once...\n'
+
     s = [sList[0]+sList[2], sList[1]+sList[3], sList[4], sLatex, sLatexItemList, classTypeStr, sPythonClass]
 
     return s
@@ -1280,7 +1284,7 @@ try: #still close file if crashes
     
     fileLatex.close()
 
-    filePython=open('..\\..\\pythonDev\\itemInterface.py','w') 
+    filePython=open('..\\..\\pythonDev\\exudyn\\itemInterface.py','w') 
     s = '#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
     s += '#automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries\n'
     s += '#author: Johannes Gerstmayr\n'
@@ -1305,7 +1309,7 @@ try: #still close file if crashes
     
     filePython.close()
 
-    fileExampleList=open('../../pythonDev/MiniExamples/miniExamplesFileList.py','w') 
+    fileExampleList=open('../../pythonDev/TestModels/MiniExamples/miniExamplesFileList.py','w') 
     s = '#this file provides a list of file names for mini examples\n'
     s+= '\n'
     s+= 'miniExamplesFileList = ['

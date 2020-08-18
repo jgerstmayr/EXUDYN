@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-06-24  22:25:49 (last modfied)
+* @date         2020-07-20  12:33:24 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
+
+#ifndef MAINLOADTORQUEVECTORPARAMETERS__H
+#define MAINLOADTORQUEVECTORPARAMETERS__H
 
 #include <ostream>
 
@@ -47,7 +49,6 @@ public: // AUTO:
                 - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 
@@ -158,3 +159,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

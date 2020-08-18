@@ -16,7 +16,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef VISUALIZATIONPRIMITIVES__H
+#define VISUALIZATIONPRIMITIVES__H
 
 #include "Graphics/VisualizationBasics.h" //for colors
 
@@ -89,3 +90,5 @@ namespace EXUvis {
 	void DrawSensor(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, bool draw3D = true);
 
 } //EXUvis
+
+#endif

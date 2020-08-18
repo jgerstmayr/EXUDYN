@@ -10,7 +10,6 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
 
 #include "Utilities/ExceptionsTemplates.h"
 #include "Graphics/VisualizationSystemContainer.h"  //includes everything needed
@@ -107,7 +106,7 @@ void VisualizationObjectGenericODE2::CallUserFunction(const VisualizationSetting
 		pyBodyGraphicsData = graphicsDataUserFunction(mainSystem, itemNumber);
 	}, "VisualizationObjectGenericODE2::CallUserFunction");
 
-	CObjectGenericODE2* cObject = (CObjectGenericODE2*)vSystem->systemData->GetCObjects()[itemNumber];
+	//CObjectGenericODE2* cObject = (CObjectGenericODE2*)vSystem->systemData->GetCObjects()[itemNumber];
 
 	Float3 refPos3DF = Float3(0);
 

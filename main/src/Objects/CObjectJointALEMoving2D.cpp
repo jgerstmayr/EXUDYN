@@ -76,7 +76,7 @@ bool MainObjectJointALEMoving2D::CheckPreAssembleConsistency(const MainSystem& m
 		return false;
 	}
 
-	if (mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName() != "BodyCable2DCoordinates")
+	if (STDstring(mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName()) != STDstring("BodyCable2DCoordinates"))
 	{
 		errorString = STDstring("ObjectJointALEMoving2D: Marker 1 must be of type = 'BodyCable2DCoordinates'");
 		return false;
@@ -217,8 +217,8 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		jacobian_AE.SetScalarMatrix(2, 0.); //no dependencies
 
 		//marker0: contains position jacobian
-		const Index forceXindex = 0;
-		const Index forceYindex = 1;
+		//const Index forceXindex = 0;
+		//const Index forceYindex = 1;
 
 		//compute ANCF position:
 		LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
@@ -331,7 +331,7 @@ Real CObjectJointALEMoving2D::PostNewtonStep(const MarkerDataStructure& markerDa
 	flags = PostNewtonFlags::_None;
 
 	Real L = markerDataCurrent.GetMarkerData(1).GetHelper(); //kind of hack ...
-	const Index slidingCoordinateIndex = 2;
+	//const Index slidingCoordinateIndex = 2;
 
 	LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
 

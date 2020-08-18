@@ -1,6 +1,6 @@
 
-from exudynUtilities import *
-from itemInterface import *
+from exudyn.utilities import *
+from exudyn.itemInterface import *
 
 #general test class for test of functions; 
 #exudyn ... must contain the exudyn module (exu)
@@ -95,7 +95,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     mbs.Assemble()
 
     simulationSettings = testInterface.exu.SimulationSettings() #takes currently set values or default values
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = "TestModels/solution/ANCFCable2D_bending_test.txt"
+    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/ANCFCable2D_bending_test.txt"
 
     simulationSettings.timeIntegration.numberOfSteps = 1000
     #simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000

@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef OUTPUTVARIABLE__H
+#define OUTPUTVARIABLE__H
 
 #include "Utilities/ReleaseAssert.h"
 #include <initializer_list>
@@ -407,4 +408,4 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
 	}
 }
 
-
+#endif

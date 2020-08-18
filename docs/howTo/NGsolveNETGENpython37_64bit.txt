@@ -26,6 +26,10 @@ Change local user paths:
 variable PYTHONPATH: AnacondaPath;[NGsolve-install-dir]\lib\site-packages
 variable PYTHONHOME: AnacondaPath
 
+ADD NGsolve manually:
+import sys
+sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
+
 using NGsolve/NETGEN in Spyder:
 - without graphics, everything should work fine
 - if you would like to visualize meshes, etc.: you must set

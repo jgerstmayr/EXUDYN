@@ -16,7 +16,7 @@ sys.path.append("../../bin/WorkingRelease")
 
 #import according libraries
 import exudyn as exu
-from itemInterface import *
+from exudyn.itemInterface import *
 
 #setup multibody system
 SC = exu.SystemContainer()

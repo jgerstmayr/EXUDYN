@@ -9,13 +9,11 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudynUtilities import *
-from itemInterface import *
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -103,8 +101,9 @@ mbs.AddLoad(Torque(markerNumber = mR0Left, loadVector = [0, 0, 10])) #apply torq
 mbs.Assemble()
 
 #now as system is assembled, nodes know their global coordinate index (for reading the coordinate out of the solution file):
-globalIndex = mbs.CallNodeFunction(nMass, 'GetGlobalODE2CoordinateIndex')
-print('global index of mass:', globalIndex)
+#deprecated: globalIndex = mbs.CallNodeFunction(nMass, 'GetGlobalODE2CoordinateIndex')
+globalIndex = mbs.GetNodeODE2Index(nMass) 
+print('global ODE2 coordinate index of mass:', globalIndex)
 #alternatively: use mbs.systemData.GetObjectLTGODE2(oMass)[0] to obtain e.g. first coordinate index of sliding mass object
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values

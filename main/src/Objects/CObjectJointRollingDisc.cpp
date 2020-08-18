@@ -72,7 +72,7 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 		const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 		Vector3D omega1 = A1*markerData.GetMarkerData(1).angularVelocityLocal;
-		const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
+		//const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
 
 		Vector3D constraintVec; //will contain constraint violation in the end
 
@@ -138,7 +138,7 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 		const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 		Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
-		const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
+		//const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
 
 		Vector3D constraintVec; //will contain constraint violation in the end
 
@@ -205,7 +205,7 @@ void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType vari
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 	Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
-	const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
+	//const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
 
 	Vector3D constraintVec; //will contain constraint violation in the end
 

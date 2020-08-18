@@ -12,18 +12,15 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#Load program libraries
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-#sys.path.append("../")
 import exudyn as exu
-from itemInterface import*
-from exudynUtilities import *
+from exudyn.itemInterface import*
+from exudyn.utilities import *
+
 import numpy as np
 
 
 #Print EXUDYN version
-print('EXUDYN version='+exu.__version__)
+print('EXUDYN version='+exu.GetVersionString())
 
 
 #Paramters

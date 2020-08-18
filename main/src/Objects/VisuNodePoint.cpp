@@ -11,7 +11,6 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
 
 #include <ostream>
 //#include <array>
@@ -735,7 +734,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 		float radius = 0.5f*visualizationSettings.nodes.defaultSize;
 		if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
 
-		Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
+		//Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 		Vector3D nodePos;
 		for (Index i = 0; i < cObject->GetNumberOfMeshNodes(); i++)
 		{
@@ -871,7 +870,8 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 	item.color2 = currentColor;
 
 	bool contourPlot = false;
-	float value1, value2; //values at endpoints, use linear interpolation
+	float value1=0; //values for linear interpolation
+	float value2=0; //values for linear interpolation
 	if ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes())
 	{
 		//ConstSizeVector<9> value; //cable elements have no more than 9 cooordinates ...
@@ -968,7 +968,7 @@ void VisualizationObjectConnectorSpringDamper::UpdateGraphics(const Visualizatio
 	CObjectConnectorSpringDamper* cItem = (CObjectConnectorSpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
 
 	//Index2 markers = Index2({ cItem->GetMarkerNumbers()[0], cItem->GetMarkerNumbers()[1] });
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1001,7 +1001,7 @@ void VisualizationObjectConnectorCartesianSpringDamper::UpdateGraphics(const Vis
 
 	CObjectConnectorCartesianSpringDamper* cItem = (CObjectConnectorCartesianSpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1047,7 +1047,7 @@ void VisualizationObjectConnectorRigidBodySpringDamper::UpdateGraphics(const Vis
 
 	CObjectConnectorRigidBodySpringDamper* cItem = (CObjectConnectorRigidBodySpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1086,7 +1086,7 @@ void VisualizationObjectConnectorCoordinateSpringDamper::UpdateGraphics(const Vi
 
 	CObjectConnectorCoordinateSpringDamper* cItem = (CObjectConnectorCoordinateSpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1116,7 +1116,7 @@ void VisualizationObjectConnectorDistance::UpdateGraphics(const VisualizationSet
 
 	CObjectConnectorDistance* cItem = (CObjectConnectorDistance*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1125,8 +1125,8 @@ void VisualizationObjectConnectorDistance::UpdateGraphics(const VisualizationSet
 
 	if (color[0] != -1.f) { currentColor = color; }
 
-	float r = 0.5f*drawSize; //radius of spring
-	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
+	//float r = 0.5f*drawSize; //radius of spring
+	//if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
 	vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor);
 
@@ -1139,7 +1139,7 @@ void VisualizationObjectConnectorCoordinate::UpdateGraphics(const VisualizationS
 
 	CObjectConnectorCoordinate* cItem = (CObjectConnectorCoordinate*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1164,7 +1164,7 @@ void VisualizationObjectConnectorRollingDiscPenalty::UpdateGraphics(const Visual
 
 	CObjectConnectorRollingDiscPenalty* cItem = (CObjectConnectorRollingDiscPenalty*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1192,7 +1192,7 @@ void VisualizationObjectContactCoordinate::UpdateGraphics(const VisualizationSet
 
 	CObjectContactCoordinate* cItem = (CObjectContactCoordinate*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1224,7 +1224,7 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 
 	CObjectContactCircleCable2D* cItem = (CObjectContactCircleCable2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1276,7 +1276,7 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 
 	CObjectContactFrictionCircleCable2D* cItem = (CObjectContactFrictionCircleCable2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1329,7 +1329,7 @@ void VisualizationObjectJointGeneric::UpdateGraphics(const VisualizationSettings
 
 	CObjectJointGeneric* cItem = (CObjectJointGeneric*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1395,7 +1395,7 @@ void VisualizationObjectJointSpherical::UpdateGraphics(const VisualizationSettin
 
 	CObjectJointSpherical* cItem = (CObjectJointSpherical*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1423,7 +1423,7 @@ void VisualizationObjectJointRollingDisc::UpdateGraphics(const VisualizationSett
 
 	CObjectJointRollingDisc* cItem = (CObjectJointRollingDisc*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1452,7 +1452,7 @@ void VisualizationObjectJointRevolute2D::UpdateGraphics(const VisualizationSetti
 
 	CObjectJointRevolute2D* cItem = (CObjectJointRevolute2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1476,7 +1476,7 @@ void VisualizationObjectJointPrismatic2D::UpdateGraphics(const VisualizationSett
 
 	CObjectJointPrismatic2D* cItem = (CObjectJointPrismatic2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1501,7 +1501,7 @@ void VisualizationObjectJointSliding2D::UpdateGraphics(const VisualizationSettin
 
 	CObjectJointSliding2D* cItem = (CObjectJointSliding2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, pos[0], ConfigurationType::Visualization);
@@ -1525,7 +1525,7 @@ void VisualizationObjectJointALEMoving2D::UpdateGraphics(const VisualizationSett
 
 	CObjectJointALEMoving2D* cItem = (CObjectJointALEMoving2D*)vSystem->systemData->GetCObjects()[itemNumber];
 	
-	const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
+	//const ArrayIndex& markerNumbers = cItem->GetMarkerNumbers();
 
 	Vector3D pos[2];
 	//moving body position:

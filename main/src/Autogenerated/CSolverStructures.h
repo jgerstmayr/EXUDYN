@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -12,7 +12,9 @@
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
+
+#ifndef CSOLVERSTRUCTURES__H
+#define CSOLVERSTRUCTURES__H
 
 #include <ostream>
 
@@ -122,7 +124,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,8 +132,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -243,7 +243,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -251,8 +251,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -341,7 +339,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -349,8 +347,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -433,7 +429,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -441,8 +437,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -521,7 +515,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2020-06-09 (last modfied)
+* @date         AUTO: 2020-07-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -529,8 +523,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#pragma once
-
 #include <ostream>
 
 #include "Utilities/ReleaseAssert.h"
@@ -565,3 +557,5 @@ public: // AUTO:
 };
 
 
+
+#endif //#ifdef include once...

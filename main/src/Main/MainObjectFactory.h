@@ -1,5 +1,5 @@
 /** ***********************************************************************************************
-* @class        ObjectFactory
+* @class        MainObjectFactory
 * @brief		
 * @details		Details:
 				- creation of objects in Exudyn
@@ -17,7 +17,8 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
+#ifndef MAINOBJECTFACTORY__H
+#define MAINOBJECTFACTORY__H
 
 #include "Main/MainSystemData.h"
 
@@ -64,3 +65,4 @@ public:
 
 };
 
+#endif

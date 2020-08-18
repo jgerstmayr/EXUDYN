@@ -11,7 +11,8 @@
                 - weblink: missing
                 
 ************************************************************************************************ */
-#pragma once
+#ifndef GLFWCLIENTTEXT__H
+#define GLFWCLIENTTEXT__H
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -21,7 +22,9 @@
 #include <ostream>
 
 #include <GLFW/glfw3.h>
-#include <stdlib.h>
+//#include <stdlib.h> //only works in MSVC for initialization with std::vector
+#include <array>
+#include <vector>
 #include <stdio.h>
 #include <thread>
 
@@ -147,3 +150,4 @@ namespace OpenGLText
 }
 
 #endif //USE_GLFW_GRAPHICS
+#endif //include once

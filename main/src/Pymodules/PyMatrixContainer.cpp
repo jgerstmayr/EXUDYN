@@ -10,7 +10,6 @@
 *
 *
 ************************************************************************************************ */
-#pragma once
 
 #include "PyMatrixContainer.h"	
 #include "PybindUtilities.h"

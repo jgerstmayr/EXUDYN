@@ -12,16 +12,17 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
+import sys
+sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudynUtilities import *
-from itemInterface import *
+from exudyn.itemInterface import *
+from exudyn.utilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
 if exudynTestGlobals.useGraphics: 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker

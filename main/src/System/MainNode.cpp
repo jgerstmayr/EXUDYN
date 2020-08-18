@@ -14,7 +14,6 @@
 * *** Example code ***
 *
 ************************************************************************************************ */
-#pragma once
 
 #include "Main/MainSystem.h"
 #include "Pymodules/PybindUtilities.h"

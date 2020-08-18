@@ -11,21 +11,19 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys
-#sys.path.append('C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\WorkingRelease') #for Spider
-#sys.path.append('C:\\DATA\\cpp\\EXUDYN_git\\main\\pythonDev\\TestModels') #needed in order to access modelUnitTests
-sys.path.append('../../bin/WorkingRelease') #for exudyn, itemInterface and exudynUtilities
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+
+import exudyn as exu
+from exudyn.itemInterface import *
+from exudyn.utilities import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import time
-import exudyn as exu
-from itemInterface import *
-from exudynUtilities import *
 import numpy as np
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-print('EXUDYN version='+exu.__version__)
+print('EXUDYN version='+exu.GetVersionString())
 
 L=1                     #total rotor axis length
 m = 1                   #mass of one disc in kg
@@ -77,8 +75,8 @@ p1 = [ lRotor*0.5,eps,0] #reference position
 v0 = [0.,0.,0.] #initial translational velocity
 
 #node for Rigid2D body: px, py, phi:
-n0=mbs.AddNode(Rigid3DEP(referenceCoordinates = p0+ep0, initialVelocities=v0+list(ep_t0)))
-n1=mbs.AddNode(Rigid3DEP(referenceCoordinates = p1+ep0, initialVelocities=v0+list(ep_t0)))
+n0=mbs.AddNode(RigidEP(referenceCoordinates = p0+ep0, initialVelocities=v0+list(ep_t0)))
+n1=mbs.AddNode(RigidEP(referenceCoordinates = p1+ep0, initialVelocities=v0+list(ep_t0)))
 
 #ground nodes
 nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [-L/2,0,0]))

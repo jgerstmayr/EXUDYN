@@ -8,8 +8,8 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 *
 ************************************************************************************************ */
-
-#pragma once
+#ifndef LINEARSOLVER__H
+#define LINEARSOLVER__H
 
 //BasicLinalg provides consistent includes for BasicDefinitions, arrays, vectors and matrices
 #include "Linalg/BasicLinalg.h"	
@@ -46,6 +46,7 @@ private:
 	bool matrixIsFactorized; //!< flag, which is only true, if the matrix has been previously factorized without any changes
 
 public:
+	virtual ~GeneralMatrix() {} //added for correct deletion of derived classes
 	//! information on storage type
 	virtual LinearSolverType GetSystemMatrixType() const = 0;
 	virtual bool IsMatrixIsFactorized() const { return matrixIsFactorized; };
@@ -412,3 +413,4 @@ public:
 
 #endif
 
+#endif //include once

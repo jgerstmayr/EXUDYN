@@ -29,7 +29,9 @@
 * cout << a2 << "\n";                //write "[42, 5, 7]" to cout
 * @endcode
 ************************************************************************************************ */
-#pragma once
+#ifndef RESIZABLEARRAY__H
+#define RESIZABLEARRAY__H
+
 #include "Utilities/BasicFunctions.h"
 #include "Utilities/SlimArray.h"
 #include <algorithm> //for std::min / std::max
@@ -137,7 +139,7 @@ public:
 	//}
 
 	//! destructor to handle dynamically allocated data
-	~ResizableArray() {
+	virtual ~ResizableArray() {
 		if (data)
 		{
 			delete[] data;
@@ -363,8 +365,8 @@ public:
         numberOfItems--;
     }
 
-    //! Sort items in ascending order, using external Quicksort(...) function
-    void Sort() { EXUstd::QuickSort(*this); }
+	//! Sort items in ascending order, using external Quicksort(...) function; not available, because EXUstd::QuickSort not tested
+	//void Sort() { EXUstd::QuickSort(*this); }
 };
 
 //! output stream operator for array; for template class only one definition
@@ -465,4 +467,4 @@ void ResizableArray<T>::SetMaxNumberOfItems(Index newNumberOfItems)
     numberOfItems = (std::min)(newNumberOfItems, numberOfItems); //in case of size reduction, numberOfItems is decreased
 }
 
-
+#endif
