@@ -3,21 +3,22 @@
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
+import os
 import sys
+import platform
 import setuptools
 
 from src.pythonGenerator.exudynVersion import exudynVersionString
 
 
-import os
 #os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux; does not work on windows
 #os.environ["CXX"] = "gcc-8"
 
-import platform
 
 isWindows = False
 isLinux = False
 
+#detect the platform used during running the setup tool:
 if platform.system() == 'Windows':
     isWindows = True
     print("platform == Windows")
@@ -33,6 +34,7 @@ else:
     is32bits = True
 
 addLibrary_dirs = []
+#find whether 32 or 64 bits are used
 if isWindows:
     if is32bits:
         addLibrary_dirs=['libs/libs32' ]
@@ -40,6 +42,9 @@ if isWindows:
     else:
         addLibrary_dirs=['libs/libs64' ]
         print("architecture==64bits")
+
+#detect python version:
+pyVersionString = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
 
 __version__ = exudynVersionString
 print('build Exudyn version',exudynVersionString)
@@ -299,4 +304,15 @@ For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
     setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
+    license = 'BSD',
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: Microsoft :: Windows :: Windows 10",
+        "Operating System :: POSIX :: Linux",
+        "Topic :: Scientific/Engineering",
+    ],
+    python_requires='=='+pyVersionString,
 )

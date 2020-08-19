@@ -74,30 +74,45 @@ However, you should know that Python versions and the version of the module must
   %\item \texttt{exudyn.pyd}
 %\ei
 %to your working directory and directly import the modules as described in tutorials and examples.
+%+++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Install with Windows MSI installer}
+The simplest way on Windows 10 (and maybe also Windows 7), which works well {\bf if you installed only one python version} and if you installed Anaconda with the option {\bf 'Register Anaconda as my default Python 3.x'} or similar, then you can use the provided \texttt{.msi} installers in the \texttt{main/dist} directory:
+\bi
+  \item For the 64bits python 3.6 version, double click on (version may differ):\\ \texttt{exudyn-1.0.6.win-amd64-py3.6.msi}
+	\item Follow the instructions of the installer
+	\item If python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:\\
+	\texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
+\ei
+
+%+++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Install from Wheel}
 The {\bf standard way to install} the python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}) provided at the directory wheels in the \codeName\ repository. 
 First, open an Anaconda prompt:
 \bi
-  \item[] EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-	\item[] You can check your python version then, by running \texttt{python}\footnote{\texttt{python3} under UBUNTU 18.04}, the output reads like:
+  \item EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
+	\item You can check your python version then, by running \texttt{python}\footnote{\texttt{python3} under UBUNTU 18.04}, the output reads like:
 	\bi
-	  \item \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
+	  \item[] \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
+		\item[] ...
 	\ei
 	\item $\ra$ type \texttt{exit()} to close python
 \ei
 
-{\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
+\noindent {\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
 
 For Windows this may read (version number 1.0.6 may be different):
 \bi
-  \item[] \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win32.whl
-  \item[] \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win\_amd64.whl
-  \item[] \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp37-cp37m-win\_amd64.whl
+  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win32.whl
+  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win\_amd64.whl
+  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp37-cp37m-win\_amd64.whl
 \ei
 For UBUNTU18.04 this may read (version number 1.0.6 may be different):
 \bi
-  \item[] \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.6-cp36-cp36m-linux\_x86\_64.whl
+  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.6-cp36-cp36m-linux\_x86\_64.whl
 \ei
 
+%+++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Work without installation and editing \texttt{sys.path}}
 The {\bf uncommon and old way} ($\ra$ not recommended for \codeName\ versions $\ge$ 1.0.0) is to use Python's \texttt{sys} module to link to your \texttt{exudyn} (previously \texttt{WorkingRelease}) directory, for example:\vspace{6pt}\\
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
@@ -135,11 +150,6 @@ You can also create your own wheels, doing the above steps to activate the accor
   \item[] \texttt{python setup.py bdist\_wheel}
 \ei
 This will add a wheel in the \texttt{dist} folder.
-
-To uninstall exudyn under Windows, run:
-\bi
-  \item[] \texttt{pip uninstall exudyn}
-\ei
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -189,11 +199,20 @@ sudo python3 setup.py install --user
   \item[] \texttt{sudo pip3 install wheel}
   \item[] \texttt{sudo python3 setup.py bdist\_wheel}
 \ei
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Uninstall \codeName }
+
+To uninstall exudyn under Windows, run (may require admin rights):
+\bi
+  \item[] \texttt{pip uninstall exudyn}
+\ei
 \noindent To uninstall under UBUNTU, run:
 \bi
   \item[] \texttt{sudo pip3 uninstall exudyn}
 \ei
 
+If you upgrade to a newer version, uninstall is usually not necessary!
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{How to install \codeName\ and using the C++ code (advanced)?}
