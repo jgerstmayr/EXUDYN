@@ -243,7 +243,7 @@ singleCommandMainwin.mainloop()
 	if (key == GLFW_KEY_V && action == GLFW_PRESS)
 	{
 		//open window to execute a python command ... 
-		std::string str = "import exudynGUI\nvis=SC.visualizationSettings.GetDictionaryWithTypeInfo()\nSC.visualizationSettings.SetDictionary(exudynGUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))";
+		std::string str = "import exudyn.GUI\nvis=SC.visualizationSettings.GetDictionaryWithTypeInfo()\nSC.visualizationSettings.SetDictionary(exudyn.GUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))";
 		PyQueueExecutableString(str);
 		UpdateGraphicsDataNow();
 	}
