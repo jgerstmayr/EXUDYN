@@ -37,6 +37,10 @@ python setup.py bdist_msi
 python setup.py bdist_wininst
 will create an executable installer, foo-1.0.win32.exe, in the current directory.
 
+#copy VS2017 .pyd file on top of files built by setup tools:
+copy exudynCPP.pyd to build\lib.win-amd64-3.6
+and rename accordingly
+
 ====================================================================
 UBUNTU / linux (tested with clean UBUNTU 18.04 installation, "Normal installation" and option enabled to 
     "Install third-party software for graphics ....", 

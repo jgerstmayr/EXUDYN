@@ -96,6 +96,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 	bool writeToFile = solutionSettings.writeSolutionToFile;
 	if (fileName != "" && writeToFile)
 	{
+		CheckPathAndCreateDirectories(fileName);
 		if (solutionSettings.appendToFile) { file.open(fileName, std::ofstream::app); }
 		else { file.open(fileName, std::ofstream::out); }
 		if (!file.is_open()) //failed to open file ...  e.g. invalid file name

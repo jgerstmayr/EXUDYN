@@ -4305,7 +4305,7 @@ A sensor attached to a node. The sensor measures OutputVariables and outputs val
     name &     String &      &     '' &     marker's unique name\\ \hline
     nodeNumber &     Index &      &     MAXINT &     node number to which sensor is attached to\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
-    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
     visualization & VSensorNode & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -4335,7 +4335,7 @@ A sensor attached to any object except bodies  (connectors, constraint, spring-d
     name &     String &      &     '' &     marker's unique name\\ \hline
     objectNumber &     Index &      &     MAXINT &     object (e.g. connector) number to which sensor is attached to\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
-    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
     visualization & VSensorObject & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -4366,7 +4366,7 @@ A sensor attached to a body-object with local position. As a difference to other
     bodyNumber &     Index &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local (body-fixed) body position of sensor\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
-    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
     visualization & VSensorBody & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -4397,7 +4397,7 @@ A sensor attached to a SuperElement-object with mesh node number. As a differenc
     bodyNumber &     Index &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
     meshNodeNumber &     Index &      &     -1 &     mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
-    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
     visualization & VSensorSuperElement & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -4427,7 +4427,7 @@ A sensor attached to a load. The sensor measures the load values and outputs val
     name &     String &      &     '' &     marker's unique name\\ \hline
     loadNumber &     Index &      &     MAXINT &     load number to which sensor is attached to\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
-    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType\\ \hline
+    fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     visualization & VSensorLoad & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}

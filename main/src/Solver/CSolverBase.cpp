@@ -81,6 +81,8 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	output.writeToSolutionFile = solutionSettings.writeSolutionToFile;
 	if (solutionFileName != "" && output.writeToSolutionFile)
 	{
+		CheckPathAndCreateDirectories(solutionFileName);
+
 		if (solutionSettings.appendToFile) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
 		else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
 		if (!file.solutionFile.is_open()) //failed to open file ...  e.g. invalid file name
@@ -100,6 +102,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	output.writeToSolverFile = false; //default
 	if (output.verboseModeFile > 0 && solverFileName != "")
 	{
+		CheckPathAndCreateDirectories(solverFileName);
 		if (solutionSettings.appendToFile) { file.solverFile.open(solverFileName, std::ofstream::app); }
 		else { file.solverFile.open(solverFileName, std::ofstream::out); }
 		
@@ -128,6 +131,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 			auto fileMode = std::ofstream::out;
 			if (solutionSettings.appendToFile) { fileMode = std::ofstream::app; }
 
+			CheckPathAndCreateDirectories(item->GetFileName());
 			sensorFile->open(item->GetFileName(), fileMode);
 
 			if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name

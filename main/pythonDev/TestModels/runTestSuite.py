@@ -25,7 +25,8 @@ elif sys.version_info.major == 3 and sys.version_info.minor == 6:
 if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
     raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
 
-sys.path.append(workingReleasePath) #for exudyn, itemInterface and from exudyn.utilities import *
+#only if not installed:
+#sys.path.append(workingReleasePath) #for exudyn, itemInterface and from exudyn.utilities import *
 
 #sys.path.append('TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
@@ -131,6 +132,7 @@ testFileList = [
                 'sphericalJointTest.py',
                 'springDamperUserFunctionTest.py',
                 'objectGenericODE2Test.py',
+                'serialRobotTest.py',
                 'objectFFRFreducedOrderTest.py',
                 'objectFFRFTest.py',
                 'objectFFRFTest2.py',
@@ -161,54 +163,54 @@ SC.Reset()
 
 #test manual examples
 if runTestExamples:
-    cnt = 0
+    testExamplesCnt = 0
     for file in testFileList:
         exu.Print('\n\n******************************************')
-        exu.Print('  START EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
+        exu.Print('  START EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         exu.Print('******************************************')
         SC.Reset()
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
         try:
             exec(open(file).read(), globals())
         except Exception as e:
-            exu.Print('EXAMPLE ' + str(cnt) + ' ("' + file + '") raised exception:\n'+str(e))
-            print('EXAMPLE ' + str(cnt) + ' ("' + file + '") raised exception:\n'+str(e))
+            exu.Print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
+            print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
 
         if abs(exudynTestGlobals.testError) < testTolerance:
             exu.Print('******************************************')
-            exu.Print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+            exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
             exu.Print('******************************************')
         else:
             exu.Print('******************************************')
-            exu.Print('  EXAMPLE ' + str(cnt) + ' ("' + file + '") FAILED')
+            exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FAILED')
             exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
             exu.Print('******************************************')
-            testsFailed = testsFailed + [cnt]
+            testsFailed = testsFailed + [testExamplesCnt]
         
-        cnt += 1
+        testExamplesCnt += 1
 
 #test mini examples which are generated with objects
 from MiniExamples.miniExamplesFileList import miniExamplesFileList
 miniExamplesFailed = []
 
 if runMiniExamples:
-    cnt = 0
+    testExamplesCnt = 0
     for file in miniExamplesFileList:
         exu.Print('\n\n******************************************')
-        exu.Print('  START MINI EXAMPLE ' + str(cnt) + ' ("' + file + '"):')
+        exu.Print('  START MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         SC.Reset()
         testError = -1
         fileDir = 'MiniExamples/'+file
         exec(open(fileDir).read(), globals())
         if abs(testError) < testTolerance:
-            exu.Print('  MINI EXAMPLE ' + str(cnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+            exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
         else:
             exu.Print('******************************************')
-            exu.Print('  MINI EXAMPLE ' + str(cnt) + ' ("' + file + '") FAILED')
+            exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FAILED')
             exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
             exu.Print('******************************************')
-            miniExamplesFailed += [cnt]
-        cnt+=1
+            miniExamplesFailed += [testExamplesCnt]
+        testExamplesCnt+=1
     
 
 timeStart += time.time()

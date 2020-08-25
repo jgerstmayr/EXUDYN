@@ -219,15 +219,18 @@ class BuildExt(build_ext):
 			   '/D', '_MBCS', 
 				'/D', '_WINDLL',
 				'/D','_CRT_SECURE_NO_WARNINGS', #/D and _CRT_SECURE_NO_WARNINGS must be consecutive==>WORKS!
-				'/Zc:twoPhase-',
 				'/errorReport:prompt', 
 				'/WX-', 
 				'/Zc:forScope',
 				'/arch:AVX2',
-				'/Gd', '/Oy', '/Oi', '/MD', 
+				'/Gd', '/Oy', '/Oi', 
+				#'/MD', #/MT=multithreaded, /MD=multithreaded DLL, overwirtes /MT
 				'/openmp',
 				'/std:c++17',
-				'/FC'],
+				'/FC',
+            '/Ot', #favor faster code
+				'/Zc:twoPhase-',
+            ],
         'unix': [
          #'-std=c++17', #==>chosen automatic
          '-Wno-non-template-friend', #deactivate warning for several vector/array templates
@@ -263,6 +266,7 @@ class BuildExt(build_ext):
     		#for graphics (if GLFW enabled); needs to be installed -> see setupToolsHowTo.txt:
          '-lglfw', #GLFW
     		'-lGL', #OpenGL
+         '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
 			],
     }
 

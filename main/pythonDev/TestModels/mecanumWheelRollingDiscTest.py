@@ -92,8 +92,9 @@ gGround = GraphicsDataOrthoCubePoint(centerPoint=[4,4,-0.001],size=[12,12,0.002]
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
-mbs.AddSensor(SensorBody(bodyNumber=bCar, fileName='solution/rollingDiscCarVel.txt', 
-                            outputVariableType = exu.OutputVariableType.Velocity))
+if exudynTestGlobals.useGraphics and True:
+    mbs.AddSensor(SensorBody(bodyNumber=bCar, fileName='solution/rollingDiscCarVel.txt', 
+                                outputVariableType = exu.OutputVariableType.Velocity))
 
 
 
@@ -175,14 +176,15 @@ for iWheel in range(nWheels):
     sAngularVelWheels += [mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
                                outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
 
-    mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.Position))
-
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.Position))
-
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForce'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.ForceLocal))
+    if exudynTestGlobals.useGraphics and True:
+        mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.Position))
+    
+        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.Position))
+    
+        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForce'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.ForceLocal))
 
 
 
@@ -269,9 +271,9 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.002
-simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.displayComputationTime = False
+simulationSettings.displayStatistics = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -313,7 +315,7 @@ if exudynTestGlobals.useGraphics:
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if exudynTestGlobals.useGraphics and True:
+if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
  

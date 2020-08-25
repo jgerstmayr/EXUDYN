@@ -1,6 +1,17 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This file contains a collection of smaller, old examples for the test suite
+# it contains the older interface for test suite functions, now replaced by standalone .py tests in TestModels
+#
+# Author:   Johannes Gerstmayr
+# Date:     2019-11-01
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from exudyn.utilities import *
-from exudyn.itemInterface import *
+
+from exudyn.utilities import * 
+from exudyn.itemInterface import * 
 
 #general test class for test of functions; 
 #exudyn ... must contain the exudyn module (exu)

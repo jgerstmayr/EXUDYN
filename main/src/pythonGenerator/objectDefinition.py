@@ -4326,7 +4326,7 @@ classType = Sensor
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",      ,       I,     "node number to which sensor is attached to"
 V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
-V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType"
+V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "general access to node number" 
@@ -4355,7 +4355,7 @@ classType = Sensor
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     objectNumber,                   ,               ,       Index,      "EXUstd::InvalidIndex",      ,       I,     "object (e.g. connector) number to which sensor is attached to"
 V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
-V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType"
+V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.objectNumber;", ,  CI,     "general access to object number" 
@@ -4385,7 +4385,7 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",      ,       I,     "body (=object) number to which sensor is attached to"
 V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",      ,       I,     "local (body-fixed) body position of sensor"
 V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
-V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType"
+V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
@@ -4416,7 +4416,7 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",      ,       I,     "body (=object) number to which sensor is attached to"
 V,      CP,     meshNodeNumber,                 ,               ,       Index,      "-1",                        ,       I,     "mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder"
 V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
-V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType"
+V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
@@ -4446,7 +4446,7 @@ classType = Sensor
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     loadNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",      ,       I,     "load number to which sensor is attached to"
 V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
-V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType"
+V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 #V,      CP,     outputVariableType,             ,               ,       OutputVariableType, 0,              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetLoadNumber,                  ,               ,       Index,      "return parameters.loadNumber;", ,  CI,     "general access to load number" 

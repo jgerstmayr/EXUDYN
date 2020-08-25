@@ -765,6 +765,14 @@ The following list covers changes in the python interface and functionality:
 	  %\item $\ra$ 
 	%\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.6 $\ra$ Version 1.0.7}
+	\item[] autocreate directories (issue: 431):
+	\bi %\ttfamily
+	\item directories (folders) will be created for given paths
+	\item this applies, e.g., to sensor's \texttt{fileName} or simulation settings \texttt{coordinatesSolutionFileName}
+	\item previously, a non-existing directory led to an exception
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 0.1.368 $\ra$ Version 1.0.0}
 	\item[] {\bf Major changes} in the python interface, as the utilities moved into the exudyn package:
 	\bi \ttfamily

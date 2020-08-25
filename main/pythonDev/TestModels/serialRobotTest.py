@@ -19,7 +19,7 @@ from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
-from exudynRobotics import *
+from exudyn.robotics import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
@@ -28,8 +28,10 @@ from numpy import linalg as LA
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-
-
+if exudynTestGlobals.useGraphics:
+    sensorWriteToFile = True
+else:
+    sensorWriteToFile = False
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -274,15 +276,19 @@ cnt = 0
 for jointLink in jointList:
     sJointRot = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
                                fileName="solution/joint" + str(cnt) + "Rot.txt",
-                               outputVariableType=exu.OutputVariableType.Rotation))
+                               outputVariableType=exu.OutputVariableType.Rotation,
+                               writeToFile = sensorWriteToFile))
     sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
                                fileName="solution/joint" + str(cnt) + "AngVel.txt",
-                               outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
+                               outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
+                               writeToFile = sensorWriteToFile))
     cnt+=1
 
+cnt = 0
 jointTorque0List = []
 for load0 in robotDict['jointTorque0List']:
-    sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName="solution/jointTorque" + str(cnt) + ".txt"))
+    sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName="solution/jointTorque" + str(cnt) + ".txt", 
+                                       writeToFile = sensorWriteToFile))
     jointTorque0List += [sTorque]
     cnt+=1
 
@@ -309,25 +315,26 @@ SC.visualizationSettings.openGL.multiSampling=4
 #  [-0.8726294636726379, 0.16856835782527924, -0.45836928486824036],
 #  [0.06480571627616882, 0.9702123999595642, 0.2334269881248474]]}
 #
-
-exu.StartRenderer()
-if 'lastRenderState' in vars():
-    SC.SetRenderState(lastRenderState) #load last model view
+    
+nSteps = 200 #1000 for testing
+if exudynTestGlobals.useGraphics:
+    nSteps = 550 #1000 for testing
+    exu.StartRenderer()
+    if 'lastRenderState' in vars():
+        SC.SetRenderState(lastRenderState) #load last model view
 
 #mbs.WaitForUserToContinue()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-fact = 1000 #1000 for testing
-outputFact = 1000
-simulationSettings.timeIntegration.numberOfSteps = 1*fact
-simulationSettings.timeIntegration.endTime = 0.8 #0.2 for testing
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
+simulationSettings.timeIntegration.numberOfSteps = nSteps
+simulationSettings.timeIntegration.endTime = nSteps/1000 #0.2 for testing
+simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/nSteps
+simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/nSteps
 #simulationSettings.solutionSettings.writeSolutionToFile = False
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
+simulationSettings.displayComputationTime = False
 simulationSettings.displayStatistics = False
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 #simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
@@ -340,8 +347,11 @@ simulate = True
 if simulate:
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
-SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer()
+
+
+if exudynTestGlobals.useGraphics:
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer()
 
 lastRenderState = SC.GetRenderState() #store model view
 
@@ -349,11 +359,12 @@ lastRenderState = SC.GetRenderState() #store model view
 measuredTorques=[]
 for sensorNumber in jointTorque0List:
     measuredTorques += [mbs.GetSensorValues(sensorNumber)[2]]
-exu.Print("torques at tEnd=", measuredTorques)
+exu.Print("torques at tEnd=", VSum(measuredTorques))
 
+#add larger test tolerance for 32/64bits difference
+exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 77.13193176752571 ) #2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
 
-doPlots = True
-if doPlots:
+if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.rcParams.update({'font.size': 14})

@@ -39,6 +39,76 @@
 
 namespace py = pybind11;
 
+//comment the following line, if C++17 or stdc++fs library are not available on your system!
+
+
+//CHECK wheter predefined macros indicate that std::...::filesystem is available: __cpp_lib_filesystem and __cpp_lib_experimental_filesystem
+#ifdef __cpp_lib_filesystem
+	//VS2017, gcc 8.0, etc:
+	#include <filesystem> //requires C++17 with filesystem implemented; linker needs "-lstdc++fs" on linux
+	namespace filesystemNamespace = std::filesystem;
+	#define USE_AUTOCREATE_DIRECTORIES
+#else
+	//for UBUNTU18.04 GCC version 7.5.0 does not implement std::filesystem and also does not have __cpp_lib_filesystem macro
+	//works for GCC and VS2017
+	#ifdef __has_include 
+		#if __has_include (<filesystem>)
+			#include <filesystem>
+			#define USE_AUTOCREATE_DIRECTORIES
+			namespace filesystemNamespace = std::filesystem;
+		#elif __has_include (<experimental/filesystem>)
+			#include <experimental/filesystem>
+			#define USE_AUTOCREATE_DIRECTORIES
+			namespace filesystemNamespace = std::experimental::filesystem;
+		#endif
+	#endif
+#endif
+
+//! check if directory of whole path+filename exists; return false, if fails
+//! this function requires C++17 std libraries
+//! works with local path
+bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
+{
+	bool returnValue = true;
+
+#ifdef USE_AUTOCREATE_DIRECTORIES
+	char key1 = '\\';
+	char key2 = '/';
+
+	std::size_t pos = std::string::npos;
+	auto found1 = pathAndFileName.rfind(key1);
+	auto found2 = pathAndFileName.rfind(key2);
+	if (found1 != std::string::npos)
+	{
+		pos = found1;
+	}
+	if (found2 != std::string::npos)
+	{
+		//only use '/' key, if it is the last key
+		if (pos == std::string::npos || pos < found2)
+		{
+			pos = found2;
+		}
+	}
+
+	//now create dictionary
+	if (pos != std::string::npos)
+	{
+		STDstring pathStr = pathAndFileName.substr(0, pos);
+		returnValue = filesystemNamespace::create_directories(pathStr);
+	}
+#endif
+
+	return returnValue;
+}
+
+
+
+
+
+
+
+
 //global variable for timers:
 TimerStructure globalTimers;
 
@@ -89,8 +159,16 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 	}
 	if (flagWriteToFile)        //now open file with new file name
 	{
-		if (flagAppend) { file.open(filename, std::ofstream::app); }
-		else { file.open(filename, std::ofstream::out); }
+		CheckPathAndCreateDirectories(filename);
+
+		if (flagAppend) 
+		{ 
+			file.open(filename, std::ofstream::app); 
+		}
+		else 
+		{ 
+			file.open(filename, std::ofstream::out); 
+		}
 	}
 	writeToFile = flagWriteToFile;
 }

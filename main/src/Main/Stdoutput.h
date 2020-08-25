@@ -77,3 +77,10 @@ extern OutputBuffer outputBuffer;  //!< link outputBuffer to change options
 //alternatively use:
 //#define pout std::cout
 //********************************
+
+
+//! check if directory of whole path+filename exists; return false, if fails
+//! this function requires C++17 std libraries
+//! works with local path
+bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName);
+

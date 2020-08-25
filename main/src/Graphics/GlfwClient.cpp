@@ -1254,6 +1254,7 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 	glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
 
 	std::ofstream imageFile;
+	CheckPathAndCreateDirectories(filename);
 	imageFile.open(filename, std::ofstream::out | std::ofstream::binary);
 	if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
 	{

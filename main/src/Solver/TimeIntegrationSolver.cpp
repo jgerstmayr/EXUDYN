@@ -87,6 +87,8 @@ bool SolverRK1::SolveSystemTemplate(CSystem& computationalSystem, const Simulati
 	bool writeToFile = solutionSettings.writeSolutionToFile;
 	if (fileName != "" && writeToFile)
 	{
+		CheckPathAndCreateDirectories(fileName);
+
 		if (solutionSettings.appendToFile) { file.open(fileName, std::ofstream::app); }
 		else { file.open(fileName, std::ofstream::out); }
 		if (!file.is_open()) //failed to open file ...  e.g. invalid file name
@@ -320,6 +322,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 	bool writeToFile = solutionSettings.writeSolutionToFile;
 	if (fileName != "" && writeToFile)
 	{
+		CheckPathAndCreateDirectories(fileName);
 		if (solutionSettings.appendToFile) { file.open(fileName, std::ofstream::app); }
 		else { file.open(fileName, std::ofstream::out); }
 		if (!file.is_open()) //failed to open file ...  e.g. invalid file name

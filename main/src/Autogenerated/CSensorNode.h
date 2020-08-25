@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:24 (last modfied)
+* @date         2020-08-25  12:46:29 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CSensorNodeParameters // AUTO:
 public: // AUTO: 
     Index nodeNumber;                             //!< AUTO: node number to which sensor is attached to
     bool writeToFile;                             //!< AUTO: true: write sensor output to file
-    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType
+    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
     OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor
     //! AUTO: default constructor with parameter initialization
     CSensorNodeParameters()
