@@ -24,8 +24,12 @@ python setup.py bdist_wheel
 #creates,e.g.:
   dist/exu-0.0.1-cp36-cp36m-win_amd64.whl
 
-#in order to install this wheel, use:
-pip install dist/exudyn-1.0.3-cp36-cp36m-win_amd64.whl
+#in order to install this wheel, e.g. python3.7 64bits, use:
+pip install dist\exudyn-1.0.8-cp37-cp37m-win_amd64.whl
+#  or python3.6 64bits, use:
+pip install dist\exudyn-1.0.8-cp36-cp36m-win_amd64.whl
+#  or python3.6 32bits, use:
+pip install dist\exudyn-1.0.8-cp36-cp36m-win32.whl
 
 #just for completeness: install python lib (==> not needed, bdist_wheel does everything):
 python setup.py install 

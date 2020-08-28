@@ -43,6 +43,8 @@ if isWindows:
         addLibrary_dirs=['libs/libs64' ]
         print("architecture==64bits")
 
+print("python version =",platform.python_version())
+
 #detect python version:
 pyVersionString = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
 
@@ -318,5 +320,5 @@ For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
         "Operating System :: POSIX :: Linux",
         "Topic :: Scientific/Engineering",
     ],
-    python_requires='=='+pyVersionString,
+    python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU
 )
