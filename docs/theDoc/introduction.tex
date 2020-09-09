@@ -765,6 +765,28 @@ The following list covers changes in the python interface and functionality:
 	  %\item $\ra$ 
 	%\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.8 $\ra$ Version 1.0.9}
+	\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):
+	\bi %\ttfamily
+	\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
+	\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
+	\item before: \texttt{mbs.AddMarker(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddMarker(...)} $\ra$ MarkerIndex
+	\item before: \texttt{mbs.AddLoad(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddLoad(...)} $\ra$ LoadIndex
+	\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
+	\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
+		\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
+		to avoid mistakes due to wrong types of indices.
+	\item for further details and specific usage, see beginning of Section \ref{sec_PCpp_command_interface}!
+	%\item {\bf NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
+	%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
+	%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
+	%\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
+	%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
+	\ei
+	\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)
+	\item[] removed functions mbs.GetNodeByName(...), GetObjectByName(...), etc. (issue: 445)
+	%
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 1.0.6 $\ra$ Version 1.0.7}
 	\item[] autocreate directories (issue: 431):
 	\bi %\ttfamily

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:23 (last modfied)
+* @date         2020-09-09  00:35:50 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -53,6 +54,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainObjectJointSliding2D
 class MainObjectJointSliding2D: public MainObjectConnector // AUTO: 
@@ -115,7 +117,7 @@ public: // AUTO:
         cObjectJointSliding2D->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointSliding2D->GetParameters().slidingMarkerNumbers = py::cast<std::vector<Index>>(d["slidingMarkerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointSliding2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(d["slidingMarkerOffsets"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectJointSliding2D->GetParameters().nodeNumber = py::cast<Index>(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectJointSliding2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "classicalFormulation")) { cObjectJointSliding2D->GetParameters().classicalFormulation = py::cast<bool>(d["classicalFormulation"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointSliding2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -133,7 +135,7 @@ public: // AUTO:
         d["markerNumbers"] = (std::vector<Index>)cObjectJointSliding2D->GetParameters().markerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
         d["slidingMarkerNumbers"] = (std::vector<Index>)cObjectJointSliding2D->GetParameters().slidingMarkerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
         d["slidingMarkerOffsets"] = (std::vector<Real>)cObjectJointSliding2D->GetParameters().slidingMarkerOffsets; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumber"] = (Index)cObjectJointSliding2D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumber"] = (NodeIndex)cObjectJointSliding2D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["classicalFormulation"] = (bool)cObjectJointSliding2D->GetParameters().classicalFormulation; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointSliding2D->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
@@ -150,7 +152,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectJointSliding2D->GetParameters().markerNumbers);} //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectJointSliding2D->GetParameters().slidingMarkerNumbers);} //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { return py::cast((std::vector<Real>)cObjectJointSliding2D->GetParameters().slidingMarkerOffsets);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((Index)cObjectJointSliding2D->GetParameters().nodeNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectJointSliding2D->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("classicalFormulation") == 0) { return py::cast((bool)cObjectJointSliding2D->GetParameters().classicalFormulation);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointSliding2D->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointSliding2D->GetShow());} //! AUTO: get parameter
@@ -168,7 +170,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { cObjectJointSliding2D->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { cObjectJointSliding2D->GetParameters().slidingMarkerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { cObjectJointSliding2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectJointSliding2D->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { cObjectJointSliding2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("classicalFormulation") == 0) { cObjectJointSliding2D->GetParameters().classicalFormulation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointSliding2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointSliding2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

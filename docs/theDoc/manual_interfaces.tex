@@ -120,7 +120,7 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddNode(pyObject) & add a node with nodeDefinition from Python node class; returns (global) node number of newly added node\tabnewline 
+  AddNode(pyObject) & add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \tabnewline
     mbs.AddNode(item) \tabnewline
@@ -132,10 +132,10 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
   GetNodeNumber(nodeName) & get node's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetNodeNumber('example node')}}\\ \hline 
-  GetNode(nodeNumber) & get node's dictionary by index\tabnewline 
+  GetNode(nodeNumber) & get node's dictionary by node number (type NodeIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{nodeDict = mbs.GetNode(0)}}\\ \hline 
-  ModifyNode(nodeNumber, nodeDict) & modify node's dictionary by index\tabnewline 
+  ModifyNode(nodeNumber, nodeDict) & modify node's dictionary by node number (type NodeIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyNode(nodeNumber, nodeDict)}}\\ \hline 
   GetNodeDefaults(typeName) & get node's default values for a certain nodeType as (dictionary)\tabnewline 
@@ -148,8 +148,8 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeODE2Index(nodeNumber=0)}}\\ \hline 
-  GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from nodeNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetNodeParameter(nodeNumber, parameterName, value) & set parameter 'parameterName' of node with nodeNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
+  SetNodeParameter(nodeNumber, parameterName, value) & set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -162,7 +162,7 @@ This section provides functions for adding, reading and modifying objects, which
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddObject(pyObject) & add a object with objectDefinition from Python object class; returns (global) object number of newly added object\tabnewline 
+  AddObject(pyObject) & add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \tabnewline
     mbs.AddObject(item) \tabnewline
@@ -174,25 +174,25 @@ This section provides functions for adding, reading and modifying objects, which
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetObjectNumber('heavy object')}}\\ \hline 
-  GetObject(objectNumber) & get object's dictionary by index\tabnewline 
+  GetObject(objectNumber) & get object's dictionary by object number (type ObjectIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectDict = mbs.GetObject(0)}}\\ \hline 
-  ModifyObject(objectNumber, objectDict) & modify object's dictionary by index\tabnewline 
+  ModifyObject(objectNumber, objectDict) & modify object's dictionary by object number (type ObjectIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyObject(objectNumber, objectDict)}}\\ \hline 
   GetObjectDefaults(typeName) & get object's default values for a certain objectType as (dictionary)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectType = 'MassPoint'\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
-  GetObjectOutput(objectNumber, variableType) & get object's current output variable from objectNumber and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
-  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from objectNumber and OutputVariableType\tabnewline 
+  GetObjectOutput(objectNumber, variableType) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
+  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
-  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from objectNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with objectNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
+  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -205,7 +205,7 @@ This section provides functions for adding, reading and modifying markers. Marke
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddMarker(pyObject) & add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker\tabnewline 
+  AddMarker(pyObject) & add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{item = MarkerNodePosition(name='my marker',nodeNumber=1) \tabnewline
     mbs.AddMarker(item)\tabnewline
@@ -240,7 +240,7 @@ This section provides functions for adding, reading and modifying operating load
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddLoad(pyObject) & add a load with loadDefinition from Python load class; returns (global) load number of newly added load\tabnewline 
+  AddLoad(pyObject) & add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \tabnewline
     mbs.AddLoad(item)\tabnewline
@@ -277,7 +277,7 @@ This section provides functions for adding, reading and modifying operating sens
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  AddSensor(pyObject) & add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor\tabnewline 
+  AddSensor(pyObject) & add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \tabnewline
     mbs.AddSensor(item)\tabnewline

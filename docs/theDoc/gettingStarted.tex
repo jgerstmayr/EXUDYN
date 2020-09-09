@@ -29,7 +29,10 @@ This section will show:
 \mysubsubsection{What is \codeName ?}
 \codeName -- {\small (fl{\bf EX}ible m{\bf U}ltibody {\bf DYN}amics  -- {\bf EX}tend yo{\bf U}r {\bf DYN}amics)}\vspace{6pt}\\
 \noindent \codeName\ is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
-It is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
+It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
+The open source code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it is outdated regarding programming techniques and the numerical formulation.
+
+\codeName\ is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see Section \ref{sec_items}.
@@ -78,7 +81,7 @@ However, you should know that Python versions and the version of the module must
 \mysubsubsection{Install with Windows MSI installer}
 The simplest way on Windows 10 (and maybe also Windows 7), which works well {\bf if you installed only one python version} and if you installed Anaconda with the option {\bf 'Register Anaconda as my default Python 3.x'} or similar, then you can use the provided \texttt{.msi} installers in the \texttt{main/dist} directory:
 \bi
-  \item For the 64bits python 3.6 version, double click on (version may differ):\\ \texttt{exudyn-1.0.6.win-amd64-py3.6.msi}
+  \item For the 64bits python 3.6 version, double click on (version may differ):\\ \texttt{exudyn-1.0.8.win-amd64-py3.6.msi}
 	\item Follow the instructions of the installer
 	\item If python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:\\
 	\texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
@@ -100,15 +103,15 @@ First, open an Anaconda prompt:
 
 \noindent {\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
 
-For Windows this may read (version number 1.0.6 may be different):
+For Windows this may read (version number 1.0.8 may be different):
 \bi
-  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win32.whl
-  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp36-cp36m-win\_amd64.whl
-  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.6-cp37-cp37m-win\_amd64.whl
+  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.8-cp36-cp36m-win32.whl
+  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.8-cp36-cp36m-win\_amd64.whl
+  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.8-cp37-cp37m-win\_amd64.whl
 \ei
-For UBUNTU18.04 this may read (version number 1.0.6 may be different):
+For UBUNTU18.04 this may read (version number 1.0.8 may be different):
 \bi
-  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.6-cp36-cp36m-linux\_x86\_64.whl
+  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.8-cp36-cp36m-linux\_x86\_64.whl
 \ei
 
 %+++++++++++++++++++++++++++++++++++++
@@ -324,12 +327,24 @@ Within this file, the first column shows the simulation time and the following c
 	\bi
 	\item[$\ra$] \codeName\ is only available via the python interface as exudyn.pyd library, which is located in folder: \texttt{main/bin/WorkingRelease}. This means that you need to run python (best: Spyder) and import the \codeName\ module.
 	\ei
+
+	%
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
+	\bi
+	\item[$\ra$] probably you used wrong item indices, see beginning of Section \ref{sec_PCpp_command_interface}. 
+	\item E.g., an object number \texttt{oNum = mbs.AddObject(...)} is used at a place where a \texttt{NodeIndex} is expected:
+	\texttt{mbs.AddObject(MassPoint(nodeNumber=oNum, ...))}
+	\item Usually, this is an ERROR in your code, it does not make sense to mix up these indices!
+	\item In the exceptional case, that you want to convert numbers, see beginning of Section \ref{sec_PCpp_command_interface}.
+	\ei
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item Why does type auto completion does not work for mbs (Main system)?
 	\bi
-	\item[$\ra$] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better. However, note that absolute paths need to be used for module import.
+	\item[$\ra$] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
 	\item[$\ra$] most python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.\\
 	WORKAROUND: type \texttt{mbs=MainSystem()} {\bf before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 	\ei

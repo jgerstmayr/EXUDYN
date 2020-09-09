@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:24 (last modfied)
+* @date         2020-09-09  00:35:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -53,6 +54,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainMarkerBodyCable2DCoordinates
 class MainMarkerBodyCable2DCoordinates: public MainMarker // AUTO: 
@@ -103,7 +105,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber = py::cast<Index>(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerBodyCable2DCoordinates->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -113,7 +115,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["markerType"] = (std::string)GetTypeName();
-        d["bodyNumber"] = (Index)cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["bodyNumber"] = (ObjectIndex)cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerBodyCable2DCoordinates->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -123,7 +125,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("bodyNumber") == 0) { return py::cast((Index)cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("bodyNumber") == 0) { return py::cast((ObjectIndex)cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerBodyCable2DCoordinates->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyCable2DCoordinates::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -134,7 +136,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("bodyNumber") == 0) { cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("bodyNumber") == 0) { cMarkerBodyCable2DCoordinates->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerBodyCable2DCoordinates->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyCable2DCoordinates::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

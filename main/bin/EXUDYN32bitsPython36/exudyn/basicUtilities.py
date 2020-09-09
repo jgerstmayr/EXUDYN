@@ -106,14 +106,14 @@ def Normalize(v):
 #**input: 3D vector v as list or in numpy format
 #**output: matrix as list of lists containing the skew-symmetric matrix computed from v: $\mr{0}{-v[2]}{v[1]} {v[2]}{0}{-v[0]} {-v[1]}{v[0]}{0}$
 def Vec2Tilde(v):
-    print('Vec2Tilde is deprecated; use Skew(...)')
+    print('Vec2Tilde is deprecated; use exudyn.rigidBodyUtilities.Skew(...)')
     return [[0.,-v[2],v[1]],[v[2],0.,-v[0]],[-v[1],v[0],0.]]
 
 #**function: take skew symmetric matrix and return vector (inverse of Skew(...))
 #**input: list of lists containing a skew-symmetric matrix (3x3)
 #**output: list containing the vector v (inverse function of Vec2Tilde(...))
 def Tilde2Vec(m):
-    print('Tilde2Vec is deprecated; use Skew(...)')
+    print('Tilde2Vec is deprecated; use exudyn.rigidBodyUtilities.Skew2Vec(...)')
     return [-m[1][2], m[0][2], -m[0][1]]
 
 #integration points per integration order (1, 3, ...); for interval [-1,1]

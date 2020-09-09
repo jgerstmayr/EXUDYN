@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:23 (last modfied)
+* @date         2020-09-08  22:06:16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -54,6 +55,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainObjectRigidBody
 class MainObjectRigidBody: public MainObjectBody // AUTO: 
@@ -113,7 +115,7 @@ public: // AUTO:
         cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector6DSafely(d, "physicsInertia", cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::SetVector3DSafely(d, "physicsCenterOfMass", cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/} 
-        cObjectRigidBody->GetParameters().nodeNumber = py::cast<Index>(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectRigidBody->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectRigidBody->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { if (EPyUtils::CheckForValidFunction(d["VgraphicsDataUserFunction"])) { visualizationObjectRigidBody->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
@@ -129,7 +131,7 @@ public: // AUTO:
         d["physicsMass"] = (Real)cObjectRigidBody->GetParameters().physicsMass; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsInertia"] = (std::vector<Real>)cObjectRigidBody->GetParameters().physicsInertia; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsCenterOfMass"] = (std::vector<Real>)cObjectRigidBody->GetParameters().physicsCenterOfMass; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumber"] = (Index)cObjectRigidBody->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumber"] = (NodeIndex)cObjectRigidBody->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectRigidBody->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         if (visualizationObjectRigidBody->GetGraphicsDataUserFunction())
@@ -148,7 +150,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectRigidBody->GetParameters().physicsMass);} //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { return py::cast((std::vector<Real>)cObjectRigidBody->GetParameters().physicsInertia);} //! AUTO: get parameter
         else if (parameterName.compare("physicsCenterOfMass") == 0) { return py::cast((std::vector<Real>)cObjectRigidBody->GetParameters().physicsCenterOfMass);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((Index)cObjectRigidBody->GetParameters().nodeNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectRigidBody->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRigidBody->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return py::cast((std::function<py::object(const MainSystem&, Index)>)visualizationObjectRigidBody->GetGraphicsDataUserFunction());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRigidBody::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -163,7 +165,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsMass") == 0) { cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::SetVector6DSafely(value, cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::SetVector3DSafely(value, cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectRigidBody->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { cObjectRigidBody->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRigidBody->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectRigidBody->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRigidBody::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

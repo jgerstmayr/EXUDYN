@@ -26,6 +26,7 @@
 
 #include "Main/MainSystemData.h"
 #include "Main/MainSystem.h"
+#include "Pymodules/PybindUtilities.h"
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -101,7 +102,7 @@ Index MainSystem::AddMainNode(py::dict d)
 	return ind;
 };
 
-Index MainSystem::AddMainNodePyClass(py::object pyObject)
+NodeIndex MainSystem::AddMainNodePyClass(py::object pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -146,7 +147,7 @@ Index MainSystem::AddMainNodePyClass(py::object pyObject)
 }
 
 //! get node's dictionary by name; does not throw a error message
-Index MainSystem::PyGetNodeNumber(STDstring nodeName)
+NodeIndex MainSystem::PyGetNodeNumber(STDstring nodeName)
 {
 	Index ind = EXUstd::GetIndexByName(mainSystemData.GetMainNodes(), nodeName);
 
@@ -161,8 +162,9 @@ Index MainSystem::PyGetNodeNumber(STDstring nodeName)
 }
 
 //! hook to read node's dictionary
-py::dict MainSystem::PyGetNode(Index nodeNumber)
+py::dict MainSystem::PyGetNode(const py::object& itemIndex)
 {
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetDictionary();
@@ -175,21 +177,22 @@ py::dict MainSystem::PyGetNode(Index nodeNumber)
 	}
 }
 
-//! get node's dictionary by name
-py::dict MainSystem::PyGetNodeByName(STDstring nodeName)
-{
-	Index ind = PyGetNodeNumber(nodeName);
-	if (ind != EXUstd::InvalidIndex) { return PyGetNode(ind); }
-	else
-	{
-		PyError(STDstring("MainSystem::GetNode: invalid access to node '") + nodeName + "'");
-		return py::dict();
-	}
-}
+////! get node's dictionary by name
+//py::dict MainSystem::PyGetNodeByName(STDstring nodeName)
+//{
+//	Index ind = (Index)PyGetNodeNumber(nodeName);
+//	if (ind != EXUstd::InvalidIndex) { return PyGetNode(ind); }
+//	else
+//	{
+//		PyError(STDstring("MainSystem::GetNode: invalid access to node '") + nodeName + "'");
+//		return py::dict();
+//	}
+//}
 
 //! modify node's dictionary
-void MainSystem::PyModifyNode(Index nodeNumber, py::dict nodeDict)
+void MainSystem::PyModifyNode(const py::object& itemIndex, py::dict nodeDict)
 {
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
@@ -222,7 +225,7 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		pout << "available node types are: [Point]\n";
+		PyError(STDstring("MainSystem::GetNodeDefaults: typeName needed'"));
 		return d;
 	}
 	
@@ -241,8 +244,9 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 	return d;
 }
 
-py::object MainSystem::PyGetNodeOutputVariable(Index nodeNumber, OutputVariableType variableType, ConfigurationType configuration) const
+py::object MainSystem::PyGetNodeOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetOutputVariable(variableType, configuration);
@@ -256,8 +260,9 @@ py::object MainSystem::PyGetNodeOutputVariable(Index nodeNumber, OutputVariableT
 }
 
 //! get index in global ODE2 coordinate vector for first node coordinate
-Index MainSystem::PyGetNodeODE2Index(Index nodeNumber) const
+Index MainSystem::PyGetNodeODE2Index(const py::object& itemIndex) const
 {
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		if (mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup() == CNodeGroup::ODE2variables)
@@ -279,26 +284,27 @@ Index MainSystem::PyGetNodeODE2Index(Index nodeNumber) const
 
 
 
-//! call pybind object function, possibly with arguments; empty function, to be overwritten in specialized class
-py::object MainSystem::PyCallNodeFunction(Index nodeNumber, STDstring functionName, py::dict args)
-{
-	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
-	{
-		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->CallFunction(functionName, args);
-	}
-	else
-	{
-		PyError(STDstring("MainSystem::ModifyObject: invalid access to node number ") + EXUstd::ToString(nodeNumber));
-		return py::int_(EXUstd::InvalidIndex);
-		//return py::object();
-	}
-
-}
+////! call pybind object function, possibly with arguments; empty function, to be overwritten in specialized class
+//py::object MainSystem::PyCallNodeFunction(Index nodeNumber, STDstring functionName, py::dict args)
+//{
+//	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
+//	{
+//		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->CallFunction(functionName, args);
+//	}
+//	else
+//	{
+//		PyError(STDstring("MainSystem::ModifyObject: invalid access to node number ") + EXUstd::ToString(nodeNumber));
+//		return py::int_(EXUstd::InvalidIndex);
+//		//return py::object();
+//	}
+//
+//}
 
 
 //! Get (read) parameter 'parameterName' of 'nodeNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-py::object MainSystem::PyGetNodeParameter(Index nodeNumber, const STDstring& parameterName) const
+py::object MainSystem::PyGetNodeParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetParameter(parameterName);
@@ -312,8 +318,9 @@ py::object MainSystem::PyGetNodeParameter(Index nodeNumber, const STDstring& par
 }
 
 //! Set (write) parameter 'parameterName' of 'nodeNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-void MainSystem::PySetNodeParameter(Index nodeNumber, const STDstring& parameterName, const py::object& value)
+void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
 		mainSystemData.GetMainNodes().GetItem(nodeNumber)->SetParameter(parameterName, value);
@@ -342,7 +349,7 @@ Index MainSystem::AddMainObject(py::dict d)
 	return ind;
 };
 
-Index MainSystem::AddMainObjectPyClass(py::object pyObject)
+ObjectIndex MainSystem::AddMainObjectPyClass(py::object pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -373,7 +380,7 @@ Index MainSystem::AddMainObjectPyClass(py::object pyObject)
 }
 
 //! get object's dictionary by name; does not throw a error message
-Index MainSystem::PyGetObjectNumber(STDstring itemName)
+ObjectIndex MainSystem::PyGetObjectNumber(STDstring itemName)
 {
 	Index ind = EXUstd::GetIndexByName(mainSystemData.GetMainObjects(), itemName);
 	if (ind != EXUstd::InvalidIndex)
@@ -387,8 +394,9 @@ Index MainSystem::PyGetObjectNumber(STDstring itemName)
 }
 
 //! hook to read object's dictionary
-py::dict MainSystem::PyGetObject(Index itemNumber)
+py::dict MainSystem::PyGetObject(const py::object& itemIndex)
 {
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetDictionary();
@@ -401,21 +409,22 @@ py::dict MainSystem::PyGetObject(Index itemNumber)
 	}
 }
 
-//! get object's dictionary by name
-py::dict MainSystem::PyGetObjectByName(STDstring itemName)
-{
-	Index ind = PyGetObjectNumber(itemName);
-	if (ind != EXUstd::InvalidIndex) { return PyGetObject(ind); }
-	else
-	{
-		PyError(STDstring("MainSystem::GetObject: invalid access to object '") + itemName + "'");
-		return py::dict();
-	}
-}
+////! get object's dictionary by name
+//py::dict MainSystem::PyGetObjectByName(STDstring itemName)
+//{
+//	Index ind = (Index)PyGetObjectNumber(itemName);
+//	if (ind != EXUstd::InvalidIndex) { return PyGetObject(ind); }
+//	else
+//	{
+//		PyError(STDstring("MainSystem::GetObject: invalid access to object '") + itemName + "'");
+//		return py::dict();
+//	}
+//}
 
 //! modify object's dictionary
-void MainSystem::PyModifyObject(Index itemNumber, py::dict d)
+void MainSystem::PyModifyObject(const py::object& itemIndex, py::dict d)
 {
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
@@ -434,7 +443,7 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		pout << "available object types are: [MassPoint,SpringDamper,Distance]\n";
+		PyError(STDstring("MainSystem::GetObjectDefaults: typeName needed'"));
 		return d;
 	}
 
@@ -453,24 +462,25 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 	return d;
 }
 
-//! call pybind object function, possibly with arguments; empty function, to be overwritten in specialized class
-py::object MainSystem::PyCallObjectFunction(Index itemNumber, STDstring functionName, py::dict args)
-{
-	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
-	{
-		return mainSystemData.GetMainObjects().GetItem(itemNumber)->CallFunction(functionName, args);
-	}
-	else
-	{
-		PyError(STDstring("MainSystem::ModifyObject: invalid access to object number ") + EXUstd::ToString(itemNumber));
-		return py::int_(EXUstd::InvalidIndex);
-		//return py::object();
-	}
-}
+////! call pybind object function, possibly with arguments; empty function, to be overwritten in specialized class
+//py::object MainSystem::PyCallObjectFunction(const py::object& itemIndex, STDstring functionName, py::dict args)
+//{
+//	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
+//	{
+//		return mainSystemData.GetMainObjects().GetItem(itemNumber)->CallFunction(functionName, args);
+//	}
+//	else
+//	{
+//		PyError(STDstring("MainSystem::ModifyObject: invalid access to object number ") + EXUstd::ToString(itemNumber));
+//		return py::int_(EXUstd::InvalidIndex);
+//		//return py::object();
+//	}
+//}
 
 //! Get specific output variable with variable type
-py::object MainSystem::PyGetObjectOutputVariable(Index itemNumber, OutputVariableType variableType) const
+py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType) const
 {
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		if ((Index)mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject()->GetType() & (Index)CObjectType::Connector)
@@ -498,11 +508,12 @@ py::object MainSystem::PyGetObjectOutputVariable(Index itemNumber, OutputVariabl
 //! Get specific output variable with variable type; ONLY for bodies;
 //py::object MainSystem::PyGetObjectOutputBody(Index objectNumber, OutputVariableType variableType,
 //	const Vector3D& localPosition, ConfigurationType configuration) //no conversion from py to Vector3D!
-py::object MainSystem::PyGetObjectOutputVariableBody(Index itemNumber, OutputVariableType variableType,
+py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex, OutputVariableType variableType,
 		const std::vector<Real>& localPosition, ConfigurationType configuration) const
 {
 	if (localPosition.size() == 3)
 	{
+		Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 		if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 		{
 			const MainObject* mo = mainSystemData.GetMainObjects().GetItem(itemNumber);
@@ -526,9 +537,10 @@ py::object MainSystem::PyGetObjectOutputVariableBody(Index itemNumber, OutputVar
 }
 
 //! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
-py::object MainSystem::PyGetObjectOutputVariableSuperElement(Index itemNumber, OutputVariableType variableType, 
+py::object MainSystem::PyGetObjectOutputVariableSuperElement(const py::object& itemIndex, OutputVariableType variableType, 
 	Index meshNodeNumber, ConfigurationType configuration) const
 {
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableSuperElement(variableType, meshNodeNumber, configuration);
@@ -541,8 +553,9 @@ py::object MainSystem::PyGetObjectOutputVariableSuperElement(Index itemNumber, O
 }
 
 //! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-py::object MainSystem::PyGetObjectParameter(Index itemNumber, const STDstring& parameterName) const
+py::object MainSystem::PyGetObjectParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetParameter(parameterName);
@@ -556,8 +569,9 @@ py::object MainSystem::PyGetObjectParameter(Index itemNumber, const STDstring& p
 }
 
 //! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-void MainSystem::PySetObjectParameter(Index itemNumber, const STDstring& parameterName, const py::object& value)
+void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
 		mainSystemData.GetMainObjects().GetItem(itemNumber)->SetParameter(parameterName, value);
@@ -584,7 +598,7 @@ Index MainSystem::AddMainMarker(py::dict d)
 	return ind;
 };
 
-Index MainSystem::AddMainMarkerPyClass(py::object pyObject)
+MarkerIndex MainSystem::AddMainMarkerPyClass(py::object pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -616,7 +630,7 @@ Index MainSystem::AddMainMarkerPyClass(py::object pyObject)
 }
 
 //! get object's dictionary by name; does not throw a error message
-Index MainSystem::PyGetMarkerNumber(STDstring itemName)
+MarkerIndex MainSystem::PyGetMarkerNumber(STDstring itemName)
 {
 	Index ind = EXUstd::GetIndexByName(mainSystemData.GetMainMarkers(), itemName);
 	if (ind != EXUstd::InvalidIndex)
@@ -630,35 +644,37 @@ Index MainSystem::PyGetMarkerNumber(STDstring itemName)
 }
 
 //! hook to read object's dictionary
-py::dict MainSystem::PyGetMarker(Index itemNumber)
+py::dict MainSystem::PyGetMarker(const py::object& itemIndex)
 {
+	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
 		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetDictionary();
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetMarker: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetMarker: invalid access to marker number ") + EXUstd::ToString(itemNumber));
 		py::dict d;
 		return d;
 	}
 }
 
-//! get object's dictionary by name
-py::dict MainSystem::PyGetMarkerByName(STDstring itemName)
-{
-	Index ind = PyGetMarkerNumber(itemName);
-	if (ind != EXUstd::InvalidIndex) { return PyGetMarker(ind); }
-	else
-	{
-		PyError(STDstring("MainSystem::GetMarker: invalid access to object '") + itemName + "'");
-		return py::dict();
-	}
-}
+////! get object's dictionary by name
+//py::dict MainSystem::PyGetMarkerByName(STDstring itemName)
+//{
+//	Index ind = (Index)PyGetMarkerNumber(itemName);
+//	if (ind != EXUstd::InvalidIndex) { return PyGetMarker(ind); }
+//	else
+//	{
+//		PyError(STDstring("MainSystem::GetMarker: invalid access to object '") + itemName + "'");
+//		return py::dict();
+//	}
+//}
 
 //! modify object's dictionary
-void MainSystem::PyModifyMarker(Index itemNumber, py::dict d)
+void MainSystem::PyModifyMarker(const py::object& itemIndex, py::dict d)
 {
+	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
@@ -667,7 +683,7 @@ void MainSystem::PyModifyMarker(Index itemNumber, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifyMarker: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifyMarker: invalid access to marker number ") + EXUstd::ToString(itemNumber));
 	}
 }
 
@@ -677,7 +693,7 @@ py::dict MainSystem::PyGetMarkerDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		pout << "available load types are: [BodyPosition]\n";
+		PyError(STDstring("MainSystem::GetMarkerDefaults: typeName needed'"));
 		return d;
 	}
 
@@ -697,30 +713,32 @@ py::dict MainSystem::PyGetMarkerDefaults(STDstring typeName)
 }
 
 //! Get (read) parameter 'parameterName' of 'markerNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-py::object MainSystem::PyGetMarkerParameter(Index markerNumber, const STDstring& parameterName) const
+py::object MainSystem::PyGetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	if (markerNumber < mainSystemData.GetMainMarkers().NumberOfItems())
+	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
-		return mainSystemData.GetMainMarkers().GetItem(markerNumber)->GetParameter(parameterName);
+		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetParameter(parameterName);
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
+		PyError(STDstring("MainSystem::GetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
 }
 
 //! Set (write) parameter 'parameterName' of 'markerNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-void MainSystem::PySetMarkerParameter(Index markerNumber, const STDstring& parameterName, const py::object& value)
+void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	if (markerNumber < mainSystemData.GetMainMarkers().NumberOfItems())
+	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
-		mainSystemData.GetMainMarkers().GetItem(markerNumber)->SetParameter(parameterName, value);
+		mainSystemData.GetMainMarkers().GetItem(itemNumber)->SetParameter(parameterName, value);
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(markerNumber));
+		PyError(STDstring("MainSystem::SetMarkerParameter: invalid access to marker number ") + EXUstd::ToString(itemNumber));
 	}
 }
 
@@ -741,7 +759,7 @@ Index MainSystem::AddMainLoad(py::dict d)
 	return ind;
 };
 
-Index MainSystem::AddMainLoadPyClass(py::object pyObject)
+LoadIndex MainSystem::AddMainLoadPyClass(py::object pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -773,7 +791,7 @@ Index MainSystem::AddMainLoadPyClass(py::object pyObject)
 }
 
 //! get object's dictionary by name; does not throw a error message
-Index MainSystem::PyGetLoadNumber(STDstring itemName)
+LoadIndex MainSystem::PyGetLoadNumber(STDstring itemName)
 {
 	Index ind = EXUstd::GetIndexByName(mainSystemData.GetMainLoads(), itemName);
 	if (ind != EXUstd::InvalidIndex)
@@ -787,35 +805,37 @@ Index MainSystem::PyGetLoadNumber(STDstring itemName)
 }
 
 //! hook to read object's dictionary
-py::dict MainSystem::PyGetLoad(Index itemNumber)
+py::dict MainSystem::PyGetLoad(const py::object& itemIndex)
 {
+	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
 		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetDictionary();
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoad: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetLoad: invalid access to load number ") + EXUstd::ToString(itemNumber));
 		py::dict d;
 		return d;
 	}
 }
 
-//! get object's dictionary by name
-py::dict MainSystem::PyGetLoadByName(STDstring itemName)
-{
-	Index ind = PyGetLoadNumber(itemName);
-	if (ind != EXUstd::InvalidIndex) { return PyGetLoad(ind); }
-	else
-	{
-		PyError(STDstring("MainSystem::GetLoad: invalid access to object '") + itemName + "'");
-		return py::dict();
-	}
-}
+////! get object's dictionary by name
+//py::dict MainSystem::PyGetLoadByName(STDstring itemName)
+//{
+//	Index ind = (Index)PyGetLoadNumber(itemName);
+//	if (ind != EXUstd::InvalidIndex) { return PyGetLoad(ind); }
+//	else
+//	{
+//		PyError(STDstring("MainSystem::GetLoad: invalid access to object '") + itemName + "'");
+//		return py::dict();
+//	}
+//}
 
 //! modify object's dictionary
-void MainSystem::PyModifyLoad(Index itemNumber, py::dict d)
+void MainSystem::PyModifyLoad(const py::object& itemIndex, py::dict d)
 {
+	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
@@ -824,7 +844,7 @@ void MainSystem::PyModifyLoad(Index itemNumber, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifyLoad: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifyLoad: invalid access to load number ") + EXUstd::ToString(itemNumber));
 	}
 }
 
@@ -834,7 +854,7 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		pout << "available load types are: [ForceVector]\n";
+		PyError(STDstring("MainSystem::GetLoadDefaults: typeName needed'"));
 		return d;
 	}
 
@@ -848,14 +868,15 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoadDefaults: unknown object type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetLoadDefaults: unknown load type '") + typeName + "'");
 	}
 	return d;
 }
 
 //! Get current load values, specifically if user-defined loads are used
-py::object MainSystem::PyGetLoadValues(Index itemNumber) const
+py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 {
+	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
 		Real t = GetCSystem()->GetSystemData().GetCData().GetCurrent().GetTime(); //only current time available
@@ -869,30 +890,32 @@ py::object MainSystem::PyGetLoadValues(Index itemNumber) const
 }
 
 //! Get (read) parameter 'parameterName' of 'loadNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-py::object MainSystem::PyGetLoadParameter(Index loadNumber, const STDstring& parameterName) const
+py::object MainSystem::PyGetLoadParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	if (loadNumber < mainSystemData.GetMainLoads().NumberOfItems())
+	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
-		return mainSystemData.GetMainLoads().GetItem(loadNumber)->GetParameter(parameterName);
+		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetParameter(parameterName);
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
+		PyError(STDstring("MainSystem::GetLoadParameter: invalid access to load number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
 }
 
 //! Set (write) parameter 'parameterName' of 'loadNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-void MainSystem::PySetLoadParameter(Index loadNumber, const STDstring& parameterName, const py::object& value)
+void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	if (loadNumber < mainSystemData.GetMainLoads().NumberOfItems())
+	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
-		mainSystemData.GetMainLoads().GetItem(loadNumber)->SetParameter(parameterName, value);
+		mainSystemData.GetMainLoads().GetItem(itemNumber)->SetParameter(parameterName, value);
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetLoadParameter: invalid access to load number ") + EXUstd::ToString(loadNumber));
+		PyError(STDstring("MainSystem::SetLoadParameter: invalid access to load number ") + EXUstd::ToString(itemNumber));
 	}
 }
 
@@ -912,7 +935,7 @@ Index MainSystem::AddMainSensor(py::dict d)
 	return ind;
 };
 
-Index MainSystem::AddMainSensorPyClass(py::object pyObject)
+SensorIndex MainSystem::AddMainSensorPyClass(py::object pyObject)
 {
 	py::dict dictObject;
 	Index itemIndex = 0;
@@ -944,7 +967,7 @@ Index MainSystem::AddMainSensorPyClass(py::object pyObject)
 }
 
 //! get object's dictionary by name; does not throw a error message
-Index MainSystem::PyGetSensorNumber(STDstring itemName)
+SensorIndex MainSystem::PyGetSensorNumber(STDstring itemName)
 {
 	Index ind = EXUstd::GetIndexByName(mainSystemData.GetMainSensors(), itemName);
 	if (ind != EXUstd::InvalidIndex)
@@ -958,35 +981,37 @@ Index MainSystem::PyGetSensorNumber(STDstring itemName)
 }
 
 //! hook to read object's dictionary
-py::dict MainSystem::PyGetSensor(Index itemNumber)
+py::dict MainSystem::PyGetSensor(const py::object& itemIndex)
 {
+	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetDictionary();
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensor: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensor: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
 		py::dict d;
 		return d;
 	}
 }
 
-//! get object's dictionary by name
-py::dict MainSystem::PyGetSensorByName(STDstring itemName)
-{
-	Index ind = PyGetSensorNumber(itemName);
-	if (ind != EXUstd::InvalidIndex) { return PyGetSensor(ind); }
-	else
-	{
-		PyError(STDstring("MainSystem::GetSensor: invalid access to object '") + itemName + "'");
-		return py::dict();
-	}
-}
+////! get object's dictionary by name
+//py::dict MainSystem::PyGetSensorByName(STDstring itemName)
+//{
+//	Index ind = (Index)PyGetSensorNumber(itemName);
+//	if (ind != EXUstd::InvalidIndex) { return PyGetSensor(ind); }
+//	else
+//	{
+//		PyError(STDstring("MainSystem::GetSensor: invalid access to object '") + itemName + "'");
+//		return py::dict();
+//	}
+//}
 
 //! modify object's dictionary
-void MainSystem::PyModifySensor(Index itemNumber, py::dict d)
+void MainSystem::PyModifySensor(const py::object& itemIndex, py::dict d)
 {
+	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		GetCSystem()->SystemHasChanged();
@@ -995,7 +1020,7 @@ void MainSystem::PyModifySensor(Index itemNumber, py::dict d)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::ModifySensor: invalid access to object number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::ModifySensor: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
 	}
 }
 
@@ -1005,7 +1030,7 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 	py::dict d;
 	if (typeName.size() == 0) //in case of empty string-->return available default names!
 	{
-		pout << "available load types are: [BodyPosition]\n";
+		PyError(STDstring("MainSystem::GetSensorDefaults: typeName needed'"));
 		return d;
 	}
 
@@ -1019,21 +1044,22 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensorDefaults: unknown object type '") + typeName + "'");
+		PyError(STDstring("MainSystem::GetSensorDefaults: unknown sensor type '") + typeName + "'");
 	}
 	return d;
 }
 
 //! get sensor's values
-py::object MainSystem::PyGetSensorValues(Index itemNumber, ConfigurationType configuration)
+py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, ConfigurationType configuration)
 {
+	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetSensorValues(GetCSystem()->GetSystemData(), configuration);
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::GetSensorValues: invalid access to node number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::GetSensorValues: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }
@@ -1041,8 +1067,9 @@ py::object MainSystem::PyGetSensorValues(Index itemNumber, ConfigurationType con
 
 
 //! Get (read) parameter 'parameterName' of 'sensorNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
-py::object MainSystem::PyGetSensorParameter(Index itemNumber, const STDstring& parameterName) const
+py::object MainSystem::PyGetSensorParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
+	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetParameter(parameterName);
@@ -1056,15 +1083,16 @@ py::object MainSystem::PyGetSensorParameter(Index itemNumber, const STDstring& p
 }
 
 //! Set (write) parameter 'parameterName' of 'SensorNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
-void MainSystem::PySetSensorParameter(Index itemNumber, const STDstring& parameterName, const py::object& value)
+void MainSystem::PySetSensorParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
+	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
 		mainSystemData.GetMainSensors().GetItem(itemNumber)->SetParameter(parameterName, value);
 	}
 	else
 	{
-		PyError(STDstring("MainSystem::SetSensorParameter: invalid access to Sensor number ") + EXUstd::ToString(itemNumber));
+		PyError(STDstring("MainSystem::SetSensorParameter: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
 	}
 }
 

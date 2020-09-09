@@ -67,7 +67,7 @@ for i in range(nElements):
     elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
                                physicsBendingStiffness=E*I, physicsAxialStiffness=E*A*0.1, 
                                physicsBendingDamping=E*I*0.025*0, physicsAxialDamping=E*A*0.1, 
-                               nodeNumbers=[nc0+i,nc0+i+1]))
+                               nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
     cableList+=[elem]
 
 mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))

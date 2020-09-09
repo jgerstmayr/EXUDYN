@@ -327,7 +327,7 @@ sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for a
 
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainNodePyClass(pyObject); }', 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='AddMainNodePyClass', 
-                                description="add a node with nodeDefinition from Python node class; returns (global) node number of newly added node",
+                                description="add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...)",
                                 argList=['pyObject'],
                                 example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item) \\\\" + "nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)"
 #                                isLambdaFunction = True
@@ -340,13 +340,13 @@ sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for a
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNode', cName='PyGetNode', 
-                                description="get node's dictionary by index",
+                                description="get node's dictionary by node number (type NodeIndex)",
                                 argList=['nodeNumber'],
                                 example = "nodeDict = mbs.GetNode(0)"
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ModifyNode', cName='PyModifyNode', 
-                                description="modify node's dictionary by index",
+                                description="modify node's dictionary by node number (type NodeIndex)",
                                 argList=['nodeNumber','nodeDict'],
                                 example = "mbs.ModifyNode(nodeNumber, nodeDict)"
                                 ); s+=s1; sL+=sL1
@@ -377,12 +377,12 @@ sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for a
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeParameter', cName='PyGetNodeParameter', 
-                                description="get nodes's parameter from nodeNumber and parameterName; parameter names can be found for the specific items in the reference manual",
+                                description="get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual",
                                 argList=['nodeNumber', 'parameterName']
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetNodeParameter', cName='PySetNodeParameter', 
-                                description="set parameter 'parameterName' of node with nodeNumber to value; parameter names can be found for the specific items in the reference manual",
+                                description="set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual",
                                 argList=['nodeNumber', 'parameterName', 'value']
                                 ); s+=s1; sL+=sL1
 
@@ -400,7 +400,7 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
 
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainObjectPyClass(pyObject); }', 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='AddMainObjectPyClass', 
-                                description="add a object with objectDefinition from Python object class; returns (global) object number of newly added object",
+                                description="add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object",
                                 argList=['pyObject'],
                                 example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item) \\\\" + "objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\ mbs.AddObject(objectDict)"
 #                                isLambdaFunction = True
@@ -413,13 +413,13 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObject', cName='PyGetObject', 
-                                description="get object's dictionary by index",
+                                description="get object's dictionary by object number (type ObjectIndex)",
                                 argList=['objectNumber'],
                                 example = "objectDict = mbs.GetObject(0)"
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ModifyObject', cName='PyModifyObject', 
-                                description="modify object's dictionary by index",
+                                description="modify object's dictionary by object number (type ObjectIndex)",
                                 argList=['objectNumber','objectDict'],
                                 example = "mbs.ModifyObject(objectNumber, objectDict)"
                                 ); s+=s1; sL+=sL1
@@ -437,12 +437,12 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
 #                                ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutput', cName='PyGetObjectOutputVariable', 
-                                description="get object's current output variable from objectNumber and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!",
+                                description="get object's current output variable from object number (type ObjectIndex) and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!",
                                 argList=['objectNumber', 'variableType']
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputBody', cName='PyGetObjectOutputVariableBody', 
-                                description="get body's output variable from objectNumber and OutputVariableType",
+                                description="get body's output variable from object number (type ObjectIndex) and OutputVariableType",
                                 argList=['objectNumber', 'variableType', 'localPosition', 'configuration'],
                                 defaultArgs=['','','','ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)"
@@ -456,12 +456,12 @@ sL += DefLatexStartClass(classStr+': Object', 'This section provides functions f
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectParameter', cName='PyGetObjectParameter', 
-                                description="get objects's parameter from objectNumber and parameterName; parameter names can be found for the specific items in the reference manual",
+                                description="get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual",
                                 argList=['objectNumber', 'parameterName']
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetObjectParameter', cName='PySetObjectParameter', 
-                                description="set parameter 'parameterName' of object with objectNumber to value; parameter names can be found for the specific items in the reference manual",
+                                description="set parameter 'parameterName' of object with object number (type ObjectIndex) to value; parameter names can be found for the specific items in the reference manual",
                                 argList=['objectNumber', 'parameterName', 'value']
                                 ); s+=s1; sL+=sL1
 
@@ -480,7 +480,7 @@ sL += DefLatexStartClass(classStr+': Marker', 'This section provides functions f
 
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainMarkerPyClass(pyObject); }', 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='AddMainMarkerPyClass', 
-                                description="add a marker with markerDefinition from Python marker class; returns (global) marker number of newly added marker",
+                                description="add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker",
                                 argList=['pyObject'],
                                 example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)\\\\" + "markerDict = {'markerType': 'NodePosition', \\\\ 'nodeNumber': 0, \\\\ 'name': 'position0'}\\\\ mbs.AddMarker(markerDict)"
 #                                isLambdaFunction = True
@@ -536,7 +536,7 @@ sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for
 
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainLoadPyClass(pyObject); }', 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='AddMainLoadPyClass', 
-                                description="add a load with loadDefinition from Python load class; returns (global) load number of newly added load",
+                                description="add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load",
                                 argList=['pyObject'],
                                 example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)\\\\" + "loadDict = {'loadType': 'ForceVector',\\\\ 'markerNumber': 0,\\\\ 'loadVector': [1.0, 0.0, 0.0],\\\\ 'name': 'heavy load'} \\\\ mbs.AddLoad(loadDict)"
 #                                isLambdaFunction = True
@@ -596,7 +596,7 @@ sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions f
 
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainSensorPyClass(pyObject); }', 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='AddMainSensorPyClass',
-                                description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number of newly added sensor",
+                                description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor",
                                 argList=['pyObject'],
                                 example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)\\\\" + "sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)"
 #                                isLambdaFunction = True

@@ -678,7 +678,7 @@ A 3D mass point which is attached to a position-based node, usually NodePoint.\v
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number for mass point\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number (type NodeIndex) for mass point\\ \hline
     visualization & VObjectMassPoint & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -696,7 +696,7 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
 {\bf Detailed information on ObjectMassPoint}:
 \startTable{input parameter}{symbol}{description see tables above}
 \rowTable{physicsMass}{$m$}{}
-\rowTable{nodeNumber}{$n_0$}{}
+\rowTable{nodeNumber}{$n0$}{}
 \finishTable
 {\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
 \startTable{output parameter}{symbol}{description}
@@ -777,7 +777,7 @@ A 2D mass point which is attached to a position-based 2D node.\vspace{12pt}
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number for mass point\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number (type NodeIndex) for mass point\\ \hline
     visualization & VObjectMassPoint2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -869,7 +869,7 @@ A 1D (translational) mass which is attached to Node1D. Note, that the mass does 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of Node1D providing translation coordinate $c_0$\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number (type NodeIndex) for Node1D\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     a reference position, used to transform the 1D coordinate to a position\\ \hline
     referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
     visualization & VObjectMass1D & & & parameters for visualization of item \\ \hline
@@ -973,7 +973,7 @@ A 1D rotational inertia (mass) which is attached to Node1D.\vspace{12pt}
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsInertia &     UReal &      &     0. &     inertia components [SI:kgm$^2$] of rotor / rotational mass\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of Node1D, providing rotation coordinate $\psi_0 = c_0$\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     a constant reference position, used to assign joint constraints accordingly and for drawing\\ \hline
     referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description\\ \hline
     visualization & VObjectRotationalMass1D & & & parameters for visualization of item \\ \hline
@@ -1083,7 +1083,7 @@ A 3D rigid body which is attached to a 3D rigid body node. Equations of motion w
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of rigid body\\ \hline
     physicsInertia &     Vector6D &      &     [0.,0.,0., 0.,0.,0.] &     inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ of rigid body w.r.t. to the reference point of the body, NOT w.r.t. to center of mass; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass\\ \hline
     physicsCenterOfMass &     Vector3D &     3 &     [0.,0.,0.] &     local position of center of mass (COM); if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number for rigid body node\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number (type NodeIndex) for rigid body node\\ \hline
     visualization & VObjectRigidBody & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1136,7 +1136,7 @@ A 2D rigid body which is attached to a rigid body 2D node. The body obtains coor
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of rigid body\\ \hline
     physicsInertia &     UReal &      &     0. &     inertia [SI:kgm$^2$] of rigid body w.r.t. center of mass\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number for 2D rigid body node\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number (type NodeIndex) for 2D rigid body node\\ \hline
     visualization & VObjectRigidBody2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2546,7 +2546,7 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData (size=3) for 3 dataCoordinates\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData (size=3) for 3 dataCoordinates\\ \hline
     dryFrictionAngle &     Real &      &     0. &     angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/m]\\ \hline
     contactDamping &     Real &      &     0. &     normal contact damping [SI:N/(m s)]\\ \hline
@@ -2719,7 +2719,7 @@ A penalty-based contact condition for one coordinate; the contact gap $g$ is def
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m]; acts only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)]; acts only upon penetration\\ \hline
     offset &     UReal &      &     0. &     offset [SI:m] of contact\\ \hline
@@ -2759,7 +2759,7 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration\\ \hline
@@ -2801,7 +2801,7 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData with 3 $\times$ nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData with 3 $\times$ nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration\\ \hline
@@ -3287,7 +3287,7 @@ A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1)
     markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     marker m0: position-marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
     slidingMarkerNumbers &     ArrayIndex &      &     [] &     these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)\\ \hline
     slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position\\ \hline
     classicalFormulation &     bool &      &     True &     uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectJointSliding2D & & & parameters for visualization of item \\ \hline
@@ -3614,7 +3614,7 @@ A marker attached to the body mass; use this marker to apply a body-load (e.g. g
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     visualization & VMarkerBodyMass & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -3645,7 +3645,7 @@ A position body-marker attached to local position (x,y,z) of the body.\vspace{12
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local body position of marker; e.g. local (body-fixed) position where force is applied to\\ \hline
     visualization & VMarkerBodyPosition & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3677,7 +3677,7 @@ A rigid-body (position+orientation) body-marker attached to local position (x,y,
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local body position of marker; e.g. local (body-fixed) position where force is applied to\\ \hline
     visualization & VMarkerBodyRigid & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3709,7 +3709,7 @@ A node-Marker attached to a position-based node.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number to which marker is attached to\\ \hline
     visualization & VMarkerNodePosition & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -3740,7 +3740,7 @@ A rigid-body (position+orientation) node-marker attached to a rigid-body node.\v
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number to which marker is attached to\\ \hline
     visualization & VMarkerNodeRigid & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -3771,7 +3771,7 @@ A node-Marker attached to a ODE2 coordinate of a node; for other coordinates (OD
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number to which marker is attached to\\ \hline
     coordinate &     Index &      &     MAXINT &     coordinate of node to which marker is attached to\\ \hline
     visualization & VMarkerNodeCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3803,7 +3803,7 @@ A node-Marker attached to a a node containing rotation; the Marker measures a ro
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number to which marker is attached to\\ \hline
     rotationCoordinate &     Index &      &     MAXINT &     rotation coordinate: 0=x, 1=y, 2=z\\ \hline
     visualization & VMarkerNodeRotationCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3835,7 +3835,7 @@ A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericO
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     meshNodeNumbers &     ArrayIndex &      &     [] &     a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
     weightingFactors &     Vector &      &     [] &     a list of $n_m$ weighting factors per node to compute the final local position\\ \hline
     visualization & VMarkerSuperElementPosition & & & parameters for visualization of item \\ \hline
@@ -3948,7 +3948,7 @@ A position and orientation (rigid-body) marker attached to a SuperElement, such 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     local marker SuperElement reference position used to compute average displacement and average rotation; currently, this must be the center of weighted nodes of the marker\\ \hline
     meshNodeNumbers &     ArrayIndex &      &     [] &     a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
     weightingFactors &     Vector &      &     [] &     a list of $n_m$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces\\ \hline
@@ -4071,7 +4071,7 @@ A Marker attached to all coordinates of an object (currently only body is possib
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    objectNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    objectNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     visualization & VMarkerObjectODE2Coordinates & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -4102,7 +4102,7 @@ A special Marker attached to a 2D ANCF beam finite element with cubic interpolat
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     numberOfSegments &     Index &      &     3 &     number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element\\ \hline
     visualization & VMarkerBodyCable2DShape & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -4134,7 +4134,7 @@ A special Marker attached to the coordinates of a 2D ANCF beam finite element wi
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body number to which marker is attached to\\ \hline
     visualization & VMarkerBodyCable2DCoordinates & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -4169,7 +4169,7 @@ Load with (3D) force vector; attached to position-based marker.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     Index &      &     MAXINT &     marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N]\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
@@ -4203,7 +4203,7 @@ Load with (3D) torque vector; attached to rigidbody-based marker.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     Index &      &     MAXINT &     marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N]\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
@@ -4237,7 +4237,7 @@ Load attached to BodyMass-based marker, applying a 3D vector load (e.g. the vect
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     Index &      &     MAXINT &     marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N/kg = m/s$^2$] \\ \hline
     loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
     visualization & VLoadMassProportional & & & parameters for visualization of item \\ \hline
@@ -4270,7 +4270,7 @@ Load with scalar value, which is attached to a coordinate-based marker; the load
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     Index &      &     MAXINT &     marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     load &     Real &      &     0. &     scalar load [SI:N]\\ \hline
     loadUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent load with parameters (Real t, Real load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, load): return load*np.sin(t*10*2*3.1415)\\ \hline
     visualization & VLoadCoordinate & & & parameters for visualization of item \\ \hline
@@ -4303,7 +4303,7 @@ A sensor attached to a node. The sensor measures OutputVariables and outputs val
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     Index &      &     MAXINT &     node number to which sensor is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     MAXINT &     node number to which sensor is attached to\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
@@ -4333,7 +4333,7 @@ A sensor attached to any object except bodies  (connectors, constraint, spring-d
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    objectNumber &     Index &      &     MAXINT &     object (e.g. connector) number to which sensor is attached to\\ \hline
+    objectNumber &     ObjectIndex &      &     MAXINT &     object (e.g. connector) number to which sensor is attached to\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
@@ -4363,7 +4363,7 @@ A sensor attached to a body-object with local position. As a difference to other
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     local (body-fixed) body position of sensor\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
@@ -4394,7 +4394,7 @@ A sensor attached to a SuperElement-object with mesh node number. As a differenc
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     Index &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     MAXINT &     body (=object) number to which sensor is attached to\\ \hline
     meshNodeNumber &     Index &      &     -1 &     mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
@@ -4425,7 +4425,7 @@ A sensor attached to a load. The sensor measures the load values and outputs val
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    loadNumber &     Index &      &     MAXINT &     load number to which sensor is attached to\\ \hline
+    loadNumber &     LoadIndex &      &     MAXINT &     load number to which sensor is attached to\\ \hline
     writeToFile &     bool &      &     True &     true: write sensor output to file\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     visualization & VSensorLoad & & & parameters for visualization of item \\ \hline

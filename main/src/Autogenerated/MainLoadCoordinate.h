@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:24 (last modfied)
+* @date         2020-09-09  00:35:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -54,6 +55,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainLoadCoordinate
 class MainLoadCoordinate: public MainLoad // AUTO: 
@@ -104,7 +106,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cLoadCoordinate->GetParameters().markerNumber = py::cast<Index>(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cLoadCoordinate->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cLoadCoordinate->GetParameters().load = py::cast<Real>(d["load"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "loadUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadUserFunction"])) { cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(Real,Real)>>((py::function)d["loadUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -116,7 +118,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["loadType"] = (std::string)GetTypeName();
-        d["markerNumber"] = (Index)cLoadCoordinate->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumber"] = (MarkerIndex)cLoadCoordinate->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["load"] = (Real)cLoadCoordinate->GetParameters().load; //! AUTO: cast variables into python (not needed for standard types) 
         if (cLoadCoordinate->GetParameters().loadUserFunction)
             {d["loadUserFunction"] = (std::function<Real(Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction;}
@@ -132,7 +134,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumber") == 0) { return py::cast((Index)cLoadCoordinate->GetParameters().markerNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadCoordinate->GetParameters().markerNumber);} //! AUTO: get parameter
         else if (parameterName.compare("load") == 0) { return py::cast((Real)cLoadCoordinate->GetParameters().load);} //! AUTO: get parameter
         else if (parameterName.compare("loadUserFunction") == 0) { return py::cast((std::function<Real(Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadCoordinate->GetShow());} //! AUTO: get parameter
@@ -145,7 +147,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumber") == 0) { cLoadCoordinate->GetParameters().markerNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumber") == 0) { cLoadCoordinate->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("load") == 0) { cLoadCoordinate->GetParameters().load = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadUserFunction") == 0) { cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationLoadCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

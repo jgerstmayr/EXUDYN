@@ -378,7 +378,8 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), 
+				item->GetCSensor()->GetOutputVariableType()))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
 					"', type = SensorType::Node: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in node with node number " + EXUstd::ToString(n));
@@ -389,12 +390,21 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index n = item->GetCSensor()->GetObjectNumber();
 			if (!EXUstd::IndexIsInRange(n, 0, numberOfObjects))
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Object, contains invalid object number " + EXUstd::ToString(n));
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
+					"', type = SensorType::Object, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			else if (EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
+			{
+				PyError(STDstring("SensorObject ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
+					"' cannot be attached to a body. Use SensorBody instead");
+			}
+			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
+				item->GetCSensor()->GetOutputVariableType()))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
+					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
+					"' is not available in object with object number " + EXUstd::ToString(n));
 			}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Body)
@@ -404,11 +414,14 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() & (Index)CObjectType::Body) == 0)
+			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
+			//2020-09-04: wrong use of &: else if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() & (Index)CObjectType::Body) == 0)
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
+				PyError(STDstring("SensorBody ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
+					"', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body. Use SensorObject instead");
 			}
-			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
+			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
+				item->GetCSensor()->GetOutputVariableType()))
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
 					"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
@@ -421,7 +434,8 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() & (Index)CObjectType::SuperElement) == 0)
+			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::SuperElement))
+			//else if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() & (Index)CObjectType::SuperElement) == 0)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
 			}
@@ -430,7 +444,8 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject());
 				const CSensorSuperElement* cSensorSuperElement = (const CSensorSuperElement*)(item->GetCSensor());
 				
-				if (!EXUstd::IsOfTypeAndNotNone(cObjectSuperElement->GetOutputVariableTypesSuperElement(cSensorSuperElement->GetMeshNodeNumber()), cSensorSuperElement->GetOutputVariableType()))
+				if (!EXUstd::IsOfTypeAndNotNone(cObjectSuperElement->GetOutputVariableTypesSuperElement(cSensorSuperElement->GetMeshNodeNumber()), 
+					cSensorSuperElement->GetOutputVariableType()))
 				{
 					PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
 						"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));

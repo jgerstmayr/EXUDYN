@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:23 (last modfied)
+* @date         2020-09-08  18:19:09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 
 //! AUTO: Parameters for class CObjectMass1DParameters
@@ -27,7 +28,7 @@ class CObjectMass1DParameters // AUTO:
 {
 public: // AUTO: 
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass
-    Index nodeNumber;                             //!< AUTO: node number of Node1D providing translation coordinate \f$c_0\f$
+    Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for Node1D
     Vector3D referencePosition;                   //!< AUTO: a reference position, used to transform the 1D coordinate to a position
     Matrix3D referenceRotation;                   //!< AUTO: the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates
     //! AUTO: default constructor with parameter initialization
@@ -59,6 +60,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: CObjectMass1D
 class CObjectMass1D: public CObjectBody // AUTO: 

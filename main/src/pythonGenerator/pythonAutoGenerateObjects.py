@@ -73,6 +73,17 @@ def IsASetSafelyParameter(parameterType):
     else:
         return False
 
+#check if type is a item index (NodeIndex, ...)
+def IsItemIndex(parameterType):
+    if ((parameterType == 'NodeIndex') |
+        (parameterType == 'ObjectIndex') | 
+        (parameterType == 'MarkerIndex') | 
+        (parameterType == 'LoadIndex') | 
+        (parameterType == 'SensorIndex') ):
+        return True
+    else:
+        return False
+
 #extract a latex $...$ code / symbol out of a string
 #return [stringWithoutSymbol, stringLatexSymbol]
 def ExtractLatexSymbol(s):
@@ -760,7 +771,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                             dictStr = '(py::function)'+dictStr
 
                         if typeCastStr != 'OutputVariableType':
-                            dictListWrite[i]+=destStr + ' = py::cast<' + typeCastStr + '>'
+                            if IsItemIndex(parameter['type']):
+                                dictListWrite[i]+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
+                            else:
+                                dictListWrite[i]+=destStr + ' = py::cast<' + typeCastStr + '>'
                         else:
                             dictListWrite[i]+=destStr + ' = (OutputVariableType)py::cast<Index>'
                             
@@ -774,6 +788,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         parWrite+=destStr + '); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
                         parWrite+='' #not implemented right now!
+                    elif IsItemIndex(parameter['type']):
+                        parWrite+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
+                        parWrite+='(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/'
                     else:
                         parWrite+=destStr + ' = py::cast<' + typeCastStr + '>'
                         parWrite+='(value); /* AUTO:  read out dictionary and cast to C++ type*/'
@@ -1018,6 +1035,7 @@ try: #still close file if crashes
     #direct type conversion used for in C++ (type casts are in WriteFile(...) function); 
     #types such as UReal shall be used lateron to perform e.g. range checks prior to setting parameters
     typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
+                      'NodeIndex':'Index', 'ObjectIndex':'Index', 'MarkerIndex':'Index', 'LoadIndex':'Index', 'SensorIndex':'Index', #in C++, all indices are the same!!!
                       'Vector':'Vector', 'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyVector':'Vector', 
                       'NumpyMatrix':'Matrix', 

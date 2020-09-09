@@ -34,6 +34,9 @@ pip install dist\exudyn-1.0.8-cp36-cp36m-win32.whl
 #just for completeness: install python lib (==> not needed, bdist_wheel does everything):
 python setup.py install 
 
+#to uninstall, and suppress prompt 'y/n', use:
+python uninstall -y exudyn
+
 #build WINDOWS MSI installer:
 python setup.py bdist_msi
 
@@ -103,6 +106,7 @@ sudo rm -r build dist exudyn.egg-info tmp .eggs
 
 #uninstall from packages:
 sudo pip3 uninstall exudyn
+sudo pip3 uninstall -y exudyn
 
 #create ubuntu wheel:
 sudo pip3 install wheel

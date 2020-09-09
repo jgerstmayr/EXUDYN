@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:24 (last modfied)
+* @date         2020-09-09  00:35:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -53,6 +54,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainSensorObject
 class MainSensorObject: public MainSensor // AUTO: 
@@ -103,7 +105,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cSensorObject->GetParameters().objectNumber = py::cast<Index>(d["objectNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cSensorObject->GetParameters().objectNumber = EPyUtils::GetObjectIndexSafely(d["objectNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorObject->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "fileName", cSensorObject->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
         cSensorObject->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -116,7 +118,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["sensorType"] = (std::string)GetTypeName();
-        d["objectNumber"] = (Index)cSensorObject->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["objectNumber"] = (ObjectIndex)cSensorObject->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["writeToFile"] = (bool)cSensorObject->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorObject->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
         d["outputVariableType"] = (OutputVariableType)cSensorObject->GetParameters().outputVariableType; //! AUTO: cast variables into python (not needed for standard types) 
@@ -129,7 +131,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("objectNumber") == 0) { return py::cast((Index)cSensorObject->GetParameters().objectNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("objectNumber") == 0) { return py::cast((ObjectIndex)cSensorObject->GetParameters().objectNumber);} //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorObject->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorObject->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { return py::cast((OutputVariableType)cSensorObject->GetParameters().outputVariableType);} //! AUTO: get parameter
@@ -143,7 +145,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("objectNumber") == 0) { cSensorObject->GetParameters().objectNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("objectNumber") == 0) { cSensorObject->GetParameters().objectNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorObject->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorObject->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { cSensorObject->GetParameters().outputVariableType = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

@@ -69,9 +69,11 @@ The following line adds a 3D node for 3D mass point\footnote{Note: Point is an a
                        initialVelocities = [v0,0,0]))
 \end{lstlisting}
 Here, \texttt{Point} (=\texttt{NodePoint}) is a Python class, which takes a number of arguments defined in the reference manual. The arguments here are \texttt{referenceCoordinates}, which are the coordinates for which the system is defined. The initial configuration is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state additionally gets \texttt{initialVelocities}.
+The command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex n1}, which basically contains an integer, which can only be used as node number. This node number will be used lateron to use the node in the object or in the marker.
 
 %
 While \texttt{Point} adds 3 unknown coordinates to the system, which need to be solved, we also can add ground nodes, which can be used similar to nodes, but they do not have unknown coordinates -- and therefore also have no initial displacements or velocities. The advantage of ground nodes (and ground bodies) is that no constraints are needed to fix these nodes.
+%
 Such a ground node is added via:
 \begin{lstlisting}[language=Python, firstnumber=22]
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
@@ -91,7 +93,8 @@ Markers are attached to the according ground and regular node number, additional
   nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, 
                                                   coordinate = 0))
 \end{lstlisting}
-This means that loads can be applied to the first coordinate of node \texttt{n1} via marker with number \texttt{nodeMarker}.
+This means that loads can be applied to the first coordinate of node \texttt{n1} via marker with number \texttt{nodeMarker},
+which is in fact of type \texttt{MarkerIndex}.
 
 Now we add a spring-damper to the markers with numbers \texttt{groundMarker} and the \texttt{nodeMarker}, providing stiffness and damping parameters:
 \begin{lstlisting}[language=Python, firstnumber=29]
@@ -102,8 +105,8 @@ Now we add a spring-damper to the markers with numbers \texttt{groundMarker} and
 %
 A load is added to marker \texttt{nodeMarker}, with a scalar load with value \texttt{f}:
 \begin{lstlisting}[language=Python, firstnumber=32]
-  nC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
-                             load = f))
+  nLoad = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
+                                     load = f))
 \end{lstlisting}
 %
 Finally, a sensor is added to the coordinate constraint object \texttt{nC}, requesting the outputvariable \texttt{Force}:

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-08-11  21:25:31 (last modfied)
+* @date         2020-09-08  18:19:09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 
 //! AUTO: Parameters for class CObjectMassPoint2DParameters
@@ -27,7 +28,7 @@ class CObjectMassPoint2DParameters // AUTO:
 {
 public: // AUTO: 
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass point
-    Index nodeNumber;                             //!< AUTO: node number for mass point
+    Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for mass point
     //! AUTO: default constructor with parameter initialization
     CObjectMassPoint2DParameters()
     {
@@ -55,6 +56,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: CObjectMassPoint2D
 class CObjectMassPoint2D: public CObjectBody // AUTO: 

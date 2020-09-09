@@ -216,6 +216,7 @@ void PyError(std::string error_msg, std::ofstream& file)
 		file << "********************************************************************\n\n";
 	}
 	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
+	//this kills kernel in spyder: CHECKandTHROWstring("Exudyn: parsing of python file terminated due to python (user) error!");
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar

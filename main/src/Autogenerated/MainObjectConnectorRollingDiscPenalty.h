@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:23 (last modfied)
+* @date         2020-09-09  00:35:50 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -53,6 +54,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainObjectConnectorRollingDiscPenalty
 class MainObjectConnectorRollingDiscPenalty: public MainObjectConnector // AUTO: 
@@ -113,7 +115,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber = py::cast<Index>(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "dryFrictionAngle")) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle = py::cast<Real>(d["dryFrictionAngle"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "contactDamping")) { cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -135,7 +137,7 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = (std::vector<Index>)cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumber"] = (Index)cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumber"] = (NodeIndex)cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["dryFrictionAngle"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactStiffness"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactDamping"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping; //! AUTO: cast variables into python (not needed for standard types) 
@@ -156,7 +158,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((Index)cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionAngle") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle);} //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping);} //! AUTO: get parameter
@@ -178,7 +180,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionAngle") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

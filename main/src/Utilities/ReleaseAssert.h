@@ -26,7 +26,8 @@
 
 //gcc cannot call std::exception() ==> use runtime_error
 #ifdef _MSC_VER
-#define EXUexception std::exception
+//#define EXUexception std::exception
+#define EXUexception std::runtime_error
 #else
 #define EXUexception std::runtime_error
 #endif

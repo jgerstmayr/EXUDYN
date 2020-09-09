@@ -257,6 +257,7 @@ def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnc
     s+='\n'
     s+='#include "Utilities/ReleaseAssert.h"\n'
     s+='#include "Utilities/BasicDefinitions.h"\n'
+    s+='#include "System/ItemIndices.h"\n'
     s+='\n'
 
     return s

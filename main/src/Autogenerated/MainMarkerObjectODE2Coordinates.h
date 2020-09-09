@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:24 (last modfied)
+* @date         2020-09-09  00:35:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -53,6 +54,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainMarkerObjectODE2Coordinates
 class MainMarkerObjectODE2Coordinates: public MainMarker // AUTO: 
@@ -106,7 +108,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cMarkerObjectODE2Coordinates->GetParameters().objectNumber = py::cast<Index>(d["objectNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cMarkerObjectODE2Coordinates->GetParameters().objectNumber = EPyUtils::GetObjectIndexSafely(d["objectNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerObjectODE2Coordinates->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -116,7 +118,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["markerType"] = (std::string)GetTypeName();
-        d["objectNumber"] = (Index)cMarkerObjectODE2Coordinates->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["objectNumber"] = (ObjectIndex)cMarkerObjectODE2Coordinates->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerObjectODE2Coordinates->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -126,7 +128,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("objectNumber") == 0) { return py::cast((Index)cMarkerObjectODE2Coordinates->GetParameters().objectNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("objectNumber") == 0) { return py::cast((ObjectIndex)cMarkerObjectODE2Coordinates->GetParameters().objectNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerObjectODE2Coordinates->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerObjectODE2Coordinates::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -137,7 +139,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("objectNumber") == 0) { cMarkerObjectODE2Coordinates->GetParameters().objectNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("objectNumber") == 0) { cMarkerObjectODE2Coordinates->GetParameters().objectNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerObjectODE2Coordinates->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerObjectODE2Coordinates::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

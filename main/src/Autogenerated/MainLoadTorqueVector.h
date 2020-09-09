@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:24 (last modfied)
+* @date         2020-09-09  00:35:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -54,6 +55,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainLoadTorqueVector
 class MainLoadTorqueVector: public MainLoad // AUTO: 
@@ -104,7 +106,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cLoadTorqueVector->GetParameters().markerNumber = py::cast<Index>(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cLoadTorqueVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DSafely(d, "loadVector", cLoadTorqueVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "bodyFixed")) { cLoadTorqueVector->GetParameters().bodyFixed = py::cast<bool>(d["bodyFixed"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadVectorUserFunction"])) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(Real,StdVector3D)>>((py::function)d["loadVectorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
@@ -117,7 +119,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["loadType"] = (std::string)GetTypeName();
-        d["markerNumber"] = (Index)cLoadTorqueVector->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumber"] = (MarkerIndex)cLoadTorqueVector->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["loadVector"] = (std::vector<Real>)cLoadTorqueVector->GetParameters().loadVector; //! AUTO: cast variables into python (not needed for standard types) 
         d["bodyFixed"] = (bool)cLoadTorqueVector->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
         if (cLoadTorqueVector->GetParameters().loadVectorUserFunction)
@@ -134,7 +136,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumber") == 0) { return py::cast((Index)cLoadTorqueVector->GetParameters().markerNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadTorqueVector->GetParameters().markerNumber);} //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { return py::cast((std::vector<Real>)cLoadTorqueVector->GetParameters().loadVector);} //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cLoadTorqueVector->GetParameters().bodyFixed);} //! AUTO: get parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector(Real,StdVector3D)>)cLoadTorqueVector->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
@@ -148,7 +150,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumber") == 0) { cLoadTorqueVector->GetParameters().markerNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumber") == 0) { cLoadTorqueVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { EPyUtils::SetVector3DSafely(value, cLoadTorqueVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { cLoadTorqueVector->GetParameters().bodyFixed = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(Real,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

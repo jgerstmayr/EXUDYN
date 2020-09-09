@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-07-20  12:33:23 (last modfied)
+* @date         2020-09-09  00:35:50 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -20,6 +20,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 #include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 #include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!
@@ -53,6 +54,7 @@ public: // AUTO:
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "System/ItemIndices.h"
 
 //! AUTO: MainMarkerBodyRigid
 class MainMarkerBodyRigid: public MainMarker // AUTO: 
@@ -103,7 +105,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cMarkerBodyRigid->GetParameters().bodyNumber = py::cast<Index>(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cMarkerBodyRigid->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DSafely(d, "localPosition", cMarkerBodyRigid->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerBodyRigid->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -114,7 +116,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["markerType"] = (std::string)GetTypeName();
-        d["bodyNumber"] = (Index)cMarkerBodyRigid->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["bodyNumber"] = (ObjectIndex)cMarkerBodyRigid->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["localPosition"] = (std::vector<Real>)cMarkerBodyRigid->GetParameters().localPosition; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerBodyRigid->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -125,7 +127,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("bodyNumber") == 0) { return py::cast((Index)cMarkerBodyRigid->GetParameters().bodyNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("bodyNumber") == 0) { return py::cast((ObjectIndex)cMarkerBodyRigid->GetParameters().bodyNumber);} //! AUTO: get parameter
         else if (parameterName.compare("localPosition") == 0) { return py::cast((std::vector<Real>)cMarkerBodyRigid->GetParameters().localPosition);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerBodyRigid->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyRigid::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -137,7 +139,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("bodyNumber") == 0) { cMarkerBodyRigid->GetParameters().bodyNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("bodyNumber") == 0) { cMarkerBodyRigid->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetVector3DSafely(value, cMarkerBodyRigid->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerBodyRigid->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyRigid::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

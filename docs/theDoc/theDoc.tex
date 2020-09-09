@@ -169,6 +169,7 @@ numberstyle=\ttm    						% line number style
 \end{center}
 \vspace{0.2cm}
 {\small \input{version}}\\
+{\small CHECK section 'CHANGES' for changes from previous versions!!!\\}
 \vspace{1.5cm}
 University of Innsbruck, Department of Mechatronics, \today,\vspace{0.25cm}\\
 Johannes Gerstmayr\vspace{2cm}
@@ -205,12 +206,16 @@ Johannes Gerstmayr\vspace{2cm}
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-\mysection{Python-C++ command interface}
+\mysection{Python-C++ command interface} \label{sec_PCpp_command_interface}
 This section lists the basic interface functions which can be used to set up a \codeName\ model in Python.
 
 To import the module, just include the \codeName\ module in Python (for compatibility with examples and other users, we recommend to use the 'exu' abbreviation throughout)\footnote{note that there is a second module, called exudynFast, which does deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases). To check which version you have, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}:
 \bi
   \item[] \texttt{import exudyn as exu}
+\ei
+In addition, you may work with a convenient interface for your items, therefore also always include the line
+\bi
+  \item[] \texttt{from exudyn.itemInterface import *}
 \ei
 The exudyn module will usually hold one SystemContainer, which is a class that is initialized by assigning a system container to a variable, usually denoted as 'SC':
 \bi
@@ -220,15 +225,17 @@ Furthermore, there are a couple of commands available directly in the \codeName\
 Regarding the {\bf (basic) module access}, functions are related to the '\texttt{exudyn = exu}' module, see these examples:
 \begin{lstlisting}[language=Python, firstnumber=14]
   import exudyn as exu
+  from exudyn.itemInterface import *
   SC = exu.SystemContainer()
-  exu.InfoStat() 
-  exu.Go()
-  nInvalid = exu.InvalidIndex()
+  exu.InfoStat() #prints some statistics if available
+  exu.Go() #creates a systemcontainer and main system
+  nInvalid = exu.InvalidIndex() #the invalid index, depends on architecture and version
 \end{lstlisting} \vspace{12pt}
 %
 Understanding the usage of functions for python object '\texttt{SystemContainer}' provided by \codeName, the following examples might help:
 \begin{lstlisting}[language=Python, firstnumber=14]
   import exudyn as exu
+  from exudyn.itemInterface import *
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   nSys = SC.NumberOfSystems()
@@ -236,15 +243,19 @@ Understanding the usage of functions for python object '\texttt{SystemContainer}
   SC.Reset()
 \end{lstlisting} \vspace{12pt}
 %
-Understanding the usage of functions for the '\texttt{MainSystem}' provided by \texttt{SystemContainer}, the following examples might help:
-\begin{lstlisting}[language=Python, firstnumber=14]
-  import exudyn as exu
-  SC = exu.SystemContainer()
-  mbs = SC.AddSystem()
-  mbs.Reset()
-  mbs.WaitForUserToContinue() 
-\end{lstlisting} \vspace{12pt}
-%
+
+Many functions will work with node numbers ('\texttt{NodeIndex}'), object numbers ('\texttt{ObjectIndex}'), marker numbers ('\texttt{MarkerIndex}') and others. These numbers are special objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.
+For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}. For these indices, the following rules apply:
+\bi
+	\item \texttt{mbs.Add[Node|Object|...](...)} returns a specific \texttt{NodeIndex}, \texttt{ObjectIndex}, ...
+	\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
+	\item You can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
+	\item Still, you can use integers as initialization for item numbers, e.g., \\
+	      \texttt{mbs.AddObject(MassPoint(nodeNumber=13, ...))}\\
+				However, it must be a pure integer type.
+	\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
+	\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
+\ei
 
 \input{manual_interfaces}
 

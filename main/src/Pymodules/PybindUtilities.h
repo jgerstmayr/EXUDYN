@@ -17,6 +17,7 @@
 #define PYBINDUTILITIES__H
 
 #include "Linalg/MatrixContainer.h"	
+#include "System/ItemIndices.h"	
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -45,6 +46,66 @@ namespace EPyUtils {
 			}
 		}
 		return false;
+	}
+
+	//! Expect Index or NodeIndex; otherwise throws error
+	inline Index GetNodeIndexSafely(const py::object& pyObject)
+	{
+		if (py::isinstance<py::int_>(pyObject) || py::isinstance<NodeIndex>(pyObject))
+		{
+			return py::cast<Index>(pyObject);
+		}
+		//otherwise:
+		PyError(STDstring("Expected NodeIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		return EXUstd::InvalidIndex;
+	}
+
+	//! Expect Index or ObjectIndex; otherwise throws error
+	inline Index GetObjectIndexSafely(const py::object& pyObject)
+	{
+		if (py::isinstance<py::int_>(pyObject) || py::isinstance<ObjectIndex>(pyObject))
+		{
+			return py::cast<Index>(pyObject);
+		}
+		//otherwise:
+		PyError(STDstring("Expected ObjectIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		return EXUstd::InvalidIndex;
+	}
+
+	//! Expect Index or MarkerIndex; otherwise throws error
+	inline Index GetMarkerIndexSafely(const py::object& pyObject)
+	{
+		if (py::isinstance<py::int_>(pyObject) || py::isinstance<MarkerIndex>(pyObject))
+		{
+			return py::cast<Index>(pyObject);
+		}
+		//otherwise:
+		PyError(STDstring("Expected MarkerIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		return EXUstd::InvalidIndex;
+	}
+
+	//! Expect Index or LoadIndex; otherwise throws error
+	inline Index GetLoadIndexSafely(const py::object& pyObject)
+	{
+		if (py::isinstance<py::int_>(pyObject) || py::isinstance<LoadIndex>(pyObject))
+		{
+			return py::cast<Index>(pyObject);
+		}
+		//otherwise:
+		PyError(STDstring("Expected LoadIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		return EXUstd::InvalidIndex;
+	}
+
+	//! Expect Index or SensorIndex; otherwise throws error
+	inline Index GetSensorIndexSafely(const py::object& pyObject)
+	{
+		if (py::isinstance<py::int_>(pyObject) || py::isinstance<SensorIndex>(pyObject))
+		{
+			return py::cast<Index>(pyObject);
+		}
+		//otherwise:
+		PyError(STDstring("Expected SensorIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		return EXUstd::InvalidIndex;
 	}
 
 	inline bool CheckForValidFunction(const py::object pyObject)
