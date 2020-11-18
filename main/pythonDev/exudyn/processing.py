@@ -54,10 +54,13 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
         if showProgress:
             try:
                 import tqdm #progress bar
-                tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
+                try: #_instances only available after first run!
+                    tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
+                except:
+                    pass
                 useTQDM = True
             except:
-                dummy=1
+                pass
                 #print("module 'tqdm' not available (use pip to install); progress bar not shown")
         
         if useTQDM:
@@ -80,31 +83,37 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #    debugMode: if True, additional print out is done
 #    addComputationIndex: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
+#    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #**output:
 #    returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList, 
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 #**example:
 #   ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, parameterFunction=Test, useMultiProcessing=True)
-def ParameterVariation(parameterFunction, parameters, **kwargs):
+def ParameterVariation(parameterFunction, parameters, 
+                       useLogSpace=False, debugMode=False, addComputationIndex=False,
+                       useMultiProcessing=False, showProgress = True,
+                       **kwargs):
     
-    debugMode = False
-    if 'debugMode' in kwargs:
-        debugMode = kwargs['debugMode']
+    # debugMode = False
+    # if 'debugMode' in kwargs:
+    #     debugMode = kwargs['debugMode']
 
-    useLogSpace = False
-    if 'useLogSpace' in kwargs and kwargs['useLogSpace']==True:
-        useLogSpace = True
+    # useLogSpace = False
+    # if 'useLogSpace' in kwargs and kwargs['useLogSpace']==True:
+    #     useLogSpace = True
     
-    addComputationIndex = False
-    if 'addComputationIndex' in kwargs and kwargs['addComputationIndex']==True:
-        addComputationIndex = True
+    # addComputationIndex = False
+    # if 'addComputationIndex' in kwargs and kwargs['addComputationIndex']==True:
+    #     addComputationIndex = True
     
-    useMultiProcessing = False
-    if 'useMultiProcessing' in kwargs and kwargs['useMultiProcessing']==True:
-        useMultiProcessing = True
-        if debugMode:
-            print("using multiprocessing")
+    # useMultiProcessing = False
+    # if 'useMultiProcessing' in kwargs and kwargs['useMultiProcessing']==True:
+    #     useMultiProcessing = True
+
+    # showProgress = True #for larger variations very nice to have
+    # if 'showProgress' in kwargs: 
+    #     showProgress = kwargs['showProgress']
 
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
@@ -115,6 +124,7 @@ def ParameterVariation(parameterFunction, parameters, **kwargs):
         numberOfThreads = 8
     if 'numberOfThreads' in kwargs: 
         numberOfThreads = kwargs['numberOfThreads']
+
 
     #generate list of parameters to iterate
     dim = len(parameters)       #dimensionality (dimension) of problem
@@ -179,7 +189,7 @@ def ParameterVariation(parameterFunction, parameters, **kwargs):
     # if debugMode:
     #     print("parameterList =", parameterList)
 
-    values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, showProgress = True, numberOfThreads=numberOfThreads)
+    values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
 
 
     # if debugMode:
@@ -192,59 +202,38 @@ def ParameterVariation(parameterFunction, parameters, **kwargs):
 #    objectiveFunction: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
 #    parameters: given as a dictionary, consist of name and tuple of (begin, end), e.g. 'mass':(10,50)
 #
-#    initialPopulationSize: number of random initial individuals (default: 100)
-#    numberOfGenerations: number of generations (default: 10)
-#    numberOfChildren: number childrens of surviving population (default: 8)
-#    useGenCrossing: if True, the children are generated from parents by gen-crossover (default: True)
-#    survivingIndividuals: number of surviving individuals after children are born (default: 8)
-#    rangeReductionFactor: (not implemented yet!) reduction of mutation range relative to ranges of last step (default: 0.7)
-#    randomizerInitialization: (not implemented yet!) initialize randomizer at beginning in order to get reproducible results (Default: True)
-#    distanceFactor: (not implemented yet!) children only survive at a certain distance of the current range (Default: 0.1)
+#    initialPopulationSize: number of random initial individuals
+#    numberOfGenerations: number of generations
+#    numberOfChildren: number childrens of surviving population
+#    useGeneCrossing: (not implemented yet) if True, the children are generated from parents by gene-crossover
+#    survivingIndividuals: number of surviving individuals after children are born
+#    rangeReductionFactor: reduction of mutation range relative to ranges of last step
+#    distanceFactor: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
+#    randomizerInitialization: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)
 #
 #    debugMode: if True, additional print out is done
 #    addComputationIndex: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
+#    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #**output:
-#    returns [optimumParameter, optimumValue, parametersAll, valuesAll], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parametersAll with according objective values 'valuesAll'
+#    returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 #**notes: This function is still under development and shows an experimental state! 
 #**example:
 #   GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffness':(1000,10000)})
-def GeneticOptimization(objectiveFunction, parameters, **kwargs):
-    debugMode = False
-    if 'debugMode' in kwargs:
-        debugMode = kwargs['debugMode']
-
-    initialPopulationSize = 100
-    if 'initialPopulationSize' in kwargs:
-        initialPopulationSize = kwargs['initialPopulationSize']
-
-    numberOfGenerations = 10
-    if 'numberOfGenerations' in kwargs:
-        numberOfGenerations = kwargs['numberOfGenerations']
-
-    numberOfChildren = 8
-    if 'numberOfChildren' in kwargs:
-        numberOfChildren = kwargs['numberOfChildren']
-
-    survivingIndividuals = 8
-    if 'survivingIndividuals' in kwargs:
-        survivingIndividuals = kwargs['survivingIndividuals']
-
-    rangeReductionFactor = 0.7
-    if 'rangeReductionFactor' in kwargs:
-        rangeReductionFactor = kwargs['rangeReductionFactor']
-
-    addComputationIndex = False
-    if 'addComputationIndex' in kwargs and kwargs['addComputationIndex']==True:
-        addComputationIndex = True
-    
-    useMultiProcessing = False
-    if 'useMultiProcessing' in kwargs and kwargs['useMultiProcessing']==True:
-        useMultiProcessing = True
-        if debugMode:
-            print("using multiprocessing")
+def GeneticOptimization(objectiveFunction, parameters, 
+                        initialPopulationSize=100,
+                        numberOfGenerations=10,
+                        numberOfChildren=8,
+                        survivingIndividuals=8,
+                        rangeReductionFactor=0.7,
+                        distanceFactor=0.1,
+                        debugMode=False, 
+                        addComputationIndex=False,
+                        useMultiProcessing=False, 
+                        showProgress = True,
+                        **kwargs):
 
     #get number of threads:
     if 'multiprocessing' in sys.modules:
@@ -254,6 +243,23 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
         numberOfThreads = 8
     if 'numberOfThreads' in kwargs: 
         numberOfThreads = kwargs['numberOfThreads']
+
+    if 'randomizerInitialization' in kwargs: 
+        randomizerInitialization = kwargs['randomizerInitialization']
+        if not isinstance(randomizerInitialization,int):
+            raise ValueError("GeneticOptimization: ERROR: randomizerInitialization must be positive 32 bit integer")
+        np.random.seed(randomizerInitialization)
+
+    dim = 0
+    ranges = [] #list containing the ranges of each dimension
+    rangesDict = {} #dict containing only the ranges
+    for (key,value) in parameters.items():
+        dim += 1 #count dimensions of parameters
+        r = value[1]-value[0]
+        if r <= 0:
+            raise ValueError("GeneticOptimization: ERROR: range of component "+str(dim-1)+" has negative or zero range")
+        ranges += [r]
+        rangesDict[key] = r
     
     #generate first generation:
     currentGeneration = []
@@ -271,16 +277,17 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
 
     if debugMode:
         print("initial population =", currentGeneration)
+        print("rangesDict =", rangesDict)
 
     #TODO: store all values for all generations
     parametersAll = []
-    valuesAll = []
+    valueList = []
 
     for popCnt in range(numberOfGenerations):
         if debugMode:
             print("===============\nevaluate population", popCnt, ":")
 
-        values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = True, numberOfThreads=numberOfThreads)
+        values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
         #print("values=",values)
 
         #remove computationIndex from new generation
@@ -290,7 +297,7 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
 
         #store all values
         parametersAll += currentGeneration
-        valuesAll += values
+        valueList += values
         
         #compute norm and minimum values:
         scalarValues = [(0,0)]*len(values)
@@ -302,27 +309,67 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
                 scalarValues[i] = (np.sqrt(np.dot(item,item)),i)
 
         valuesDtype = [('value', float), ('index', int)]
-        scalarValues = np.array(scalarValues,         dtype = valuesDtype)
+        scalarValues = np.array(scalarValues, dtype = valuesDtype)
 
         sortedValues = np.sort(scalarValues, order='value') #sort for item values
         #print("scalarValues=",scalarValues)
         #print("sortedValues=",sortedValues)
 
         if popCnt < numberOfGenerations-1: #go on for next population
-            #selection: chose best surviving individuals
-            #TODO: consider minimum distance between individuals!
+            relativeRange = rangeReductionFactor**(popCnt+1) #this is the relative range for the next population
             
+            #selection: chose best surviving individuals
             newGeneration = []
             cnt = 0
-            for i in range(min(survivingIndividuals,len(sortedValues))):
-                ind = currentGeneration[int(sortedValues[i][1])] #dictionary for individual
-                if addComputationIndex:
-                    ind['computationIndex'] = cnt #unique index for one set of computations
-                newGeneration += [ind]
+
+            if distanceFactor == 0: #distance not important
+                for i in range(min(survivingIndividuals,len(sortedValues))):
+                    ind = currentGeneration[int(sortedValues[i][1])] #dictionary for individual
+                    if addComputationIndex:
+                        ind['computationIndex'] = cnt #unique index for one set of computations
+                    newGeneration += [ind]
+                    cnt += 1
+            else:
+                nSurviving = min(survivingIndividuals,len(sortedValues))
+                nGen = len(currentGeneration)
+                j = 0 #index counter
+                i = 0 #counter for surviving individuals to be found
+                distanceList = [1]*nGen #initialize with one, saying that all distances large enough #relativeRange*np.reshape(ranges*dim,(nGen, dim)) #these are the maximum distances
+                
+                #print("nSurviving=",nSurviving)
+                #print("len(sortedValues)=",len(sortedValues))
+                #find indices which have sallest objective function value, but obey distanceFactor
+                while i < nSurviving and j < len(sortedValues):
+                    iInd = int(sortedValues[j][1]) #index for individual in currentGeneration
+                    ind = currentGeneration[iInd] #dictionary for individual
+                    j += 1
+                    if distanceList[iInd] > distanceFactor:
+                        if addComputationIndex:
+                            ind['computationIndex'] = cnt #unique index for one set of computations
+                        newGeneration += [ind]
+                        cnt += 1 #computation index counter
+                        i += 1   #counts the surviving individuals
+                        #print("\nadd individual", ind)
+                        #print("currentGeneration", currentGeneration)
+                        
+                        #update distances for added individual:
+                        for k in range(nGen):
+                            d = 0
+                            for (key,value) in ind.items():
+                                if key != 'computationIndex':
+                                    d += (ind[key] - currentGeneration[k][key])**2/(rangesDict[key])**2
+                            d = np.sqrt(d/dim) #number of parameters shall not influence distanceFactor
+                            #print("d=",d,":",ind,"-",currentGeneration[k])
+                            if d < distanceList[k]:
+                                distanceList[k] = d
+                    # else:
+                    #     print("\nindiv.",ind," ignored due to small distance:", distanceList[iInd])
+                        
+                    #print("distanceList=",distanceList)
             
             #print("survivingIndividuals=",newGeneration)
             if debugMode:
-                print("best values=",sortedValues[0:min(survivingIndividuals,4)])
+                print("\nbest values=",sortedValues[0:min(survivingIndividuals,4)])
             
             #prolongate best individuals:
             currentGeneration = []
@@ -337,7 +384,7 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
     
                     for (key,value) in parameters.items():
                         r = value[1]-value[0]
-                        r *= rangeReductionFactor**(popCnt+1) #reduce range
+                        r *= relativeRange #reduce range
                         #print("range=",r)
                         pBegin = item[key]-0.5*r #minimum value
                         pEnd = item[key]+0.5*r 
@@ -349,9 +396,10 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
                         
                         value = np.random.uniform(pBegin, pEnd)
                         ind[key] = value
-                        if addComputationIndex:
-                            ind['computationIndex'] = cnt #unique index for one set of computations
-                        cnt += 1
+
+                    if addComputationIndex:
+                        ind['computationIndex'] = cnt #unique index for one set of computations
+                    cnt += 1
     
                     currentGeneration += [ind]
             #print("pop", popCnt, ": currentGeneration=\n",currentGeneration)
@@ -359,46 +407,69 @@ def GeneticOptimization(objectiveFunction, parameters, **kwargs):
             #select final best individual
             optimumParameter = currentGeneration[int(sortedValues[0][1])]
             optimumValue = sortedValues[0][0]
-            print("opt par=", optimumParameter, ", opt val=", optimumValue)
+            if debugMode:
+                print("opt par=", optimumParameter, ", opt val=", optimumValue)
 
-        
-    return [optimumParameter, optimumValue, parametersAll, valuesAll]
+    #now make dict of parameter lists instead list of dicts
+    parameterList = {}
+    n = len(parametersAll)
+    if n != 0:
+        for key in parametersAll[0]:
+            parameterData = np.zeros(n)
+            #extract parameter list from list of dictionaries:
+            for i in range(n):
+                parameterData[i] = parametersAll[i][key]
 
-#**function: visualize results of optimization
+            #add parameter list to final dictionary
+            parameterList[key] = parameterData
+
+    return [optimumParameter, optimumValue, parameterList, valueList]
+
+#**function: visualize results of optimization for every parameter (2D plots)
 #**input: 
-#   parameterList: taken from output parametersAll of \texttt{GeneticOptimization}, containing a list of parameter set dictinaries
-#   valueList: taken from output valuesAll of \texttt{GeneticOptimization}; containing a list of floats that result from the objective function
-#**output: creates a figure for every parameter in parameterList
-def PlotOptimizationResults(parameterList, valueList):
+#   parameterList: taken from output parameterList of \texttt{GeneticOptimization}, containing a dictinary with lists of parameters
+#   valueList: taken from output valueList of \texttt{GeneticOptimization}; containing a list of floats that result from the objective function
+#   xLogScale: use log scale for x-axis
+#   yLogScale: use log scale for y-axis
+#**output: return [figList, axList] containing the corresponding handles; creates a figure for every parameter in parameterList
+def PlotOptimizationResults2D(parameterList, valueList, xLogScale=False, yLogScale=False):
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close("all")
-    ax=plt.gca() # get current axes
 
-    n = len(parameterList) #length of data
+    n = len(valueList) #length of data
     if  n == 0:
         print('WARNING: PlotOptimizationResults: parameterList has zero length and therefore terminates!')
+    
+    figList = []
+    axList = []
+    for key in parameterList:
+        fig = plt.figure()
+        figList += [fig]
+        ax=fig.gca() # get current axes
+        axList+=[ax]
 
-    if n != len(valueList):
-        raise ValueError('PlotOptimizationResults: length of parameterList is different from length of valueList')
+        parameterData = parameterList[key]
+        if n != len(parameterData):
+            raise ValueError('PlotOptimizationResults: length of parameterList is different from length of valueList')
         
-    for key in parameterList[0]:
-        plt.figure()
-        parameterData = np.zeros(n)
-        #extract parameter list from list of dictionaries:
-        for i in range(n):
-            parameterData[i] = parameterList[i][key]
-        
-        plt.plot(parameterData, valueList, 'b.', label=key) 
-        plt.ylabel('value (objective function)')
-        plt.xlabel(key)
+        ax.plot(parameterData, valueList, 'b.', label=key) 
+        ax.set_ylabel('value (objective function)')
+        ax.set_xlabel(key)
+
+
         ax.grid(True, 'major', 'both')
         ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
         ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+
+        if xLogScale:
+            ax.set_xscale('log')
+        if yLogScale:
+            ax.set_yscale('log')
+            
+
         plt.tight_layout()
         plt.legend()
 
     plt.show() 
-    
-
-
+    return [figList, axList]

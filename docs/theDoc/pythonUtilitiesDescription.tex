@@ -1457,7 +1457,7 @@ this class holds all data for ObjectFFRF user functions
   \item[--]  {\bf output}: returns values containing the results according to parameterList  \item[--]  {\bf notes}: options are passed from Parametervariation\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\noindent {def {\bf ParameterVariation}}({\it parameterFunction}, {\it parameters}, {\it **kwargs})
+\noindent {def {\bf ParameterVariation}}({\it parameterFunction}, {\it parameters}, {\it useLogSpace}=False, {\it debugMode}=False, {\it addComputationIndex}=False, {\it useMultiProcessing}=False, {\it showProgress}=True, {\it **kwargs})
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
   \item[--]  {\bf function description}: \vspace{-6pt}
@@ -1475,6 +1475,7 @@ this class holds all data for ObjectFFRF user functions
     \item[] {\it     debugMode}: if True, additional print out is done
     \item[] {\it     addComputationIndex}: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
     \item[] {\it     useMultiProcessing}: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
+    \item[] {\it     showProgress}: if True, shows for every iteration the progress bar (requires tqdm library)
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
   \ei
   \item[--]  {\bf output}: \vspace{-6pt}
@@ -1486,7 +1487,7 @@ this class holds all data for ObjectFFRF user functions
   \item[--]  {\bf example}: ParameterVariation(parameters=\{'mass':(1,10,10), 'stiffness':(1000,10000,10)\}, parameterFunction=Test, useMultiProcessing=True)\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\noindent {def {\bf GeneticOptimization}}({\it objectiveFunction}, {\it parameters}, {\it **kwargs})
+\noindent {def {\bf GeneticOptimization}}({\it objectiveFunction}, {\it parameters}, {\it initialPopulationSize}=100, {\it numberOfGenerations}=10, {\it numberOfChildren}=8, {\it survivingIndividuals}=8, {\it rangeReductionFactor}=0.7, {\it distanceFactor}=0.1, {\it debugMode}=False, {\it addComputationIndex}=False, {\it useMultiProcessing}=False, {\it showProgress}=True, {\it **kwargs})
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
   \item[--]  {\bf function description}: compute minimum of given objectiveFunction  \item[--]  {\bf input}: \vspace{-6pt}
@@ -1494,36 +1495,39 @@ this class holds all data for ObjectFFRF user functions
 \setlength{\itemindent}{-0.7cm}
     \item[] {\it objectiveFunction}: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
     \item[] {\it     parameters}: given as a dictionary, consist of name and tuple of (begin, end), e.g. 'mass':(10,50)
-    \item[] {\it     initialPopulationSize}: number of random initial individuals (default: 100)
-    \item[] {\it     numberOfGenerations}: number of generations (default: 10)
-    \item[] {\it     numberOfChildren}: number childrens of surviving population (default: 8)
-    \item[] {\it     useGenCrossing}: if True, the children are generated from parents by gen-crossover (default: True)
-    \item[] {\it     survivingIndividuals}: number of surviving individuals after children are born (default: 8)
-    \item[] {\it     rangeReductionFactor}: (not implemented yet!) reduction of mutation range relative to ranges of last step (default: 0.7)
-    \item[] {\it     randomizerInitialization}: (not implemented yet!) initialize randomizer at beginning in order to get reproducible results (Default: True)
-    \item[] {\it     distanceFactor}: (not implemented yet!) children only survive at a certain distance of the current range (Default: 0.1)
+    \item[] {\it     initialPopulationSize}: number of random initial individuals
+    \item[] {\it     numberOfGenerations}: number of generations
+    \item[] {\it     numberOfChildren}: number childrens of surviving population
+    \item[] {\it     useGeneCrossing}: (not implemented yet) if True, the children are generated from parents by gene-crossover
+    \item[] {\it     survivingIndividuals}: number of surviving individuals after children are born
+    \item[] {\it     rangeReductionFactor}: reduction of mutation range relative to ranges of last step
+    \item[] {\it     distanceFactor}: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
+    \item[] {\it     randomizerInitialization}: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)
     \item[] {\it     debugMode}: if True, additional print out is done
     \item[] {\it     addComputationIndex}: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
     \item[] {\it     useMultiProcessing}: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
+    \item[] {\it     showProgress}: if True, shows for every iteration the progress bar (requires tqdm library)
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
   \ei
   \item[--]  {\bf output}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-    \item[] returns [optimumParameter, optimumValue, parametersAll, valuesAll], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parametersAll with according objective values 'valuesAll'
+    \item[] returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
     \item[]            values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
   \ei
   \item[--]  {\bf notes}: This function is still under development and shows an experimental state!  \item[--]  {\bf example}: GeneticOptimization(objectiveFunction = fOpt, parameters=\{'mass':(1,10), 'stiffness':(1000,10000)\})\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\noindent {def {\bf PlotOptimizationResults}}({\it parameterList}, {\it valueList})
+\noindent {def {\bf PlotOptimizationResults2D}}({\it parameterList}, {\it valueList}, {\it xLogScale}=False, {\it yLogScale}=False)
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: visualize results of optimization  \item[--]  {\bf input}: \vspace{-6pt}
+  \item[--]  {\bf function description}: visualize results of optimization for every parameter (2D plots)  \item[--]  {\bf input}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-    \item[] {\it parameterList}: taken from output parametersAll of \texttt{GeneticOptimization}, containing a list of parameter set dictinaries
-    \item[] {\it    valueList}: taken from output valuesAll of \texttt{GeneticOptimization}; containing a list of floats that result from the objective function
+    \item[] {\it parameterList}: taken from output parameterList of \texttt{GeneticOptimization}, containing a dictinary with lists of parameters
+    \item[] {\it    valueList}: taken from output valueList of \texttt{GeneticOptimization}; containing a list of floats that result from the objective function
+    \item[] {\it    xLogScale}: use log scale for x-axis
+    \item[] {\it    yLogScale}: use log scale for y-axis
   \ei
-  \item[--]  {\bf output}: creates a figure for every parameter in parameterList\vspace{12pt}\end{itemize}
+  \item[--]  {\bf output}: return [figList, axList] containing the corresponding handles; creates a figure for every parameter in parameterList\vspace{12pt}\end{itemize}
 %
