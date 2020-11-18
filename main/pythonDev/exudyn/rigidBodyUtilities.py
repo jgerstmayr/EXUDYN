@@ -9,7 +9,7 @@ goal: support functions, which simplify the generation of models
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
 from exudyn.itemInterface import *
-#import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
+import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
 from exudyn.basicUtilities import NormL2
 
 
@@ -65,8 +65,24 @@ def Skew(vector):
     return skewsymmetricMatrix
 
 #**function: convert skew symmetric matrix m to vector
-def Skew2Vec(m):
-    return np.array([-m[1][2], m[0][2], -m[0][1]])
+#def Skew2Vec(m):
+def Skew2Vec(skew):
+    shape = skew.shape
+    if shape == (3,3):
+        w1 = skew[2][1]
+        w2 = skew[0][2]
+        w3 = -skew[0][1]
+        vec = np.array([w1, w2, w3])
+    if shape == (4,4):
+        w1 = skew[2][1]
+        w2 = skew[0][2]
+        w3 = -skew[0][1]
+        u1 = skew[0][3]
+        u2 = skew[1][3]
+        u3 = skew[2][3]
+        vec = np.array([u1, u2, u3, w1, w2, w3])       
+    return vec
+
 
 #**function: compute (3 x 3*n) skew matrix from (3*n) vector
 def ComputeSkewMatrix(v):
@@ -168,20 +184,22 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            ROTATION VECTOR
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: rotaton matrix from rotation vector
+#**function: rotaton matrix from rotation vector, see appendix B in \cite{Simo1988}
 #**input: 3D rotation vector as list or np.array
 #**output: 3x3 rotation matrix as np.array
 def RotationVector2RotationMatrix(rotationVector):
-    rotationAngle = np.linalg.norm(rotationVector)
-    I = np.diag([1, 1, 1])
-    if rotationAngle == 0.0:
-        R = I
+    phi = np.linalg.norm(rotationVector)
+    if phi == 0.:
+        R = np.eye(3)
     else:
-        rotVecTilde = np.array(Skew(rotationVector))
-        R0 = I + (np.sin(rotationAngle)/rotationAngle)*rotVecTilde
-        R1 = ((1-np.cos(rotationAngle))/rotationAngle**2)*np.dot(rotVecTilde,rotVecTilde)
-        R = R0 + R1
-    return R
+        OmegaSkew = Skew(rotationVector)
+        alpha = np.sin(phi)/phi
+        beta = 2*(1-np.cos(phi))/phi**2
+        R = np.eye(3) + alpha*OmegaSkew + 0.5*beta*np.matmul(OmegaSkew, OmegaSkew)
+
+    
+    return R  
+
 
 #**function: compute rotation vector from rotation matrix
 #**input: 3x3 rotation matrix as list of lists or as np.array
@@ -196,6 +214,26 @@ def RotationMatrix2RotationVector(rotationMatrix):
     else:
         rotationVector = np.zeros(3)
     return rotationVector
+
+
+#**function: compute rotation axis from given rotation vector
+#**input: 3D rotation vector as np.array
+#**output: 3D vector as np.array representing the rotation axis
+def ComputeRotationAxisFromRotationVector(rotationVector):
+    
+    # compute rotation angle
+    rotationAngle = np.linalg.norm(rotationVector)
+    
+    # compute rotation axis
+    if rotationAngle == 0.0:
+        rotationAxis = np.zeros(3)
+    else:
+        rotationAxis = rotationVector/rotationAngle
+    
+    # return rotation axis 
+    return rotationAxis
+
+
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -230,6 +268,7 @@ def RotationMatrix2RotXYZ(rotationMatrix):
     rot[2] = np.arctan2(-R[0][1], R[0][0])
     return np.array(rot);
 
+
 #**function: compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
 #**input:  
 #  angularVelocity: global angular velocity vector as list or np.array
@@ -247,7 +286,32 @@ def AngularVelocity2RotXYZ_t(angularVelocity, rotation):
                                 [0            , np.cos(psi)*np.cos(theta)   , np.sin(psi)*np.cos(theta)],
                                 [0            ,-np.sin(psi)              , np.cos(psi)]])
     return np.dot(GInv,angularVelocity)
+  
     
+#**function: compute four Euler parameters from given RotXYZ angles, see \cite{Henderson1977}
+#**input: 
+#   alpha: 3D vector as np.array containing RotXYZ angles
+#**output: 4D vector as np.array containing four Euler parameters 
+#          entry zero of output represent the scalar part of Euler parameters
+def RotXYZ2EulerParameters(alpha):
+    psi   = alpha[0]
+    theta = alpha[1]
+    phi   = alpha[2]   
+    u = 0.5*psi
+    v = 0.5*theta
+    w = 0.5*phi    
+    cPsi   = np.cos(u)
+    cTheta = np.cos(v)
+    cPhi   = np.cos(w)    
+    sPsi   = np.sin(u)
+    sTheta = np.sin(v)
+    sPhi   = np.sin(w)    
+    q0 = -sPsi*sTheta*sPhi + cPsi*cTheta*cPhi
+    q1 =  sPsi*cTheta*cPhi + sTheta*sPhi*cPsi    
+    q2 = -sPsi*sPhi*cTheta + sTheta*cPsi*cPhi 
+    q3 =  sPsi*sTheta*cPhi + sPhi*cPsi*cTheta 
+    return np.array([q0, q1, q2, q3])
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

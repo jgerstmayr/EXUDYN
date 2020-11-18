@@ -101,7 +101,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		LinkedDataVector aeRHS(systemRHS, data.startAE, data.nAE);
 
 		//compute system RHS for initial conditions:
-		computationalSystem.ComputeODE2RHS(data.tempCompData, ode2RHS);
+		computationalSystem.ComputeSystemODE2RHS(data.tempCompData, ode2RHS);
 		aeRHS.SetAll(0);
 
 		if (IsVerbose(3)) { Verbose(3, "    initial accelerations update Jacobian: Jac    = " + EXUstd::ToString(*(data.systemJacobian)) + "\n"); }
@@ -288,7 +288,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 	STOPTIMER(timer.massMatrix);
 
 	STARTTIMER(timer.ODE2RHS);
-	computationalSystem.ComputeODE2RHS(data.tempCompData, data.tempODE2); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
+	computationalSystem.ComputeSystemODE2RHS(data.tempCompData, data.tempODE2); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 	STOPTIMER(timer.ODE2RHS);
 	STARTTIMER(timer.AERHS);
 	computationalSystem.ComputeAlgebraicEquations(data.tempCompData, aeResidual, simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);

@@ -1,171 +1,59 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Lie group update formulas for rotation vector
-#           Refs.:  Holzinger S., Gerstmayr J.: Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics (2020)
-#
-#           Notation according to reference above!
-#           v ... rotation vector
-#           w ... angular velocity (local frame)  
-#           phi ... rotation angle
-#           n ... rotation axis
-#
+# Details:  Lie group integration methods (experimental!)
+#               
 # Author:   Stefan Holzinger
-# Date:     2020-06-02
+# Date:     2020-09-11
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import numpy as np
-from numpy import linalg as LA
-import math
 
 import exudyn as exu
-from exudyn.rigidBodyUtilities import Skew
-
-###############################################################################
-# rotation vector update formulas
-def ComposeRotationVectors(v0, Omega):
-    # This function composes two rotation vectors v0 and Omega 
-    # Reuslt: v = v0 circ Omega
-    
-    # compute rotation angle and rotation Axis of rotation vector v0
-    phi0 = LA.norm(v0)                               # rotation angle 
-    n0   = ComputeRotationAxisFromRotationVector(v0) # rotation axis
-    
-    # compute rotation angle of rotation vector Omega
-    deltaPhi = LA.norm(Omega)
-    
-    # compute rotation angle of resulting rotation vector 
-    phi = 2*np.arccos(np.cos(phi0/2)*np.cos(deltaPhi/2) - 0.5*np.dot(n0,Omega)*(np.sin(phi0/2)*Sinc(deltaPhi/2)))
-    
-    # np.arccos(x) returns NaN in case that x>1 or x < -1, both leading to sin(phi/2) == 0
-    if math.isnan( phi ):
-        phi = 0.
-        
-    # compute rotation axis of resulting rotation vector v
-    I = np.diag([1, 1, 1])
-    n0Tilde = Skew(n0)
-    sinPhi2 = np.sin(phi/2)
-    if sinPhi2 == 0.:
-        nBar = np.array([0.0, 0.0, 0.0])
-#    elif phi == 2*np.pi:
-#        nBar = np.array([0.0, 0.0, 0.0]) 
-    else:
-        x1 = ( (np.sin(phi0/2)*np.cos(deltaPhi/2))/sinPhi2 )*n0
-        x2 = np.dot((Sinc(deltaPhi/2)/(2*sinPhi2))*(I*np.cos(phi0/2) + np.sin(phi0/2)*n0Tilde), Omega)
-        nBar = x1 + x2
-    
-    # compute resulting rotation vector v
-    v = phi*nBar
-    
-    # return resulting rotation vector 
-    return v
-
-
-# compute rotation axis from given rotation vector
-def ComputeRotationAxisFromRotationVector(rotationVector):
-    
-    # compute rotation angle
-    rotationAngle = LA.norm(rotationVector)
-    
-    # compute rotation axis
-    if rotationAngle == 0.0:
-        rotationAxis = np.array([0.0, 0.0, 0.0])
-    else:
-        rotationAxis = (1/rotationAngle)*rotationVector
-    
-    # return rotation axis 
-    return rotationAxis
-
-
-# sinc function according to paper
-def Sinc(x):
-    return np.sinc(x/np.pi)
-#    if x == 0:
-#        s = 1
-#    else:
-#        s = np.sin(x)/x
-#    return s
+from exudyn.lieGroupBasics import *
 
 
 
-## inverse tangent operator corresponding to exponential map
-#def TSO3Inv(Omega):
-#    I = np.diag([1, 1, 1])
-#    incrementalRotationAngle = LA.norm(Omega)
-#    if incrementalRotationAngle == 0:
-#        Omega_t = I
-#    else:
-#        OmegaTilde = Skew(Omega)
-#        omegaNorm = LA.norm(Omega)
-#        gamma      = 0.5*omegaNorm*cot( 0.5*omegaNorm )
-#        phiSquared = omegaNorm*omegaNorm
-#        Omega_t = I + 0.5*OmegaTilde + ((1-gamma)/phiSquared)*np.dot(OmegaTilde,OmegaTilde)
-#    return Omega_t
-#
-# inverse tangent operator corresponding to exponential map
-def TSO3Inv(Omega):
-    I = np.diag([1, 1, 1])
-    incrementalRotationAngle = LA.norm(Omega)
-    if incrementalRotationAngle == 0:
-        Omega_t = I
-    else:
-        OmegaTilde = Skew(Omega)
-        omegaNorm = LA.norm(Omega)
-        #gamma      = 0.5*omegaNorm*cot( 0.5*omegaNorm )
-        gamma1 = 0
-        if omegaNorm < 1e-1: #approximate 1-x/tan(x)
-            x=0.5*omegaNorm
-            gamma1 = x**2/3+x**4/45+x**6*2/945+x**8/4725
-        else:
-            gamma1 = 1-0.5*omegaNorm*cot( 0.5*omegaNorm )
-        phiSquared = omegaNorm*omegaNorm
-        Omega_t = I + 0.5*OmegaTilde + ((gamma1)/phiSquared)*np.dot(OmegaTilde,OmegaTilde)
-    return Omega_t
-
-#cot(x) = 1/x-1/3*x-1/45*x**3-2/945*x**5
-    
-               
-def cot(x):
-    # Cotangent of angle in radians
-    return 1/np.tan(x)
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#       LIE GROUP TIME INTEGRATION METHODS 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 ###############################################################################    
 def ComputeStepWithRK1(ODE2RHS, v0, w0, h):
     w     = w0 + h*ODE2RHS(v0, w0)
     Omega = h*w
-    v     = ComposeRotationVectors(v0, Omega)
+    v     = CompositionRuleForRotationVectors(v0, Omega)
     return [v, w]
 
 def ComputeStepWithRK1FromAcceleration(v0_t, v0, w0, h):
     w     = w0 + h*v0_t
     Omega = h*w
-    v     = ComposeRotationVectors(v0, Omega)
+    v     = CompositionRuleForRotationVectors(v0, Omega)
     return [v, w]
 
 def ComputeStepWithRK4(ODE2RHS, v0, w0, h):
     
     # compute slope estimations
     k1 = h*ODE2RHS( v0, w0 )
-    K1 = h*np.dot( TSO3Inv(np.zeros(3)), w0 )
+    K1 = h*np.dot( TExpSO3Inv(np.zeros(3)), w0 )
     
-    k2 = h*ODE2RHS( ComposeRotationVectors(v0, 0.5*K1), w0+0.5*k1 )
-    K2 = h*np.dot( TSO3Inv(0.5*K1), w0+0.5*k1 )
+    k2 = h*ODE2RHS( CompositionRuleForRotationVectors(v0, 0.5*K1), w0+0.5*k1 )
+    K2 = h*np.dot( TExpSO3Inv(0.5*K1), w0+0.5*k1 )
     
-    k3 = h*ODE2RHS( ComposeRotationVectors(v0, 0.5*K2), w0+0.5*k2 )
-    K3 = h*np.dot( TSO3Inv(0.5*K2), w0+0.5*k2 )
+    k3 = h*ODE2RHS( CompositionRuleForRotationVectors(v0, 0.5*K2), w0+0.5*k2 )
+    K3 = h*np.dot( TExpSO3Inv(0.5*K2), w0+0.5*k2 )
     
     #k4 = h*ODE2RHS( v0, w0+k3 )
-    k4 = h*ODE2RHS( ComposeRotationVectors(v0, K3), w0+k3 )
-    K4 = h*np.dot( TSO3Inv(K3), w0+k3 )
+    k4 = h*ODE2RHS( CompositionRuleForRotationVectors(v0, K3), w0+k3 )
+    K4 = h*np.dot( TExpSO3Inv(K3), w0+k3 )
     
     # compute update
     w     = w0 + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     Omega = 1/6 * (K1 + 2*K2 + 2*K3 + K4)
-    v     = ComposeRotationVectors(v0, Omega)
+    v     = CompositionRuleForRotationVectors(v0, Omega)
     
     # return step solution
     return [v, w]
@@ -306,7 +194,7 @@ def LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, Kprev, kprev, factK):
         omega0 = v0[i1:i2]
         K0 = Kprev[i1:i2]
         k0 = kprev[i1:i2]
-        K[i1:i2] = h*np.dot(TSO3Inv(factK*K0), omega0 + factK*k0)
+        K[i1:i2] = h*np.dot(TExpSO3Inv(factK*K0), omega0 + factK*k0)
         
     return K
 
@@ -345,7 +233,7 @@ def LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, Kprev, kprev, f
         omega0 = v0[i1:i2]
         K = Kprev[i1:i2]
         k = kprev[i1:i2]
-        u[i1:i2] = ComposeRotationVectors(vec0, factK*K) - vecRef
+        u[i1:i2] = CompositionRuleForRotationVectors(vec0, factK*K) - vecRef
         #print("k=",k, ",factK=", factK, ",omega0=", omega0)
         v[i1:i2] = omega0+factK*k
         cnt += 1
@@ -415,7 +303,7 @@ def UserFunctionNewtonLieGroupRK4(mainSolver, mainSys, sims):
         vec0 = vecRef + u0[i1:i2]
         #vec0 = u0[i1:i2]
         incrRotVec = deltaU[i1:i2]
-        uStep[i1:i2] = ComposeRotationVectors(vec0, incrRotVec) - vecRef
+        uStep[i1:i2] = CompositionRuleForRotationVectors(vec0, incrRotVec) - vecRef
         cnt += 1
         
     mainSys.systemData.SetODE2Coordinates(uStep)

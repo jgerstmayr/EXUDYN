@@ -41,13 +41,12 @@ Vector3D CNodePoint2D::GetVelocity(ConfigurationType configuration) const
 	return Vector3D({ u2D_t[0], u2D_t[1], 0. });
 }
 
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CNodePoint2D::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)((Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity +
-//		(Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t);
-//}
-//
+Vector3D CNodePoint2D::GetAcceleration(ConfigurationType configuration) const
+{
+	LinkedDataVector u2D_tt = GetCoordinateVector_tt(configuration);
+	return Vector3D({ u2D_tt[0], u2D_tt[1], 0. });
+}
+
 //! provide according output variable in "value"
 void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const
 {
@@ -56,6 +55,7 @@ void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, Configurat
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
 		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
@@ -73,6 +73,18 @@ void CNodePoint2D::GetOutputVariable(OutputVariableType variableType, Configurat
 		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_t(configuration);
+		}
+		else
+		{
+			PyError("CNodePoint2D::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		{
+			value = GetCoordinateVector_tt(configuration);
 		}
 		else
 		{

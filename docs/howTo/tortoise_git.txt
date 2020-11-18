@@ -29,6 +29,12 @@ whenever you like to commit changes:
 tips:
 - in the push dialog, use the button manage to save your remote URL (and URL)
 
++++++++++++++++++++++++++++++++++
+git clone (also LFUI git):
+- Tortoise git, right click on empty destination folder (otherwise menu does not show up!)
+- select TortoiseGit->clone
+- clone into this directory 
+- possibly enter log in information
 
 +++++++++++++++++++++++++++++++++
 ADVANCED:

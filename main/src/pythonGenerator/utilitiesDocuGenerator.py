@@ -9,13 +9,16 @@ goal: generate latex documentation for all utilities packages
 import copy #for deep copies
 from autoGenerateHelper import Str2Latex
 
-fileDir='../../pythonDev/'
-filesParsed=['exudynBasicUtilities.py',
-             'exudynUtilities.py',
-             'exudynGraphicsDataUtilities.py',
-             'exudynRigidBodyUtilities.py',
-             ##'exudynLieGroupIntegration.py',
-             'exudynFEM.py'
+fileDir='../../pythonDev/exudyn/'
+filesParsed=['basicUtilities.py',
+             'utilities.py',
+             'graphicsDataUtilities.py',
+             'rigidBodyUtilities.py',
+             'lieGroupBasics.py', #Stefan Holzinger
+             #'lieGroupIntegration.py', #Stefan Holzinger
+             'FEM.py',
+             'plot.py',
+             'processing.py',
              ]
 
 docuTags = ['classFunction','class','function','input','output','author','notes','example']
@@ -195,6 +198,9 @@ def ParsePythonFile(fileName):
                         if currentInfo[0] == ':': #erase ':', which may be omitted
                             currentInfo = currentInfo[1:]
                         currentInfo+="\n"
+                if fillInMode == 'example' and len(currentInfo) > 1: #always has length 1 ...
+                    #print("example=", currentInfo)
+                    currentInfo = currentInfo.replace('{','\{').replace('}','\}')
                 #now add remaining line or total line
                 if not newTag:
                     if len(line.strip()) > 1 and line.strip()[0] == '#': #comment needed to add into docu info

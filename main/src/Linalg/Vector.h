@@ -365,10 +365,26 @@ public:
 	friend VectorBase operator-(const VectorBase& v1, const VectorBase& v2);
 
     //! scalar multiply, result = scalar * v (for each component)
-	friend VectorBase operator*(const VectorBase& v, T scalar);
+	friend VectorBase operator*(const VectorBase& v, T scalar)
+	{
+		VectorBase<T> result(v.NumberOfItems());
+		Index cnt = 0;
+		for (auto &item : result) {
+			item = scalar * v[cnt++];
+		}
+		return result;
+	}
 
     //! scalar multiply, result = v * scalar (for each component)
-	friend VectorBase operator*(T scalar, const VectorBase& v);
+	friend VectorBase operator*(T scalar, const VectorBase& v)
+	{
+		VectorBase<T> result(v.NumberOfItems());
+		Index cnt = 0;
+		for (auto &item : result) {
+			item = scalar * v[cnt++];
+		}
+		return result;
+	}
 
     //! scalar product, result = v1 * v2 (scalar result)
     friend T operator*(const VectorBase& v1, const VectorBase& v2)

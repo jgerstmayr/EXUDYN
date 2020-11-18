@@ -4,7 +4,7 @@
 The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
 as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver').
 
-\codeName\ is hosted on GitHub:
+\codeName\ is hosted on GitHub \cite{EXUDYNgit}:
 \bi
  \item web: \texttt{https://github.com/jgerstmayr/EXUDYN/wiki}
 \ei
@@ -64,7 +64,7 @@ In order to run \codeName , you need an appropriate Python installation.
 We recommend to use
 \bi
   \item Anaconda, 32bit, Python 3.6.5 or Anaconda 64bit, Python 3.6.5)\footnote{Anaconda 32/64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe} or \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
-	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anacondo 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer}
+	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer}
 %Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
 If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
@@ -318,8 +318,48 @@ Within this file, the first column shows the simulation time and the following c
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{FAQ -- Frequently asked questions}
+\mysubsection{Trouble shooting and FAQ}
 
+{\bf Known issues}:
+\bn
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item Sometimes the \texttt{exudyn} module cannot be loaded into Python. There are several reasons and workarounds:
+	\bi
+	  \item You mixed up 32 and 64 bits (see below) version
+		\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
+		\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
+		A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX; however, low-cost Celeron and Pentium processors {\bf will not support AVX}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
+		$\ra$ {\bf workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+	  \item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
+	\ei
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item When importing \codeName\ in python (windows) I get the error (or similar):\\
+{\ttfamily \footnotesize
+\begin{lstlisting}[breaklines=true]
+Traceback (most recent call last):
+  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\pytest.py", line 18, in <module>
+    import exudyn as exu
+  ImportError: DLL load failed: %1 is no valid Win32 application.
+\end{lstlisting}}
+	$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be {\bf BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have {\bf BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item I do not understand the python errors -- how can I find the reason of the error or crash?
+	\bi
+	\item[$\ra$] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
+	\item[$\ra$] If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
+	\item[$\ra$] If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \texttt{ reply.exudyn@gmail.com}
+	\ei
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item Spyder console hangs up, does not show error messages, ...:\\
+	$\ra$ very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder); \\
+	$\ra$ restarting the IPython console also brings back all error messages
+	
+\en
+{\bf List of Frequently asked questions}:
 \bn
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -364,14 +404,6 @@ Within this file, the first column shows the simulation time and the following c
 	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item I do not understand the python errors -- how can I find the reason of the error or crash?
-	\bi
-	\item[$\ra$] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
-	\item[$\ra$] If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
-	\item[$\ra$] If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \texttt{ reply.exudyn@gmail.com}
-	\ei
-  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item I get an error in \texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)} but no further information -- how can I solve it?
 	\bi
 	\item[$\ra$] Typical time integration errors may look like:\\
@@ -380,6 +412,7 @@ Within this file, the first column shows the simulation time and the following c
 	\texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)}\\
   \texttt{SystemError: <built-in method TimeIntegrationSolve of PyCapsule object at 0x0CC63590> returned a result with an error set}}
 	\item[$\ra$] The prechecks, which are performed to enable a crash-free simulation are insufficient for your model.
+	\item[$\ra$] As a first try, restart the IPython console in order to get all error messages, which may be blocked due to a previous run of \codeName.
 	\item[$\ra$] Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(t,load), which tries to access load[4] will fail internally.
 	\item[$\ra$] Use the print(...) command in python at many places to find a possible error in user functions (e.g., put \texttt{print("Start user function XYZ")} at the beginning of every user function.
 	\item[$\ra$] It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
@@ -396,15 +429,6 @@ Within this file, the first column shows the simulation time and the following c
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item When importing \codeName\ in python (windows) I get the error (or similar):\\
-{\ttfamily \footnotesize
-\begin{lstlisting}[breaklines=true]
-Traceback (most recent call last):
-  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\pytest.py", line 18, in <module>
-    import exudyn as exu
-  ImportError: DLL load failed: %1 is no valid Win32 application.
-\end{lstlisting}}
-	$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be {\bf BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have {\bf BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
 \en
 
 

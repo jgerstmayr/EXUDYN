@@ -24,11 +24,11 @@ void CObjectRigidBody2D::ComputeMassMatrix(Matrix& massMatrix) const
 		  0.,0.,parameters.physicsInertia });
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectRigidBody2D::ComputeODE2RHS(Vector& ode2Rhs) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
-	ode2Rhs.SetNumberOfItems(nODE2Coordinates);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetAll(0.);
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
@@ -91,8 +91,12 @@ void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, 
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
+
 	case OutputVariableType::Rotation: value.CopyFrom(Vector1D( GetCNode(0)->GetCoordinateVector(configuration)[2])); break;
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
+	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(localPosition, configuration)); break;
+
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(localPosition, configuration);
 		value.SetVector(rot.NumberOfColumns()*rot.NumberOfRows(), rot.GetDataPointer()); 
@@ -103,22 +107,34 @@ void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, 
 	}
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectRigidBody2D::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) + ((CNodeODE2*)GetCNode(0))->GetRotationMatrix(configuration) *localPosition;
-
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
-//  return the (global) position of "localPosition" according to configuration type
+//  return the (global) velocity of "localPosition" according to configuration type
 Vector3D CObjectRigidBody2D::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	// \dot R + A * \localOmega x \localPosition
-	return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration) + 
-		((CNodeODE2*)GetCNode(0))->GetRotationMatrix(configuration) * 
+	return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration) +
+		((CNodeODE2*)GetCNode(0))->GetRotationMatrix(configuration) *
 		((CNodeODE2*)GetCNode(0))->GetAngularVelocityLocal(configuration).CrossProduct(localPosition); //add omega x r
+}
+
+//  return the (global) acceleration of "localPosition" according to configuration type
+Vector3D CObjectRigidBody2D::GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	// \ddot R + \alpha x (A * \localPosition) + \omega x (\omega x (A * \localPosition))
+
+	//compute local position in global coordinates (=global position of point relative to origin of body coordinate system)
+	Vector3D relativePosition = ((CNodeODE2*)GetCNode(0))->GetRotationMatrix(configuration) * localPosition;
+	Vector3D omega = ((CNodeODE2*)GetCNode(0))->GetAngularVelocity(configuration);
+
+	//could be done much simpler, but kept like this as this is only used in sensors and output (not time critical)
+	return ((CNodeODE2*)GetCNode(0))->GetAcceleration(configuration) +
+		((CNodeODE2*)GetCNode(0))->GetAngularAcceleration(configuration).CrossProduct(relativePosition) +
+		omega.CrossProduct(omega.CrossProduct(relativePosition));
 }
 
 //! return the (global) position of "localPosition" according to configuration type
@@ -132,9 +148,15 @@ Matrix3D CObjectRigidBody2D::GetRotationMatrix(const Vector3D& localPosition, Co
 	return ((CNodeODE2*)GetCNode(0))->GetRotationMatrix(configuration);
 }
 
-//! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
+//! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector
 Vector3D CObjectRigidBody2D::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	return ((CNodeODE2*)GetCNode(0))->GetAngularVelocity(configuration);
+}
+
+//! AUTO:  return configuration dependent angular acceleration of node; returns always a 3D Vector
+Vector3D CObjectRigidBody2D::GetAngularAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	return ((CNodeODE2*)GetCNode(0))->GetAngularAcceleration(configuration);
 }
 

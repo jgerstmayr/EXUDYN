@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:38 (last modfied)
+* @date         2020-11-12  23:55:30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,6 +87,9 @@ public: // AUTO:
 
     //! AUTO:  return configuration dependent velocity of node
     virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return configuration dependent acceleration of node
+    virtual Vector3D GetAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  provide position jacobian of node
     virtual void GetPositionJacobian(Matrix& value) const override

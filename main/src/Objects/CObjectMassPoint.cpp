@@ -27,11 +27,11 @@ void CObjectMassPoint::ComputeMassMatrix(Matrix& massMatrix) const
 	massMatrix.SetScalarMatrix(nODE2Coordinates, parameters.physicsMass);
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectMassPoint::ComputeODE2RHS(Vector& ode2Rhs) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectMassPoint::ComputeODE2LHS(Vector& ode2Lhs) const
 {
-	ode2Rhs.SetNumberOfItems(nODE2Coordinates);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetAll(0.);
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
@@ -64,12 +64,12 @@ void CObjectMassPoint::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
 	default:
 		SysError("CObjectMassPoint::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectMassPoint::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
@@ -77,11 +77,16 @@ Vector3D CObjectMassPoint::GetPosition(const Vector3D& localPosition, Configurat
 
 }
 
-//! @todo: add ConfigurationType to CObjectMassPoint::GetPosition; 
-//  return the (global) position of "localPosition" according to configuration type
+//  return the (global) velocity of "localPosition" according to configuration type
 Vector3D CObjectMassPoint::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration);
+}
+
+//  return the (global) acceleration of "localPosition" according to configuration type
+Vector3D CObjectMassPoint::GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	return ((CNodeODE2*)GetCNode(0))->GetAcceleration(configuration);
 }
 
 //! return the (global) position of "localPosition" according to configuration type

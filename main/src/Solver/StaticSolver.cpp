@@ -144,7 +144,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 	ResizableVector systemRHS(nSys); //solution
 	
 	//link system vectors:
-	LinkedDataVector ode2Rhs(systemRHS, 0, nODE2); //link ODE2 coordinates
+	LinkedDataVector systemODE2Rhs(systemRHS, 0, nODE2); //link ODE2 coordinates
 	//LinkedDataVector ode1Rhs(systemRHS, startODE1, nODE1); //link ODE1 coordinates
 	LinkedDataVector aeRhs(systemRHS, startAE, nAE); //link ODE1 coordinates
 
@@ -336,7 +336,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 				{
 					//now compute the new residual:
 					timer.ODE2RHS -= EXUstd::GetTimeInSeconds();
-					computationalSystem.ComputeODE2RHS(tempCompData, ode2Rhs); //this is the system residual
+					computationalSystem.ComputeSystemODE2RHS(tempCompData, systemODE2Rhs); //this is the system residual
 					timer.ODE2RHS += EXUstd::GetTimeInSeconds();
 
 					timer.AERHS -= EXUstd::GetTimeInSeconds();
@@ -362,7 +362,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 
 						for (Index i = 0; i < nODE2; i++)
 						{
-							ode2Rhs[i] += stabilizer[i];
+							systemODE2Rhs[i] += stabilizer[i];
 						}
 
 						timer.massMatrix += EXUstd::GetTimeInSeconds();
@@ -372,7 +372,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 					//+++++++++++++++++++++++++++++++++
 					//add CqT*lambda terms:
 					timer.reactionForces -= EXUstd::GetTimeInSeconds();
-					computationalSystem.ComputeODE2ProjectedReactionForces(tempCompData, solutionAE, ode2Rhs);
+					computationalSystem.ComputeODE2ProjectedReactionForces(tempCompData, solutionAE, systemODE2Rhs);
 					timer.reactionForces += EXUstd::GetTimeInSeconds();
 					//+++++++++++++++++++++++++++++++++
 

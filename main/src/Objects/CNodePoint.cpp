@@ -38,6 +38,13 @@ Vector3D CNodePoint::GetVelocity(ConfigurationType configuration) const
 	return Vector3D(GetCoordinateVector_t(configuration));
 }
 
+Vector3D CNodePoint::GetAcceleration(ConfigurationType configuration) const
+{
+	//LinkedDataVector u2D_tt = GetCoordinateVector_tt(configuration);
+	return Vector3D(GetCoordinateVector_tt(configuration));
+}
+
+
 ////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 //OutputVariableType CNodePoint::GetOutputVariableTypes() const
 //{
@@ -53,7 +60,9 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
-	case OutputVariableType::Coordinates: 
+	//case OutputVariableType::Acceleration: value.CopyFrom(GetCoordinateVector_tt(configuration)); break;
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
+	case OutputVariableType::Coordinates:
 	{
 		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{
@@ -69,6 +78,19 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_t(configuration);
+		}
+		else
+		{
+			PyError("CNodePoint::GetOutputVariable: invalid configuration");
+		}
+		break;
+
+	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		{
+			value = GetCoordinateVector_tt(configuration);
 		}
 		else
 		{

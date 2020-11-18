@@ -240,6 +240,7 @@ exu.Print('time elapsed =',round(timeStart,3),'seconds')
 #10+19+8tests: 2020-04-22: 7.754 seconds on i9
 #10+21+8tests: 2020-05-17: 9.949 seconds on i9
 #10+28+12tests: 2020-05-17: 15.667 seconds on i9
+#10+29+12tests: 2020-09-10: 17.001 seconds on Surface Pro
 
 if rv == True:
     exu.Print('ALL UNIT TESTS SUCCESSFUL')

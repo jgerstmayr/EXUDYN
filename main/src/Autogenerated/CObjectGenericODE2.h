@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-09-10  16:56:16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -92,8 +92,8 @@ public: // AUTO:
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
 
-    //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
-    virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
+    //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override

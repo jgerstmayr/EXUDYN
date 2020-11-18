@@ -163,11 +163,11 @@ void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix) const
 		
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectANCFCable2DBase::ComputeODE2RHS(Vector& ode2Rhs) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs) const
 {
-	ode2Rhs.SetNumberOfItems(nODE2Coordinates);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetAll(0.);
 	//compute work of elastic forces:
 
 	const Index dim = 2;  //2D finite element
@@ -244,7 +244,7 @@ void CObjectANCFCable2DBase::ComputeODE2RHS(Vector& ode2Rhs) const
 		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
 		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrain0) + axialDamping * axialStrain_t);
 
-		ode2Rhs += elasticForces;  //add to element elastic forces
+		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
 
 	//++++++++++++++++++++++++++++++
@@ -315,19 +315,19 @@ void CObjectANCFCable2DBase::ComputeODE2RHS(Vector& ode2Rhs) const
 		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
 		elasticForces *= integrationFactor * (EI * (curvature - curvature0) + bendingDamping * curvature_t );
 
-		ode2Rhs += elasticForces;  //add to element elastic forces
+		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
 
 
 }
 
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 template<class TReal>
-void CObjectANCFCable2DBase::ComputeODE2RHStemplate(VectorBase<TReal>& ode2Rhs, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const
+void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const
 {
-	ode2Rhs.SetNumberOfItems(nODE2Coordinates);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetAll(0.);
 	//compute work of elastic forces:
 
 	const Index dim = 2;  //2D finite element
@@ -394,7 +394,7 @@ void CObjectANCFCable2DBase::ComputeODE2RHStemplate(VectorBase<TReal>& ode2Rhs, 
 		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
 		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrain0) + axialDamping * axialStrain_t);
 
-		ode2Rhs += elasticForces;  //add to element elastic forces
+		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
 
 	//++++++++++++++++++++++++++++++
@@ -465,13 +465,13 @@ void CObjectANCFCable2DBase::ComputeODE2RHStemplate(VectorBase<TReal>& ode2Rhs, 
 		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
 		elasticForces *= integrationFactor * (EI * (curvature - curvature0) + bendingDamping * curvature_t);
 
-		ode2Rhs += elasticForces;  //add to element elastic forces
+		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
 
 
 }
 
-
+//! jacobian of LHS, w.r.t. position AND velocity level coordinates
 void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
 {
 	const Index ns = 4;   //number of shape functions
@@ -488,16 +488,16 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian,
 		qANCF[i].DValue((int)i) = 1; //mark that this is the corresponding derivative
 		qANCF_t[i].DValue((int)(i+2*ns)) = 1; //mark that this is the corresponding derivative; velocity derivatives are in second block
 	}
-	ConstSizeVectorBase<DReal16, 2 * ns> ode2RHS;
+	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
 
-	ComputeODE2RHStemplate<DReal16>(ode2RHS, qANCF, qANCF_t);
+	ComputeODE2LHStemplate<DReal16>(ode2Lhs, qANCF, qANCF_t);
 	//now copy autodifferentiated result:
 	for (Index i = 0; i < 2 * ns; i++)
 	{
 		for (Index j = 0; j < 2 * ns; j++)
 		{
-			jacobian(i, j) = ode2RHS[i].DValue((int)j);
-			jacobian_ODE2_t(i, j) = ode2RHS[i].DValue((int)(j+2*ns));
+			jacobian(i, j) = ode2Lhs[i].DValue((int)j);
+			jacobian_ODE2_t(i, j) = ode2Lhs[i].DValue((int)(j+2*ns));
 		}
 	}
 }
@@ -833,7 +833,7 @@ Real CObjectANCFCable2DBase::ComputeCurvature(Real x, ConfigurationType configur
 	Vector2D rx = ComputeSlopeVector(x, configuration);
 	Vector2D rxx = ComputeSlopeVector_x(x, configuration);
 
-	Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2RHS(...)
+	Real rxNorm2 = rx.GetL2NormSquared(); //computation see ComputeODE2LHS(...)
 	//Real rxNorm = sqrt(rxNorm2);
 	Real rxCrossRxx = rx.CrossProduct2D(rxx);
 	return rxCrossRxx / rxNorm2; //curvature

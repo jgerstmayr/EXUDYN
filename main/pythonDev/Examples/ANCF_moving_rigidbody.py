@@ -84,9 +84,9 @@ for i in range(nElements):
 
 
 
-mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=0))
-mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=1))
-mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=3))
+mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=0))
+mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=1))
+mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=3))
 
 mANCF3 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nLast, coordinate=1)) #tip constraint
 mANCF4 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nLast, coordinate=2)) #tip constraint

@@ -13,11 +13,35 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="CPPvisualization">
+      <UniqueIdentifier>{df67e9e4-6801-437e-960b-4d752753c93e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CPPitems">
+      <UniqueIdentifier>{8030606b-404f-4bff-ace9-eb96d51c2440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CPPsystemAndSolver">
+      <UniqueIdentifier>{56999882-49d4-4dec-8156-a027c8f3eaf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CPPparallel">
+      <UniqueIdentifier>{ab05556b-12af-45e8-8161-b9ce04c88318}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HPPnodes">
+      <UniqueIdentifier>{52a51c48-2895-48f9-8566-eea4458707c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HPPobjects">
+      <UniqueIdentifier>{e5228d73-333a-4d12-b94c-e6f34b127694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HPPmarkers">
+      <UniqueIdentifier>{fe98fbda-d3b6-4094-86f3-4ea7d70fa469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HPPloads">
+      <UniqueIdentifier>{32333071-4c94-454e-b04a-b0f0727ae282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HPPsensors">
+      <UniqueIdentifier>{3054867e-c76f-421c-a471-b417fea5ac5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\solver\TimeIntegrationSolver.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\System\CNode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -30,248 +54,272 @@
     <ClCompile Include="..\src\tests\UnitTestBase.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectMassPoint.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerBodyPosition.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\System\CObjectBody.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Utilities\BasicFunctions.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Linalg\Matrix.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectGround.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Pymodules\PybindModule.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\GlfwClient.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\VisualizationSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\VisualizationSystemData.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\VisuNodePoint.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorDistance.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\StaticSolver.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\VisualizationSystemContainer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorSpringDamper.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodePoint.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodePointGround.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerNodePosition.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerNodeCoordinate.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinate.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodeRigidBody2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodePoint2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectMassPoint2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectRigidBody2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointRevolute2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodePoint2DSlope1.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectANCFCable2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerBodyRigid.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerNodeRigid.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorCartesianSpringDamper.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectContactCoordinate.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerBodyCable2DShape.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectContactCircleCable2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointSliding2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerBodyCable2DCoordinates.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerBodyMass.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectALEANCFCable2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointALEMoving2D.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\System\MainNode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinateSpringDamper.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodeGenericODE2.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodeGenericData.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectContactFrictionCircleCable2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectRigidBody.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\System\CLoad.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointPrismatic2D.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\CSolver.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\CSolverImplicitSecondOrder.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\CSolverStatic.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Main\MainObjectFactory.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Main\MainSystem.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Main\Stdoutput.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Main\CSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Linalg\LinearSolver.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\CSolverBase.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\MainSolver.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Solver\MainSolverBase.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\System\CSensor.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodeRigidBodyRxyz.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodeRigidBodyEP.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CNodeRigidBodyRotVecLG.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorRigidBodySpringDamper.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointGeneric.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics\VisualizationPrimitives.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectGenericODE2.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointSpherical.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectFFRF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Pymodules\PyMatrixContainer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectFFRFreducedOrder.cpp">
+    <ClCompile Include="..\src\Autogenerated\versionCpp.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerSuperElementPosition.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CMarkerBodyCable2DCoordinates.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerObjectODE2Coordinates.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CMarkerBodyCable2DShape.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinateVector.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CMarkerBodyMass.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerBodyPosition.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerBodyRigid.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerNodeCoordinate.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerNodePosition.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerNodeRigid.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Objects\CMarkerNodeRotationCoordinate.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerObjectODE2Coordinates.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerSuperElementPosition.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CMarkerSuperElementRigid.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\System\CLoad.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Objects\CNode1D.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectMass1D.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CNodeGenericData.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectRotationalMass1D.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CNodeGenericODE2.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CMarkerSuperElementRigid.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CNodePoint.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Objects\CObjectJointRollingDisc.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Objects\CNodePoint2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CNodePoint2DSlope1.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CNodePointGround.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CNodeRigidBody2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CNodeRigidBodyEP.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CNodeRigidBodyRotVecLG.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CNodeRigidBodyRxyz.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectALEANCFCable2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectANCFCable2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\System\CObjectBody.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorCartesianSpringDamper.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinate.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinateSpringDamper.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorCoordinateVector.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorDistance.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorRigidBodySpringDamper.cpp">
+      <Filter>CPPitems</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Objects\CObjectConnectorRollingDiscPenalty.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectConnectorSpringDamper.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectContactCircleCable2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectContactCoordinate.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectContactFrictionCircleCable2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectFFRF.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectFFRFreducedOrder.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectGenericODE2.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectGround.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointALEMoving2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointGeneric.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointPrismatic2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointRevolute2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointRollingDisc.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointSliding2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectJointSpherical.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectMass1D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectMassPoint.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectMassPoint2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectRigidBody.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectRigidBody2D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\CObjectRotationalMass1D.cpp">
+      <Filter>CPPitems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\MainSolver.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\MainSolverBase.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\StaticSolver.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\solver\TimeIntegrationSolver.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Main\MainSystem.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Linalg\LinearSolver.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Main\CSystem.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\CSolverStatic.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\CSolverImplicitSecondOrder.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\CSolverBase.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Solver\CSolver.cpp">
+      <Filter>CPPsystemAndSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Objects\VisuNodePoint.cpp">
+      <Filter>CPPvisualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\VisualizationPrimitives.cpp">
+      <Filter>CPPvisualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\VisualizationSystem.cpp">
+      <Filter>CPPvisualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\VisualizationSystemContainer.cpp">
+      <Filter>CPPvisualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics\VisualizationSystemData.cpp">
+      <Filter>CPPvisualization</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Graphics\VisualizationUserFunctions.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>CPPvisualization</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Autogenerated\versionCpp.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="..\src\Graphics\GlfwClient.cpp">
+      <Filter>CPPvisualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\paje_interface.cpp">
+      <Filter>CPPparallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\profiler.cpp">
+      <Filter>CPPparallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\table.cpp">
+      <Filter>CPPparallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\taskmanager.cpp">
+      <Filter>CPPparallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\bitarray.cpp">
+      <Filter>CPPparallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\exception.cpp">
+      <Filter>CPPparallel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\ngs-core-master\localheap.cpp">
+      <Filter>CPPparallel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -297,12 +345,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\system\CMaterial.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\system\CNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\system\CObject.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\tests\AllMatrixUnitTests.h">
@@ -347,58 +389,13 @@
     <ClInclude Include="..\src\autogenerated\SystemContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodePoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodePoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\MainNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Pymodules\PybindUtilities.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\MainMarker.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\System\MainMaterial.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\System\MainObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\MainLoad.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectMassPoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectMassPoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\MainObjectFactory.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerBodyPosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyPosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Pymodules\PybindTests.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\CObjectBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\CLoad.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CLoadForceVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainLoadForceVector.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\ConstSizeMatrix.h">
@@ -408,12 +405,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\BasicLinalg.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectGround.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectGround.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\Use_avx.h">
@@ -434,34 +425,7 @@
     <ClInclude Include="..\src\Graphics\VisualizationSystemData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodePoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectGround.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectMassPoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuLoadForceVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyPosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Autogenerated\VisualizationSettings.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorDistance.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorDistance.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\CObjectConnector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorDistance.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\GlfwClientText.h">
@@ -473,307 +437,16 @@
     <ClInclude Include="..\src\Graphics\VisualizationSystemContainerBase.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodePointGround.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodePointGround.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodePointGround.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerNodePosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodePosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerNodePosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerNodeCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodePoint2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBody2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodePoint2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodeRigidBody2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodePoint2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBody2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectMassPoint2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectRigidBody2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectMassPoint2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectRigidBody2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectMassPoint2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectRigidBody2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointRevolute2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointRevolute2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodePoint2DSlope1.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodePoint2DSlope1.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodePoint2DSlope1.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectANCFCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectANCFCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectANCFCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyRigid.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyRigid.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerBodyRigid.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\CMarker.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuLoadTorqueVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainLoadTorqueVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CLoadTorqueVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeRigid.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeRigid.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerNodeRigid.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodeGenericData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodeGenericData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodeGenericData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCartesianSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCartesianSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCartesianSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectContactCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectContactCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectContactCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Linalg\Geometry.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectContactCircleCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectContactCircleCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectContactCircleCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointSliding2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectJointSliding2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointSliding2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyCable2DCoordinates.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerBodyCable2DCoordinates.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyCable2DCoordinates.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Autogenerated\pybind_manual_classes.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyMass.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerBodyMass.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyMass.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuLoadMassProportional.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CLoadMassProportional.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainLoadMassProportional.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodeGenericODE2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodeGenericODE2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodeGenericODE2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectALEANCFCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectALEANCFCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectALEANCFCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Objects\CObjectANCFCable2DBase.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointALEMoving2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectJointALEMoving2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointALEMoving2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinateSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinateSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinateSpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainLoadCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuLoadCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CLoadCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectContactFrictionCircleCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectContactFrictionCircleCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectContactFrictionCircleCable2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectRigidBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectRigidBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectRigidBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Utilities\RigidBodyMath.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyEP.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyEP.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyEP.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Linalg\LinearSolver.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointPrismatic2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectJointPrismatic2D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointPrismatic2D.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Solver\CSolver.h">
@@ -789,9 +462,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Main\CSystemState.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Main\MainObjectFactory.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Main\MainSystem.h">
@@ -830,127 +500,16 @@
     <ClInclude Include="..\src\Solver\MainSolverBase.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\System\CSensor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\MainSensor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\VisualizationNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\VisualizationMarker.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\VisualizationObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\VisualizationSensor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\System\VisualizationLoad.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainSensorNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuSensorNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CSensorNode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Autogenerated\DictionariesGetSet.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainSensorBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuSensorBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CSensorBody.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRxyz.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRxyz.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRxyz.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRotVecLG.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRotVecLG.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRotVecLG.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorRigidBodySpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorRigidBodySpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorRigidBodySpringDamper.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointGeneric.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointGeneric.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectJointGeneric.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graphics\VisualizationPrimitives.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CSensorLoad.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainSensorLoad.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuSensorLoad.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Utilities\TimerStructure.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectGenericODE2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectGenericODE2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectGenericODE2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectJointSpherical.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointSpherical.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointSpherical.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Utilities\ExceptionsTemplates.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectFFRF.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectFFRF.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectFFRF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\MatrixContainer.h">
@@ -959,122 +518,611 @@
     <ClInclude Include="..\src\Pymodules\PyMatrixContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuSensorObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectFFRFreducedOrder.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectFFRFreducedOrder.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectFFRFreducedOrder.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Graphics\VisualizationBasics.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainSensorSuperElement.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuSensorSuperElement.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CSensorSuperElement.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerSuperElementPosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerSuperElementPosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerSuperElementPosition.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\LinkedDataMatrix.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinateVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerObjectODE2Coordinates.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinateVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CNode1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectMass1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectRotationalMass1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainNode1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectMass1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectRotationalMass1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuNode1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectMass1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectRotationalMass1D.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerNodeRotationCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeRotationCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CMarkerObjectODE2Coordinates.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinateVector.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerObjectODE2Coordinates.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeRotationCoordinate.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectJointRollingDisc.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectJointRollingDisc.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectJointRollingDisc.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CObjectConnectorRollingDiscPenalty.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorRollingDiscPenalty.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorRollingDiscPenalty.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\CSensorObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Autogenerated\MainSensorObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\System\ItemIndices.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuSensorSuperElement.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuSensorBody.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuSensorLoad.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuSensorNode.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuSensorObject.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectRotationalMass1D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectALEANCFCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectANCFCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCartesianSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinate.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinateSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorCoordinateVector.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorDistance.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorRigidBodySpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorRollingDiscPenalty.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectConnectorSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectContactCircleCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectContactCoordinate.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectContactFrictionCircleCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectFFRF.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectFFRFreducedOrder.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectGenericODE2.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectGround.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointALEMoving2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointGeneric.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointPrismatic2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointRevolute2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointRollingDisc.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointSliding2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectJointSpherical.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectMass1D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectMassPoint.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectMassPoint2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectRigidBody.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuObjectRigidBody2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRxyz.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNode1D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodeGenericData.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodeGenericODE2.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodePoint.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodePoint2D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodePoint2DSlope1.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodePointGround.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBody2D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyEP.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuNodeRigidBodyRotVecLG.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerSuperElementPosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyCable2DCoordinates.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyMass.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyPosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerBodyRigid.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeCoordinate.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodePosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeRigid.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerNodeRotationCoordinate.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuMarkerObjectODE2Coordinates.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuLoadTorqueVector.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuLoadCoordinate.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuLoadForceVector.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\VisuLoadMassProportional.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainSensorSuperElement.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\MainSensor.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainSensorBody.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainSensorLoad.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainSensorNode.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainSensorObject.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectRotationalMass1D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\MainObject.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectALEANCFCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectANCFCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCartesianSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinate.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinateSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorCoordinateVector.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorDistance.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorRigidBodySpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorRollingDiscPenalty.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectConnectorSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectContactCircleCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectContactCoordinate.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectContactFrictionCircleCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\MainObjectFactory.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Main\MainObjectFactory.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectFFRF.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectFFRFreducedOrder.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectGenericODE2.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectGround.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointALEMoving2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointGeneric.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointPrismatic2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointRevolute2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointRollingDisc.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointSliding2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectJointSpherical.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectMass1D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectMassPoint.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectMassPoint2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectRigidBody.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainObjectRigidBody2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRxyz.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\MainNode.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNode1D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodeGenericData.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodeGenericODE2.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodePoint.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodePoint2D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodePoint2DSlope1.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodePointGround.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBody2D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyEP.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainNodeRigidBodyRotVecLG.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerSuperElementPosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\MainMarker.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyCable2DCoordinates.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyMass.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyPosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerBodyRigid.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeCoordinate.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodePosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeRigid.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerNodeRotationCoordinate.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainMarkerObjectODE2Coordinates.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainLoadTorqueVector.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\MainLoad.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainLoadCoordinate.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainLoadForceVector.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\MainLoadMassProportional.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\VisualizationMarker.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\VisualizationNode.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\VisualizationObject.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\VisualizationLoad.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\VisualizationSensor.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectRotationalMass1D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system\CObject.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectALEANCFCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectANCFCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Objects\CObjectANCFCable2DBase.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\CObjectBody.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\CObjectConnector.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCartesianSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinate.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinateSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorCoordinateVector.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorDistance.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorRigidBodySpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorRollingDiscPenalty.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectConnectorSpringDamper.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectContactCircleCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectContactCoordinate.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectContactFrictionCircleCable2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectFFRF.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectFFRFreducedOrder.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectGenericODE2.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectGround.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectJointALEMoving2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectJointGeneric.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectJointPrismatic2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectJointRollingDisc.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectJointSliding2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectJointSpherical.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectMass1D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectMassPoint.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectMassPoint2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectRigidBody.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CObjectRigidBody2D.h">
+      <Filter>HPPobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRxyz.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system\CNode.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNode1D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodeGenericData.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodeGenericODE2.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodePoint.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodePoint2D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodePoint2DSlope1.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodePointGround.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodeRigidBody2D.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyEP.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CNodeRigidBodyRotVecLG.h">
+      <Filter>HPPnodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\CMarker.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyCable2DCoordinates.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyMass.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyPosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerBodyRigid.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodeCoordinate.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodePosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodeRigid.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerNodeRotationCoordinate.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerObjectODE2Coordinates.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CMarkerSuperElementPosition.h">
+      <Filter>HPPmarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\CLoad.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CLoadCoordinate.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CLoadForceVector.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CLoadMassProportional.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CLoadTorqueVector.h">
+      <Filter>HPPloads</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\System\CSensor.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CSensorBody.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CSensorLoad.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CSensorNode.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CSensorObject.h">
+      <Filter>HPPsensors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Autogenerated\CSensorSuperElement.h">
+      <Filter>HPPsensors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

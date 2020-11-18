@@ -201,7 +201,7 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrder=',result)
 
 exudynTestGlobals.testError = result - (0.5354530110580623) #2020-05-26(added EP-constraint): 0.5354530110580623; 2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
-exudynTestGlobals.testError *=0.1 #make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
+exudynTestGlobals.testError *=0.05 #make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
 
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()

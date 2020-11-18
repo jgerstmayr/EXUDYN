@@ -330,6 +330,9 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
   NumberOfObjects() & return number of objects in system\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{print(mbs.systemData.NumberOfObjects())}}\\ \hline 
+  NumberOfSensors() & return number of sensors in system\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{print(mbs.systemData.NumberOfSensors())}}\\ \hline 
   GetTime(configurationType = exu.ConfigurationType.Current) & get configuration dependent time.\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.GetTime(exu.ConfigurationType.Initial)}}\\ \hline 
@@ -369,6 +372,12 @@ This section provides access functions to global coordinate vectors. Assigning i
   SetODE2Coordinates\_t(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE2Coordinates\_t(vCurrent)}}\\ \hline 
+  GetODE2Coordinates\_tt(configuration = exu.ConfigurationType.Current) & get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{vCurrent = mbs.systemData.GetODE2Coordinates\_tt()}}\\ \hline 
+  SetODE2Coordinates\_tt(coordinates, configuration = exu.ConfigurationType.Current) & set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.systemData.SetODE2Coordinates\_tt(aCurrent)}}\\ \hline 
   GetODE1Coordinates(configuration = exu.ConfigurationType.Current) & get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{qCurrent = mbs.systemData.GetODE1Coordinates()}}\\ \hline 
@@ -456,6 +465,7 @@ Available output variables and the interpreation of the output variable can be f
   Rotation & measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint\\ \hline 
   Coordinates & measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values\\ \hline 
   Coordinates\_t & measure the time derivative of coordinates (= velocity coordinates) of a node or object\\ \hline 
+  Coordinates\_tt & measure the second time derivative of coordinates (= acceleration coordinates) of a node or object\\ \hline 
   SlidingCoordinate & measure sliding coordinate in sliding joint\\ \hline 
   Director1 & measure a director (e.g. of a rigid body frame), or a slope vector in local 1 or x-direction\\ \hline 
   Director2 & measure a director (e.g. of a rigid body frame), or a slope vector in local 2 or y-direction\\ \hline 

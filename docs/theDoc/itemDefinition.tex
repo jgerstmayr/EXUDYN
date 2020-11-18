@@ -108,8 +108,10 @@ The item VNodePoint2D has the following parameters:\vspace{-1cm}\\
 \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\cConfig + \pv\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\uv\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\vv\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Acceleration}{$\av\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$}{global 3D acceleration vector of node}
 \rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1]\tp\cConfig$}{ coordinate vector of node}
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{Coordinates\_tt}{$\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1]\tp\cConfig$}{ acceleration coordinates vector of node}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -170,12 +172,15 @@ The item VNodeRigidBodyEP has the following parameters:\vspace{-1cm}\\
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$}{global 3D acceleration vector of node}
 \rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 4 Euler parameters}
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{Coordinates\_tt}{$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2,\,\ddot \psi_3]\tp\cConfig$}{ acceleration coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
 \rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$}{global 3D angular acceleration vector of node}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -255,12 +260,15 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$}{global 3D acceleration vector of node}
 \rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles}
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{Coordinates\_tt}{$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2]\tp\cConfig$}{ acceleration coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
 \rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$}{global 3D angular acceleration vector of node}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -278,7 +286,7 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
     \be
       \LU{0b}{\Rot} = \Rot_0(\theta_0)\Rot_1(\theta_1)\Rot_2(\theta_2)
     \ee
-    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
     \bea
       \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
@@ -338,6 +346,8 @@ The item VNodeRigidBodyRotVecLG has the following parameters:\vspace{-1cm}\\
 \finishTable
 {\bf Description of Item}:
  \noindent
+    For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020}.
+
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
     \be
       \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
@@ -349,19 +359,15 @@ The item VNodeRigidBodyRotVecLG has the following parameters:\vspace{-1cm}\\
     \be
       \LU{0}{\pv}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pv} 
     \ee
-    Note that the rotation vector $\tnu\cCur$ are computed as sum of current coordinates plus reference coordinates,
-    \be
-      \ttheta\cCur = \tnu\cCur + \tnu\cRef \quad \mathrm{with}.
-    \ee
-    %The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
-    %\be
-    %  \LU{0b}{\Rot} = \Rot_0(\theta_0)\Rot_1(\theta_1)\Rot_2(\theta_2)
-    %\ee
-    The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
-    \bea
-      \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
-      \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
-    \eea
+    
+    A Lie group integrator must be used with this node, which is why the is used, the 
+    rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
+    matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
+    %The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    %\bea
+    %  \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
+    %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
+    %\eea
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -408,12 +414,15 @@ The item VNodeRigidBody2D has the following parameters:\vspace{-1cm}\\
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$}{global 3D acceleration vector of node}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,\psi_0]\tp\cConfig$}{ coordinate vector of node, having 2 displacement coordinates and 1 angle}
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{Coordinates\_tt}{$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot \psi_0]\tp\cConfig$}{ acceleration coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
-\rowTable{Rotation}{$[\theta_0]\tp\cConfig = [\psi_0]\tp\cRef + [\psi_0]\tp\cConfig$}{vector with 1 angle around out of plane axix}
-\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,0,\,0]}\cConfig\tp$}{global 3D angular velocity vector of node}
-\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,0,\,0]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\rowTable{Rotation}{$[\theta_0]\tp\cConfig = [\psi_0]\tp\cRef + [\psi_0]\tp\cConfig$}{vector with 1 angle around out of plane axis}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{[0,\,0,\,\ddot \psi_0]}\cConfig\tp$}{global 3D angular acceleration vector of node}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -466,6 +475,7 @@ The item VNode1D has the following parameters:\vspace{-1cm}\\
 \startTable{output parameter}{symbol}{description}
 \rowTable{Coordinates}{$\qv\cConfig = [q_0]\tp\cConfig$}{ODE2 coordinate of node (in vector form)}
 \rowTable{Coordinates\_t}{$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$}{ODE2 velocity coordinate of node (in vector form)}
+\rowTable{Coordinates\_tt}{$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$}{ODE2 acceleration coordinate of node (in vector form)}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -522,6 +532,7 @@ The item VNodePoint2DSlope1 has the following parameters:\vspace{-1cm}\\
 \rowTable{Velocity}{}{global 3D velocity vector of node}
 \rowTable{Coordinates}{}{coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)}
 \rowTable{Coordinates\_t}{}{velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)}
+\rowTable{Coordinates\_tt}{}{acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)}
 \finishTable
 \newpage
 
@@ -568,6 +579,7 @@ The item VNodeGenericODE2 has the following parameters:\vspace{-1cm}\\
 \startTable{output parameter}{symbol}{description}
 \rowTable{Coordinates}{$\qv\cConfig = [q_0,\,\ldots,\,q_{nc}]\tp\cConfig$}{coordinates vector of node}
 \rowTable{Coordinates\_t}{$\dot \qv\cConfig = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cConfig$}{velocity coordinates vector of node}
+\rowTable{Coordinates\_tt}{$\ddot \qv\cConfig = [\ddot q_0,\,\ldots,\,\ddot q_{nc}]\tp\cConfig$}{acceleration coordinates vector of node}
 \finishTable
 \newpage
 
@@ -703,6 +715,7 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of translated local position; local (body) coordinate system = global coordinate system}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp$}{global displacement vector of mass point}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp$}{global velocity vector of mass point}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$}{global acceleration vector of mass point}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -802,6 +815,7 @@ The item VObjectMassPoint2D has the following parameters:\vspace{-1cm}\\
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of translated local position; local (body) coordinate system = global coordinate system}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$}{global displacement vector of mass point}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$}{global velocity vector of mass point}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\ddot q_1,\;0]\cConfig\tp$}{global acceleration vector of mass point}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -1108,14 +1122,19 @@ The item VObjectRigidBody has the following parameters:\vspace{-1cm}\\
 \finishTable
 {\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
 \startTable{output parameter}{symbol}{description}
-\rowTable{Position}{}{global position vector of rotated and translated local position}
-\rowTable{Displacement}{}{global displacement vector of local position}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of body-fixed point given by local position vector}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\LU{b}{\pv}$}{global displacement vector of body-fixed point given by local position vector}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig(\LU{b}{\pv}) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \LU{b}{\pv}\cConfig)$}{global velocity vector of body-fixed point given by local position vector}
 \rowTable{RotationMatrix}{}{vector with 9 components of the rotation matrix (row-major format)}
 \rowTable{Rotation}{}{vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix}
-\rowTable{Velocity}{}{global velocity vector of local position}
-\rowTable{AngularVelocity}{}{angular velocity of body}
-\rowTable{AngularVelocityLocal}{}{local (body-fixed) 3D velocity vector of node}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig$}{angular velocity of body}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig$}{local (body-fixed) 3D velocity vector of node}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig(\LU{b}{\pv}) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \LU{b}{\pv}) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \LU{b}{\pv}))$}{global acceleration vector of body-fixed point given by local position vector}
+\rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig$}{angular acceleration vector of body}
 \finishTable
+{\bf Description of Item}:
+ \noindent
+    equations coming soon!
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1162,10 +1181,12 @@ The item VObjectRigidBody2D has the following parameters:\vspace{-1cm}\\
 \startTable{output parameter}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of body-fixed point given by local position vector}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\LU{b}{\pv}$}{global displacement vector of body-fixed point given by local position vector}
-\rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \LU{b}{\pv}\cConfig)$}{global velocity vector of body-fixed point given by local position vector}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig(\LU{b}{\pv}) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \LU{b}{\pv}\cConfig)$}{global velocity vector of body-fixed point given by local position vector}
 \rowTable{Rotation}{$\theta_{0\mathrm{config}}$}{scalar rotation angle of body}
-\rowTable{AngularVelocity}{$\omega_{0\mathrm{config}}$}{angular velocity of body}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig$}{angular velocity vector of body}
 \rowTable{RotationMatrix}{$\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{rotation matrix in vector form (stored in row-major order)}
+\rowTable{Acceleration}{$\LU{0}{\av}\cConfig(\LU{b}{\pv}) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \LU{b}{\pv}) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \LU{b}{\pv}))$}{global acceleration vector of body-fixed point given by local position vector}
+\rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig$}{angular acceleration vector of body}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -1245,7 +1266,7 @@ A system of $n$ second order ordinary differential equations (ODE2), having a ma
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     ArrayIndex &      &     [] &     node numbers which provide the coordinates for the object (consecutively as provided in this list)\\ \hline
+    nodeNumbers &     ArrayNodeIndex &      &     [] &     node numbers which provide the coordinates for the object (consecutively as provided in this list)\\ \hline
     massMatrix &     NumpyMatrix &      &     Matrix[] &     mass matrix of object in python numpy format\\ \hline
     stiffnessMatrix &     NumpyMatrix &      &     Matrix[] &     stiffness matrix of object in python numpy format\\ \hline
     dampingMatrix &     NumpyMatrix &      &     Matrix[] &     damping matrix of object in python numpy format\\ \hline
@@ -1284,7 +1305,7 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
 \startTable{output parameter}{symbol}{description}
 \rowTable{Coordinates}{}{all ODE2 coordinates}
 \rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
-\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2RHS)}
+\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -1360,7 +1381,7 @@ This object is used to represent equations modelled by the floating frame of ref
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     ArrayIndex &      &     [] &     node numbers which provide the coordinates for the object (consecutively as provided in this list); the $(n_f+1)$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame\\ \hline
+    nodeNumbers &     ArrayNodeIndex &      &     [] &     node numbers which provide the coordinates for the object (consecutively as provided in this list); the $(n_f+1)$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame\\ \hline
     massMatrixFF &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of mass matrix of object given in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format\\ \hline
     stiffnessMatrixFF &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of stiffness matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format\\ \hline
     dampingMatrixFF &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of damping matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format\\ \hline
@@ -1420,7 +1441,7 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
 \startTable{output parameter}{symbol}{description}
 \rowTable{Coordinates}{}{all ODE2 coordinates}
 \rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
-\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2RHS)}
+\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -1458,6 +1479,7 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
     Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
+    The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2020}.
     
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
     
@@ -1497,7 +1519,7 @@ This object is used to represent modally reduced flexible bodies using the float
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     ArrayIndex &      &     [] &     node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis\\ \hline
+    nodeNumbers &     ArrayNodeIndex &      &     [] &     node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis\\ \hline
     massMatrixReduced &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)\\ \hline
     stiffnessMatrixReduced &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)\\ \hline
     dampingMatrixReduced &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)\\ \hline
@@ -1554,7 +1576,7 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
 \startTable{output parameter}{symbol}{description}
 \rowTable{Coordinates}{}{all ODE2 coordinates}
 \rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
-\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2RHS)}
+\rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)}
 \finishTable
 {\bf Description of Item}:
  \noindent
@@ -1609,6 +1631,7 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
     Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
+    The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2021}.
     
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
     %
@@ -1616,7 +1639,7 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectANCFCable2D}
-A 2D cable finite element using 2 nodes of type NodePoint2DSlope1; the element has 8 coordinates and uses cubic polynomials for position interpolation; the Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.\vspace{12pt}
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1.\vspace{12pt}
  \\{\bf Additional information for ObjectANCFCable2D}:
 \bi
   \item Requested node type = \texttt{Position2D} + \texttt{Orientation2D} + \texttt{Point2DSlope1} + \texttt{Position} + \texttt{Orientation}
@@ -1637,7 +1660,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1; the element h
     physicsAxialDamping &     UReal &      &     0. &     axial stiffness $d_{EA}$ [SI:N/s] of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$\\ \hline
     physicsReferenceAxialStrain &     UReal &      &     0. &     reference axial strain of beam (pre-deformation) $\varepsilon_0$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     physicsReferenceCurvature &     UReal &      &     0. &     reference curvature of beam (pre-deformation) $\kappa_0$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
-    nodeNumbers &     Index2 &      &     [MAXINT, MAXINT] &     two node numbers ANCF cable element\\ \hline
+    nodeNumbers &     NodeIndex2 &      &     [MAXINT, MAXINT] &     two node numbers ANCF cable element\\ \hline
     useReducedOrderIntegration &     Bool &      &     False &     false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     visualization & VObjectANCFCable2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -1666,11 +1689,18 @@ The item VObjectANCFCable2D has the following parameters:\vspace{-1cm}\\
 \rowTable{Force}{}{(local) section normal force (scalar)}
 \rowTable{Torque}{}{(local) bending moment (scalar)}
 \finishTable
+{\bf Description of Item}:
+ \noindent
+    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1.
+    The element has 8 coordinates and uses cubic polynomials for position interpolation.
+    The Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
+
+    For a detailed description of this beam element, see Gerstmayr and Irschik \cite{GerstmayrIrschik2008}.
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectALEANCFCable2D}
-A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2; the element has 8+1 coordinates and uses cubic polynomials for position interpolation; the element in addition to ANCFCable2D adds an Eulerian axial velocity by the GenericODE2 coordiante\vspace{12pt}
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2.\vspace{12pt}
  \\{\bf Additional information for ObjectALEANCFCable2D}:
 \bi
   \item Requested node type: read detailed information of item
@@ -1693,7 +1723,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially 
     physicsReferenceAxialStrain &     UReal &      &     0. &     reference axial strain of beam (pre-deformation) $\varepsilon_0$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     physicsReferenceCurvature &     UReal &      &     0. &     reference curvature of beam (pre-deformation) $\kappa_0$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
     physicsUseCouplingTerms &     bool &      &     True &     true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)\\ \hline
-    nodeNumbers &     Index3 &      &     [MAXINT, MAXINT, MAXINT] &     two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
+    nodeNumbers &     NodeIndex3 &      &     [MAXINT, MAXINT, MAXINT] &     two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
     useReducedOrderIntegration &     Bool &      &     False &     false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     visualization & VObjectALEANCFCable2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -1722,6 +1752,19 @@ The item VObjectALEANCFCable2D has the following parameters:\vspace{-1cm}\\
 \rowTable{Force}{}{(local) section normal force (scalar)}
 \rowTable{Torque}{}{(local) bending moment (scalar)}
 \finishTable
+{\bf Description of Item}:
+ \noindent
+    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
+    The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
+    In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
+    The parameter \texttt{physicsMovingMassFactor} allows to control the amount of mass, which moves with
+    the Eulerian velocity (e.g., the fluid), and which is not moving (the pipe). 
+    A factor of \texttt{physicsMovingMassFactor=1} gives an axially moving beam.
+
+    The Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
+    Note that damping (physicsBendingDamping, physicsAxialDamping) only acts on the non-moving part of the beam, as it is the case for the pipe.
+
+    A detailed paper on this element is yet under submission, but a similar formulation can be found in \cite{PechsteinGerstmayr2013ale}.
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -1783,7 +1826,7 @@ An simple spring-damper element with additional force; connects to position-base
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     referenceLength &     UReal &      &     0. &     reference length [SI:m] of spring\\ \hline
     stiffness &     UReal &      &     0. &     stiffness [SI:N/m] of spring; acts against (length-initialLength)\\ \hline
     damping &     UReal &      &     0. &     damping [SI:N/(m s)] of damper; acts against d/dt(length)\\ \hline
@@ -1906,7 +1949,7 @@ An 3D spring-damper element acting accordingly in three (global) directions (x,y
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     stiffness &     Vector3D &      &     [0.,0.,0.] &     stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction\\ \hline
     damping &     Vector3D &      &     [0.,0.,0.] &     damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction\\ \hline
     offset &     Vector3D &      &     [0.,0.,0.] &     offset between two springs\\ \hline
@@ -2011,7 +2054,7 @@ An 3D spring-damper element acting on relative displacements and relative rotati
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     stiffness &     Matrix6D &      &     np.zeros([6,6]) &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis\\ \hline
     damping &     Matrix6D &      &     np.zeros([6,6]) &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
@@ -2104,7 +2147,7 @@ A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     stiffness &     Real &      &     0. &     stiffness [SI:N/m] of spring; acts against relative value of coordinates\\ \hline
     damping &     Real &      &     0. &     damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates\\ \hline
     offset &     Real &      &     0. &     offset between two coordinates (reference length of springs), see equation\\ \hline
@@ -2220,7 +2263,7 @@ Connector which enforces constant or prescribed distance between two bodies/node
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     distance &     UReal &      &     0. &     prescribed distance [SI:m] of the used markers\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorDistance & & & parameters for visualization of item \\ \hline
@@ -2321,7 +2364,7 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     offset &     UReal &      &     0. &     An offset between the two values\\ \hline
     factorValue1 &     UReal &      &     1. &     An additional factor multiplied with value1 used in algebraic equation\\ \hline
     velocityLevel &     bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored\\ \hline
@@ -2438,7 +2481,7 @@ A constraint which constrains the coordinate vectors of two markers Marker[Node|
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     scalingMarker0 &     NumpyMatrix &      &     Matrix[] &     linear scaling matrix for coordinate vector of marker 0; matrix provided in python numpy format\\ \hline
     scalingMarker1 &     NumpyMatrix &      &     Matrix[] &     linear scaling matrix for coordinate vector of marker 1; matrix provided in python numpy format\\ \hline
     offset &     NumpyVector &      &     [] &     offset added to constraint equation; only active, if no userFunction is defined\\ \hline
@@ -2545,7 +2588,7 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData (size=3) for 3 dataCoordinates\\ \hline
     dryFrictionAngle &     Real &      &     0. &     angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/m]\\ \hline
@@ -2718,7 +2761,7 @@ A penalty-based contact condition for one coordinate; the contact gap $g$ is def
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
     nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m]; acts only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)]; acts only upon penetration\\ \hline
@@ -2758,7 +2801,7 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
     nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
@@ -2800,7 +2843,7 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     markers define contact gap\\ \hline
     nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData with 3 $\times$ nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
@@ -2844,7 +2887,7 @@ A generic joint in 3D; constrains components of the absolute position and rotati
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     constrainedAxes &     ArrayIndex &     6 &     [1,1,1,1,1,1] &     flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
@@ -2989,7 +3032,7 @@ A spherical joint, which constrains the relative translation between two positio
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectJointSpherical & & & parameters for visualization of item \\ \hline
@@ -3081,7 +3124,7 @@ A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &     2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     discRadius &     Real &      &     0 &     defines the disc radius\\ \hline
@@ -3210,7 +3253,7 @@ A revolute joint in 2D; constrains the absolute 2D position of two points given 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectJointRevolute2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3245,7 +3288,7 @@ A prismatic joint in 2D; allows the relative motion of two bodies, using two Rig
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
     axisMarker0 &     Vector3D &      &     [1.,0.,0.] &     direction of prismatic axis, given as a 3D vector in Marker0 frame\\ \hline
     normalMarker1 &     Vector3D &      &     [0.,1.,0.] &     direction of normal to prismatic axis, given as a 3D vector in Marker1 frame\\ \hline
     constrainRotation &     bool &      &     True &     flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero\\ \hline
@@ -3284,8 +3327,8 @@ A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1)
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     marker m0: position-marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
-    slidingMarkerNumbers &     ArrayIndex &      &     [] &     these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     marker m0: position-marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
+    slidingMarkerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [] &     these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)\\ \hline
     slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...\\ \hline
     nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position\\ \hline
     classicalFormulation &     bool &      &     True &     uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation\\ \hline
@@ -3451,11 +3494,11 @@ A specialized axially moving joint (without rotation) in 2D between a ALE Cable2
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
-    slidingMarkerNumbers &     ArrayIndex &      &     [] &     a list of sn (global) marker numbers which are are used to update marker1\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
+    slidingMarkerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [] &     a list of sn (global) marker numbers which are are used to update marker1\\ \hline
     slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...\\ \hline
     slidingOffset &     Real &      &     0. &     sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements\\ \hline
-    nodeNumbers &     ArrayIndex &      &     [ MAXINT, MAXINT ] &     node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate\\ \hline
+    nodeNumbers &     ArrayNodeIndex &      &     [ MAXINT, MAXINT ] &     node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate\\ \hline
     usePenaltyFormulation &     bool &      &     False &     flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)\\ \hline
     penaltyStiffness &     Real &      &     0. &     penalty stiffness [SI:N/m] used if usePenaltyFormulation=True\\ \hline
     activeConnector &     bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline

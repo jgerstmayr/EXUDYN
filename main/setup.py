@@ -224,7 +224,7 @@ class BuildExt(build_ext):
 				'/errorReport:prompt', 
 				'/WX-', 
 				'/Zc:forScope',
-				'/arch:AVX2',
+				#'/arch:AVX2', #add only if not 32bits
 				'/Gd', '/Oy', '/Oi', 
 				#'/MD', #/MT=multithreaded, /MD=multithreaded DLL, overwirtes /MT
 				'/openmp',
@@ -252,6 +252,9 @@ class BuildExt(build_ext):
 #		'-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
         ],
     }
+    if not is32bits: #for 32bits, we assume that processors may not support avx
+        c_opts['msvc'] += ['/arch:AVX2']
+    
     l_opts = {
         'msvc': [
         'opengl32.lib', #not needed since VS2015?
@@ -320,5 +323,5 @@ For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
         "Operating System :: POSIX :: Linux",
         "Topic :: Scientific/Engineering",
     ],
-    python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU
+    python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
 )

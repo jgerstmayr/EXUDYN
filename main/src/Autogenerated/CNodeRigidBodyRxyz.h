@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-11-13  00:46:29 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,6 +108,9 @@ public: // AUTO:
     //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
     virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const override;
 
+    //! AUTO:  return configuration dependent acceleration of node
+    virtual Vector3D GetAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override;
+
     //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Vector
     virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const override;
 
@@ -116,6 +119,9 @@ public: // AUTO:
 
     //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector
     virtual Vector3D GetAngularVelocityLocal(ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return configuration dependent angular acceleration of node
+    virtual Vector3D GetAngularAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  provide position jacobian of node; derivative of 3D Position with respect to 3 displacement coordinates \f$[q_0,\,q_1,\,q_2]\tp\f$ and 3 rotation coordinates \f$[\psi_0,\,\psi_1,\,\psi_2]\tp\f$
     virtual void GetPositionJacobian(Matrix& value) const override;
@@ -156,12 +162,15 @@ public: // AUTO:
             (Index)OutputVariableType::Position +
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::Acceleration +
             (Index)OutputVariableType::Coordinates +
             (Index)OutputVariableType::Coordinates_t +
+            (Index)OutputVariableType::Coordinates_tt +
             (Index)OutputVariableType::RotationMatrix +
             (Index)OutputVariableType::Rotation +
             (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::AngularVelocityLocal );
+            (Index)OutputVariableType::AngularVelocityLocal +
+            (Index)OutputVariableType::AngularAcceleration );
     }
 
 };

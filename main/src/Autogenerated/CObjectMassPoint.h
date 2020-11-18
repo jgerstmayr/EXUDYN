@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:19:09 (last modfied)
+* @date         2020-11-13  11:46:29 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -76,8 +76,8 @@ public: // AUTO:
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
 
-    //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
-    virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
+    //! AUTO:  Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
@@ -102,6 +102,9 @@ public: // AUTO:
 
     //! AUTO:  return the (global) velocity of 'localPosition' according to configuration type
     virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return the (global) acceleration of 'localPosition' according to configuration type
+    Vector3D GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
@@ -139,7 +142,8 @@ public: // AUTO:
         return (OutputVariableType)(
             (Index)OutputVariableType::Position +
             (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity );
+            (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::Acceleration );
     }
 
 };

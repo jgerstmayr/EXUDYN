@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2020-09-09  16:20:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,7 +106,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectConnectorCoordinate->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorCoordinate->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinate->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinate->GetParameters().factorValue1 = py::cast<Real>(d["factorValue1"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinate->GetParameters().velocityLevel = py::cast<bool>(d["velocityLevel"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -125,7 +125,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = (std::vector<Index>)cObjectConnectorCoordinate->GetParameters().markerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorCoordinate->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = (Real)cObjectConnectorCoordinate->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
         d["factorValue1"] = (Real)cObjectConnectorCoordinate->GetParameters().factorValue1; //! AUTO: cast variables into python (not needed for standard types) 
         d["velocityLevel"] = (bool)cObjectConnectorCoordinate->GetParameters().velocityLevel; //! AUTO: cast variables into python (not needed for standard types) 
@@ -151,7 +151,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectConnectorCoordinate->GetParameters().markerNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorCoordinate->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("factorValue1") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().factorValue1);} //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { return py::cast((bool)cObjectConnectorCoordinate->GetParameters().velocityLevel);} //! AUTO: get parameter
@@ -170,7 +170,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCoordinate->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCoordinate->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { cObjectConnectorCoordinate->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("factorValue1") == 0) { cObjectConnectorCoordinate->GetParameters().factorValue1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { cObjectConnectorCoordinate->GetParameters().velocityLevel = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

@@ -163,7 +163,7 @@ public:
 
 //call to pointer to member function (std::invoke) did not work
 ////memberfunction pointers follow idea of https://isocpp.org/wiki/faq/pointers-to-members
-//typedef  void (CSystem::*CSystemDifferentiableFunction)(TemporaryComputationData& temp, Vector& ode2Rhs);
+//typedef  void (CSystem::*CSystemDifferentiableFunction)(TemporaryComputationData& temp, Vector& systemODE2Rhs);
 
 class CSystem
 {
@@ -265,14 +265,14 @@ public:
 	virtual void ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix);
 	//virtual void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
-	//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation); return true, if object has localODE2Rhs, false otherwise
-	virtual bool ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Rhs);
+	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation); return true, if object has localODE2Rhs, false otherwise
+	virtual bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Rhs);
 		
-	//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
-	virtual void ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs);
+	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+	virtual void ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs);
 
-	//! compute right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
-	virtual void ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs);
+	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
+	virtual void ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs);
 
 	//! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
@@ -292,10 +292,10 @@ public:
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
 	virtual void PostDiscontinuousIterationStep();
 
-	//! compute right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
+	//! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
 	virtual void ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel = false);
 
-	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeODE2RHS, GetOutputVariableConnector, etc.
+	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.
 	virtual void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
 	{ cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure); }
 

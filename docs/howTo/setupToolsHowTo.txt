@@ -31,24 +31,31 @@ pip install dist\exudyn-1.0.8-cp36-cp36m-win_amd64.whl
 #  or python3.6 32bits, use:
 pip install dist\exudyn-1.0.8-cp36-cp36m-win32.whl
 
-#just for completeness: install python lib (==> not needed, bdist_wheel does everything):
-python setup.py install 
-
-#to uninstall, and suppress prompt 'y/n', use:
-python uninstall -y exudyn
-
-#build WINDOWS MSI installer:
-python setup.py bdist_msi
-
+#+++++++++++++++++++++++++++++++++++++++++++++++++
 #build WINDOWS executable installer (will only work, if python is installed also in registry):
 python setup.py bdist_wininst
 will create an executable installer, foo-1.0.win32.exe, in the current directory.
 
+#build WINDOWS MSI installer:
+python setup.py bdist_msi
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++
+#just for completeness: build and install python lib (==> not needed, bdist_wheel does everything):
+python setup.py install 
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++
+#to uninstall, and suppress prompt 'y/n', use:
+pip uninstall -y exudyn
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++
+#advanced for Windows:
 #copy VS2017 .pyd file on top of files built by setup tools:
 copy exudynCPP.pyd to build\lib.win-amd64-3.6
 and rename accordingly
 
 ====================================================================
+#+++++++++++++++++++++++++++++++++++++++++++++++++
 UBUNTU / linux (tested with clean UBUNTU 18.04 installation, "Normal installation" and option enabled to 
     "Install third-party software for graphics ....", 
 	agree to "update" after first boot,

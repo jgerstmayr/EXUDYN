@@ -46,6 +46,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'Rotation', 'measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates', 'measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates_t', 'measure the time derivative of coordinates (= velocity coordinates) of a node or object'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Coordinates_tt', 'measure the second time derivative of coordinates (= acceleration coordinates) of a node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'SlidingCoordinate', 'measure sliding coordinate in sliding joint'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Director1', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 1 or x-direction'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Director2', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 2 or y-direction'); s+=s1; sLenum+=sL1
@@ -682,6 +683,11 @@ s += "\n//        General functions:\n"
                                 isLambdaFunction = True,
                                 example = 'print(mbs.systemData.NumberOfObjects())'); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSensors', cName='[](const MainSystemData& msd) {return msd.GetMainSensors().NumberOfItems(); }', 
+                                description="return number of sensors in system",
+                                isLambdaFunction = True,
+                                example = 'print(mbs.systemData.NumberOfSensors())'); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetTime', cName='PyGetStateTime', 
                                 description="get configuration dependent time.",
                                 argList=['configurationType'],
@@ -753,6 +759,20 @@ sL += DefLatexStartClass(pyClassStr+': Access coordinates', 'This section provid
                                 argList=['coordinates','configuration'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
                                 example = "mbs.systemData.SetODE2Coordinates_t(vCurrent)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates_tt', cName='GetODE2Coords_tt', 
+                                description="get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)",
+                                argList=['configuration'],
+                                defaultArgs=['exu.ConfigurationType::Current'],
+                                example = "vCurrent = mbs.systemData.GetODE2Coordinates_tt()"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates_tt', cName='SetODE2Coords_tt', 
+                                description="set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
+                                argList=['coordinates','configuration'],
+                                defaultArgs=['','exu.ConfigurationType::Current'],
+                                example = "mbs.systemData.SetODE2Coordinates_tt(aCurrent)"
                                 ); s+=s1; sL+=sL1
 
 

@@ -10,14 +10,11 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import time
 import numpy as np
 
@@ -35,12 +32,17 @@ Jyyzz = 0.25*m*r**2 + 1/12.*m*lRotor**2      #moment of inertia for y and z axes
 
 omega0=np.sqrt(2*k/(2*m)) #linear system; without flexibility of rotor
 
-D0 = 0.002*0              #dimensionless damping
-d = 2*omega0*D0*(2*m)       #damping constant in N/(m/s)
+#case 1: external damping: D0=0.002, D0int=0
+#case 2: external damping with small internal damping: D0=0.002, D0int=0.001
+#case 3: external damping with larger internal damping: D0=0.002, D0int=0.1
+#case 4: no external damping with small internal damping: D0=0, D0int=0.001
+attr = 'g-' #color in plot
+D0 = 0.002              #0.002 default; dimensionless damping
+D0int = 0.001*0 #*200      #default 0.001; dimensionless damping (not fully); value > 0.08 gives instability
 
-attr = 'r-' #color in plot
+d = 2*omega0*D0*(2*m)       #damping constant for external damping in N/(m/s)
+
 kInt = 4*800            #stiffness of (all/both) springs in rotor in N/m
-D0int = 0.001 #*200      #dimensionless damping (not fully); value > 0.08 gives instability
 omega0int = np.sqrt(kInt/m)
 dInt = 2*omega0int*D0int*m    #damping constant in N/(m/s)
 
@@ -174,7 +176,7 @@ print('omega=',u)
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-if exudynTestGlobals.useGraphics:
+if True:
     data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     n=steps
     #plt.plot(data[:,2], data[:,3], 'r-') #numerical solution

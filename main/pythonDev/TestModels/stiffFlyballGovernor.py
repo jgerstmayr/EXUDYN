@@ -18,7 +18,7 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.graphicsDataUtilities import *
-from exudyn.lieGroupIntegration import *
+from exudyn.lieGroupBasics import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np

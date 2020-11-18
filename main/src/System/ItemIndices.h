@@ -23,6 +23,7 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //defines Real
 
+
 //! class which contains index which can only be used for node numbers (avoids mixing different indices ...)
 class NodeIndex
 {
@@ -158,7 +159,6 @@ public:
 		return STDstring("SensorIndex");
 	}
 };
-
 
 
 

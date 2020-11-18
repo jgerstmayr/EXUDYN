@@ -22,6 +22,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
+//#include <pybind11/operators.h>
+#include <pybind11/numpy.h>			//interface to numpy
+//#include <pybind11/cast.h>		//for argument annotation
+
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
 //! Exudyn python utilities namespace
@@ -48,65 +52,250 @@ namespace EPyUtils {
 		return false;
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! check if python type is any kind of integer; np.array uses int32_t, while standard lists use int_ types
+	inline bool IsPyTypeInteger(const py::object& pyObject)
+	{
+		return //py::isinstance<std::int64_t>(pyObject) || //may be needed by other compilers?
+			//py::isinstance<std::int8_t>(pyObject) ||
+			//py::isinstance<std::int16_t>(pyObject) ||
+			py::isinstance<std::int32_t>(pyObject) ||
+			//py::isinstance<std::int64_t>(pyObject) ||
+			//py::isinstance<std::intptr_t>(pyObject) ||
+			//py::isinstance<std::int_fast32_t>(pyObject) ||
+			py::isinstance<py::int_>(pyObject);
+	}
+
+	inline bool IsNodeIndex(const py::object& pyObject)
+	{
+		return	py::isinstance<NodeIndex>(pyObject) || !(
+			py::isinstance<ObjectIndex>(pyObject) ||
+			py::isinstance<MarkerIndex>(pyObject) ||
+			py::isinstance<LoadIndex>(pyObject) ||
+			py::isinstance<SensorIndex>(pyObject));
+	}
+	
+	inline bool IsObjectIndex(const py::object& pyObject)
+	{
+		return	py::isinstance<ObjectIndex>(pyObject) || !(
+			py::isinstance<NodeIndex>(pyObject) ||
+			py::isinstance<MarkerIndex>(pyObject) ||
+			py::isinstance<LoadIndex>(pyObject) ||
+			py::isinstance<SensorIndex>(pyObject));
+	}
+
+	inline bool IsMarkerIndex(const py::object& pyObject)
+	{
+		return	py::isinstance<MarkerIndex>(pyObject) || !(
+			py::isinstance<NodeIndex>(pyObject) ||
+			py::isinstance<ObjectIndex>(pyObject) ||
+			py::isinstance<LoadIndex>(pyObject) ||
+			py::isinstance<SensorIndex>(pyObject));
+	}
+
+	inline bool IsLoadIndex(const py::object& pyObject)
+	{
+		return	py::isinstance<LoadIndex>(pyObject) || !(
+			py::isinstance<NodeIndex>(pyObject) ||
+			py::isinstance<MarkerIndex>(pyObject) ||
+			py::isinstance<ObjectIndex>(pyObject) ||
+			py::isinstance<SensorIndex>(pyObject));
+	}
+
+	inline bool IsSensorIndex(const py::object& pyObject)
+	{
+		return	py::isinstance<SensorIndex>(pyObject) || !(
+			py::isinstance<NodeIndex>(pyObject) ||
+			py::isinstance<MarkerIndex>(pyObject) ||
+			py::isinstance<LoadIndex>(pyObject) ||
+			py::isinstance<ObjectIndex>(pyObject));
+	}
+
 	//! Expect Index or NodeIndex; otherwise throws error
 	inline Index GetNodeIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::int_>(pyObject) || py::isinstance<NodeIndex>(pyObject))
+		//if (IsPyTypeInteger(pyObject) || py::isinstance<NodeIndex>(pyObject))
+		if (IsNodeIndex(pyObject))
 		{
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected NodeIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected NodeIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) +
+			"'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
 	//! Expect Index or ObjectIndex; otherwise throws error
 	inline Index GetObjectIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::int_>(pyObject) || py::isinstance<ObjectIndex>(pyObject))
+		//if (IsPyTypeInteger(pyObject) || py::isinstance<ObjectIndex>(pyObject))
+		if (IsObjectIndex(pyObject))
 		{
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected ObjectIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected ObjectIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
 	//! Expect Index or MarkerIndex; otherwise throws error
 	inline Index GetMarkerIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::int_>(pyObject) || py::isinstance<MarkerIndex>(pyObject))
+		//check different int types ...
+		//if (IsPyTypeInteger(pyObject) || py::isinstance<MarkerIndex>(pyObject))
+		if (IsMarkerIndex(pyObject))
 		{
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected MarkerIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected MarkerIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
 	//! Expect Index or LoadIndex; otherwise throws error
 	inline Index GetLoadIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::int_>(pyObject) || py::isinstance<LoadIndex>(pyObject))
+		//if (IsPyTypeInteger(pyObject) || py::isinstance<LoadIndex>(pyObject))
+		if (IsLoadIndex(pyObject))
 		{
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected LoadIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected LoadIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
 	//! Expect Index or SensorIndex; otherwise throws error
 	inline Index GetSensorIndexSafely(const py::object& pyObject)
 	{
-		if (py::isinstance<py::int_>(pyObject) || py::isinstance<SensorIndex>(pyObject))
+		//if (IsPyTypeInteger(pyObject) || py::isinstance<SensorIndex>(pyObject))
+		if (IsSensorIndex(pyObject))
 		{
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected SensorIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected SensorIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// some conversion functions for conversion of (internal, C++) index arrays to arrays of NodeIndex, MarkerIndex, ...
+
+	//! Expect Index or ArrayNodeIndex; otherwise throws error
+	inline ArrayIndex GetArrayNodeIndexSafely(const py::object& pyObject)
+	{
+		//crashes, if pyObject list mixes different types as they cannot be cast to std::vector ...!
+		//if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+		//{
+		//	//std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
+		//	std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(pyObject); //! # read out list and cast to C++ type
+		//	Index rows = stdlist.size();
+		//	ArrayIndex indexList(rows); //initialize empty list
+		//	for (Index i = 0; i < rows; i++)
+		//	{
+		//		indexList[i] = GetNodeIndexSafely(stdlist[i]);
+		//	}
+		//	return indexList;
+		//}
+
+		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+		{
+			py::list pylist = py::cast<py::list>(pyObject); //also works for numpy arrays (but gives different type!)
+			ArrayIndex indexList; //initialize empty list
+			for (auto item: pylist)
+			{
+				indexList.Append(GetNodeIndexSafely(py::cast<py::object>(item))); //will crash, if e.g. function in list ...
+			}
+			return indexList;
+		}
+		//otherwise:
+		PyError(STDstring("Expected list of NodeIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...) or inconsistent arrays for nodeNumbers, markerNumbers, ...!"));
+		return ArrayIndex();
+	}
+
+	//! Expect list of 2 NodeIndex; otherwise throws error
+	inline Index2 GetNodeIndex2Safely(const py::object& pyObject)
+	{
+		ArrayIndex arrayIndex = GetArrayNodeIndexSafely(pyObject);
+
+		if (arrayIndex.NumberOfItems() != 2)
+		{
+			PyError(STDstring("Expected list of 2 NodeIndex, but received " + EXUstd::ToString(arrayIndex.NumberOfItems()) + " items in list"));
+			return Index2({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
+		}
+		return Index2(arrayIndex, 0);
+	}
+
+	//! Expect list of 3 NodeIndex; otherwise throws error
+	inline Index3 GetNodeIndex3Safely(const py::object& pyObject)
+	{
+		ArrayIndex arrayIndex = GetArrayNodeIndexSafely(pyObject);
+
+		if (arrayIndex.NumberOfItems() != 3)
+		{
+			PyError(STDstring("Expected list of 3 NodeIndex, but received " + EXUstd::ToString(arrayIndex.NumberOfItems()) + " items in list"));
+			return Index3({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
+		}
+		return Index3(arrayIndex, 0);
+	}
+
+	//! get pybind-convertible vector of NodeIndex from ArrayIndex
+	inline std::vector<NodeIndex> GetArrayNodeIndex(const ArrayIndex& arrayIndex)
+	{
+		std::vector<NodeIndex> vectorNodeIndex;
+		for (auto item : arrayIndex)
+		{
+			vectorNodeIndex.push_back(NodeIndex(item));
+		}
+		return vectorNodeIndex;
+	}
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	//! Expect Index or ArrayMarkerIndex; otherwise throws error
+	inline ArrayIndex GetArrayMarkerIndexSafely(const py::object& pyObject)
+	{
+		//if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+		//{
+		//	std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(pyObject); //! # read out list and cast to C++ type
+		//	Index rows = stdlist.size();
+		//	ArrayIndex indexList(rows); //initialize empty list
+		//	for (Index i = 0; i < rows; i++)
+		//	{
+		//		indexList[i] = GetMarkerIndexSafely(stdlist[i]);
+		//	}
+		//	return indexList;
+		//}
+		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+		{
+			py::list pylist = py::cast<py::list>(pyObject); //hopefully also works for numpy arrays .. TEST!
+			ArrayIndex indexList; //initialize empty list
+			for (auto item : pylist)
+			{
+				indexList.Append(GetMarkerIndexSafely(py::cast<py::object>(item))); //will crash, if e.g. function in list ...
+			}
+			return indexList;
+		}
+
+		//otherwise:
+		PyError(STDstring("Expected list of MarkerIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...) or inconsistent arrays for nodeNumbers, markerNumbers, ...!"));
+		return ArrayIndex();
+	}
+
+	//! get pybind-convertible vector of MarkerIndex from ArrayIndex
+	inline std::vector<MarkerIndex> GetArrayMarkerIndex(const ArrayIndex& arrayIndex)
+	{
+		std::vector<MarkerIndex> vectorMarkerIndex;
+		for (auto item : arrayIndex)
+		{
+			vectorMarkerIndex.push_back(MarkerIndex(item));
+		}
+		return vectorMarkerIndex;
+	}
+
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	inline bool CheckForValidFunction(const py::object pyObject)
 	{
@@ -114,7 +303,7 @@ namespace EPyUtils {
 		{
 			return true;
 		}
-		else if (py::isinstance<py::int_>(pyObject))
+		else if (IsPyTypeInteger(pyObject))
 		{
 			if (py::cast<int>(pyObject) != 0) 
 			{ 

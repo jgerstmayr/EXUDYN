@@ -121,13 +121,14 @@ NodeIndex MainSystem::AddMainNodePyClass(py::object pyObject)
 	}
 	catch (const EXUexception& ex)
 	{
-		PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		//will fail, if dictObject is invalid: PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddNode(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddNode(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
 	}
 	return itemIndex;
@@ -367,13 +368,14 @@ ObjectIndex MainSystem::AddMainObjectPyClass(py::object pyObject)
 	}
 	catch (const EXUexception& ex)
 	{
-		PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
-			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
+		//will fail, if dictObject is invalid: PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddObject(...):") +
+				"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) + 
+		PyError(STDstring("Error in AddObject(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
 	}
 	return itemIndex;
@@ -617,13 +619,14 @@ MarkerIndex MainSystem::AddMainMarkerPyClass(py::object pyObject)
 	}
 	catch (const EXUexception& ex)
 	{
-		PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		//will fail, if dictObject is invalid: PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddMarker(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddMarker(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
 	}
 	return itemIndex;
@@ -778,13 +781,14 @@ LoadIndex MainSystem::AddMainLoadPyClass(py::object pyObject)
 	}
 	catch (const EXUexception& ex)
 	{
-		PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		//will fail, if dictObject is invalid: PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddLoad(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddLoad(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
 	}
 	return itemIndex;
@@ -954,13 +958,14 @@ SensorIndex MainSystem::AddMainSensorPyClass(py::object pyObject)
 	}
 	catch (const EXUexception& ex)
 	{
-		PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		//will fail, if dictObject is invalid: PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddSensor(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
 		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
+		PyError(STDstring("Error in AddSensor(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\n");
 	}
 	return itemIndex;

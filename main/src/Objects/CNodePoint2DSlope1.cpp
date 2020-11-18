@@ -126,9 +126,21 @@ void CNodePoint2DSlope1::GetOutputVariable(OutputVariableType variableType, Conf
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsConfigurationInitialCurrentVisualization(configuration)) 
 		{
 			value = GetCoordinateVector_t(configuration);
+		}
+		else
+		{
+			PyError("CNodePoint2DSlope1::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		{
+			value = GetCoordinateVector_tt(configuration);
 		}
 		else
 		{

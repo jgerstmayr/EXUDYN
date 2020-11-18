@@ -61,30 +61,31 @@ VectorBase<T> operator-(const VectorBase<T>& v1, const VectorBase<T>& v2)
 	return result;
 }
 
-//! scalar multiply, result = scalar * v (for each component)
-template<typename T>
-VectorBase<T> operator*(const VectorBase<T>& v, Real scalar)
-{
-	VectorBase<T> result(v.NumberOfItems());
-	Index cnt = 0;
-	for (auto &item : result) {
-		item = scalar * v[cnt++];
-	}
-	return result;
-}
-
-//! scalar multiply, result = v * scalar (for each component)
-template<typename T>
-VectorBase<T> operator*(Real scalar, const VectorBase<T>& v)
-{
-	VectorBase<T> result(v.NumberOfItems());
-	Index cnt = 0;
-	for (auto &item : result) {
-		item = scalar * v[cnt++];
-	}
-	return result;
-}
-
+//the following code gives a linker error on MSVC17; cannot resolve this for double: why?
+////! scalar multiply, result = scalar * v (for each component)
+//template<typename T>
+//VectorBase<T> operator*(const VectorBase<T>& v, T scalar)
+//{
+//	VectorBase<T> result(v.NumberOfItems());
+//	Index cnt = 0;
+//	for (auto &item : result) {
+//		item = scalar * v[cnt++];
+//	}
+//	return result;
+//}
+//
+////! scalar multiply, result = v * scalar (for each component)
+//template<typename T>
+//VectorBase<T> operator*(T scalar, const VectorBase<T>& v)
+//{
+//	VectorBase<T> result(v.NumberOfItems());
+//	Index cnt = 0;
+//	for (auto &item : result) {
+//		item = scalar * v[cnt++];
+//	}
+//	return result;
+//}
+//
 
 //! append a vector to Vector(*this) and return result=[*this,vector]; does not modify *this
 template<typename T>

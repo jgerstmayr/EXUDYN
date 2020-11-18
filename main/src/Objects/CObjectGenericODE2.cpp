@@ -188,13 +188,13 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
 	}
 }
 
-//! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+//! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectGenericODE2::ComputeODE2RHS(Vector& ode2Rhs) const
+void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	Index nODE2 = GetODE2Size();
-	ode2Rhs.SetNumberOfItems(nODE2);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(nODE2);
+	ode2Lhs.SetAll(0.);
 
 	Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
 	Vector coordinates_t(nODE2);
@@ -204,17 +204,17 @@ void CObjectGenericODE2::ComputeODE2RHS(Vector& ode2Rhs) const
 
 	if (parameters.stiffnessMatrix.NumberOfRows() != 0)
 	{
-		EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, coordinates, ode2Rhs);
+		EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, coordinates, ode2Lhs);
 	}
 
 	if (parameters.dampingMatrix.NumberOfRows() != 0)
 	{
-		EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, coordinates_t, ode2Rhs);
+		EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, coordinates_t, ode2Lhs);
 	}
 
 	if (parameters.forceVector.NumberOfItems() != 0)
 	{
-		ode2Rhs -= parameters.forceVector;
+		ode2Lhs -= parameters.forceVector;
 	}
 
 	if (parameters.forceUserFunction)
@@ -228,7 +228,7 @@ void CObjectGenericODE2::ComputeODE2RHS(Vector& ode2Rhs) const
 			userForce = (Vector)(parameters.forceUserFunction(t, coordinates, coordinates_t));
 		}, "ObjectGenericODE2::forceUserFunction");
 
-		ode2Rhs -= userForce;
+		ode2Lhs -= userForce;
 	}
 
 }
@@ -258,7 +258,7 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 	{
 	case OutputVariableType::Coordinates:	value.CopyFrom(coordinates);	break;
 	case OutputVariableType::Coordinates_t: value.CopyFrom(coordinates_t);	break;
-	case OutputVariableType::Force:			ComputeODE2RHS(value);	break;
+	case OutputVariableType::Force:			ComputeODE2LHS(value);	break;
 	default:
 		SysError("CObjectGenericODE2::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
@@ -312,7 +312,14 @@ void CObjectGenericODE2::InitializeCoordinateIndices()
 	for (Index i = 0; i < parameters.nodeNumbers.NumberOfItems(); i++)
 	{
 		parameters.coordinateIndexPerNode[i] = s;
-		s += GetCNode(i)->GetNumberOfODE2Coordinates();
+		if (!EXUstd::IndexIsInRange(parameters.nodeNumbers[i], 0, cSystemData->GetCNodes().NumberOfItems()))
+		{
+			PyError("ObjectGenericODE2: invalid node number detected; alle nodes used in ObjectGenericODE2 must already exist");
+		}
+		else
+		{
+			s += GetCNode(i)->GetNumberOfODE2Coordinates();
+		}
 	}
 }
 

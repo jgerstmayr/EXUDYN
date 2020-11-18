@@ -236,24 +236,24 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 	SetMatrixBuiltFromTriplets(); //now the sparse matrix is finally set and ready for multiplication and factorization
 }
 
-Index TSeigenFactorize;
-TimerStructureRegistrator TSReigenFactorize("eigenFactorize", TSeigenFactorize, globalTimers);
-Index TSeigenAnalyzePattern;
-TimerStructureRegistrator TSReigenAnalyzePattern("eigenAnalyzePattern", TSeigenAnalyzePattern, globalTimers);
+//Index TSeigenFactorize;
+//TimerStructureRegistrator TSReigenFactorize("eigenFactorize", TSeigenFactorize, globalTimers);
+//Index TSeigenAnalyzePattern;
+//TimerStructureRegistrator TSReigenAnalyzePattern("eigenAnalyzePattern", TSeigenAnalyzePattern, globalTimers);
 
 //! factorize matrix (invert, SparseLU, etc.); 0=success
 Index GeneralMatrixEigenSparse::Factorize()
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
 
-	STARTGLOBALTIMER(TSeigenAnalyzePattern);
+	//STARTGLOBALTIMER(TSeigenAnalyzePattern);
 	solver.analyzePattern(matrix);
-	STOPGLOBALTIMER(TSeigenAnalyzePattern);
+	//STOPGLOBALTIMER(TSeigenAnalyzePattern);
 
 	// Compute the numerical factorization 
-	STARTGLOBALTIMER(TSeigenFactorize);
+	//STARTGLOBALTIMER(TSeigenFactorize);
 	solver.factorize(matrix);
-	STOPGLOBALTIMER(TSeigenFactorize);
+	//STOPGLOBALTIMER(TSeigenFactorize);
 
 	//0: successful factorization
 	//if info = i, and i is

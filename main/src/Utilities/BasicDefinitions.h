@@ -17,8 +17,23 @@
 #ifndef BASICDEFINITIONS__H
 #define BASICDEFINITIONS__H
 
-#define EXUDYN_RELEASE		//!< set this flag to exclude experimental parts of the code
-#define _USE_MATH_DEFINES	//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//this part contains important definition of flags to set up hte compiled module
+
+#define EXUDYN_RELEASE			//!< set this flag to exclude experimental parts of the code
+#define _USE_MATH_DEFINES		//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
+
+#define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
+
+//#define PERFORM_UNIT_TESTS	//!< remove definition in order to disable unit tests
+#define DoublePrecision
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//MULTITHREADED computation CURRENTLY IN TRIAL STATE, only works for special cases!
+//#define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //#define __STDC_WANT_LIB_EXT1__ 1 //==> according to cppreference this shall enable strcpy_s, but does not work in gcc
 #include <string> //std::string
@@ -39,18 +54,16 @@ typedef uint32_t Index;			//!< all indices used in Exudyn must be declared with 
 typedef int32_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
 #endif
 
+constexpr Index MAX_NUMBER_OF_THREADS = 16;   //!< maximum number of threads, e.g., for predefined structures with fixed size
+
+
 #include "Main/Stdoutput.h"		//for pout and error/warning messages
 
-#define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
 
-//#define PERFORM_UNIT_TESTS //!< remove definition in order to disable unit tests
 
 
 
 typedef uint32_t UInt;          //!< explicitly used for smaller indices
-
-//! define precision: otherwise write #undef
-#define DoublePrecision
 
 #ifdef DoublePrecision
 typedef double Real;		//!< define datatype Real; use typedef for eigen lib

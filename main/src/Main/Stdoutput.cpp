@@ -110,7 +110,7 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 
 
 //global variable for timers:
-TimerStructure globalTimers;
+TimerStructure globalTimers; //global timers crash in debug mode! (use Resizable Array instead of std::vector ?)
 
 //these two variables become global
 OutputBuffer outputBuffer; //this is my customized output buffer, which can redirect the output stream;
@@ -132,19 +132,25 @@ int OutputBuffer::overflow(int c)
 	}
 	else 
 	{
-		if (writeToConsole)
+		if (!suspendWriting)
 		{
-			py::print(buf);
-			if (waitMilliSeconds) {
-				std::this_thread::sleep_for(std::chrono::milliseconds(waitMilliSeconds)); //add this to enable Spyder to print messages
+			if (writeToConsole)
+			{
+				py::print(buf);
+				if (waitMilliSeconds) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(waitMilliSeconds)); //add this to enable Spyder to print messages
+				}
 			}
+			if (writeToFile)
+			{
+				file << buf << "\n"; //add "\n" as compared to py::print, which already adds end line command
+			}
+			buf.clear();
 		}
-		if (writeToFile)
+		else
 		{
-			file << buf << "\n"; //add "\n" as compared to py::print, which already adds end line command
+			buf.push_back((char)c);
 		}
-
-		buf.clear();
 	}
 	//py::print((char)c); //this would be much slower as each character needs to be processed with py::print
 	outputBufferAtomicFlag.clear(std::memory_order_release); //clear outputBuffer

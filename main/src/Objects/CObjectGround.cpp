@@ -26,10 +26,10 @@ void CObjectGround::ComputeMassMatrix(Matrix& massMatrix) const
 	massMatrix.SetNumberOfRowsAndColumns(0, 0);
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectGround::ComputeODE2RHS(Vector& ode2Rhs) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectGround::ComputeODE2LHS(Vector& ode2Lhs) const
 {
-	ode2Rhs.SetNumberOfItems(0);
+	ode2Lhs.SetNumberOfItems(0);
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible

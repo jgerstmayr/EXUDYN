@@ -59,16 +59,16 @@ void ComputeConnectorCoordinateSpringDamperProperties(const MarkerDataStructure&
 
 
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
+void CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS: marker do not provide velocityLevel information");
+		"CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS: marker do not provide velocityLevel information");
 
-	//link separate vectors to result (ode2Rhs) vector
-	ode2Rhs.SetNumberOfItems(markerData.GetMarkerData(0).jacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-	ode2Rhs.SetAll(0.);
+	//link separate vectors to result (ode2Lhs) vector
+	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).jacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
+	ode2Lhs.SetAll(0.);
 
 	if (parameters.activeConnector)
 	{
@@ -80,17 +80,17 @@ void CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, con
 
 		Vector1D fVec(force); //convert to vector to allow matrix-multiplication as usual ...
 
-		//now link ode2Rhs Vector to partial result using the two jacobians
+		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
-			LinkedDataVector ldv1(ode2Rhs, markerData.GetMarkerData(0).jacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
+			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).jacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
 
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).jacobian, fVec, ldv1);
 		}
 
 		if (markerData.GetMarkerData(0).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
-			LinkedDataVector ldv0(ode2Rhs, 0, markerData.GetMarkerData(0).jacobian.NumberOfColumns());
+			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).jacobian.NumberOfColumns());
 
 			fVec *= -1.;
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).jacobian, fVec, ldv0);
@@ -102,7 +102,7 @@ void CObjectConnectorCoordinateSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, con
 
 void CObjectConnectorCoordinateSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCoordinateSpringDamper::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCoordinateSpringDamper::ComputeODE2LHSJacobian");
 }
 
 ////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

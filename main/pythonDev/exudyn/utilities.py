@@ -14,6 +14,7 @@ import copy as copy #to be able to copy e.g. lists
 from exudyn.basicUtilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
+from exudyn.itemInterface import *
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -276,7 +277,273 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
 
 
 
+#**function: helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph
+#**input:
+#   showLoads: toggle appearance of loads in mbs
+#   showSensors: toggle appearance of sensors in mbs
+#   useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
+#   useItemTypes: if True, object type names (ObjectMassPoint, ...) are shown instead of basic object types (Node, Load, ...)
+#**output: nothing
+def DrawSystemGraph(mbs, showLoads=True, showSensors=True, 
+                    useItemNames = False, useItemTypes = False):
+    
+    try:
+        #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
+        import numpy as np
+        import networkx as nx #for generating graphs and graph arrangement
+        import matplotlib.pyplot as plt #for drawing
+    except ImportError as e:
+        raise ImportError("numpy, networkx and matplotlib reuired for DrawSystemGraph(...)") from e
+    except :
+        print("DrawSystemGraph(...): unexpected error during import of numpy, networkx and matplotlib")
+        raise
+    
+    itemColors = {'Node':'red', 'Object':'skyblue', 'Oconnector':'dodgerblue', 'Ojoint':'dodgerblue', 'Ocontact':'dodgerblue', #turqoise, skyblue
+                      'Marker': 'orange', 'Load': 'mediumorchid', 
+                      'Sensor': 'forestgreen'} #https://matplotlib.org/examples/color/named_colors.html
+    
+    plt.clf()
+    
+    itemColorMap=[]     #color per item
+    itemNames=[]        #name per item 
+    itemTypes=[]        #name per item 
+    edgeColorMap=[]
+    nodesToItems=[]     #maps mbs-node numbers to item numbers
+    markersToItems=[]   #maps mbs-marker numbers to item numbers
+    objectsToItems=[]   #maps mbs-object numbers to item numbers
+    loadsToItems=[]     #maps mbs-load numbers to item numbers
+    sensorsToItems=[]   #maps mbs-sensor numbers to item numbers
+    
+    objectNodeColor = 'navy' #color for edges between nodes and objects, to be highlighted
+            
+    G = nx.Graph()
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    itemType = 'Node'
+    n = mbs.systemData.NumberOfNodes()
+    for i in range(n):
+        item = mbs.GetNode(i)
+        itemName=itemType+str(i)
+        if item['nodeType'].find('Ground') != -1:
+            itemName= 'G'+itemName
+    
+        if useItemNames:
+            itemName=item['name']+str(i)
+        elif useItemTypes:
+            itemName='Node'+item['nodeType']+str(i)
+    
+    
+        G.add_node(itemName) #attributes: size, weight, ...
+        nodesToItems += [len(itemColorMap)]
+        itemColorMap += [itemColors[itemType]]
+        itemNames += [itemName]
+        itemTypes += [itemType]
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #add markers without edges
+    itemType = 'Marker'
+    n = mbs.systemData.NumberOfMarkers()
+    for i in range(n):
+        item = mbs.GetMarker(i)
+        itemName=itemType+str(i)
+        if useItemNames:
+            itemName=item['name']+str(i)
+        elif useItemTypes:
+            itemName='Marker'+item['markerType']+str(i)
+    
+        G.add_node(itemName) #attributes: size, weight, ...
+        markersToItems += [len(itemColorMap)]
+        itemColorMap += [itemColors[itemType]]
+        itemNames += [itemName]
+        itemTypes += [itemType]
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    itemType = 'Object'
+    n = mbs.systemData.NumberOfObjects()
+    for i in range(n):
+        objectType = itemType
+        item = mbs.GetObject(i)
+        if item['objectType'].find('Connector') != -1:
+            objectType = 'Oconnector'
+        elif item['objectType'].find('Contact') != -1:
+            objectType = 'Ocontact'
+        elif item['objectType'].find('Joint') != -1:
+            objectType = 'Ojoint'
+        itemName=objectType+str(i)
+    
+        if useItemNames:
+            itemName=item['name']+str(i)
+        elif useItemTypes:
+            itemName='Object'+item['objectType']+str(i)
+            
+        G.add_node(itemName) #attributes: size, weight, ...
+        objectsToItems += [len(itemColorMap)]
+        itemNames += [itemName]
+        itemTypes += [itemType]
+        itemColorMap += [itemColors[objectType]]
+    
+    #    objectColor = ''
+        #for objects: add edges to nodes
+        nodeNumbers = []
+        if 'nodeNumber' in item:
+            nodeNumbers += [item['nodeNumber']]
+        if 'nodeNumbers' in item:
+            nodeNumbers += item['nodeNumbers']
+    
+        for j in range(len(nodeNumbers)):
+            nodeNumbers[j] = int(nodeNumbers[j])
+    
+        for j in nodeNumbers:
+            G.add_edge(itemNames[objectsToItems[i]],itemNames[nodesToItems[j]],color=objectNodeColor)
+    
+        #for connectors, contact, joint: add edges to these objects
+        markerNumbers = []
+        if 'markerNumbers' in item: #should only be markerNumbers ...
+            markerNumbers += item['markerNumbers']
+    
+        for j in range(len(markerNumbers)):
+            markerNumbers[j] = int(markerNumbers[j])
+    
+        for j in markerNumbers:
+            G.add_edge(itemNames[objectsToItems[i]],itemNames[markersToItems[j]], color=itemColors['Oconnector'])
+            
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #now add only edges for markers:
+    itemType = 'Marker'
+    n = mbs.systemData.NumberOfMarkers()
+    for i in range(n):
+        objectType = itemType
+        item = mbs.GetMarker(i)
+    
+        #for node markers:
+        nodeNumbers = []
+        if 'nodeNumber' in item:
+            nodeNumbers += [item['nodeNumber']]
+    #    if 'nodeNumbers' in item:
+    #        nodeNumbers += item['nodeNumbers']
+       
+        for j in range(len(nodeNumbers)):
+            nodeNumbers[j] = int(nodeNumbers[j])
+    
+        for j in nodeNumbers:
+            G.add_edge(itemNames[markersToItems[i]],itemNames[nodesToItems[j]],color='orange')
+    
+        #for object markers:
+        objectNumbers = []
+        if 'objectNumber' in item: objectNumbers += [item['objectNumber']]
+        if 'bodyNumber' in item: objectNumbers += [item['bodyNumber']]
+       
+        for j in range(len(objectNumbers)):
+            objectNumbers[j] = int(objectNumbers[j])
+    
+        for j in objectNumbers:
+            G.add_edge(itemNames[markersToItems[i]],itemNames[objectsToItems[j]],color='orange')
+            
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #add loads
+    if showLoads:
+        itemType = 'Load'
+        n = mbs.systemData.NumberOfLoads()
+        for i in range(n):
+            item = mbs.GetLoad(i)
+            itemName=itemType+str(i)
+            if useItemNames:
+                itemName=item['name']+str(i)
+            elif useItemTypes:
+                itemName='Load'+item['loadType']+str(i)
+        
+            G.add_node(itemName) #attributes: size, weight, ...
+            loadsToItems += [len(itemColorMap)]
+            itemColorMap += [itemColors[itemType]]
+            itemNames += [itemName]
+            itemTypes += [itemType]
+    
+            markerNumbers = [int(item['markerNumber'])]
+            
+            for j in markerNumbers:
+                G.add_edge(itemNames[loadsToItems[i]],itemNames[markersToItems[j]], color=itemColors['Load'])
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #add sensors
+    if showSensors:
+        itemType = 'Sensor'
+        n = mbs.systemData.NumberOfSensors() #only available for Exudyn version >= 1.0.15
+        for i in range(n):
+            item = mbs.GetSensor(i)
+            itemName=itemType+str(i)
+            if useItemNames:
+                itemName=item['name']+str(i)
+            elif useItemTypes:
+                itemName='Sensor'+item['sensorType']+str(i)
+        
+            G.add_node(itemName) #attributes: size, weight, ...
+            sensorsToItems += [len(itemColorMap)]
+            itemColorMap += [itemColors[itemType]]
+            itemNames += [itemName]
+            itemTypes += [itemType]
+    
+            #for object sensors:
+            objectNumbers = []
+            if 'objectNumber' in item: objectNumbers += [item['objectNumber']]
+            if 'bodyNumber' in item: objectNumbers += [item['bodyNumber']]
+           
+            for j in range(len(objectNumbers)):
+                objectNumbers[j] = int(objectNumbers[j])
+        
+            for j in objectNumbers:
+                G.add_edge(itemNames[sensorsToItems[i]],itemNames[objectsToItems[j]],color=itemColors[itemType])
 
+            #for node sensors:
+            nodeNumbers = []
+            if 'nodeNumber' in item: nodeNumbers += [int(item['nodeNumber'])]
+                   
+            for j in nodeNumbers:
+                G.add_edge(itemNames[sensorsToItems[i]],itemNames[nodesToItems[j]],color=itemColors[itemType])
+    
+    
+    #now get out the right sorting of colors ...
+    edgeColorMap = []
+    edgeWidths = []
+    edges=G.edges()
+    for item in edges.items(): 
+        edgeColorMap += [item[1]['color']] #color is in item[1], which is a dictionary ...
+        edgeWidth = 2
+        if item[1]['color'] == objectNodeColor: #object-node should be emphasized
+            edgeWidth = 5
+        edgeWidths += [edgeWidth]
+    
+    pos = nx.drawing.spring_layout(G)
+    nx.draw_networkx_nodes(G, pos, node_size=1)
+    nx.draw_networkx_edges(G, pos, edge_color=edgeColorMap, width=edgeWidths)#width=2)
+    
+    #reproduce what draw_networkx_labels does, allowing different colors for nodes
+    #check: https://networkx.github.io/documentation/stable/_modules/networkx/drawing/nx_pylab.html
+    items = nx.draw_networkx_labels(G, pos, font_size=10,
+                                    bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.1'))
+    
+    #now assign correct colors:
+    for i in range(len(itemNames)):
+        currentColor = itemColorMap[i]
+        itemType = itemTypes[i]
+        boxStyle = 'round,pad=0.2'
+        fontSize = 10
+        if itemType == 'Object':
+            boxStyle = 'round,pad=0.2'
+            fontSize = 12
+        if itemType == 'Node':  
+            boxStyle = 'square,pad=0.1'
+            fontSize = 10
+        if itemType == 'Marker':  
+            boxStyle = 'square,pad=0.1'
+            fontSize = 8
+    
+        #print("color=",currentColor)
+        items[itemNames[i]].set_bbox(dict(facecolor=currentColor,  
+             edgecolor=currentColor, boxstyle=boxStyle))
+        items[itemNames[i]].set_fontsize(fontSize)
+    
+    plt.draw() #force redraw after colors have changed
+    
 
 
 
@@ -286,7 +553,6 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     
-from exudyn.itemInterface import *    
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate cable elements along straight line with certain discretization
 #**input:
@@ -304,6 +570,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                 vALE=0, ConstrainAleCoordinate=True):
     
+
     cableNodeList=[]
     cableNodePositionList=[positionOfNode0]
     cableObjectList=[]

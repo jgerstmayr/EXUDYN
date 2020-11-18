@@ -94,4 +94,3 @@ SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
-

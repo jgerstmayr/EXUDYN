@@ -42,6 +42,12 @@ Vector3D CNodeRigidBody2D::GetVelocity(ConfigurationType configuration) const
 	return Vector3D({ u2D_t[0], u2D_t[1], 0. }); //rotation ignored
 }
 
+Vector3D CNodeRigidBody2D::GetAcceleration(ConfigurationType configuration) const
+{
+	LinkedDataVector u2D_tt = GetCoordinateVector_tt(configuration);
+	return Vector3D({ u2D_tt[0], u2D_tt[1], 0. }); //rotation ignored
+}
+
 Matrix3D CNodeRigidBody2D::GetRotationMatrix(ConfigurationType configuration) const
 {
 	Real phi = GetReferenceCoordinateVector()[2];
@@ -49,14 +55,19 @@ Matrix3D CNodeRigidBody2D::GetRotationMatrix(ConfigurationType configuration) co
 	{
 		phi += GetCoordinateVector(configuration)[2];
 	}
-	return Matrix3D(3,3,{ cos(phi),-sin(phi),0.,  sin(phi),cos(phi),0., 0.,0.,1.}); //rotation ignored
+	return Matrix3D(3,3,{ cos(phi),-sin(phi),0.,  sin(phi),cos(phi),0., 0.,0.,1.});
 }
 
-//! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
+//! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector
 Vector3D CNodeRigidBody2D::GetAngularVelocity(ConfigurationType configuration) const
 {
-	//OLD/WRONG: only using current configuration: return Vector3D({ 0., 0., GetCurrentCoordinateVector_t()[2] }); //rotation ignored
-	return Vector3D({ 0., 0., GetCoordinateVector_t(configuration)[2] }); //rotation ignored
+	return Vector3D({ 0., 0., GetCoordinateVector_t(configuration)[2] }); 
+}
+
+//! AUTO:  return configuration dependent angular acceleration of node; returns always a 3D Vector
+Vector3D CNodeRigidBody2D::GetAngularAcceleration(ConfigurationType configuration) const
+{
+	return Vector3D({ 0., 0., GetCoordinateVector_tt(configuration)[2] }); 
 }
 
 
@@ -76,6 +87,8 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
+	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
 		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
@@ -93,6 +106,18 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_t(configuration);
+		}
+		else
+		{
+			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		{
+			value = GetCoordinateVector_tt(configuration);
 		}
 		else
 		{

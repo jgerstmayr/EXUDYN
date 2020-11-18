@@ -27,6 +27,7 @@ class OutputBuffer : public std::stringbuf //uses solution of so:redirect-stdcou
 {
 private:
 	std::string buf;     //this buffer is used until end of line is detected
+	bool suspendWriting; //this flag is used to suspend writing via Python, e.g., during parallel computation
 	bool writeToFile;    //redirect all output to file
 	bool writeToConsole; //redirect all output to console
 	std::ofstream file;  //this is the filename for redirecting all output
@@ -39,14 +40,20 @@ public:
 		writeToConsole = true;
 		waitMilliSeconds = 0;
 	} 
-	//virtual int sync(); //this solution does not work!
+	//! virtual int sync(); //this solution does not work!
 	virtual int overflow(int c = EOF);
 	
+	//! set delay added to writing in order to resolve problems of some ipython consoles
 	virtual void SetDelayMilliSeconds(Index delayMilliSeconds) { waitMilliSeconds = delayMilliSeconds; }
 
+	//! activate/deactivate writing to console
 	virtual void SetWriteToConsole(bool flag) { writeToConsole = flag; }
-	
+
+	//! activate/deactivate writing to file
 	virtual void SetWriteToFile(STDstring filename, bool flagWriteToFile = true, bool flagAppend = false);
+
+	//! suspend writing to console/file with flag=true; needs to be set to false, otherwise writing to console is fully stopped
+	virtual void SetSuspendWriting(bool flag) { suspendWriting = flag; }
 };
 
 void SysError(std::string error_msg); //!< prints a formated system (inernal) error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "ERROR: ..." or similar

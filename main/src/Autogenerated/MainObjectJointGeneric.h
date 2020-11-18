@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2020-09-09  16:20:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,7 +106,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectJointGeneric->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectJointGeneric->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "constrainedAxes")) { cObjectJointGeneric->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(d["constrainedAxes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetMatrix3DSafely(d, "rotationMarker0", cObjectJointGeneric->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetMatrix3DSafely(d, "rotationMarker1", cObjectJointGeneric->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
@@ -127,7 +127,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = (std::vector<Index>)cObjectJointGeneric->GetParameters().markerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectJointGeneric->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["constrainedAxes"] = (std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes; //! AUTO: cast variables into python (not needed for standard types) 
         d["rotationMarker0"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
         d["rotationMarker1"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
@@ -155,7 +155,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectJointGeneric->GetParameters().markerNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectJointGeneric->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("constrainedAxes") == 0) { return py::cast((std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes);} //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker0") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker0));} //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker1));} //! AUTO: get parameter
@@ -176,7 +176,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectJointGeneric->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { cObjectJointGeneric->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("constrainedAxes") == 0) { cObjectJointGeneric->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectJointGeneric->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectJointGeneric->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter

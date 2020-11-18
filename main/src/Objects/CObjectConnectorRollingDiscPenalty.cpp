@@ -135,15 +135,15 @@ bool MainObjectConnectorRollingDiscPenalty::CheckPreAssembleConsistency(const Ma
 }
 
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectConnectorRollingDiscPenalty::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorRollingDiscPenalty::ComputeODE2RHS: marker do not provide velocityLevel information");
+		"CObjectConnectorRollingDiscPenalty::ComputeODE2LHS: marker do not provide velocityLevel information");
 
-	//link separate vectors to result (ode2Rhs) vector
-	ode2Rhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Rhs.SetAll(0.);
+	//link separate vectors to result (ode2Lhs) vector
+	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+	ode2Lhs.SetAll(0.);
 
 	//pout << "test\n";
 	if (parameters.activeConnector)
@@ -171,11 +171,11 @@ void CObjectConnectorRollingDiscPenalty::ComputeODE2RHS(Vector& ode2Rhs, const M
 
 
 
-		//now link ode2Rhs Vector to partial result using the two jacobians
+		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
 			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
-			LinkedDataVector ldv1(ode2Rhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fPos, ldv1);
 			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, fRot, ldv1);
 		}
@@ -184,18 +184,18 @@ void CObjectConnectorRollingDiscPenalty::ComputeODE2RHS(Vector& ode2Rhs, const M
 		{
 			fPos *= -1.;
 			fRot *= -1.;
-			LinkedDataVector ldv0(ode2Rhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
+			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, fPos, ldv0);
 			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, fRot, ldv0);
 		}
-		//pout << "  ode2Rhs=" << ode2Rhs << "\n";
+		//pout << "  ode2Lhs=" << ode2Lhs << "\n";
 	}
 
 }
 
 void CObjectConnectorRollingDiscPenalty::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorRollingDiscPenalty::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorRollingDiscPenalty::ComputeODE2LHSJacobian");
 }
 
 //! provide according output variable in "value"

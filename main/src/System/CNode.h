@@ -229,17 +229,26 @@ public:
 	//! read globally stored current coordinates (velocities)
 	virtual LinkedDataVector GetCurrentCoordinateVector_t() const;
 
+	//! read globally stored current coordinates (accelerations)
+	virtual LinkedDataVector GetCurrentCoordinateVector_tt() const;
+
 	//! read globally stored initial coordinates (displacements)
 	virtual LinkedDataVector GetInitialCoordinateVector() const override;
 
 	//! read globally stored initial coordinates (velocities)
 	virtual LinkedDataVector GetInitialCoordinateVector_t() const;
 
+	//! read globally stored initial coordinates (accelerations)
+	virtual LinkedDataVector GetInitialCoordinateVector_tt() const;
+
 	//! read visualization coordinates (displacements)
 	virtual LinkedDataVector GetVisualizationCoordinateVector() const override;
 
 	//! read visualization coordinates (velocities)
 	virtual LinkedDataVector GetVisualizationCoordinateVector_t() const;
+
+	//! read visualization coordinates (accelerations)
+	virtual LinkedDataVector GetVisualizationCoordinateVector_tt() const;
 
 	virtual LinkedDataVector GetCoordinateVector(ConfigurationType configuration) const override
     {
@@ -275,11 +284,26 @@ public:
 		}
 	}
 
+	virtual LinkedDataVector GetCoordinateVector_tt(ConfigurationType configuration) const
+	{
+		switch (configuration)
+		{
+		case ConfigurationType::Current: return GetCurrentCoordinateVector_tt();
+		case ConfigurationType::Initial: return GetInitialCoordinateVector_tt();
+		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_tt();
+
+		default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector_tt: invalid ConfigurationType"); return LinkedDataVector();
+		}
+	}
+
 	//! return configuration-dependent position (for drawing, marker)
-	virtual Vector3D GetPosition(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetCurrentPosition: call illegal"); return Vector3D(); }
+	virtual Vector3D GetPosition(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetPosition: call illegal"); return Vector3D(); }
 	
 	//! return configuration-dependent velocity (for marker)
-	virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetCurrentVelocity: call illegal"); return Vector3D(); }
+	virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetVelocity: call illegal"); return Vector3D(); }
+
+	//! return configuration-dependent velocity (for marker)
+	virtual Vector3D GetAcceleration(ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeODE2::GetAcceleration: call illegal"); return Vector3D(); }
 
 	//! return configuration dependent position of node; returns always a 3D Vector
 	virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const 
@@ -289,6 +313,12 @@ public:
 	virtual Vector3D GetAngularVelocity(ConfigurationType configuration = ConfigurationType::Current) const
 	{
 		CHECKandTHROWstring("CNodeODE2::GetAngularVelocity: call illegal"); return Vector3D();
+	}
+
+	//! return configuration dependent angular acceleration of node; returns always a 3D Vector
+	virtual Vector3D GetAngularAcceleration(ConfigurationType configuration = ConfigurationType::Current) const
+	{
+		CHECKandTHROWstring("CNodeODE2::GetAngularAcceleration: call illegal"); return Vector3D();
 	}
 
 	//! return configuration dependent local (body fixed) angular velocity of node; returns always a 3D Vector

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-09-09  16:28:57 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,7 +115,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectGenericODE2->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectGenericODE2->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetNumpyMatrixSafely(d, "massMatrix", cObjectGenericODE2->GetParameters().massMatrix); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetNumpyMatrixSafely(d, "stiffnessMatrix", cObjectGenericODE2->GetParameters().stiffnessMatrix); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetNumpyMatrixSafely(d, "dampingMatrix", cObjectGenericODE2->GetParameters().dampingMatrix); /*! AUTO:  safely cast to C++ type*/
@@ -136,7 +136,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = (std::vector<Index>)cObjectGenericODE2->GetParameters().nodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectGenericODE2->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["massMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().massMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["stiffnessMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().stiffnessMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().dampingMatrix); //! AUTO: cast variables into python (not needed for standard types) 
@@ -169,7 +169,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast((std::vector<Index>)cObjectGenericODE2->GetParameters().nodeNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectGenericODE2->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("massMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().massMatrix);} //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().stiffnessMatrix);} //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().dampingMatrix);} //! AUTO: get parameter
@@ -191,7 +191,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectGenericODE2->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { cObjectGenericODE2->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("massMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE2->GetParameters().massMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE2->GetParameters().stiffnessMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE2->GetParameters().dampingMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-09-16  11:22:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -225,8 +225,8 @@ public: // AUTO:
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
 
-    //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
-    virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
+    //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  Compute algebraic equations part of rigid body
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;

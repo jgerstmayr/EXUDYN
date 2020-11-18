@@ -75,6 +75,18 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 		}
 		break;
 	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		{
+			value = GetCoordinateVector_tt(configuration);
+		}
+		else
+		{
+			PyError("CNode1D::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
 	default:
 		SysError("CNode1D::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

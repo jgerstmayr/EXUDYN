@@ -210,7 +210,7 @@ if exudynTestGlobals.useGraphics:
     exu.StopRenderer() #safely close rendering window!
 
 exudynTestGlobals.testError = resUy + resIt - (1.131033204186729+1.1246157002409096 + 1501+1217) #2020-01-16: (1.131033204186729+1.1246157002409096 + 1501+1217)
-
+exudynTestGlobals.testError *= 1e-2 #32bit version shows larger differences ...
 #+++++++++++++++++++++++++++++++++++
 #plot data:
 

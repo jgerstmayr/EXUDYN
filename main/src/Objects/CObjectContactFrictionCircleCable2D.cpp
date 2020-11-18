@@ -136,14 +136,14 @@ bool CObjectContactFrictionCircleCable2D::IsActive() const
 	return false;
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectContactFrictionCircleCable2D::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
+void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 
-	ode2Rhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-	//positionJacobian and orientationJacobian have same number of columns, therefore only one jacobian is used to set size of ode2Rhs vector
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
+	//positionJacobian and orientationJacobian have same number of columns, therefore only one jacobian is used to set size of ode2Lhs vector
+	ode2Lhs.SetAll(0.);
 
 	//bool isContact = false;
 	//for (Index i = 0; i < parameters.numberOfContactSegments; i++)
@@ -241,10 +241,10 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2RHS(Vector& ode2Rhs, const 
 		//	pout << "yDirectionGap=" << yDirectionGap << "\n";
 		//}
 
-		//now link ode2Rhs Vector to partial result using the two jacobians
+		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
-			LinkedDataVector ldv1(ode2Rhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
+			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
 
 			//positive force on marker1
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
@@ -252,7 +252,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2RHS(Vector& ode2Rhs, const 
 
 		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
-			LinkedDataVector ldv0(ode2Rhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
+			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
 
 			forceSum *= -1; //negative force on marker0
 			torqueSum *= -1; //negative force on marker0
@@ -267,7 +267,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2RHS(Vector& ode2Rhs, const 
 
 void CObjectContactFrictionCircleCable2D::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	CHECKandTHROWstring("ERROR: illegal call to ObjectContactFrictionCircleCable2D::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to ObjectContactFrictionCircleCable2D::ComputeODE2LHSJacobian");
 }
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)

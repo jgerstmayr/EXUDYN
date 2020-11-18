@@ -241,7 +241,7 @@ void MainSolverBase::ComputeODE2RHS(MainSystem& mainSystem/*, const SimulationSe
 	CheckInitialized(mainSystem);
 	LinkedDataVector linkODE2residual(GetCSolver().data.systemResidual, 0, GetCSolver().data.nODE2);
 
-	mainSystem.cSystem->ComputeODE2RHS(GetCSolver().data.tempCompData, linkODE2residual); //entries set to zero in ComputeODE2RHS
+	mainSystem.cSystem->ComputeSystemODE2RHS(GetCSolver().data.tempCompData, linkODE2residual); //entries set to zero in ComputeSystemODE2RHS
 }
 
 //! compute the algebraic equations in systemResidual in range(nODE2+nODE1,nODE2+nODE1+nAE)

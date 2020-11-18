@@ -22,11 +22,11 @@ void CObjectMass1D::ComputeMassMatrix(Matrix& massMatrix) const
 	massMatrix.SetScalarMatrix(1, parameters.physicsMass);
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectMass1D::ComputeODE2RHS(Vector& ode2Rhs) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectMass1D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
-	ode2Rhs.SetNumberOfItems(1);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(1);
+	ode2Lhs.SetAll(0.);
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible

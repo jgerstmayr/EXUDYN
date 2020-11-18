@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2020-09-09  16:20:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,7 +106,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness = py::cast<Real>(d["stiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "damping")) { cObjectConnectorCoordinateSpringDamper->GetParameters().damping = py::cast<Real>(d["damping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "offset")) { cObjectConnectorCoordinateSpringDamper->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -126,7 +126,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = (std::vector<Index>)cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["stiffness"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["damping"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().damping; //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
@@ -149,7 +149,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("stiffness") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness);} //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().damping);} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().offset);} //! AUTO: get parameter
@@ -169,7 +169,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffness") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().damping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

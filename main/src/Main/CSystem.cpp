@@ -34,6 +34,20 @@
 
 //#define USE_AUTODIFF
 
+//#define USE_OPENMP
+
+#ifdef USE_OPENMP
+const int maxThreads = 12;
+#endif
+
+#ifdef USE_NGSOLVE_TASKMANAGER
+#include "ngs-core-master/ngs_core.hpp"
+#endif
+
+#if defined(USE_NGSOLVE_TASKMANAGER) || defined(USE_OPENMP)
+TemporaryComputationData tempParallel[MAX_NUMBER_OF_THREADS];
+GeneralMatrixEigenSparse matSparse[MAX_NUMBER_OF_THREADS];
+#endif
 
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
 void CSystem::Assemble(const MainSystem& mainSystem)
@@ -616,7 +630,7 @@ void CSystem::AssembleCoordinates(const MainSystem& mainSystem)
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! build ltg-coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices)
+//! build ltg-coordinate lists for objects (used to build system ODE2RHS, MassMatrix, etc. vectors and matrices)
 void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 {
 	//pout << "Assemble LTG Lists\n";
@@ -910,6 +924,7 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 
 	cSystemData.GetCData().initialState.ODE2Coords = ODE2u;
 	cSystemData.GetCData().initialState.ODE2Coords_t = ODE2v;
+	cSystemData.GetCData().initialState.ODE2Coords_tt = 0*ODE2v; //use same size as in velocities for accelerations, but initialize with zeros
 	cSystemData.GetCData().initialState.ODE1Coords = ODE1x;
 	cSystemData.GetCData().initialState.dataCoords = data;
 	cSystemData.GetCData().initialState.AECoords = AE;
@@ -929,6 +944,165 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 }
 
 
+#ifdef USE_OPENMP
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// CSystem computation functions
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! compute system massmatrix; massmatrix must have according size
+void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix)
+{
+	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
+	for (Index i = 0; i < maxThreads; i++)
+	{
+		matSparse[i].SetAllZero();
+	}
+
+	//#pragma omp parallel num_threads(maxThreads)
+	//#pragma omp for
+	int nItems = (int)(cSystemData.GetCObjects().NumberOfItems());
+#pragma omp parallel num_threads(maxThreads)
+#pragma omp for 
+	for (int j = 0; j < nItems; j++)
+	{
+		int nThread = omp_get_thread_num();
+		TemporaryComputationData& myTemp = tempParallel[nThread];
+		//work over bodies, connectors, etc.
+		CObject& object = *(cSystemData.GetCObjects()[j]);
+
+		//if object is a body, it must have a mass matrix
+		if ((Index)object.GetType() & (Index)CObjectType::Body)
+		{
+			ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
+			if (ltg.NumberOfItems() != 0) //to exclude bodies attached to ground nodes
+			{
+				((CObjectBody&)object).ComputeMassMatrix(myTemp.localMass);
+
+				matSparse[nThread].AddSubmatrix(myTemp.localMass, 1., ltg, ltg);
+			}
+		}
+	}
+
+	CHECKandTHROW(massMatrix.GetSystemMatrixType() == LinearSolverType::EigenSparse,
+		"CSystem::ComputeMassMatrix in USE_OPENMP only sparse mode allowed");
+
+	GeneralMatrixEigenSparse& massMatrixSparse = (GeneralMatrixEigenSparse&)massMatrix;
+	EigenTripletVector& triplets = massMatrixSparse.GetEigenTriplets();
+		
+	for (Index i = 0; i < maxThreads; i++)
+	{
+		//for (Index j = 0; j < matSparse[i].GetEigenTriplets().size(); i++)
+		for (auto& item: matSparse[i].GetEigenTriplets())
+		{
+			triplets.push_back(item);
+		}
+	}
+
+}
+#elif defined(USE_NGSOLVE_TASKMANAGER)
+////timer structures for PajeTracer:
+//ngstd::Timer t0(STDstring("CSystem::ComputeMassMatrix0")); //timer name and importance
+//ngstd::Timer t1(STDstring("CSystem::ComputeMassMatrix1"), 2); //timer name and importance
+//ngstd::Timer t2(STDstring("CSystem::ComputeMassMatrix2"), 2); //timer name and importance
+Index TScomputeMM0;
+TimerStructureRegistrator TSRcomputeMM0("computeMassMatrix0", TScomputeMM0, globalTimers);
+Index TScomputeMM1;
+TimerStructureRegistrator TSRcomputeMM1("computeMassMatrix1", TScomputeMM1, globalTimers);
+Index TScomputeMM2;
+TimerStructureRegistrator TSRcomputeMM2("computeMassMatrix2", TScomputeMM2, globalTimers);
+
+
+void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix)
+{
+
+	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
+	Index nThreadsTaskmanager = ngstd::task_manager->GetNumThreads();
+
+	for (Index i = 0; i < nThreadsTaskmanager; i++)
+	{
+		matSparse[i].SetAllZero();
+	}
+
+	//#pragma omp parallel num_threads(maxThreads)
+	//#pragma omp for
+	int nItems = (int)(cSystemData.GetCObjects().NumberOfItems());
+	outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+	
+	STARTGLOBALTIMER(TScomputeMM0);
+
+	ngstd::ParallelFor(nItems, [this, &nItems](size_t j) //&temp,&systemODE2Rhs,&cSystemData
+	{
+		//ngstd::RegionTracer regtr(ngstd::TaskManager::GetThreadId(), t1);
+
+		Index threadID = ngstd::task_manager->GetThreadId();
+		TemporaryComputationData& myTemp = tempParallel[threadID];
+		//work over bodies, connectors, etc.
+		CObject& object = *(cSystemData.GetCObjects()[j]);
+
+		//if object is a body, it must have a mass matrix
+		if ((Index)object.GetType() & (Index)CObjectType::Body)
+		{
+			ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
+			if (ltg.NumberOfItems() != 0) //to exclude bodies attached to ground nodes
+			{
+				((CObjectBody&)object).ComputeMassMatrix(myTemp.localMass);
+
+				//ngstd::RegionTracer regtr(ngstd::TaskManager::GetThreadId(), t2);
+				matSparse[threadID].AddSubmatrix(myTemp.localMass, 1., ltg, ltg);
+			}
+		}
+	}, nThreadsTaskmanager*3);
+	STOPGLOBALTIMER(TScomputeMM0);
+
+	CHECKandTHROW(massMatrix.GetSystemMatrixType() == LinearSolverType::EigenSparse,
+		"CSystem::ComputeMassMatrix in USE_NGSOLVE_TASKMANAGER only sparse mode allowed");
+
+	GeneralMatrixEigenSparse& massMatrixSparse = (GeneralMatrixEigenSparse&)massMatrix;
+	EigenTripletVector& triplets = massMatrixSparse.GetEigenTriplets();
+
+	Index totalTriplets = 0;
+	SlimArray<Index, MAX_NUMBER_OF_THREADS> tripletIndex;
+	for (Index i = 0; i < nThreadsTaskmanager; i++)
+	{
+		tripletIndex[i] = totalTriplets;
+		totalTriplets += matSparse[i].GetEigenTriplets().size();
+	}
+
+	//STARTGLOBALTIMER(TScomputeMM1);
+	////triplets.reserve(totalTriplets+ triplets.size()); //this guarantees that vector size is large enough
+	//triplets.resize(totalTriplets);
+	//STOPGLOBALTIMER(TScomputeMM1);
+	
+	STARTGLOBALTIMER(TScomputeMM2);
+	//Index iTriplet = 0;
+	for (Index i = 0; i < nThreadsTaskmanager; i++)
+	{
+		//for (Index j = 0; j < matSparse[i].GetEigenTriplets().size(); i++)
+		for (auto& item : matSparse[i].GetEigenTriplets())
+		{
+			triplets.push_back(item);
+			//triplets[iTriplet++] = item;
+		}
+	}
+	//for (Index i = 0; i < nThreadsTaskmanager; i++)
+	//{
+	//	copy(matSparse[i].GetEigenTriplets().begin(), matSparse[i].GetEigenTriplets().end(),
+	//		triplets[tripletIndex[i]]);
+	//}
+
+	//ngstd::ParallelFor(nThreadsTaskmanager, [&triplets, &tripletIndex](size_t j) //&temp,&systemODE2Rhs,&cSystemData
+	//{
+	//	Index matSparseSize = matSparse[j].GetEigenTriplets().size();
+	//	for (Index k = 0; k < matSparseSize; ++k)
+	//	{
+	//		triplets[tripletIndex[j] + k] = matSparse[j].GetEigenTriplets()[k];
+	//	}
+	//});
+	STOPGLOBALTIMER(TScomputeMM2);
+	outputBuffer.SetSuspendWriting(false); //may not write to python during parallel computation
+
+}
+#else
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // CSystem computation functions
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -956,32 +1130,31 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 	}
 
 }
+#endif
 
-
-Index TScomputeODE2RHSobject;
-TimerStructureRegistrator TSRcomputeODE2RHSobject("computeODE2RHSobject", TScomputeODE2RHSobject, globalTimers);
-Index TScomputeODE2RHSconnector;
-TimerStructureRegistrator TSRcomputeODE2RHSconnector("computeODE2RHSconnector", TScomputeODE2RHSconnector, globalTimers);
-Index TScomputeODE2RHSmarkerData;
-TimerStructureRegistrator TSRcomputeODE2RHSmarkerData("computeODE2RHSmarkerData", TScomputeODE2RHSmarkerData, globalTimers);
+//Index TScomputeODE2LHSobject;
+//TimerStructureRegistrator TSRcomputeODE2LHSobject("computeODE2LHSobject", TScomputeODE2LHSobject, globalTimers);
+//Index TScomputeODE2LHSconnector;
+//TimerStructureRegistrator TSRcomputeODE2LHSconnector("computeODE2LHSconnector", TScomputeODE2LHSconnector, globalTimers);
+//Index TScomputeODE2LHSmarkerData;
+//TimerStructureRegistrator TSRcomputeODE2LHSmarkerData("computeODE2LHSmarkerData", TScomputeODE2LHSmarkerData, globalTimers);
 Index TScomputeLoads;
 TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, globalTimers);
 
-//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
-//! return true, if object has localODE2Rhs, false otherwise
-bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Rhs)
+//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
+//! return true, if object has localODE2Lhs, false otherwise
+bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs)
 {
 	//Index i = 0;
-	//std::cout << "ComputeODE2RHS" << i++ << ": " << (Index)object->GetType() << "\n";
+	//std::cout << "ComputeSystemODE2RHS" << i++ << ": " << (Index)object->GetType() << "\n";
 	if (!((Index)object->GetType() & (Index)CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
 	{
 		//if object is a body, it must have ODE2RHS
 		if ((Index)object->GetType() & (Index)CObjectType::Body)
 		{
-			STARTGLOBALTIMER(TScomputeODE2RHSobject);
-			object->ComputeODE2RHS(localODE2Rhs);
-			STOPGLOBALTIMER(TScomputeODE2RHSobject);
-			//pout << "temp.localODE2RHS=" << temp.localODE2RHS << "\n";
+			//STARTGLOBALTIMER(TScomputeODE2LHSobject);
+			object->ComputeODE2LHS(localODE2Lhs);
+			//STOPGLOBALTIMER(TScomputeODE2LHSobject);
 		}
 		else if ((Index)object->GetType() & (Index)CObjectType::Connector)
 		{
@@ -989,28 +1162,103 @@ bool CSystem::ComputeObjectODE2RHS(TemporaryComputationData& temp, CObject* obje
 
 			//compute MarkerData for connector:
 			const bool computeJacobian = true;
-			STARTGLOBALTIMER(TScomputeODE2RHSmarkerData);
+			//STARTGLOBALTIMER(TScomputeODE2LHSmarkerData);
 			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
-			STOPGLOBALTIMER(TScomputeODE2RHSmarkerData);
+			//STOPGLOBALTIMER(TScomputeODE2LHSmarkerData);
 
-			//pout << "ComputeODE2RHS " << i++ << "\n";
-			//Real t = cSystemData.GetCData().currentState.time; //==>done in markerdatastructure
-			STARTGLOBALTIMER(TScomputeODE2RHSconnector);
-			connector->ComputeODE2RHS(localODE2Rhs, temp.markerDataStructure);
-			STOPGLOBALTIMER(TScomputeODE2RHSconnector);
+			//STARTGLOBALTIMER(TScomputeODE2LHSconnector);
+			connector->ComputeODE2LHS(localODE2Lhs, temp.markerDataStructure);
+			//STOPGLOBALTIMER(TScomputeODE2LHSconnector);
 
 		}
-		else { CHECKandTHROWstring("CSystem::ComputeODE2RHS(...): object type not implemented"); return false; }
+		else { CHECKandTHROWstring("CSystem::ComputeODE2LHS(...): object type not implemented"); return false; }
 
 		return true;
 	}
 	return false;
 }
 
-//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
-void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
+#ifdef USE_OPENMP
+//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs)
 {
-	ode2Rhs.SetAll(0.);
+	systemODE2Rhs.SetAll(0.);
+	//#pragma omp parallel num_threads(maxThreads)
+	//#pragma omp for
+	//#pragma omp parallel for num_threads(maxThreads)
+
+	int nItems = (int)(cSystemData.GetCObjects().NumberOfItems());
+#pragma omp parallel num_threads(maxThreads)
+#pragma omp for 
+	for (int j = 0; j < nItems; j++)
+	{
+		TemporaryComputationData& myTemp = tempParallel[omp_get_thread_num()];
+		//std::cout << "compute ODE2 with thread " << omp_get_thread_num() << "\n";
+		if ((cSystemData.GetCObjects()[j])->IsActive())
+		{
+			//work over bodies, connectors, etc.
+			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+
+			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(myTemp, cSystemData.GetCObjects()[j], myTemp.localODE2RHS))
+			{
+				//now add RHS to system vector
+				for (Index k = 0; k < myTemp.localODE2RHS.NumberOfItems(); k++)
+				{
+					systemODE2Rhs[ltgODE2[k]] -= myTemp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+				}
+			}
+		}
+	}
+	//pout << "systemODE2Rhs=" << systemODE2Rhs << "\n";
+
+	ComputeLoads(temp, systemODE2Rhs);
+}
+#elif defined(USE_NGSOLVE_TASKMANAGER)
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs)
+{
+	systemODE2Rhs.SetAll(0.);
+
+	//std::mutex mtx;           // mutex for critical section
+	outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+
+	int nItems = cSystemData.GetCObjects().NumberOfItems();
+	ngstd::ParallelFor(nItems, [this, &systemODE2Rhs, &nItems](size_t j) //&temp,&systemODE2Rhs,&cSystemData
+	//for (Index j = 0; j < nItems; j++)
+	{
+		Index threadID = ngstd::task_manager->GetThreadId();
+
+		//std::cout << "thread=" << threadID << "\n";
+		//std::cout << "j=" << j << "\n";
+		TemporaryComputationData& myTemp = tempParallel[threadID];
+		//TemporaryComputationData& myTemp = temp;
+		if ((this->cSystemData.GetCObjects()[j])->IsActive())
+		{
+			//work over bodies, connectors, etc.
+			ArrayIndex& ltgODE2 = this->cSystemData.GetLocalToGlobalODE2()[j];
+
+			if (ltgODE2.NumberOfItems() && this->ComputeObjectODE2LHS(myTemp, cSystemData.GetCObjects()[j], myTemp.localODE2RHS))//temp.localODE2RHS))
+			{
+				//now add RHS to system vector
+				for (Index k = 0; k < myTemp.localODE2RHS.NumberOfItems(); k++)
+				{
+					systemODE2Rhs[ltgODE2[k]] -= myTemp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+				}
+			}
+		}
+	});
+	//pout << "systemODE2Rhs=" << systemODE2Rhs << "\n";
+
+	outputBuffer.SetSuspendWriting(false);
+	ComputeLoads(temp, systemODE2Rhs);
+}
+#else
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs)
+{
+	systemODE2Rhs.SetAll(0.);
 
 	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
 	{
@@ -1019,23 +1267,24 @@ void CSystem::ComputeODE2RHS(TemporaryComputationData& temp, Vector& ode2Rhs)
 			//work over bodies, connectors, etc.
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 
-			if (ltgODE2.NumberOfItems() && ComputeObjectODE2RHS(temp, cSystemData.GetCObjects()[j], temp.localODE2RHS))//temp.localODE2RHS))
+			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2RHS))//temp.localODE2RHS))
 			{
 				//now add RHS to system vector
 				for (Index k = 0; k < temp.localODE2RHS.NumberOfItems(); k++)
 				{
-					ode2Rhs[ltgODE2[k]] -= temp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+					systemODE2Rhs[ltgODE2[k]] -= temp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
 				}
 			}
 		}
 	}
-	//pout << "ode2Rhs=" << ode2Rhs << "\n";
+	//pout << "systemODE2Rhs=" << systemODE2Rhs << "\n";
 
-	ComputeLoads(temp, ode2Rhs);
+	ComputeLoads(temp, systemODE2Rhs);
 }
+#endif
 
-//! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
-void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
+//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs)
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute loads ==> not needed in jacobian, except for follower loads, 
@@ -1093,11 +1342,11 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 				}
 				else
 				{
-					CHECKandTHROWstring("ERROR: CSystem::ComputeODE2RHS, marker type not implemented!");
+					CHECKandTHROWstring("ERROR: CSystem::ComputeSystemODE2RHS, marker type not implemented!");
 				}
 			}
 		}
-		else { pout << "ERROR: CSystem::ComputeODE2RHS: marker must be Body or Node type\n"; }
+		else { pout << "ERROR: CSystem::ComputeSystemODE2RHS: marker must be Body or Node type\n"; }
 
 		if (applyLoad)
 		{
@@ -1144,7 +1393,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 				//pout << "generalizedLoad=" << temp.generalizedLoad << "\n";
 				//pout << "loadVector1D=" << loadVector1D << "\n";
 			}
-			else { CHECKandTHROWstring("ERROR: CSystem::ComputeODE2RHS, LoadType not implemented!"); }
+			else { CHECKandTHROWstring("ERROR: CSystem::ComputeSystemODE2RHS, LoadType not implemented!"); }
 
 			//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
 			//pout << "genLoad=" << temp.generalizedLoad << "\n";
@@ -1155,7 +1404,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 				//pout << "load=" << temp.generalizedLoad << ", LF=" << solverData.loadFactor << ", rotJac=" << temp.markerDataStructure.GetMarkerData(0).positionJacobian << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
-					ode2Rhs[(*ltg)[k]] += solverData.loadFactor * temp.generalizedLoad[k]; //if the loadfactor shall not be used for static case: add LoadRampType structure to define behavior: StaticRampDynamicStep=0, StaticStep=1, DynamicRamp=2, ...
+					systemODE2Rhs[(*ltg)[k]] += solverData.loadFactor * temp.generalizedLoad[k]; //if the loadfactor shall not be used for static case: add LoadRampType structure to define behavior: StaticRampDynamicStep=0, StaticStep=1, DynamicRamp=2, ...
 				}
 			}
 			else //must be node
@@ -1163,7 +1412,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 				//pout << "  nodeCoordinate=" << nodeCoordinate << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
-					ode2Rhs[nodeCoordinate + k] += solverData.loadFactor * temp.generalizedLoad[k];
+					systemODE2Rhs[nodeCoordinate + k] += solverData.loadFactor * temp.generalizedLoad[k];
 				}
 
 			}
@@ -1173,7 +1422,7 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& ode2Rhs)
 	STOPGLOBALTIMER(TScomputeLoads);
 }
 
-//! compute right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
+//! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
 void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel)
 {
 	//Still needed? algebraicEquations.SetNumberOfItems(cSystemData.GetNumberOfCoordinatesAE()); //needed for numerical differentiation
@@ -1392,7 +1641,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 				}
 				else 
 #endif
-				if (ComputeObjectODE2RHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+				if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
 				{
 					localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 					Real xRefVal = 0;
@@ -1405,7 +1654,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 
 						xStore = xVal;
 						xVal += eps;
-						ComputeObjectODE2RHS(temp, object, f1);
+						ComputeObjectODE2LHS(temp, object, f1);
 						xVal = xStore;
 
 						epsInv = (1. / eps) * scalarFactor;
@@ -1428,7 +1677,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 		//++++++++++++++++++++++++++++++++++++++++++++++++
 		f0.SetNumberOfItems(nODE2);
 		f1.SetNumberOfItems(nODE2);
-		ComputeODE2RHS(temp, f0); //compute nominal value for jacobian
+		ComputeSystemODE2RHS(temp, f0); //compute nominal value for jacobian
 		Real xRefVal = 0;
 
 		for (Index i = 0; i < nODE2; i++) //compute column i
@@ -1438,7 +1687,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 
 			xStore = x[i];
 			x[i] += eps;
-			ComputeODE2RHS(temp, f1);
+			ComputeSystemODE2RHS(temp, f1);
 			x[i] = xStore;
 
 			epsInv = (1. / eps) * scalarFactor;
@@ -1494,7 +1743,7 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 				}
 				else
 #endif
-				if (ComputeObjectODE2RHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+				if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
 				{
 					localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 					for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
@@ -1504,7 +1753,7 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 
 						xStore = xVal;
 						xVal += eps;
-						ComputeObjectODE2RHS(temp, object, f1);
+						ComputeObjectODE2LHS(temp, object, f1);
 						xVal = xStore;
 
 						epsInv = (1. / eps) * scalarFactor;
@@ -1527,7 +1776,7 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 
 		f0.SetNumberOfItems(nODE2);
 		f1.SetNumberOfItems(nODE2);
-		ComputeODE2RHS(temp, f0); //compute nominal value for jacobian
+		ComputeSystemODE2RHS(temp, f0); //compute nominal value for jacobian
 
 
 		for (Index i = 0; i < nODE2; i++)
@@ -1536,7 +1785,7 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 
 			xStore = x[i];
 			x[i] += eps;
-			ComputeODE2RHS(temp, f1);
+			ComputeSystemODE2RHS(temp, f1);
 			x[i] = xStore;
 
 			epsInv = (1. / eps) * scalarFactor;

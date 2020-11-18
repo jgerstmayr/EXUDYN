@@ -101,6 +101,7 @@ SC.StaticSolve(mbs, simulationSettings)
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 exu.Print('static tip displacement (y)=', u[1])
 exudynTestGlobals.testError = u[1]-(-6.779862983766792) #72 x 6 bodies; CPUtime surface: 0.029 seconds
+exudynTestGlobals.testError *= 1e-2 #32bit version shows 2.1e-12 error
 
 if exudynTestGlobals.useGraphics: 
     SC.WaitForRenderEngineStopFlag()

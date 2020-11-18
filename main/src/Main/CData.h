@@ -1,6 +1,6 @@
 /** ***********************************************************************************************
 * @class        CData
-* @brief        data needed from nodes in order to perform evaluation of MassMatrix, ODE2RHS, ...;@details                - note: initial position is referenceCoordinates + initialCoordinates;                - note: current position is referenceCoordinates + currentCoordinates
+* @brief        data needed from nodes in order to perform evaluation of MassMatrix, ODE2LHS, ...;@details                - note: initial position is referenceCoordinates + initialCoordinates;                - note: current position is referenceCoordinates + currentCoordinates
 *
 * @author       Gerstmayr Johannes
 * @date         2018-05-18 (generated)

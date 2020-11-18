@@ -85,11 +85,11 @@ void CObjectRigidBody::ComputeMassMatrix(Matrix& massMatrix) const
 	//pout << "mass=" << massMatrix << "\n";
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
-void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 {
-	ode2Rhs.SetNumberOfItems(GetODE2Size());
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(GetODE2Size());
+	ode2Lhs.SetAll(0.);
 
 	ConstSizeMatrix<9> localInertia;
 	RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, localInertia);
@@ -129,8 +129,8 @@ void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
 	}
 
 	//+++++++++++++++++++++++++++++++++++++
-	//Version2:
-	//RHS = -2*Gbar_t^T*Ibar*omegaBar
+	//alternative Version2, for completeness:
+	////compute term: 2*Gbar_t^T*Ibar*omegaBar
 	//omegaBar *= 2.;
 	//Vector3D temp = localInertia * omegaBar;
 	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forces1; //forces acting on Euler parameter coordinates
@@ -169,16 +169,16 @@ void CObjectRigidBody::ComputeODE2RHS(Vector& ode2Rhs) const
 
 		for (Index i = 0; i < nDim3D; i++)
 		{
-			ode2Rhs[i] += addForce[i]; //positive sign, because object ODEforces are put on LHS
+			ode2Lhs[i] += addForce[i]; //positive sign, because object ODEforces are put on LHS
 		}
 	}
 
 	for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(0))->GetNumberOfRotationCoordinates(); i++)
 	{
-		ode2Rhs[i + nDisplacementCoordinates] += forces1[i]; //positive sign, because object ODEforces are put on LHS
+		ode2Lhs[i + nDisplacementCoordinates] += forces1[i]; //positive sign, because object ODEforces are put on LHS
 	}
 
-	//pout << "ode2RHS=" << ode2Rhs << "\n";
+	//pout << "ode2Lhs=" << ode2Lhs << "\n";
 }
 
 //! Compute algebraic equations part of rigid body
@@ -358,17 +358,21 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
-	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
-	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(localPosition, configuration)); break;
-	case OutputVariableType::RotationMatrix: {
-		Matrix3D rot = GetRotationMatrix(localPosition, configuration);
-		value.SetVector(9, rot.GetDataPointer());
-		break;
-	}
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
+
 	case OutputVariableType::Rotation: {
 		Matrix3D rotMat = GetRotationMatrix(localPosition, configuration);
 		Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
 		value.CopyFrom(rot);
+		break;
+	}
+	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
+	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(localPosition, configuration)); break;
+	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(localPosition, configuration)); break;
+
+	case OutputVariableType::RotationMatrix: {
+		Matrix3D rot = GetRotationMatrix(localPosition, configuration);
+		value.SetVector(9, rot.GetDataPointer());
 		break;
 	}
 	default:
@@ -384,7 +388,13 @@ Vector3D CObjectRigidBody::GetPosition(const Vector3D& localPosition, Configurat
 
 }
 
-//  return the (global) position of "localPosition" according to configuration type
+//! return the (global) position of "localPosition" according to configuration type
+Vector3D CObjectRigidBody::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	return ((CNodeRigidBody*)GetCNode(0))->GetPosition(configuration) - ((CNodeRigidBody*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
+}
+
+//  return the (global) velocity of "localPosition" according to configuration type
 Vector3D CObjectRigidBody::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	// \dot R + A * \localOmega x \localPosition
@@ -393,10 +403,15 @@ Vector3D CObjectRigidBody::GetVelocity(const Vector3D& localPosition, Configurat
 		((CNodeRigidBody*)GetCNode(0))->GetAngularVelocityLocal(configuration).CrossProduct(localPosition); //add omega x r
 }
 
-//! return the (global) position of "localPosition" according to configuration type
-Vector3D CObjectRigidBody::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
+//  return the (global) acceleration of "localPosition" according to configuration type
+Vector3D CObjectRigidBody::GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	return ((CNodeRigidBody*)GetCNode(0))->GetPosition(configuration) - ((CNodeRigidBody*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
+	// \ddot R + \alpha x (A * \localPosition) + \omega x (\omega x (A * \localPosition))
+	Vector3D relativePosition = ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix(configuration) * localPosition;
+	Vector3D omega = ((CNodeRigidBody*)GetCNode(0))->GetAngularVelocity(configuration);
+	return ((CNodeRigidBody*)GetCNode(0))->GetAcceleration(configuration) +
+		((CNodeRigidBody*)GetCNode(0))->GetAngularAcceleration(configuration).CrossProduct(relativePosition) +
+		omega.CrossProduct(omega.CrossProduct(relativePosition));
 }
 
 Matrix3D CObjectRigidBody::GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration) const
@@ -414,5 +429,11 @@ Vector3D CObjectRigidBody::GetAngularVelocity(const Vector3D& localPosition, Con
 Vector3D CObjectRigidBody::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	return ((CNodeRigidBody*)GetCNode(0))->GetAngularVelocityLocal(configuration);
+}
+
+//! return configuration dependent angular acceleration of rigid body; returns always a 3D Vector
+Vector3D CObjectRigidBody::GetAngularAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	return ((CNodeRigidBody*)GetCNode(0))->GetAngularAcceleration(configuration);
 }
 

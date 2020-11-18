@@ -45,6 +45,10 @@ plt.plot([1,2,3,4,5], [1,2,3,4,10], 'go-') # 'g'reen 'd'ots '-'solid line
 	# markers: point, pixel,circle: .,o   triangles: v^<>  s8*P+xDd
 	# line style: ':', '-.', '--', '-'
 
+#line width: 1 is too thick for pdf plots, 0.5 or 0.7 are better
+plt.plot([1,2,3,4,5], [1,2,3,4,10], 'b-', linewidth=0.5) 
+
+
 #loglog/linear plot:
 ax = plt.axes(xscale='log', yscale='log')
 ax = plt.axes(xscale='linear', yscale='linear')

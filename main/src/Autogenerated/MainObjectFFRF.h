@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-09-16  11:22:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,7 +115,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectFFRF->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectFFRF->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d, "massMatrixFF", cObjectFFRF->GetParameters().massMatrixFF); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d, "stiffnessMatrixFF", cObjectFFRF->GetParameters().stiffnessMatrixFF); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d, "dampingMatrixFF", cObjectFFRF->GetParameters().dampingMatrixFF); /*! AUTO:  safely cast to C++ type*/
@@ -137,7 +137,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = (std::vector<Index>)cObjectFFRF->GetParameters().nodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectFFRF->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["massMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().massMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
         d["stiffnessMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().stiffnessMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrixFF"] = (PyMatrixContainer)cObjectFFRF->GetParameters().dampingMatrixFF; //! AUTO: cast variables into python (not needed for standard types) 
@@ -177,7 +177,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast((std::vector<Index>)cObjectFFRF->GetParameters().nodeNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectFFRF->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("massMatrixFF") == 0) { return py::cast((PyMatrixContainer)cObjectFFRF->GetParameters().massMatrixFF);} //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrixFF") == 0) { return py::cast((PyMatrixContainer)cObjectFFRF->GetParameters().stiffnessMatrixFF);} //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixFF") == 0) { return py::cast((PyMatrixContainer)cObjectFFRF->GetParameters().dampingMatrixFF);} //! AUTO: get parameter
@@ -210,7 +210,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectFFRF->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { cObjectFFRF->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("massMatrixFF") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRF->GetParameters().massMatrixFF); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrixFF") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRF->GetParameters().stiffnessMatrixFF); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixFF") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRF->GetParameters().dampingMatrixFF); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter

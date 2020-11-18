@@ -1,6 +1,10 @@
 \documentclass[11pt,a4paper]{book} %print
 %\documentclass[12pt,a5paper,landscape]{book} %slides
 
+\renewcommand\bibname{References}
+\renewcommand{\contentsname}{Table of Contents}
+%\renewcommand{\refname}{References}
+
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 \usepackage{amsmath}
@@ -492,6 +496,44 @@ The following table includes the keyboard shortcuts available in the window.
   \end{longtable}
 \end{center}
 
+\mysection{System of equations}
+The general idea of the code is to have objects, which provide equations (ODE2, ODE1, AE).
+The solver then assembles these equations and solves the static or dynamic problem.
+The system structure and solver follow partially the previous implementation in HOTINT \cite{GerstmayrStangl2004,Gerstmayr2009,GerstmayrEtAl2013}.
+
+\mysubsection{LHS-RHS naming conventions in EXUDYN} \label{eq_equationLHSRHS}
+
+Functions and variables contain the abbreviations LHS ({\it left-hand-side}) and RHS ({\it right-hand-side}), sometimes lower-case, in order
+to distinguish if terms are computed at the LHS or RHS.
+
+The objects have the following LHS--RHS conventions:
+\bi
+		\item the acceleration term, e.g., $m \cdot \ddot q$ is always positive on the LHS
+	  \item objects, connectors, etc., use LHS conventions for most terms: mass, stiffness matrix, elastic forces, damping, etc., are computed at LHS of the object equation
+		\item object forces are written at the RHS of the object equation
+		\item in case of constraint or connector equations, there is no LHS or RHS, as there is no acceleration term. 
+		Therefore, the computation function evaluates the term as given in the description of the object, adding it to the LHS.
+\ei
+Object equations may read, e.g., for one coordinate $q$, mass $m$, damping coefficient $d$, stiffness $k$ and applied force $f$,
+\be
+  \underbrace{m \cdot \ddot q + d \cdot \dot q + k \cdot q}_{LHS} = \underbrace{f}_{RHS}
+\ee 
+In this case, the C++ function \texttt{ComputeODE2LHS(const Vector\& ode2Lhs)} will compute the term
+$d \cdot \dot q + k \cdot q$ with positive sign. Note that the acceleration term $m \cdot \ddot q$ is computed separately, as it 
+is computed from mass matrix and acceleration.
+
+However, system quantities (e.g.\ within the solver) are always written on RHS, except for the acceleration and mass matrix: 
+\be 
+  \underbrace{M_{sys} \cdot \ddot q_{sys}}_{LHS} = \underbrace{f_{sys}}_{RHS} \,.
+\ee
+In the case of the object equation
+\be
+  m \cdot \ddot q + d \cdot \dot q + k \cdot q = f \, ,
+\ee 
+the RHS term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is computed by the C++ function \texttt{ComputeSystemODE2RHS}.
+
+This means, that during computation, terms which appear at the LHS of the object are transferred to the RHS of the system equation.
+This enables a simpler setup of equations for the solver.
 
 \mysection{Solver}
 \input{solver}
@@ -500,16 +542,19 @@ The following table includes the keyboard shortcuts available in the window.
 
 \clearpage
 
-\mysection{References} 
-coming soon!
+%\mysection{References}  %done in \bibliography command
+\bibliographystyle{abbrv}
+\bibliography{bibliographyDoc}
 
 \mysection{License} 
 
 %\verbatiminput{././LICENSE.txt}
 %\input{../../licenseEXUDYN.txt}
 %\lstinputlisting{..\..\LICENSE.txt}
-\plainlststyle
+\plainlststyle 
+{\tiny
 \lstinputlisting[breaklines=true, basicstyle=\ttm]{../../LICENSE.txt}
+}
 \end{document}
 
 

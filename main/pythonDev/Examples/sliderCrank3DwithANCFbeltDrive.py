@@ -74,7 +74,7 @@ damping = 8e2                               #[N/(ms)]
 L0 = 0.51                     #wheelbase [m]
 r0 = 0.05                     #radius disk 0 [m] 
 r1 = 0.1                      #radius disk 1 [m]
-a = 0.01                      #belt wide [m]
+a = 0.01                      #belt width [m]
 A = a*a                       #belt cross section [m^2]
 L_eff = 1.5                   #effective belt length [m]
 
@@ -112,13 +112,14 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 
 #Generate Visualisation-Objects
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 vSlider = GraphicsDataCylinder([0.05,0,0], [-0.1,0,0],
-                               0.05, [1,0,0,1])
+                               0.05, [1,0,0,1], nTiles=64)
 vRod = GraphicsDataOrthoCube(-L_B/2, -h_B/2, -h_B/2, L_B/2,
                              h_B/2, h_B/2, [0,1,0,1])
 
 vCrank0 = GraphicsDataCylinder([0,0,-2*ba_1], [0,0,0.01],
-                               r1,color=[0.3,0.3,0.9,1], nTiles=64)
+                               r1+a/2,color=[0.3,0.3,0.9,1], nTiles=128)
 vCrank1 = GraphicsDataCylinder([0,0,0.01], [0,0,-ba_0-0.01],
                                0.01,color=[0.3,0.3,0.9,1])
 vCrank2 = GraphicsDataCylinder([0,0,ba_1-0.01], [0,0,ba_2+0.01],
@@ -138,6 +139,9 @@ vCrank5 = GraphicsDataCylinder([-L_A,0,0.0], [0,0,0.05],
 
 vDisk_line0 = GraphicsDataRectangle(0,-0.001,r0,0.001)
 vDisk_line1 = GraphicsDataRectangle(0,-0.001,r1,0.001)
+
+cylDisc0 = GraphicsDataCylinder([0,0,-0.005], [0,0,0.01],
+                               r0+a/2,color=[0.3,0.3,0.9,1], nTiles=64)
 
 #Generate Nodes and Objects
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -260,7 +264,7 @@ mDisk1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oDisk1))
 nDisk0 = mbs.AddNode(Rigid2D(referenceCoordinates=[0, 0, 0]))
 oDisk0 = mbs.AddObject(RigidBody2D(physicsMass=m_disk0, physicsInertia=J_disk0,
                                    nodeNumber=nDisk0,
-                                   visualization=VObjectRigidBody2D(graphicsData=[vDisk_line0])))
+                                   visualization=VObjectRigidBody2D(graphicsData=[vDisk_line0,cylDisc0])))
 mDisk0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oDisk0))
 #Marker for contactCable
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -298,7 +302,7 @@ markerList = []
 #Calculate element parameters
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 beltRadius = L_eff/(2*np.pi)
-nElements = 30
+nElements = 30*2
 angleSegments = 2*np.pi/nElements
 arcLenght = angleSegments*beltRadius
 
@@ -356,8 +360,8 @@ for i in range(len(cableList)):
                                                      contactDamping = cDamping,
                                                      frictionVelocityPenalty = 1000,
                                                      frictionCoefficient = mu,
-                                                     circleRadius = r1,
-                                                     offset = a/2))
+                                                     circleRadius = r1+a/2,
+                                                     offset = a/2*0))
     #Generate contact for disk0
     nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList, 
                                                        numberOfDataCoordinates=3*nSegments))
@@ -367,8 +371,8 @@ for i in range(len(cableList)):
                                                      contactDamping = cDamping,
                                                      frictionVelocityPenalty = 1000,
                                                      frictionCoefficient = mu,
-                                                     circleRadius = r0,
-                                                     offset = a/2))
+                                                     circleRadius = r0+a/2,
+                                                     offset = a/2*0))
 
 
 #Generate Load

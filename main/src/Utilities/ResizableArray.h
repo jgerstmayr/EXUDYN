@@ -101,15 +101,33 @@ public:
 		data = nullptr;
 		numberOfItems = vector.size();
 		maxNumberOfItems = vector.size();
-		if (maxNumberOfItems > 0) 
-		{ 
-			data = new T[maxNumberOfItems]; 
+		if (maxNumberOfItems > 0)
+		{
+			data = new T[maxNumberOfItems];
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			array_new_counts++;
 #endif
 		}
 
 		std::copy(vector.begin(), vector.end(), this->begin());
+	}
+
+	//! constructor with SlimVector, allows only explicit conversion!
+	template<Index slimArraySize>
+	explicit ResizableArray(const SlimArray<T,slimArraySize> slimArray)
+	{
+		data = nullptr;
+		numberOfItems = slimArray.NumberOfItems();
+		maxNumberOfItems = numberOfItems;
+		if (maxNumberOfItems > 0)
+		{
+			data = new T[maxNumberOfItems];
+#ifdef __EXUDYN_RUNTIME_CHECKS__
+			array_new_counts++;
+#endif
+		}
+
+		std::copy(slimArray.begin(), slimArray.end(), this->begin());
 	}
 
 	//! copy constructor; copies data (e.g. Index, Real or SlimVector<3>)

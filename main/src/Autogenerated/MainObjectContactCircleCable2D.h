@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-09  00:35:50 (last modfied)
+* @date         2020-09-09  16:20:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,7 +114,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectContactCircleCable2D->GetParameters().markerNumbers = py::cast<std::vector<Index>>(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectContactCircleCable2D->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(d["numberOfContactSegments"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -134,7 +134,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = (std::vector<Index>)cObjectContactCircleCable2D->GetParameters().markerNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectContactCircleCable2D->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectContactCircleCable2D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["numberOfContactSegments"] = (Index)cObjectContactCircleCable2D->GetParameters().numberOfContactSegments; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactStiffness"] = (Real)cObjectContactCircleCable2D->GetParameters().contactStiffness; //! AUTO: cast variables into python (not needed for standard types) 
@@ -153,7 +153,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast((std::vector<Index>)cObjectContactCircleCable2D->GetParameters().markerNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectContactCircleCable2D->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactCircleCable2D->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("numberOfContactSegments") == 0) { return py::cast((Index)cObjectContactCircleCable2D->GetParameters().numberOfContactSegments);} //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactCircleCable2D->GetParameters().contactStiffness);} //! AUTO: get parameter
@@ -173,7 +173,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectContactCircleCable2D->GetParameters().markerNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { cObjectContactCircleCable2D->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectContactCircleCable2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("numberOfContactSegments") == 0) { cObjectContactCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { cObjectContactCircleCable2D->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

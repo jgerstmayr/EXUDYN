@@ -1,0 +1,37 @@
+#+++++++++++++++++++++++++++++++++
+How to couple Intel MKL with Visual Studio 2017
+
+download MKL:
+https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library/choose-download/windows.html
+
+Download:
+->Intel Performance Libaries->Intel Math Kernel Libary for Windows
+->Version 2020 Update 3
+->Full Package
+->Use pre-selected installation
+
+setup project with MKL:
+- Go to EXUDYN / cppsrc properties / configuration properties:
+  -> Intel Performance Libraries
+  -> UseIntel MKL, Parallel
+  -> 
+  
+for VS2017 integration see the links:
+https://software.intel.com/content/www/us/en/develop/articles/intel-math-kernel-library-intel-mkl-compiling-and-linking-with-microsoft-visual-cc.html
+https://software.intel.com/content/www/us/en/develop/articles/intel-math-kernel-library-intel-mkl-using-intel-mkl-with-threaded-applications.html
+
+instructions in local drive:
+.../IntelSWtools/documentation_2020/en/mkl/ps2020/get_started.htm
+
+MKL in EXUDYN:
+- #define USE_EXUDYN_MKL
+
+MKL in Eigen:
+
+https://eigen.tuxfamily.org/dox/TopicUsingIntelMKL.html
+
+MKL Vector mathematical functions (SIMD; AVX, ...):
+vector-sin:
+https://software.intel.com/content/www/us/en/develop/documentation/mkl-developer-reference-c/top/vector-mathematical-functions/vm-mathematical-functions/trigonometric-functions/v-sin.html#v-sin
+
+

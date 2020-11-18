@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:19:09 (last modfied)
+* @date         2020-11-13  11:45:07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -82,8 +82,8 @@ public: // AUTO:
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
 
-    //! AUTO:  Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'
-    virtual void ComputeODE2RHS(Vector& ode2Rhs) const override;
+    //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  Compute algebraic equations part of rigid body
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
@@ -112,6 +112,9 @@ public: // AUTO:
     //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
+    //! AUTO:  return the (global) acceleration of 'localPosition' according to configuration type
+    Vector3D GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
+
     //! AUTO:  return the (global) velocity of 'localPosition' according to configuration type
     virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
@@ -123,6 +126,9 @@ public: // AUTO:
 
     //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return the (global) angular acceleration of 'localPosition' according to configuration type
+    Vector3D GetAngularAcceleration(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
@@ -160,11 +166,13 @@ public: // AUTO:
         return (OutputVariableType)(
             (Index)OutputVariableType::Position +
             (Index)OutputVariableType::Displacement +
+            (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::RotationMatrix +
             (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::AngularVelocityLocal );
+            (Index)OutputVariableType::AngularVelocityLocal +
+            (Index)OutputVariableType::Acceleration +
+            (Index)OutputVariableType::AngularAcceleration );
     }
 
 };

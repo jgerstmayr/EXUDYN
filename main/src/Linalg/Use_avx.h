@@ -106,7 +106,7 @@
 #endif
 
 
-// operators for AVX2 & AVX512 
+// operators for AVX2 & AVX512; used from ngsolve project
 // note: in case of AVX2-DoublePrecision, AVX2 intrinsics in simd.hpp is deactivated and the instructions below will be used by ngs
 // note: in case of AVX2-SinglePrecision and AVX512, the AVX2-DoublePrecision Intrinsics will be activated in simd.hpp for ngs
 INLINE PReal operator- (PReal a) { return _mm_xor_(a, _mm_set1_(-0.0)); }

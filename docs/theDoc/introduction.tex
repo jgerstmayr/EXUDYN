@@ -65,7 +65,7 @@ Currently, the module structure is simple:
 \begin{figure}
   \centering
 	\begin{tikzpicture}[node distance = 2cm, auto]
-			% Place nodes
+			% 
 			\node [cloud] (system) {MainSystem ('mbs')};
 			\node [wideblock, below of=system] (systemData) {systemData};
 			\node [wideblock, left of=systemData, node distance=5cm] (systemStates) {system states};
@@ -80,6 +80,7 @@ Currently, the module structure is simple:
 			\node [wideblock, below of=nodes] (objects) {list of objects};
 			\node [wideblock, below of=objects] (markers) {list of markers};
 			\node [wideblock, below of=markers] (loads) {list of loads};
+			\node [wideblock, below of=loads] (sensors) {list of sensors};
 
 			% Draw edges
 			\path [line] (system) -- (systemData);
@@ -95,7 +96,8 @@ Currently, the module structure is simple:
 			\path [line] (systemData) |- (objects);
 			\path [line] (systemData) |- (markers);
 			\path [line] (systemData) |- (loads);
-
+			\path [line] (systemData) |- (sensors);
+%
 	\end{tikzpicture}
   \caption{Overview of systemData, which connects items and states. Note that access to items is provided via functions in \texttt{system}.}
 	\label{fig_system_overview}
@@ -764,6 +766,22 @@ The following list covers changes in the python interface and functionality:
 	%\bi \ttfamily
 	  %\item $\ra$ 
 	%\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.17 $\ra$ Version 1.0.18}
+	\bi
+	\item {\bf removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
+	\item added acceleration sensor functionality to most objects and nodes
+	\item added Lie group utilities (see \texttt{exudyn.lieGroup})
+	\item added processing utilities for parameter variation and optimization (see \texttt{exudyn.processing})
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.12 $\ra$ Version 1.0.13}
+	\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see Section \ref{eq_equationLHSRHS}:
+	\bi
+	  \item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
+		\item forces are written at the RHS
+		\item system quantities are always written on RHS: $m \ddot q = f_{RHS}$
+	\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 1.0.8 $\ra$ Version 1.0.9}
 	\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):

@@ -75,11 +75,17 @@ def IsASetSafelyParameter(parameterType):
 
 #check if type is a item index (NodeIndex, ...)
 def IsItemIndex(parameterType):
-    if ((parameterType == 'NodeIndex') |
+    if (
+        (parameterType == 'NodeIndex') |
         (parameterType == 'ObjectIndex') | 
         (parameterType == 'MarkerIndex') | 
         (parameterType == 'LoadIndex') | 
-        (parameterType == 'SensorIndex') ):
+        (parameterType == 'SensorIndex') |
+        (parameterType == 'NodeIndex2') |
+        (parameterType == 'NodeIndex3') |
+        (parameterType == 'ArrayNodeIndex') |
+        (parameterType == 'ArrayMarkerIndex')
+        ):
         return True
     else:
         return False
@@ -730,11 +736,18 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     parRead = 'EPyUtils::MatrixI2NumPy(' + destStr + ')'
                 elif parameter['type'] == 'NumpyVector':
                     parRead = 'EPyUtils::Vector2NumPy(' + destStr + ')'
-                    #dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix3DToStdArray33(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
-#                elif parameter['type'] == 'Matrix6D':
-#                    dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix6DToStdArray66(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
-#                elif parameter['type'] == 'Matrix3D':
-#                    dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix3DToStdArray33(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                elif IsItemIndex(parameter['type']):
+#                    print("typecaststr=", typeCastStr)
+#                    print("typestr=", typeStr)
+                    if (typeCastStr == 'ArrayNodeIndex'):
+                        parRead = 'EPyUtils::GetArrayNodeIndex(' + destStr + ')'
+                    elif (typeCastStr == 'ArrayMarkerIndex'):
+                        parRead = 'EPyUtils::GetArrayMarkerIndex(' + destStr + ')'
+                    elif (typeCastStr == 'NodeIndex2') or (typeCastStr == 'NodeIndex3'):
+                        parRead = 'EPyUtils::GetArrayNodeIndex(ArrayIndex(' + destStr + '))'
+                        #parRead = 'EPyUtils::GetArrayNodeIndexFromSlimArray(' + destStr + ')'
+                    else:
+                        parRead = '(' + typeCastStr + ')' + destStr
                 else:
                     parRead = '(' + typeCastStr + ')' + destStr
 
@@ -1036,6 +1049,7 @@ try: #still close file if crashes
     #types such as UReal shall be used lateron to perform e.g. range checks prior to setting parameters
     typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
                       'NodeIndex':'Index', 'ObjectIndex':'Index', 'MarkerIndex':'Index', 'LoadIndex':'Index', 'SensorIndex':'Index', #in C++, all indices are the same!!!
+                      'NodeIndex2':'Index2', 'NodeIndex3':'Index3', 'ArrayNodeIndex':'ArrayIndex', 'ArrayMarkerIndex':'ArrayIndex', #in C++, all index lists are the same!!!
                       'Vector':'Vector', 'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyVector':'Vector', 
                       'NumpyMatrix':'Matrix', 

@@ -32,6 +32,13 @@
 
 namespace py = pybind11;	//for py::object
 
+#ifdef USE_NGSOLVE_TASKMANAGER
+#include "ngs-core-master/ngs_core.hpp"
+#include <thread>         // std::thread
+#include <mutex>          // std::mutex, std::unique_lock, std::defer_lock
+using namespace ngstd;
+#endif
+
 //! initialize all data,it,conv; set/compute initial conditions (solver-specific!); initialize output files
 bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -356,6 +363,71 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 //! specific call to the start solver
 bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+#ifdef USE_NGSOLVE_TASKMANAGER
+	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
+	Index nThreads = simulationSettings.numberOfThreads;
+	if (nThreads > MAX_NUMBER_OF_THREADS)
+	{
+		pout << "\nmaximum number of threads=" << MAX_NUMBER_OF_THREADS << "\n"; //always printed, as it anyway leads to an exception
+		CHECKandTHROW(nThreads <= MAX_NUMBER_OF_THREADS,
+			"Solver::SolveSteps(...): number of threads must be smaller or equal to maximum number of threads");
+	}
+	TaskManager::SetNumThreads(simulationSettings.numberOfThreads);
+	//std::cout << "TaskManager::SetNumThreads = " << simulationSettings.numberOfThreads << "\n";
+	Index taskmanagerNumthreads = 0;
+
+	//TaskManager::SetPajeTrace(true);
+	//PajeTrace::SetMaxTracefileSize(100000000);
+
+	taskmanagerNumthreads = EnterTaskManager();
+	//std::cout << "EnterTaskManager = " << taskmanagerNumthreads << "\n";
+
+	size_t n = 100;
+	const int m = 10;
+	int loop = (int)(1e7 / m);
+	double gflop = (1.*n*m*loop) / 1.e9; //number of operations in 10^9 units
+
+							   //for (size_t n = 10; n <= 10000; n *= 10)
+	Array<double> res(n);
+	std::mutex mtx;           // mutex for critical section
+
+	ngstd::ParallelFor(n, [&res,&m,&mtx,this](size_t i)
+		//for (i=1; i <= n; i++)
+	{
+		//std::unique_lock<std::mutex> lck(mtx, std::defer_lock);
+		//lck.lock(); //start critical section
+		//std::cout << "i=" << i << "\n";
+		//std::cout << "thread=" << ngstd::TaskManager().GetThreadId() << "\n";
+		//lck.unlock(); //finish critical section
+
+		double val1 = 1 + 1e-7*i;
+		double val2 = 1 + 2e-7*i;
+		double val3 = 1 + 3e-7*i;
+		double val4 = 1 + 4e-7*i;
+		double prod = 1;
+		double sum = 1;
+		double sum2 = 2;
+		this->GetSolverName();
+		for (int j = 0; j < m; j++)
+		{
+			prod *= val1;
+			//prod *= val2;
+			//prod *= val3;
+			//prod *= val4;
+			//sum += val1;
+			//sum += val2;
+			//sum += val3;
+			//sum += val4;
+			//sum2 += val1;
+			//sum2 += val2;
+			//sum2 += val3;
+			sum2 += val4;
+		}
+		res[8] += prod + sum + sum2;
+	}); //ParallelFor
+
+#endif
+
 	bool success = true; //local success variable
 	SolverExceptionHandling([&]
 	{
@@ -365,6 +437,9 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 	globalTimers.Reset();
 	timer.Reset(simulationSettings.displayComputationTime);
 	timer.total = -EXUstd::GetTimeInSeconds();
+//#define maxThreads 16 //leads to crash. Why? atomic variables, visualization/prostprocessdata? python?
+//#pragma omp parallel num_threads(maxThreads)
+
 	if (success)
 	{
 		SolverExceptionHandling([&]
@@ -380,6 +455,11 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 	}, "CSolverBase::FinalizeSolver");
 
 	output.finishedSuccessfully = success;
+
+#ifdef USE_NGSOLVE_TASKMANAGER
+	//std::cout << "ExitTaskManager\n";
+	ExitTaskManager(taskmanagerNumthreads);
+#endif
 
 	return success;
 }
@@ -404,6 +484,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		if (simulationSettings.displayComputationTime) //computation statistics
 		{
 			VerboseWrite(1, timer.ToString());
+#ifdef USEGLOBALTIMERS
 			STDstring sGlobal;
 			sGlobal = globalTimers.ToString();
 			if (sGlobal.size())
@@ -411,6 +492,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 				sGlobal = "global timings:\n" + sGlobal + "\n";
 				VerboseWrite(1, sGlobal);
 			}
+#endif
 		}
 		if (simulationSettings.displayStatistics)
 		{
@@ -480,10 +562,9 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 
 	bool simulationEndTimeReached = false; //signals that end time has been reached (tEnd in time integration, loadFactor=1 in static solver)
 	it.currentStepIndex++; //first step starts with stepIndex = 1
-	//while (!conv.stepReductionFailed && it.currentStepIndex <= it.numberOfSteps &&
-	//	!computationalSystem.GetPostProcessData()->stopSimulation)
+
 	while (!conv.stepReductionFailed && !simulationEndTimeReached &&
-			!computationalSystem.GetPostProcessData()->stopSimulation)
+		!computationalSystem.GetPostProcessData()->stopSimulation)
 	{
 		computationalSystem.GetSystemData().GetCData().startOfStepState = computationalSystem.GetSystemData().GetCData().currentState; //for step reduction, disc. iteration, python functions, etc.
 		data.startOfStepStateAAlgorithmic.CopyFrom(data.aAlgorithmic);
@@ -543,8 +624,8 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 				stepsSinceLastStepSizeReduction++;
 				if ((stepsSinceLastStepSizeReduction >= 10 || (IsStaticSolver() && stepsSinceLastStepSizeReduction > 3)) &&
 					it.newtonSteps + it.discontinuousIteration < 6) //small iteration numbers needed to increase step ...
-				{ 
-					IncreaseStepSize(computationalSystem, simulationSettings); 
+				{
+					IncreaseStepSize(computationalSystem, simulationSettings);
 					stepsSinceLastStepSizeReduction = 0;
 				}
 			}
@@ -725,7 +806,12 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 			recordImage = true;
 		}
 	}
-	computationalSystem.UpdatePostProcessData(recordImage);
+
+	//update postprocess data only if visualization is running ...
+	if (computationalSystem.GetPostProcessData()->visualizationIsRunning)
+	{
+		computationalSystem.UpdatePostProcessData(recordImage);
+	}
 
 	if (simulationSettings.pauseAfterEachStep) { computationalSystem.GetPostProcessData()->WaitForUserToContinue(); }
 	STOPTIMER(timer.visualization);
@@ -742,6 +828,7 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 
 	bool discIterFinishedSuccessful = false; //local variable
 	it.discontinuousIteration = 0;
+
 	while (it.discontinuousIteration < newton.maxDiscontinuousIterations && !discIterFinishedSuccessful)
 	{
 		if (IsVerbose(2)) { Verbose(2,STDstring("  START discontinuous iteration ")+EXUstd::ToString(it.discontinuousIteration) + ":\n"); }

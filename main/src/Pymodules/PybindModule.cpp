@@ -109,7 +109,14 @@ extern Index matrix_delete_counts; //global counter of item deallocations; is in
 //! retrieve current version as m.attr is not passed trough package
 py::str PyGetVersionString()
 {
-	return STDstring(EXUstd::exudynVersion);
+	STDstring str = STDstring(EXUstd::exudynVersion);
+#ifndef EXUDYN_RELEASE
+	str += "(pre-release)";
+#pragma message("====================================")
+#pragma message("EXUDYN not compiled in release mode!")
+#pragma message("====================================")
+#endif
+	return str;
 }
 
 //! Definition of Invalid Index; to be used in Python to check whether a function returned a valid index (e.g. AddObject(...))
@@ -423,89 +430,113 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def("__int__", [](const NodeIndex &item) {
 		return item.GetIndex();
 		}, "return the integer representation of the index")
-			.def("__repr__", [](const NodeIndex &item) {
+		.def("__repr__", [](const NodeIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
 		}, "return the string representation of the index, which can be, e.g., printed")
 		;
 
-		py::class_<ObjectIndex>(m, "ObjectIndex", "ObjectIndex: index which may only be used for nodes")
-			.def(py::init<>())
-			.def(py::init<Index>())
-			//+++++++++++++++++++++++++++++++++++++++++++
-			//private: .def_readwrite("index", &ObjectIndex::index)
-			.def("GetTypeString", &ObjectIndex::GetTypeString,
-				"get type string for identification in python")
-			.def("GetIndex", &ObjectIndex::GetIndex,
-				"get index converted to index / int")
-			.def("SetIndex", &ObjectIndex::SetIndex,
-				"set index with index / int")
-			.def("__int__", [](const ObjectIndex &item) {
-			return item.GetIndex();
+	py::class_<ObjectIndex>(m, "ObjectIndex", "ObjectIndex: index which may only be used for nodes")
+		.def(py::init<>())
+		.def(py::init<Index>())
+		//+++++++++++++++++++++++++++++++++++++++++++
+		//private: .def_readwrite("index", &ObjectIndex::index)
+		.def("GetTypeString", &ObjectIndex::GetTypeString,
+			"get type string for identification in python")
+		.def("GetIndex", &ObjectIndex::GetIndex,
+			"get index converted to index / int")
+		.def("SetIndex", &ObjectIndex::SetIndex,
+			"set index with index / int")
+		.def("__int__", [](const ObjectIndex &item) {
+		return item.GetIndex();
 		}, "return the integer representation of the index")
 			.def("__repr__", [](const ObjectIndex &item) {
 			return STDstring(EXUstd::ToString(item.GetIndex()));
 		}, "return the string representation of the index, which can be, e.g., printed")
 			;
 
-		py::class_<MarkerIndex>(m, "MarkerIndex", "MarkerIndex: index which may only be used for nodes")
-			.def(py::init<>())
-			.def(py::init<Index>())
-			//+++++++++++++++++++++++++++++++++++++++++++
-			//private: .def_readwrite("index", &MarkerIndex::index)
-			.def("GetTypeString", &MarkerIndex::GetTypeString,
-				"get type string for identification in python")
-			.def("GetIndex", &MarkerIndex::GetIndex,
-				"get index converted to index / int")
-			.def("SetIndex", &MarkerIndex::SetIndex,
-				"set index with index / int")
-			.def("__int__", [](const MarkerIndex &item) {
-			return item.GetIndex();
-			}, "return the integer representation of the index")
-				.def("__repr__", [](const MarkerIndex &item) {
-				return STDstring(EXUstd::ToString(item.GetIndex()));
-			}, "return the string representation of the index, which can be, e.g., printed")
-			;
+	py::class_<MarkerIndex>(m, "MarkerIndex", "MarkerIndex: index which may only be used for nodes")
+		.def(py::init<>())
+		.def(py::init<Index>())
+		//+++++++++++++++++++++++++++++++++++++++++++
+		//private: .def_readwrite("index", &MarkerIndex::index)
+		.def("GetTypeString", &MarkerIndex::GetTypeString,
+			"get type string for identification in python")
+		.def("GetIndex", &MarkerIndex::GetIndex,
+			"get index converted to index / int")
+		.def("SetIndex", &MarkerIndex::SetIndex,
+			"set index with index / int")
+		.def("__int__", [](const MarkerIndex &item) {
+		return item.GetIndex();
+		}, "return the integer representation of the index")
+			.def("__repr__", [](const MarkerIndex &item) {
+			return STDstring(EXUstd::ToString(item.GetIndex()));
+		}, "return the string representation of the index, which can be, e.g., printed")
+		;
 
-		py::class_<LoadIndex>(m, "LoadIndex", "LoadIndex: index which may only be used for nodes")
-			.def(py::init<>())
-			.def(py::init<Index>())
-			//+++++++++++++++++++++++++++++++++++++++++++
-			//private: .def_readwrite("index", &LoadIndex::index)
-			.def("GetTypeString", &LoadIndex::GetTypeString,
-				"get type string for identification in python")
-			.def("GetIndex", &LoadIndex::GetIndex,
-				"get index converted to index / int")
-			.def("SetIndex", &LoadIndex::SetIndex,
-				"set index with index / int")
-			.def("__int__", [](const LoadIndex &item) {
-			return item.GetIndex();
-			}, "return the integer representation of the index")
-				.def("__repr__", [](const LoadIndex &item) {
-				return STDstring(EXUstd::ToString(item.GetIndex()));
-			}, "return the string representation of the index, which can be, e.g., printed")
-			;
+	py::class_<LoadIndex>(m, "LoadIndex", "LoadIndex: index which may only be used for nodes")
+		.def(py::init<>())
+		.def(py::init<Index>())
+		//+++++++++++++++++++++++++++++++++++++++++++
+		//private: .def_readwrite("index", &LoadIndex::index)
+		.def("GetTypeString", &LoadIndex::GetTypeString,
+			"get type string for identification in python")
+		.def("GetIndex", &LoadIndex::GetIndex,
+			"get index converted to index / int")
+		.def("SetIndex", &LoadIndex::SetIndex,
+			"set index with index / int")
+		.def("__int__", [](const LoadIndex &item) {
+		return item.GetIndex();
+		}, "return the integer representation of the index")
+			.def("__repr__", [](const LoadIndex &item) {
+			return STDstring(EXUstd::ToString(item.GetIndex()));
+		}, "return the string representation of the index, which can be, e.g., printed")
+		;
 
-		py::class_<SensorIndex>(m, "SensorIndex", "SensorIndex: index which may only be used for nodes")
-			.def(py::init<>())
-			.def(py::init<Index>())
-			//+++++++++++++++++++++++++++++++++++++++++++
-			//private: .def_readwrite("index", &SensorIndex::index)
-			.def("GetTypeString", &SensorIndex::GetTypeString,
-				"get type string for identification in python")
-			.def("GetIndex", &SensorIndex::GetIndex,
-				"get index converted to index / int")
-			.def("SetIndex", &SensorIndex::SetIndex,
-				"set index with index / int")
-			.def("__int__", [](const SensorIndex &item) {
-			return item.GetIndex();
-			}, "return the integer representation of the index")
-				.def("__repr__", [](const SensorIndex &item) {
-				return STDstring(EXUstd::ToString(item.GetIndex()));
-			}, "return the string representation of the index, which can be, e.g., printed")
-			;
+	py::class_<SensorIndex>(m, "SensorIndex", "SensorIndex: index which may only be used for nodes")
+		.def(py::init<>())
+		.def(py::init<Index>())
+		//+++++++++++++++++++++++++++++++++++++++++++
+		//private: .def_readwrite("index", &SensorIndex::index)
+		.def("GetTypeString", &SensorIndex::GetTypeString,
+			"get type string for identification in python")
+		.def("GetIndex", &SensorIndex::GetIndex,
+			"get index converted to index / int")
+		.def("SetIndex", &SensorIndex::SetIndex,
+			"set index with index / int")
+		.def("__int__", [](const SensorIndex &item) {
+		return item.GetIndex();
+		}, "return the integer representation of the index")
+		.def("__repr__", [](const SensorIndex &item) {
+			return STDstring(EXUstd::ToString(item.GetIndex()));
+		}, "return the string representation of the index, which can be, e.g., printed")
+		;
+
+	////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//NOT needed, should always convert to std::vector<NodeIndex>
+	//py::class_<ArrayNodeIndex>(m, "ArrayNodeIndex", "ArrayNodeIndex: array of indices which may only be used for nodes")
+	//	.def(py::init<>())
+	//	.def(py::init<std::vector<Index>>())
+	//	.def(py::init<std::vector<NodeIndex>>())
+	//	//+++++++++++++++++++++++++++++++++++++++++++
+	//	.def("GetTypeString", &ArrayNodeIndex::GetTypeString,
+	//		"get type string for identification in python")
+	//	.def("GetArrayIndex", &ArrayNodeIndex::GetArrayIndex,
+	//		"get index converted to index / int")
+	//	.def("SetArrayIndex", &ArrayNodeIndex::SetArrayIndex,
+	//		"set index with index / int")
+	//	//.def("__list__", [](const ArrayNodeIndex &item) {
+	//	//	return item.GetArrayIndex();
+	//	//}, "return the integer representation of the index array")
+	//	.def("__repr__", [](const ArrayNodeIndex &item) {
+	//		return STDstring(EXUstd::ToString(ArrayIndex(item.GetArrayIndex())));
+	//	}, "return the string representation of the index array, which can be, e.g., printed")
+	//	;
+
 
 		//+++++++++++++++++++++++++++++++++++++++++++
-	py::class_<PyMatrixContainer>(m, "MatrixContainer", "MatrixContainer: holds a dense or sparse matrix")
+		//+++++++++++++++++++++++++++++++++++++++++++
+		//+++++++++++++++++++++++++++++++++++++++++++
+		py::class_<PyMatrixContainer>(m, "MatrixContainer", "MatrixContainer: holds a dense or sparse matrix")
 		.def(py::init<>())
 		//+++++++++++++++++++++++++++++++++++++++++++
 		.def("SetWithDenseMatrix", &PyMatrixContainer::SetWithDenseMatrix, 

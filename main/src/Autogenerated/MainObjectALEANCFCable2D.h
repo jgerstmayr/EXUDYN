@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2020-09-16  11:24:28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectALEANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2; the element has 8+1 coordinates and uses cubic polynomials for position interpolation; the element in addition to ANCFCable2D adds an Eulerian axial velocity by the GenericODE2 coordiante
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -127,7 +127,7 @@ public: // AUTO:
         cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(d["physicsReferenceAxialStrain"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms = py::cast<bool>(d["physicsUseCouplingTerms"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectALEANCFCable2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex3Safely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<bool>(d["useReducedOrderIntegration"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectALEANCFCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -151,7 +151,7 @@ public: // AUTO:
         d["physicsReferenceAxialStrain"] = (Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsReferenceCurvature"] = (Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsUseCouplingTerms"] = (bool)cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumbers"] = (std::vector<Index>)cObjectALEANCFCable2D->GetParameters().nodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectALEANCFCable2D->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
         d["useReducedOrderIntegration"] = (bool)cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectALEANCFCable2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -174,7 +174,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain);} //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature);} //! AUTO: get parameter
         else if (parameterName.compare("physicsUseCouplingTerms") == 0) { return py::cast((bool)cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast((std::vector<Index>)cObjectALEANCFCable2D->GetParameters().nodeNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectALEANCFCable2D->GetParameters().nodeNumbers)));} //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((bool)cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectALEANCFCable2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { return py::cast((float)visualizationObjectALEANCFCable2D->GetDrawHeight());} //! AUTO: get parameter
@@ -198,7 +198,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsUseCouplingTerms") == 0) { cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectALEANCFCable2D->GetParameters().nodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { cObjectALEANCFCable2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex3Safely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectALEANCFCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { visualizationObjectALEANCFCable2D->GetDrawHeight() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

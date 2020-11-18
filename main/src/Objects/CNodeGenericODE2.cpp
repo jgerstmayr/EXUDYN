@@ -40,7 +40,19 @@ void CNodeGenericODE2::GetOutputVariable(OutputVariableType variableType, Config
 	{
 		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
-			value = GetCoordinateVector_t(configuration); 
+			value = GetCoordinateVector_t(configuration);
+		}
+		else
+		{
+			PyError("CNodeGenericODE2::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		{
+			value = GetCoordinateVector_tt(configuration);
 		}
 		else
 		{

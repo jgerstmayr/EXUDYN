@@ -401,16 +401,16 @@ void CObjectFFRF::ComputeMassMatrix(Matrix& massMatrix) const
 
 
 
-//! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+//! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
+void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	Index nODE2 = GetODE2Size(); //total number of coordinates
 	Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
 	Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
 
-	ode2Rhs.SetNumberOfItems(nODE2);
-	ode2Rhs.SetAll(0.);
+	ode2Lhs.SetNumberOfItems(nODE2);
+	ode2Lhs.SetAll(0.);
 
 	//tempCoordinates.SetNumberOfItems(nODE2); //delete
 	//tempCoordinates_t.SetNumberOfItems(nODE2);
@@ -422,9 +422,9 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 		//link to flexible parts of vectors:
 		LinkedDataVector coordinatesFF(tempCoordinates, nODE2Rigid, nODE2FF);
 		LinkedDataVector coordinatesFF_t(tempCoordinates_t, nODE2Rigid, nODE2FF); //cF_t in python
-		LinkedDataVector ode2RhsTT(ode2Rhs, 0, ffrfNodeDim);
-		LinkedDataVector ode2RhsRR(ode2Rhs, ffrfNodeDim, nODE2Rigid-ffrfNodeDim);
-		LinkedDataVector ode2RhsFF(ode2Rhs, nODE2Rigid, nODE2FF);
+		LinkedDataVector ode2LhsTT(ode2Lhs, 0, ffrfNodeDim);
+		LinkedDataVector ode2LhsRR(ode2Lhs, ffrfNodeDim, nODE2Rigid-ffrfNodeDim);
+		LinkedDataVector ode2LhsFF(ode2Lhs, nODE2Rigid, nODE2FF);
 
 		Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix();
 
@@ -433,16 +433,16 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 
 		if (parameters.stiffnessMatrixFF.NumberOfRows() != 0)
 		{
-			//EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrixFF, coordinatesFF, ode2RhsFF);
-			parameters.stiffnessMatrixFF.MultMatrixVectorAdd(coordinatesFF, ode2RhsFF);
+			//EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrixFF, coordinatesFF, ode2LhsFF);
+			parameters.stiffnessMatrixFF.MultMatrixVectorAdd(coordinatesFF, ode2LhsFF);
 		}
 
 		if (parameters.dampingMatrixFF.NumberOfRows() != 0)
 		{
-			parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, ode2RhsFF);
+			parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, ode2LhsFF);
 
 			//delete:
-			//Vector test = ode2RhsFF;
+			//Vector test = ode2LhsFF;
 			//test *= 0;
 			//parameters.dampingMatrixFF.MultMatrixVectorAdd(coordinatesFF_t, test);
 			//pout << "|damping term|=" << test.GetL2Norm() << "\n";
@@ -450,18 +450,18 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 
 		if (parameters.forceVector.NumberOfItems() != 0)
 		{
-			//CHECKandTHROWstring("CObjectFFRF::ComputeODE2RHS: forceVector not implemented!");
+			//CHECKandTHROWstring("CObjectFFRF::ComputeODE2LHS: forceVector not implemented!");
 			//transformation needed, which transforms f_{ff} components from global to local coordiantes
 			LinkedDataVector forceVectorRigid(parameters.forceVector, 0, nODE2Rigid);
 			LinkedDataVector forceVectorFF(parameters.forceVector, nODE2Rigid, nODE2FF);
-			LinkedDataVector ode2RhsRigid(ode2Rhs, 0, nODE2Rigid);
+			LinkedDataVector ode2LhsRigid(ode2Lhs, 0, nODE2Rigid);
 
-			ode2RhsRigid -= forceVectorRigid;
+			ode2LhsRigid -= forceVectorRigid;
 			Matrix3D AT = GetRotationMatrix(Vector3D({ 0, 0, 0 })).GetTransposed();
 			AT *= -1; //because forceVector is subtracted
-			RigidBodyMath::ApplyTransformationAndAdd(AT, forceVectorFF, ode2RhsFF);
+			RigidBodyMath::ApplyTransformationAndAdd(AT, forceVectorFF, ode2LhsFF);
 
-			//ode2Rhs -= parameters.forceVector;
+			//ode2Lhs -= parameters.forceVector;
 		}
 
 		ConstSizeMatrix<GMaxSize> Glocal;
@@ -495,7 +495,7 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 		//2*PHItTM @ cF_tTilde @ omega3D
 		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(PHItTM, tempVelSkew, temp);
 		tempVec += temp * (2. * omega3D);
-		ode2RhsTT -= A * tempVec; //-= for all ode2Rhs terms
+		ode2LhsTT -= A * tempVec; //-= for all ode2Lhs terms
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//fRot = -G.T@(omega3Dtilde @ rfTilde.T @ massMatrix @ rfTilde @ omega3D + 
@@ -510,8 +510,8 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(tempMatrix, tempVelSkew, temp);
 		tempVec += 2.*(temp * omega3D);
 
-		//ode2RhsRR -= -1.*(GlocalT * tempVec); //-= for all ode2Rhs terms; NOT IMPLEMENTED, because cannot decide result vector at compile time
-		EXUmath::MultMatrixVectorAdd(GlocalT, tempVec, ode2RhsRR); //double negative signs cancel!
+		//ode2LhsRR -= -1.*(GlocalT * tempVec); //-= for all ode2Lhs terms; NOT IMPLEMENTED, because cannot decide result vector at compile time
+		EXUmath::MultMatrixVectorAdd(GlocalT, tempVec, ode2LhsRR); //double negative signs cancel!
 
 
 
@@ -521,7 +521,7 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 		tempVector = coordinatesFF;
 		RigidBodyMath::ApplyTransformation(omega3Dtilde2, tempVector);
 		RigidBodyMath::ApplyTransformationAndAdd(2.*omega3Dtilde, coordinatesFF_t, tempVector);
-		parameters.massMatrixFF.MultMatrixVectorAdd(tempVector, ode2RhsFF); //two negative signs cancel: fFlex = - ... and ode2RhsFF -= ...
+		parameters.massMatrixFF.MultMatrixVectorAdd(tempVector, ode2LhsFF); //two negative signs cancel: fFlex = - ... and ode2LhsFF -= ...
 		
 
 		//#add gravity:
@@ -542,7 +542,7 @@ void CObjectFFRF::ComputeODE2RHS(Vector& ode2Rhs) const
 			userForce = (Vector)(parameters.forceUserFunction(t, tempCoordinates, tempCoordinates_t));
 		}, "ObjectFFRF::forceUserFunction");
 
-		ode2Rhs -= userForce;
+		ode2Lhs -= userForce;
 	}
 
 }
@@ -789,7 +789,7 @@ void CObjectFFRF::GetOutputVariableBody(OutputVariableType variableType, const V
 	{
 	case OutputVariableType::Coordinates:	value.CopyFrom(coordinates);	break;
 	case OutputVariableType::Coordinates_t: value.CopyFrom(coordinates_t);	break;
-	case OutputVariableType::Force:			ComputeODE2RHS(value);	break;
+	case OutputVariableType::Force:			ComputeODE2LHS(value);	break;
 	default:
 		SysError("CObjectFFRF::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

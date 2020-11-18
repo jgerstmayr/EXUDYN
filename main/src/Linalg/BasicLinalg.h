@@ -310,6 +310,11 @@ namespace EXUmath {
 		MultMatrixVectorAddTemplate<Matrix3D, Vector3D, Vector>(matrix, vector, result);
 	}
 
+	//! result += matrix*vector (ADD results)
+	inline void MultMatrixVectorAdd(const ConstSizeMatrix<12>& matrix, const Vector& vector, Vector3D& result) {
+		MultMatrixVectorAddTemplate<ConstSizeMatrix<12>, Vector, Vector3D>(matrix, vector, result);
+	}
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Matrix * Matrix multiplication templates; this should also work with operator* in ConstSizeMatrix<9>
 	inline void MultMatrixMatrix(const ConstSizeMatrix<9>& m1, const ConstSizeMatrix<9>& m2, ConstSizeMatrix<9>& result) {

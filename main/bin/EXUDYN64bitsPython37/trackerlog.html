@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 447, 
-Number of resolved issues = 11, 
-EXUDYN version = 1.0.11, 
-last change =  2020-09-09
+Number of issues = 449, 
+Number of resolved issues = 13, 
+EXUDYN version = 1.0.13, 
+last change =  2020-09-10
 
 
 <table style = "width:100%">
@@ -38,6 +38,38 @@ last change =  2020-09-09
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0448</td>
+    <td>ObjectGenericODE2 bug</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> ObjectGenericODE2 crashes without message when initialized with invalid node numbers</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-09-09</td>
+    <td>2020-11-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0447</td>
+    <td>test examples       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test all examples with new index types</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-09-09</td>
+    <td>2020-11-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0446</td>
     <td>NodeIndex in arrays </td>
@@ -92,22 +124,6 @@ last change =  2020-09-09
     <td>JG</td>
     <td>RAISED  </td>
     <td> make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2020-07-21</td>
-    <td>2020-09-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0435</td>
-    <td>check runtimeError  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check if exception runtimeerror works for all catch cases (test in windows?)</td>
     <td>CHECK</td>
     <td></td>
     <td>2020-07-21</td>
@@ -560,22 +576,6 @@ last change =  2020-09-09
     <td></td>
     <td>2020-02-04</td>
     <td>2020-04-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0330</td>
-    <td>correct ODE2RHS     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> correct ODE2RHS to ODE2Terms in objects because it is left-hand-side</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2020-02-03</td>
-    <td>2020-04-03</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1233,6 +1233,22 @@ last change =  2020-09-09
     <td>2020-08-13</td>
     <td>2020-10-12</td>
     <td>2020-08-13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0435</td>
+    <td>check runtimeError  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if exception runtimeerror works for all catch cases (test in windows?)</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-07-21</td>
+    <td>2020-09-19</td>
+    <td>2020-09-09</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -2453,6 +2469,22 @@ last change =  2020-09-09
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0330</td>
+    <td>correct ODE2RHS     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct ODE2RHS to ODE2Terms in objects because it is left-hand-side</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-02-03</td>
+    <td>2020-04-03</td>
+    <td>2020-09-10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>changed object computation function from RHS to LHS, as it always computed the LHS (the system.cpp function ComputeODE2RHS then puts it to RHS)</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0329</td>

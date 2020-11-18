@@ -191,7 +191,7 @@ public: //
 	//! Read (Reference) access to:global number of Data variable (sum of all node Data variable)
 	const Index& GetNumberOfCoordinatesData() const { return numberOfCoordinatesData; }
 
-	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeODE2RHS, GetOutputVariableConnector, etc.; implemented in CSystem.cpp
+	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.; implemented in CSystem.cpp
 	virtual void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const;
 
 

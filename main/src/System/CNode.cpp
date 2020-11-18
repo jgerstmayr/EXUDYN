@@ -74,6 +74,12 @@ LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_t() const
 	return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
+//! get vector with current coordinates_tt; corresponds to accelerations
+LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_tt() const
+{
+	return LinkedDataVector(computationalData->currentState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+}
+
 LinkedDataVector CNodeODE2::GetInitialCoordinateVector() const
 {
 	return LinkedDataVector(computationalData->initialState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
@@ -84,6 +90,11 @@ LinkedDataVector CNodeODE2::GetInitialCoordinateVector_t() const
 	return LinkedDataVector(computationalData->initialState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
+LinkedDataVector CNodeODE2::GetInitialCoordinateVector_tt() const
+{
+	return LinkedDataVector(computationalData->initialState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+}
+
 LinkedDataVector CNodeODE2::GetVisualizationCoordinateVector() const
 {
 	return LinkedDataVector(computationalData->visualizationState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
@@ -92,6 +103,11 @@ LinkedDataVector CNodeODE2::GetVisualizationCoordinateVector() const
 LinkedDataVector CNodeODE2::GetVisualizationCoordinateVector_t() const
 {
 	return LinkedDataVector(computationalData->visualizationState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+}
+
+LinkedDataVector CNodeODE2::GetVisualizationCoordinateVector_tt() const
+{
+	return LinkedDataVector(computationalData->visualizationState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

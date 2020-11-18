@@ -12,11 +12,14 @@
 
 import sys
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+#sys.path.append('../exudyn') 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
+from exudyn.rigidBodyUtilities import *
+#from exudyn.lieGroupBasics import *
 from exudyn.lieGroupIntegration import *
 
 import numpy as np
@@ -179,13 +182,13 @@ if exudynTestGlobals.useGraphics:
     import matplotlib.ticker as ticker
     plt.close("all")
     
-#    [fig1, ax1] = plt.subplots()
+##    [fig1, ax1] = plt.subplots()
     [fig2, ax2] = plt.subplots()
-    [fig3, ax3] = plt.subplots()
-    data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
-#    ax1.plot(data1[:,0], data1[:,1+3], 'r-', label='coordinate 0')  #1, because coordinates to not include ref. values
-#    ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='coordinate 1') 
-#    ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='coordinate 2') 
+#    [fig3, ax3] = plt.subplots()
+#    data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
+##    ax1.plot(data1[:,0], data1[:,1+3], 'r-', label='coordinate 0')  #1, because coordinates to not include ref. values
+##    ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='coordinate 1') 
+##    ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='coordinate 2') 
     
     
     data2 = np.loadtxt('solution/sensorAngVelLocal.txt', comments='#', delimiter=',')

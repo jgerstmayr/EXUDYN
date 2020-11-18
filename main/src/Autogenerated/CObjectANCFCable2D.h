@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-09-16  11:24:28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -57,7 +57,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1; the element has 8 coordinates and uses cubic polynomials for position interpolation; the Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

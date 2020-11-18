@@ -170,13 +170,13 @@ public:
     // Computation FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    //! compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs'; time t not provided, as nodes can obtain time from CData
-    virtual void ComputeODE2RHS(Vector& ode2Rhs) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2RHS"); }
+    //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'; time t not provided, as nodes can obtain time from CData
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHS"); }
 
-    //! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs', which has dimension GetODE1Size(); q are the system coordinates
-    //virtual void ComputeODE1RHS(Vector& ode1Rhs, const Vector& q) {}
-    //! compute derivative of right-hand-side (RHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2rhs', which has dimension GetODE1Size() x GetODE1Size(); this is the tangent (stiffness) matrix; q are the system coordinates
-    //virtual void ComputeODE1RHS_q(Matrix& ode2Rhs, const Vector& q) {}
+    //! compute left-hand-side (LHS) of first order ordinary differential equations (ODE) to 'ode1Lhs', which has dimension GetODE1Size(); q are the system coordinates
+    //virtual void ComputeODE1LHS(Vector& ode1Lhs, const Vector& q) {}
+    //! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE1Size() x GetODE1Size(); this is the tangent (stiffness) matrix; q are the system coordinates
+    //virtual void ComputeODE1LHS_q(Matrix& ode2Lhs, const Vector& q) {}
 
     //! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeAlgebraicEquations"); }
@@ -184,8 +184,8 @@ public:
 	//! return the available jacobian types (can be combined with 2^i enum flags); default: no jacobians ==> computed numerically
 	virtual JacobianType::Type GetAvailableJacobians() const { return JacobianType::_None; }
 
-    //! compute derivative of right-hand-side (RHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
-    virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2RHSJacobian"); }
+    //! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
+    virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHSJacobian"); }
 
     //! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }

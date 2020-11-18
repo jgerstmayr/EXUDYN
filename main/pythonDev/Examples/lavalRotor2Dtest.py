@@ -41,7 +41,7 @@ torque = 0*1 #Nm
 eps = 1e-2 #excentricity in y-direction
 omegaInitial = 0.5*omega0
 
-print('resonance frequency = '+str(omega0))
+print('resonance frequency = '+str(omega0/2/np.pi)+'Hz')
 tEnd = 50     #end time of simulation
 steps = 10000  #number of steps
 
@@ -128,7 +128,7 @@ print('displacement=',u[0])
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-if 0*exudynTestGlobals.useGraphics:
+if True:
     data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     n=steps
     #plt.plot(data[:,0], data[:,6], 'r-') #numerical solution

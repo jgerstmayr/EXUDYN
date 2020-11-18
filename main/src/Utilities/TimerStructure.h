@@ -53,7 +53,7 @@ public:
 	Index AddTimer(const char* name)
 	{
 		Index n = counters.size();
-		counters.push_back(0);
+		counters.push_back(0.);
 		counterNames.push_back(name);
 		return n;
 	}

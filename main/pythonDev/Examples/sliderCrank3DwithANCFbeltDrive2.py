@@ -854,7 +854,7 @@ sims.solutionSettings.sensorsWritePeriod = 0.001
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #visualizaion
-
+SC.visualizationSettings.general.circleTiling=128
 dSize = 0.02
 SC.visualizationSettings.nodes.defaultSize = dSize
 SC.visualizationSettings.markers.defaultSize = dSize

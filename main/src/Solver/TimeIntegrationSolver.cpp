@@ -163,7 +163,7 @@ bool SolverRK1::SolveSystemTemplate(CSystem& computationalSystem, const Simulati
 		massMatrix.SetAllZero();
 		computationalSystem.ComputeMassMatrix(tempCompData, massMatrix);
 
-		computationalSystem.ComputeODE2RHS(tempCompData, systemRHS);
+		computationalSystem.ComputeSystemODE2RHS(tempCompData, systemRHS);
 		if (verbose >= 3) { pout << "  systemRHS=" << systemRHS << "\n"; }
 		if (verbose >= 4) { pout << "  mass matrix=\n" << massMatrix << "\n"; }
 
@@ -418,7 +418,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 	//to be fully consistent the initial accelerations must be computed with Lagrange multipliers
 	systemMassMatrix.SetAllZero();
 	computationalSystem.ComputeMassMatrix(tempCompData, systemMassMatrix);
-	computationalSystem.ComputeODE2RHS(tempCompData, tempODE2);
+	computationalSystem.ComputeSystemODE2RHS(tempCompData, tempODE2);
 	systemMassMatrix.FinalizeMatrix(); //for sparse matrix
 	if (systemMassMatrix.Factorize() != 0)
 	{
@@ -555,7 +555,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 			timer.massMatrix += EXUstd::GetTimeInSeconds();
 
 			timer.ODE2RHS -= EXUstd::GetTimeInSeconds();
-			computationalSystem.ComputeODE2RHS(tempCompData, tempODE2); //temp contains RHS (linear case: temp = F_applied - K*u - D*v)
+			computationalSystem.ComputeSystemODE2RHS(tempCompData, tempODE2); //temp contains RHS (linear case: temp = F_applied - K*u - D*v)
 			timer.ODE2RHS += EXUstd::GetTimeInSeconds();
 
 			timer.AERHS -= EXUstd::GetTimeInSeconds();
@@ -739,7 +739,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 					timer.massMatrix += EXUstd::GetTimeInSeconds();
 
 					timer.ODE2RHS -= EXUstd::GetTimeInSeconds();
-					computationalSystem.ComputeODE2RHS(tempCompData, tempODE2); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
+					computationalSystem.ComputeSystemODE2RHS(tempCompData, tempODE2); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 					timer.ODE2RHS += EXUstd::GetTimeInSeconds();
 					timer.AERHS -= EXUstd::GetTimeInSeconds();
 					computationalSystem.ComputeAlgebraicEquations(tempCompData, aeResiduum, useIndex2Constraints);
@@ -877,7 +877,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 								computationalSystem.ComputeMassMatrix(tempCompData, systemMassMatrix);
 								timer.massMatrix += EXUstd::GetTimeInSeconds();
 								timer.ODE2RHS -= EXUstd::GetTimeInSeconds();
-								computationalSystem.ComputeODE2RHS(tempCompData, tempODE2); //temp contains RHS (linear case: temp = F_applied - K*u - D*v)
+								computationalSystem.ComputeSystemODE2RHS(tempCompData, tempODE2); //temp contains RHS (linear case: temp = F_applied - K*u - D*v)
 								timer.ODE2RHS += EXUstd::GetTimeInSeconds();
 								timer.AERHS -= EXUstd::GetTimeInSeconds();
 								computationalSystem.ComputeAlgebraicEquations(tempCompData, aeResiduum, useIndex2Constraints); //temp contains RHS (linear case: temp = F_applied - K*u - D*v)

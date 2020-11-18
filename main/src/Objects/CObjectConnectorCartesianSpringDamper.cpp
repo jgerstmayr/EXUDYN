@@ -54,26 +54,26 @@ inline void CObjectConnectorCartesianSpringDamper::ComputeSpringForce(const Mark
 
 }
 
-//! Computational function: compute right-hand-side (RHS) of second order ordinary differential equations (ODE) to "ode2rhs"
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectConnectorCartesianSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, const MarkerDataStructure& markerData) const
+void CObjectConnectorCartesianSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorCartesianSpringDamper::ComputeODE2RHS: marker do not provide velocityLevel information");
+		"CObjectConnectorCartesianSpringDamper::ComputeODE2LHS: marker do not provide velocityLevel information");
 
-	//link separate vectors to result (ode2Rhs) vector
-	ode2Rhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Rhs.SetAll(0.);
+	//link separate vectors to result (ode2Lhs) vector
+	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+	ode2Lhs.SetAll(0.);
 
 	if (parameters.activeConnector)
 	{
 		Vector3D vPos, vVel, fVec;
 		ComputeSpringForce(markerData, parameters, vPos, vVel, fVec);
 
-		//now link ode2Rhs Vector to partial result using the two jacobians
+		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
-			LinkedDataVector ldv1(ode2Rhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 
 			//ldv1 = (1.)*(markerData.GetMarkerData(1).positionJacobian.GetTransposed()*f); //slow version		
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fVec, ldv1);
@@ -81,7 +81,7 @@ void CObjectConnectorCartesianSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, cons
 
 		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
-			LinkedDataVector ldv0(ode2Rhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
+			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
 
 			//ldv0 = (-1.)*(jacobian0.GetTransposed()*f); //SLOW version
 			fVec *= -1.;
@@ -94,7 +94,7 @@ void CObjectConnectorCartesianSpringDamper::ComputeODE2RHS(Vector& ode2Rhs, cons
 
 void CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
 {
-	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCartesianSpringDamper::ComputeODE2RHSJacobian");
+	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2");
 }
 
 //! provide according output variable in "value"

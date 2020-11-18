@@ -102,6 +102,12 @@ Vector3D CNodeRigidBodyEP::GetVelocity(ConfigurationType configuration) const
 	return Vector3D({ u3D_t[0], u3D_t[1], u3D_t[2] });
 }
 
+Vector3D CNodeRigidBodyEP::GetAcceleration(ConfigurationType configuration) const
+{
+	LinkedDataVector u3D_tt = GetCoordinateVector_tt(configuration);
+	return Vector3D({ u3D_tt[0], u3D_tt[1], u3D_tt[2] });
+}
+
 Matrix3D CNodeRigidBodyEP::GetRotationMatrix(ConfigurationType configuration) const
 {
 	ConstSizeVector<maxRotationCoordinates> ep(GetRotationParameters(configuration));
@@ -119,6 +125,21 @@ Vector3D CNodeRigidBodyEP::GetAngularVelocity(ConfigurationType configuration) c
 	EXUmath::MultMatrixVector(RigidBodyMath::EP2G(ep), ep_t, omega);
 
 	return omega;
+}
+
+//! return configuration dependent angular velocity of node; returns always a 3D Vector
+Vector3D CNodeRigidBodyEP::GetAngularAcceleration(ConfigurationType configuration) const
+{
+	ConstSizeVector<maxRotationCoordinates> ep(GetRotationParameters(configuration));
+	//LinkedDataVector ep_t(GetRotationParameters_t(configuration));
+	LinkedDataVector ep_tt(GetCoordinateVector_tt(configuration),nDisplacementCoordinates,nRotationCoordinates);
+
+	//Vector3D omega;
+	//EXUmath::MultMatrixVector(RigidBodyMath::EP2G(ep), ep_t, omega);
+	Vector3D alpha;
+	EXUmath::MultMatrixVector(RigidBodyMath::EP2G(ep), ep_tt, alpha); //EP2G_t not needed for Euler parameters as EP2G_t*ep_t=0!
+
+	return alpha;
 }
 
 //! return configuration dependent local (=body fixed) angular velocity of node; returns always a 3D Vector
@@ -173,8 +194,10 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(configuration)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(configuration)); break;
+	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(configuration)); break;
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(configuration);
 		value.SetVector(9, rot.GetDataPointer());
@@ -203,6 +226,18 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_t(configuration);
+		}
+		else
+		{
+			PyError("CNodeRigidBodyEP::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates_tt:
+	{
+		if (IsConfigurationInitialCurrentVisualization(configuration))
+		{
+			value = GetCoordinateVector_tt(configuration);
 		}
 		else
 		{

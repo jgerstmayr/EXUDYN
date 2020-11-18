@@ -140,7 +140,7 @@ void CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 
 	//now compute the new residual with updated system vectors:
 	STARTTIMER(timer.ODE2RHS);
-	computationalSystem.ComputeODE2RHS(data.tempCompData, ode2Residual); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
+	computationalSystem.ComputeSystemODE2RHS(data.tempCompData, ode2Residual); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 	STOPTIMER(timer.ODE2RHS);
 
 	STARTTIMER(timer.AERHS);
