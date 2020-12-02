@@ -278,6 +278,15 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //    }
 //};
 
+//currently not used inside C++ code!
+enum class DynamicSolverType {
+	//_None = 0, //marks that no configuration is used
+	GeneralizedAlpha = 1,	//an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers
+	TrapezoidalIndex2 = 2,	//an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction
+	ExplicitEuler = 3,		//an explicit first order solver for systems without constraints
+	RK45 = 4				//an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection
+};
+
 enum class ConfigurationType {
 	_None = 0, //marks that no configuration is used
 	Initial = 1,

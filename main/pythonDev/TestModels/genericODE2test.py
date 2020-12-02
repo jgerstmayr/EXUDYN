@@ -98,7 +98,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 u1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
 #exu.Print("u1 =", u1)

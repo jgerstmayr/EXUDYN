@@ -177,7 +177,7 @@ if exudynTestGlobals.useGraphics:
 solveDynamic = True
 if solveDynamic: 
 
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates()
     u = sol[len(sol)-3]
@@ -202,7 +202,7 @@ else:
     simulationSettings.staticSolver.pauseAfterEachStep = False
     simulationSettings.staticSolver.stabilizerODE2term = 50 
 
-    SC.StaticSolve(mbs, simulationSettings)
+    exu.SolveStatic(mbs, simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates()
     n = len(sol)

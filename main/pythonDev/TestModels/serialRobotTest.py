@@ -345,7 +345,7 @@ simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=
 
 simulate = True
 if simulate:
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
 
 
 

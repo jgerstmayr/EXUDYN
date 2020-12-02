@@ -1,0 +1,62 @@
+How to use tortoise git on Windows with Exudyn
+
+Install git for windows (gitforwindows.org):
+- open as administrator
+- use true type font in all console windows
+- use notepad as default editor
+- (use defaults settings)
+
+Download TortoiseGit Version 2.9.0 - 64-bit (default installation)
+
++++++++++++++++++++++++++++++++++
+Checkout a copy inside a local repository (on local harddisk) onto the (empty) remote repository:
+- go to your local working directory, e.g. C:\DATA\cpp\EXUDYN_git
+- (right mouse button) TortoiseGit -> "Git create repository here ..."
+- Do not activate 'Make it bare' !!!
+- (right mouse button) TortoiseGit -> Pull: 
+    - Check Arbitrary URL: L:\MEKT2\Exudyn\EXUDYN2019_11_18Git
+    - Remote branch: master
+    - 'OK'
+    - Window opens; Writes 'Success' at the end of message
+
+whenever you like to update from the remote repo:
+- use pull (e.g. master branch)
+
+whenever you like to commit changes:
+- TortoiseGit -> Commit; add some meaningful text
+- TortoiseGit -> Push to remote repo
+
+tips:
+- in the push dialog, use the button manage to save your remote URL (and URL)
+
++++++++++++++++++++++++++++++++++
+git clone (also LFUI git):
+- Tortoise git, right click on empty destination folder (otherwise menu does not show up!)
+- select TortoiseGit->clone
+- clone into this directory 
+- possibly enter log in information
+
++++++++++++++++++++++++++++++++++
+ADVANCED:
++++++++++++++++++++++++++++++++++
+Server, use TortoiseGit, set up new repository:
+- go to (e.g. L: directory), create empty directory
+- go into this directory (explorer) 
+- (right mouse button) "Git create repository here ..."
+- Activate: 'Make it bare'      (otherwise it will not work as remote repo)
+- It will create a lot of folders: DO NOT TOUCH THEM ...
+
++++++++++++++++++++++++++++++++++
+Client, use TortoiseGit to Commit/Push a new local repository (on local harddisk) onto the (empty) remote repository:
+- go to your local working directory, e.g. cpp/yourcode/
+- (right mouse button) "Git create repository here ..."
+- Do not activate 'Make it bare' !!!
+- TortoiseGit -> Add files
+- TortoiseGit -> Commit (will transport your files to your local repository in your working directory)
+- TortoiseGit -> Push (will commit changes to the remote repository on the server)
+
+
+
+
+
+

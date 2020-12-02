@@ -316,7 +316,7 @@ for i in range( len(stepSizeList) ):
     
     
     exu.StartRenderer()
-    #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    #exu.SolveDynamic(mbs, simulationSettings)
     SC.TimeIntegrationSolve(mbs, 'RungeKutta1', simulationSettings)
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!

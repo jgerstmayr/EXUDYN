@@ -14,7 +14,6 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 //#include <string>
-using namespace std::string_literals; // enables s-suffix for std::string literals
 
 
 //void testtest()
@@ -23,6 +22,7 @@ using namespace std::string_literals; // enables s-suffix for std::string litera
 //}
 //
 #ifdef USE_GLFW_GRAPHICS
+using namespace std::string_literals; // enables s-suffix for std::string literals
 
 #include <ostream>
 //#include <stdlib.h> //only works in MSVC for initialization with std::vector

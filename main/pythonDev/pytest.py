@@ -93,7 +93,7 @@ print(solver.it)
 exu.InfoStat()
 
 #alternative solver command
-#SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+#exu.SolveDynamic(mbs, simulationSettings)
 
 #+++++++++++++++++++++++++++++++++++
 #wait for closing window (press 'Q')

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2020-12-01  14:51:06 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,8 +32,8 @@ public: // AUTO:
     Real offset;                                  //!< AUTO: An offset between the two values
     Real factorValue1;                            //!< AUTO: An additional factor multiplied with value1 used in algebraic equation
     bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored
-    std::function<Real(Real,Real)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent offset; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def UF(t, l\_offset): return l\_offset*(1-np.cos(t*10*2*np.pi))
-    std::function<Real(Real,Real)> offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators
+    std::function<Real(Real,Real)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent offset; see description below
+    std::function<Real(Real,Real)> offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for velocity level constraints; see description below
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateParameters()
@@ -51,7 +51,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorCoordinate
-* @brief        A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values.
+* @brief        A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -227,11 +227,11 @@ mbs.SetPreStepUserFunction(UFgondulaReset)
 
 
 exu.StartRenderer()
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 if False:
     for i in range(5000): #2500
-        SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+        exu.SolveDynamic(mbs, simulationSettings)
 
         if mbs.GetRenderEngineStopFlag():
             print('stopped by user')

@@ -454,7 +454,7 @@ if 'lastRenderState' in vars():
 
 #    mbs.WaitForUserToContinue() #press space to continue
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 #if exudynTestGlobals.useGraphics:
 SC.WaitForRenderEngineStopFlag()

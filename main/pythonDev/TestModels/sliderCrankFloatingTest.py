@@ -227,7 +227,7 @@ for testCases in rangeTests:
     if exudynTestGlobals.useGraphics: 
         exu.StartRenderer()
    
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     #SC.TimeIntegrationSolve(mbs, 'SecondOrderImplicit', simulationSettings)
         
     if exudynTestGlobals.useGraphics: 

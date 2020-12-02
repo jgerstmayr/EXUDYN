@@ -200,7 +200,7 @@ for case in range(2):
 #    mbs.WaitForUserToContinue()
     
     #alternative solver command
-    #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    #exu.SolveDynamic(mbs, simulationSettings)
 
 
 

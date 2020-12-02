@@ -92,7 +92,7 @@ SC.visualizationSettings.openGL.multiSampling = 1
 
 exu.StartRenderer()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 print('end time =',mbs.systemData.GetTime()) #time after time integration ...
 #print('solution =',mbs.systemData.GetODE2Coordinates()) #solution coordinates after time integration ...
 

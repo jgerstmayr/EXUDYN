@@ -90,7 +90,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.05
 
 exu.StartRenderer()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

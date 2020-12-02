@@ -22,8 +22,9 @@ import exudyn #for sensor index
 #  sensorNumbers: consists of one or a list of sensor numbers (type SensorIndex) as returned by the mbs function AddSensor(...)
 #  components: consists of one or a list of components according to the component of the sensor to be plotted;
 #  *kwargs: additional options, e.g.: 
-#        xLabel -> string for text at x-axis
-#        yLabel -> string for text at y-axis
+#        xLabel -> string for text at x-axis (otherwise time is used)
+#        yLabel -> string for text at y-axis (otherwise outputvalues are used)
+#        fontSize -> default = 16, which is a little bit larger than default (12)
 #**output: plots the sensor data
 #**example: 
 #  s0=mbs.AddSensor(SensorNode(nodeNumber=0))
@@ -50,7 +51,30 @@ def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
     if len(componentList) !=  len(sensorList):
         raise ValueError('ERROR in PlotSensor: number of sensors and number components must be same or number of components is 1')
         
+    #increase font size as default is rather small
+    if 'fontSize' in kwargs:
+        plt.rcParams.update({'font.size': kwargs['fontSize']})
+    plt.rcParams.update({'font.size': 16})
+
+    #check if all sensor outputvariables are the same
+    checkStr = ''
+    allVariablesSame = True
+    for i in range(len(sensorList)):
+        sensorNumber = sensorList[i]
+        component = componentList[i]
+        variable = mbs.GetSensor(sensorNumber)['outputVariableType']
+        variableStr = str(variable).replace('OutputVariableType.','')
+        if i == 0:
+            checkStr = variableStr
+        elif checkStr != variableStr:
+            allVariablesSame = False
+
     yLabel = ''
+    if allVariablesSame:
+        yLabel = checkStr
+
+    if 'yLabel' in kwargs:
+        yLabel = kwargs['yLabel']
 
     for i in range(len(sensorList)):
         sensorNumber = sensorList[i]
@@ -75,17 +99,19 @@ def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
         
         #extract additional paramters
         xLabel = 'time (s)'
-        yLabelAdd = variableStr
+        
         if 'xLabel' in kwargs:
             xLabel = kwargs['xLabel']
-        if 'yLabel' in kwargs:
-            yLabelAdd = kwargs['yLabel']
-        if len(yLabel) != 0:
-            yLabel += ', '
-        yLabel += yLabelAdd
+        if not 'yLabel' in kwargs and not allVariablesSame:
+            yLabel += variableStr
+            if i < len(sensorList)-1:
+                yLabel += ', '
         
         #plot according column (component+1)!:
-        plt.plot(data[:,0], data[:,component+1], col, label=sensorName+', '+variableStr) #numerical solution
+        sComponent=''
+        if len(componentList) != 1:
+            sComponent = str(component)
+        plt.plot(data[:,0], data[:,component+1], col, label=sensorName+', '+variableStr+sComponent) #numerical solution
         plt.xlabel(xLabel)
         plt.ylabel(yLabel)
         ax=plt.gca() # get current axes

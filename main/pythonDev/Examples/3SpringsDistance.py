@@ -107,7 +107,7 @@ if computeDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.displayStatistics = True
 
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     #SC.TimeIntegrationSolve(mbs, 'RK1', simulationSettings)
 
 else:
@@ -118,7 +118,7 @@ else:
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
     simulationSettings.staticSolver.verboseMode = 2
 
-    SC.StaticSolve(mbs, simulationSettings)
+    exu.SolveStatic(mbs, simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

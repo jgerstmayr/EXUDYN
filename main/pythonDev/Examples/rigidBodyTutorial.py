@@ -79,7 +79,7 @@ simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=
 exu.StartRenderer()
 mbs.WaitForUserToContinue()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

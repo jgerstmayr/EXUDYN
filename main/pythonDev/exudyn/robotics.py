@@ -61,8 +61,8 @@ from exudyn.utilities import *
        # 'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the robot is built
        # } 
 
-
 #compute transformation matrix from standard denavit hartenberg parameters
+#**function: compute homogeneous transformation HT from standard DH-parameters
 def DH2HT(DHparameters):
 #    [theta, d, a, alpha] = DHparameters
 #    return HTrotateZ(theta) @ HTtranslate([0,0,d]) @ HTtranslate([a,0,0]) @ HTrotateX(alpha)
@@ -85,6 +85,24 @@ def DH2HT(DHparameters):
 #print("std. DH =\n", DH2HT([0.5, 0.1, 0.2, np.pi/2]).round(4))
 
 #compute HT for every joint, using given configuration
+#**function: compute list of  homogeneous transformations HT from base to every joint for given configuration
+#**example:
+#link0={'stdDH':[0,0,0,np.pi/2], 
+#         'mass':20,  #not needed!
+#         'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM!
+#         'COM':[0,0,0]}
+#link1={'stdDH':[0,0,0.4318,0],
+#         'mass':17.4, 
+#         'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM!
+#         'COM':[-0.3638, 0.006, 0.2275]}
+#robot={'links':[link0, link1],
+#         'jointType':[1,1], #1=revolute, 0=prismatic
+#         'base':{'HT':HT0()},
+#         'tool':{'HT':HTtranslate([0,0,0.1])},
+#         'gravity':[0,0,9.81],
+#         'referenceConfiguration':[0]*2 #reference configuration for bodies; at which the robot is built
+#         } 
+#HTlist = ComputeJointHT(robot, [np.pi/8]*2)
 def ComputeJointHT(robot, configuration):
     Tcurrent = robot['base']['HT']
     HT = []
@@ -105,6 +123,7 @@ def ComputeJointHT(robot, configuration):
     return HT
 
 #compute HT for every link's COM; takes current jointHT as input
+#**function: compute list of  homogeneous transformations HT from base to every COM using HT list from ComputeJointHT
 def ComputeCOMHT(robot, HT):
     HTCOM = []
     
@@ -116,6 +135,7 @@ def ComputeCOMHT(robot, HT):
     return HTCOM
 
 #compute static torques for robot defined by DH-parameters and for given HT
+#**function: compute list joint torques for serial robot under gravity (gravity and mass as given in robot)
 def ComputeStaticTorques(robot,HT):
     jointTorques = np.zeros(6)
 
@@ -137,6 +157,7 @@ def ComputeStaticTorques(robot,HT):
 #compute jacobian, needs per-link HT in current configuration
 #runs over number of HTs given in HT (may be less than number of links)
 #modes are: 'all', 'trans'...only translation part, 'rot': only rotation part
+#**function: compute jacobian for translation and rotation at toolPosition using joint HT
 def Jacobian(robot,HT,toolPosition=[],mode='all'):
     n = len(HT)
     if n > len(robot['links']):
@@ -253,7 +274,7 @@ def MotionInterpolator(t, robotTrajectory, joint):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++  create a SERIAL ROBOT from DH-parameters in the mbs +++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#add items to existing mbs from the robot structure, a baseMarker (can be ground object or body)
+#**function: add items to existing mbs from the robot structure, a baseMarker (can be ground object or body)
 # and the user function list for the joints
 #the function returns a dictionary containing information on nodes, objects, joints, markers, ...
 #there are options that can be passed as args / kwargs, which can contain the following flags:

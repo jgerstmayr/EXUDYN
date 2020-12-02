@@ -1083,7 +1083,7 @@ class VObjectConnectorRollingDiscPenalty:
         yield 'color', self.color
 
 class ObjectConnectorRollingDiscPenalty:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1095,6 +1095,7 @@ class ObjectConnectorRollingDiscPenalty:
         self.rollingFrictionViscous = rollingFrictionViscous
         self.activeConnector = activeConnector
         self.discRadius = discRadius
+        self.planeNormal = planeNormal
         self.visualization = visualization
 
     def __iter__(self):
@@ -1110,6 +1111,7 @@ class ObjectConnectorRollingDiscPenalty:
         yield 'rollingFrictionViscous', self.rollingFrictionViscous
         yield 'activeConnector', self.activeConnector
         yield 'discRadius', self.discRadius
+        yield 'planeNormal', self.planeNormal
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]
         yield 'Vcolor', dict(self.visualization)["color"]
@@ -1328,12 +1330,13 @@ class VObjectJointRollingDisc:
         yield 'color', self.color
 
 class ObjectJointRollingDisc:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
         self.activeConnector = activeConnector
         self.discRadius = discRadius
+        self.planeNormal = planeNormal
         self.visualization = visualization
 
     def __iter__(self):
@@ -1343,6 +1346,7 @@ class ObjectJointRollingDisc:
         yield 'constrainedAxes', self.constrainedAxes
         yield 'activeConnector', self.activeConnector
         yield 'discRadius', self.discRadius
+        yield 'planeNormal', self.planeNormal
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]
         yield 'Vcolor', dict(self.visualization)["color"]

@@ -242,7 +242,7 @@ if useExplicitIntegrator:#nodeType == exu.NodeType.RotationRotationVector:
     dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
 
 dynamicSolver.SolveSystem(mbs, simulationSettings)
-#SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+#exu.SolveDynamic(mbs, simulationSettings)
 
 omegay=mbs.GetNodeOutput(nRB,exu.OutputVariableType.AngularVelocity)[1] #y-component of angular vel
 exu.Print("omegay=", omegay)

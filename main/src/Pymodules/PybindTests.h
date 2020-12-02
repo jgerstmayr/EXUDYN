@@ -31,10 +31,11 @@ void PythonAlive()
 void PythonGo()
 {
 	py::exec(R"(
-		systemContainer = exu.SystemContainer()
-		mbs = systemContainer.AddSystem()
+import exudyn
+systemContainer = exudyn.SystemContainer()
+mbs = systemContainer.AddSystem()
     )");
-	pout << "main variables:\n systemContainer=exu.SystemContainer()\n mbs = systemContainer.AddSystem()\n";
+	pout << "main variables:\n systemContainer=exudyn.SystemContainer()\n mbs = systemContainer.AddSystem()\n";
 	//pout << "ready to go\n";
 }
 

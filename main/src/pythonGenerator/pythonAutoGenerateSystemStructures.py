@@ -97,7 +97,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         descriptionStr = parseInfo['classDescription']
         if descriptionStr[-1] != '.': descriptionStr += '. '
         
-        sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '} \label{sec_' + parseInfo['class'].replace(' ','_') + '}\n'
+        sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '} \label{sec:' + parseInfo['class'].replace(' ','') + '}\n'
         sLatex += Str2Latex(descriptionStr) + '\\\\ \n'
         sLatex += '%\n'
         sLatex += parseInfo['class'] + ' has the following items:\n'

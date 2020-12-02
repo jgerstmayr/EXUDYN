@@ -13,13 +13,29 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.plot import PlotSensor
+#from exudyn.plot import PlotSensor
 from math import sin, cos, pi
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 print('EXUDYN version='+exu.GetVersionString())
+
+modes = ['100Hz132Xrot', '100Hz132XrotFine', '10Hz132Xrot', '100HzGeneralRotFine']
+iMode = 0
+mStr = modes[iMode]
+
+tEnd = 4
+h = 1e-5
+if mStr.find('Fine') != -1:
+    h = 1e-6 #very fine integration
+
+hSensor = 0.01 #100Hz
+if mStr.find('10Hz') != -1:
+    hSensor = 0.1
+
+localPosition = [0.05,0.05,0.05] #position for measurement of acceleration
+#localPosition = [0.0,0.0,0.0] #position for measurement of acceleration
 
 #background
 #rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax
@@ -47,11 +63,16 @@ v0 = [0,0,0] #initial translational velocity
 
 nGyro = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, 
                                   initialVelocities=v0+list(ep_t0)))
+mass = 2
 Ixx = 0.2
 Iyy = 0.2
 Izz = 0.2
+if mStr == '100HzGeneralRot':
+    Ixx = 0.1
+    Iyy = 0.4
+
 oGraphics = GraphicsDataOrthoCube(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
-oGyro = mbs.AddObject(ObjectRigidBody(physicsMass=2, 
+oGyro = mbs.AddObject(ObjectRigidBody(physicsMass=mass, 
                                     physicsInertia=[Ixx,Iyy,Izz,0,0,0], 
                                     nodeNumber=nGyro, 
                                     visualization=VObjectRigidBody(graphicsData=[oGraphics])))
@@ -80,46 +101,94 @@ def UFtorque1(t, load):
         fy = Iyy*angleYY*4 #factor 4 because of integration of accelerations
     elif t <= 3:
         fy = -Iyy*angleYY*4
+    elif t <= 2.5:
+        fy = Iyy*angleYY*4 #factor 4 because of integration of accelerations
+        fx = Ixx*angleXX*4*0.5 #factor 4 because of integration of accelerations
+    elif t <= 3:
+        fy = -Iyy*angleYY*4
+        fx = -Ixx*angleXX*4*0.5
     return [fx,fy,fz]
-    
+
+def UFtorque2(t, load):
+    fx = 0    
+    fy = 0    
+    fz = 0    
+    Mloc= Ixx*angleXX*4
+    if t <= 1:
+        fx = Mloc #factor 4 because of integration of accelerations
+        fz = Mloc #factor 4 because of integration of accelerations
+    elif t <= 2:
+        fx = -Mloc
+        fz = -Mloc
+    return [fx,fy,fz]
+
+forceFact = 0
+UFtorque = UFtorque1
+if mStr.find('GeneralRot') != -1:
+    UFtorque = UFtorque2
+    forceFact = 1
+    tEnd = 3
+
+#apply COM force
+aX = 10*forceFact
+aY = 2*forceFact
+def UFforce(t, load):
+    fx = 0
+    fy = 0    
+    fz = 0    
+    if t <= 1:
+        fx = mass * aX 
+        fy = mass * aY * t 
+    elif t <= 2:
+        fx = -mass * aX 
+        fy = -mass * aY * (2-t)
+    return [fx,fy,fz]
+
+
+
 mCenterRB = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGyro, localPosition = [0.,0.,0.]))
 mbs.AddLoad(Torque(markerNumber = mCenterRB, 
                    loadVector=[0,0,0],
                    bodyFixed=True, #use local coordinates for torque
-                   loadVectorUserFunction = UFtorque1)) #gravity in negative z-direction
+                   loadVectorUserFunction = UFtorque)) #gravity in negative z-direction
+mbs.AddLoad(Force(markerNumber = mCenterRB, 
+                   loadVector=[0,0,0],
+                   bodyFixed=False, #use global coordinates for force
+                   loadVectorUserFunction = UFforce)) #gravity in negative z-direction
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #sensors
 #all sensors placed at localPosition=[0,0,0]
-sOmegaLocal = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/angularVelocityLocalIMU.txt',
+sOmegaLocal = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/angularVelocityLocal.txt',
                           outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
-sRotation = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/rotationIMU.txt',
+sRotation = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/rotation.txt',
                           outputVariableType=exu.OutputVariableType.Rotation))
-sOmega = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/angularVelocityGlobalIMU.txt',
+sOmega = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/angularVelocityGlobal.txt',
                           outputVariableType=exu.OutputVariableType.AngularVelocity))
-sAcc = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/accelerationGlobalIMU.txt',
-                                localPosition = [0.05,0.05,0.05],
-                          outputVariableType=exu.OutputVariableType.Acceleration))
-sRot = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/rotationMatrix.txt',
-                          outputVariableType=exu.OutputVariableType.RotationMatrix))
 
-#acceleration sensor: gives global coordinates!
-#sAcceleration = mbs.AddSensor(SensorBody(bodyNumber=oGyro, 
-#                                         fileName='solution/accelerationGlobalIMU.txt',
-#                                         localPosition=[0.05,0.05,0], #measure off-axis accerlations...
-#                                         outputVariableType=exu.OutputVariableType.Acceleration))
-#
+sPos = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/displacementGlobal.txt',
+                                localPosition = localPosition,
+                          outputVariableType=exu.OutputVariableType.Displacement))
+sVel = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/velocityGlobal.txt',
+                                localPosition = localPosition,
+                          outputVariableType=exu.OutputVariableType.Velocity))
+sAcc = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/accelerationGlobal.txt',
+                                localPosition = localPosition,
+                          outputVariableType=exu.OutputVariableType.Acceleration))
+sRot = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/rotationMatrix.txt',
+                          outputVariableType=exu.OutputVariableType.RotationMatrix))
 
 mbs.Assemble()
 #print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-tEnd = 3
-h = 1e-5
+
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.solutionWritePeriod = 2e-3
+simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solutionSettings.sensorsWritePeriod = hSensor
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -145,7 +214,7 @@ SC.SetRenderState({'centerPoint': [0.0, 0.0, 0.0],
         [0,1,0]])}) #load last model view
 
 #mbs.WaitForUserToContinue()
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 #SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
@@ -165,8 +234,10 @@ if True:
     plt.close("all")
     ax=plt.gca() # get current axes
 
-    dataRot = np.loadtxt('solution/rotationMatrix.txt', comments='#', delimiter=',')
-    dataAcc = np.loadtxt('solution/accelerationGlobalIMU.txt', comments='#', delimiter=',')
+    dataRot = np.loadtxt('solutionIMU'+mStr+'/rotationMatrix.txt', comments='#', delimiter=',')
+    dataAcc = np.loadtxt('solutionIMU'+mStr+'/accelerationGlobal.txt', comments='#', delimiter=',')
+    dataVel = np.loadtxt('solutionIMU'+mStr+'/velocityGlobal.txt', comments='#', delimiter=',')
+    dataPos = np.loadtxt('solutionIMU'+mStr+'/displacementGlobal.txt', comments='#', delimiter=',')
 
     n = len(dataAcc)
     accLocal = np.zeros((n,4))
@@ -174,7 +245,7 @@ if True:
     rotMat = np.zeros((n,3,3))
     for i in range(n):
         rotMat[i,:,:] = dataRot[i,1:10].reshape(3,3)
-        accLocal[i,1:4] = rotMat[i,:,:] @ dataAcc[i,1:4]
+        accLocal[i,1:4] = rotMat[i,:,:].T @ dataAcc[i,1:4]
 
     #plot 3 components of global accelerations
     plt.plot(accLocal[:,0], accLocal[:,1], 'r-', label='acc0 local') 
@@ -199,6 +270,15 @@ if True:
 
     plt.figure()
     PlotSensor(mbs, [sRotation]*3, components = [0,1,2])
+    
+    plt.figure()
+    PlotSensor(mbs, [sPos]*3, components = [0,1,2])
+
+    plt.figure()
+    PlotSensor(mbs, [sOmega]*3, components = [0,1,2])
+
+    plt.figure()
+    PlotSensor(mbs, [sVel]*3, components = [0,1,2])
     
     ax.grid(True, 'major', 'both')
     ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 

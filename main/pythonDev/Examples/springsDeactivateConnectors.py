@@ -86,7 +86,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 for i in range(800): #1000
     print('iteration '+str(i)+':')
-    #testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    #testInterface.exu.SolveDynamic(mbs, simulationSettings)
     SC.TimeIntegrationSolve(mbs, 'RungeKutta1', simulationSettings)
 
     for spring in springList:

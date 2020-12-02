@@ -83,7 +83,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD w
 if testInterface.useGraphics: 
     testInterface.exu.StartRenderer()
 
-testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
 if testInterface.useGraphics: 
     testInterface.SC.WaitForRenderEngineStopFlag()

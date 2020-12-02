@@ -11,5 +11,6 @@ miniExamplesFileList = ['ObjectMassPoint.py',
 'ObjectConnectorCoordinateSpringDamper.py',
 'ObjectConnectorDistance.py',
 'ObjectConnectorCoordinate.py',
-'MarkerSuperElementPosition.py']
+'MarkerSuperElementPosition.py',
+'LoadMassProportional.py']
 

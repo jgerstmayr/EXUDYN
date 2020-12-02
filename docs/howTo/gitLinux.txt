@@ -1,0 +1,82 @@
+#+++++++++++++++++++++++++++++++++++++++
+# some notes on clone (download), installation and compilation of exudyn in UBUNTU / linux using git tools
+# author: Johannes Gerstmayr
+# date: 19.11.2020
+#+++++++++++++++++++++++++++++++++++++++
+
+#first steps: install necessry packages
+sudo apt-get update
+sudo apt install git
+
+#if wheel should be created, you will probably need the following python package:
+sudo pip3 install wheel
+
+#+++++++++++++++++++++++++++++++++++++++
+#configure git (change "user_name" and "email_id" accordingly to github email address):
+git config --global user.name "user_name"
+git config --global user.email "your@email"
+
+#go into some local, empty folder (e.g. exudyn_git)
+#clone downloads the whole repo and may take some time depending on your internet connection (>300MB)
+git clone https://github.com/jgerstmayr/EXUDYN
+
+
+#+++++++++++
+#COMPILE
+#+++++++++++
+#change to EXUDYN/main
+#compile and install exudyn with sudo (run in main directory, where setup.py is located):
+#will use the current python version, such that it fits to your system requirements
+sudo python3 setup.py install
+
+
+#create ubuntu wheel (for simple distribution):
+sudo python3 setup.py bdist_wheel
+#==>provides file in dist, e.g., exudyn-1.0.8-cp36-cp36m-linux_x86_64.whl
+#remove local folders and files created during build/install:
+sudo rm -r build dist/*.egg pythonDev/exudyn.egg-info src/pythonGenerator/__pycache__
+
+
+#use prebuilt objects: ?not tested?
+CC="ccache gcc" python setup.py install
+
+
+#++++++++++++++++++
+#INSTALL from wheel
+#++++++++++++++++++
+#install ubuntu wheel with given wheel exudynXYZ.whl (python versions must match!!!)
+pip3 install dist/exudynXYZ.whl
+#for version 1.0.8, this reads:
+pip3 install dist/exudyn-1.0.8-cp36-cp36m-linux_x86_64.whl
+
+#this takes some minutes (~5 for Version 1.0.19), depending on your CPU
+#test exudyn, e.g. by typing (still in main folder):
+python3 pythonDev/Examples/rigid3Dexample.py
+
+
+#++++++++++++++++++
+#UNINSTALL exudyn (-y to avoid questions)
+#++++++++++++++++++
+sudo pip3 uninstall exudyn
+sudo pip3 uninstall -y exudyn
+
+#++++++++++++++++++
+#commit changes
+#++++++++++++++++++
+#add files (go to according directory):
+git add exudyn-1.0.19-cp36-cp36m-linux_x86_64.whl
+
+#commit files locally:
+git commit -m "notes on changes to exudyn..."
+
+#add remote file location
+git remote add origin https://github.com/jgerstmayr/EXUDYN
+
+#create ssh key for github (also add that in your github settings: https://github.com/settings/keys):
+ssh-keygen -o -t rsa -C "johannes.gerstmayr@uibk.ac.at"
+#==> this is required that you can login to this account and to commit changes!
+
+#push files to remote directory (requires login ...):
+git push origin master
+#your login data is the email address and the password for the login
+

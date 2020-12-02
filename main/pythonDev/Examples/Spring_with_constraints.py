@@ -82,7 +82,7 @@ simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mecha
 
 #exu.StartRenderer()
 ##exu.InfoStat()
-#SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+#exu.SolveDynamic(mbs, simulationSettings)
 ##exu.InfoStat()
 #SC.WaitForRenderEngineStopFlag()
 #exu.StopRenderer() #safely close rendering window!
@@ -90,7 +90,7 @@ simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mecha
 simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 0.1
 simulationSettings.staticSolver.verboseMode = 3
 exu.StartRenderer()
-SC.StaticSolve(mbs, simulationSettings)
+exu.SolveStatic(mbs, simulationSettings)
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
 

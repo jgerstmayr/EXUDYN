@@ -72,7 +72,7 @@ exu.StartRenderer()
 
 #mbs.WaitForUserToContinue()
 #exu.InfoStat()
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 #exu.InfoStat()
 
 SC.WaitForRenderEngineStopFlag()

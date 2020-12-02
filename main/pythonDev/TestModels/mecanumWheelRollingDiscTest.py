@@ -301,7 +301,7 @@ if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 p0=mbs.GetObjectOutputBody(bCar, exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of mecanumWheelRollingDiscTest=',p0[0]) #use x-coordinate

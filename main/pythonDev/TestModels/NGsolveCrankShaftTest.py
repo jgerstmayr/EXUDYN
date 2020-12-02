@@ -351,7 +351,7 @@ if False:
     
         mbs.WaitForUserToContinue() #press space to continue
         
-        SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+        exu.SolveDynamic(mbs, simulationSettings)
         
         SC.WaitForRenderEngineStopFlag()
         exu.StopRenderer() #safely close rendering window!

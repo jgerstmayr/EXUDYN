@@ -1,5 +1,5 @@
 
-\mysubsection{Module structure} \label{sec_programStructure}
+\mysubsection{Module structure} \label{sec:programStructure}
 This section will show:
 \bi
   \item Overview of modules
@@ -21,7 +21,7 @@ Currently, the module structure is simple:
 	  \item \texttt{exudyn}\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
 	  \item \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
 	  \item \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
-		loads can added to the system, see Section \ref{sec_item_reference_manual};
+		loads can added to the system, see \refSection{sec:item:reference:manual};
 		\item \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
 	\ei
 \ei
@@ -129,7 +129,7 @@ As an example, consider a \texttt{NodePoint2D}:
 \ei
 Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
 
-\mysubsection{Items: Nodes, Objects, Loads, Markers, Sensors, ...} \label{sec_items}
+\mysubsection{Items: Nodes, Objects, Loads, Markers, Sensors, ...} \label{sec:items}
 %
 In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
 
@@ -227,7 +227,7 @@ Initial displacement (or rotation) values are provided separately, in order to s
 As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
 
 
-\mysubsection{Exudyn Basics} \label{sec_exudynBasics}
+\mysubsection{Exudyn Basics} \label{sec:exudynBasics}
 This section will show:
 \bi
 	\item Interaction with the \codeName\ module
@@ -252,7 +252,7 @@ Using \texttt{mbs.Reset()} will clear the system and allows to set up a new syst
 %
 
 \mysubsubsection{Simulation settings}
-The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec_SolutionSettings} -- \ref{sec_SimulationSettings}.
+The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec:SolutionSettings} -- \ref{sec:SimulationSettings}.
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -281,7 +281,7 @@ Hereafter, values of the structure can be modified, e.g.,
 \mysubsubsection{Visualization settings}
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
-Details on visualization settings and its substructures are provided in Sections \ref{sec_VSettingsGeneral} -- \ref{sec_VisualizationSettings}.
+Details on visualization settings and its substructures are provided in Sections \ref{sec:VSettingsGeneral} -- \ref{sec:VisualizationSettings}.
 
 The visualization settings structure can be accessed in the system container \texttt{SC} (access per reference, no copying!), accessing every value or structure directly, e.g.,
 \pythonstyle
@@ -313,8 +313,8 @@ Both in the static as well as in the dynamic case, the solver runs in a loop to 
 For the time integration (dynamic solver), \fig{fig_solver_time_integration} shows the basic loops for the solution process. The inner loops are shown in \fig{fig_solver_solve_steps} and\fig{fig_solver_discontinuous_iteration}.
 The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.
 
-Settings for the solver substructures, like timer, output, iterations, etc.\, are described in Sections \ref{sec_CSolverTimer} -- \ref{sec_SolverOutputData}.
-The description of interfaces for solvers starts in Section \ref{sec_MainSolverStatic}.
+Settings for the solver substructures, like timer, output, iterations, etc.\, are described in Sections \ref{sec:CSolverTimer} -- \ref{sec:SolverOutputData}.
+The description of interfaces for solvers starts in \refSection{sec:MainSolverStatic}.
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
@@ -564,7 +564,7 @@ Typical output settings are:
 
 
 \mysubsubsection{Graphics pipeline}
-The user cannot interact with the visualization part for now.
+%deprecated, since there are user functions!: The user cannot interact with the visualization part for now.
 There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:
 \bi
@@ -573,7 +573,7 @@ The solver runs a loop:
 	\item copy current state to visualization state (thread safe)
 	\item signal graphics pipeline that new visualization data is available
 \ei
-The openGL graphics thread runs the following loop:
+The openGL graphics thread (=separate thread) runs the following loop:
 \bi
   \item render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
   \item go idle for some milliseconds
@@ -581,6 +581,15 @@ The openGL graphics thread runs the following loop:
 	\item[] $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
 	\item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 \ei
+
+\mysubsubsection{Graphics user Python functions}
+There are some user functions in order to customize drawing:
+\bi
+	\item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\texttt{GraphicsDataFromSTLfileTxt}).
+	\item Some objects, e.g., \texttt{ObjectGenericODE2} or \texttt{ObjectRigidBody}, provide customized a function \texttt{graphicsDataUserFunction}. This user function just returns a list of GraphicsData, see \refSection{sec:graphicsData}. With this function you can change the shape of the body in every step of the computation.
+	\item Specifically, the \texttt{graphicsDataUserFunction} in \texttt{ObjectGround} can be used to draw any moving background in the scene.
+\ei
+Note that all kinds of graphicsUserPythonFunctions need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \texttt{graphicsDataUserFunction} between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
 \mysubsubsection{Color and RGBA}
 Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
@@ -767,6 +776,12 @@ The following list covers changes in the python interface and functionality:
 	  %\item $\ra$ 
 	%\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.32$\ra$ Version 1.0.33}
+	\bi
+	\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
+	\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 1.0.17 $\ra$ Version 1.0.18}
 	\bi
 	\item {\bf removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
@@ -776,7 +791,7 @@ The following list covers changes in the python interface and functionality:
 	\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item {\bf Version 1.0.12 $\ra$ Version 1.0.13}
-	\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see Section \ref{eq_equationLHSRHS}:
+	\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see \refSection{eq_equationLHSRHS}:
 	\bi
 	  \item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
 		\item forces are written at the RHS
@@ -794,7 +809,7 @@ The following list covers changes in the python interface and functionality:
 	\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
 		\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
 		to avoid mistakes due to wrong types of indices.
-	\item for further details and specific usage, see beginning of Section \ref{sec_PCpp_command_interface}!
+	\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
 	%\item {\bf NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
 	%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
 	%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}

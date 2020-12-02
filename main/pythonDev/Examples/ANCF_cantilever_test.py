@@ -118,7 +118,7 @@ doDynamicSimulation = False #switch between static and dynamic simulation
 
 if doDynamicSimulation:
     exu.StartRenderer()
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 else:
@@ -144,7 +144,7 @@ else:
         mbs.SetLoadParameter(nLoad, 'loadVector', [0, -loadValue,0])
         print('load vector=' + str(mbs.GetLoadParameter(nLoad, 'loadVector')) )
     
-        SC.StaticSolve(mbs, simulationSettings)
+        exu.SolveStatic(mbs, simulationSettings)
     
         sol = mbs.systemData.GetODE2Coordinates()
         #print('sol step  ' + str(loadSteps) + '  ='+str(sol))

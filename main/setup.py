@@ -14,7 +14,32 @@ from src.pythonGenerator.exudynVersion import exudynVersionString
 #os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux; does not work on windows
 #os.environ["CXX"] = "gcc-8"
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#check GLFW
+USEGLFW = True
+if '--noglfw' in sys.argv:
+    USEGLFW = False
+    print("setup.py: *** compiling without graphics (OpenGL and GLFW) ***")
+    sys.argv.remove('--noglfw')
 
+glfwIncludeDirs=[]
+msvcGLFWlibs =[]
+unixGLFWlibs = []
+msvcCppGLFWflag = ['/D', '__NOGLFW'] #indicates, that no GLFW shall be used
+unixCppGLFWflag = ['-D__NOGLFW'] #indicates, that no GLFW shall be used
+if USEGLFW:
+    msvcCppGLFWflag = [] #GLFW will be used
+    unixCppGLFWflag = [] #GLFW will be used
+
+    glfwIncludeDirs=["include/glfw/deps", "include/glfw",]
+    msvcGLFWlibs = ['opengl32.lib', 'glfw3.lib'] #opengl32.lib: not needed since VS2015?
+                    
+    #unix: for graphics; libs (*.so) need to be installed on your linux system -> see setupToolsHowTo.txt:
+    unixGLFWlibs = ['-lglfw', #GLFW
+                    '-lGL'] #OpenGL
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#check system and platform
 isWindows = False
 isLinux = False
 
@@ -48,6 +73,8 @@ print("python version =",platform.python_version())
 #detect python version:
 pyVersionString = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#check EXUDYN version
 __version__ = exudynVersionString
 print('build Exudyn version',exudynVersionString)
 
@@ -155,10 +182,8 @@ ext_modules = [
     			"src",
     			"include",
     			"include/pybind11",
-    			"include/glfw/deps",
-    			"include/glfw",
     			"include/lest",
-      ],
+      ]+glfwIncludeDirs,
       library_dirs = addLibrary_dirs,
 		define_macros=[('NDEBUG', '1'),
 						#('_MBCS', ''),
@@ -232,7 +257,7 @@ class BuildExt(build_ext):
 				'/FC',
             '/Ot', #favor faster code
 				'/Zc:twoPhase-',
-            ],
+            ]+msvcCppGLFWflag,
         'unix': [
          #'-std=c++17', #==>chosen automatic
          '-Wno-non-template-friend', #deactivate warning for several vector/array templates
@@ -250,29 +275,24 @@ class BuildExt(build_ext):
 #		'-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
 #		'-Wall',
 #		'-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
-        ],
+        ]+unixCppGLFWflag,
     }
     if not is32bits: #for 32bits, we assume that processors may not support avx
         c_opts['msvc'] += ['/arch:AVX2']
     
     l_opts = {
         'msvc': [
-        'opengl32.lib', #not needed since VS2015?
-        'glfw3.lib',
         'kernel32.lib',
         'user32.lib',
         'gdi32.lib',
         'shell32.lib',
         #additional libs that may be needed in future:
         #"winspool.lib" "comdlg32.lib" "advapi32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib"        
-        ],
+        ]+msvcGLFWlibs,
         'unix': [
 			'-lgomp', #for openmp ==> needed for omp_get_num_threads()
-    		#for graphics (if GLFW enabled); needs to be installed -> see setupToolsHowTo.txt:
-         '-lglfw', #GLFW
-    		'-lGL', #OpenGL
-         '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
-			],
+            '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
+			]+unixGLFWlibs,
     }
 
     if sys.platform == 'darwin':

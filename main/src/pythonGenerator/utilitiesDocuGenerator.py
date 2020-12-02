@@ -10,18 +10,22 @@ import copy #for deep copies
 from autoGenerateHelper import Str2Latex
 
 fileDir='../../pythonDev/exudyn/'
-filesParsed=['basicUtilities.py',
-             'utilities.py',
-             'graphicsDataUtilities.py',
-             'rigidBodyUtilities.py',
-             'lieGroupBasics.py', #Stefan Holzinger
-             #'lieGroupIntegration.py', #Stefan Holzinger
+filesParsed=[
+             'basicUtilities.py',
              'FEM.py',
+             'graphicsDataUtilities.py',
+             'lieGroupBasics.py', #Stefan Holzinger
              'plot.py',
              'processing.py',
+             'rigidBodyUtilities.py',
+             'robotics.py',
+             'roboticsSpecial.py',
+             'solver.py',
+             'utilities.py',
+             #'lieGroupIntegration.py', #Stefan Holzinger
              ]
 
-docuTags = ['classFunction','class','function','input','output','author','notes','example']
+docuTags = ['classFunction','class','function','input','output','author','notes','example','status']
 #function = basic/brief notes on function
 #additionally, there are the following dictionary items:
 #  functionName (string), 
@@ -198,15 +202,17 @@ def ParsePythonFile(fileName):
                         if currentInfo[0] == ':': #erase ':', which may be omitted
                             currentInfo = currentInfo[1:]
                         currentInfo+="\n"
-                if fillInMode == 'example' and len(currentInfo) > 1: #always has length 1 ...
+                #if fillInMode == 'example' and len(currentInfo) > 1: #always has length 1 ...
                     #print("example=", currentInfo)
-                    currentInfo = currentInfo.replace('{','\{').replace('}','\}')
+                    #currentInfo = currentInfo.replace('{','\{').replace('}','\}')
+                    #currentInfo = '\\begin{lstlisting}[language=Python]\n'+currentInfo+'\\end{lstlisting}' #' \\vspace{6pt}'
                 #now add remaining line or total line
                 if not newTag:
                     if len(line.strip()) > 1 and line.strip()[0] == '#': #comment needed to add into docu info
                         currentInfo += line.strip()[1:]+"\n"
                     elif HasDefinitionIdentifier(line): #parse arguments
                         if verbose: print("function def line:",line)
+                        storedLineNumber = lineCnt #beginning of function definition, for hyperref
                         definitionFinished = True
                         if fillInMode != '': 
                             functionDict[fillInMode] = currentInfo #complete writing of previous tag information
@@ -217,6 +223,7 @@ def ParsePythonFile(fileName):
                             functionLine += fileLines[lineCnt]
                         [functionName, argumentsList, defaultArgumentsList]=GetFunctionArguments(functionLine)
                         functionDict['functionName'] = Str2Latex(functionName)
+                        functionDict['lineNumber'] = storedLineNumber
                         functionDict['argumentsList'] = argumentsList
                         functionDict['defaultArgumentsList'] = defaultArgumentsList
                     elif HasClassIdentifier(line): #parse arguments
@@ -256,15 +263,26 @@ def ParsePythonFile(fileName):
 
 #*****************************************************
 #write single function description into latex code
-def WriteFunctionDescription2Latex(functionDict, isClassFunction = False):
+def WriteFunctionDescription2Latex(functionDict, moduleName, isClassFunction = False, className=''):
     sLatex = ''
     argList = functionDict['argumentsList']
     argDefault = functionDict['defaultArgumentsList']
     addStr = ''
+    classLabelStr = ''
     if isClassFunction:
         addStr = '\\textcolor{steelblue}'
+        classLabelStr = className+':'
     
-    sLatex += '\\noindent '+addStr+'{def {\\bf ' + functionDict['functionName']+'}}'
+    #debug:    
+    # print("\n\nfunction name=",functionDict['functionName'])
+    # print("\n\nfunction dict=\n",functionDict)
+    functionName = functionDict['functionName']
+    lineNumberStr = '' #will be e.g: '#L122'
+    if functionDict['lineNumber'] != 0:
+        lineNumberStr = '\#L'+str(functionDict['lineNumber']+1)
+        
+    sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/' + moduleName +'.py'+lineNumberStr+'}{' + functionName +'}{' '}}}'
+    sLatex += '\\label{sec:'+ moduleName + ':' + classLabelStr + functionName.replace('\_','_') + '}\n'
     sLatex += '('
     sep = ''
     for i in range(len(argList)):
@@ -286,7 +304,14 @@ def WriteFunctionDescription2Latex(functionDict, isClassFunction = False):
             sLatex += '  \\item[--]  '+addStr+'{\\bf ' + text + '}: '
             strTag = functionDict[tag].strip()
             #print(strTag)
-            if strTag.count("\n") > 0: #multiple lines are replaced by list
+            if tag == 'example':
+                #print("example=", strTag)
+                sLatex += '\\vspace{-12pt}\\ei' #for global itemize list for function
+                sLatex += '\\begin{lstlisting}[language=Python, xleftmargin=36pt]\n'
+                sLatex += strTag
+                sLatex += '\\end{lstlisting}' #' \\vspace{6pt}'
+                sLatex += '\\vspace{-24pt}\\bi\item[]\\vspace{-24pt}' #for global itemize list for function
+            elif strTag.count("\n") > 0: #multiple lines are replaced by list
                 sLatex += '\\vspace{-6pt}\n  \\begin{itemize}[leftmargin=1.2cm]\n'
                 sLatex += '\setlength{\itemindent}{-0.7cm}\n'
                 if strTag[0:2] == '\n':
@@ -302,9 +327,10 @@ def WriteFunctionDescription2Latex(functionDict, isClassFunction = False):
                         s = '{\\it '+s[:n]+'}'+ s[n:]
                     sLatex += '    \item[] '+s+'\n'
                     
-                sLatex += '  \\ei\n'
+                sLatex += '  \\end{itemize}\n'
             else:
                 sLatex += strTag.replace('\n','\\\\ \n')
+                
 
     sLatex += '\\vspace{12pt}\\end{itemize}\n%\n'
     
@@ -322,13 +348,14 @@ for fileName in filesParsed:
     [functionList,classList] = ParsePythonFile(fileDir+fileName)
     moduleName = fileName[:-3]
     sLatex += '\\mysubsection{Module: '+moduleName+'}\n'
+    sLatex += '\\label{sec:module:'+moduleName+'}\n'
     isFirstFunction = True
     #insert function descriptions
     for funcDict in functionList:
         if not isFirstFunction:
             sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
             #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-        sLatex += WriteFunctionDescription2Latex(funcDict)
+        sLatex += WriteFunctionDescription2Latex(funcDict, moduleName)
         isFirstFunction=False
 
     #insert class descriptions with functions
@@ -343,7 +370,7 @@ for fileName in filesParsed:
             if not isFirstFunction:
                 sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
                 #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-            sLatex += WriteFunctionDescription2Latex(funcDict, isClassFunction=True)
+            sLatex += WriteFunctionDescription2Latex(funcDict, moduleName, isClassFunction=True, className=classDict['className'])
             isFirstFunction=False
 
         

@@ -125,7 +125,7 @@ if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
 exu.Print('solution of rollingCoinPenaltyTest=',p0[0]) #use x-coordinate

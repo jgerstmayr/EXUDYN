@@ -106,7 +106,7 @@ def ParameterFunction(parameterSet):
     #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
     
     #start solver:
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     
     #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
     #exu.StopRenderer()               #safely close rendering window!
@@ -143,21 +143,13 @@ def ParameterFunction(parameterSet):
     if True: #delete files; does not work for parallel, consecutive operation
         if iCalc != 'Ref':
             os.remove(sensorFileName) #remove files in order to clean up
-            while(os.path.exists(sensorFileName)):
+            while(os.path.exists(sensorFileName)): #wait until file is really deleted -> usually some delay
                 sleep(0.001) #not nice, but there is no other way than that
         
     del mbs
     del SC
     
     return errorNorm
-
-#remove lateron
-import sys
-from exudyn.processing import ProcessParameterList
-
-
-
-
 
 
 #now perform parameter variation
@@ -169,14 +161,14 @@ if __name__ == '__main__': #include this to enable parallel processing
     
     start_time = time.time()
     [pOpt, vOpt, pList, values] = GeneticOptimization(objectiveFunction = ParameterFunction, 
-                                         parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,1000)},
+                                         parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,1000)}, #parameters provide search range
                                          numberOfGenerations = 20,
                                          initialPopulationSize = 100,
                                          rangeReductionFactor = 0.7,
                                          numberOfChildren = 8,
                                          addComputationIndex=True,
-                                         randomizerInitialization=0,
-                                         distanceFactor = 0.1,
+                                         randomizerInitialization=0, #for reproducible results
+                                         distanceFactor = 0., #for this example only one significant minimum
                                          debugMode=False,
                                          useMultiProcessing=True,
                                          showProgress=True,

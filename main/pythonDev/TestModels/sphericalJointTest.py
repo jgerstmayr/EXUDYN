@@ -103,7 +103,7 @@ if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 sol = mbs.systemData.GetODE2Coordinates(); 

@@ -89,10 +89,27 @@ s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
+pyClass = 'DynamicSolverType'
+
+descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting dynamic solvers for simulation.\n\n'
+
+s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
+sLenum += DefLatexStartClass(sectionName = pyClass, 
+                            description=descriptionStr, 
+                            subSection=True)
+#keep this list synchronized with the accoring enum structure in C++!!!
+[s1,sL1] = AddEnumValue(pyClass, 'GeneralizedAlpha', 'an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'TrapezoidalIndex2', 'an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ExplicitEuler', '[NOT IMPLEMENTED YET] an explicit first order solver for systems without constraints'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'RK45', '[NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection'); s+=s1; sLenum+=sL1
+
+s +=	'		.export_values();\n\n'
+sLenum += DefLatexFinishClass()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'LinearSolverType'
 
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.\n\n'
+descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting linear solver types, which are dense or sparse solvers.\n\n'
 
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
@@ -111,9 +128,12 @@ sLenum += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [s1,sL1] = DefPyStartClass('','', 'These are the access functions to the \\codeName\\ module.'); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs'); s+=s1; sL+=sL1
+[s1,sL1] = DefPyFunctionAccess('', 'GetVersionString', 'PyGetVersionString', 'Get EXUDYN module version as string'); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess('', 'InfoStat', 'PythonInfoStat', 'Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.'); s+=s1; sL+=sL1
+[s1,sL1] = DefPyFunctionAccess('', 'RequireVersion', '', 
+                               argList=['requiredVersionString'],
+                               description = 'Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")')
+sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp bindings
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
                                 defaultArgs=['false'],
@@ -122,6 +142,24 @@ sLenum += DefLatexFinishClass()
 
 [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'PyStopOpenGLRenderer', "Stop OpenGL rendering engine"); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(pyName='SolveStatic', 
+                               description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solver:equations}',
+                               argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
+                               defaultArgs=['','exudyn.SimulationSettings()','False','True']
+                               ); sL+=sL1
+                
+[s1,sL1] = DefPyFunctionAccess('', 'SolveDynamic', '', ""); sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(pyName='SolveDynamic', 
+                               description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solver:equations}',
+                               argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
+                               defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True']
+                               ); sL+=sL1
+                
+[s1,sL1] = DefPyFunctionAccess(pyName='ComputeODE2Eigenvalues', 
+                               description='Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:ComputeODE2Eigenvalues}',
+                               argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
+                               defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False']); sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetOutputPrecision', cName='PySetOutputPrecision', 
                                 description="Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)",
                                 argList=['numberOfDigits']); s+=s1; sL+=sL1
@@ -129,9 +167,6 @@ sLenum += DefLatexFinishClass()
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetLinalgOutputFormatPython', cName='PySetLinalgOutputFormatPython', 
                                 description="true: use python format for output of vectors and matrices; false: use matlab format",
                                 argList=['flagPythonFormat']); s+=s1; sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex', 
-                            "This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetWriteToConsole', cName='PySetWriteToConsole', 
                             description="set flag to write (true) or not write to console; default = true",
@@ -153,6 +188,13 @@ sLenum += DefLatexFinishClass()
                             description="this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false",
                             #argList=['pyObject'] #not compatible with py::args
                             ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess('', 'InfoStat', 'PythonInfoStat', 'Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.'); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs'); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex', 
+                            "This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; in future, the invalid index may be changed to -1, therefore you should use this variable"); s+=s1; sL+=sL1
 
 #s += '        m.def_readwrite("variables", &exudynVariables, py::return_value_policy::reference)\n' 
 #variables in the module itself are exported with "m.attr(...)" !
@@ -183,21 +225,33 @@ sL+=sL1
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem', 
                                 description="add a new computational system", options='py::return_value_policy::reference'); sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
-                                description="delete all systems and reset SystemContainer (including graphics)"); sL+=sL1
+#s += '        .def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)\n' 
+sL += '  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  \\\\ \\hline  \n'
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
-                                description="obtain number of systems available in system container"); sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='TimeIntegrationSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, HString solverName, const SimulationSettings& simulationSettings) {
+                            		pout.precision(simulationSettings.outputPrecision);
+                            		if (solverName == "RungeKutta1")
+                            			msc.GetSolvers().GetSolverRK1().SolveSystem(simulationSettings, *(ms.GetCSystem()));
+                            		else if (solverName == "GeneralizedAlpha")
+                            			msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(simulationSettings, *(ms.GetCSystem()));
+                            		else
+                            			PyError(HString("SystemContainer::TimeIntegrationSolve: invalid solverName '")+solverName+"'; options are: RungeKutta1 or GeneralizedAlpha");
+                            		}""", 
+                                argList=['mainSystem','solverName','simulationSettings'],
+                                description="DEPRECATED, use exu.SolveDynamic(...) instead, see \refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
+                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)",
+                                isLambdaFunction = True
+                                ); sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
-                                description="obtain systems with index from system container",
-                                argList=['systemNumber']); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
-                                description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
-                                description="Send zoom all signal, which will perform zoom all at next redraw request"); sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='StaticSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
+                                pout.precision(simulationSettings.outputPrecision);
+                                msc.GetSolvers().GetSolverStatic().SolveSystem(simulationSettings, *(ms.GetCSystem()));
+                                }""", 
+                                argList=['mainSystem','simulationSettings'],
+                                description="DEPRECATED, use exu.SolveStatic(...) instead\refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)",
+                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.staticSolver.newton.relativeTolerance = 1e-6\\\\SC.StaticSolve(mbs, simSettings)",
+                                isLambdaFunction = True
+                                ); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
                                 description="Get dictionary with current render state (openGL zoom, modelview, etc.)",
@@ -210,36 +264,25 @@ sL+=sL1
                                 argList=['renderState'],
                                 ); sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
+                                description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
+                                description="Send zoom all signal, which will perform zoom all at next redraw request"); sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
                                 description="Redraw openGL scene and save image (command waits until process is finished)"); sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='TimeIntegrationSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, HString solverName, const SimulationSettings& simulationSettings) {
-                            		pout.precision(simulationSettings.outputPrecision);
-                            		if (solverName == "RungeKutta1")
-                            			msc.GetSolvers().GetSolverRK1().SolveSystem(simulationSettings, *(ms.GetCSystem()));
-                            		else if (solverName == "GeneralizedAlpha")
-                            			msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(simulationSettings, *(ms.GetCSystem()));
-                            		else
-                            			PyError(HString("SystemContainer::TimeIntegrationSolve: invalid solverName '")+solverName+"'; options are: RungeKutta1 or GeneralizedAlpha");
-                            		}""", 
-                                argList=['mainSystem','solverName','simulationSettings'],
-                                description="Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
-                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)",
-                                isLambdaFunction = True
-                                ); sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
+                                description="delete all systems and reset SystemContainer (including graphics)"); sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='StaticSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
-                                pout.precision(simulationSettings.outputPrecision);
-                                msc.GetSolvers().GetSolverStatic().SolveSystem(simulationSettings, *(ms.GetCSystem()));
-                                }""", 
-                                argList=['mainSystem','simulationSettings'],
-                                description="Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)",
-                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.staticSolver.newton.relativeTolerance = 1e-6\\\\SC.StaticSolve(mbs, simSettings)",
-                                isLambdaFunction = True
-                                ); sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
+                                description="obtain number of systems available in system container"); sL+=sL1
 
-#s += '        .def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)\n' 
-sL += '  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  \\\\ \\hline  \n'
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
+                                description="obtain systems with index from system container",
+                                argList=['systemNumber']); sL+=sL1
+
 
 sL += DefLatexFinishClass()#only finalize latex table
 
@@ -289,7 +332,8 @@ s+=s1; sL+=sL1
 
 #++++++++++++++++
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nmainSystem:\\n  variables = " + EXUstd::ToString(ms.variables) + "\\n  sys = " + EXUstd::ToString(ms.systemVariables) + "\\n>\\n"; }', 
+#old version, with variables: [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nmainSystem:\\n  variables = " + EXUstd::ToString(ms.variables) + "\\n  sys = " + EXUstd::ToString(ms.systemVariables) + "\\n>\\n"; }', 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nFor details see mbs.systemData, mbs.sys and mbs.variables\\n>\\n"; }', 
                                 description="return the representation of the system, which can be, e.g., printed",
                                 isLambdaFunction = True,
                                 example = 'print(mbs)'); s+=s1; sL+=sL1
@@ -729,7 +773,7 @@ s += "\n//        General functions:\n"
 sL += DefLatexFinishClass()
 
 s += "\n//        Coordinate access:\n"
-sL += DefLatexStartClass(pyClassStr+': Access coordinates', 'This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.', subSection=True)
+sL += DefLatexStartClass(pyClassStr+': Access coordinates', '\label{sec:mbs:systemData}This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.', subSection=True)
 #+++++++++++++++++++++++++++++++++
 #coordinate access functions:
 
@@ -831,7 +875,7 @@ sL += DefLatexStartClass(pyClassStr+': Access coordinates', 'This section provid
                                 description="set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]",
                                 argList=['systemStateList','configuration'],
                                 defaultArgs=['','exu.ConfigurationType::Current'], #exu will be removed for binding
-                                example = "mbs.systemData.SetDataCoordinates(sysStateList, configuration = exu.ConfigurationType.Initial)"
+                                example = "mbs.systemData.SetSystemState(sysStateList, configuration = exu.ConfigurationType.Initial)"
                                 ); s+=s1; sL+=sL1
 
 

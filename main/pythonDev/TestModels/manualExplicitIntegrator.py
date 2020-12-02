@@ -188,7 +188,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewton)
 
 dynamicSolver.SolveSystem(mbs, simulationSettings)
-#SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+#exu.SolveDynamic(mbs, simulationSettings)
 
 uy=mbs.GetNodeOutput(nLast,exu.OutputVariableType.Position)[1] #y-coordinate of tip
 exu.Print("uy=", uy)

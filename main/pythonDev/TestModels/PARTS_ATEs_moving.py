@@ -519,7 +519,7 @@ if computeDynamic:
     simulationSettings.displayStatistics = True
         
     
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
 
     
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set

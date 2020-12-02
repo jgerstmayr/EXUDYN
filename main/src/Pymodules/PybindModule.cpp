@@ -320,7 +320,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 	py::dict exudynVariables; //!< global dictionary which can be used by the user to store local variables
 	py::dict exudynSystemVariables; //!< global dictionary which is used by system functions to store local variables
 
-	m.def("GetVersionString", &PyGetVersionString, "get version as string as a function which is passed trough exudyn package");
+	//put into pybindings.py: m.def("GetVersionString", &PyGetVersionString, "get version as string as a function which is passed trough exudyn package");
 
 	//m.def("PrintLF", &PyPrintLF, "this allows printing via exudyn with similar syntax as in python print(...) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...)");
 	
@@ -555,14 +555,12 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//System functions:
 		.def("AddSystem", &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference)
-		//.def("AddSystem", (Index(MainSystem::*)(STDstring)) &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference)
-		.def("Reset", &MainSystemContainer::Reset, "delete all systems and reset SystemContainer (including graphics)") //WRONG?: , py::return_value_policy::reference)
-
-		.def("NumberOfSystems", [](const MainSystemContainer& msc) {msc.GetMainSystems().NumberOfItems(); })
-
-		.def("GetSystem", &MainSystemContainer::GetMainSystem, "Get main system i from system container")
 
 		.def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)
+
+		.def("GetRenderState", &MainSystemContainer::PyGetRenderState, "Get dictionary with current render state (openGL zoom, modelview, etc.)")
+
+		.def("SetRenderState", &MainSystemContainer::PySetRenderState, "Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState")
 
 		.def("WaitForRenderEngineStopFlag", &MainSystemContainer::WaitForRenderEngineStopFlag, "Wait for user to stop render engine (CTRL+Q)")
 
@@ -570,32 +568,36 @@ PYBIND11_MODULE(exudynCPP, m) {
 		
 		.def("RedrawAndSaveImage", &MainSystemContainer::RedrawAndSaveImage, "Redraw openGL scene and save image (command waits until process is finished)")
 
-		.def("GetRenderState", &MainSystemContainer::PyGetRenderState, "Get dictionary with current render state (openGL zoom, modelview, etc.)")
+		.def("Reset", &MainSystemContainer::Reset, "delete all systems and reset SystemContainer (including graphics)") //WRONG?: , py::return_value_policy::reference)
 
-		.def("SetRenderState", &MainSystemContainer::PySetRenderState, "Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState")
+		.def("NumberOfSystems", [](const MainSystemContainer& msc) {msc.GetMainSystems().NumberOfItems(); })
+
+		.def("GetSystem", &MainSystemContainer::GetMainSystem, "Get main system i from system container", py::return_value_policy::reference) //added reference options as otherwise system is copied
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//Solver functions:
 		.def("TimeIntegrationSolve", [](MainSystemContainer& msc, MainSystem& ms, STDstring solverName, const SimulationSettings& simulationSettings) {
 		pout.precision(simulationSettings.outputPrecision);
+		bool returnValue = false;
 		try
 		{
 			if (solverName == "RungeKutta1")
 			{
-				msc.GetSolvers().GetSolverRK1().SolveSystem(*(ms.GetCSystem()), simulationSettings);
+				returnValue = msc.GetSolvers().GetSolverRK1().SolveSystem(*(ms.GetCSystem()), simulationSettings);
 			}
 			else if (solverName == "GeneralizedAlphaOldSolver")
 			{
-				msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(*(ms.GetCSystem()), simulationSettings);
+				returnValue = msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(*(ms.GetCSystem()), simulationSettings);
 			}
 			else if (solverName == "GeneralizedAlpha")
 			{
 				CSolverImplicitSecondOrderTimeInt solverSO;
-				solverSO.SolveSystem(*(ms.GetCSystem()), simulationSettings);
+				returnValue = solverSO.SolveSystem(*(ms.GetCSystem()), simulationSettings);
 			}
 			else {
 				PyError(STDstring("SystemContainer::TimeIntegrationSolve: invalid solverName '") + solverName + "'; options are: RungeKutta1 or GeneralizedAlpha");
 			}
+			return returnValue;
 		}
 		catch (const EXUexception& ex)
 		{
@@ -616,11 +618,11 @@ PYBIND11_MODULE(exudynCPP, m) {
 
 		.def("StaticSolve", [](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
 			pout.precision(simulationSettings.outputPrecision);
-
+			bool returnValue = false;
 			try
 			{
 				CSolverStatic solverStatic;
-				solverStatic.SolveSystem(*(ms.GetCSystem()), simulationSettings);
+				returnValue = solverStatic.SolveSystem(*(ms.GetCSystem()), simulationSettings);
 			}
 			catch (const EXUexception& ex)
 			{
@@ -630,6 +632,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 			{
 				SysError("Unexpected exception during StaticSolve!\n");
 			}
+			return returnValue;
 
 		}, "Statically solve system (linear/nonlinear)")
 

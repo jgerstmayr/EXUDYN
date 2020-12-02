@@ -270,11 +270,11 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 #
 #**author: Stefan Holzinger
 #
-# Note:
+#**notes:
 #   A MMF file can be created in Ansys by placing the following APDL code inside
 #   the solution tree in Ansys Workbench:
 #
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #   ! APDL code that exports sparse stiffnes and mass matrix in MMF format. If 
 #   ! the dense matrix is needed, replace *SMAT with *DMAT in the following
 #   ! APDL code.
@@ -286,17 +286,16 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 #   ! Export the mass matrix in MMF format
 #   *SMAT,MatMD,D,IMPORT,FULL,file.full,MASS
 #   *EXPORT,MatMD,MMF,fileNameMassMatrix,,,
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
 # In case a lumped mass matrix is needed, place the following APDL Code inside 
 # the Modal Analysis Tree:
 #
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# ! APDL code to force Ansys to use a lumped mass formulation (if available for
-# ! used elements)
-#
-# LUMPM, ON, , 0
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#   ! APDL code to force Ansys to use a lumped mass formulation (if available for
+#   ! used elements)
+#   LUMPM, ON, , 0
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++   
 def ReadMatrixFromAnsysMMF(fileName, verbose=False):
     if verbose: print("Start read matrix")
@@ -813,7 +812,7 @@ class ObjectFFRFreducedOrderInterface:
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #prepare CMS matrices (some already given):
-        #according to: A. Zwölfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction, Acta Mechanica, 2020, submitted.
+        #according to: A. Zw\"olfer, J. Gerstmayr. The nodal-based floating frame of reference formulation with modal reduction, Acta Mechanica, 2020, submitted.
         #\bar x = xRef
         #\tilde \bar x = xRefTilde
         #\bar Theta = inertiaLocal
@@ -1358,7 +1357,7 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
-    #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer 
+    #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
     #  of NETGEN/NGsolve; Thank's a lot!
     #  download NGsolve at: https://ngsolve.org/
     #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!

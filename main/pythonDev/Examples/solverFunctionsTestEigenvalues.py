@@ -160,7 +160,7 @@ for i in range(nEig):
 print('omega analytical =',omega)
 
 
-#SC.StaticSolve(mbs, simulationSettings)
+#exu.SolveStatic(mbs, simulationSettings)
 
 
 SC.WaitForRenderEngineStopFlag()

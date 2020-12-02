@@ -18,10 +18,12 @@ requirements:
 - open Anaconda prompt (either from START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat):
 - got to your setup.py directory and build wheel distribution: 
 
+#all commands for setup.py must be called in the main directory, e.g.:
 cd C:\DATA\cpp\EXUDYN_git\main
-python setup.py bdist_wheel
 
-#creates,e.g.:
+#build wheel distribution:
+python setup.py bdist_wheel
+#==>creates,e.g.:
   dist/exu-0.0.1-cp36-cp36m-win_amd64.whl
 
 #in order to install this wheel, e.g. python3.7 64bits, use:
@@ -68,15 +70,17 @@ sudo apt install python3-pip
 pip3 install pybind11
 pip3 install numpy
 
-#needed for some examples:
-pip3 install matplotlib
-pip3 install scipy
+#alternatively:
+sudo apt-get update && sudo dpkg --configure -a && sudo apt install python3-pip && pip3 install pybind11 && pip3 install numpy
 
-####
+
+#needed for some examples:
+pip3 install matplotlib && pip3 install scipy
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++
 #add glfw library (if graphics activated: main/src/Utilities/BasicDefinitions.h: #define USE_GLFW_GRAPHICS):
 #install OpenGL libs and OpenGL headers (gets necessary includes in usr/include/GL)::
-sudo apt-get install freeglut3 freeglut3-dev
-sudo apt-get install mesa-common-dev
+sudo apt-get install freeglut3 freeglut3-dev mesa-common-dev
 
 #install glfw libs:
 sudo apt-get install libglfw3 libglfw3-dev
@@ -84,17 +88,23 @@ sudo apt-get install libglfw3 libglfw3-dev
 #install X11 libs:
 sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
 
+### ALL ### glfw and X11 packages:
+sudo apt-get install freeglut3 freeglut3-dev mesa-common-dev libglfw3 libglfw3-dev libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+
+
 #(recommendation, usually not needed:)
 sudo apt-get install cmake libx11-dev xorg-dev libglu1-mesa-dev freeglut3-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev libglfw3-dev libglfw3
 #### end graphics
 
-
+#+++++++++++++++++++++++++++++++++++++++++++++++++
 
 #libglfw.so and libGL.so [.x...] should be available under:
 /usr/lib/x86_64-linux-gnu
 
 use pip3 and python3 for any python3.x version !!!
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++
+#install:
 #change to exudyn_git/main
 #install exudyn with sudo (run in main directory, where setup.py is located):
 sudo python3 setup.py install
@@ -115,11 +125,27 @@ sudo rm -r build dist exudyn.egg-info tmp .eggs
 sudo pip3 uninstall exudyn
 sudo pip3 uninstall -y exudyn
 
-#create ubuntu wheel:
+#+++++++++++++++++++++++++++++++++++++++++++++++++
+#WHEELS:
+#install wheel python package, if you do not have it:
 sudo pip3 install wheel
+#create ubuntu wheel:
 sudo python3 setup.py bdist_wheel
 
+#install ubuntu wheel with given wheel exudynXYZ.whl (python versions must match!!!)
+pip3 install dist\exudynXYZ.whl
+#for version 1.0.8, this reads:
+pip3 install dist\exudyn-1.0.8-cp36-cp36m-linux_x86_64.whl
+
 #see also: "history on UBUNTU18.04 for new installation" in this file
+
+#+++++++++++++++++++++++++++
+#using setup tools / creating wheels with WSL:
+#there are problems with file access
+==> go right click on root folder->properties->security
+for Authenticated Users->Edit-> set "Full control"
+python3 setup.py bdist_wheel
+
 ====================================================================
 
 ====================================================================

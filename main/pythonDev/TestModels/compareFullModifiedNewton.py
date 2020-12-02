@@ -66,11 +66,11 @@ simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "modifiedNewton.txt"
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "fullNewton.txt"
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 #SC.WaitForRenderEngineStopFlag()
 #exu.StopRenderer() #safely close rendering window!

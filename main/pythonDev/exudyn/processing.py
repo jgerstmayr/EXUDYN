@@ -200,7 +200,7 @@ def ParameterVariation(parameterFunction, parameters,
 #**function: compute minimum of given objectiveFunction
 #**input:
 #    objectiveFunction: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
-#    parameters: given as a dictionary, consist of name and tuple of (begin, end), e.g. 'mass':(10,50)
+#    parameters: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. 'mass':(10,50)
 #
 #    initialPopulationSize: number of random initial individuals
 #    numberOfGenerations: number of generations
@@ -243,6 +243,7 @@ def GeneticOptimization(objectiveFunction, parameters,
         numberOfThreads = 8
     if 'numberOfThreads' in kwargs: 
         numberOfThreads = kwargs['numberOfThreads']
+    print("number of threads used =", numberOfThreads) #very useful informaiton
 
     if 'randomizerInitialization' in kwargs: 
         randomizerInitialization = kwargs['randomizerInitialization']

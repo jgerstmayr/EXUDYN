@@ -129,7 +129,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.01
 simulationSettings.solutionSettings.solutionInformation = "nonlinear beam oscillations"
 
 exu.StartRenderer()
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!
 

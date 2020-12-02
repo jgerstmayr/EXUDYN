@@ -11,6 +11,97 @@ currently: automatic generate structures with ostream and initialization
 from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex
 import os
 
+#get list of filenames in folder dirPath which contain keyword (to find examples with specific items)
+def ExtractExamplesWithKeyword(keyword, dirPath):
+    from os import listdir
+    from os.path import isfile, join
+    
+    fileNames = [f for f in listdir(dirPath) if isfile(join(dirPath, f))]
+    
+    filesWithKeyword = []
+
+    for fileName in fileNames:
+        file = open(dirPath+'/'+fileName)
+        text = file.read()
+        if text.find(keyword) != -1:
+            filesWithKeyword += [fileName]
+        file.close()
+    return filesWithKeyword
+
+#generate latex string containing a list of file references (and hyperref links), 
+#based on a search through Examples and TestModels
+def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName):
+    s = ''
+
+    keywords = ['mbs.Add'+itemType+'('+itemName+'(']
+    if itemName == 'ObjectRigidBody' or itemName == 'NodeRigidBodyEP':
+        keywords += ['AddRigidBody('] #additional keyword
+
+    if itemName == 'ObjectFFRF':
+        keywords += ['AddObjectFFRF('] #additional keyword
+
+    if itemName == 'ObjectFFRFreducedOrder':
+        keywords += ['AddObjectFFRFreducedOrderWithUserFunctions('] #additional keyword
+
+
+
+    if itemShortName != '' and itemName != itemShortName:
+        keywords += ['mbs.Add'+itemType+'('+itemShortName]
+
+    fileListOrig = []
+    for kw in keywords:
+        dirPath = '../../pythonDev/Examples'
+        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
+                                              dirPath = dirPath)
+    
+    fileList = []
+    for f in fileListOrig:
+        if f not in fileList: fileList += [f]
+    
+    if len(fileList) != 0:
+        s += '%\n\\noindent For further examples on '+itemName+' see Examples:\n'
+        sep = ''
+        cnt = 0
+        s += '\\bi\n'
+        for name in fileList:
+            s += '\\item'+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/' + name+'}'
+            s += '{\\texttt{'+name.replace('_','\\_')+'}}'
+            #sep = ', \n'
+            cnt += 1
+            if cnt >= 10: #max. 10 examples ...
+                s += '\\item ...\n'
+                break
+        s += '\\ei\n'
+        s += '\n%\n'
+        
+
+    fileListOrig = []
+    for kw in keywords:
+        dirPath = '../../pythonDev/TestModels'
+        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
+                                              dirPath = dirPath)
+
+    fileList = []
+    for f in fileListOrig:
+        if f not in fileList: fileList += [f]
+
+    if len(fileList) != 0:
+        s += '%\n\\noindent For further examples on '+itemName+' see TestModels:\n'
+        s += '\\bi\n'
+        sep = ''
+        cnt = 0
+        for name in fileList:
+            s += '\\item'+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/' + name+'}'
+            s += '{\\texttt{'+name.replace('_','\\_')+'}}'
+            #sep = ', \n'
+            cnt += 1
+            if cnt >= 10: #max. 10 examples ...
+                s += '\\item ...\n'
+                break
+        s += '\\ei\n'
+        s += '\n%\n'
+    return s
+
 # compute destination number of str given from [C|M][P]
 # [sParamComp=0, sParamMain=1, sComp=2, sMain=3]
 # return -1 if no destination
@@ -296,6 +387,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         descriptionStr = parseInfo['classDescription']
         
         sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
+        sLatex += '\\label{sec:item:' + parseInfo['class'] + '}\n'
         sLatex += descriptionStr + '\\vspace{12pt}\n \\\\'
 
 
@@ -402,6 +494,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         addLatex = ''
         if len(symbolList) != 0: #automatically generated import parameter symbol list
             #addLatex += "\\vspace{6pt}\\\\ \n"
+            addLatex += "\paragraph{Information on input parameters:} \n"
             addLatex += "\\startTable{input parameter}{symbol}{description see tables above}\n"
             addLatex += symbolList
             addLatex += "\\finishTable\n"
@@ -422,18 +515,33 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             addLatex += "\\finishTable\n" #outputvariables
 
         if len(parseInfo['equations']) != 0:
-            addLatex += "{\\bf Description of Item}:\n"
+            #addLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            #addLatex += '\mysubsubsubsection{DESCRIPTION}\n'
+            #addLatex += "\paragraph{Detailed information:}\n"
             addLatex +=' \\noindent\n' + parseInfo['equations']
         if len(parseInfo['miniExample']) != 0:
             #addLatex +='\\vspace{12pt}\\\\ \n'
-            addLatex +='\\noindent {\\bf Example} for ' + parseInfo['class'] + ':\n'
+            addLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            #addLatex += '\mysubsubsubsection{\\textcolor{steelblue}{\\bf MINI EXAMPLE} for ' + parseInfo['class'] + '}:\n'
+            addLatex += '\mysubsubsubsection{MINI EXAMPLE for ' + parseInfo['class'] + '}\n'
+            addLatex +='\\label{miniExample_'+parseInfo['class']+'}\n'
             addLatex +='\\pythonstyle\n'
             addLatex +='\\begin{lstlisting}[language=Python, firstnumber=1]\n'
             addLatex += parseInfo['miniExample'] + '\n'
             addLatex +='\\end{lstlisting}\n\n'
 
+        sExamples = GenerateLatexStrKeywordExamples(parseInfo['classType'], 
+                                        parseInfo['class'], parseInfo['pythonShortName'])
+        if len(sExamples) != 0:
+            addLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            addLatex += sExamples
+
         if len(addLatex) != 0:
-            sLatex += "{\\bf Detailed information on " + parseInfo['class'] + "}:\n"
+            #sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            sLatex += "\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            sLatex += '\mysubsubsubsection{DESCRIPTION of ' + parseInfo['class'] + ':}\n' #\\vspace{6pt} \\\\ \n'
+            sLatex +='\\label{description_'+parseInfo['class']+'}\n'
+            #sLatex += "{\\bf Detailed information on " + parseInfo['class'] + "}:\n"
             sLatex += addLatex
 
 

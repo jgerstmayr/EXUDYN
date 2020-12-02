@@ -39,7 +39,7 @@ def TestExudyn(x):
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    #SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+    #exu.SolveDynamic(mbs, exu.SimulationSettings())
 
     h=1e-6
     tEnd = 10
@@ -49,7 +49,7 @@ def TestExudyn(x):
     simulationSettings.solutionSettings.coordinatesSolutionFileName = "coordinatesSolution"+str(int(x))+".txt"
     simulationSettings.solutionSettings.writeSolutionToFile = True #no concurrent writing to files ...!
     #exu.StartRenderer() #don't do this in parallelization: will crash
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     #exu.StopRenderer() #don't do this in parallelization: will crash
 
     #check result, get current mass position at local position [0,0,0]

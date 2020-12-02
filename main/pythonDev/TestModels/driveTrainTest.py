@@ -311,7 +311,7 @@ if exudynTestGlobals.useGraphics:
         SC.SetRenderState(lastRenderState) #load last model view
     mbs.WaitForUserToContinue()
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 
 phiCrank = mbs.GetSensorValues(sCrankAngle)[2]

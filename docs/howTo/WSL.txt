@@ -1,0 +1,97 @@
+#+++++++++++++++++++++++++++++++++++++++++++
+#WINDOWS SUBSYSTEM FOR LINUX WSL
+#information on installation of EXUDYN on WSL2
+#WSL2 runs on Windows 10 
+#author: Johannes Gerstmayr
+#date: 20.11.2020
+#+++++++++++++++++++++++++++++++++++++++++++
+
+#installation of WSL2: follow:
+https://docs.microsoft.com/en-us/windows/wsl/install-win10#install-windows-subsystem-for-linux
+
+#install WSL2:
+#in powershell (admin) run:
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+#update windows if WSL2 not available yet (requires at least Windows 10 Version 1903
+==> go to settings, Windows Update and perform update
+==> this won't work usually without computer restart!
+
+#enable Virtual Machine feature:
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+#download WSL2 Linux kernel update
+https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+
+#set WSL2 as default
+wsl --set-default-version 2
+
+#go to Microsoft Store:
+https://aka.ms/wslstore
+==>search e.g. for Ubuntu18.04 and download "Get"
+==>Press "Start" in store, this will run the installation
+
+#without Microsoft Store, you can do this manually:
+https://docs.microsoft.com/en-us/windows/wsl/install-manual
+
+
+#install Ubuntu18
+enter user name
+enter password
+
+#install windows terminal
+https://docs.microsoft.com/en-us/windows/terminal/get-started
+
+#++++++++++++++++++++++++++++++
+#using several Ubuntu versions:
+#you can install several linux distributions at the same time
+#show the list of distributions:
+wsl --list
+#set active / default configuration if you enter wsl in powershell:
+wsl --setdefault Ubuntu-18.04
+
+#run unix command from powershell, runs in local (windows) directory:
+wsl python3 test.py
+
+#build linux wheel with WSL:
+sudo python3 setup.py bdist_wheel
+#==> if [Errno 13] Permission denied: 'build/bdist.linux-x86_64/wheel/exudyn... occures:
+#==> go to build folder, right mouse click, security, change authentication "full access" for authorized users
+#workaround for file permissions (put into ~/.bashrc ?):
+# sudo umount /mnt/c && sudo mount -t drvfs C: /mnt/c -o metadata
+
+#using setup tools with WSL:
+#there are problems with file access
+==> go right click on root folder->properties->security
+for Authenticated Users->Edit-> set "Full control"
+
+#+++++++++++++++++++++++++++++++++++++++
+#xserver for WSL (see also https://skeptric.com/wsl2-xserver/):
+#first allow xserver to pass local firewall (even everything runs on local PC...):
+->open Firewall & Network Protection
+->Advanced settings
+->right click on Inbound rules->New Rule
+->select Rule type=port -> continue
+->TCP + specific local ports 6000
+->allow connection, apply to all profiles -> enter some name WSLX ->Finish
+->list of inbound rules -> right click on WSLX -> Properties 
+->Scope -> Remote IP Address add "172.16.0.0/12" under port 
+->add gain "192.168.0.0/16"
+
+#download VcXsrv Windows X Server:
+https://sourceforge.net/projects/vcxsrv/
+
+==> try to install e.g. gedit, which should run out of the box
+#UBUNTU20.04:
+#DISPLAY does not connect automatically => add the following to ~/.bashrc:
+#suggested workaround (did not work so far):
+export DISPLAY=:0 # in WSL 1
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0 # in WSL 2
+export LIBGL_ALWAYS_INDIRECT=1
+
+
+#optinoally: add this to properties->shorcut->target
+"C:\Program Files\VcXsrv\vcxsrv.exe" :0 -ac -terminate -lesspointer -multiwindow -clipboard -wgl -dpi auto
+
+#check for advanced wsl options:
+https://www.sitepoint.com/wsl2/

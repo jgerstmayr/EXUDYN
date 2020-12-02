@@ -54,7 +54,7 @@ mbs.AddLoad(LoadForceVector(markerNumber=m0,loadVector=[0,-1,0]))
 mbs.Assemble()
 
 #simulate with default parameters
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+exu.SolveDynamic(mbs, exu.SimulationSettings())
 
 #stop rendering window
 exu.StopRenderer()

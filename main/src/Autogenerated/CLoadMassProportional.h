@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:41 (last modfied)
+* @date         2020-12-01  17:12:39 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,8 +29,8 @@ class CLoadMassProportionalParameters // AUTO:
 {
 public: // AUTO: 
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
-    Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N/kg = m/s\f$^2\f$] 
-    std::function<StdVector(Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]
+    Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N/kg = m/s\f$^2\f$]; typically, this will be the gravity vector in global coordinates
+    std::function<StdVector(Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent loadVector.
     //! AUTO: default constructor with parameter initialization
     CLoadMassProportionalParameters()
     {
@@ -43,7 +43,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CLoadMassProportional
-* @brief        Load attached to BodyMass-based marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).
+* @brief        Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

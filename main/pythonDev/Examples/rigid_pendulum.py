@@ -63,7 +63,7 @@ simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum"
 exu.StartRenderer()
 
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 SC.WaitForRenderEngineStopFlag()
 exu.StopRenderer() #safely close rendering window!

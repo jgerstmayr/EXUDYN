@@ -23,7 +23,9 @@
 #define EXUDYN_RELEASE			//!< set this flag to exclude experimental parts of the code
 #define _USE_MATH_DEFINES		//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
 
-#define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
+#ifndef __NOGLFW //passed from compiler
+  #define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
+#endif
 
 //#define PERFORM_UNIT_TESTS	//!< remove definition in order to disable unit tests
 #define DoublePrecision

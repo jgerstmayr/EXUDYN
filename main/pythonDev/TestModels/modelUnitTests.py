@@ -122,7 +122,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     #tip displacements:
@@ -131,7 +131,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     testInterface.exu.Print('sol dynamic=',u,v)
     #testInterface.exu.Print('time integration error =',totalError)
 
-    testInterface.SC.StaticSolve(mbs, simulationSettings)
+    testInterface.exu.SolveStatic(mbs, simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     u = sol[n-4]; v = sol[n-3]; #20.10.2019: -0.3622447299987188 -0.9941447593196007; 17.10.2019: sol= -0.3622447299990847 -0.9941447593206921; #28.7.2019: -0.3622447300008477, -0.994144759326213
@@ -141,7 +141,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-14 #in order to converge to MATLAB results
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-14
 
-    testInterface.SC.StaticSolve(mbs, simulationSettings)
+    testInterface.exu.SolveStatic(mbs, simulationSettings)
 
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     #tip displacements: paper GerstmIschrik2008: 1Element: u=-0.362244729891,  v=-0.994144758725; 4 Elements: 0.507428715119 1.205533702233
@@ -225,7 +225,7 @@ def SpringDamperMesh(mbs, testInterface):
 #    if testInterface.useGraphics: 
 #        testInterface.SC.WaitForRenderEngineStopFlag()
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()
@@ -244,7 +244,7 @@ def SpringDamperMesh(mbs, testInterface):
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
     #simulationSettings.staticSolver.verboseMode = 1
 
-    testInterface.SC.StaticSolve(mbs, simulationSettings)
+    testInterface.exu.SolveStatic(mbs, simulationSettings)
 
     u = mbs.GetNodeOutput(nBodies-2, testInterface.exu.OutputVariableType.Position) #tip node
     testInterface.exu.Print('static tip displacement (y)=', u[1])
@@ -310,7 +310,7 @@ def MathematicalPendulumTest(mbs, testInterface):
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 
     #simulationSettings.displayStatistics = False
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()
         testInterface.exu.StopRenderer() #safely close rendering window!
@@ -380,7 +380,7 @@ def RigidPendulumTest(mbs, testInterface):
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()
@@ -483,7 +483,7 @@ def SliderCrank2DTest(mbs, testInterface):
         testInterface.exu.StartRenderer()
 
     #solve generalized alpha / index3:
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     u = mbs.GetNodeOutput(nMass, testInterface.exu.OutputVariableType.Position) #tip node
     errorSliderCrankIndex3 = u[0] - 1.353298442702153 #2019-12-26: 1.353298442702153; 15.12.2019: 1.3513750614337234; before 15.12.2019: 1.3513750614326427 #2019-11-22; previous: 1.3513750614331235 #x-position of slider
@@ -494,7 +494,7 @@ def SliderCrank2DTest(mbs, testInterface):
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 
     #solve index 2 / trapezoidal rule:
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     u = mbs.GetNodeOutput(nMass, testInterface.exu.OutputVariableType.Position) #tip node
     errorSliderCrankIndex2 = u[0] - 1.3550413308333111 #2019-12-26: 1.3550413308333111; 15.12.2019: 1.352878631961969; before 15.12.2019: 1.3528786319585846 #2019-11-22; previous: 1.3528786319585837 #x-position of slider
@@ -639,7 +639,7 @@ def SlidingJoint2DTest(mbs, testInterface):
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
 
     error = 0
@@ -698,7 +698,7 @@ def CartesianSpringDamperTest(mbs, testInterface):
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
     simulationSettings.displayStatistics = False
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCartesianSpringDamper= u[0] - L
@@ -760,7 +760,7 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
     
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
     
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()
@@ -845,7 +845,7 @@ def SwitchingConstraintsTest(mbs, testInterface):
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
 
-    testInterface.SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     if testInterface.useGraphics: 
         testInterface.SC.WaitForRenderEngineStopFlag()

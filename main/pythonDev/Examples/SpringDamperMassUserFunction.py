@@ -98,7 +98,7 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displac
 SC.visualizationSettings.contour.outputVariableComponent = 0 #y-component
 
 #SC.TimeIntegrationSolve(mbs, 'RungeKutta1', simulationSettings)
-#SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+#exu.SolveDynamic(mbs, simulationSettings)
 #u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 #print('dynamic tip displacement (y)=', u[1]) #dense: -11.085967426937412, sparse:-11.085967426937431
 
@@ -107,7 +107,7 @@ simulationSettings.staticSolver.newton.relativeTolerance = 1e-6*1e5 # make this 
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
 simulationSettings.staticSolver.verboseMode = 1
 
-SC.StaticSolve(mbs, simulationSettings)
+exu.SolveStatic(mbs, simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 print('static tip displacement (y)=', u[1])

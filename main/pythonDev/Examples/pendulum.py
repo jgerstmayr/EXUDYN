@@ -96,7 +96,7 @@ if computeDynamic:
     SC.visualizationSettings.nodes.defaultSize = 0.05
 
     exu.InfoStat()
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     #SC.TimeIntegrationSolve(mbs, 'RK1', simulationSettings)
     exu.InfoStat()
 
@@ -114,7 +114,7 @@ else:
     SC.visualizationSettings.connectors.showNumbers = True
     SC.visualizationSettings.nodes.defaultSize = 0.05
 
-    SC.StaticSolve(mbs, simulationSettings)
+    exu.SolveStatic(mbs, simulationSettings)
 
 #time.sleep(0.5)
 

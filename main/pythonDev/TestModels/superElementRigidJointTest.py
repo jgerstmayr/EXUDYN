@@ -242,7 +242,7 @@ if exudynTestGlobals.useGraphics:
 
     mbs.WaitForUserToContinue() #press space to continue
 
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
     
 
 data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')

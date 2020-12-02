@@ -114,7 +114,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
 
 #start solver:
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 
 exu.StartRenderer()              #start graphics visualization
 mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue

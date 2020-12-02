@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 466, 
-Number of resolved issues = 19, 
-EXUDYN version = 1.0.19, 
-last change =  2020-11-18
+Number of issues = 482, 
+Number of resolved issues = 405 (37 in current version), 
+EXUDYN version = 1.0.37, 
+last change =  2020-12-02
 
 
 <table style = "width:100%">
@@ -39,15 +39,79 @@ last change =  2020-11-18
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0465</td>
-    <td>SC.GetSystem(..)    </td>
+    <td>0478</td>
+    <td>link examples       </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> raises RuntimeError: should return reference instead of copy</td>
-    <td>BUG</td>
+    <td> automatically add links to examples in thedoc</td>
+    <td>DOCU</td>
     <td></td>
-    <td>2020-11-18</td>
-    <td>2021-01-17</td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0477</td>
+    <td>links in theDoc     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add links between user functions, add labels to item sections</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0471</td>
+    <td>geometrically exact beam3D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add to CPP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-21</td>
+    <td>2021-01-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0470</td>
+    <td>geometrically exact beam2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add to CPP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-21</td>
+    <td>2021-01-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0467</td>
+    <td>mouse coordinates   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> show mouse coordinates in render window (without transformation)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-19</td>
+    <td>2021-01-18</td>
     <td></td>
     <td></td>
     <td></td>
@@ -96,38 +160,6 @@ last change =  2020-11-18
     <td></td>
     <td>2020-11-12</td>
     <td>2021-01-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0458</td>
-    <td>graphicsDataUserFunction</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add example to docu in ObjectGround and GenericODE2 and add more accurate docu to ALL python user functions</td>
-    <td>DOCU</td>
-    <td></td>
-    <td>2020-11-10</td>
-    <td>2021-01-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0457</td>
-    <td>GetVersionString    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> put into docu with pybindings</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-11-07</td>
-    <td>2021-01-06</td>
     <td></td>
     <td></td>
     <td></td>
@@ -247,22 +279,6 @@ last change =  2020-11-18
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0446</td>
-    <td>NodeIndex in arrays </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2020-09-09</td>
-    <td>2020-11-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0444</td>
     <td>docstrings          </td>
     <td>JG</td>
@@ -320,22 +336,6 @@ last change =  2020-11-18
     <td></td>
     <td>2020-07-01</td>
     <td>2020-08-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0428</td>
-    <td>implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> EXTENSION</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-06-26</td>
-    <td>2020-08-25</td>
     <td></td>
     <td></td>
     <td></td>
@@ -556,22 +556,6 @@ last change =  2020-11-18
     <td>JG</td>
     <td>RAISED  </td>
     <td> change solver interface such that it stores MainSystem/mbs for user functions; MainSolverXYZ and CSolverXYZ take MainSystem as argument in constructor</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-06</td>
-    <td>2020-07-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0383</td>
-    <td>pybind11 submodule  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> used for advanced functions, not necessarily included in exudyn or make other module</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-05-06</td>
@@ -999,22 +983,6 @@ last change =  2020-11-18
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0191</td>
-    <td>Newton lambda       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Check whether Newton can be implemented as lambda-function</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2019-06-17</td>
-    <td>2019-08-16</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0174</td>
     <td>Iterator begin      </td>
     <td>JG</td>
@@ -1303,6 +1271,198 @@ last change =  2020-11-18
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0481</td>
+    <td>eigenvalue solver   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add eigenvalue computation interface for mbs in python</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td>2020-12-02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0480</td>
+    <td>python solver       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add solver interfaces in python for MainSolverStatic and MainSolverImplicitSecondOrder, helping to retrieve solver data and to make solvers accessible for users</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td>2020-12-02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0479</td>
+    <td>solver return       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add return value to solvers and copy solver structures to mbs.sys variables after finishing</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td>2020-12-02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added python interfaces and kept old cpp solvers</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0476</td>
+    <td>add RequireVersion  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> functionality to allow to add a simple check to see if the installed version meets the requirements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-30</td>
+    <td>2021-01-29</td>
+    <td>2020-11-30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0475</td>
+    <td>rolling disc ext    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add force on ground and moving ground for ObjectJointRollingDisc</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-26</td>
+    <td>2021-01-25</td>
+    <td>2020-11-29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>needs to be tested further</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0474</td>
+    <td>auto compilation    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check automatic compilation; check version in wheels; check linux wheels</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-11-25</td>
+    <td>2021-01-24</td>
+    <td>2020-11-29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>linux wheels can not be built with admin rights</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0473</td>
+    <td>no glfw option      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add simple option in setup.py to deactivate glfw both in setup.py as well as in C++ part</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-25</td>
+    <td>2021-01-24</td>
+    <td>2020-11-29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0472</td>
+    <td>examples in utilities</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> activate lstlisting for examples</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-25</td>
+    <td>2021-01-24</td>
+    <td>2020-11-25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0469</td>
+    <td>userfunctions       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> put user function generation in objectdefinition, with seperate U userfunction flag - this will automatically document the user function parameters (AND return values); this improves documentation and adds a unique interface in C++ using exception handling as well as GIL handling</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-20</td>
+    <td>2021-01-19</td>
+    <td>2020-12-02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0468</td>
+    <td>test WSL2           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test compilation on WSL2 - Windows subsystem for Linux</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-11-19</td>
+    <td>2021-01-18</td>
+    <td>2020-11-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0466</td>
+    <td>main/bin            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove main/bin from github and from Tools folder</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-11-19</td>
+    <td>2021-01-18</td>
+    <td>2020-11-19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0465</td>
+    <td>SC.GetSystem(..)    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> raises RuntimeError: should return reference instead of copy</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-11-18</td>
+    <td>2021-01-17</td>
+    <td>2020-11-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0464</td>
     <td>processing module   </td>
     <td>JG</td>
@@ -1346,6 +1506,38 @@ last change =  2020-11-18
     <td>2021-01-10</td>
     <td>2020-11-11</td>
     <td>Stefan Holzinger</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0458</td>
+    <td>graphicsDataUserFunction</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example to docu in ObjectGround and GenericODE2 and add more accurate docu to ALL python user functions</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2020-11-10</td>
+    <td>2021-01-09</td>
+    <td>2020-12-02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0457</td>
+    <td>GetVersionString    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> put into docu with pybindings</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-07</td>
+    <td>2021-01-06</td>
+    <td>2020-11-29</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1397,6 +1589,22 @@ last change =  2020-11-18
     <td></td>
     <td></td>
     <td>first tests made</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0446</td>
+    <td>NodeIndex in arrays </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-09-09</td>
+    <td>2020-11-08</td>
+    <td>2020-11-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not needed for now</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0445</td>
@@ -1601,6 +1809,22 @@ last change =  2020-11-18
     <td>2020-07-01</td>
     <td>2020-08-30</td>
     <td>2020-07-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0428</td>
+    <td>implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> EXTENSION</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-06-26</td>
+    <td>2020-08-25</td>
+    <td>2020-12-02</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -2085,6 +2309,22 @@ last change =  2020-11-18
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0383</td>
+    <td>pybind11 submodule  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> used for advanced functions, not necessarily included in exudyn or make other module</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td>2020-11-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not needed for now</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0382</td>
@@ -4725,6 +4965,22 @@ last change =  2020-11-18
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0191</td>
+    <td>Newton lambda       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Check whether Newton can be implemented as lambda-function</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2019-06-17</td>
+    <td>2019-08-16</td>
+    <td>2020-11-21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not needed for now</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0190</td>

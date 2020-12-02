@@ -191,7 +191,7 @@ vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationTyp
 
 #mbs.WaitForUserToContinue()
 
-SC.StaticSolve(mbs, simulationSettings) 
+exu.SolveStatic(mbs, simulationSettings) 
 
 #prolong solution for next computation
 u = mbs.systemData.GetODE2Coordinates()
@@ -239,7 +239,7 @@ if solveDynamic:
     simulationSettings.timeIntegration.verboseModeFile = 0
 
     
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     
 
 if exudynTestGlobals.useGraphics: 

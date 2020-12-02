@@ -4,9 +4,9 @@
 The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
 as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver').
 
-\codeName\ is hosted on GitHub \cite{EXUDYNgit}:
+\codeName\ is hosted on \exuUrl{https://github.com}{GitHub} \cite{EXUDYNgit}:
 \bi
- \item web: \texttt{https://github.com/jgerstmayr/EXUDYN/wiki}
+ \item web: \exuUrl{https://github.com/jgerstmayr/EXUDYN}{https://github.com/jgerstmayr/EXUDYN}
 \ei
 For any comments, requests, issues, bug reports, send an email to: 
 \bi
@@ -35,8 +35,7 @@ The open source code HOTINT reached limits of further (efficient) development an
 \codeName\ is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see Section \ref{sec_items}.
-\vspace{6pt}\\
+For details on the interaction of nodes, objects, markers and loads see \refSection{sec:items}.
 %
 \mysubsubsection{Who is developing \codeName ?}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
@@ -58,6 +57,7 @@ The following people have contributed to the examples:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsection{Installation instructions}
 \mysubsubsection{How to install \codeName ?}
 
 In order to run \codeName , you need an appropriate Python installation.
@@ -88,8 +88,21 @@ The simplest way on Windows 10 (and maybe also Windows 7), which works well {\bf
 \ei
 
 %+++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Install from Wheel}
+\mysubsubsection{Install from Wheel (UBUNTU and Windows)}
 The {\bf standard way to install} the python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}) provided at the directory wheels in the \codeName\ repository. 
+\vspace{6pt}\\
+For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
+\bi
+  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp36-cp36-linux\_x86\_64.whl
+\ei
+For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
+\bi
+  \item \texttt{Python 3.8, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp38-cp38-linux\_x86\_64.whl
+\ei
+NOTE that your installation may have environments with different python versions, so install that \codeName\ version appropriately!
+If the wheel installation does not work on UBUNTU, it is highly recommended to build \codeName\ for your specific system as given in \refSection{sec:build:ubuntu}.
+
+\noindent {\bf Windows}:\vspace{6pt}\\
 First, open an Anaconda prompt:
 \bi
   \item EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
@@ -103,15 +116,11 @@ First, open an Anaconda prompt:
 
 \noindent {\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
 
-For Windows this may read (version number 1.0.8 may be different):
+For Windows the installation commands may read (version number 1.0.20 may be different):
 \bi
-  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.8-cp36-cp36m-win32.whl
-  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.8-cp36-cp36m-win\_amd64.whl
-  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.8-cp37-cp37m-win\_amd64.whl
-\ei
-For UBUNTU18.04 this may read (version number 1.0.8 may be different):
-\bi
-  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.8-cp36-cp36m-linux\_x86\_64.whl
+  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win32.whl
+  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win\_amd64.whl
+  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp37-cp37m-win\_amd64.whl
 \ei
 
 %+++++++++++++++++++++++++++++++++++++
@@ -132,7 +141,7 @@ The folder \texttt{EXUDYN32bitsPython36} needs to be adapted to the location of 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under Windows 10?}
-
+\label{sec:build:windows}
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 \bi
   \item install your Anaconda distribution including Spyder
@@ -157,7 +166,7 @@ This will add a wheel in the \texttt{dist} folder.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under UBUNTU?}
-
+\label{sec:build:ubuntu}
 Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python {\bf 3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \texttt{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
 
 \noindent First update ...
@@ -203,6 +212,13 @@ sudo python3 setup.py install --user
   \item[] \texttt{sudo python3 setup.py bdist\_wheel}
 \ei
 
+\noindent {\bf KNOWN issues for linux builds}:
+\bi
+  \item Using {\bf WSL2} (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
+  \item {\bf compiler (gcc,g++) conflicts}: It seems that \codeName works well on UBUNTU18.04 with the original \texttt{Python 3.6.9} and \texttt{gcc-7.5.0} version as well as with UBUNTU20.04 with \texttt{Python 3.8.5} and \texttt{gcc-9.3.0}. Upgrading \texttt{gcc} on a linux system with Python 3.6 to, e.g., \texttt{gcc-8.2} showed us a linker error when loading the \codeName\ module in python -- there are some common restriction using \texttt{gcc} versions different from those with which the Python version has been built. Starting \texttt{python} or \texttt{python3} on your linux machine shows you the \texttt{gcc} version it had been build with.
+	Check your current \texttt{gcc} version with: \texttt{gcc --version}
+\ei
+
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Uninstall \codeName }
 
@@ -241,6 +257,7 @@ In order to make full usage of the C++ code and extending it, you can use:
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsection{Further notes}
 \mysubsubsection{Goals of \codeName}
 After the first development phase (planned in Q4/2021), it will
 \bi
@@ -373,11 +390,11 @@ Traceback (most recent call last):
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	\item I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
 	\bi
-	\item[$\ra$] probably you used wrong item indices, see beginning of Section \ref{sec_PCpp_command_interface}. 
+	\item[$\ra$] probably you used wrong item indices, see beginning of \refSection{sec:PCpp:command:interface}. 
 	\item E.g., an object number \texttt{oNum = mbs.AddObject(...)} is used at a place where a \texttt{NodeIndex} is expected:
 	\texttt{mbs.AddObject(MassPoint(nodeNumber=oNum, ...))}
 	\item Usually, this is an ERROR in your code, it does not make sense to mix up these indices!
-	\item In the exceptional case, that you want to convert numbers, see beginning of Section \ref{sec_PCpp_command_interface}.
+	\item In the exceptional case, that you want to convert numbers, see beginning of \refSection{sec:PCpp:command:interface}.
 	\ei
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

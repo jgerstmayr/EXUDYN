@@ -143,7 +143,7 @@ if solveDynamic:
     mbs.SetPreStepUserFunction(UFchangeLoad)
     #simulationSettings.timeIntegration.preStepPyExecute = "mbs.SetLoadParameter(0,'loadVector',[0, 0, E*I*3.141592653589793*mbs.systemData.GetCurrentTime()])"
 
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     #v = mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[L/2,0,0],'configuration':'Current'})
     #print('angular vel='+str(v))
     SC.WaitForRenderEngineStopFlag()
@@ -185,7 +185,7 @@ else:
             #    cableDict['physicsReferenceAxialStrain'] = 0.1*curvatureValue
             #    mbs.ModifyObject(nCable, cableDict)
         
-            SC.StaticSolve(mbs, simulationSettings)
+            exu.SolveStatic(mbs, simulationSettings)
 
             sol = mbs.systemData.GetODE2Coords()
             mbs.systemData.SetODE2Coords(coords=sol, configurationType=exu.ConfigurationType.Initial) #set initial conditions for next step
@@ -202,7 +202,7 @@ else:
     else:
         simulationSettings.staticSolver.numberOfLoadSteps = 1
         simulationSettings.staticSolver.adaptiveStep = True
-        SC.StaticSolve(mbs, simulationSettings)
+        exu.SolveStatic(mbs, simulationSettings)
 
 
     SC.WaitForRenderEngineStopFlag()

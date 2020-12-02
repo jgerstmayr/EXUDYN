@@ -59,10 +59,12 @@ equations =
     %\startTable{intermediate variables}{symbol}{description}
     %  \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     %\finishTable
+    \paragraph{Detailed information:}
     The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
     Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
-    \noindent {\bf Example} for NodePoint: see ObjectMassPoint
+
+    \noindent {\bf Example} for NodePoint: see ObjectMassPoint, \refSection{sec:item:ObjectMassPoint}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -84,7 +86,7 @@ Fv,     M,      GetInitialVector,               ,               ,       LinkedDa
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -103,17 +105,18 @@ outputVariables = "{'Position':'$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\c
 classType = Node
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
     %{\bf Note the difference of coordinate vectors and displacement or position vectors}:
     %\startTable{quantity}{symbol}{description}
     %  \rowTable{Coordinates}{$\cv\cConfig = \qv\cConfig = [q_0,\,q_1]\cConfig\tp = [u_0,\,u_1]\cConfig\tp \ldots$}{displacement coordinates}
     %  \rowTable{Displacement}{$\uv\cConfig = [u_0,\,u_1,\,0]\cConfig\tp$}{displacement vector, 0 in third component}
     %  \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp = [u_0,\,u_1,\,0]\cConfig\tp + [r_0,\,r_1,\,0]\cRef\tp$}{displacement vector, 0 in third component}
     %\finishTable
+    \paragraph{Detailed information:}
     The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
     Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \vspace{6pt}\\
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
-    \noindent {\bf Example} for NodePoint: see ObjectMassPoint2D
+    
+    \noindent {\bf Example} for NodePoint2D: see ObjectMassPoint2D, \refSection{sec:item:ObjectMassPoint2D}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -135,7 +138,7 @@ Fv,     M,      GetInitialVector,               ,               ,       LinkedDa
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -161,6 +164,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}
 #'AngularVelocityLocal':'local (body-fixed) 3D velocity vector of node', 
 #'Coordinates':'coordinates vector of node', 'Coordinates_t':'velocity coordinates vector of node'}"
 equations =
+    \paragraph{Detailed information:}
     All coordinates $\cv\cConfig$ lead to second order differential equations, but there is one additional constraint equation for the quaternions.
     The additional constraint equation, which needs to be provided by the object, reads
     \be
@@ -191,6 +195,9 @@ equations =
 		%									-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
 		%									-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
     \eea
+    
+    For creating a \texttt{NodeRigidBodyEP}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
 /end
 classType = Node
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -224,7 +231,7 @@ Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDa
 Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #helper functions for rotation parameters:
 #F,      C,      GetEulerParameters,             ,               ,       ConstSizeVector<nRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to of 4 Euler Parameters from reference and configuration coordinates"  
 #F,      C,      GetEulerParameters_t,           ,               ,       ConstSizeVector<nRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to time derivative of 4 Euler Parameters in given configuration"  
@@ -236,7 +243,7 @@ Fv,      C,      GetG_t,                        ,               ,       void, ,"
 Fv,      C,      GetGlocal_t,                   ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute local G matrix for given configuration"  
 #
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -254,6 +261,7 @@ pythonShortName = RigidRxyz
 outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node'}"
 classType = Node
 equations =
+    \paragraph{Detailed information:}
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).
     All coordinates $\cv\cConfig$ lead to second order differential equations.
     The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms local (body-fixed) 3D positions $\LU{b}{\pv} = \LU{b}{[p_0,\,p_1,\,p_2]}\tp$ to global 3D positions,
@@ -273,6 +281,9 @@ equations =
       \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     \eea
+    
+    For creating a \texttt{NodeRigidBodyRxyz}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -310,7 +321,7 @@ Fv,      C,      GetG_t,                        ,               ,       void, ,"
 Fv,      C,      GetGlocal_t,                   ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute local G matrix for given configuration"  
 #
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -328,6 +339,7 @@ pythonShortName = RigidRotVecLG
 outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}"
 classType = Node
 equations =
+    \paragraph{Detailed information:}
     For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020}.
 
     The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
@@ -350,6 +362,9 @@ equations =
     %  \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
     %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
     %\eea
+    
+    For creating a \texttt{NodeRigidBodyRotVecLG}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -385,7 +400,7 @@ Fv,      C,      GetG_t,                        ,               ,       void, ,"
 Fv,      C,      GetGlocal_t,                   ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute local G matrix for given configuration"  
 #
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -404,6 +419,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\c
 classType = Node
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
+    \paragraph{Detailed information:}
     The node provides 2 displacement coordinates (displacement of center of mass, COM, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
     Using the rotation parameter $\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}$, the rotation matrix is defined as
     \be
@@ -435,7 +451,7 @@ Fv,     M,      GetInitialVector,               ,               ,       LinkedDa
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -451,6 +467,7 @@ visuParentClass = VisualizationNode
 outputVariables = "{'Coordinates':'$\qv\cConfig = [q_0]\tp\cConfig$ODE2 coordinate of node (in vector form)', 'Coordinates_t':'$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$ODE2 velocity coordinate of node (in vector form)', 'Coordinates_tt':'$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$ODE2 acceleration coordinate of node (in vector form)'}"
 classType = Node
 equations =
+    \paragraph{Detailed information:}
     The current position/rotation coordinate of the 1D node is computed from
     \be
       p_0 = {q_0}\cRef + {q_0}\cCur
@@ -478,9 +495,9 @@ Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDa
 Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
-#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "false",                    ,       IO,    "set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D"
+Vp,     V,      show,                           ,               ,       Bool,       "false",                    ,       IO,    "set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Empty graphics update for now" 
 #file names automatically determined from class name
 writeFile = True
@@ -515,7 +532,7 @@ Fv,     M,      GetInitialVector,               ,               ,       LinkedDa
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -545,9 +562,9 @@ Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDa
 Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "false",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,       "false",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Empty graphics update for now" 
 #file names automatically determined from class name
 writeFile = True
@@ -571,9 +588,9 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ";",    "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial data coordinates of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "false",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,       "false",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Empty graphics update for now" 
 #file names automatically determined from class name
 writeFile = True
@@ -606,7 +623,7 @@ Fv,     M,      GetInitialVector,               ,               ,       LinkedDa
 Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return LinkedDataVector();", , CI,  "return empty vector, as there are no initial velocity coordinates" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -629,7 +646,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{node position}{$\LU{0}{\pv}\cConfig = \LU{0}{\pv}(n_0)\cConfig$}{position of mass point which is provided by node $n_0$ in any configuration}
       \rowTable{node displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of mass point which is provided by node $n_0$ in any configuration}
@@ -639,7 +656,6 @@ equations =
       \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
     \finishTable
 
-    %{\bf Definition of quantities}:
     %\bi
     %  %\item $m \ldots$ physicsMass
     %  %\item $n0 \ldots$ node number
@@ -649,7 +665,7 @@ equations =
     %  \item $\pv\cConfig = \uv\cConfig + \pv\cRef \ldots$ position in any configuration ($\uv\cRef = 0$)
     %  \item $\pv\cCur = \uv\cCur + \pv\cRef \ldots$ current position, equals to node's reference position + current coordinates
     %\ei
-    {\bf Equations of motion}:
+    \mysubsubsubsection{Equations of motion}
     \be 
       \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
     \ee
@@ -708,7 +724,7 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -726,7 +742,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{node position}{$\LU{0}{\pv}\cConfig = \LU{0}{\pv}(n_0)\cConfig$}{position of mass point which is provided by node $n_0$ in any configuration}
       \rowTable{node displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of mass point which is provided by node $n_0$ in any configuration}
@@ -736,7 +752,7 @@ equations =
       \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
     \finishTable
     %
-    {\bf Equations of motion}:
+    \mysubsubsubsection{Equations of motion}
     \be 
       \mp{m}{0} {0}{m} \vp{\ddot q_0}{\ddot q_1} = \vp{f_0}{f_1}.
     \ee
@@ -797,7 +813,7 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -815,7 +831,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig$global position vector; for
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{position coordinate}{${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$}{position coordinate of node (nodal coordinate $c_0$) in any configuration}
       \rowTable{displacement coordinate}{${u_0}\cConfig = {c_0}\cConfig$}{displacement coordinate of mass node in any configuration}
@@ -832,7 +848,7 @@ equations =
     A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
     However, torques will have no effect and forces will only have effect in 'direction' of the coordinate.
 
-    {\bf Equations of motion}:
+    \mysubsubsubsection{Equations of motion}
     \be 
       m \cdot \ddot q_0 = f.
     \ee
@@ -894,7 +910,7 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -912,7 +928,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig$global position vector; for
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{position coordinate}{${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $}{total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
       \rowTable{displacement coordinate}{${\psi_0}\cConfig = {c_0}\cConfig$}{change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$)}
@@ -932,7 +948,7 @@ equations =
     A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
     However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
 
-    {\bf Equations of motion}:
+    \mysubsubsubsection{Equations of motion}
     \be 
       J \cdot \ddot \psi_0 = \tau.
     \ee
@@ -995,7 +1011,7 @@ Fv,     C,      GetODE2Size,                    ,               ,       Index,  
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -1019,7 +1035,26 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    equations coming soon!
+    \mysubsubsubsection{Definition of quantities}
+    Detailed equations on rigid body coming soon $\ra$ check C++ code for now!
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    A user function, which is called by the visualization thread in order to draw user-defined objects.
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
+    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+    
+    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+    \finishTable
+    
+    For creating a \texttt{ObjectRigidBody}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -1059,10 +1094,10 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      CallUserFunction,               ,               ,       void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
-Fv,     V,      HasUserFunction,                ,               ,       bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+Fv,     V,      HasUserFunction,                ,               ,       Bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
 V,      V,      graphicsDataUserFunction,       ,               ,       PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates"
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -1080,7 +1115,7 @@ outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{COM position}{$\LU{0}{\pv}\cConfig = \LU{0}{\pv}(n_0)\cConfig$}{position of center of mass (COM) which is provided by node $n_0$ in any configuration}
       \rowTable{COM displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of center of mass which is provided by node $n_0$ in any configuration}
@@ -1095,7 +1130,7 @@ equations =
       \rowTable{applied torques}{$\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$}{applied torques (loads, connectors, joint reaction forces, ...)}
     \finishTable
     %
-    {\bf Equations of motion}:
+    \mysubsubsubsection{Equations of motion}
     \be 
       \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
     \ee
@@ -1119,6 +1154,21 @@ equations =
     \be
       \Qm = \Jm_{rot} \LU{0}{\ttau}_a
     \ee
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    A user function, which is called by the visualization thread in order to draw user-defined objects.
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
+    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+
+    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
+      \rowTable{\texttt{itemNumber}}{int}{integer number of the object in mbs, allowing easy access}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+    \finishTable
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1169,10 +1219,10 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      CallUserFunction,               ,               ,       void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
-Fv,     V,      HasUserFunction,                ,               ,       bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+Fv,     V,      HasUserFunction,                ,               ,       Bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
 V,      V,      graphicsDataUserFunction,       ,               ,       PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates"
 V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -1190,11 +1240,14 @@ addIncludesC = '#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11
 outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all ODE2 velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}"
 classType = Object
 equations =
+    \mysubsubsubsection{Equations of motion}
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
     \be
-      n = \sum_{i} n_{c_i}.
+      n = \sum_{i} n_{c_i},
     \ee
-    {\bf Equations of motion}:
+    which is used throughout the description of this object.
+    %
+    \mysubsubsubsection{Equations of motion}
     \be \label{eq_ObjectGenericODE2_EOM}
       \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
     \ee
@@ -1205,6 +1258,73 @@ equations =
       \Mm_{user}(t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
     \ee
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{forceUserFunction(t, q, q\_t)}
+    A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+    %
+    %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{massMatrixUserFunction(t, q, q\_t)}
+    A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n \times n}$}{returns mass matrix for object}
+    \finishTable
+    \vspace{12pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    A user function, which is called by the visualization thread in order to draw user-defined objects.
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
+    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+
+    For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
+    KD = numpy.diag([200,100])
+    #nonlinear force example
+    def UFforce(t, q, q\_t): 
+        return np.dot(KD, q_t*q) #add nonlinear function for q_t and q, q_t*q gives vector
+    
+    #non-constant mass matrix:
+    def UFmass(t, q, q\_t): 
+        return return (q[0]+1)*M #uses mass matrix from mini example
+    
+    #non-constant mass matrix:
+    def UFgraphics(mainSystem, objectNum):
+        t = mainSystem.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+        p = mainSystem.GetObjectOutputSuperElement(objectNumber=objectNum, variableType = exu.OutputVariableType.Position,
+                                            meshNodeNumber = 0, #get first node's position 
+                                            configuration = exu.ConfigurationType.Visualization)
+        graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
+            graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue}
+        return [graphics1, graphics2] 
+
+    #now add object instead of object in mini-example:
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                       massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
+                       forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
+                       visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)
+    \end{lstlisting}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1249,8 +1369,8 @@ V,      CP,     massMatrix,                     ,               ,       NumpyMat
 V,      CP,     stiffnessMatrix,                ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Km \in \Rcal^{n \times n}$stiffness matrix of object in python numpy format"
 V,      CP,     dampingMatrix,                  ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Dm \in \Rcal^{n \times n}$damping matrix of object in python numpy format"
 V,      CP,     forceVector,                    ,               ,       NumpyVector,"Vector()",                       ,       I,      "$\fv \in \Rcal^{n}$generalized force vector added to RHS"
-V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,             ,       IO,     "$\fv_{user} \in \Rcal^{n}$A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy stiffness matrix K: def f(t, q, q\_t): return np.dot(K, q)"
-V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,             ,       IO,     "$\Mm_{user} \in \Rcal^{n\times n}$A python user function which computes the mass matrix instead of the constant mass matrix; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy stiffness matrix M: def f(t, q, q\_t): return (q[0]+1)*M"
+V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,             ,       IO,     "$\fv_{user} \in \Rcal^{n}$A python user function which computes the generalized user force vector for the ODE2 equations; see description below"
+V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,             ,       IO,     "$\Mm_{user} \in \Rcal^{n\times n}$A python user function which computes the mass matrix instead of the constant mass matrix; see description below"
 V,      CP,     coordinateIndexPerNode,         ,               ,       ArrayIndex, "ArrayIndex()",                   ,       IR,     "this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed"
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix",       CDI,    "Computational function: compute mass matrix" 
@@ -1272,13 +1392,13 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,       "InitializeCoordinateIndices();", ,     I,    "This flag is reset upon change of parameters; says that the vector of coordinate indices has changed" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 Fv,     C,      GetLocalODE2CoordinateIndexPerNode, ,           ,       Index,      "return parameters.coordinateIndexPerNode[localNode];", "Index localNode", CI,    "read access to coordinate index array" 
 #helper functions:
 F,      C,      ComputeObjectCoordinates,       ,               ,       void,       ,                           "Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object coordinates composed from all nodal coordinates; does not include reference coordinates" 
 F,      C,      InitializeCoordinateIndices,    ,               ,       void,       ,                           ,          DI,    "initialize coordinateIndexPerNode array" 
 #superelement functions:
-Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "localReferenceFrameNode = 0; return false;", "Index& localReferenceFrameNode", CI,    "return true, if object has reference frame; return according LOCAL node number" 
+Fv,     C,      HasReferenceFrame,              ,               ,       Bool,       "localReferenceFrameNode = 0; return false;", "Index& localReferenceFrameNode", CI,    "return true, if object has reference frame; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return GetNumberOfNodes();", , IC, "return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used" 
 Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -1288,17 +1408,17 @@ Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,   
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "true",                         ,   IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,       "true",                         ,   IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      color,                          ,               4,      Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})", ,  IO,      "RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 V,      V,      triangleMesh,                   ,               ,       NumpyMatrixI,"MatrixI()",               ,       IO,      "a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!"
-V,      V,      showNodes,                      ,               ,       bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
+V,      V,      showNodes,                      ,               ,       Bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
 Fv,     V,      CallUserFunction,               ,               ,       void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
-Fv,     V,      HasUserFunction,                ,               ,       bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+Fv,     V,      HasUserFunction,                ,               ,       Bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
 V,      V,      graphicsDataUserFunction,       ,               ,       PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization"
 #
 #done in VisualizationObjectSuperElement:
 #Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-#Fv,     V,      GetSuperElementShowNodes,       ,               ,       bool,       "return showNodes;",       ,        CI,     "showNodes interface for general drawing function of super element" 
+#Fv,     V,      GetSuperElementShowNodes,       ,               ,       Bool,       "return showNodes;",       ,        CI,     "showNodes interface for general drawing function of super element" 
 #Fv,     V,      GetSuperElementTriangleMesh,    ,               ,       "const MatrixI&", "return triangleMesh;", ,     CI,     "mesh interface for general drawing function of super element" 
 #Fv,     V,      GetSuperElementColor,           ,               ,       Float4,     ";",                       ,        CI,     "color interface for general drawing function of super element" 
 #could be used to visualize nodes: V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
@@ -1316,7 +1436,7 @@ addPublicC = "    static constexpr Index ffrfNodeDim = 3; //dimension of nodes (
 outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all ODE2 velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}"
 classType = Object
 equations =
-    \vspace{6pt}\\
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{object coordinates}{$\cv = [\cv_r,\,\qv_f]\tp$}{object coordinates}
       \rowTable{rigid body coordinates}{$\cv_r = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp$}{rigid body coordinates in case of Euler parameters}
@@ -1325,6 +1445,7 @@ equations =
       \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am}_{bd} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
     \finishTable
     %
+    \mysubsubsubsection{Equations of motion}
     Consider an object with $n = 1+ n_f$ nodes, $n_f$ being the 'flexible' nodes.
     It has node numbers $[n_0,\,\ldots,\,n_{n_f}]$ and according numbers of 
     nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$.
@@ -1372,6 +1493,28 @@ equations =
         \tilde\xv_{f}\tp \Mm \cv_f = 0
     \ee
     %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{forceUserFunction(t, q, q\_t)}
+    A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+    %
+    %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_c$}{object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_c$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{Vector $\in \Rcal^{n_c}$}{returns force vector for object}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{massMatrixUserFunction(t, q, q\_t)}
+    A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_c$}{object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_c$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n_c \times n_c}$}{returns mass matrix for object}
+    \finishTable
+    \vspace{12pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
@@ -1380,13 +1523,13 @@ V,      CP,     massMatrixFF,                   ,               ,       PyMatrix
 V,      CP,     stiffnessMatrixFF,              ,               ,       PyMatrixContainer,"PyMatrixContainer()",  ,       I,    "$\Km_{ff} \in \Rcal^{n_{c_f} \times n_{c_f}}$body-fixed and ONLY flexible coordinates part of stiffness matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format"
 V,      CP,     dampingMatrixFF,                ,               ,       PyMatrixContainer,"PyMatrixContainer()",  ,       I,    "$\Dm_{ff} \in \Rcal^{n_{c_f} \times n_{c_f}}$body-fixed and ONLY flexible coordinates part of damping matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format"
 V,      CP,     forceVector,                    ,               ,       NumpyVector,"Vector()",                 ,       I,      "$\fv \in \Rcal^{n_c}$generalized, global force vector added to RHS; the rigid body part $\fv_r$ is directly applied to rigid body coordinates while the flexible part $\fv_{ff}$ is transformed from global to local coordinates"
-V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,       ,       IO,     "$\fv_{user} \in \Rcal^{n_c}$A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy matrix K: def f(t, q, q\_t): return np.dot(K, q)"
-V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,       ,       IO,     "$\Mm_{user} \in \Rcal^{n_c\times n_c}$A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; this function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy matrix M: def f(t, q, q\_t): return (q[0]+1)*M"
-V,      CP,     computeFFRFterms,               ,               ,       bool,       "true",                     ,       IO,     "flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector"
-#impossible now: object cannot have constraints without algebraic nodal variables: V,      CP,     constrainRigidBodyMotion,       ,               ,       bool,       "true",                     ,       IO,     "if true, the rigid body motion of the flexible coordinates is constrained by 6 additional algebraic equations, using the Tisserand frame"
+V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,       ,       IO,     "$\fv_{user} \in \Rcal^{n_c}$A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; see description below"
+V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,       ,       IO,     "$\Mm_{user} \in \Rcal^{n_c\times n_c}$A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below"
+V,      CP,     computeFFRFterms,               ,               ,       Bool,       "true",                     ,       IO,     "flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector"
+#impossible now: object cannot have constraints without algebraic nodal variables: V,      CP,     constrainRigidBodyMotion,       ,               ,       Bool,       "true",                     ,       IO,     "if true, the rigid body motion of the flexible coordinates is constrained by 6 additional algebraic equations, using the Tisserand frame"
 #auto-computed quantities:
 V,      C,      coordinateIndexPerNode,         ,               ,       ArrayIndex, "ArrayIndex()",             ,       IR,     "this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed"
-V,      C,      objectIsInitialized,            ,               ,       bool,       "false",                    ,       IO,     "flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed"
+V,      C,      objectIsInitialized,            ,               ,       Bool,       "false",                    ,       IO,     "flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed"
 V,      C,      physicsMass,                    ,               ,       UReal,      "0.",                       ,       IR,     "$m$total mass [SI:kg] of FFRF object, auto-computed from mass matrix $\Mm$"
 V,      C,      physicsInertia,                 ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       IR,     "$J_r \in \Rcal^{3 \times 3}$inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\Mm_{ff}$"
 V,      C,      physicsCenterOfMass,            ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       IR,     "$\LU{b}{\pv}_{COM}$local position of center of mass (COM); auto-computed from mass matrix $\Mm$"
@@ -1429,15 +1572,15 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,       "objectIsInitialized = false;",      ,     I,    "This flag is reset upon change of parameters; says that the vector of coordinate indices has changed" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 Fv,     C,      PostAssemble,                   ,               ,       void,       "InitializeObject();",      ,     I,    "operations done after Assemble()" 
 Fv,     C,      GetLocalODE2CoordinateIndexPerNode, ,           ,       Index,      "return coordinateIndexPerNode[localNode];", "Index localNode", CI,    "read access to coordinate index array" 
 #helper functions:
 F,      C,      ComputeObjectCoordinates,       ,               ,       void,       ,                           "Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object coordinates composed from all nodal coordinates; does not include reference coordinates" 
 F,      C,      InitializeObject,               ,               ,       void,       ,                           ,          DI,    "initialize coordinateIndexPerNode array" 
-#F,      C,      HasModeBasis,                   ,               ,       bool,       "return parameters.modeBasis.NumberOfColumns()!=0;",                           ,          CI,    "return true, if a modal basis is provided and the object is treated as modally reduced FFRF-formulation" 
+#F,      C,      HasModeBasis,                   ,               ,       Bool,       "return parameters.modeBasis.NumberOfColumns()!=0;",                           ,          CI,    "return true, if a modal basis is provided and the object is treated as modally reduced FFRF-formulation" 
 #superelement, mesh functions:
-Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "localReferenceFrameNode = rigidBodyNodeNumber; return true;", "Index& localReferenceFrameNode", CI,    "always true, because ObjectFFRF; return according LOCAL node number" 
+Fv,     C,      HasReferenceFrame,              ,               ,       Bool,       "localReferenceFrameNode = rigidBodyNodeNumber; return true;", "Index& localReferenceFrameNode", CI,    "always true, because ObjectFFRF; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return GetNumberOfNodes()-1;", , IC, "return the number of mesh nodes, which is 1 less than the number of nodes (but different in other SuperElements)" 
 Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -1448,14 +1591,14 @@ Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVa
 Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #??decide, whether GenericMarker or Object computes special jacobian
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF"
 V,      V,      color,                          ,               4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})",,       IO,     "RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 V,      V,      triangleMesh,                   ,               ,       NumpyMatrixI,"MatrixI()",               ,       IO,      "a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!"
-V,      V,      showNodes,                      ,               ,       bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
+V,      V,      showNodes,                      ,               ,       Bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
 #
 #done in VisualizationObjectSuperElement:
 #Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-#Fv,     V,      GetSuperElementShowNodes,       ,               ,       bool,       ";",                       ,        I,      "showNodes interface for general drawing function of super element" 
+#Fv,     V,      GetSuperElementShowNodes,       ,               ,       Bool,       ";",                       ,        I,      "showNodes interface for general drawing function of super element" 
 #Fv,     V,      GetSuperElementTriangleMesh,    ,               ,       "const MatrixI&", "return triangleMesh;", ,     I,      "mesh interface for general drawing function of super element" 
 #Fv,     V,      GetSuperElementColor,           ,               ,       Float4,     ";",                       ,        I,      "color interface for general drawing function of super element" 
 #could be used to visualize nodes: V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
@@ -1473,12 +1616,10 @@ visuParentClass = VisualizationObjectSuperElement
 pythonShortName = CMSobject
 addIncludesC = '#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11/stl.h>//for NumpyMatrix\n#include <pybind11/pybind11.h>\ntypedef py::array_t<Real> NumpyMatrix; \n#include "Pymodules/PyMatrixContainer.h"//for some FFRF matrices\n'
 addPublicC = "    static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)\n    static constexpr Index rigidBodyNodeNumber = 0; //node number of rigid body node (usually = 0)\n    static constexpr Index genericNodeNumber = 1;//node number for modal coordinates\n"
-outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all ODE2 velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}"
+outputVariables = "{'Coordinates':'all ODE2 coordinates', 'Coordinates_t':'all ODE2 velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)', 'Stress':'allows to compute linearized, corotational nodal stresses (in mesh nodes, in body frame) based on modal stress values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Stress', 'Strain':'allows to compute linearized, corotational nodal strains (in mesh nodes, in body frame) based on modal strain values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Strain'}"
 classType = Object
 equations =
-    \vspace{6pt}\\
-
-, 'Stress':'allows to compute linearized, corotational nodal stresses (in mesh nodes, in body frame) based on modal stress values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Stress', 'Strain':'allows to compute linearized, corotational nodal strains (in mesh nodes, in body frame) based on modal strain values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Strain'
+    \mysubsubsubsection{Definition of quantities}
     The object additionally provides the following output variables for mesh nodes (use \\texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
     \startTable{mesh node output variables}{symbol}{description}
       \rowTable{Position}{$\LU{0}{\rv}_{n_i}$}{position of node with mesh node number $n_i$ in global coordinates}
@@ -1505,6 +1646,7 @@ equations =
       \rowTable{local mesh position}{$\LU{b}{\pv}_{f,i} = \vr{\LU{b}{\qv}_{f,i\cdot 3}}{\LU{b}{\qv}_{f,i\cdot 3+1}}{\LU{b}{\qv}_{f,i\cdot 3+2}} + \vr{\LU{b}{\rv}_{f,i\cdot 3}}{\LU{b}{\rv}_{f,i\cdot 3+1}}{\LU{b}{\rv}_{f,i\cdot 3+2}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
     \finishTable
     %
+    \mysubsubsubsection{Equations motion}
     Some definitions:
         \bi
           \item body frame (b) = reference frame
@@ -1518,19 +1660,42 @@ equations =
           \item $\LU{b}{\rv}_{f} $ ... node reference coordinates for mesh nodes
         \ei
     
-    {\bf Equations of motion}, in case that \texttt{computeFFRFterms = True} (NEEDS TO BE UPDATED FOR FFRF!!!!):
+    Equations of motion, in case that \texttt{computeFFRFterms = True}:
     \be
       \left(\Mm_{user}(t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
             \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \cv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \cv = 
             \fv_Q(\cv,\dot \cv) + \fv_{user}(t,\cv,\dot \cv)
     \ee
+    $\ra$ will be completed later, see according literature of Zw\"olfer and Gerstmayr, 2020.
+    
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
     Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2021}.
     
-    CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
+    CoordinateLoads are added for each ODE2 coordinate on the RHS of the latter equation. 
     %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{forceUserFunction(t, q, q\_t)}
+    A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{Vector $\in \Rcal^{n_{ODE2}}$}{returns force vector for object}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{massMatrixUserFunction(t, q, q\_t)}
+    A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$}{returns mass matrix for object}
+    \finishTable
+    \vspace{12pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
@@ -1538,16 +1703,16 @@ V,      CP,     nodeNumbers,                    ,               ,       ArrayNod
 V,      CP,     massMatrixReduced,              ,               ,       PyMatrixContainer,"PyMatrixContainer()",,       I,      "$\Mm_{red} \in \Rcal^{n_{c_f} \times n_{c_f}}$body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)"
 V,      CP,     stiffnessMatrixReduced,         ,               ,       PyMatrixContainer,"PyMatrixContainer()",,       I,      "$\Km_{red} \in \Rcal^{n_{c_f} \times n_{c_f}}$body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)"
 V,      CP,     dampingMatrixReduced,           ,               ,       PyMatrixContainer,"PyMatrixContainer()",,       I,      "$\Dm_{red} \in \Rcal^{n_{c_f} \times n_{c_f}}$body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)"
-V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,       ,       IO,     "$\fv_{user} \in \Rcal^{n_c}$A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example for python function with numpy matrix K: def f(t, q, q\_t): return np.dot(K, q)"
-V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,       ,       IO,     "$\Mm_{user} \in \Rcal^{n_c\times n_c}$A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; this function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; Example (academic) for python function with numpy matrix M: def f(t, q, q\_t): return (q[0]+1)*M"
-V,      CP,     computeFFRFterms,               ,               ,       bool,       "true",                     ,       IO,     "flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector"
+V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorScalar2Vector, 0,       ,       IO,     "$\fv_{user} \in \Rcal^{n_c}$A python user function which computes the generalized user force vector for the ODE2 equations; see description below"
+V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixScalar2Vector, 0,       ,       IO,     "$\Mm_{user} \in \Rcal^{n_c\times n_c}$A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below"
+V,      CP,     computeFFRFterms,               ,               ,       Bool,       "true",                     ,       IO,     "flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector"
 #
 V,      CP,     modeBasis,                      ,               ,       NumpyMatrix,"Matrix()",                 ,       I,      "$\tpsi \in \Rcal^{n_{c_f} \times n_{m}}$mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$"
 V,      CP,     outputVariableModeBasis,        ,               ,       NumpyMatrix,"Matrix()",                 ,       IO,     "$\tpsi_{OV} \in \Rcal^{n_{n} \times (n_{m}\cdot s_{OV})}$mode basis, which transforms reduced coordinates to output variables per mode; $s_{OV}$ is the size of the output variable, e.g., 6 for stress modes ($S_{xx},...,S_{xy}$)"
 V,      CP,     outputVariableTypeModeBasis,    ,               ,       OutputVariableType, "OutputVariableType::_None", , IO,  "this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress" 
 V,      CP,     referencePositions,             ,               ,       NumpyVector,"Vector()",                 ,       I,      "$\LU{b}{\rv}_{f} \in \Rcal^{n_f}$vector containing the reference positions of all flexible nodes, needed for graphics"
 #auto-computed quantities:
-#V,      C,      objectIsInitialized,            ,               ,       bool,       "false",                    ,       IO,     "flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed"
+#V,      C,      objectIsInitialized,            ,               ,       Bool,       "false",                    ,       IO,     "flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed"
 V,      C,      physicsMass,                    ,               ,       UReal,      "0.",                       ,       IR,     "$m$total mass [SI:kg] of FFRF object, auto-computed from mass matrix $\Mm$"
 V,      C,      physicsInertia,                 ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       IR,     "$J_r \in \Rcal^{3 \times 3}$inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\Mm_{ff}$"
 V,      C,      physicsCenterOfMass,            ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       IR,     "$\LU{b}{\pv}_{COM}$local position of center of mass (COM); auto-computed from mass matrix $\Mm$"
@@ -1591,7 +1756,7 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 #Fv,     C,      ParametersHaveChanged,          ,               ,       void,       "objectIsInitialized = false;",      ,     I,    "This flag is reset upon change of parameters; says that the vector of coordinate indices has changed" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #Fv,     C,      PostAssemble,                   ,               ,       void,       "InitializeObject();",      ,     I,    "operations done after Assemble()" 
 #not needed any more: Fv,     C,      GetLocalODE2CoordinateIndexPerNode, ,           ,       Index,      "return coordinateIndexPerNode[localNode];", "Index localNode", CI,    "read access to coordinate index array" 
 #helper functions:
@@ -1599,7 +1764,7 @@ F,      C,      ComputeObjectCoordinates,       ,               ,       void,   
 F,      C,      ComputeObjectCoordinates_t,     ,               ,       void,       ,                           "Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object velocity coordinates composed from all nodal coordinates" 
 F,      C,      GetMeshNodeCoordinates,         ,               ,       Vector3D,   ,                           "Index nodeNumber, const Vector& coordinates",          CDI,    "compute coordinates for nodeNumber (without reference coordinates) from modeBasis (=multiplication of according part of mode Basis with modal coordinates)"
 #superelement, mesh functions:
-Fv,     C,      HasReferenceFrame,              ,               ,       bool,       "localReferenceFrameNode = rigidBodyNodeNumber; return true;", "Index& localReferenceFrameNode", CI,    "always true, because FFRF-based object; return according LOCAL node number" 
+Fv,     C,      HasReferenceFrame,              ,               ,       Bool,       "localReferenceFrameNode = rigidBodyNodeNumber; return true;", "Index& localReferenceFrameNode", CI,    "always true, because FFRF-based object; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return parameters.referencePositions.NumberOfItems()/3;", , IC, "return the number of mesh nodes, which is given according to the node reference positions" 
 Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -1610,14 +1775,14 @@ Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVa
 Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #??decide, whether GenericMarker or Object computes special jacobian
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF"
 V,      V,      color,                          ,               4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})",,       IO,     "RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 V,      V,      triangleMesh,                   ,               ,       NumpyMatrixI,"MatrixI()",               ,       IO,      "a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!"
-V,      V,      showNodes,                      ,               ,       bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
+V,      V,      showNodes,                      ,               ,       Bool,       "false",                    ,       IO,      "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'"
 #put into bodies-settings: V,      V,      deformationScaleFactor,         ,               ,       UReal,      1,                    ,       IO,      "a scaling factor, which is applied to the nodal deformations in order to visualize deformations"
 #done in VisualizationObjectSuperElement:
 #Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-#Fv,     V,      GetSuperElementShowNodes,       ,               ,       bool,       ";",                       ,        I,      "showNodes interface for general drawing function of super element" 
+#Fv,     V,      GetSuperElementShowNodes,       ,               ,       Bool,       ";",                       ,        I,      "showNodes interface for general drawing function of super element" 
 #Fv,     V,      GetSuperElementTriangleMesh,    ,               ,       "const MatrixI&", "return triangleMesh;", ,     I,      "mesh interface for general drawing function of super element" 
 #Fv,     V,      GetSuperElementColor,           ,               ,       Float4,     ";",                       ,        I,      "color interface for general drawing function of super element" 
 #could be used to visualize nodes: V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
@@ -1685,7 +1850,7 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 #Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #internal functions:
 #Fs,     C,      MapCoordinates,                 ,               ,       Vector2D,   ,                           "const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1",          DI, "map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc." 
 #Fs,     C,      ComputeShapeFunctions,          ,               ,       Vector4D,   ,                           "Real x, Real L",          DI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
@@ -1697,7 +1862,7 @@ Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,   
 #F,      C,      ComputeCurrentObjectVelocities, ,               ,       void,       ,                           "ConstSizeVector<8>& qANCF_t",        CDI, "Compute object (finite element) velocities in current configuration" 
 #F,      C,      ComputeSlopeVector,             ,               ,       Vector2D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute the slope vector at a certain position, for given configuration" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      drawHeight,                     ,               ,       float,  "0.f",                          ,       IO,    "if beam is drawn with rectangular shape, this is the drawing height"
 V,      V,      color,                          ,               ,       Float4,    "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA color of the object; if R==-1, use default color" 
@@ -1740,7 +1905,7 @@ V,      CP,     physicsBendingDamping,          ,               ,       UReal,  
 V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "axial stiffness $d_{EA}$ [SI:N/s] of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"
 V,      CP,     physicsReferenceAxialStrain,    ,               ,       UReal,      "0.",                       ,       I,      "reference axial strain of beam (pre-deformation) $\varepsilon_0$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value"
 V,      CP,     physicsReferenceCurvature,      ,               ,       UReal,      "0.",                       ,       I,      "reference curvature of beam (pre-deformation) $\kappa_0$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value"
-V,      CP,     physicsUseCouplingTerms,        ,               ,       bool,       "true",                     ,       I,      "true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)"
+V,      CP,     physicsUseCouplingTerms,        ,               ,       Bool,       "true",                     ,       I,      "true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)"
 V,      CP,     nodeNumbers,                    ,               ,       NodeIndex3,     "Index3({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "two node numbers ANCF cable element, third node=ALE GenericODE2 node"
 V,      CP,     useReducedOrderIntegration,     ,               ,       Bool,       false,                      ,       I,      "false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 #access to parameters for Base class:
@@ -1770,7 +1935,7 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 #Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massTermsALEComputed = false; massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #internal functions:
 #Fs,     C,      MapCoordinates,                 ,               ,       Vector2D,   ,                           "const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1",          DI, "map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc." 
 #Fs,     C,      ComputeShapeFunctions,          ,               ,       Vector4D,   ,                           "Real x, Real L",          DI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
@@ -1780,7 +1945,7 @@ Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,   
 #F,      C,      ComputeCurrentNodeVelocities,   ,               ,       void,       ,                           "ConstSizeVector<4>& qNode0, ConstSizeVector<4>& qNode1",          CDI, "Compute node velocity coordinates of current configuration" 
 #F,      C,      ComputeSlopeVector,             ,               ,       Vector2D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute the slope vector at a certain position, for given configuration" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 V,      V,      drawHeight,                     ,               ,       float,  "0.f",                          ,       IO,    "if beam is drawn with rectangular shape, this is the drawing height"
 V,      V,      color,                          ,               ,       Float4,    "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA color of the object; if R==-1, use default color" 
@@ -1798,6 +1963,55 @@ addProtectedC = "    static constexpr Index nODE2Coordinates = 0;\n"
 #keep this consistent with ObjectRigidBody for mutual usage of both objects:
 outputVariables = "{'Position':'global position vector of rotated and translated local position', 'Displacement':'global displacement vector of local position', 'Velocity':'global velocity vector of local position', 'AngularVelocity':'angular velocity of body', 'RotationMatrix':'rotation matrix in vector form (stored in row-major order)'}"
 classType = Object
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+equations =
+    \mysubsubsubsection{Equations}
+    ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. The object cannot move and forces or torques do not have an effect. 
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
+    A user function, which is called by the visualization thread in order to draw user-defined objects.
+    The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
+    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
+    inefficient and only designed to enable simpler tests, but not large scale problems.
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
+      \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    import exudyn as exu
+    from math import sin, cos, pi
+    from exudyn.itemInterface import *
+    from exudyn.graphicsDataUtilities import *
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    #create simple system:
+    mbs.AddNode(NodePoint())
+    body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+    
+    #user function for moving graphics:
+    def UFgraphics(mainSystem, objectNum):
+        t = mainSystem.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+        #draw moving sphere on ground
+        graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                     radius=0.1, color=color4red, nTiles=32)
+        return [graphics1] 
+
+    #add object with graphics user function
+    ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
+    mbs.Assemble()
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
+    exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
+    exu.SolveDynamic(mbs, sims)
+    exu.StopRenderer()
+    \end{lstlisting}
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
 V,      CP,     referencePosition,              ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "reference position for ground object; local position is added on top of reference position for a ground object"
@@ -1828,10 +2042,10 @@ Fv,     C,      GetType,                        ,               ,       CObjectT
 Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 #
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      CallUserFunction,               ,               ,      void,         ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber", DI,  "user function which is called to update specific object graphics computed in python functions; this is rather slow, but useful for user elements"  
-Fv,     V,      HasUserFunction,                ,               ,      bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
+Fv,     V,      HasUserFunction,                ,               ,      Bool,         "return graphicsDataUserFunction!=0;",                        "", I,  "return true, if object has a user function to be called during redraw"  
 V,      V,      graphicsDataUserFunction,       ,               ,      PyFunctionGraphicsData, 0,               ,       IO,     "A python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function"
 V,      V,      color,                          ,               ,      Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,  "RGB node color; if R==-1, use default color" 
 V,      V,      graphicsData,                   ,               ,      BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
@@ -1849,16 +2063,7 @@ classType = Object
 outputVariables = "{'Distance':'distance between both points', 'Displacement':'relative displacement between both points', 'Velocity':'relative velocity between both points', 'Force':'spring-damper force'}"
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
-    \startTable{input parameter}{symbol}{description}
-    \rowTable{referenceLength}{$L_0$}{}
-    \rowTable{stiffness}{$k$}{}
-    \rowTable{damping}{$d$}{}
-    \rowTable{force}{$f_{a}$}{additional force (e.g., actuator force)}
-    \rowTable{markerNumbers[0]}{$m0$}{global marker number m0}
-    \rowTable{markerNumbers[1]}{$m1$}{global marker number m1}
-    \finishTable
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
@@ -1872,7 +2077,7 @@ equations =
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
 
-    \noindent {\bf Connector equations}:
+    \mysubsubsubsection{Connector forces}
     %Displacement between marker m0 to marker m1 positions,
     %\be
     %  \Delta\! \LU{0}{\pv}= \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}
@@ -1899,6 +2104,35 @@ equations =
     \be
       \fv = f_{SD}\vv_{f}
     \ee
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceUserFunction(t, deltaL, deltaL\_t, stiffness, damping, force)}
+    A user function, which computes the spring force depending on time, object variables (deltaL, deltaL\_t) and 
+    object parameters (stiffness, damping, force).
+    The object variables are provided to the function using the current values of the SpringDamper object
+    %
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{deltaL}}{Real}{$L-L_0$, spring elongation}
+      \rowTable{\texttt{deltaL\_t}}{Real}{$\Delta\! \LU{0}{\vv}\tp \vv_{f}$, spring velocity}
+      \rowTable{\texttt{stiffness}}{Real}{copied from object}
+      \rowTable{\texttt{damping}}{Real}{copied from object}
+      \rowTable{\texttt{force}}{Real}{copied from object; constant force}
+      \rowTable{\returnValue}{Real}{scalar value of computed spring force}
+    \finishTable
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #define nonlinear force
+    def UFforce(t, u, v, k, d, F0): 
+        return k*u + d*v + F0
+    #markerNumbers taken from mini example
+    mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                                              referenceLength = 1, 
+                                              stiffness = 100, damping = 1,
+                                              springForceUserFunction = UFforce))
+    \end{lstlisting} \vspace{12pt}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1924,14 +2158,14 @@ miniExample =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
-V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
-V,      CP,     referenceLength,                ,               ,       UReal,      0.,                          ,       I,      "reference length [SI:m] of spring"
-V,      CP,     stiffness,                      ,               ,       UReal,      0.,                          ,       I,      "stiffness [SI:N/m] of spring; acts against (length-initialLength)"
-V,      CP,     damping,                        ,               ,       UReal,      0.,                          ,       I,      "damping [SI:N/(m s)] of damper; acts against d/dt(length)"
-V,      CP,     force,                          ,               ,       UReal,      0.,                          ,       IO,     "added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     referenceLength,                ,               ,       UReal,      0.,                          ,       I,      "$L_0$reference length [SI:m] of spring"
+V,      CP,     stiffness,                      ,               ,       UReal,      0.,                          ,       I,      "$k$stiffness [SI:N/m] of spring; acts against (length-initialLength)"
+V,      CP,     damping,                        ,               ,       UReal,      0.,                          ,       I,      "$d$damping [SI:N/(m s)] of damper; acts against d/dt(length)"
+V,      CP,     force,                          ,               ,       UReal,      0.,                          ,       IO,     "$f_{a}$added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #questionable if the functions should go into Parameter class:
-V,      CP,     springForceUserFunction,        ,               ,       PyFunctionScalar6, 0,                     ,       IO,     "A python function which defines the spring force with parameters (time, deltaL, deltaL\_t, Real stiffness, Real damping, Real springForce); the parameters are provided to the function using the current values of the SpringDamper object; The python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; Example for python function: def f(t, u, v, k, d, F0): return k*u + d*v + F0"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionScalar6, 0,                     ,       IO,     "A python function which defines the spring force with parameters; the python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
@@ -1966,15 +2200,14 @@ outputVariables = "{'Displacement':'$\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
     \finishTable
-    \noindent {\bf Connector equations}:
+    \mysubsubsubsection{Connector forces}
     Displacement between marker m0 to marker m1 positions,
     \be
       \Delta\! \LU{0}{\pv}= \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}
@@ -1991,7 +2224,37 @@ equations =
     \be
       \fv_{SD} = \mathrm{UF}(t, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
     \ee
-    if \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.
+    if \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.:
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceUserFunction(t, displacement, velocity, stiffness, damping, offset)}
+    A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL\_t) and object parameters 
+    (stiffness, damping, force).
+    The object variables are provided to the function using the current values of the SpringDamper object
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{displacement}}{Vector3D}{$\Delta\! \LU{0}{\pv}$}
+      \rowTable{\texttt{velocity}}{Vector3D}{$\Delta\! \LU{0}{\vv}$}
+      %
+      \rowTable{\texttt{stiffness}}{Vector3D}{copied from object}
+      \rowTable{\texttt{damping}}{Vector3D}{copied from object}
+      \rowTable{\texttt{offset}}{Vector3D}{copied from object}
+      \rowTable{\returnValue}{Vector3D}{list or numpy array of computed spring force}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #define simple force for spring-damper:
+    def UFforce(t, u, v, k, d, offset): 
+        return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
+    
+    #markerNumbers and parameters taken from mini example
+    mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
+                                        stiffness = [k,k,k], 
+                                        damping = [0,k*0.05,0], offset = [0,0,0],
+                                        springForceUserFunction = UFforce))
+    \end{lstlisting}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -2022,8 +2285,8 @@ V,      CP,     markerNumbers,                  ,               ,       ArrayMar
 V,      CP,     stiffness,                      ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",       ,       I,      "$\kv$stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction"
 V,      CP,     damping,                        ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",       ,       IO,     "$\dv$damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction"
 V,      CP,     offset,                         ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",       ,       IO,     "$\vv_{\mathrm{off}}$offset between two springs"
-V,      CP,     springForceUserFunction,        ,               ,       PyFunctionVector3DScalar5Vector3D, 0,           ,       IO,     "A python function which computes the 3D force vector between the two marker points, if activeConnector=True;  The function takes the relative displacement (3D) vector (m1.position-m0.position, etc.) and the relative velocity vector (3D), the spring striffness vector 3D, damping and offset parameter vectors (3D): f(time, displacement, velocity, stiffness, damping, offset); Example for python function: def f(t, u, v, k, d, offset): return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,      "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionVector3DScalar5Vector3D, 0,           ,       IO,     "A python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,      "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,            ,               ,        Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
@@ -2059,8 +2322,7 @@ pythonShortName = RigidBodySpringDamper
 outputVariables = "{'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.)', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local joint0 coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in in local joint0 coordinates'}"
 classType = Object
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{input parameter}{symbol}{description}
     \rowTable{stiffness}{$\kv \in \mathbb{R}^{6\times 6}$}{stiffness in $J0$ coordinates}
     \rowTable{damping}{$\dv \in \mathbb{R}^{6\times 6}$}{damping in $J0$ coordinates}
@@ -2092,14 +2354,14 @@ equations =
     %\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
     \finishTable
 
-    \noindent {\bf Connector equations}:
+    \mysubsubsubsection{Connector forces}
     If \texttt{activeConnector = True}, the vector spring force is computed as
     \be
       \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) + 
             \dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
     \ee
     For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
-    if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.
+    if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.:
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -2112,7 +2374,7 @@ V,      CP,     rotationMarker0,                ,               ,       Matrix3D
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1"
 #V,      CP,     damping,                        ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",       ,       IO,      "damping [SI:N/(m s)] of dampers; act against relative velocities in x, y, and z-direction"
 V,      CP,     offset,                         ,               ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,   IO,     "translational and rotational offset considered in the spring force calculation"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,            ,               ,        Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
@@ -2147,15 +2409,14 @@ outputVariables = "{'Displacement':'$\Delta q$relative scalar displacement of ma
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
     \rowTable{marker m1 coordinate}{$q_{m1}$}{}
     \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
     \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
     \finishTable
-    \noindent {\bf Connector equations}:
+    \mysubsubsubsection{Connector forces}
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
     \be
       \Delta q= q_{m1} - q_{m0}
@@ -2179,7 +2440,34 @@ equations =
     \be
       f_{SD} = \mathrm{UF}(t, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
     \ee
-    if \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
+    if \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceUserFunction(t, displacement, velocity, stiffness, damping, offset, frictionForce, frictionProportionalZone)}
+    A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
+    and object parameters .
+    The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
+      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
+      %
+      \rowTable{\texttt{stiffness}}{Real}{copied from object}
+      \rowTable{\texttt{damping}}{Real}{copied from object}
+      \rowTable{\texttt{offset}}{Real}{copied from object}
+      \rowTable{\texttt{frictionForce}}{Real}{copied from object}
+      \rowTable{\texttt{frictionProportionalZone}}{Real}{copied from object}
+      \rowTable{\returnValue}{Real}{scalar value of computed force}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #see also mini example!
+    def UFforce(t, u, v, k, d, offset, frictionForce, frictionProportionalZone): 
+        return k*(u-offset) + d*v
+    \end{lstlisting}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -2214,8 +2502,8 @@ V,      CP,     damping,                        ,               ,       Real,   
 V,      CP,     offset,                         ,               ,       Real,       "0.",       ,       IO,      "$l_\mathrm{off}$offset between two coordinates (reference length of springs), see equation"
 V,      CP,     dryFriction,                    ,               ,       Real,       "0.",       ,       IO,      "$f_\mu$dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
 V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",       ,       IO,      "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
-V,      CP,     springForceUserFunction,        ,               ,       PyFunctionScalar8, 0,                     ,       IO,     "A python function which defines the spring force with 8 parameters, see equations section; Example for python function: def f(t, u, v, k, d, offset, frictionForce, frictionProportionalZone): return k*(u-offset) + d*v"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionScalar8, 0,                     ,       IO,     "A python function which defines the spring force with 8 parameters, see equations section / see description below"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,            ,               ,        Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
@@ -2249,7 +2537,7 @@ classType = Object
 outputVariables = "{'Displacement':'$\LU{0}{\Delta\pv}$relative displacement in global coordinates', 'Velocity':'$\LU{0}{\Delta\vv}$relative translational velocity in global coordinates', 'Distance':'$|\LU{0}{\Delta\pv}|$distance between markers (should stay constant; shows constraint deviation)', 'Force':'$\lambda_0$joint force in global coordinates'}"
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
         \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
         \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
@@ -2262,7 +2550,7 @@ equations =
         \rowTable{algebraicVariable}{$\lambda_0$}{Lagrange multiplier = force in constraint}
     \finishTable
 
-    \noindent {\bf Algebraic constraint equations}:
+    \mysubsubsubsection{Connector forces constraint equations}
     If \texttt{activeConnector = True}, the index 3 algebraic equation reads
     \be
       \left|\LU{0}{\Delta\pv}\right| - d_0 = 0
@@ -2304,7 +2592,7 @@ miniExample =
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
 V,      CP,     distance,                       ,               ,       UReal,      0.,                          ,       I,      "$d_0$prescribed distance [SI:m] of the used markers"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -2320,7 +2608,7 @@ Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,  
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorDistance';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = link size; size == -1.f means that default connector size is used"
@@ -2331,7 +2619,7 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCoordinate
-classDescription = "A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values."
+classDescription = "A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates."
 # The constraint must fulfill the condition: \be factorValue1*marker[1].value-marker[0].value - offset = 0 \ee
 cParentClass = CObjectConstraint
 mainParentClass = MainObjectConnector
@@ -2341,7 +2629,7 @@ classType = Object
 outputVariables = "{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates, not including factorValue1', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates, not including factorValue1', 'ConstraintEquation':'$\cv$(residuum of) constraint equation', 'Force':'$\lambda_0$scalar constraint force (Lagrange multiplier)'}"
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
     \rowTable{marker m1 coordinate}{$q_{m1}$}{}
@@ -2350,7 +2638,7 @@ equations =
     \rowTable{difference of coordinates}{$\Delta q = q_{m1} - q_{m0}$}{Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates)}
     \rowTable{difference of velocity coordinates}{$\Delta v= v_{m1} - v_{m0}$}{}
     \finishTable
-    \noindent {\bf Algebraic constraint equations}:
+    \mysubsubsubsection{Connector constraint equations}
     If \texttt{activeConnector = True}, the index 3 algebraic equation reads
     \be
       \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} - l_\mathrm{off} = 0
@@ -2376,6 +2664,64 @@ equations =
     \be
       \cv(\lambda_0) = \lambda_0 = 0
     \ee
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{offsetUserFunction(t, lOffset)}
+    %
+    A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
+    It is NECESSARY to use sufficiently smooth functions, having {\bf initial offsets} consistent with {\bf initial configuration} of bodies, 
+    either zero or compatible initial offset-velocity, and no initial accelerations.
+    The \texttt{offsetUserFunction} is {\bf ONLY used} in case of static computation or index3 (generalizedAlpha) time integration.
+    In order to be on the safe side, provide both  \texttt{offsetUserFunction} and  \texttt{offsetUserFunction\_t}.
+
+    The user function gets time and the offset parameter as an input and returns the computed offset:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
+      \rowTable{\returnValue}{Real}{computed offset for given time}
+    \finishTable
+%
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{offsetUserFunction\_t(t, lOffset)}
+    %
+    A user function, which computes scalar offset {\bf velocity} for the coordinate constraint.
+    It is NECESSARY to use sufficiently smooth functions, having {\bf initial offset velocities} consistent with {\bf initial velocities} of bodies.
+    The \texttt{offsetUserFunction\_t} is used instead of \texttt{offsetUserFunction} in case of \texttt{velocityLevel = True}, 
+    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
+
+    The user function gets time and the offset parameter as an input and returns the computed offset velocity:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
+      \rowTable{\returnValue}{Real}{computed offset velocity for given time}
+    \finishTable
+%
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #see also mini example!
+    from math import sin, cos, pi
+    def UFoffset(t, lOffset): 
+        return 0.5*lOffset*(1-cos(0.5*pi*t))
+    
+    def UFoffset_t(t, lOffset): #time derivative of UFoffset
+        return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
+
+    nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    
+    groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+    nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+    
+    #Spring-Damper between two marker coordinates
+    mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
+                                       offset = 0.1, 
+                                       offsetUserFunction = UFoffset, 
+                                       offsetUserFunction_t = UFoffset_t)) 
+    \end{lstlisting}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -2407,14 +2753,14 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
 V,      CP,     offset,                         ,               ,       UReal,      0.,                         ,       I,      "$l_\mathrm{off}$An offset between the two values"
 V,      CP,     factorValue1,                   ,               ,       UReal,      1.,                         ,       I,      "$k_{m1}$An additional factor multiplied with value1 used in algebraic equation"
-V,      CP,     velocityLevel,                  ,               ,       bool,       false,                      ,       I,      "If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"
-V,      CP,     offsetUserFunction,             ,               ,       PyFunctionScalar2, 0,                   ,       IO,     "$\mathrm{UF}(t,l_\mathrm{off})$A python function which defines the time-dependent offset; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def UF(t, l\_offset): return l\_offset*(1-np.cos(t*10*2*np.pi))"
-V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionScalar2, 0,                   ,       IO,     "$\mathrm{UF}_t(t,l_\mathrm{off})$time derivative of offsetUserFunction; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     velocityLevel,                  ,               ,       Bool,       false,                      ,       I,      "If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"
+V,      CP,     offsetUserFunction,             ,               ,       PyFunctionScalar2, 0,                   ,       IO,     "$\mathrm{UF}(t,l_\mathrm{off})$A python function which defines the time-dependent offset; see description below"
+V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionScalar2, 0,                   ,       IO,     "$\mathrm{UF}_t(t,l_\mathrm{off})$time derivative of offsetUserFunction; needed for velocity level constraints; see description below"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
+Fv,     C,      IsTimeDependent,                ,               ,       Bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
 #Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,       "return parameters.velocityLevel;",  ,      CI,     "Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,   "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
@@ -2429,7 +2775,7 @@ Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,  
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorCoordinate';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = link size; size == -1.f means that default connector size is used"
@@ -2450,7 +2796,7 @@ classType = Object
 outputVariables = "{'Displacement':'$\Delta \qv$relative scalar displacement of marker coordinates, not including scaling matrices', 'Velocity':'$\Delta \vv$difference of scalar marker velocity coordinates, not including scaling matrices', 'ConstraintEquation':'$\cv$(residuum of) constraint equations', 'Force':'$\tlambda$constraint force vector (vector of Lagrange multipliers), resulting from action of constraint equations'}"
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 coordinate vector}{$\qv_{m0} \in \Rcal^{n_{q_{m0}}}$}{coordinate vector provided by marker $m0$; depending on the marker, the coordinates may or may not include reference coordinates}
     \rowTable{marker m1 coordinate vector}{$\qv_{m1} \in \Rcal^{n_{q_{m1}}}$}{coordinate vector provided by marker $m1$; depending on the marker, the coordinates may or may not include reference coordinates}
@@ -2462,7 +2808,7 @@ equations =
     \rowTable{difference of velocity coordinates}{$\Delta \vv= \dot \qv_{m1} - \dot \qv_{m0}$}{}
     \finishTable
     %
-    \noindent {\bf Remarks}:
+    \mysubsubsubsection{Remarks}
     The number of algebraic equations depends on the number of rows in $\Xm_{m0}$, which must be same as the 
     number of rows in $\Xm_{m1}$. 
     The number of columns in $\Xm_{m0}$ must agree with the length of the coordinate vector
@@ -2474,7 +2820,7 @@ equations =
     larger than the total number of coordinates ( $\qv_{m0}$ and  $\qv_{m1}$), the algebraic equations are 
     underdetermined and probably not solvable.
     
-    \noindent {\bf Algebraic constraint equations}:
+    \mysubsubsubsection{Connector constraint equations}
     If \texttt{activeConnector = True}, the index 3 algebraic equations
     \be
       \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} - \Xm_{m0} \qv_{m0} - \vv_\mathrm{off} = 0
@@ -2512,15 +2858,15 @@ V,      CP,     markerNumbers,                  ,               ,       ArrayMar
 V,      CP,     scalingMarker0,                 ,               ,       NumpyMatrix,"Matrix()",                 ,       I,      "$\Xm_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$linear scaling matrix for coordinate vector of marker 0; matrix provided in python numpy format"
 V,      CP,     scalingMarker1,                 ,               ,       NumpyMatrix,"Matrix()",                 ,       I,      "$\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$linear scaling matrix for coordinate vector of marker 1; matrix provided in python numpy format"
 V,      CP,     offset,                         ,               ,       NumpyVector,"Vector()",                 ,       I,      "$\vv_\mathrm{off} \in \Rcal^{n_{ae}}$offset added to constraint equation; only active, if no userFunction is defined"
-V,      CP,     velocityLevel,                  ,               ,       bool,       false,                      ,       I,      "If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"
+V,      CP,     velocityLevel,                  ,               ,       Bool,       false,                      ,       I,      "If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"
 #V,      CP,     offsetUserFunction,             ,               ,       PyFunctionScalar2, 0,                   ,       IO,     "$\mathrm{UF}(t,l_\mathrm{off})$A python function which defines the time-dependent offset; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def UF(t, l\_offset): return l\_offset*(1-np.cos(t*10*2*np.pi))"
 #V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionScalar2, 0,                   ,       IO,     "$\mathrm{UF}_t(t,l_\mathrm{off})$time derivative of offsetUserFunction; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
-Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return false;", ,      CI,    "connector is time dependent if user functions are defined" 
-#Fv,     C,      IsTimeDependent,                ,               ,       bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
+Fv,     C,      IsTimeDependent,                ,               ,       Bool,       "return false;", ,      CI,    "connector is time dependent if user functions are defined" 
+#Fv,     C,      IsTimeDependent,                ,               ,       Bool,       "return (parameters.offsetUserFunction != 0 || parameters.offsetUserFunction_t != 0);", ,      CI,    "connector is time dependent if user functions are defined" 
 #Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
 Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,       "return parameters.velocityLevel;",  ,      CI,     "Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
@@ -2533,10 +2879,10 @@ Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
 Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      ,                           ,       CDI,     "number of algebraic equations; independent of node/body coordinates" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorCoordinate';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,       "return true;",             ,       CI,    "this function is needed to distinguish connector objects from body objects"
 #V,      V,      drawSize,                       ,               ,       float,      "-1.f",                     ,       IO,    "drawing size = link size; size == -1.f means that default connector size is used"
@@ -2546,7 +2892,7 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorRollingDiscPenalty
-classDescription = "A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing."
+classDescription = "A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -2557,8 +2903,7 @@ classType = Object
 #add input quantities
 #add equations
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference position; currently unused}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
@@ -2583,8 +2928,8 @@ equations =
 %
     \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
     \finishTable
-    \vspace{6pt}
-    \noindent {\bf Geometric relations}:\\
+%
+    \mysubsubsubsection{Geometric relations}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
     \begin{center}
@@ -2651,6 +2996,8 @@ equations =
     \be
       \tmu = \mp{\cos(\alpha_t)}{\sin(\alpha_t)}{-\sin(\alpha_t)}{\cos(\alpha_t)} \mp{\mu_x}{0}{0}{\mu_y} \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
     \ee
+    %
+    \mysubsubsubsection{Connector forces}
     Finally, the connector forces read in joint coordinates
     \be
       \LU{J1}{\fv} = \vr{f_{t,x}}{f_{t,y}}{f_n}
@@ -2682,9 +3029,9 @@ V,      CP,     contactDamping,                 ,               ,       Real,   
 V,      CP,     dryFriction,                    ,               ,       Vector2D,   "Vector2D({0,0})",          ,       IO,     "$[\mu_x,\mu_y]\tp$dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$"
 V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",                       ,       IO,     "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
 V,      CP,     rollingFrictionViscous,         ,               ,       Real,       "0.",                       ,       IO,     "$\mu_r$rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 V,      CP,     discRadius,                     ,               ,       Real,       "0",                        ,       I,      "defines the disc radius"
-V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       ,       "normal to the contact / rolling plane; cannot be changed at the moment"
+V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       IO,     "normal to the contact / rolling plane; cannot be changed at the moment"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -2702,7 +3049,7 @@ Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,   
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value",          DC, "provide according output variable in 'value'" 
 F,      C,      ComputeContactForces,           ,               ,       void,       , "const MarkerDataStructure& markerData, const CObjectConnectorRollingDiscPenaltyParameters& parameters, bool computeCurrent, Vector3D& pC, Vector3D& vC, Vector3D& wLateral, Vector3D& w2, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity", CDI,    "compute contact kinematics and contact forces" 
 F,      C,      ComputeSlipForce,               ,               ,       Vector2D,   , "const CObjectConnectorRollingDiscPenaltyParameters& parameters, 	const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce", CDI,    "compute slip force vector for specific states" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,      CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
@@ -2712,7 +3059,7 @@ Fv,     C,      IsActive,                       ,               ,       Bool,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,       ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,       "return true;",             ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      discWidth,                      ,               ,       float,      "0.1f",                     ,       IO,    "width of disc for drawing"
 V,      V,      color,                          ,               ,       Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})",,IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -2738,13 +3085,13 @@ V,      CP,     nodeNumber,                     ,               ,       NodeInde
 V,      CP,     contactStiffness,               ,               ,       UReal,      0.,                          ,       I,      "contact (penalty) stiffness [SI:N/m]; acts only upon penetration"
 V,      CP,     contactDamping,                 ,               ,       UReal,      0.,                          ,       I,      "contact damping [SI:N/(m s)]; acts only upon penetration"
 V,      CP,     offset,                         ,               ,       UReal,      0.,                          ,       I,      "offset [SI:m] of contact"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 1;",                 ,       CI,     "needed in order to create ltg-lists for data variable of connector" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #computation functions:
 F,      C,      ComputeGap,                     ,               ,       Real,       ,                           "const MarkerDataStructure& markerData",       CDI,     "compute gap for given MarkerData --> done for different configurations (current, start of step, ...)" 
@@ -2791,13 +3138,13 @@ V,      CP,     contactDamping,                 ,               ,       UReal,  
 V,      CP,     circleRadius,                   ,               ,       UReal,      0.,                          ,       I,      "radius [SI:m] of contact circle"
 #delete: this is done by position marker! V,      CP,     circleMidpoint,                 ,               ,       Vector2D,   "Vector2D({0.,0.})",         ,       I,      "2D point [SI:m] of contact circle"
 V,      CP,     offset,                         ,               ,       UReal,      0.,                          ,       I,      "offset [SI:m] of contact, e.g. to include thickness of cable element"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not)" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #computation functions:
 F,      C,      ComputeGap,                     ,               ,       void,       ,           "const MarkerDataStructure& markerData, ConstSizeVector<maxNumberOfSegments>& gapPerSegment, ConstSizeVector<maxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<maxNumberOfSegments>& xDirectionGap, ConstSizeVector<maxNumberOfSegments>& yDirectionGap",       CDI,     "compute gap for given MarkerData; done for every contact point (numberOfSegments+1) --> in order to decide contact state for every segment; in case of positive gap, the area is distance*segment_length" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
@@ -2847,13 +3194,13 @@ V,      CP,     frictionCoefficient,            ,               ,       UReal,  
 V,      CP,     circleRadius,                   ,               ,       UReal,      0.,                          ,       I,      "radius [SI:m] of contact circle"
 #delete: this is done by position marker! V,      CP,     circleMidpoint,                 ,               ,       Vector2D,   "Vector2D({0.,0.})",         ,       I,      "2D point [SI:m] of contact circle"
 V,      CP,     offset,                         ,               ,       UReal,      0.,                          ,       I,      "offset [SI:m] of contact, e.g. to include thickness of cable element"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3*parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not), every friction condition (stick = 1, slip = 0), and the last sticking position in tangential direction in terms of an angle $\varphi$ in the local circle coordinates ($\varphi = 0$, if the vector to the contact position is aligned with the x-axis)" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #computation functions:
 F,      C,      ComputeGap,                     ,               ,       void,       ,           "const MarkerDataStructure& markerData, ConstSizeVector<maxNumberOfSegments>& gapPerSegment, ConstSizeVector<maxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<maxNumberOfSegments>& xDirectionGap, ConstSizeVector<maxNumberOfSegments>& yDirectionGap",       CDI,     "compute gap for given MarkerData; done for every contact point (numberOfSegments+1) --> in order to decide contact state for every segment; in case of positive gap, the area is distance*segment_length" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
@@ -2896,8 +3243,7 @@ classType = Object
 #add input quantities
 #add equations
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -2921,8 +3267,9 @@ equations =
     \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
-    \vspace{6pt}
-    \noindent {\bf Connector equations for translational part (\texttt{activeConnector = True})}:\\
+%
+    \mysubsubsubsection{Connector constraint equations}
+    \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
     the translational index 3 constraints read ($UF_{0,1,2}(t, \pv_{par})$ is the translational part of the user function $UF$),
@@ -2942,12 +3289,12 @@ equations =
     \eea
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
     \bea
-      \LU{J0}{\Delta v_k} - UF_{t;k}(t, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta v_k} - UF\_t_{k}(t, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
 %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Connector equations for rotational part (\texttt{activeConnector = True})}:\\
+    \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
     Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
     In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(t, \pv_{par}))$, in which the three components of 
@@ -2976,6 +3323,54 @@ equations =
     \be
       \zv = \Null
     \ee
+%
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{offsetUserFunction(t, offsetUserFunctionParameters)}
+    %
+    A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint, 
+    e.g., in order to move or rotate a body on a prescribed trajectory.
+    It is NECESSARY to use sufficiently smooth functions, having {\bf initial offsets} consistent with {\bf initial configuration} of bodies, 
+    either zero or compatible initial offset-velocity, and no initial accelerations.
+    The \texttt{offsetUserFunction} is {\bf ONLY used} in case of static computation or index3 (generalizedAlpha) time integration.
+    In order to be on the safe side, provide both  \texttt{offsetUserFunction} and  \texttt{offsetUserFunction\_t}.
+
+    The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset vector 
+    for all relative translational and rotational joint coordinates:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
+      \rowTable{\returnValue}{Real}{computed offset vector for given time}
+    \finishTable
+%
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{offsetUserFunction\_t(t, offsetUserFunctionParameters)}
+    %
+    A user function, which computes an offset {\bf velocity} vector for the GenericJoint.
+    It is NECESSARY to use sufficiently smooth functions, having {\bf initial offset velocities} consistent with {\bf initial velocities} of bodies.
+    The \texttt{offsetUserFunction\_t} is used instead of \texttt{offsetUserFunction} in case of \texttt{velocityLevel = True}, 
+    or for index2 time integration and needed for computation of initial accelerations in second order implicit time integrators.
+
+    The user function gets time and the offsetUserFunctionParameters as an input and returns the computed offset velocity vector 
+    for all relative translational and rotational joint coordinates:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
+      \rowTable{\returnValue}{Real}{computed offset velocity vector for given time}
+    \finishTable
+%
+
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #simple example, computing only the translational offset for x-coordinate
+    from math import sin, cos, pi
+    def UFoffset(t, offsetUserFunctionParameters): 
+        return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
+
+    \end{lstlisting}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -2985,12 +3380,12 @@ V,      CP,     markerNumbers,                  ,               2,      ArrayMar
 V,      CP,     constrainedAxes,                ,               6,      ArrayIndex, "ArrayIndex({1,1,1,1,1,1})", ,       IO,     "$\jv=[j_0,\,\ldots,\,j_5]$flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis"
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #V,      CP,     forceTorqueUserFunctionParameters, ,            ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "vector of 6 parameters for joint's forceTorqueUserFunction"
 V,      CP,     offsetUserFunctionParameters,   ,               ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "$\pv_{par}$vector of 6 parameters for joint's offsetUserFunction"
 #V,      CP,     forceTorqueUserFunction,        ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "A python function which defines the time-dependent force (indices 0,1,2) and torque (indices 3,4,5) joint coordinates with parameters (t, forceTorqueUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, forceTorqueUserFunctionParameters): return [forceTorqueUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]"
-V,      CP,     offsetUserFunction,             ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "$UF(t, \pv_{par})$A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for python function: def f(t, offsetUserFunctionParameters): return [offsetUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]"
-V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "$UF_t(t, \pv_{par})$(NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators"
+V,      CP,     offsetUserFunction,             ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "$UF(t, \pv_{par})$A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters)"
+V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionVector6DScalarVector6D, 0,     ,       IO,     "$UF_t(t, \pv_{par})$(NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -3008,7 +3403,7 @@ Fv,     C,      IsActive,                       ,               ,       Bool,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      axesRadius,                     ,               ,       float,  "0.1f",                          ,       IO,    "radius of joint axes to draw"
 V,      V,      axesLength,                     ,               ,       float,  "0.4f",                          ,       IO,    "length of joint axes to draw"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
@@ -3029,8 +3424,7 @@ classType = Object
 #add input quantities
 #add equations
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker $m0$}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{current global position which is provided by marker $m1$}
@@ -3042,8 +3436,8 @@ equations =
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
 %
-    \vspace{6pt}
-    \noindent {\bf Connector equations (\texttt{activeConnector = True})}:\\
+    \mysubsubsubsection{Connector constraint equations}
+    \paragraph{\texttt{activeConnector = True}:}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
     the translational index 3 constraints read
@@ -3067,7 +3461,7 @@ equations =
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
 %
-    if \texttt{activeConnector = False}, 
+    \paragraph{\texttt{activeConnector = False}:}
     \be
       \zv = \Null
     \ee
@@ -3076,9 +3470,9 @@ equations =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,            Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
-V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!"
 V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,       CI,     "constraints uses Lagrance multiplier formulation" 
@@ -3096,7 +3490,7 @@ Fv,     C,      IsActive,                       ,               ,       Bool,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      jointRadius,                    ,               ,       float,  "0.1f",                          ,       IO,    "radius of joint to draw"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -3105,7 +3499,7 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectJointRollingDisc
-classDescription = "A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly)."
+classDescription = "A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. NOTE: the case of a moving ground body needs to be tested further, check your results!"
 cParentClass = CObjectConstraint
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -3116,23 +3510,24 @@ classType = Object
 #add input quantities
 #add equations
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
-    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference position; currently unused}
-    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position of marker $m0$ body reference position (ground body reference position); needed only if body $m0$ is not a ground body}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0 (assumed to be rigid body)}
+    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
+    %
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
 %
-    %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
 %
     \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}}$}{normalized normal vector to the ground plane, currently [0,0,1]}
-    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground (normal projection)}
-    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
-    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
+    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground in plane normal ($z$-direction, $z=0$)}
+    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground in global coordinates}
+    \rowTable{ground velocity C}{$\LU{0}{\vv}_{Cm1}$}{velocity of disc (marker 1) at ground contact point (must be zero if ground does not move)}
+    \rowTable{ground velocity C}{$\LU{0}{\vv}_{Cm2}$}{velocity of ground (marker 0) at ground contact point (is always zero if ground does not move)}
     %\rowTable{ground vector}{$\LU{0}{\dv}$}{vector from ground to the disc center point , currently [0,0,\LU{0}{\pv}_{m1,z}]}
     \rowTable{wheel axis vector}{$\LU{0}{\wv}_1 =\LU{0,m1}{\Rot} \cdot [1,0,0]\tp $}{normalized disc axis vector, currently $[1,0,0]\tp$ in local coordinates}
     \rowTable{longitudinal vector}{$\LU{0}{\wv}_2$}{vector in longitudinal (motion) direction}
@@ -3141,8 +3536,8 @@ equations =
 %
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
-    \vspace{6pt}
-    \noindent {\bf Geometric relations}:\\
+    %
+    \mysubsubsubsection{Geometric relations}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
     \begin{center}
@@ -3169,29 +3564,36 @@ equations =
     \be
       \LU{0}{\wv}_3 = \LU{0}{\wv}_1 \times \LU{0}{\wv}_2
     \ee
-    The contact point can be computed from
+    The contact point $C$ can be computed from
     \be
       \LU{0}{\pv}_{C} = \LU{0}{\pv}_{m1} + r \cdot \LU{0}{\wv}_3
     \ee
     The velocity of the contact point at the disc is computed from,
     \be
-      \LU{0}{\vv}_{C} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
+      \LU{0}{\vv}_{Cm1} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
     \ee
-    \vspace{6pt}
-    \noindent {\bf Connector constraint equations (\texttt{activeConnector = True})}:\\
-    %The holonomic, index 3 constraint for the normal direction reads
+    If marker 0 body is (moving) rigid body instead of a ground body, the contact point $C$ is reconstructed in 
+    body of marker 0,
+    \be
+      \LU{m0}{\pv}_{C} = \LU{m0,0}{\Rot} (\LU{0}{\pv}_{C} - \LU{0}{\pv}_{m0})
+    \ee
+    The velocity of the contact point at the marker 0 body reads
+    \be
+      \LU{0}{\vv}_{Cm0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left( \LU{0,m0}{\Rot} \LU{m0}{\pv}_{C} \right)
+    \ee
+%
+    \mysubsubsubsection{Connector constraint equations}
+    \noindent {\bf \texttt{activeConnector = True}}:\\
+    %
+    The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
+    \be
+      \vr{\LU{0}{\vv}_{Cm1,x}}{\LU{0}{\vv}_{Cm1,y}}{\LU{0}{\vv}_{Cm1,z}} - \vr{\LU{0}{\vv}_{Cm0,x}}{\LU{0}{\vv}_{Cm0,y}}{\LU{0}{\vv}_{Cm0,z}}= \Null
+    \ee
+    %In the index 2 (velocity level) case, the constraint for the normal direction reads
     %\be
-    %  \LU{0}{\pv}_{C,z} = 0
+    %  \LU{0}{\vv}_{C,z} = 0
     %\ee
-    The non-holonomic, index 2 constraints for the tangential motion follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
-    \be
-      \vp{\LU{0}{\vv}_{C,x}}{\LU{0}{\vv}_{C,y}}= \Null
-    \ee
-    In the index 2 (velocity level) case, the constraint for the normal direction reads
-    \be
-      \LU{0}{\vv}_{C,z} = 0
-    \ee
-    if \texttt{activeConnector = False}, 
+    \noindent {\bf \texttt{activeConnector = False}}:\\
     \be
       \zv = \Null
     \ee
@@ -3202,9 +3604,9 @@ equations =
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
 V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 V,      CP,     discRadius,                     ,               ,       Real,       "0",                        ,       I,      "defines the disc radius"
-V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       ,       "normal to the contact / rolling plane; cannot be changed at the moment"
+V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       IO,      "normal to the contact / rolling plane; cannot be changed at the moment"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -3217,14 +3619,14 @@ Fv,     C,      UsesVelocityLevel,              ,               ,       Bool,   
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 3;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRollingDisc';",   ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI, "return if connector is active-->speeds up computation" 
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      discWidth,                      ,               ,       float,  "0.1f",                          ,       IO,    "width of disc for drawing"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -3245,7 +3647,7 @@ classType = Object
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -3263,7 +3665,7 @@ Fv,     C,      IsActive,                       ,               ,       Bool,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = radius of revolute joint; size == -1.f means that default connector size is used"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -3284,8 +3686,8 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
 V,      CP,     axisMarker0,                    ,               ,       Vector3D,   "Vector3D({1.,0.,0.})",      ,       I,      "direction of prismatic axis, given as a 3D vector in Marker0 frame"
 V,      CP,     normalMarker1,                  ,               ,       Vector3D,   "Vector3D({0.,1.,0.})",      ,       I,      "direction of normal to prismatic axis, given as a 3D vector in Marker1 frame"
-V,      CP,     constrainRotation,              ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     constrainRotation,              ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -3303,7 +3705,7 @@ Fv,     C,      IsActive,                       ,               ,       Bool,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = radius of revolute joint; size == -1.f means that default connector size is used"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -3321,8 +3723,7 @@ outputVariables = "{'Position':'position vector of joint given by marker0', 'Vel
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    \vspace{6pt}\\
-    {\bf Definition of quantities}:
+    \mysubsubsubsection{Definition of quantities}
     %\startTable{input parameter}{symbol}{description}
     %\rowTable{nodeNumber}{$n_{GD}$}{node number of generic data node}
     %\rowTable{markerNumbers[0]}{$m0$}{position-marker of mass point or rigid body}
@@ -3357,6 +3758,7 @@ equations =
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
 
+    \mysubsubsubsection{Geometric relations}
     %cable
     Assume we have given the sliding coordinate $s$ (e.g., as a guess of the Newton method or beginning of the time step). 
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed as
@@ -3373,7 +3775,7 @@ equations =
     \ee
 %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Algebraic constraint equations (classicalFormulation=True)}:
+    \mysubsubsubsection{Connector constraint equations (classicalFormulation=True)}
     The 2D sliding joint is implemented having 3 equations, using the special algebraic coordinates $\zv$.
     The algebraic equations read
     \bea
@@ -3395,7 +3797,7 @@ equations =
     \eea
     %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Algebraic constraint equations (classicalFormulation=False)}:
+    \mysubsubsubsection{Connector constraint equations (classicalFormulation=False)}
     The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated), using the special algebraic coordinates $\zv$. 
     The algebraic equations read
     \bea
@@ -3416,7 +3818,7 @@ equations =
     %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
 %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Post Newton Step}:
+    \mysubsubsubsection{Post Newton Step}
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
     updates the marker $m1$ index if necessary.
     \bea
@@ -3431,7 +3833,6 @@ equations =
     \ee
     %the data coordinates are \be \qv_{Data} = [i_{marker} \;\; s_{0}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list and  $s_{0}$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step.
 %
-    {\bf Examples}: see TestModels!
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -3441,14 +3842,14 @@ V,      CP,     markerNumbers,                  ,               ,       ArrayMar
 V,      CP,     slidingMarkerNumbers,           ,               ,       ArrayMarkerIndex,"ArrayIndex()",              ,       I,      "$[m_{s0}, \ldots, m_{sn}]\tp$these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)"
 V,      CP,     slidingMarkerOffsets,           ,               ,       Vector,"Vector()", ,                            I,      "$[d_{s0}, \ldots, d_{sn}]$this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ..."
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",       ,       I,     "$n_{GD}$node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position"
-V,      CP,     classicalFormulation,           ,               ,       bool,       "true",                      ,       IO,     "uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     classicalFormulation,           ,               ,       Bool,       "true",                      ,       IO,     "uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 2;",                 ,       CI,     "data variables: [0] showing the current (local) index in slidingMarkerNumber list --> providing the cable element active in sliding; coordinate [1] stores the previous sliding coordinate" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
 #Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",             ,      CI,     "constraint also implements velocity level equations" 
@@ -3473,7 +3874,7 @@ F,      C,      ComputeLocalSlidingCoordinate,  ,               ,       Real,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = radius of revolute joint; size == -1.f means that default connector size is used"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -3491,18 +3892,8 @@ outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of pos
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    %\vspace{6pt}\\
-    %{\bf Definition of quantities}:
-    %\startTable{input parameter}{symbol}{description}
-    %\rowTable{nodeNumbers}{$[n_{GD}, n_{ALE}]$}{node number of NodeGenericData $n_{GD}$ with one data coordinate and $n_{ALE}$ of NodeGenericODE2 with one ODE2 coordinate}
-    %\rowTable{slidingOffset}{$s_{off}$}{sliding offset, which is added to the current value of the ALE node coordinate}
-    %\rowTable{markerNumbers[0]}{$m0$}{position-marker of mass point or rigid body}
-    %\rowTable{markerNumbers[1]}{$m1$}{marker to a Cable2D element, which is {\bf updated} in every PostNewtonStep; $m1$ contains the current marker number, which is active for the sliding joint; must be initialized appropriately}
-    %\rowTable{slidingMarkerNumbers}{$[m_{s0}, \ldots, m_{sn}]\tp$}{a list of $sn$ (global) marker numbers which are are used to update marker1}
-    %\rowTable{slidingMarkerOffsets}{$[d_{s0}, \ldots, d_{sn}]$}{a list of $sn$ scalar offsets, which represent the (reference arc) length of all previous sliding cable elements}
-    %\rowTable{penaltyStiffness}{$k$}{penalty stiffness coefficients for usePenaltyFormulation=True}
-    %\finishTable
-%    
+    \mysubsubsubsection{Definition of quantities}
+%
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{generic data node}{$\xv=[x_{data0}]\tp$}{coordinates of node with node number $n_{GD}$}
     \rowTable{generic ODE2 node}{$\qv=[q_{0}]\tp$}{coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects}
@@ -3530,6 +3921,7 @@ equations =
     %\rowTable{Force}{$\fv$}{see below}
     %\finishTable
 
+    \mysubsubsubsection{Geometric relations}
     The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate
     \be
       s_{el} = q_{ALE} + s_{off} - d_{m1} = s_g - d_{m1}.
@@ -3544,7 +3936,7 @@ equations =
     \ee
 %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Algebraic constraint equations}:
+    \mysubsubsubsection{Connector constraint equations}
     The 2D sliding joint is implemented having 2 equations, using the Lagrange multipliers $\zv$. 
     The algebraic (index 3) equations read
     \be
@@ -3575,7 +3967,7 @@ equations =
     \eea   
 %
     %+++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Post Newton Step}:
+    \mysubsubsubsection{Post Newton Step}
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
     updates the marker $m1$ index if necessary.
     \bea
@@ -3589,7 +3981,6 @@ equations =
       x_{data1} \;+\!\!= s.
     \ee
 %
-    {\bf Examples}: see TestModels!
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -3600,16 +3991,16 @@ V,      CP,     slidingMarkerNumbers,           ,               ,       ArrayMar
 V,      CP,     slidingMarkerOffsets,           ,               ,       Vector,     "Vector()",                 ,       I,      "$[d_{s0}, \ldots, d_{sn}]$this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ..."
 V,      CP,     slidingOffset,                  ,               ,       Real,       0.,                         ,       I,      "$s_{off}$sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements"
 V,      CP,     nodeNumbers,                    ,               ,       ArrayNodeIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[n_{GD}, n_{ALE}]$node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate"
-V,      CP,     usePenaltyFormulation,          ,               ,       bool,       "false",                    ,       IO,     "flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)"
+V,      CP,     usePenaltyFormulation,          ,               ,       Bool,       "false",                    ,       IO,     "flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)"
 V,      CP,     penaltyStiffness,               ,               ,       Real,       0.,                         ,       I,      "$k$penalty stiffness [SI:N/m] used if usePenaltyFormulation=True"
-V,      CP,     activeConnector,                ,               ,       bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 1;",                 ,       CI,     "data variables: [0] showing the current (local) index in slidingMarkerNumber list --> providing the cable element active in sliding; coordinate [1] stores the previous sliding coordinate" 
 #Done automatically? Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return 1;",                ,       CI,     "number of ODE2 coordinates; needed for object?" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
 #Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",             ,      CI,     "constraint also implements velocity level equations" 
@@ -3635,7 +4026,7 @@ F,      C,      ComputeLocalSlidingCoordinate_t,,               ,       Real,   
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = radius of revolute joint; size == -1.f means that default connector size is used"
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
@@ -3664,7 +4055,7 @@ Fv,     C,      GetPosition,                    ,               ,       void,   
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyMass';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,       "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3693,7 +4084,7 @@ Fv,     C,      GetVelocity,                    ,               ,      void,   ,
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyPosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3725,7 +4116,7 @@ Fv,     C,      GetAngularVelocityLocal,        ,               ,       void,   
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3750,7 +4141,7 @@ Fv,     C,      GetVelocity,                    ,               ,      void,   ,
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'NodePosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3779,7 +4170,7 @@ Fv,     C,      GetAngularVelocityLocal,        ,               ,      void,   ,
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'NodeRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3796,7 +4187,7 @@ classType = Marker
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "marker's unique name"
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",       ,       I,      "node number to which marker is attached to"
 V,      CP,     coordinate,                     ,               ,       Index,      "EXUstd::InvalidIndex",       ,       I,      "coordinate of node to which marker is attached to"
-#remove: velocities are often needed together with position (cf. MarkerNodePosition) ==> velocities are measured using according flags; V,      CP,     useVelocity,                    ,               ,       bool,       "false",                    ,       I,      "Flag: true, if marker is attached to ODE2 velocity coordinate (e.g. to constrain or measure velocities)"
+#remove: velocities are often needed together with position (cf. MarkerNodePosition) ==> velocities are measured using according flags; V,      CP,     useVelocity,                    ,               ,       Bool,       "false",                    ,       I,      "Flag: true, if marker is attached to ODE2 velocity coordinate (e.g. to constrain or measure velocities)"
 #
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "access to node number" 
 Fv,     C,      GetCoordinateNumber,            ,               ,       Index,      "return parameters.coordinate;", ,  CI,     "access to coordinate index" 
@@ -3806,9 +4197,9 @@ Fv,     C,      GetPosition,                    ,               3,      void,   
 #Fv,     C,      GetVelocity,                    ,               3,      void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'NodeCoordinate';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3833,9 +4224,9 @@ Fv,     C,      GetDimension,                   ,               ,       Index,  
 Fv,     C,      GetPosition,                    ,               3,      void,       ,  "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'NodeRotationCoordinate';", ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,        "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,        "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";","const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3848,7 +4239,6 @@ mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
 classType = Marker
 equations =
-    \vspace{6pt}\\
     {\bf Definition of marker quantities}:
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
@@ -3861,7 +4251,7 @@ equations =
 %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Marker quantities}:\\
+    \mysubsubsubsection{Marker quantities}
     The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
     object velocity coordinates $\dot \qv_{n_b}$,
     \be
@@ -3934,10 +4324,10 @@ Fv,     C,      GetPosition,                    ,               ,       void,   
 Fv,     C,      GetVelocity,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,                           "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'SuperElementPosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
-V,      V,      showMarkerNodes,                ,               ,       bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
+Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      showMarkerNodes,                ,               ,       Bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -3945,13 +4335,12 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerSuperElementRigid
-classDescription = "A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that the can represent rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition."
+classDescription = "A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
 classType = Marker
 equations =
-    \vspace{6pt}\\
     {\bf Definition of marker quantities}:
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{number of mesh nodes}{$n_m$}{size of \texttt{meshNodeNumbers} and \texttt{weightingFactors} which are marked; this must not be the number of mesh nodes in the marked object}
@@ -3980,7 +4369,7 @@ equations =
 %
     \vspace{6pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \noindent {\bf Marker quantities}:\\
+    \mysubsubsubsection{Marker quantities}
     The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
     object velocity coordinates $\dot \qv_{n_b}$,
     \be
@@ -4052,14 +4441,14 @@ Fv,     C,      GetAngularVelocity,             ,               ,       void,   
 Fv,     C,      GetAngularVelocityLocal,        ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,                           "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'SuperElementRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #helper functions:
 F,      C,      GetFloatingFrameNodeData,       ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return parameters of underlying floating frame node (or default values for case that no frame exists)" 
 F,      C,      GetWeightedRotations,           ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedRotations, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted (linearized) rotation from local mesh displacements" 
 F,      C,      GetWeightedAngularVelocity,     ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted angular velocity from local mesh velocities" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
-V,      V,      showMarkerNodes,                ,               ,       bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
+Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      showMarkerNodes,                ,               ,       Bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4087,10 +4476,10 @@ Fv,     C,      GetPosition,                    ,               ,       void,   
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ObjectODE2Coordinates';",  ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #
-Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 F,      C,      GetObjectODE2Coordinates,       ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector& objectCoordinates, Vector& objectCoordinates_t",       CDI,     "return the ODE2 coordinate vectors (and derivative) of the attached object"
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,      IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,      IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4113,7 +4502,7 @@ writeFile = True
 #V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",     ,       I,      "body number to which marker is attached to"
 #V,      CP,     nodeNumbers,                    ,               ,       ArrayNodeIndex, "ArrayIndex()",         ,       I,      "local node numbers of body which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers"
 #V,      CP,     weightingFactors,               ,               ,       Vector,     "Vector()",                 ,       I,      "weighting factors per node to compute the final local position"
-#V,      CP,     useFirstNodeAsReferenceFrame,   ,               ,       bool,       "false",                    ,       I,      "if true, the first node of the body is used to transform the nodal coordinates from local (body-fixed) to global coordinates, which MUST provide position and orientation information; this is according to the floating frame of reference formulation (ffrf)"
+#V,      CP,     useFirstNodeAsReferenceFrame,   ,               ,       Bool,       "false",                    ,       I,      "if true, the first node of the body is used to transform the nodal coordinates from local (body-fixed) to global coordinates, which MUST provide position and orientation information; this is according to the floating frame of reference formulation (ffrf)"
 ##V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,      "if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates"
 ##
 #Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
@@ -4124,10 +4513,10 @@ writeFile = True
 #Fv,     C,      GetVelocity,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 #Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 #Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'GenericBodyPosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
-#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 ##VISUALIZATION:
-#Vp,     V,      show,                           ,               ,       bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
-#V,      V,      showMarkerNodes,                ,               ,       bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
+#Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+#V,      V,      showMarkerNodes,                ,               ,       Bool,       "true",                     ,       IO,      "set true, if all nodes are shown (similar to marker, but with less intensity)"
 #Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 ##file names automatically determined from class name
 #writeFile = True
@@ -4155,7 +4544,7 @@ Fv,     C,      GetPosition,                    ,               ,       void,   
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyCable2DShape';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4180,7 +4569,7 @@ Fv,     C,      GetPosition,                    ,               ,       void,   
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyCable2DCoordinates';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4211,7 +4600,7 @@ writeFile = True
 #Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
 #Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyPosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 ##VISUALIZATION:
-#Vp,     V,      show,                           ,               ,       bool,       "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+#Vp,     V,      show,                           ,               ,       Bool,       "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 #Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 ##file names automatically determined from class name
 #writeFile = True
@@ -4227,13 +4616,37 @@ mainParentClass = MainLoad
 visuParentClass = VisualizationLoad
 pythonShortName = Force
 classType = Load
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+equations =
+    \mysubsubsubsection{Details}
+    The load vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
+    The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadVectorUserFunction(t, loadVector)}
+    A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{loadVector}}{Vector3D}{$\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Vector3D}{computed force vector}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    from math import sin, cos, pi
+    def UFforce(t, loadVector): 
+        return [loadVector[0]*sin(t*10*2*pi),0,0]
+    \end{lstlisting}
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",             ,       I,      "marker's number to which load is applied"
-V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "vector-valued load [SI:N]"
+V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\fv$vector-valued load [SI:N]"
 V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,     "if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used"
-V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DScalarVector3D, 0,    ,       IO,     "A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"
+V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DScalarVector3D, 0,    ,       IO,     "A python function which defines the time-dependent load"
 #
 #dimension must be known (1=scalar, 3=vector) Fv,     C,      Dimension,                      ,               ,       Index,      "return 3;",                ,       CI,     "dimensionality of load; 3D force vector==>dimension=3; scalar load==>dimension=1" 
 Fv,     C,      GetMarkerNumber,                ,               ,       Index,      "return parameters.markerNumber;", ,     CI,     "get according marker number where load is applied" 
@@ -4241,13 +4654,13 @@ Fv,     C,      SetMarkerNumber,                ,               ,       void,   
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Position;", ,   CI,     "provide requested markerType for connector" 
 #
 Fv,     C,      GetType,                        ,               ,       LoadType,   "return (LoadType)((Index)LoadType::Force);",  ,       CI,     "return force type" 
-Fv,     C,      IsVector,                       ,               ,       bool,       "return true;",             ,       CI,     "true = load is of vector type" 
+Fv,     C,      IsVector,                       ,               ,       Bool,       "return true;",             ,       CI,     "true = load is of vector type" 
 Fv,     C,      GetLoadVector,                  ,               ,       Vector3D,   , "Real t", CDI, "read access for force vector; returns user function in case it is defined" 
-Fv,     C,      IsBodyFixed,                    ,               ,       bool,       "return parameters.bodyFixed;",             ,       CI,     "per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system" 
+Fv,     C,      IsBodyFixed,                    ,               ,       Bool,       "return parameters.bodyFixed;",             ,       CI,     "per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ForceVector';",    ,       CI,     "Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?" 
-#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,        "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,        "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 
 #file names automatically determined from class name
@@ -4260,11 +4673,34 @@ mainParentClass = MainLoad
 visuParentClass = VisualizationLoad
 pythonShortName = Torque
 classType = Load
+equations =
+    \mysubsubsubsection{Details}
+    The torque vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
+    The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadVectorUserFunction(t, loadVector)}
+    A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{loadVector}}{Vector3D}{$\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Vector3D}{computed torque vector}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    from math import sin, cos, pi
+    def UFforce(t, loadVector): 
+        return [loadVector[0]*sin(t*10*2*pi),0,0]
+    \end{lstlisting}
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",             ,       I,      "marker's number to which load is applied"
-V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "vector-valued load [SI:N]"
+V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\ttau$vector-valued load [SI:N]"
 V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,     "if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used"
 V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DScalarVector3D, 0,    ,       IO,     "A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"
 #
@@ -4274,12 +4710,12 @@ Fv,     C,      SetMarkerNumber,                ,               ,       void,   
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Orientation;", ,   CI,     "provide requested markerType for connector" 
 #
 Fv,     C,      GetType,                        ,               ,       LoadType,   "return (LoadType)((Index)LoadType::Torque);",  ,       CI,     "return load type" 
-Fv,     C,      IsVector,                       ,               ,       bool,       "return true;",             ,       CI,     "true = load is of vector type" 
+Fv,     C,      IsVector,                       ,               ,       Bool,       "return true;",             ,       CI,     "true = load is of vector type" 
 Fv,     C,      GetLoadVector,                  ,               ,       Vector3D,   , "Real t", CDI, "read access for load vector" 
-Fv,     C,      IsBodyFixed,                    ,               ,       bool,       "return parameters.bodyFixed;",             ,       CI,     "per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system" 
+Fv,     C,      IsBodyFixed,                    ,               ,       Bool,       "return parameters.bodyFixed;",             ,       CI,     "per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system" 
 Fv,     M,      GetTypeName,                    ,               ,       const char* ,"return 'TorqueVector';",    ,       CI,     "Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 
 #file names automatically determined from class name
@@ -4287,18 +4723,49 @@ writeFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = LoadMassProportional
-classDescription = "Load attached to BodyMass-based marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction)."
+classDescription = "Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction)."
 cParentClass = CLoad
 mainParentClass = MainLoad
 visuParentClass = VisualizationLoad
 pythonShortName = Gravity
 classType = Load
+equations =
+    \mysubsubsubsection{Details}
+    The load applies a (translational) and distributed load proportional to the distributed body's density.
+    The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadVectorUserFunction(t, loadVector)}
+    A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{loadVector}}{Vector3D}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Vector3D}{computed load vector}
+    \finishTable
+    Example of user function: functionality same as in \texttt{LoadForceVector}
+/end
+miniExample =
+    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
+    body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))
+    mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+
+    #check result
+    testError = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] - (-9.81/2)
+    #final z-coordinate of position shall be -g/2 due to constant acceleration with g=-9.81
+    #result independent of mass
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",             ,       I,      "marker's number to which load is applied"
-V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "vector-valued load [SI:N/kg = m/s$^2$] "
-V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DScalarVector3D, 0,    ,       IO,     "A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"
+V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\bv$vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates"
+V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DScalarVector3D, 0,    ,       IO,     "A python function which defines the time-dependent loadVector."
 #
 #dimension must be known (1=scalar, 3=vector) Fv,     C,      Dimension,                      ,               ,       Index,      "return 3;",                ,       CI,     "dimensionality of load; 3D force vector==>dimension=3; scalar load==>dimension=1" 
 Fv,     C,      GetMarkerNumber,                ,               ,       Index,      "return parameters.markerNumber;", ,     CI,     "get according marker number where load is applied" 
@@ -4306,12 +4773,12 @@ Fv,     C,      SetMarkerNumber,                ,               ,       void,   
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::BodyMass;", ,   CI,     "provide requested markerType for connector" 
 #
 Fv,     C,      GetType,                        ,               ,       LoadType,   "return (LoadType)((Index)LoadType::ForcePerMass);",  ,       CI,     "return load type" 
-Fv,     C,      IsVector,                       ,               ,       bool,       "return true;",             ,       CI,     "true = load is of vector type" 
+Fv,     C,      IsVector,                       ,               ,       Bool,       "return true;",             ,       CI,     "true = load is of vector type" 
 #DELETE, not needed: Fv,     C,      GetLoadVector,                  ,               ,       Vector3D&,  "return GetParameters().loadVector;", , I, "write override for force vector" 
 Fv,     C,      GetLoadVector,                  ,               ,       Vector3D,   , "Real t", CDI, "read access for force vector" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'MassProportional';",    ,       CI,     "Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,        "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,        "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 
 #file names automatically determined from class name
@@ -4324,24 +4791,54 @@ mainParentClass = MainLoad
 visuParentClass = VisualizationLoad
 #pythonShortName = GeneralizedForce?
 classType = Load
+equations =
+    \mysubsubsubsection{Details}
+    The scalar \texttt{load} is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., \texttt{MarkerNodeCoordinate}.
+    This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
+    on a rotation coordinate (but take care for its meaning).
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadUserFunction(t, load)}
+    A user function, which computes the scalar load depending on time and the object's \texttt{load} parameter.
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{load}}{Real}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Real}{computed load}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    from math import sin, cos, pi
+    #this example uses the object's stored parameter load to compute a time-dependent load
+    def UFload(t, load): 
+        return load*sin(10*(2*pi)*t)
+
+    n0=mbs.AddNode(Point())
+    nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
+                               load = 10,
+                               loadUserFunction = UFload))
+    \end{lstlisting}
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",       ,       I,      "marker's number to which load is applied"
-V,      CP,     load,                           ,               ,       Real,       "0.",                       ,       I,      "scalar load [SI:N]"
-V,      CP,     loadUserFunction,               ,               ,       PyFunctionScalar2, 0,                    ,       IO,     "A python function which defines the time-dependent load with parameters (Real t, Real load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, load): return load*np.sin(t*10*2*3.1415)"
+V,      CP,     load,                           ,               ,       Real,       "0.",                       ,       I,      "$f$scalar load [SI:N]"
+V,      CP,     loadUserFunction,               ,               ,       PyFunctionScalar2, 0,                    ,       IO,     "A python function which defines the time-dependent load; see description below"
 #
 Fv,     C,      GetMarkerNumber,                ,               ,       Index,      "return parameters.markerNumber;", ,     CI,     "get according marker number where load is applied" 
 Fv,     C,      SetMarkerNumber,                ,               ,       void,       "parameters.markerNumber = markerNumberInit;",    "Index markerNumberInit",     I,     "set according marker number where load is applied" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
 #
 Fv,     C,      GetType,                        ,               ,       LoadType,   "return (LoadType)((Index)LoadType::Coordinate);",  ,       CI,     "return load type" 
-Fv,     C,      IsVector,                       ,               ,       bool,       "return false;",             ,      CI,     "true = load is of vector type" 
+Fv,     C,      IsVector,                       ,               ,       Bool,       "return false;",             ,      CI,     "true = load is of vector type" 
 #DELETE, not needed: Fv,     C,      GetLoadValue,                   ,               ,       Real&,      "return GetParameters().load;", ,   I,      "write override for load value (IsVector=false)" 
 Fv,     C,      GetLoadValue,                   ,               ,       Real,       , "Real t", CDI,     "read access for load value (IsVector=false)" 
 Fv,     M,      GetTypeName,                    ,               ,       const char* ,"return 'Coordinate';",     ,       CI,     "Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,      bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,      void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 
 #file names automatically determined from class name
@@ -4362,21 +4859,21 @@ classType = Sensor
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",      ,       I,     "node number to which sensor is attached to"
-V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
+V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "true: write sensor output to file"
 V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "general access to node number" 
 Fv,     C,      GetType,                        ,               ,       "SensorType", "return SensorType::Node;", ,     CI,     "return sensor type" 
 #
-Fv,     C,      GetWriteToFileFlag,             ,               ,       bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
+Fv,     C,      GetWriteToFileFlag,             ,               ,       Bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
 Fv,     C,      GetFileName,                    ,               ,       "STDstring", "return parameters.fileName;", ,     CI,     "get file name" 
 Fv,     C,      GetOutputVariableType,          ,               ,       OutputVariableType,  "return parameters.outputVariableType;", ,     CI,     "get OutputVariableType" 
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Node';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4391,21 +4888,21 @@ classType = Sensor
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     objectNumber,                   ,               ,       ObjectIndex,"EXUstd::InvalidIndex",      ,       I,     "object (e.g. connector) number to which sensor is attached to"
-V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
+V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "true: write sensor output to file"
 V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.objectNumber;", ,  CI,     "general access to object number" 
 Fv,     C,      GetType,                        ,               ,       "SensorType", "return SensorType::Object;", ,     CI,     "return sensor type" 
 #
-Fv,     C,      GetWriteToFileFlag,             ,               ,       bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
+Fv,     C,      GetWriteToFileFlag,             ,               ,       Bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
 Fv,     C,      GetFileName,                    ,               ,       "STDstring", "return parameters.fileName;", ,     CI,   "get file name" 
 Fv,     C,      GetOutputVariableType,          ,               ,       OutputVariableType,  "return parameters.outputVariableType;", ,     CI,     "get OutputVariableType" 
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Object';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)!"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)!"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4421,7 +4918,7 @@ classType = Sensor
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     bodyNumber,                     ,               ,       ObjectIndex,"EXUstd::InvalidIndex",      ,       I,     "body (=object) number to which sensor is attached to"
 V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",      ,       I,     "local (body-fixed) body position of sensor"
-V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
+V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "true: write sensor output to file"
 V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
@@ -4429,14 +4926,14 @@ Fv,     C,      GetObjectNumber,                ,               ,       Index,  
 Fv,     C,      GetType,                        ,               ,       "SensorType", "return SensorType::Body;", ,     CI,     "return sensor type" 
 #
 F,      C,      GetBodyLocalPosition,           ,               ,       Vector3D,    "return parameters.localPosition;", , CI,  "get local position" 
-Fv,     C,      GetWriteToFileFlag,             ,               ,       bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
+Fv,     C,      GetWriteToFileFlag,             ,               ,       Bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
 Fv,     C,      GetFileName,                    ,               ,       "STDstring", "return parameters.fileName;", ,     CI,   "get file name" 
 Fv,     C,      GetOutputVariableType,          ,               ,       OutputVariableType,  "return parameters.outputVariableType;", ,     CI,     "get OutputVariableType" 
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Body';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4452,7 +4949,7 @@ classType = Sensor
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     bodyNumber,                     ,               ,       ObjectIndex,"EXUstd::InvalidIndex",      ,       I,     "body (=object) number to which sensor is attached to"
 V,      CP,     meshNodeNumber,                 ,               ,       Index,      "-1",                        ,       I,     "mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder"
-V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
+V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "true: write sensor output to file"
 V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
 #
@@ -4460,14 +4957,14 @@ Fv,     C,      GetObjectNumber,                ,               ,       Index,  
 Fv,     C,      GetType,                        ,               ,       "SensorType", "return SensorType::SuperElement;", ,     CI,     "return sensor type" 
 #
 F,      C,      GetMeshNodeNumber,              ,               ,       Index,      "return parameters.meshNodeNumber;", , CI,  "get local position" 
-Fv,     C,      GetWriteToFileFlag,             ,               ,       bool,       "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
+Fv,     C,      GetWriteToFileFlag,             ,               ,       Bool,       "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
 Fv,     C,      GetFileName,                    ,               ,       "STDstring","return parameters.fileName;", ,     CI,   "get file name" 
 Fv,     C,      GetOutputVariableType,          ,               ,       OutputVariableType,  "return parameters.outputVariableType;", ,     CI,     "get OutputVariableType" 
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,       ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'SuperElement';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,         ,                         "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
@@ -4482,21 +4979,21 @@ classType = Sensor
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "marker's unique name"
 V,      CP,     loadNumber,                     ,               ,       LoadIndex,  "EXUstd::InvalidIndex",      ,       I,     "load number to which sensor is attached to"
-V,      CP,     writeToFile,                    ,               ,       bool,       true,                        ,       I,     "true: write sensor output to file"
+V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "true: write sensor output to file"
 V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 #V,      CP,     outputVariableType,             ,               ,       OutputVariableType, 0,              ,       I,     "OutputVariableType for sensor"
 #
 Fv,     C,      GetLoadNumber,                  ,               ,       Index,      "return parameters.loadNumber;", ,  CI,     "general access to load number" 
 Fv,     C,      GetType,                        ,               ,       "SensorType", "return SensorType::Load;", ,     CI,     "return sensor type" 
 #
-Fv,     C,      GetWriteToFileFlag,             ,               ,       bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
+Fv,     C,      GetWriteToFileFlag,             ,               ,       Bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
 Fv,     C,      GetFileName,                    ,               ,       "STDstring", "return parameters.fileName;", ,     CI,     "get file name" 
 Fv,     C,      GetOutputVariableType,          ,               ,       OutputVariableType,  "return OutputVariableType::_None;", ,     CI,     "get OutputVariableType" 
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Load';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
 #VISUALIZATION:
-Vp,     V,      show,                           ,               ,       bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown; CURRENTLY NOT AVAILABLE"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown; CURRENTLY NOT AVAILABLE"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True

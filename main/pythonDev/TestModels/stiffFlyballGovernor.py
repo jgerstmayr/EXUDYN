@@ -319,7 +319,7 @@ if True:
     dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)
 
 dynamicSolver.SolveSystem(mbs, simulationSettings)
-#SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+#exu.SolveDynamic(mbs, simulationSettings)
 
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()

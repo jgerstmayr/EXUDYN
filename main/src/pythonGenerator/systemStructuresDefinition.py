@@ -476,7 +476,7 @@ writeFile=VisualizationSettings.h
 class = CSolverTimer
 appendToFile=False
 writePybindIncludes = True
-latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Solver substructures}\nThis section includes structures contained in the solver, which can be accessed via the python interface during solution or for building a customized solver in python.\n"
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Solver substructures}\label{sec:solverSubstructures}\nThis section includes structures contained in the solver, which can be accessed via the python interface during solution or for building a customized solver in python.\n"
 classDescription = "Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,            args,           cFlags, parameterDescription
 V,      useTimer,                   , 	             ,     bool,         true,                   ,   P,    "flag to decide, whether the timer is used (true) or not"

@@ -8,13 +8,15 @@ These are the access functions to the \codeName\ module.
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  Go() & Creates a SystemContainer SC and a main system mbs\\ \hline 
-  InfoStat() & Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.\\ \hline 
+  GetVersionString() & Get EXUDYN module version as string\\ \hline 
+  RequireVersion(requiredVersionString) & Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")\\ \hline 
   StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
+  SolveStatic() & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
+  SolveDynamic() & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
+  ComputeODE2Eigenvalues() & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)\\ \hline 
   SetLinalgOutputFormatPython(flagPythonFormat) & true: use python format for output of vectors and matrices; false: use matlab format\\ \hline 
-  InvalidIndex() & This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list\\ \hline 
   SetWriteToConsole(flag) & set flag to write (true) or not write to console; default = true\\ \hline 
   SetWriteToFile(filename, flagWriteToFile = true, flagAppend = false) & set flag to write (true) or not write to console; default value of flagWriteToFile = false; flagAppend appends output to file, if set true; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
@@ -24,6 +26,9 @@ These are the access functions to the \codeName\ module.
     exu.SetWriteToFile('', False) \#terminate writing to file which closes the file}}\\ \hline 
   SetPrintDelayMilliSeconds(delayMilliSeconds) & add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0\\ \hline 
   Print() & this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false\\ \hline 
+  InfoStat() & Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.\\ \hline 
+  Go() & Creates a SystemContainer SC and a main system mbs\\ \hline 
+  InvalidIndex() & This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; in future, the invalid index may be changed to -1, therefore you should use this variable\\ \hline 
   variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
   sys & this dictionary is used by the system, e.g. for testsuite or solvers to store exudyn-wide data in order to avoid global python variables \\ \hline  
 \end{longtable}
@@ -39,11 +44,22 @@ The SystemContainer is the top level of structures in \codeName. The container h
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
   AddSystem() & add a new computational system\\ \hline 
-  Reset() & delete all systems and reset SystemContainer (including graphics)\\ \hline 
-  NumberOfSystems() & obtain number of systems available in system container\\ \hline 
-  GetSystem(systemNumber) & obtain systems with index from system container\\ \hline 
-  WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
-  RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
+  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
+    EXAMPLE:\tabnewline
+    SC = exu.SystemContainer()\tabnewline
+    SC.visualizationSettings.autoFitScene=False  \\ \hline  
+  TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & DEPRECATED, use exu.SolveDynamic(...) instead, see efSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{simSettings = exu.SimulationSettings()\tabnewline
+    simSettings.timeIntegration.numberOfSteps = 1000\tabnewline
+    simSettings.timeIntegration.endTime = 2\tabnewline
+    simSettings.timeIntegration.verboseMode = 1\tabnewline
+    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)}}\\ \hline 
+  StaticSolve(mainSystem, simulationSettings) & DEPRECATED, use exu.SolveStatic(...) insteadefSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{simSettings = exu.SimulationSettings()\tabnewline
+    simSettings.staticSolver.newton.relativeTolerance = 1e-6\tabnewline
+    SC.StaticSolve(mbs, simSettings)}}\\ \hline 
   GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{SC = exu.SystemContainer()\tabnewline
@@ -53,23 +69,12 @@ The SystemContainer is the top level of structures in \codeName. The container h
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{SC = exu.SystemContainer()\tabnewline
     SC.GetRenderState(renderState)}}\\ \hline 
+  WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
+  RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
-  TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{simSettings = exu.SimulationSettings()\tabnewline
-    simSettings.timeIntegration.numberOfSteps = 1000\tabnewline
-    simSettings.timeIntegration.endTime = 2\tabnewline
-    simSettings.timeIntegration.verboseMode = 1\tabnewline
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)}}\\ \hline 
-  StaticSolve(mainSystem, simulationSettings) & Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{simSettings = exu.SimulationSettings()\tabnewline
-    simSettings.staticSolver.newton.relativeTolerance = 1e-6\tabnewline
-    SC.StaticSolve(mbs, simSettings)}}\\ \hline 
-  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
-    EXAMPLE:\tabnewline
-    SC = exu.SystemContainer()\tabnewline
-    SC.visualizationSettings.autoFitScene=False  \\ \hline  
+  Reset() & delete all systems and reset SystemContainer (including graphics)\\ \hline 
+  NumberOfSystems() & obtain number of systems available in system container\\ \hline 
+  GetSystem(systemNumber) & obtain systems with index from system container\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -353,7 +358,7 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
 
 %++++++++++++++++++++
 \mysubsubsection{SystemData: Access coordinates}
-This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.
+\label{sec:mbs:systemData}This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.
 
 \begin{center}
 \footnotesize
@@ -401,7 +406,7 @@ This section provides access functions to global coordinate vectors. Assigning i
     \texttt{sysStateList = mbs.systemData.GetSystemState()}}\\ \hline 
   SetSystemState(systemStateList, configuration = exu.ConfigurationType.Current) & set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1\_t and ODE2\_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords\_t, ODE1Coords, AEcoords, dataCoords]\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{mbs.systemData.SetDataCoordinates(sysStateList, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
+    \texttt{mbs.systemData.SetSystemState(sysStateList, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -506,8 +511,26 @@ This section shows the ConfigurationType structure, which is used for selecting 
 \end{center}
 
 %++++++++++++++++++++
+\mysubsubsection{DynamicSolverType}
+This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  GeneralizedAlpha & an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers\\ \hline 
+  TrapezoidalIndex2 & an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction\\ \hline 
+  ExplicitEuler & [NOT IMPLEMENTED YET] an explicit first order solver for systems without constraints\\ \hline 
+  RK45 & [NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
 \mysubsubsection{LinearSolverType}
-This section shows the LinearSolverType structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.
+This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.
 
 
 

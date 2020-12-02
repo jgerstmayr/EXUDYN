@@ -109,6 +109,17 @@ Vector.h: include missing file (namespace, function EXUstd::Minimum)
 #include "Utilities/BasicFunctions.h"   //for Minimum
 
 ===============================================
+import error:
+>>> import exudyn as e
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: /usr/local/lib/python3.6/dist-packages/exudyn-0.1.368-py3.6-linux-x86_64.egg/exudyn.cpython-36m-x86_64-linux-gnu.so: undefined symbol: _ZN27CObjectContactCircleCable2D19maxNumberOfSegmentsE
+
+==> this error occured because a static const variable had been used as a template argument:
+ConstSizeVector<maxNumberOfSegments>
+==> this is not available at compile time!
+==> solution: make the variable a 'constexpr':
+static constexpr Index maxNumberOfSegments = 12;
 
 ===============================================
 

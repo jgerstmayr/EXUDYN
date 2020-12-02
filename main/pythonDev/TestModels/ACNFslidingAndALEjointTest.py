@@ -214,7 +214,7 @@ vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationTyp
 
 #start static calculation
 #SC.StaticSolveOldSolver(mbs, simulationSettings)
-SC.StaticSolve(mbs, simulationSettings) 
+exu.SolveStatic(mbs, simulationSettings) 
 
 #++++++++++++++++++++++++++++++++++++++++
 #compute error for test suite:
@@ -269,7 +269,7 @@ if solveDynamic:
     simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.displayStatistics = True
     
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings)
     
 if exudynTestGlobals.useGraphics: 
     #SC.WaitForRenderEngineStopFlag()

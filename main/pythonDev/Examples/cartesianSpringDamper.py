@@ -62,7 +62,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
 
 #exu.StartRenderer()
-SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 #SC.WaitForRenderEngineStopFlag()
 #exu.StopRenderer() #safely close rendering window!
 

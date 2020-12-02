@@ -5,7 +5,7 @@
 This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolutionSettings} \label{sec_SolutionSettings}
+\mysubsubsection{SolutionSettings} \label{sec:SolutionSettings}
 General settings for exporting the solution (results) of a simulation.\\ 
 %
 SolutionSettings has the following items:
@@ -36,7 +36,7 @@ SolutionSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{NumericalDifferentiationSettings} \label{sec_NumericalDifferentiationSettings}
+\mysubsubsection{NumericalDifferentiationSettings} \label{sec:NumericalDifferentiationSettings}
 Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration); HOTINT1: relativeEpsilon * Maximum(minimumCoordinateSize, fabs(x(i))).\\ 
 %
 NumericalDifferentiationSettings has the following items:
@@ -54,7 +54,7 @@ NumericalDifferentiationSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{NewtonSettings} \label{sec_NewtonSettings}
+\mysubsubsection{NewtonSettings} \label{sec:NewtonSettings}
 Settings for Newton method used in static or dynamic simulation.\\ 
 %
 NewtonSettings has the following items:
@@ -87,7 +87,7 @@ NewtonSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{GeneralizedAlphaSettings} \label{sec_GeneralizedAlphaSettings}
+\mysubsubsection{GeneralizedAlphaSettings} \label{sec:GeneralizedAlphaSettings}
 Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.\\ 
 %
 GeneralizedAlphaSettings has the following items:
@@ -107,7 +107,7 @@ GeneralizedAlphaSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{TimeIntegrationSettings} \label{sec_TimeIntegrationSettings}
+\mysubsubsection{TimeIntegrationSettings} \label{sec:TimeIntegrationSettings}
 General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.\\ 
 %
 TimeIntegrationSettings has the following items:
@@ -131,7 +131,7 @@ TimeIntegrationSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{StaticSolverSettings} \label{sec_StaticSolverSettings}
+\mysubsubsection{StaticSolverSettings} \label{sec:StaticSolverSettings}
 Settings for static solver linear or nonlinear (Newton).\\ 
 %
 StaticSolverSettings has the following items:
@@ -158,7 +158,7 @@ StaticSolverSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SimulationSettings} \label{sec_SimulationSettings}
+\mysubsubsection{SimulationSettings} \label{sec:SimulationSettings}
 General Settings for simulation; according settings for solution and solvers are given in subitems of this structure. \\ 
 %
 SimulationSettings has the following items:
@@ -186,7 +186,7 @@ SimulationSettings has the following items:
 This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsGeneral} \label{sec_VSettingsGeneral}
+\mysubsubsection{VSettingsGeneral} \label{sec:VSettingsGeneral}
 General settings for visualization.\\ 
 %
 VSettingsGeneral has the following items:
@@ -213,7 +213,7 @@ VSettingsGeneral has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsWindow} \label{sec_VSettingsWindow}
+\mysubsubsection{VSettingsWindow} \label{sec:VSettingsWindow}
 Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.\\ 
 %
 VSettingsWindow has the following items:
@@ -236,7 +236,7 @@ VSettingsWindow has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsOpenGL} \label{sec_VSettingsOpenGL}
+\mysubsubsection{VSettingsOpenGL} \label{sec:VSettingsOpenGL}
 OpenGL settings for 2D and 2D rendering.\\ 
 %
 VSettingsOpenGL has the following items:
@@ -277,7 +277,7 @@ VSettingsOpenGL has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsContour} \label{sec_VSettingsContour}
+\mysubsubsection{VSettingsContour} \label{sec:VSettingsContour}
 Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.\\ 
 %
 VSettingsContour has the following items:
@@ -299,7 +299,7 @@ VSettingsContour has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsExportImages} \label{sec_VSettingsExportImages}
+\mysubsubsection{VSettingsExportImages} \label{sec:VSettingsExportImages}
 Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.\\ 
 %
 VSettingsExportImages has the following items:
@@ -317,7 +317,7 @@ VSettingsExportImages has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsNodes} \label{sec_VSettingsNodes}
+\mysubsubsection{VSettingsNodes} \label{sec:VSettingsNodes}
 Visualization settings for nodes.\\ 
 %
 VSettingsNodes has the following items:
@@ -340,7 +340,7 @@ VSettingsNodes has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsBeams} \label{sec_VSettingsBeams}
+\mysubsubsection{VSettingsBeams} \label{sec:VSettingsBeams}
 Visualization settings for beam finite elements.\\ 
 %
 VSettingsBeams has the following items:
@@ -355,7 +355,7 @@ VSettingsBeams has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsBodies} \label{sec_VSettingsBodies}
+\mysubsubsection{VSettingsBodies} \label{sec:VSettingsBodies}
 Visualization settings for bodies.\\ 
 %
 VSettingsBodies has the following items:
@@ -375,7 +375,7 @@ VSettingsBodies has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsConnectors} \label{sec_VSettingsConnectors}
+\mysubsubsection{VSettingsConnectors} \label{sec:VSettingsConnectors}
 Visualization settings for connectors.\\ 
 %
 VSettingsConnectors has the following items:
@@ -399,7 +399,7 @@ VSettingsConnectors has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsMarkers} \label{sec_VSettingsMarkers}
+\mysubsubsection{VSettingsMarkers} \label{sec:VSettingsMarkers}
 Visualization settings for markers.\\ 
 %
 VSettingsMarkers has the following items:
@@ -418,7 +418,7 @@ VSettingsMarkers has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsLoads} \label{sec_VSettingsLoads}
+\mysubsubsection{VSettingsLoads} \label{sec:VSettingsLoads}
 Visualization settings for loads.\\ 
 %
 VSettingsLoads has the following items:
@@ -440,7 +440,7 @@ VSettingsLoads has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsSensors} \label{sec_VSettingsSensors}
+\mysubsubsection{VSettingsSensors} \label{sec:VSettingsSensors}
 Visualization settings for sensors.\\ 
 %
 VSettingsSensors has the following items:
@@ -459,7 +459,7 @@ VSettingsSensors has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VisualizationSettings} \label{sec_VisualizationSettings}
+\mysubsubsection{VisualizationSettings} \label{sec:VisualizationSettings}
 Settings for visualization. \\ 
 %
 VisualizationSettings has the following items:
@@ -484,11 +484,11 @@ VisualizationSettings has the following items:
 	\end{center}
 
 %++++++++++++++++++++++++++++++++++++++
-\mysubsection{Solver substructures}
+\mysubsection{Solver substructures}\label{sec:solverSubstructures}
 This section includes structures contained in the solver, which can be accessed via the python interface during solution or for building a customized solver in python.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{CSolverTimer} \label{sec_CSolverTimer}
+\mysubsubsection{CSolverTimer} \label{sec:CSolverTimer}
 Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the \_\_FAST\_EXUDYN\_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.\\ 
 %
 CSolverTimer has the following items:
@@ -525,7 +525,7 @@ CSolverTimer has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverLocalData} \label{sec_SolverLocalData}
+\mysubsubsection{SolverLocalData} \label{sec:SolverLocalData}
 Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.\\ 
 %
 SolverLocalData has the following items:
@@ -556,7 +556,7 @@ SolverLocalData has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverIterationData} \label{sec_SolverIterationData}
+\mysubsubsection{SolverIterationData} \label{sec:SolverIterationData}
 Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.\\ 
 %
 SolverIterationData has the following items:
@@ -586,7 +586,7 @@ SolverIterationData has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverConvergenceData} \label{sec_SolverConvergenceData}
+\mysubsubsection{SolverConvergenceData} \label{sec:SolverConvergenceData}
 Solver internal structure for convergence information: residua, iteration loop errors and error flags. For detailed behavior of these flags, visit the source code!. \\ 
 %
 SolverConvergenceData has the following items:
@@ -613,7 +613,7 @@ SolverConvergenceData has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverOutputData} \label{sec_SolverOutputData}
+\mysubsubsection{SolverOutputData} \label{sec:SolverOutputData}
 Solver internal structure for output modes, output timers and counters.\\ 
 %
 SolverOutputData has the following items:
@@ -639,7 +639,7 @@ SolverOutputData has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{MainSolverStatic} \label{sec_MainSolverStatic}
+\mysubsubsection{MainSolverStatic} \label{sec:MainSolverStatic}
 PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to python interfaces, and should thus be used for small systems. To access the solver in python, write: \bi
  \item[] solver = MainSolverStatic() 
 \ei
@@ -708,7 +708,7 @@ MainSolverStatic has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{MainSolverImplicitSecondOrder} \label{sec_MainSolverImplicitSecondOrder}
+\mysubsubsection{MainSolverImplicitSecondOrder} \label{sec:MainSolverImplicitSecondOrder}
 PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to python interfaces, and should thus be used for small systems. To access the solver in python, write \bi
  \item[] solver = MainSolverImplicitSecondOrder() 
 \ei

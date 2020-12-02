@@ -2,6 +2,7 @@
 this file describes all necessary steps for setup of python with UBUNTU 18.04.4LTS
 author: Johannes Gerstmayr
 date:   2020-07-16
+NOTES:  for a more up-to-date howto see setupToolsHowTo / UBUNTU
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 * preliminary steps (if needed):
@@ -50,7 +51,8 @@ sudo apt install gcc-7 g++-7 gcc-8 g++-8 gcc-9 g++-9
 import os
 os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux
 os.environ["CXX"] = "gcc-8"
-
+#or follow these hints to switch between different gcc versions (UBUNTU20.04?):
+https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa
 
 ===============================================
 #using CMAKE:

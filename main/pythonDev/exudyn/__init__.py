@@ -18,6 +18,46 @@ except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from exudynCPP import *
 
+#import very useful solver functionality into exudyn module (==> available as exu.SolveStatic, etc.)
+try:
+    from .solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
+except:
+    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
+    from solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
+
+
+#add a functionality to check the current version
+def RequireVersion(requiredVersionString):
+    """
+    Parameters
+    ----------
+    requiredVersionString : string
+        Checks if the installed version is according to the required version.
+        Major, micro and minor version must agree the required level.
+    Returns
+    -------
+    None. But will raise RuntimeError, if required version is not met.
+
+    Example
+    ----------
+    RequireVersion("1.0.26")
+
+    """
+    vExudyn=GetVersionString().split('.')
+    vRequired = requiredVersionString.split('.')
+    isOk = True
+    if int(vExudyn[0]) < int(vRequired[0]):
+        isOk = False
+    elif int(vExudyn[0]) == int(vRequired[0]): #only for equal major versions
+        if int(vExudyn[1]) < int(vRequired[1]): #check minor version
+            isOk = False
+        elif int(vExudyn[1]) == int(vRequired[1]): #only for equal minor versions
+            if int(vExudyn[2]) < int(vRequired[2]): #check micro version
+                isOk = False
+    if not isOk:
+        print("EXUDYN version "+requiredVersionString+" required, but only " + exu.GetVersionString() + " available")
+        #raise RuntimeError("EXUDYN version "+requiredVersionString+" required, but only " + exu.GetVersionString() + "available")
+    
 
 #do not import itemInterface here, as it would go into exu. scope
 #from .itemInterface import *

@@ -5,7 +5,6 @@
 \renewcommand{\contentsname}{Table of Contents}
 %\renewcommand{\refname}{References}
 
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 \usepackage{amsmath}
 \usepackage{pxfonts} 
@@ -14,7 +13,6 @@
 \usepackage{graphicx} %\includegraphics
  
 \usepackage{import}
-\usepackage{hyperref}
 \usepackage{longtable} %for tables in reference manual
 \usepackage{mathtools} %for \prescript
 
@@ -22,8 +20,23 @@
 \usepackage[T1]{fontenc}
 
 %\input{docincludes}
+\usepackage{hyperref} %for pdf bookmarks, \url, \href...; must be included before docincludes
 \usepackage{docincludes} %exudyn definitions
 \usepackage{xcolor}
+
+\hypersetup{bookmarks=true,
+						colorlinks=true, %=[rgb]{0.1,0.1,0.},
+						breaklinks,
+            urlcolor=[rgb]{0.1,0.0,0.7}, %color for urls, \href
+            linkcolor=[rgb]{0.,0.2,0.8}, %color for pdf refs (toc, section, ...)
+            citecolor=[rgb]{0.,0.2,0.8} %color for cites
+						%urlbordercolor={0 1 0}, %does not work
+						%pdfborder = {0 0 0.5 [3 3]}, %does not work
+						%linkbordercolor = {1 0 0} %does not work
+						}
+\newcommand{\exuUrl}[2]{\href{#1}{\underline{#2}}} %\exuUrl{github.com}{link to github}
+\newcommand{\refSection}[1]{\hyperref[#1]{\underline{Section \ref*{#1}}}} %see \refSection{sec_label}
+
 \usepackage{enumitem} %for adjustable indentation in itemize (leftmargin=...)
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %configurations subscripts
@@ -110,7 +123,8 @@ TimeIntegrationSolve,__init__},          % Custom highlighting
 emphstyle=\ttb\color{deepred},    % Custom highlighting style
 stringstyle=\color{deepgreen},
 commentstyle=\color{commentgreen},
-frame=tb,                         % Any extra options here
+frame=none,                         % horizontal line top and bottom
+%frame=tb,                         % horizontal line top and bottom
 showstringspaces=false,           % 
 %numbers=left,										 %show line numbers
 breaklines=true,									 %automatically breaks lines
@@ -151,7 +165,28 @@ numberstyle=\ttm    						% line number style
 
 \newcommand{\tabnewline}{\newline}
 
-%+++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%add numbering for \mysubsubsubsections
+%\renewcommand*{\thesubsection}{\thesection.\arabic{subsection}}
+%\renewcommand*{\thesubsubsection}{\thesection.\thesubsection.\roman{subsubsection}}
+\setcounter{secnumdepth}{3} %enable numbering for \mysubsubsubsection
+
+%make user function descriptions look unique:
+\newcommand{\userFunction}[1]{
+    \par\noindent\rule{\textwidth}{0.4pt}
+    \paragraph{\textcolor{steelblue}{\bf Userfunction}: \texttt{#1} \vspace{6pt}\\}
+}
+
+\newcommand{\userFunctionExample}[1]{
+    \par\noindent\rule{\textwidth}{0.4pt}
+    \paragraph{\textcolor{steelblue}{\bf User function example:}} \phantom{X} %add invisible character to enable paragraph
+		}
+		
+\newcommand{\returnValue}{\textcolor{steelblue}{\bf \texttt{return value}}}
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{document}
 \pagenumbering{roman} 
 \setcounter{page}{0}
@@ -189,6 +224,7 @@ Johannes Gerstmayr\vspace{2cm}
 
 %add additional entry for bookmarks in pdfs
 \clearpage\phantomsection\pdfbookmark{\contentsname}{toc} 
+%\setcounter{tocdepth}{3} %to add \mysubsubsubsection names
 \tableofcontents
 
 %%++++++++++++++++++++++++++++++++++++++++++++++
@@ -210,7 +246,7 @@ Johannes Gerstmayr\vspace{2cm}
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-\mysection{Python-C++ command interface} \label{sec_PCpp_command_interface}
+\mysection{Python-C++ command interface} \label{sec:PCpp:command:interface}
 This section lists the basic interface functions which can be used to set up a \codeName\ model in Python.
 
 To import the module, just include the \codeName\ module in Python (for compatibility with examples and other users, we recommend to use the 'exu' abbreviation throughout)\footnote{note that there is a second module, called exudynFast, which does deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases). To check which version you have, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}:
@@ -221,10 +257,14 @@ In addition, you may work with a convenient interface for your items, therefore 
 \bi
   \item[] \texttt{from exudyn.itemInterface import *}
 \ei
-The exudyn module will usually hold one SystemContainer, which is a class that is initialized by assigning a system container to a variable, usually denoted as 'SC':
+Everything you work with is provided by the class \texttt{SystemContainer}, except for some very basic system functionality (which is inside the \codeName\ module).
+
+You can create a new \texttt{SystemContainer}, which is a class that is initialized by assigning a system container to a variable, usually denoted as 'SC':
 \bi
   \item[] \texttt{SC = exu.SystemContainer()}
 \ei
+Note that creating a second \texttt{exu.SystemContainer()} will be independent of \texttt{SC} and therefore usually makes no sense.
+
 Furthermore, there are a couple of commands available directly in the \codeName\ module, given in the following subsections.
 Regarding the {\bf (basic) module access}, functions are related to the '\texttt{exudyn = exu}' module, see these examples:
 \begin{lstlisting}[language=Python, firstnumber=14]
@@ -247,13 +287,14 @@ Understanding the usage of functions for python object '\texttt{SystemContainer}
   SC.Reset()
 \end{lstlisting} \vspace{12pt}
 %
+If you run a parameter variation (check \texttt{Examples/parameterVariationExample.py}), you may delete the created \texttt{MainSystem} \texttt{mbs} and the \texttt{SystemContainer} \texttt{SC} before creating new instances in order to avoid memory growth.
 
 Many functions will work with node numbers ('\texttt{NodeIndex}'), object numbers ('\texttt{ObjectIndex}'), marker numbers ('\texttt{MarkerIndex}') and others. These numbers are special objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.
 For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}. For these indices, the following rules apply:
 \bi
 	\item \texttt{mbs.Add[Node|Object|...](...)} returns a specific \texttt{NodeIndex}, \texttt{ObjectIndex}, ...
 	\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
-	\item You can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
+	\item You can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)} of \texttt{no.GetIndex()}
 	\item Still, you can use integers as initialization for item numbers, e.g., \\
 	      \texttt{mbs.AddObject(MassPoint(nodeNumber=13, ...))}\\
 				However, it must be a pure integer type.
@@ -264,30 +305,59 @@ For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}.
 \input{manual_interfaces}
 
 \mysection{Python utility functions}
-This chapter describes in every subsection the functions and classes of the utility modules. These modules help to create multibody systems with the EXUDYN core module. Functions are implemented in Python and can be easily changed, extended and also verified by the user. The are much slower than the functions available in the C++ core. Some matrix computations with larger matrices implemented in numpy and scipy, however, are parallelized and therefore very efficient.
+This chapter describes in every subsection the functions and classes of the utility modules. These modules help to create multibody systems with the EXUDYN core module. Functions are implemented in Python and can be easily changed, extended and also verified by the user. {\bf Check the source code} by entering these functions in Sypder and pressing {\bf CTRL + left mouse button}. These Python functions are much slower than the functions available in the C++ core. Some matrix computations with larger matrices implemented in numpy and scipy, however, are parallelized and therefore very efficient.
 
 Functions have been implemented, if not otherwise noted, by Johannes Gerstmayr.
 
 \input{pythonUtilitiesDescription}
 
 
-\mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec_item_reference_manual}
+\mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec:item:reference:manual}
 This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Notation for item equations}
+\mysubsection{Notation}
+\label{sec:itemnotation}
 %
-The following subscripts are used to define configurations of a quantity, e.g., $\xv$:
+\mysubsubsection{Common types in item descriptions}
+%
+There are certain types, which are heavily used in the description of items:
 \bi
-  \item $\xv\cConfig \ldots$ $\xv$ in any configuration
-  \item $\xv\cRef \ldots$ $\xv$ in reference configuration, e.g., reference coordinates: $\cv\cRef$
-  \item $\xv\cIni \ldots$ $\xv$ in initial configuration, e.g., initial displacements: $\uv\cIni$
-  \item $\xv\cCur \ldots$ $\xv$ in current configuration
-  \item $\xv\cVis \ldots$ $\xv$ in visualization configuration
-  \item $\xv\cSOS \ldots$ $\xv$ in start of step configuration
+  \item \texttt{float} $\ldots$ a single-precision floating point number (note: in Python, '\texttt{float}' is used also for double precision numbers; in EXUDYN, internally floats are single precision numbers especially for graphics objects and OpenGL)
+  \item \texttt{Real} $\ldots$ a double-precision floating point number (note: in Python this is also of type '\texttt{float}')
+  \item \texttt{UReal} $\ldots$ same as \texttt{Real}, but may not be negative
+  \item \texttt{Index} $\ldots$ an integer number ('\texttt{int}' in Python)
+  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special number object to represent integer indices of nodes, markers, ...
+  \item \texttt{String} $\ldots$ a string
+  \item \texttt{ArrayIndex} $\ldots$ a list of integer numbers (either list or in some cases \texttt{numpy} arrays may be allowed)
+  \item \texttt{Bool} $\ldots$ a boolean parameter: either \texttt{True} or \texttt{False} ('\texttt{bool}' in Python)
+  \item \texttt{VObjectMassPoint} $\ldots$ represents the visualization object; 'V' is put in front of object name
+  \item \texttt{BodyGraphicsData} $\ldots$ see \refSection{sec:graphicsData}
+%	
+	\item \texttt{Vector2D} $\ldots$ a list or \texttt{numpy} array of 2 real numbers
+	\item \texttt{Vector3D} $\ldots$ a list or \texttt{numpy} array of 3 real numbers
+	\item \texttt{Vector'X'D} $\ldots$ a list or \texttt{numpy} array of 'X' real numbers
+	\item \texttt{Float4} $\ldots$ a list of 4 float numbers
+%
+	\item \texttt{Vector} $\ldots$ a list or \texttt{numpy} array of real numbers (length given by according object)
+	\item \texttt{NumpyVector} $\ldots$ a 1D \texttt{numpy} array with real numbers (size given by according object); similar as Vector, but not accepting list
+
+	\item \texttt{Matrix3D} $\ldots$ a list of lists or \texttt{numpy} array with $3 \times 3$ real numbers
+	\item \texttt{NumpyMatrix} $\ldots$ a 2D \texttt{numpy} array (matrix) with real numbers (size given by according object)
 \ei
-As written in the introduction, the coordinates can have the types:
+%
+\mysubsubsection{States and coordinate attributes}
+The following subscripts are used to define configurations of a quantity, e.g., for a vector of displacement coordinates $\qv$:
+\bi
+  \item $\qv\cConfig \ldots$ $\qv$ in any configuration
+  \item $\qv\cRef \ldots$ $\qv$ in reference configuration, e.g., reference coordinates: $\cv\cRef$
+  \item $\qv\cIni \ldots$ $\qv$ in initial configuration, e.g., initial displacements: $\uv\cIni$
+  \item $\qv\cCur \ldots$ $\qv$ in current configuration
+  \item $\qv\cVis \ldots$ $\qv$ in visualization configuration
+  \item $\qv\cSOS \ldots$ $\qv$ in start of step configuration
+\ei
+As written in the introduction, the coordinates are attributed to certain types of equations and therefore, the following attributes are used (usually as subscript, e.g., $\qv_{ODE2}$):
 \bi
   \item ODE2 $\ldots$ second order differential equations coordinates
   \item ODE1 $\ldots$ first order differential equations coordinates; CURRENTLY NOT AVAILABLE
@@ -299,8 +369,9 @@ The cross product or vector product '$\times$' is often replaced by the skew sym
 \be
   \av \times \bv = \tilde \av \, \bv = -\tilde \bv \, \av
 \ee
-
+%
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Symbols and abbreviations in equations}
 \noindent The following table contains the common notation: \vspace{-12pt}
 \begin{center}
   \footnotesize
@@ -381,9 +452,10 @@ in which $\LU{0,m0}{\Rot}$ is the transformation matrix of (the body or node of)
 \newpage
 
 \mysubsection{GraphicsData}
-Some items may include a 'graphicsData' dictionary structure. 
-GraphicsData dictionaries can be created with functions provided in the utilities module \texttt{exudynGraphicsDataUtilities.py}.
-GraphicsData contains a list of graphicsData items, i.e.\ graphicsData = [graphicsItem1, graphicsItem2, ...]. Every single graphicsItem may be defined as one of the following structures using a specific 'type':
+\label{sec:graphicsData}
+Some items may include a \texttt{GraphicsData} dictionary structure. 
+GraphicsData dictionaries can be created with functions provided in the utilities module \texttt{exudynGraphicsDataUtilities.py}, see \refSection{sec:graphicsDataUtilities}.
+\texttt{BodyGraphicsData} contains a list of \texttt{GraphicsData} items, i.e.\ bodyGraphicsData = [graphicsItem1, graphicsItem2, ...]. Every single graphicsItem may be defined as one of the following structures using a specific 'type':
 \begin{center}
   \footnotesize
   \begin{longtable}{| p{3cm} | p{2cm} | p{3cm} | p{7.5cm} |} 
@@ -535,7 +607,7 @@ the RHS term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is co
 This means, that during computation, terms which appear at the LHS of the object are transferred to the RHS of the system equation.
 This enables a simpler setup of equations for the solver.
 
-\mysection{Solver}
+\mysection{Solver}\label{sec:solver:equations}
 \input{solver}
 
 
