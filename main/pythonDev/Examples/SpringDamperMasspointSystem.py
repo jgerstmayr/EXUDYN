@@ -156,7 +156,7 @@ for i in range( len(stepSizeList) ):
         
         # body mass - used for garvitational load
         bodyMassMarkerDict = {"markerType": "BodyMass",
-                              "bodyNumber": nodeNumber,
+                              "bodyNumber": exu.ObjectIndex(nodeNumber), #nodeNumber=bodyNumber
                               "name": bodyMassMarkerName[i]}
         
         nodePositionMarkerDict = {"markerType": "NodePosition",

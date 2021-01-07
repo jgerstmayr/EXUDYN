@@ -19,6 +19,7 @@ from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.graphicsDataUtilities import *
 
+#exudynTestGlobals.useGraphics=False
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -40,7 +41,7 @@ v0 = -5*0 #initial car velocity in y-direction
 omega0Wheel = [v0/rWheel,0,0]                   #initial angular velocity around z-axis
 
 #v0 = [0,0,0]                                   #initial translational velocity
-print("v0Car=",v0)
+#print("v0Car=",v0)
 
 #++++++++++++++++++++++++++++++
 #car parameters:
@@ -167,21 +168,22 @@ for iWheel in range(nWheels):
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)
-    mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.AngularVelocityLocal))
+    if exudynTestGlobals.useGraphics:
+        mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.AngularVelocityLocal))
+    
+        mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.Position))
+    
+        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.Position))
+    
+        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForce'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.ForceLocal))
 
-    mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.Position))
-
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.Position))
-
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForce'+strNum+'.txt', 
-                               outputVariableType = exu.OutputVariableType.ForceLocal))
 
 
-
-def UFtorque(t, torque):
+def UFtorque(mbs, t, torque):
     if t < 4:
         return torque
     else:
@@ -190,47 +192,47 @@ def UFtorque(t, torque):
 mbs.AddLoad(Torque(markerNumber=markerWheels[0],loadVector=[-200,0,0], bodyFixed = True, loadVectorUserFunction=UFtorque))
 mbs.AddLoad(Torque(markerNumber=markerWheels[1],loadVector=[-200,0,0], bodyFixed = True, loadVectorUserFunction=UFtorque))
 
-#mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrailVel.txt', 
-#                           outputVariableType = exu.OutputVariableType.VelocityLocal))
-
 
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-tEnd = 40#1.2
-h=0.001 #no visual differences for step sizes smaller than 0.0005
+tEnd = 0.5 #40#1.2
+h=0.002 #no visual differences for step sizes smaller than 0.0005
+
+if exudynTestGlobals.useGraphics:
+    #tEnd = 40
+    exu.StartRenderer()
+    mbs.WaitForUserToContinue()
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = h*4
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5#0.5
-simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 
-simulationSettings.timeIntegration.newton.ignoreMaxDiscontinuousIterations = False #reduce step size for contact switching
-simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 0.1
+#simulationSettings.timeIntegration.newton.ignoreMaxDiscontinuousIterations = False #reduce step size for contact switching
+#simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 0.1
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
-exu.StartRenderer()
-mbs.WaitForUserToContinue()
+exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
-exu.SolveDynamic(mbs, simulationSettings)
+if exudynTestGlobals.useGraphics:
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() #safely close rendering window!
 
-SC.WaitForRenderEngineStopFlag()
-exu.StopRenderer() #safely close rendering window!
+c=mbs.GetNodeOutput(n0, variableType=exu.OutputVariableType.Coordinates)
+u=sum(c)
+exu.Print("carRollingDiscTest u=",u)
+
+exudynTestGlobals.testError = u - (-0.23940048717113419) #2020-12-18: -0.23940048717113419
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if True:
+if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
  
@@ -245,26 +247,26 @@ if True:
         #data = np.loadtxt('solution/rollingDiscAngVelLocal'+s+'.txt', comments='#', delimiter=',') 
         #plt.plot(data[:,0], data[:,1], symStr2[i],label='wheel ang vel'+s) 
     
-    data = np.loadtxt('solution/rollingDiscPos.txt', comments='#', delimiter=',') 
+    data = np.loadtxt('solution/rollingDiscPos0.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], data[:,1], 'r-',label='coin pos x') 
     #plt.plot(data[:,0], data[:,2], 'g-',label='coin pos y') 
     #plt.plot(data[:,0], data[:,3], 'b-',label='coin pos z') 
 
-    data = np.loadtxt('solution/rollingDiscCarVel.txt', comments='#', delimiter=',') 
+    data = np.loadtxt('solution/rollingDiscCarVel0.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], data[:,2], 'r-',label='car vel y') 
     plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'r-',label='car |vel|') 
 
-    data = np.loadtxt('solution/rollingDiscForce.txt', comments='#', delimiter=',') 
+    data = np.loadtxt('solution/rollingDiscForce0.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'k-',label='friction force') 
 
-    data = np.loadtxt('solution/rollingDiscAngVel.txt', comments='#', delimiter=',') 
+    data = np.loadtxt('solution/rollingDiscAngVel0.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], data[:,1], 'r-',label='ang vel x') 
 
     #data = np.loadtxt('solution/rollingDiscAngVelLocal.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], data[:,1], 'k-',label='ang vel local x') #x/y coordinates of trail
 
     if False:
-        data = np.loadtxt('solution/rollingDiscTrail.txt', comments='#', delimiter=',') 
+        data = np.loadtxt('solution/rollingDiscTrail0.txt', comments='#', delimiter=',') 
         nData = len(data)
         vVec = np.zeros((nData,2))
         dt = data[1,0]-data[0,0]

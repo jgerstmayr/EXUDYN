@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-09  16:28:57 (last modfied)
+* @date         2021-01-05  01:41:05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,14 +120,20 @@ public: // AUTO:
         EPyUtils::SetNumpyMatrixSafely(d, "stiffnessMatrix", cObjectGenericODE2->GetParameters().stiffnessMatrix); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetNumpyMatrixSafely(d, "dampingMatrix", cObjectGenericODE2->GetParameters().dampingMatrix); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetNumpyVectorSafely(d, "forceVector", cObjectGenericODE2->GetParameters().forceVector); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "forceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["forceUserFunction"])) { cObjectGenericODE2->GetParameters().forceUserFunction = py::cast<std::function<StdVector(Real, StdVector,StdVector)>>((py::function)d["forceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
-        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { if (EPyUtils::CheckForValidFunction(d["massMatrixUserFunction"])) { cObjectGenericODE2->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(Real, StdVector,StdVector)>>((py::function)d["massMatrixUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
+        if (EPyUtils::DictItemExists(d, "forceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["forceUserFunction"])) 
+            { cObjectGenericODE2->GetParameters().forceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>>((py::function)d["forceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            else {cObjectGenericODE2->GetParameters().forceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { if (EPyUtils::CheckForValidFunction(d["massMatrixUserFunction"])) 
+            { cObjectGenericODE2->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>>((py::function)d["massMatrixUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            else {cObjectGenericODE2->GetParameters().massMatrixUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectGenericODE2->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectGenericODE2->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::SetNumpyMatrixISafely(d, "VtriangleMesh", visualizationObjectGenericODE2->GetTriangleMesh()); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowNodes")) { visualizationObjectGenericODE2->GetShowNodes() = py::cast<bool>(d["VshowNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { if (EPyUtils::CheckForValidFunction(d["VgraphicsDataUserFunction"])) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
+        if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { if (EPyUtils::CheckForValidFunction(d["VgraphicsDataUserFunction"])) 
+            { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            else {visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -142,12 +148,12 @@ public: // AUTO:
         d["dampingMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().dampingMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["forceVector"] = EPyUtils::Vector2NumPy(cObjectGenericODE2->GetParameters().forceVector); //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectGenericODE2->GetParameters().forceUserFunction)
-            {d["forceUserFunction"] = (std::function<StdVector(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction;}
+            {d["forceUserFunction"] = (std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction;}
         else
             {d["forceUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectGenericODE2->GetParameters().massMatrixUserFunction)
-            {d["massMatrixUserFunction"] = (std::function<NumpyMatrix(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction;}
+            {d["massMatrixUserFunction"] = (std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction;}
         else
             {d["massMatrixUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -174,8 +180,8 @@ public: // AUTO:
         else if (parameterName.compare("stiffnessMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().stiffnessMatrix);} //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE2->GetParameters().dampingMatrix);} //! AUTO: get parameter
         else if (parameterName.compare("forceVector") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE2->GetParameters().forceVector);} //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { return py::cast((std::function<StdVector(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { return py::cast((std::function<NumpyMatrix(Real, StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { return py::cast((std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectGenericODE2->GetParameters().coordinateIndexPerNode);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericODE2->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectGenericODE2->GetColor());} //! AUTO: get parameter
@@ -196,13 +202,16 @@ public: // AUTO:
         else if (parameterName.compare("stiffnessMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE2->GetParameters().stiffnessMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE2->GetParameters().dampingMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("forceVector") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectGenericODE2->GetParameters().forceVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { cObjectGenericODE2->GetParameters().forceUserFunction = py::cast<std::function<StdVector(Real, StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectGenericODE2->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(Real, StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectGenericODE2->GetParameters().forceUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectGenericODE2->GetParameters().massMatrixUserFunction = py::cast<std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectGenericODE2->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectGenericODE2->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::SetNumpyMatrixISafely(value, visualizationObjectGenericODE2->GetTriangleMesh()); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { visualizationObjectGenericODE2->GetShowNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { if (py::isinstance<py::function>(value)) {visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE2::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

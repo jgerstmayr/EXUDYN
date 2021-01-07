@@ -17,6 +17,7 @@ typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':
              'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
              'Float9': 'std::array<float,9>', 'Float16': 'std::array<float,16>', #e.g. for OpenGL rotation matrix and homogenous transformation
              'Index2': 'std::array<Index,2>', 'Index3': 'std::array<Index,3>', 'Index4': 'std::array<Index,4>', 
+             'KeyPressUserFunction': 'std::function<void(int, int, int)>',
              } #convert parameter types to C++/DYNALFEX types
 
 #conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
@@ -283,7 +284,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 s+='Get' + functionStr + '() { return ' + paramStr + '; }\n'
 
             typeCastStr = TypeConversion(parameter['type'], typeCasts)
-            if ((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and typeCastStr.find('std::ofstream') == -1) or (parameter['lineType'].find('L') == -1  and parameter['cplusplusName'].find('.') != -1): #then it must get a set/get function!
+            #delete: if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1 or (parameter['type'].find('KeyPressUserFunction') != -1)) and typeCastStr.find('std::ofstream') == -1) or 
+            if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and typeCastStr.find('std::ofstream') == -1) or 
+                (parameter['lineType'].find('L') == -1  and parameter['cplusplusName'].find('.') != -1)): #then it must get a set/get function!
                 accessWritten = True
                 castStr = '(' + typeCastStr + ')'
                 linkedClassStr = ''
@@ -293,6 +296,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 s+='  //! AUTO: Set function (needed in pybind) for: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 s+='  void '
                 s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + linkedClassStr + paramStr + ' = ' + paramStrPure + 'Init; }\n'
+                # if parameter['type'].find('KeyPressUserFunction') != -1:
+                #     do special tasks:
+                    # .def_property("keyPressUserFunction", &VSettingsWindow::PyGetKeyPressUserFunction, 
+                    #    py::object& object) { VSettingsWindow::PySetKeyPressUserFunction(object); })
+                    # #include <pybind11/pybind11.h>
+                    # namespace py = pybind11;
+                    #class py::object;
+                    #void PySetKeyPressUserFunction(const py::object& keyPressUserFunctionInit);
+            		# .def_property("keyPressUserFunction", &VSettingsWindow::PyGetKeyPressUserFunction,
+            		# 	&[](const py::object& object) { VSettingsWindow::PySetKeyPressUserFunction(object); })
+
 
                 s+='  //! AUTO: Read (Copy) access to: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 s+='  '+typeCastStr + ' '
@@ -343,18 +357,19 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     descrStr = parameter['parameterDescription'].replace("\\","\\\\").replace('$','')
                     typeCastStr = TypeConversion(parameter['type'], typeCasts)
                     
-                    #get functions:
-                    sDictGet += '    d = py::dict(); //reset local dict\n'
-                    sDictGet += '    d["itemIdentifier"] = std::string(""); //identifier for item\n'
-                    sDictGet += '    d["value"] = data.' + cValueStr + ';\n'
-                    sDictGet += '    d["type"] = "' + pType + '";\n'
-                    sDictGet += '    d["size"] = std::vector<int>' + pSize + ';\n' #only used for vectors (e.g. '3') and matrices (e.g. '3x3')
-                    sDictGet += '    d["description"] = "' + descrStr + '";\n'
-                    sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = d;\n' #keyName used to identify the object
-                    sDictGet += '\n'
-                    
-                    #set functions:
-                    sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
+                    if parameter['type'] != 'KeyPressUserFunction': #this would not work for editing dictionary
+                        #get functions:
+                        sDictGet += '    d = py::dict(); //reset local dict\n'
+                        sDictGet += '    d["itemIdentifier"] = std::string(""); //identifier for item\n'
+                        sDictGet += '    d["value"] = data.' + cValueStr + ';\n'
+                        sDictGet += '    d["type"] = "' + pType + '";\n'
+                        sDictGet += '    d["size"] = std::vector<int>' + pSize + ';\n' #only used for vectors (e.g. '3') and matrices (e.g. '3x3')
+                        sDictGet += '    d["description"] = "' + descrStr + '";\n'
+                        sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = d;\n' #keyName used to identify the object
+                        sDictGet += '\n'
+                        
+                        #set functions:
+                        sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     
@@ -409,7 +424,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         
     #output each parameter
     for parameter in parameterList:
-        if (parameter['lineType'].find('V') != -1) and (parameter['lineType'].find('L') == -1) and (parameter['type']!='TemporaryComputationData') and (parameter['type'].find('std::ofstream')==-1) and (parameter['type'].find('userFunction')==-1): #only if it is a member variable; some types not printable
+        if (parameter['lineType'].find('V') != -1) and (parameter['lineType'].find('L') == -1) and (parameter['type']!='TemporaryComputationData') and (parameter['type'].find('std::ofstream')==-1) and (parameter['type'].find('userFunction')==-1) and (parameter['type'].find('UserFunction')==-1): #only if it is a member variable; some types not printable
             paramStr = parameter['cplusplusName']
             typeStr = TypeConversion(parameter['type'], typeConversion)
             refChar = ''
@@ -468,7 +483,9 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
             if (len(parseInfo['linkedClass']) != 0):
                 linkedClassStr = parseInfo['linkedClass'] + '.'
 
-            if (typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
+            if ((typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and 
+            (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1)): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
+            #and (parameter['type'].find('KeyPressUserFunction') == -1)): 
                 s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName'] + ')\n' #extend this to incorporate 'read only' and other flags
             else:
                 #access with setter/getter functions and conversions to std::vector
@@ -576,7 +593,8 @@ try: #still close file if crashes
     typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 'Vector':'Vector', 
                       'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
-                      'String':'std::string', 'FileName':'std::string'} #convert parameter types to C++/DYNALFEX types
+                      'String':'std::string', 'FileName':'std::string',
+                      'KeyPressUserFunction': 'std::function<void(int, int, int)>'} #convert parameter types to C++/EXUDYN types
 
     parseInfo = {'class':'',            # C++ class name
                  'writeFile':'',        #filename (e.g. SensorData.h)

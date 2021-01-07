@@ -8,7 +8,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 
@@ -165,7 +165,7 @@ void VisualizationNodePoint::UpdateGraphics(const VisualizationSettings& visuali
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 
 	//add contour plot values to color:
@@ -205,7 +205,7 @@ void VisualizationNodePointGround::UpdateGraphics(const VisualizationSettings& v
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 
@@ -241,7 +241,7 @@ void VisualizationNodePoint2D::UpdateGraphics(const VisualizationSettings& visua
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 
@@ -275,7 +275,7 @@ void VisualizationNodeRigidBodyEP::UpdateGraphics(const VisualizationSettings& v
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
@@ -321,7 +321,7 @@ void VisualizationNodeRigidBodyRxyz::UpdateGraphics(const VisualizationSettings&
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
@@ -367,7 +367,7 @@ void VisualizationNodeRigidBodyRotVecLG::UpdateGraphics(const VisualizationSetti
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
@@ -413,7 +413,7 @@ void VisualizationNodeRigidBody2D::UpdateGraphics(const VisualizationSettings& v
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
@@ -456,7 +456,7 @@ void VisualizationNodePoint2DSlope1::UpdateGraphics(const VisualizationSettings&
 
 	float radius = 0.5f*drawSize; //drawSize represents diameter/cube edge length
 	if (drawSize == -1.f) { radius = 0.5f*visualizationSettings.nodes.defaultSize; } //use default size
-	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+	if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
@@ -611,7 +611,7 @@ void VisualizationObjectRigidBody2D::UpdateGraphics(const VisualizationSettings&
 //	{
 //		//node size only defined globally
 //		float radius = 0.5f*visualizationSettings.nodes.defaultSize;
-//		if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+//		if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 //
 //		Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 //		Vector3D nodePos;
@@ -732,7 +732,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 	{
 		//node size only defined globally
 		float radius = 0.5f*visualizationSettings.nodes.defaultSize;
-		if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->rendererState.maxSceneSize * 0.002f; }
+		if (visualizationSettings.nodes.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; } //{ radius = 0.5f*vSystem->renderState.maxSceneSize * 0.002f; }
 
 		//Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 		Vector3D nodePos;
@@ -1991,7 +1991,7 @@ void VisualizationSensorObject::UpdateGraphics(const VisualizationSettings& visu
 			cMarker0.GetPosition(*(vSystem->systemData), pos0, ConfigurationType::Visualization);
 			cMarker1.GetPosition(*(vSystem->systemData), pos1, ConfigurationType::Visualization);
 
-			Vector3D pos = pos0 + pos1;
+			Vector3D pos = 0.5*(pos0 + pos1);
 			EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
 			if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, "S", currentColor); }
 		}

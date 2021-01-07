@@ -21,6 +21,9 @@ import numpy as np #for postprocessing
 import os
 from time import sleep
 
+#additional trial for version using FFT, which does not improve convergence for this example!
+useFFTfitness = False #use fft of signal for computation of fitness
+
 #this is the function which is repeatedly called from ParameterVariation
 #parameterSet contains dictinary with varied parameters
 def ParameterFunction(parameterSet):
@@ -30,7 +33,7 @@ def ParameterFunction(parameterSet):
     #default values
     mass = 1.6          #mass in kg
     spring = 4000       #stiffness of spring-damper in N/m
-    damper = 8          #damping constant in N/(m/s)
+    damper = 8    #old: 8; damping constant in N/(m/s)
     u0=-0.08            #initial displacement
     v0=1                #initial velocity
     force =80               #force applied to mass
@@ -49,6 +52,9 @@ def ParameterFunction(parameterSet):
     if 'computationIndex' in parameterSet:
         iCalc = str(parameterSet['computationIndex'])
         #print("computation index=",iCalc, flush=True)
+    # else:
+    #     print("***********************\nfailed: computationIndex\n***********************\n")
+
 
     #mass-spring-damper system
     L=0.5               #spring length (for drawing)
@@ -120,26 +126,78 @@ def ParameterFunction(parameterSet):
     #reference solution:
     dataRef = np.loadtxt('solution/paramVarDisplacementRef.txt', comments='#', delimiter=',')
     data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
-    diff = data[:,1]-dataRef[:,1]
-    
-    errorNorm = np.sqrt(np.dot(diff,diff))/steps*tEnd
-    
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #draw solution (not during optimization!):
-    if False:
-        from matplotlib import plt
-        
-        plt.close('all')
-        plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m)')
-                
-        ax=plt.gca() # get current axes
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        plt.legend() #show labels as legend
-        plt.tight_layout()
-        plt.show() 
 
+    # s = 50 #shift, for testing what happens if signal has phase-shift
+    # dataRef[0:-s] = dataRef[s:]
+    
+    if not useFFTfitness:
+        diff = data[:,1]-dataRef[:,1]
+        
+        errorNorm = np.sqrt(np.dot(diff,diff))/steps*tEnd
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #draw solution (not during optimization!):
+        if False:
+            import matplotlib.pyplot as plt
+            from matplotlib import ticker
+            
+            #plt.close('all')
+            plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m)')
+                    
+            ax=plt.gca() # get current axes
+            ax.grid(True, 'major', 'both')
+            ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+            ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+            plt.legend() #show labels as legend
+            plt.tight_layout()
+            plt.show() 
+
+    else:
+        from exudyn.signal import ComputeFFT
+
+        tvec = data[:,0]
+        uvec = data[:,1]
+        tvecRef = dataRef[:,0]
+        uvecRef = dataRef[:,1]
+        [freq, mag, phase] = ComputeFFT(tvec, uvec)
+        [freqRef, magRef, phaseRef] = ComputeFFT(tvecRef, uvecRef)
+        
+        diff = mag-magRef
+        #diff = np.log(abs(mag)) - np.log(abs(magRef)) #does not improve convergence
+        nMag = len(mag)
+        fRange = freq[-1]-freq[0] #use frequency range for better reference value
+        
+        # avrgLength  = 51
+        # def runningMeanFast(x, N):
+        #     return np.convolve(x, np.ones((N,))/N)[(N-1):]
+
+        # mag = runningMeanFast(mag, avrgLength)
+        # magRef = runningMeanFast(magRef, avrgLength)
+
+        errorNorm = np.sqrt(np.dot(diff,diff))/nMag*fRange 
+        # sumV = 0
+        # p = 2 #higher coefficient has no effect
+        # for v in diff:
+        #     sumV += v**p
+        
+        # errorNorm = (sumV**(1/p))/nMag*fRange  #higher weight to peaks
+
+        # #convolution does not work well:
+        # sumV = 0
+        # for i in range(20,len(mag)-5):
+        #     #sumV += -mag[i]*magRef[i]
+        #     sumV += -np.log(abs(mag[i])) * np.log(abs(magRef[i]))
+        
+        # errorNorm = sumV/nMag*fRange  #higher weight to peaks
+        
+    
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #draw solution (not during optimization!):
+        if False:
+            from exudyn.plot import PlotFFT
+            
+            PlotFFT(freq, mag, label = 'freq')#, logScaleY=False)
+            PlotFFT(freqRef, magRef, label = 'freqRef')#, logScaleY=False)
+            
     if True: #delete files; does not work for parallel, consecutive operation
         if iCalc != 'Ref':
             os.remove(sensorFileName) #remove files in order to clean up
@@ -158,49 +216,58 @@ if __name__ == '__main__': #include this to enable parallel processing
 
     refval = ParameterFunction({}) # compute reference solution
     print("refval =", refval)
+    #val2 = ParameterFunction({'mass':1.6, 'spring':4000, 'force':80, 'computationIndex':0}) # compute reference solution
+    #val2 = ParameterFunction({'mass': 1.0018195727935817, 'spring': 3066.4507829396744, 'force': 59.226672433534354}, 'computationIndex':1}) # compute reference solution
+    #val2 = ParameterFunction({'mass': 1.0018195727935817, 'spring': 3066.4507829396744, 'force': 59.226672433534354, 'computationIndex':1}) # compute reference solution
     
-    start_time = time.time()
-    [pOpt, vOpt, pList, values] = GeneticOptimization(objectiveFunction = ParameterFunction, 
-                                         parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,1000)}, #parameters provide search range
-                                         numberOfGenerations = 20,
-                                         initialPopulationSize = 100,
-                                         rangeReductionFactor = 0.7,
-                                         numberOfChildren = 8,
-                                         addComputationIndex=True,
-                                         randomizerInitialization=0, #for reproducible results
-                                         distanceFactor = 0., #for this example only one significant minimum
-                                         debugMode=False,
-                                         useMultiProcessing=True,
-                                         showProgress=True,
-                                         )
-    print("--- %s seconds ---" % (time.time() - start_time))
-
-    print("optimum parameters=", pOpt)
-    print("minimum value=", vOpt)
-
-    from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
-    import matplotlib.pyplot as plt
-    #from matplotlib import cm
-    #from matplotlib.ticker import LinearLocator, FormatStrFormatter
-    import numpy as np
-    colorMap = plt.cm.get_cmap('jet') #finite element colors
+    if True:
+        start_time = time.time()
+        [pOpt, vOpt, pList, values] = GeneticOptimization(objectiveFunction = ParameterFunction, 
+                                             parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,1000)}, #parameters provide search range
+                                             numberOfGenerations = 20,
+                                             populationSize = 100,
+                                             elitistRatio = 0.1,
+                                             crossoverProbability = 0.1*0,
+                                             rangeReductionFactor = 0.7,
+                                             addComputationIndex=True,
+                                             randomizerInitialization=1, #for reproducible results
+                                             distanceFactor = 0.1, #for this example only one significant minimum
+                                             debugMode=False,
+                                             useMultiProcessing=True,
+                                             showProgress=True,
+                                             )
+        print("--- %s seconds ---" % (time.time() - start_time))
     
-    plt.close('all')
-    [figList, axList] = PlotOptimizationResults2D(pList, values, yLogScale=True)
+        print("optimum parameters=", pOpt)
+        print("minimum value=", vOpt)
     
-    #add 3D visualization of searched parameters
-    if False:
-        fig = plt.figure()
-        ax = fig.gca(projection='3d') #not compatible with log scale!
+        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+        import matplotlib.pyplot as plt
+        #from matplotlib import cm
+        #from matplotlib.ticker import LinearLocator, FormatStrFormatter
+        import numpy as np
+        colorMap = plt.cm.get_cmap('jet') #finite element colors
         
-        #plt.scatter(pDict['mass'], pDict['spring'], values, c='b', marker='o')
-        #ps = ax.scatter(pList['mass'], pList['spring'], pList['force'], c=values, marker='o', cmap = colorMap)
-        ps = ax.scatter(pList['mass'], pList['spring'], pList['force'], c=np.log(values), marker='o', cmap = colorMap)
-
-        ax.set_xlabel('mass')
-        ax.set_ylabel('spring')
-        ax.set_zlabel('force')
-
-        plt.colorbar(ps)
-        plt.tight_layout()
-        plt.show()
+        #for negative values:
+        if min(values) <= 0:
+            values = np.array(values)-min(values)*1.001+1e-10
+            
+        plt.close('all')
+        [figList, axList] = PlotOptimizationResults2D(pList, values, yLogScale=True)
+        
+        #add 3D visualization of searched parameters
+        if False:
+            fig = plt.figure()
+            ax = fig.gca(projection='3d') #not compatible with log scale!
+            
+            #plt.scatter(pDict['mass'], pDict['spring'], values, c='b', marker='o')
+            #ps = ax.scatter(pList['mass'], pList['spring'], pList['force'], c=values, marker='o', cmap = colorMap)
+            ps = ax.scatter(pList['mass'], pList['spring'], pList['force'], c=np.log(values), marker='o', cmap = colorMap)
+    
+            ax.set_xlabel('mass')
+            ax.set_ylabel('spring')
+            ax.set_zlabel('force')
+    
+            plt.colorbar(ps)
+            plt.tight_layout()
+            plt.show()

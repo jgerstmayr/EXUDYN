@@ -7,7 +7,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 
@@ -28,11 +28,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 			Real offset = parameters.offset;
 			if (parameters.offsetUserFunction)
 			{
-				//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-				UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-				{
-					offset = parameters.offsetUserFunction(t, parameters.offset);
-				}, "ObjectConnectorCoordinate::offsetUserFunction");
+				EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t);
 			}
 
 
@@ -49,10 +45,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 			if (parameters.offsetUserFunction_t)
 			{
 				Real offset=0;
-				UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-				{
-					offset = parameters.offsetUserFunction_t(t, parameters.offset);
-				}, "ObjectConnectorCoordinate::offsetUserFunction_t");
+				EvaluateUserFunctionOffset_t(offset, cSystemData->GetMainSystemBacklink(), t);
 				algebraicEquations[0] -= offset;
 			}
 			else if (parameters.velocityLevel) { algebraicEquations[0] -= parameters.offset; }

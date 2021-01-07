@@ -92,7 +92,7 @@ if useSparseG:
     from scipy.sparse import csr_matrix
     G=csr_matrix(G) #convert to sparse matrix
 
-def UFforce(t, q, q_t):
+def UFforce(mbs, t, q, q_t):
     #print("UFforce")
     omega = 2.*np.pi*FrequencySweep(t, t1, f0,f1)
     fact = omega/omega1

@@ -79,9 +79,17 @@ dateStr = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now
 #date and time of exudyn library:
 import os #for retrieving file information
 from datetime import datetime #datetime contains .fromtimestamp(...)
-fileInfo=os.stat(workingReleasePath+'\\exudyn\\exudynCPP.pyd')
-exuDate = datetime.fromtimestamp(fileInfo.st_mtime) #mtime=modified time; ctime=created time, but contains time of first creation (2019...)
+import exudyn.exudynCPP as exuCPP #this is the cpp file, 
+
+exu.Print("exudyn path=",exuCPP.__file__)
+fileInfo=os.stat(exuCPP.__file__)
+exuDate = datetime.fromtimestamp(fileInfo.st_mtime) 
 exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
+
+#previous, with WorkingRelease:
+# fileInfo=os.stat(workingReleasePath+'\\exudyn\\exudynCPP.pyd')
+# exuDate = datetime.fromtimestamp(fileInfo.st_mtime) #mtime=modified time; ctime=created time, but contains time of first creation (2019...)
+# exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -116,31 +124,39 @@ testFileList = [
                 'ANCFcontactFrictionTest.py',
                 'ANCFmovingRigidBodyTest.py',
                 'ACNFslidingAndALEjointTest.py',
+                'carRollingDiscTest.py',
+                'compareAbaqusAnsysRotorEigenfrequencies.py',
+                'compareFullModifiedNewton.py',
+                'computeODE2EigenvaluesTest.py',
+                'driveTrainTest.py',
                 'explicitLieGroupIntegratorTest.py',
                 'fourBarMechanismTest.py', 
                 'genericJointUserFunctionTest.py',
                 'genericODE2test.py',
+                'geneticOptimizationTest.py',
                 'heavyTop.py',
                 'manualExplicitIntegrator.py',
+                'mecanumWheelRollingDiscTest.py',
+                'objectFFRFreducedOrderAccelerations.py',
+                'objectFFRFreducedOrderTest.py',
+                'objectFFRFTest.py',
+                'objectFFRFTest2.py',
+                'objectGenericODE2Test.py',
                 'PARTS_ATEs_moving.py',
                 'pendulumFriction.py',
                 'rigidBodyCOMtest.py',
+                'rollingCoinTest.py',
+                'rollingCoinPenaltyTest.py',
                 'scissorPrismaticRevolute2D.py',
+                'serialRobotTest.py',
                 'sliderCrank3Dbenchmark.py',
                 'sliderCrankFloatingTest.py',
                 'sparseMatrixSpringDamperTest.py',
                 'sphericalJointTest.py',
                 'springDamperUserFunctionTest.py',
-                'objectGenericODE2Test.py',
-                'serialRobotTest.py',
-                'objectFFRFreducedOrderTest.py',
-                'objectFFRFTest.py',
-                'objectFFRFTest2.py',
-                'compareAbaqusAnsysRotorEigenfrequencies.py',
-                'driveTrainTest.py',
-                'rollingCoinTest.py',
-                'rollingCoinPenaltyTest.py',
-                'mecanumWheelRollingDiscTest.py',
+                'stiffFlyballGovernor.py',
+                'superElementRigidJointTest.py',
+                'connectorRigidBodySpringDamperTest.py',
                 ]
 
 
@@ -241,6 +257,7 @@ exu.Print('time elapsed =',round(timeStart,3),'seconds')
 #10+21+8tests: 2020-05-17: 9.949 seconds on i9
 #10+28+12tests: 2020-05-17: 15.667 seconds on i9
 #10+29+12tests: 2020-09-10: 17.001 seconds on Surface Pro
+#10+36+13tests: 2021-01-04: 23.54 seconds on i9
 
 if rv == True:
     exu.Print('ALL UNIT TESTS SUCCESSFUL')

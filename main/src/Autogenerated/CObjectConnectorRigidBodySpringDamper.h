@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-10  16:56:16 (last modfied)
+* @date         2021-01-07  10:18:37 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,8 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+#include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorRigidBodySpringDamperParameters
 class CObjectConnectorRigidBodySpringDamperParameters // AUTO: 
@@ -34,6 +36,7 @@ public: // AUTO:
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
     Vector6D offset;                              //!< AUTO: translational and rotational offset considered in the spring force calculation
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
+    std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> springForceTorqueUserFunction;//!< AUTO: A python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorRigidBodySpringDamperParameters()
     {
@@ -44,6 +47,7 @@ public: // AUTO:
         rotationMarker1 = EXUmath::unitMatrix3D;
         offset = Vector6D({0.,0.,0.,0.,0.,0.});
         activeConnector = true;
+        springForceTorqueUserFunction = 0;
     };
 };
 
@@ -120,6 +124,12 @@ public: // AUTO:
     {
         return parameters.activeConnector;
     }
+
+    //! AUTO:  compute spring damper force-torque helper function
+    void ComputeSpringForceTorque(const MarkerDataStructure& markerData, Matrix3D& A0all, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionForce(Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Vector6D& uLoc6D, Vector6D& vLoc6D) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

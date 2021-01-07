@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  14:51:06 (last modfied)
+* @date         2021-01-05  12:43:42 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorCoordinateParameters
 class CObjectConnectorCoordinateParameters // AUTO: 
@@ -32,8 +33,8 @@ public: // AUTO:
     Real offset;                                  //!< AUTO: An offset between the two values
     Real factorValue1;                            //!< AUTO: An additional factor multiplied with value1 used in algebraic equation
     bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored
-    std::function<Real(Real,Real)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent offset; see description below
-    std::function<Real(Real,Real)> offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for velocity level constraints; see description below
+    std::function<Real(const MainSystem&,Real,Real)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent offset; see description below
+    std::function<Real(const MainSystem&,Real,Real)> offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for velocity level constraints; see description below
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateParameters()
@@ -142,6 +143,12 @@ public: // AUTO:
     {
         return parameters.activeConnector;
     }
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionOffset(Real& offset, const MainSystemBase& mainSystem, Real t) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionOffset_t(Real& offset, const MainSystemBase& mainSystem, Real t) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

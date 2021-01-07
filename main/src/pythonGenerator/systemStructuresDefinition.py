@@ -52,10 +52,10 @@ V,  exportVelocities,			     ,    , bool, 						   true,  		,      P     , "solu
 V,  exportAccelerations,			,  	, bool, 						true,  		,      P     , "solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]"
 V,  exportAlgebraicCoordinates,	,    , bool, 						   true,  		,      P     , "solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]"
 V,  exportDataCoordinates,	     ,    , bool, 						   true,  		,      P     , "solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates"
-V,  coordinatesSolutionFileName,, 	  , FileName,                "coordinatesSolution.txt", ,P		, "filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist"
+V,  coordinatesSolutionFileName,, 	  , FileName,                "coordinatesSolution.txt", ,P		, "filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only"
 #
-V,  solverInformationFileName,  , 	  , FileName,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist"
-V,  solutionInformation,	     ,    , String,                "",       ,      P	  , "special information added to header of solution file (e.g. parameters and settings, modes, ...)"
+V,  solverInformationFileName,  , 	  , FileName,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only"
+V,  solutionInformation,	     ,    , String,                "",       ,      P	  , "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)"
 V,  outputPrecision,            , 	  , Index,                 10,       ,       P		, "precision for floating point numbers written to solution and sensor files"
 V,  recordImagesInterval,       , 	  , Real,                  -1.,      ,       P    ,  "record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages"
 #
@@ -136,7 +136,8 @@ V,  minimumStepSize,	    ,  		, UReal, 		           1e-8,   ,  P, "lower limit o
 V,  verboseMode,	      ,  	  , Index, 			        0  ,    ,   P, "0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
 V,  verboseModeFile,	    ,  	  , Index, 			        0  ,    ,   P, "same behaviour as verboseMode, but outputs all solver information to file"
 V,  generalizedAlpha,    ,     , GeneralizedAlphaSettings,  ,   ,   PS, "parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)"
-V,  preStepPyExecute,		 , 	 	, String, 			        ""	, 		,   P, "DEPRECATED, use preStepFunction in simulation settings; Python code to be executed prior to every step and after last step, e.g. for postprocessing"
+V,  preStepPyExecute,		 , 	 	, String, 			        ""	, 		,   P, "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing"
+V,  simulateInRealtime,		       , 	     , bool,       false,   ,  P, "true: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues"
 #
 writeFile=SimulationSettings.h
 
@@ -161,7 +162,7 @@ V,  minimumStepSize,	      ,  		   ,      UReal, 					1e-8,    ,P		, "lower limi
 #
 V,  verboseMode,	           ,  		   ,      Index, 					1,       ,P		, "0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse"
 V,  verboseModeFile,	     ,  	        ,       Index, 			     0,       ,P, "same behaviour as verboseMode, but outputs all solver information to file"
-V,  preStepPyExecute,		   , 	 	     ,       String, 			     ""	, 		 ,P, "Python code to be executed prior to every load step and after last step, e.g. for postprocessing"
+V,  preStepPyExecute,		   , 	 	     ,       String, 			     ""	, 		 ,P, "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every load step and after last step, e.g. for postprocessing"
 #
 writeFile=SimulationSettings.h
 
@@ -234,11 +235,18 @@ classDescription = "General settings for visualization."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      graphicsUpdateInterval,         , 	             ,     float,        "0.1f",                 , P,      "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed"
 V,      autoFitScene,                   , 	             ,     bool,         true,                   , P,      "automatically fit scene within first second after StartRenderer()"
-V,      textSize,                       , 	             ,     float,        "12.f",                 , P,      "general text size if not overwritten"
+V,      textSize,                       , 	             ,     float,        "12.f",                 , P,      "general text size (font size) in pixels if not overwritten; if useWindowsMonitorScaleFactor=True, the the textSize is multplied with the windows monitor scaling factor for larger texts on on high resolution monitors; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)"
+V,      textColor,                      , 	             4,    Float4,       "Float4({0.f,0.f,0.f,1.0f})", , P, "general text color (default); used for system texts in render window"
+V,      useWindowsMonitorScaleFactor,   , 	             ,     bool,         true,                   , P,      "the windows monitor scaling is used for increased visibility of texts on high resolution monitors; based on GLFW glfwGetWindowContentScale"
+V,      useBitmapText,                  , 	             ,     bool,         true,                   , P,      "if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown"
 V,      minSceneSize,                   , 	             ,     float,        "0.1f",                 , P,      "minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO"
-V,      backgroundColor,                , 	             4,    Float4,       "Float4({1.f,1.f,1.f,1.f})", , P, "red, green, blue and alpha values for background of render window (white=[1,1,1,1]; black = [0,0,0,1])"
-V,      coordinateSystemSize,           , 	             ,     float,        "0.4f",                 , P,      "size of coordinate system relative to screen"
+V,      backgroundColor,                , 	             4,    Float4,       "Float4({1.0f,1.0f,1.0f,1.0f})", , P, "red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])"
+V,      backgroundColorBottom,          , 	             4,    Float4,       "Float4({0.8f,0.8f,1.0f,1.0f})", , P, "red, green, blue and alpha values for bottom background color in case that useGradientBackground = True"
+V,      useGradientBackground,          , 	             ,     bool,         false,                  , P,      "true = use vertical gradient for background; "
+V,      coordinateSystemSize,           , 	             ,     float,        "5.f",                  , P,      "size of coordinate system relative to font size"
 V,      drawCoordinateSystem,           , 	             ,     bool,         true,                   , P,      "false = no coordinate system shown"
+V,      drawWorldBasis,                 , 	             ,     bool,         false,                  , P,      "true = draw world basis coordinate system at (0,0,0)"
+V,      worldBasisSize,                 , 	             ,     float,        "1.0f",                 , P,      "size of world basis coordinate system"
 V,      showComputationInfo,            , 	             ,     bool,         true,                   , P,      "false = no info about computation (current time, solver, etc.) shown"
 V,      pointSize,                      , 	             ,     float,        "0.01f",                , P,      "global point size (absolute)"
 V,      circleTiling,                   , 	             ,     Index,        "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
@@ -254,7 +262,7 @@ writePybindIncludes = True
 classDescription = "Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      renderWindowSize,               , 	             2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
-V,      startupTimeout,                 , 	             ,     Index,        "5000",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
+V,      startupTimeout,                 , 	             ,     Index,        "2500",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
 V,      alwaysOnTop,                    , 	             ,     bool,         false,                  , P,      "true: OpenGL render window will be always on top of all other windows"
 V,      maximize,                       , 	             ,     bool,         false,                  , P,      "true: OpenGL render window will be maximized at startup"
 V,      showWindow,                     , 	             ,     bool,         true,                   , P,      "true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
@@ -262,13 +270,18 @@ V,      keypressRotationStep,           , 	             ,     float,        "5.f
 V,      mouseMoveRotationFactor,        , 	             ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
 V,      keypressTranslationStep,        , 	             ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
 V,      zoomStepFactor,                 , 	             ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
+#special settings:
+V,      keyPressUserFunction,           , 	             ,     KeyPressUserFunction,  0,  , P,   "add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: def f(key, action, mods): print('key=',key)\\; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
+V,      showMouseCoordinates,           , 	             ,     bool,         "false",                , P,      "true: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
+V,      ignoreKeys,                     , 	             ,     bool,         "false",                , P,      "true: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
+F,      ResetKeyPressUserFunction,      ,                ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
 #
 writeFile=VisualizationSettings.h
 
 class = VSettingsOpenGL
 appendToFile=True
 writePybindIncludes = True
-classDescription = "OpenGL settings for 2D and 2D rendering."
+classDescription = "OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality"
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      initialCenterPoint,             , 	             3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True"
 V,      initialZoom,                    , 	             ,     float,        "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
@@ -282,22 +295,37 @@ V,      lineSmooth,                     , 	             1,    bool,         true
 V,      textLineWidth,                  , 	             1,    float,        "1.f",                  , P,      "width of lines used for representation of text"
 V,      textLineSmooth,                 , 	             1,    bool,         false,                  , P,      "draw lines for representation of text smooth"
 V,      showFaces,                      , 	             1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
+V,      facesTransparent,               , 	             1,    bool,         false,                  , P,      "true: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
 V,      showFaceEdges,                  , 	             1,    bool,         false,                  , P,      "show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
 #
 V,      shadeModelSmooth,               , 	             1,    bool,         true,                   , P,      "true: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
-V,      materialSpecular,               , 	             4,    Float4,       "Float4({1.f,1.f,1.f,1.f})",, P,"4f specular color of material"
-V,      materialShininess,              , 	             1,    float,        "60.f",                 , P,      "shininess of material"
+V,      materialAmbientAndDiffuse,      , 	             4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,"4f ambient color of material"
+V,      materialShininess,              , 	             1,    float,        "32.f",                 , P,      "shininess of material"
+V,      materialSpecular,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,  "4f specular color of material"
+#lights:
+V,      enableLighting,                 , 	             1,    bool,         true,                   , P,      "generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)"
+V,      lightModelLocalViewer,          , 	             1,    bool,         false,                  , P,      "select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)"
+V,      lightModelTwoSide,              , 	             1,    bool,         true,                   , P,      "enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)"
+V,      lightModelAmbient,              , 	             4,    Float4,       "Float4({0.f,0.f,0.f,1.f})",,P,"global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])"
 #
 V,      enableLight0,                   , 	             1,    bool,         true,                   , P,      "turn on/off light0"
-V,      light0position,                 , 	             4,    Float4,       "Float4({1.f,1.f,-10.f,0.f})",, P,      "4f position vector of GL light0; 4th value should be 0, otherwise the vector obtains a special interpretation, see opengl manuals"
-V,      light0ambient,                  , 	             1,    float,        "0.25f",                , P,      "ambient value of GL light0"
-V,      light0diffuse,                  , 	             1,    float,        "0.4f",                 , P,      "diffuse value of GL light0"
-V,      light0specular,                 , 	             1,    float,        "0.4f",                 , P,      "specular value of GL light0"
+V,      light0position,                 , 	             4,    Float4,       "Float4({0.2f,0.2f,10.f,0.f})",, P,"4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals"
+V,      light0ambient,                  , 	             1,    float,        "0.3f",                , P,      "ambient value of GL\_LIGHT0"
+V,      light0diffuse,                  , 	             1,    float,        "0.6f",                 , P,      "diffuse value of GL\_LIGHT0"
+V,      light0specular,                 , 	             1,    float,        "0.5f",                 , P,      "specular value of GL\_LIGHT0"
+V,      light0constantAttenuation,      , 	             1,    float,        "1.0f",                 , P,      "constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1"
+V,      light0linearAttenuation,        , 	             1,    float,        "0.0f",                 , P,      "linear attenuation coefficient of GL\_LIGHT0, this is a linear factor for attenuation of the light source with distance"
+V,      light0quadraticAttenuation,     , 	             1,    float,        "0.0f",                 , P,      "quadratic attenuation coefficient of GL\_LIGHT0, this is a quadratic factor for attenuation of the light source with distance"
+#
 V,      enableLight1,                   , 	             1,    bool,         true,                   , P,      "turn on/off light1"
-V,      light1position,                 , 	             4,    Float4,       "Float4({0.f,3.f,2.f,0.f})",, P,      "4f position vector of GL light1; 4th value should be 0, otherwise the vector obtains a special interpretation, see opengl manuals"
-V,      light1ambient,                  , 	             1,    float,        "0.25f",                , P,      "ambient value of GL light1"
-V,      light1diffuse,                  , 	             1,    float,        "0.4f",                 , P,      "diffuse value of GL light1"
-V,      light1specular,                 , 	             1,    float,        "0.f",                  , P,      "specular value of GL light1"
+V,      light1position,                 , 	             4,    Float4,       "Float4({1.f,1.f,-10.f,0.f})",, P, "4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals"
+V,      light1ambient,                  , 	             1,    float,        "0.0f ",                , P,      "ambient value of GL\_LIGHT1"
+V,      light1diffuse,                  , 	             1,    float,        "0.5f",                 , P,      "diffuse value of GL\_LIGHT1"
+V,      light1specular,                 , 	             1,    float,        "0.6f",                 , P,      "specular value of GL\_LIGHT1"
+V,      light1constantAttenuation,      , 	             1,    float,        "1.0f",                 , P,      "constant attenuation coefficient of GL\_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1"
+V,      light1linearAttenuation,        , 	             1,    float,        "0.0f",                 , P,      "linear attenuation coefficient of GL\_LIGHT1, this is a linear factor for attenuation of the light source with distance"
+V,      light1quadraticAttenuation,     , 	             1,    float,        "0.0f",                 , P,      "quadratic attenuation coefficient of GL\_LIGHT1, this is a quadratic factor for attenuation of the light source with distance"
+
 # debug:
 V,      drawFaceNormals,                , 	             1,    bool,         false,                  , P,      "draws triangle normals, e.g. at center of triangles; used for debugging of faces"
 V,      drawVertexNormals,              , 	             1,    bool,         false,                  , P,      "draws vertex normals; used for debugging"
@@ -874,102 +902,4 @@ writeFile=MainSolver.h
 
 
 
-
-
-
-
-##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-## MAIN SOLVER interfaces
-##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#
-#class = MainSolverStatic
-#appendToFile=False
-#writePybindIncludes = True
-#linkedClass = "cSolver"
-#classDescription = "PyBind interface (trampoline) class for CSolverStatic. With this interface, the static solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to python interfaces, and should thus be used for small systems."
-##V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,            args,           cFlags, parameterDescription
-#VL,     timer,                       , 	             ,     CSolverTimer,      ,                  ,   P,    "timer which measures the CPU time of solver sub functions"
-#VL,     it,                          , 	             ,     SolverIterationData, ,                ,   P,    "all information about iterations (steps, discontinuous iteration, newton,...)"
-#VL,     conv,                        , 	             ,     SolverConvergenceData, ,              ,   P,    "all information about tolerances, errors and residua"
-#VL,     output,                      , 	             ,     SolverOutputData,  ,                  ,   P,    "output modes and timers for exporting solver information and solution"
-#VL,     newton,                      , 	             ,     NewtonSettings,    ,                  ,   P,    "copy of newton settings from timeint or staticSolver"
-##these structures cannot be accessed directly via pybind:
-##VL,     data,                        , 	             ,     SolverLocalData,   ,                  ,   P,    "local solver vectors and matrices"
-##VL,     file,                      , 	             ,     SolverFileData,  ,                  ,   P,    "output files for solver information and solution"
-##specialized variables for CSolverStatic
-#VL,     loadStepGeometricFactor,     ,               ,     Real,              ,                  ,   P,    "multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...)"
-##
-#V,      cSolver,                     , 	             ,     CSolverStatic,     ,                  ,    ,    "link to C++ CSolver, not accessible from Python"
-##
-#V,      isInitialized,               , 	             ,     bool,              ,                  ,    ,   "variable is used to see, if system is initialized ==> avoid crashes; DO not change these variables: can easily lead to crash! "
-#V,      initializedSystemSizes,      , 	             ,     Index4,            ,                  ,    ,   "index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! "
-##++++++++++++++++++++++++++++++++++++++++++++++
-#F,      MainSolverStatic,            ,               ,     ,                  "isInitialized = false;",,,  "constructor, in order to set valid state (settings not initialized at beginning)"
-#F,      CheckInitialized,            ,               ,     bool,              ,                  "const MainSystem& mainSystem",   DGPV,  "check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError"
-##++++++++++++++++++++++++++++++++++++++++++++++
-##this should be exactly the same as MainSolverImplicitSecondOrder
-##general functions:
-#F,      GetSolverName,               ,                ,    "std::string", "return cSolver.GetSolverName();",                                       ,   GPV,    "get solver name - needed for output file header and visualization window"
-#F,      IsStaticSolver,              ,                ,    bool,        "return cSolver.IsStaticSolver();",                                        ,   GPV,    "return true, if static solver; needs to be overwritten in derived class"
-#F,      GetSimulationEndTime,        ,                ,    Real,        "return cSolver.GetSimulationEndTime(simulationSettings);",                       "const SimulationSettings& simulationSettings",   GPV,    "compute simulation end time (depends on static or time integration solver)"
-#F,      ReduceStepSize,              ,                ,    bool,        "CheckInitialized(mainSystem); return cSolver.ReduceStepSize(*(mainSystem.cSystem), simulationSettings, severity);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Index severity",   GPV,    "reduce step size (1..normal, 2..severe problems); return true, if reduction was successful"
-#F,      IncreaseStepSize,            ,                ,    void,        "CheckInitialized(mainSystem); cSolver.IncreaseStepSize(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "increase step size if convergence is good"
-#F,      ComputeLoadFactor,           ,                ,    Real,        "return cSolver.ComputeLoadFactor(simulationSettings);",                       "const SimulationSettings& simulationSettings",   GPV,    "for static solver, this is a factor in interval [0,1]; MUST be overwritten"
-##initialization functions:
-#F,      InitializeSolver,            ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files"
-#F,      PreInitializeSolverSpecific, ,                ,    void,        "CheckInitialized(mainSystem); cSolver.PreInitializeSolverSpecific(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset"
-#F,      InitializeSolverOutput,      ,                ,    void,        "cSolver.InitializeSolverOutput(simulationSettings);",                       "const SimulationSettings& simulationSettings",   GPV,    "initialize output files; called from InitializeSolver()"
-#F,      InitializeSolverPreChecks,   ,                ,    bool,        "CheckInitialized(mainSystem); return cSolver.InitializeSolverPreChecks(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "check if system is solvable; initialize dense/sparse computation modes"
-#F,      InitializeSolverData,        ,                ,    void,        "CheckInitialized(mainSystem); cSolver.InitializeSolverData(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "initialize all data,it,conv; called from InitializeSolver()"
-#F,      InitializeSolverInitialConditions, ,          ,    void,        "CheckInitialized(mainSystem); cSolver.InitializeSolverInitialConditions(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "set/compute initial conditions (solver-specific!); called from InitializeSolver()"
-#F,      PostInitializeSolverSpecific,,                ,    void,        "CheckInitialized(mainSystem); cSolver.PostInitializeSolverSpecific(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "post-initialize for solver specific tasks; called at the end of InitializeSolver"
-##++++++++++++++++++++++++++++++++++
-##solve functions:
-#F,      SolveSystem,                 ,                ,    bool,        "return cSolver.SolveSystem(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "solve System: InitializeSolver, SolveSteps, FinalizeSolver"
-#F,      FinalizeSolver,              ,                ,    void,        "CheckInitialized(mainSystem); cSolver.FinalizeSolver(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "write concluding information (timer statistics, messages) and close files"
-#F,      SolveSteps,                  ,                ,    bool,        "CheckInitialized(mainSystem); return cSolver.SolveSteps(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else"
-#F,      UpdateCurrentTime,           ,                ,    void,        "CheckInitialized(mainSystem); cSolver.UpdateCurrentTime(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "update currentTime (and load factor); MUST be overwritten in special solver class"
-#F,      InitializeStep,              ,                ,    void,        "CheckInitialized(mainSystem); cSolver.InitializeStep(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "initialize static step / time step; python-functions; do some outputs, checks, etc."
-#F,      FinishStep,                  ,                ,    void,        "CheckInitialized(mainSystem); cSolver.FinishStep(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "finish static step / time step; write output of results to file"
-#F,      DiscontinuousIteration,      ,                ,    bool,        "CheckInitialized(mainSystem); return cSolver.DiscontinuousIteration(*(mainSystem.cSystem), simulationSettings);",                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual"
-#F,      Newton,                      ,                ,    bool,        "CheckInitialized(mainSystem); return cSolver.Newton(*(mainSystem.cSystem), simulationSettings);", "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "perform Newton method for given solver method"
-#F,      ComputeNewtonResidual,       ,                ,    void,        "CheckInitialized(mainSystem); cSolver.ComputeNewtonResidual(*(mainSystem.cSystem), simulationSettings);", "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "compute residual for Newton method (e.g. static or time step); store result in systemResidual"
-#F,      ComputeNewtonUpdate,         ,                ,    void,        "CheckInitialized(mainSystem); cSolver.ComputeNewtonUpdate(*(mainSystem.cSystem));",                       "MainSystem& mainSystem",   GPV,    "compute update for currentState from newtonSolution (decrement from residual and jacobian)"
-#F,      ComputeNewtonJacobian,       ,                ,    void,        "CheckInitialized(mainSystem); cSolver.ComputeNewtonJacobian(*(mainSystem.cSystem), simulationSettings);", "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "compute jacobian for newton method of given solver method; store result in systemJacobian"
-##output functions:
-#F,      WriteSolutionFileHeader,     ,                ,    void,        "CheckInitialized(mainSystem); cSolver.WriteSolutionFileHeader(*(mainSystem.cSystem), simulationSettings);", "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "write unique file header, depending on static/ dynamic simulation"
-#F,      WriteCoordinatesToFile,      ,                ,    void,        "CheckInitialized(mainSystem); cSolver.WriteCoordinatesToFile(*(mainSystem.cSystem), simulationSettings);", "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "write unique coordinates solution file"
-#F,      IsVerboseCheck,              ,                ,    bool,        "return cSolver.IsVerboseCheck(level);",                                   "Index level",   GPV,    "return true, if file or console output is at or above the given level"
-#F,      VerboseWrite,                ,                ,    void,        "cSolver.VerboseWrite(level, str);",                                "Index level, const std::string& str",   GPV,    "write to console and/or file in case of level"
-#
-##special functions to access residua and system matrices
-#F,      GetODE2size,                 ,                ,    Index,       "return cSolver.data.nODE2;",                                ,   GP,    "number of ODE2 equations in solver"
-#F,      GetODE1size,                 ,                ,    Index,       "return cSolver.data.nODE1;",                                ,   GP,    "number of ODE1 equations in solver (not yet implemented)"
-#F,      GetAEsize,                   ,                ,    Index,       "return cSolver.data.nAE;",                                  ,   GP,    "number of algebraic equations in solver"
-#F,      GetDataSize,                 ,                ,    Index,       "return cSolver.data.nData;",                                ,   GP,    "number of data (history) variables in solver"
-##
-#F,      GetSystemJacobian,           ,                ,    NumpyMatrix,    ,                       ,   DGPV,    "get locally stored / last computed system jacobian of solver"
-#F,      GetSystemMassMatrix,         ,                ,    NumpyMatrix,    ,                       ,   DGPV,    "get locally stored / last computed mass matrix of solver"
-#F,      GetSystemResidual,           ,                ,    NumpyVector,    ,                       ,   DGPV,    "get locally stored / last computed system residual"
-#F,      GetNewtonSolution,           ,                ,    NumpyVector,    ,                       ,   DGPV,    "get locally stored / last computed solution (=increment) of Newton"
-#F,      SetSystemJacobian,           ,                ,    void,    ,                       "const py::array_t<Real>& systemJacobian",   DGPV,      "set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE"
-#F,      SetSystemMassMatrix,         ,                ,    void,    ,                       "const py::array_t<Real>& systemMassMatrix",   DGPV,    "set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE"
-#F,      SetSystemResidual,           ,                ,    void,    ,                       "const Vector& systemResidual",   DGPV,    "set locally stored system residual; must have size nODE2+nODE1+nAE"
-##
-##F,      GetAAlgorithmic,             ,                ,    NumpyVector,    ,                       ,   DGPV,    "get locally stored / last computed algorithmic accelerations"
-##F,      GetStartOfStepStateAAlgorithmic, ,            ,    NumpyVector,    ,                       ,   DGPV,    "get locally stored / last computed algorithmic accelerations at start of step"
-##
-##special functions for interaction with mainSystem:
-#F,      ComputeMassMatrix,           ,                ,    void,    ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix"
-#F,      ComputeJacobianODE2RHS,      ,                ,    void,    ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Real scalarFactor=1.",   DGPV,    "set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver"
-#F,      ComputeJacobianODE2RHS_t,    ,                ,    void,    ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Real scalarFactor=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
-#F,      ComputeJacobianAE,           ,                ,    void,    ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
-#
-#F,      ComputeODE2RHS,              ,                ,    void,    ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)"
-#F,      ComputeAlgebraicEquations,   ,                ,    void,    ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)"
-#
-##
-#writeFile=MainSolver.h
-#
-#
 

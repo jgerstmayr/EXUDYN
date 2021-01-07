@@ -42,7 +42,7 @@ steps = 5000  #number of steps
 
 
 #user function for spring force
-def springForce(t, u, v, k, d, offset, mu, muPropZone):
+def springForce(mbs, t, u, v, k, d, offset, mu, muPropZone):
     return 0.1*k*u+k*u**3+v*d
 
 #linear frequency sweep in time interval [0, t1] and frequency interval [f0,f1];
@@ -51,7 +51,7 @@ def Sweep(t, t1, f0, f1):
     return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 #user function for load
-def userLoad(t, load):
+def userLoad(mbs, t, load):
     #return load*np.sin(0.5*omega0*t) #gives resonance
     #exu.Print(t)
     return load*Sweep(t, tEnd, f0, f1)

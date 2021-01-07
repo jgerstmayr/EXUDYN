@@ -277,7 +277,7 @@ mNDisk01 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nDisk0, coordinate=1))
 
 #Generate disc joints
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def OffsetUF(t, lOffset):
+def OffsetUF(mbs, t, lOffset):
     if t < duration: return L0*(1-np.cos(t*np.pi/duration))/2
     else: return L0
 
@@ -377,7 +377,7 @@ for i in range(len(cableList)):
 
 #Generate Load
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def loadUF(t,loadVector):
+def loadUF(mbs, t,loadVector):
     if t < 2*duration : return [0,0,0] 
     if sweep == True:
         omega_soll = 10 + omega*(t-2*duration)/tSim

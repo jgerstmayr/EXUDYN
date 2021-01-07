@@ -14,7 +14,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -884,7 +884,7 @@ py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
 		Real t = GetCSystem()->GetSystemData().GetCData().GetCurrent().GetTime(); //only current time available
-		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetLoadValues(t);
+		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetLoadValues(GetCSystem()->GetSystemData().GetMainSystemBacklink(), t);
 	}
 	else
 	{

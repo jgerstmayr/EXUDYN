@@ -45,7 +45,7 @@ steps = 20000         #number of steps
 
 
 #user function for load
-def userLoad(t, load):
+def userLoad(mbs, t, load):
     #time.sleep(0.005) #make simulation slower
     if t<0.01: print(load)
     if t>10 and t<10.05: 
@@ -72,7 +72,7 @@ p0 = [0,0,0] #reference position
 v0 = [0.,0.,0.] #initial translational velocity
 
 #node for Rigid2D body: px, py, phi:
-n1=mbs.AddNode(Rigid3DEP(referenceCoordinates = p0+ep0, initialVelocities=v0+list(ep_t0)))
+n1=mbs.AddNode(NodeRigidBodyEP(referenceCoordinates = p0+ep0, initialVelocities=v0+list(ep_t0)))
 
 #ground nodes
 nGround0=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))

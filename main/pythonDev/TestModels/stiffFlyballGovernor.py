@@ -19,6 +19,7 @@ from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.lieGroupBasics import *
+from exudyn.lieGroupIntegration import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
@@ -290,7 +291,10 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
     
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-fact = 200000
+fact = 200000 #200000
+if not exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+    fact = 20
+
 simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
 simulationSettings.timeIntegration.endTime = 5e-5*fact              #1s for test suite / error
 
@@ -328,15 +332,21 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 
 for i in range(4):
     om=mbs.GetNodeOutput(i,exu.OutputVariableType.AngularVelocity)
-    exu.Print("om",i,"=",om)
+    # exu.Print("om",i,"=",om)
 
 for i in range(4):
     vel=mbs.GetNodeOutput(i,exu.OutputVariableType.Velocity)
-    exu.Print("v",i,"=",vel)
+    # exu.Print("v",i,"=",vel)
 
 for i in range(2):
     rot=mbs.GetNodeOutput(i+2,exu.OutputVariableType.RotationMatrix)
-    exu.Print("Rot",i+2,"=",rot)
+    # exu.Print("Rot",i+2,"=",rot)
+
+result = mbs.GetNodeOutput(2,exu.OutputVariableType.Velocity)[1] #y-velocity of bar
+exu.Print('solution of stiffFlyballGovernor=',result)
+
+exudynTestGlobals.testError = result - (0.8962488779114738) #2021-01-04: 0.015213599619996604 (Python3.7)
+
 
 plist=[]
 plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[2], variableType = exu.OutputVariableType.Velocity, localPosition = list(pointARodAC), configuration =
@@ -345,8 +355,8 @@ plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[2], variableType
 exu.ConfigurationType.Current)]
 plist += [mbs.GetObjectOutputBody(objectNumber = bodyNumberList[3], variableType = exu.OutputVariableType.Velocity, localPosition = pointARodBD, configuration =
 exu.ConfigurationType.Current)]
-for i in range(3):
-    exu.Print("vX",i,"=",plist[i])
+# for i in range(3):
+#     exu.Print("vX",i,"=",plist[i])
 
 #locU = mbs.GetObjectOutput(objectNumber = nj2, variableType =exu.OutputVariableType.DisplacementLocal)
 #exu.Print('locU=', locU)
@@ -364,7 +374,7 @@ for i in range(3):
 #v 2 = [-1.91975841e-16  5.60155553e+00 -4.90500111e-10]
 #v 3 = [ 1.91975841e-16 -5.60155553e+00 -4.90500111e-10]
 
-if True:
+if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close('all')
@@ -381,12 +391,13 @@ if True:
     plt.plot(data[:,0], data[:,2], 'g--') #z coordinate of slider
     plt.plot(data[:,0], data[:,3], 'b--') #z coordinate of slider
 
-    #data = np.loadtxt('solution/flyballSliderPositionRxyz.txt', comments='#', delimiter=',')    #rigid joints?
-    data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',') #compliant joints
-    #plt.plot(data[:,0], data[:,3], 'r:') #z coordinate of slider
-    plt.plot(data[:,0], data[:,1], 'b:') #z coordinate of slider
-    plt.plot(data[:,0], data[:,2], 'g:') #z coordinate of slider
-    plt.plot(data[:,0], data[:,3], 'k:') #z coordinate of slider
+    if False:
+        #data = np.loadtxt('solution/flyballSliderPositionRxyz.txt', comments='#', delimiter=',')    #rigid joints?
+        data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',') #compliant joints
+        #plt.plot(data[:,0], data[:,3], 'r:') #z coordinate of slider
+        plt.plot(data[:,0], data[:,1], 'b:') #z coordinate of slider
+        plt.plot(data[:,0], data[:,2], 'g:') #z coordinate of slider
+        plt.plot(data[:,0], data[:,3], 'k:') #z coordinate of slider
     
 #    data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',')
 #    plt.plot(data[:,0], data[:,3], 'g:') #z coordinate of slider

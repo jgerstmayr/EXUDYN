@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  17:12:39 (last modfied)
+* @date         2021-01-05  01:13:06 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadMassProportionalParameters
 class CLoadMassProportionalParameters // AUTO: 
@@ -30,7 +31,7 @@ class CLoadMassProportionalParameters // AUTO:
 public: // AUTO: 
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N/kg = m/s\f$^2\f$]; typically, this will be the gravity vector in global coordinates
-    std::function<StdVector(Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent loadVector.
+    std::function<StdVector(const MainSystem&,Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent loadVector.
     //! AUTO: default constructor with parameter initialization
     CLoadMassProportionalParameters()
     {
@@ -106,7 +107,7 @@ public: // AUTO:
     }
 
     //! AUTO:  read access for force vector
-    virtual Vector3D GetLoadVector(Real t) const override;
+    virtual Vector3D GetLoadVector(const MainSystemBase& mbs, Real t) const override;
 
 };
 

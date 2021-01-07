@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-09  00:35:51 (last modfied)
+* @date         2021-01-04  23:07:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,7 +108,9 @@ public: // AUTO:
     {
         cLoadCoordinate->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cLoadCoordinate->GetParameters().load = py::cast<Real>(d["load"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "loadUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadUserFunction"])) { cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(Real,Real)>>((py::function)d["loadUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
+        if (EPyUtils::DictItemExists(d, "loadUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadUserFunction"])) 
+            { cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Real)>>((py::function)d["loadUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            else {cLoadCoordinate->GetParameters().loadUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadCoordinate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -121,7 +123,7 @@ public: // AUTO:
         d["markerNumber"] = (MarkerIndex)cLoadCoordinate->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["load"] = (Real)cLoadCoordinate->GetParameters().load; //! AUTO: cast variables into python (not needed for standard types) 
         if (cLoadCoordinate->GetParameters().loadUserFunction)
-            {d["loadUserFunction"] = (std::function<Real(Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction;}
+            {d["loadUserFunction"] = (std::function<Real(const MainSystem&,Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction;}
         else
             {d["loadUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -136,7 +138,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadCoordinate->GetParameters().markerNumber);} //! AUTO: get parameter
         else if (parameterName.compare("load") == 0) { return py::cast((Real)cLoadCoordinate->GetParameters().load);} //! AUTO: get parameter
-        else if (parameterName.compare("loadUserFunction") == 0) { return py::cast((std::function<Real(Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("loadUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Real)>)cLoadCoordinate->GetParameters().loadUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadCoordinate->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("LoadCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -149,7 +151,8 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { cLoadCoordinate->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("load") == 0) { cLoadCoordinate->GetParameters().load = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("loadUserFunction") == 0) { cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("loadUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cLoadCoordinate->GetParameters().loadUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationLoadCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

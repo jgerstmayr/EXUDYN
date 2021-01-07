@@ -52,7 +52,7 @@ def Sweep(t, t1, f0, f1):
     return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 #user function for load
-def userLoad(t, load):
+def userLoad(mbs, t, load):
     #return load*np.sin(0.5*omega0*t) #gives resonance
     if t>40: time.sleep(0.02) #make simulation slower
     return load*Sweep(t, tEnd, f0, f1)
@@ -60,9 +60,9 @@ def userLoad(t, load):
 
 #backward whirl excitation:
 amp = 0*10  #in resonance: *0.01
-def userLoadBWx(t, load):
+def userLoadBWx(mbs, t, load):
     return load*np.sin(omegaInitial*t)
-def userLoadBWy(t, load):
+def userLoadBWy(mbs, t, load):
     return -load*np.cos(omegaInitial*t) #negative sign: FW, positive sign: BW
 
 #node for Rigid2D body: px, py, phi:

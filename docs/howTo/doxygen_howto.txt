@@ -1,3 +1,21 @@
+#install for EXUDYN:
+download doxygen:
+https://sourceforge.net/projects/doxygen/files/snapshots/
+
+download graphviz:
+http://www.graphviz.org/download/
+
+add doxygen to system path (start->system environment variables), ADD:
+C:\Program Files\doxygen\bin
+
+add graphviz to system path (start->system environment variables), ADD:
+C:\Program Files\Graphviz2.44.1\bin
+
+now editing the Doxyfile.txt in the docs/doxygen folder allows you to setup the
+html build for doxygen. Since some time, latex fails, probably because of some
+comments which are not compatible with doxygen and some log messages would
+need to be parsed.
+
 latex:
  - be careful with latex commands with inline formulas: \f$ x^2 \f$ and display formulas_ \f[ y+x=2 \f]
  - 64-bit ghostscript installation: copy gswin64c.exe to gswin32c.exe in ghostscript directory

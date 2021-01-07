@@ -72,7 +72,7 @@ def Normalize(v):
 #++++++++++++++++++++++++++++++++++++
 startTotal = timeit.default_timer()
 #parameters
-meshSize = 0.0025 #standard: 0.005; 0.0015 does not always work
+meshSize = 0.0015 #standard: 0.005; 0.0015 does not always work
 
 #crank:
 b1 = 0.012 #width of journal bearing
@@ -399,10 +399,10 @@ if True:
     cmsCrank = ObjectFFRFreducedOrderInterface(femCrank)
     
     #user functions should be defined outside of class:
-    def UFmassFFRFreducedOrderCrank(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderCrank(mbs, t, qReduced, qReduced_t):
         return cmsCrank.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    def UFforceFFRFreducedOrderCrank(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderCrank(mbs, t, qReduced, qReduced_t):
         return cmsCrank.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
     objFFRFcrank = cmsCrank.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
@@ -449,57 +449,57 @@ if True:
     #import multiple conrods and pistons
 
     #user functions should be defined outside of class:
-    def UFmassFFRFreducedOrderConrod0(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderConrod0(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[0].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderConrod1(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderConrod1(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[1].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderConrod2(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderConrod2(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[2].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderConrod3(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderConrod3(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[3].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderConrod4(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderConrod4(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[4].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderConrod5(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderConrod5(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[5].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    def UFforceFFRFreducedOrderConrod0(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderConrod0(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[0].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderConrod1(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderConrod1(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[1].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderConrod2(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderConrod2(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[2].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderConrod3(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderConrod3(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[3].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderConrod4(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderConrod4(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[4].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderConrod5(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderConrod5(mbs, t, qReduced, qReduced_t):
         return cmsConrodList[5].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
     #user functions should be defined outside of class:
-    def UFmassFFRFreducedOrderPiston0(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderPiston0(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[0].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderPiston1(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderPiston1(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[1].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderPiston2(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderPiston2(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[2].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderPiston3(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderPiston3(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[3].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderPiston4(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderPiston4(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[4].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFmassFFRFreducedOrderPiston5(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrderPiston5(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[5].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    def UFforceFFRFreducedOrderPiston0(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderPiston0(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[0].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderPiston1(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderPiston1(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[1].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderPiston2(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderPiston2(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[2].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderPiston3(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderPiston3(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[3].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderPiston4(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderPiston4(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[4].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    def UFforceFFRFreducedOrderPiston5(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrderPiston5(mbs, t, qReduced, qReduced_t):
         return cmsPistonList[5].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
     #lists for multiple objects in conrods and pistons:
@@ -661,6 +661,10 @@ if True:
         simulationSettings = exu.SimulationSettings()
         
         nodeDrawSize = 0.0005
+        SC.visualizationSettings.general.textSize = 40
+        SC.visualizationSettings.general.useGradientBackground = True
+        SC.visualizationSettings.openGL.lineWidth = 2
+
         SC.visualizationSettings.nodes.defaultSize = nodeDrawSize
         SC.visualizationSettings.nodes.drawNodesAsPoint = False
         SC.visualizationSettings.connectors.defaultSize = 2*nodeDrawSize
@@ -715,14 +719,18 @@ if True:
         #SC.visualizationSettings.window.renderWindowSize=[1920,1080]
         
         exu.StartRenderer()
-        lastRenderState = {'centerPoint': [-0.1251770257949829, -0.07375780493021011, 0.0],
-                             'maxSceneSize': 0.10000000149011612,
-                             'zoom': 0.15295113623142242,
-                             'currentWindowSize': [1024, 768],
-                             'modelRotation': np.array([[ 0.484963  ,  0.04052661,  0.87359524],
-                                    [-0.3886355 ,  0.9048576 ,  0.17376813],
-                                    [-0.783437  , -0.42378116,  0.4545725 ]])}
-        SC.SetRenderState(lastRenderState) #load last model view
+        lastRenderState = {'renderState': {'centerPoint': [-0.1360926777124405,   -0.012394198216497898,   0.17600969970226288],
+              'maxSceneSize': 0.10000000149011612,
+              'zoom': 0.1513097584247589,
+              'currentWindowSize': [1024, 768],
+              'modelRotation': [[0.03042728640139103,
+                0.8777410387992859,
+                0.4781683087348938],
+               [-0.6386303901672363, 0.38508182764053345, -0.6662305593490601],
+               [-0.7689120173454285, -0.2851012349128723, 0.572269082069397]],
+              'mouseCoordinates': [713.0, 395.0],
+              'openGLcoordinates': [-0.05689147603698075, -0.01672859233804047]}}
+        SC.SetRenderState(exu.sys.renderState) #load last model view
     
         mbs.WaitForUserToContinue() #press space to continue
         mbs.WaitForUserToContinue() #press space to continue

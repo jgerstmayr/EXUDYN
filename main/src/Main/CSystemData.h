@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
 				- email: johannes.gerstmayr@uibk.ac.at
-				- weblink: missing
+				- weblink: https://github.com/jgerstmayr/EXUDYN
 				
 ************************************************************************************************ */
 #ifndef CSYSTEMDATA__H
@@ -22,6 +22,8 @@
 
 #include "Main/OutputVariable.h" 
 #include "Main/CData.h"		//includes ReleaseAssert.h and BasicDefinitions.h
+#include "Main/MainSystemBase.h"	//no further dependencies
+
 
 #include "System/CMaterial.h"			//includes ReleaseAssert.h 
 #include "System/CObjectBody.h"			//includes OutputVariable.h and CObject.h
@@ -31,13 +33,11 @@
 #include "System/CSensor.h"				//needs sensors
 #include "System/CObjectConnector.h"	//includes OutputVariable.h and CObject.h
 
-
-
-
 class CSystemData //
 {
 protected: //
 	CData cData;                                    //!< computational data for all configurations (current, initial, etc.); this data is available in CNode
+	MainSystemBase* mainSystemBacklink;             //!< backlink to MainSystem, but do not use generally!
 	ResizableArray<CObject*> cObjects;              //!< container for computational objects
 	ResizableArray<CNode*> cNodes;                  //!< container for computational nodes
 	ResizableArray<CMaterial*> cMaterials;          //!< container for computational materials
@@ -67,6 +67,7 @@ public: //
 	void Reset()
 	{
 		cData = CData();
+		//mainSystemBacklink = nullptr; //should not be reset, as the back link is still needed!!!
 
 		for (auto item : cLoads) { delete item; }
 		for (auto item : cMarkers) { delete item; }
@@ -99,7 +100,12 @@ public: //
 	CData& GetCData() { return cData; }
 	//! Read (Reference) access to:computational data for all configurations (current, initial, etc.); this data is available in CNode
 	const CData& GetCData() const { return cData; }
-	//void SetCData(const CData& cDataInit) { cData = cDataInit; }
+
+	//! Write (Reference) access to: MainSystem
+	MainSystemBase& GetMainSystemBacklink() { return *mainSystemBacklink; }
+	void SetMainSystemBacklink(MainSystemBase* mainSystemBacklinkInit) { mainSystemBacklink = mainSystemBacklinkInit; }
+	//! Read (Reference) access to:computational data for all configurations (current, initial, etc.); this data is available in CNode
+	const MainSystemBase& GetMainSystemBacklink() const { return *mainSystemBacklink; }
 
 	//! Write (Reference) access to:container for computational objects
 	ResizableArray<CObject*>& GetCObjects() { return cObjects; }

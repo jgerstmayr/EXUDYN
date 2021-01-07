@@ -11,10 +11,13 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 ************************************************************************************************ */
+
+#include <chrono> //#sleep_for
+#include <thread> //#sleep_for
 
 #include <pybind11/pybind11.h> //for integrated python connectivity (==>put functionality into separate file ...!!!)
 #include <pybind11/eval.h>
@@ -730,6 +733,19 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		|| it.currentTime + 1e-10>=it.endTime )) || (output.verboseModeFile >= 2);
 	bool printConsole = ((output.verboseMode == 1) && ((EXUstd::GetTimeInSeconds() - output.cpuLastTimePrinted >= 2)
 		|| it.currentTime + 1e-10 >= it.endTime)) || (output.verboseMode >= 2);
+
+	if (simulationSettings.timeIntegration.simulateInRealtime)
+	{
+		Real cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
+		Real simTimeElapsed = t - it.startTime;
+		Index waitMicroSeconds = 1000; //wait time until next computation
+
+		while (cpuTimeElapsed < simTimeElapsed) //no workaround if simTimeElapsed would be much too big
+		{
+			std::this_thread::sleep_for(std::chrono::microseconds(waitMicroSeconds)); //avoid continuous computation
+			cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
+		}
+	}
 
 	if (printFile || printConsole)
 	{

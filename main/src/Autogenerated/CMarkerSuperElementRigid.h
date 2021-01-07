@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  14:51:06 (last modfied)
+* @date         2020-12-09  16:54:33 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -69,6 +69,8 @@ protected: // AUTO:
     CMarkerSuperElementRigidParameters parameters; //! AUTO: contains all parameters for CMarkerSuperElementRigid
 
 public: // AUTO: 
+    static constexpr bool useAlternativeApproach = true; //must be same as in CObjectFFRFreducedOrder! alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
+    static constexpr bool useRefPosWeightedRot = true; //use reference position for computed weighted rotations
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

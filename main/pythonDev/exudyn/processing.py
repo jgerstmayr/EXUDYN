@@ -1,16 +1,16 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  The processing module supports multiple execution of EXUDYN models
-#           it includes parameter variation and optimization functionality
+# Details:  The processing module supports multiple execution of EXUDYN models.
+#           It includes parameter variation and (genetic) optimization functionality.
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2020-11-17
-# Notes:    This module is still under construction and for testing purposes only!
+# Notes:    Parallel processing, which requires multiprocessing library, can lead to considerable speedup (measured speedup factor > 50 on 80 core machine). The progess bar during multiprocessing requires the library tqdm.
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 import numpy as np
@@ -202,12 +202,12 @@ def ParameterVariation(parameterFunction, parameters,
 #    objectiveFunction: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
 #    parameters: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. 'mass':(10,50)
 #
-#    initialPopulationSize: number of random initial individuals
+#    populationSize: individuals in every generation
+#    initialPopulationSize: number of random initial individuals; default: population size
 #    numberOfGenerations: number of generations
-#    numberOfChildren: number childrens of surviving population
-#    useGeneCrossing: (not implemented yet) if True, the children are generated from parents by gene-crossover
-#    survivingIndividuals: number of surviving individuals after children are born
-#    rangeReductionFactor: reduction of mutation range relative to ranges of last step
+#    crossoverProbability: if > 0: children are generated from two (randomly selected) parents by gene-crossover; if 0, no crossover is used
+#    crossoverAmount: if crossoverProbability > 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50% of genes cross
+#    rangeReductionFactor: reduction of mutation range (boundary) relative to range of last generation; helps algorithm to converge to more accurate values
 #    distanceFactor: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
 #    randomizerInitialization: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)
 #
@@ -216,6 +216,8 @@ def ParameterVariation(parameterFunction, parameters,
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
 #    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
+#    numberOfChildren: (DEPRECATED, UNUSED) number childrens of surviving population
+#    survivingIndividuals: (DEPRECATED) number of surviving individuals after children are born
 #**output:
 #    returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -223,10 +225,11 @@ def ParameterVariation(parameterFunction, parameters,
 #**example:
 #   GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffness':(1000,10000)})
 def GeneticOptimization(objectiveFunction, parameters, 
-                        initialPopulationSize=100,
+                        populationSize=100,
                         numberOfGenerations=10,
-                        numberOfChildren=8,
-                        survivingIndividuals=8,
+                        elitistRatio = 0.1,
+                        crossoverProbability=0.25,
+                        crossoverAmount=0.5,
                         rangeReductionFactor=0.7,
                         distanceFactor=0.1,
                         debugMode=False, 
@@ -243,7 +246,27 @@ def GeneticOptimization(objectiveFunction, parameters,
         numberOfThreads = 8
     if 'numberOfThreads' in kwargs: 
         numberOfThreads = kwargs['numberOfThreads']
-    print("number of threads used =", numberOfThreads) #very useful informaiton
+
+    if useMultiProcessing:
+        print("number of threads used =", numberOfThreads) #very useful information
+
+    initialPopulationSize = populationSize
+    if 'initialPopulationSize' in kwargs: 
+        initialPopulationSize = kwargs['initialPopulationSize']
+
+
+    #+++++++++++++++++++++++++++++++++++++++++++++++
+    #delete this in future:
+    if 'numberOfChildren' in kwargs: 
+        print("GeneticOptimization: deprecated and unused parameter; use population size a and elitistRatio instead")
+    
+    #old value: survivingIndividuals=8
+    survivingIndividuals = int(elitistRatio*populationSize)
+    if 'survivingIndividuals' in kwargs: 
+        survivingIndividuals = kwargs['survivingIndividuals']
+        print("GeneticOptimization: survivingIndividuals: deprecated parameter; use population size a and elitistRatio instead")
+    #+++++++++++++++++++++++++++++++++++++++++++++++
+
 
     if 'randomizerInitialization' in kwargs: 
         randomizerInitialization = kwargs['randomizerInitialization']
@@ -251,8 +274,9 @@ def GeneticOptimization(objectiveFunction, parameters,
             raise ValueError("GeneticOptimization: ERROR: randomizerInitialization must be positive 32 bit integer")
         np.random.seed(randomizerInitialization)
 
+
     dim = 0
-    ranges = [] #list containing the ranges of each dimension
+    ranges = []                 #list containing the ranges of each dimension
     rangesDict = {} #dict containing only the ranges
     for (key,value) in parameters.items():
         dim += 1 #count dimensions of parameters
@@ -271,8 +295,8 @@ def GeneticOptimization(objectiveFunction, parameters,
             pEnd = value[1]
             value = np.random.uniform(pBegin, pEnd)
             ind[key] = value
-            if addComputationIndex:
-                ind['computationIndex'] = i #unique index for one set of computations
+        if addComputationIndex:
+            ind['computationIndex'] = i #unique index for one set of computations
 
         currentGeneration += [ind]
 
@@ -280,14 +304,18 @@ def GeneticOptimization(objectiveFunction, parameters,
         print("initial population =", currentGeneration)
         print("rangesDict =", rangesDict)
 
-    #TODO: store all values for all generations
     parametersAll = []
     valueList = []
+    newGeneration = []      #surviving individuals, not re-computed!
+    newGenerationValues = []#surviving individuals' values, not re-computed!
+    
+    totalEvaluations = 0
 
     for popCnt in range(numberOfGenerations):
         if debugMode:
             print("===============\nevaluate population", popCnt, ":")
 
+        totalEvaluations += len(currentGeneration)
         values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
         #print("values=",values)
 
@@ -297,8 +325,12 @@ def GeneticOptimization(objectiveFunction, parameters,
                 del item['computationIndex']
 
         #store all values
-        parametersAll += currentGeneration
-        valueList += values
+        parametersAll += currentGeneration.copy()
+        valueList += values.copy()
+
+        #add best individuals from previous parents:
+        currentGeneration += newGeneration.copy()
+        values += newGenerationValues.copy()
         
         #compute norm and minimum values:
         scalarValues = [(0,0)]*len(values)
@@ -321,6 +353,7 @@ def GeneticOptimization(objectiveFunction, parameters,
             
             #selection: chose best surviving individuals
             newGeneration = []
+            newGenerationValues = []
             cnt = 0
 
             if distanceFactor == 0: #distance not important
@@ -329,6 +362,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                     if addComputationIndex:
                         ind['computationIndex'] = cnt #unique index for one set of computations
                     newGeneration += [ind]
+                    newGenerationValues += [values[int(sortedValues[i][1])]]
                     cnt += 1
             else:
                 nSurviving = min(survivingIndividuals,len(sortedValues))
@@ -348,6 +382,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                         if addComputationIndex:
                             ind['computationIndex'] = cnt #unique index for one set of computations
                         newGeneration += [ind]
+                        newGenerationValues += [values[iInd]]
                         cnt += 1 #computation index counter
                         i += 1   #counts the surviving individuals
                         #print("\nadd individual", ind)
@@ -374,35 +409,58 @@ def GeneticOptimization(objectiveFunction, parameters,
             
             #prolongate best individuals:
             currentGeneration = []
-            for item in newGeneration:
-                currentGeneration += [item]
+            # for item in newGeneration: #removed, in order to save number of evaluations
+            #     currentGeneration += [item]
     
-            #modification
-            #TODO: add gene mutation
-            for item in newGeneration:
-                for j in range(numberOfChildren):
-                    ind = {} #dictionary for individual
-    
-                    for (key,value) in parameters.items():
-                        r = value[1]-value[0]
-                        r *= relativeRange #reduce range
-                        #print("range=",r)
-                        pBegin = item[key]-0.5*r #minimum value
-                        pEnd = item[key]+0.5*r 
-                        #obej ranges: ==> this may give more values at boundary
-                        if pBegin < value[0]: pBegin = value[0]
-                        if pEnd > value[1]: pEnd = value[1]
+            #modification of parents
+            genSize = len(newGeneration)
+            p = 0 #current population size
+            while p < populationSize:
+                for item in newGeneration:
+                    indList = [{}]      #dictionary for individual
+                    parents = [item]    #list of parents
 
-                        #print("new range=",pBegin,pEnd)
+                    #do gene crossing fro parents:
+                    if crossoverProbability > 0:
+                        r = np.random.random()
+                        if r < crossoverProbability: #do cross-over only for a smaller portion of parents!
+                            indList += [{}] #use two new individuals with gene-crossover
+                            rand0 = np.random.randint(genSize)
+                            rand1 = np.random.randint(genSize) #may be same as rand1
+                            p0 = newGeneration[rand0].copy() #parent1 for crossover
+                            p1 = newGeneration[rand1].copy() #parent2 for crossover
+                            parents = [p0, p1]
+                            for (key,value) in parameters.items():
+                                r = np.random.random()
+                                if r < crossoverAmount: #usually 50% gene cross over
+                                    indList[0][key] = p1[key] #uniform gene crossing
+                                    indList[1][key] = p0[key]
+
+                    #one or two individuals
+                    for pi in range(len(parents)):
+                        item = parents[pi]
+                        for (key,value) in parameters.items():
+                            r = value[1]-value[0]
+                            r *= relativeRange #reduce range
+                            #print("range=",r)
+                            pBegin = item[key]-0.5*r #minimum value
+                            pEnd = item[key]+0.5*r 
+                            #obej ranges: ==> this may give more values at boundary
+                            if pBegin < value[0]: pBegin = value[0]
+                            if pEnd > value[1]: pEnd = value[1]
+    
+                            #print("new range=",pBegin,pEnd)
+                            
+                            value = np.random.uniform(pBegin, pEnd)
+                            indList[pi][key] = value
+    
+                        if addComputationIndex:
+                            indList[pi]['computationIndex'] = cnt #unique index for one set of computations
+                        cnt += 1
                         
-                        value = np.random.uniform(pBegin, pEnd)
-                        ind[key] = value
-
-                    if addComputationIndex:
-                        ind['computationIndex'] = cnt #unique index for one set of computations
-                    cnt += 1
-    
-                    currentGeneration += [ind]
+                        if p < populationSize:
+                            currentGeneration += [indList[pi]]
+                            p += 1
             #print("pop", popCnt, ": currentGeneration=\n",currentGeneration)
         else:
             #select final best individual
@@ -411,20 +469,28 @@ def GeneticOptimization(objectiveFunction, parameters,
             if debugMode:
                 print("opt par=", optimumParameter, ", opt val=", optimumValue)
 
+    if debugMode:
+        print("===============\ntotal evaluations=", totalEvaluations)
+
     #now make dict of parameter lists instead list of dicts
     parameterList = {}
     n = len(parametersAll)
     if n != 0:
         for key in parametersAll[0]:
-            parameterData = np.zeros(n)
-            #extract parameter list from list of dictionaries:
-            for i in range(n):
-                parameterData[i] = parametersAll[i][key]
+            if key != 'computationIndex':
+                parameterData = np.zeros(n)
+                #extract parameter list from list of dictionaries:
+                for i in range(n):
+                    parameterData[i] = parametersAll[i][key]
+    
+                #add parameter list to final dictionary
+                parameterList[key] = parameterData
 
-            #add parameter list to final dictionary
-            parameterList[key] = parameterData
 
     return [optimumParameter, optimumValue, parameterList, valueList]
+
+
+
 
 #**function: visualize results of optimization for every parameter (2D plots)
 #**input: 

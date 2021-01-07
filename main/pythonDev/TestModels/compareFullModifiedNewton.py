@@ -1,25 +1,31 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  car with wheels modeled by ObjectConnectorRollingDiscPenalty
+#           formulation is still under development and needs more testing
+#
+# Author:   Johannes Gerstmayr
+# Date:     2020-06-19
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys
 sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import RunAllModelUnitTests, TestInterface
-
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-
-testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
-#RunAllModelUnitTests(mbs, testInterface)
-
-
 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #rigid pendulum:
 rect = [-2,-2,2,2] #xmin,ymin,xmax,ymax
 background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
@@ -62,35 +68,37 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 simulationSettings.displayStatistics = True
 simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
 
-#exu.StartRenderer()
-
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "modifiedNewton.txt"
+simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/modifiedNewton.txt"
 exu.SolveDynamic(mbs, simulationSettings)
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "fullNewton.txt"
+simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/fullNewton.txt"
 exu.SolveDynamic(mbs, simulationSettings)
 
-#SC.WaitForRenderEngineStopFlag()
-#exu.StopRenderer() #safely close rendering window!
 
-
-#*****************************************
+#%%*****************************************
 #post processing for mass point system
 
-dataM = np.loadtxt('modifiedNewton.txt', comments='#', delimiter=',')
-dataF = np.loadtxt('fullNewton.txt', comments='#', delimiter=',')
+dataM = np.loadtxt('solution/modifiedNewton.txt', comments='#', delimiter=',')
+dataF = np.loadtxt('solution/fullNewton.txt', comments='#', delimiter=',')
 
-plt.plot(dataM[:,0], dataM[:,3+2], 'b-') #plot column i over column 0 (time)
-plt.plot(dataF[:,0], dataF[:,3+2], 'r-') #plot column i over column 0 (time)
-#plt.plot(dataF[:,1], dataF[:,2], 'r-') #plot column i over column 0 (time)
+u=sum(abs(dataM[:,5]-dataF[:,5]))
+exu.Print("compareFullModifiedNewton u=",u)
 
-ax=plt.gca() # get current axes
-ax.grid(True, 'major', 'both')
-ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-plt.tight_layout()
-plt.show() 
+exudynTestGlobals.testError = u - (0.0001583478719999567 ) #2020-12-18: 0.0001583478719999567 
+
+
+if exudynTestGlobals.useGraphics:
+    # plt.plot(dataM[:,0], dataM[:,3+2], 'b-') #plot column i over column 0 (time)
+    # plt.plot(dataF[:,0], dataF[:,3+2], 'r-') #plot column i over column 0 (time)
+    plt.plot(dataF[:,0], dataF[:,5]-dataM[:,5], 'r-') 
+    
+    ax=plt.gca() # get current axes
+    ax.grid(True, 'major', 'both')
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+    plt.tight_layout()
+    plt.show() 
 
 

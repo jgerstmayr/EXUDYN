@@ -12,9 +12,9 @@ These are the access functions to the \codeName\ module.
   RequireVersion(requiredVersionString) & Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")\\ \hline 
   StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
-  SolveStatic() & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
-  SolveDynamic() & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
-  ComputeODE2Eigenvalues() & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
+  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
+  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
+  ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)\\ \hline 
   SetLinalgOutputFormatPython(flagPythonFormat) & true: use python format for output of vectors and matrices; false: use matlab format\\ \hline 
   SetWriteToConsole(flag) & set flag to write (true) or not write to console; default = true\\ \hline 
@@ -30,7 +30,7 @@ These are the access functions to the \codeName\ module.
   Go() & Creates a SystemContainer SC and a main system mbs\\ \hline 
   InvalidIndex() & This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; in future, the invalid index may be changed to -1, therefore you should use this variable\\ \hline 
   variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
-  sys & this dictionary is used by the system, e.g. for testsuite or solvers to store exudyn-wide data in order to avoid global python variables \\ \hline  
+  sys & this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations \\ \hline  
 \end{longtable}
 \end{center}
 
@@ -68,10 +68,11 @@ The SystemContainer is the top level of structures in \codeName. The container h
   SetRenderState(renderState) & Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{SC = exu.SystemContainer()\tabnewline
-    SC.GetRenderState(renderState)}}\\ \hline 
+    SC.SetRenderState(renderState)}}\\ \hline 
   WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
   RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
+  GetCurrentMouseCoordinates(useOpenGLcoordinates = False) & Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane\\ \hline 
   Reset() & delete all systems and reset SystemContainer (including graphics)\\ \hline 
   NumberOfSystems() & obtain number of systems available in system container\\ \hline 
   GetSystem(systemNumber) & obtain systems with index from system container\\ \hline 
@@ -118,7 +119,8 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
 
 %++++++++++++++++++++
 \mysubsubsection{MainSystem: Node}
-This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.
+\label{sec:mainsystem:node}
+ This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.
 
 \begin{center}
 \footnotesize
@@ -160,7 +162,8 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
 
 %++++++++++++++++++++
 \mysubsubsection{MainSystem: Object}
-This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.
+\label{sec:mainsystem:object}
+ This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.
 
 \begin{center}
 \footnotesize
@@ -203,7 +206,8 @@ This section provides functions for adding, reading and modifying objects, which
 
 %++++++++++++++++++++
 \mysubsubsection{MainSystem: Marker}
-This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).
+\label{sec:mainsystem:marker}
+ This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).
 
 \begin{center}
 \footnotesize
@@ -238,7 +242,8 @@ This section provides functions for adding, reading and modifying markers. Marke
 
 %++++++++++++++++++++
 \mysubsubsection{MainSystem: Load}
-This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.
+\label{sec:mainsystem:load}
+ This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.
 
 \begin{center}
 \footnotesize
@@ -275,7 +280,8 @@ This section provides functions for adding, reading and modifying operating load
 
 %++++++++++++++++++++
 \mysubsubsection{MainSystem: Sensor}
-This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.
+\label{sec:mainsystem:sensor}
+ This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.
 
 \begin{center}
 \footnotesize
@@ -525,6 +531,38 @@ This section shows the DynamicSolverType structure, which is used for selecting 
   TrapezoidalIndex2 & an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction\\ \hline 
   ExplicitEuler & [NOT IMPLEMENTED YET] an explicit first order solver for systems without constraints\\ \hline 
   RK45 & [NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{KeyCode}
+This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  SPACE & space key\\ \hline 
+  ENTER & enter (return) key\\ \hline 
+  TAB & \\ \hline 
+  BACKSPACE & \\ \hline 
+  RIGHT & cursor right\\ \hline 
+  LEFT & cursor left\\ \hline 
+  DOWN & cursor down\\ \hline 
+  UP & cursor up\\ \hline 
+  F1 & function key F1\\ \hline 
+  F2 & function key F2\\ \hline 
+  F3 & function key F3\\ \hline 
+  F4 & function key F4\\ \hline 
+  F5 & function key F5\\ \hline 
+  F6 & function key F6\\ \hline 
+  F7 & function key F7\\ \hline 
+  F8 & function key F8\\ \hline 
+  F9 & function key F9\\ \hline 
+  F10 & function key F10\\ \hline 
 \end{longtable}
 \end{center}
 

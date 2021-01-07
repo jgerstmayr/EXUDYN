@@ -58,7 +58,9 @@ nElements = 32 #2020-01-03: now works even with 64 elements if relTol=1e-5; did 
 lElem = L / nElements
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
-    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A*0.1, nodeNumbers=[nc0+i,nc0+i+1], useReducedOrderIntegration=True))
+    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
+                               physicsBendingStiffness=E*I, physicsAxialStiffness=E*A*0.1, 
+                               nodeNumbers=[int(nc0)+i,int(nc0)+i+1], useReducedOrderIntegration=True))
     cableList+=[elem]
 
 mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))

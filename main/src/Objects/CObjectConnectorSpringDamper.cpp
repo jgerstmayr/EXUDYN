@@ -7,7 +7,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 
@@ -17,11 +17,8 @@
 
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void ComputeConnectorProperties(const MarkerDataStructure& markerData, const CObjectConnectorSpringDamperParameters& parameters,
-	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection)
-//void ComputeConnectorProperties(const MarkerDataStructure& markerData, Real referenceLength, Real stiffness, Real damping, Real springForce, 
-//	bool activeConnector, const std::function<Real(Real, Real, Real, Real, Real)>& userFunction,
-//	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection)
+void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataStructure& markerData,
+	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const
 {
 	relPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 	Real springLength = relPos.GetL2Norm();
@@ -49,11 +46,10 @@ void ComputeConnectorProperties(const MarkerDataStructure& markerData, const COb
 		}
 		else
 		{
-			UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-			{
-				//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real springForce)
-				force += parameters.springForceUserFunction(markerData.GetTime(), springLength - parameters.referenceLength, relVel*forceDirection, parameters.stiffness, parameters.damping, parameters.force);
-			}, "ObjectConnectorSpringDamper::springForceUserFunction");
+			Real forceAdd;
+			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), 
+				springLength - parameters.referenceLength, relVel*forceDirection);
+			force += forceAdd;
 		}
 	}
 }
@@ -74,7 +70,7 @@ void CObjectConnectorSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerD
 	{
 		Real force;
 		Vector3D relPos, relVel, forceDirection;
-		ComputeConnectorProperties(markerData, parameters, relPos, relVel, force, forceDirection);
+		ComputeConnectorProperties(markerData, relPos, relVel, force, forceDirection);
 		Vector3D fVec = force * forceDirection;
 
 		//now link ode2Lhs Vector to partial result using the two jacobians
@@ -114,7 +110,7 @@ void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType
 {
 	Real force;
 	Vector3D relPos, relVel, forceDirection;
-	ComputeConnectorProperties(markerData, parameters, relPos, relVel, force, forceDirection);
+	ComputeConnectorProperties(markerData, relPos, relVel, force, forceDirection);
 
 	switch (variableType)
 	{

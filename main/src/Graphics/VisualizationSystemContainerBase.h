@@ -10,7 +10,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -63,7 +63,7 @@ public:
 
 //MOVE to python generated class!!!
 //! rendering state to be controlled via pybind
-class RendererState
+class RenderState
 {
 public:
 	//GLfloat modelview[16]; //current model view matrix
@@ -75,7 +75,12 @@ public:
 	Float16 modelRotation;		//!< rotation used for incremental rotation with mouse / right mouse button
 	Float16 openGLModelViewMatrix;	//!< modelview matrix as used in openGL
 	Float16 openGLProjection;		//!< projection matrix as used in openGL
-
+	
+	Vector2D mouseCoordinates; //!current mouse coordinates as obtained from GLFW
+	Vector2D openGLcoordinates; //!current mouse coordinates projected in current model view plane (x/y)
+	bool mouseLeftPressed;     //!current left mouse button as obtained from GLFW
+	bool mouseRightPressed;    //!current right mouse button as obtained from GLFW
+	bool mouseMiddlePressed;   //!current middle mouse button as obtained from GLFW
 };
 
 #endif

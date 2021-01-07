@@ -11,7 +11,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -285,6 +285,30 @@ enum class DynamicSolverType {
 	TrapezoidalIndex2 = 2,	//an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction
 	ExplicitEuler = 3,		//an explicit first order solver for systems without constraints
 	RK45 = 4				//an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection
+};
+
+//key codes as defined in GLFW, used for Python keyPressUserFunction
+enum class KeyCode {
+	_None = 0,			//marks that no configuration is used
+	SPACE = 32,			//see GLFW and Python interface};
+	ESCAPE = 256,		//see GLFW and Python interface};
+	ENTER = 257,		//see GLFW and Python interface};
+	TAB = 258,			//see GLFW and Python interface};
+	BACKSPACE = 259,	//see GLFW and Python interface};
+	RIGHT = 262,		//see GLFW and Python interface};
+	LEFT = 263,			//see GLFW and Python interface};
+	DOWN = 264,			//see GLFW and Python interface};
+	UP = 265,			//see GLFW and Python interface};
+	F1 = 291,	//see GLFW and Python interface};
+	F2 = 292,	//see GLFW and Python interface};
+	F3 = 293,	//see GLFW and Python interface};
+	F4 = 294,	//see GLFW and Python interface};
+	F5 = 295,	//see GLFW and Python interface};
+	F6 = 296,	//see GLFW and Python interface};
+	F7 = 297,	//see GLFW and Python interface};
+	F8 = 298,	//see GLFW and Python interface};
+	F9 = 299,	//see GLFW and Python interface};
+	F10 = 300	//see GLFW and Python interface};
 };
 
 enum class ConfigurationType {

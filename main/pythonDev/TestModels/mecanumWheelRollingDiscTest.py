@@ -41,7 +41,7 @@ v0 = -5*0 #initial car velocity in y-direction
 omega0Wheel = [v0/rWheel,0,0]                   #initial angular velocity around z-axis
 
 #v0 = [0,0,0]                                   #initial translational velocity
-print("v0Car=",v0)
+#exu.Print("v0Car=",v0)
 
 #++++++++++++++++++++++++++++++
 #car parameters:
@@ -189,7 +189,7 @@ for iWheel in range(nWheels):
 
 
 torqueFactor = 100
-def UFBasicTorque(t, torque):
+def UFBasicTorque(mbs, t, torque):
     if t < 0.2:
         return torque
     else:
@@ -231,7 +231,7 @@ def ComputeVelocity(t):
 
 pControl = 500
 #compute controlled torque; torque[0] contains wheel number
-def UFtorque(t, torque):
+def UFtorque(mbs, t, torque):
     iWheel = int(torque[0]) #wheel number
 
     v = ComputeVelocity(t) #desired velocity

@@ -12,7 +12,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -60,7 +60,7 @@ public:
 	virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const { return true; }
 
 	//! Get current load value(s); copies values==>slow!; can be scalar or vector-valued!
-	virtual py::object GetLoadValues(Real time) const;
+	virtual py::object GetLoadValues(const MainSystemBase&, Real time) const;
 
 	//! Get (read) parameter 'parameterName' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Invalid call to MainLoad::GetParameter"); return py::object(); }

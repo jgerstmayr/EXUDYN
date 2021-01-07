@@ -84,7 +84,7 @@ Such a ground node is added via:
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 \end{lstlisting}
 %
-In the next step, we add an object\footnote{For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section \ref{sec_programStructure}.}, which provides equations for coordinates. The \texttt{MassPoint} needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
+In the next step, we add an object\footnote{For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section \ref{sec:programStructure}.}, which provides equations for coordinates. The \texttt{MassPoint} needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
 \begin{lstlisting}[language=Python, firstnumber=23]
   massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
 \end{lstlisting}

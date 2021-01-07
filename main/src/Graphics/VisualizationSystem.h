@@ -10,7 +10,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -49,7 +49,7 @@ public: //declared as public for direct access via pybind
 	PostProcessData* postProcessData;	//!< link to postProcessData of CSystem ==> communication between the two threads
 	CSystemData* systemData;			//!< REMOVE: this is a temporary access, before visualization objects are introduced
 
-	//RendererState rendererState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
+	//RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	const float contourPlotFlag = -2.f;	//!< this is the value of transparency used to identify contour plot values in GraphicsData items
 
 	//additional data for user functions

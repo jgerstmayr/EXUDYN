@@ -889,7 +889,7 @@ class VObjectConnectorRigidBodySpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorRigidBodySpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, springForceTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness
@@ -898,6 +898,7 @@ class ObjectConnectorRigidBodySpringDamper:
         self.rotationMarker1 = rotationMarker1
         self.offset = offset
         self.activeConnector = activeConnector
+        self.springForceTorqueUserFunction = springForceTorqueUserFunction
         self.visualization = visualization
 
     def __iter__(self):
@@ -910,6 +911,7 @@ class ObjectConnectorRigidBodySpringDamper:
         yield 'rotationMarker1', self.rotationMarker1
         yield 'offset', self.offset
         yield 'activeConnector', self.activeConnector
+        yield 'springForceTorqueUserFunction', self.springForceTorqueUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]

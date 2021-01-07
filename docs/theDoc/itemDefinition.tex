@@ -47,8 +47,8 @@ The item VNodePoint has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2]\cIni\tp = \uv\cIni = [u_0,\,u_1,\,u_2]\cIni\tp$}{}
 \rowTable{initialVelocities}{$\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2]\cIni\tp$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
@@ -78,7 +78,7 @@ The item VNodePoint has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on NodePoint see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\item ...
 \ei
 
 %
@@ -127,8 +127,8 @@ The item VNodePoint2D has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1]\cIni\tp = [u_0,\,u_1]\cIni\tp$}{}
 \rowTable{initialVelocities}{$\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1]\cIni\tp$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\cConfig + \pv\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\uv\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\vv\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$}{global 3D velocity vector of node}
@@ -161,7 +161,7 @@ The item VNodePoint2D has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on NodePoint2D see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sparseMatrixSpringDamperTest.py}{\texttt{sparseMatrixSpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sparseMatrixSpringDamperTest.py}{\texttt{sparseMatrixSpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\ei
 
 %
 \newpage
@@ -209,8 +209,8 @@ The item VNodeRigidBodyEP has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$}{}
 \rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
@@ -263,7 +263,7 @@ The item VNodeRigidBodyEP has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on NodeRigidBodyEP see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Drunup.py}{\texttt{rigidRotor3Drunup.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/performanceMultiThreadingNG.py}{\texttt{performanceMultiThreadingNG.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py}{\texttt{rigidRotor3Dnutation.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Drunup.py}{\texttt{rigidRotor3Drunup.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item ...
 \ei
 
 %
@@ -319,8 +319,8 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$}{}
 \rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
@@ -368,7 +368,7 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on NodeRigidBodyRxyz see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}}\ei
 
 %
 \newpage
@@ -416,8 +416,8 @@ The item VNodeRigidBodyRotVecLG has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [\uv\tp\cIni,\,\tnu\tp\cIni]\tp$}{}
 \rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
@@ -507,8 +507,8 @@ The item VNodeRigidBody2D has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,\psi_0]\tp\cIni$}{}
 \rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni =  [v_0,\,v_1,\,\omega_2]\tp\cIni$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$}{global 3D displacement vector of node}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$}{global 3D velocity vector of node}
@@ -587,8 +587,8 @@ The item VNode1D has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$[q_0]\tp\cIni$}{}
 \rowTable{initialVelocities}{$[\dot q_0]\tp\cIni$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Coordinates}{$\qv\cConfig = [q_0]\tp\cConfig$}{ODE2 coordinate of node (in vector form)}
 \rowTable{Coordinates\_t}{$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$}{ODE2 velocity coordinate of node (in vector form)}
 \rowTable{Coordinates\_tt}{$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$}{ODE2 acceleration coordinate of node (in vector form)}
@@ -657,8 +657,8 @@ The item VNodePoint2DSlope1 has the following parameters:\vspace{-1cm}\\
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of NodePoint2DSlope1:}
 \label{description_NodePoint2DSlope1}
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{}{global 3D position vector of node (=displacement+reference position)}
 \rowTable{Displacement}{}{global 3D displacement vector of node}
 \rowTable{Velocity}{}{global 3D velocity vector of node}
@@ -677,7 +677,7 @@ The item VNodePoint2DSlope1 has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on NodePoint2DSlope1 see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\ei
 
 %
 \newpage
@@ -725,8 +725,8 @@ The item VNodeGenericODE2 has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates\_t}{$\dot \qv\cIni = [\dot q_0,\,\ldots,\,\dot q_{n_c}]\tp\cIni$}{}
 \rowTable{numberOfODE2Coordinates}{$n_c$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Coordinates}{$\qv\cConfig = [q_0,\,\ldots,\,q_{nc}]\tp\cConfig$}{coordinates vector of node}
 \rowTable{Coordinates\_t}{$\dot \qv\cConfig = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cConfig$}{velocity coordinates vector of node}
 \rowTable{Coordinates\_tt}{$\ddot \qv\cConfig = [\ddot q_0,\,\ldots,\,\ddot q_{nc}]\tp\cConfig$}{acceleration coordinates vector of node}
@@ -785,8 +785,8 @@ The item VNodeGenericData has the following parameters:\vspace{-1cm}\\
 \rowTable{initialCoordinates}{$\xv\cIni = [x_0,\,\ldots,\,x_{n_c}]\tp\cIni$}{}
 \rowTable{numberOfDataCoordinates}{$n_c$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Coordinates}{$\xv\cConfig = [x_0,\,\ldots,\,x_{nc}]\tp\cConfig$}{data coordinates (history variables) vector of node}
 \finishTable
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
@@ -843,8 +843,8 @@ The item VNodePointGround has the following parameters:\vspace{-1cm}\\
 \startTable{input parameter}{symbol}{description see tables above}
 \rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,q_2]\tp\cRef = \pv\cRef = [r_0,\,r_1,\,r_2]\tp$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp = \pv\cRef$}{global 3D position vector of node (=reference position)}
 \rowTable{Displacement}{$\uv\cConfig = [0,\,0,\,0]\cConfig\tp$}{zero 3D vector}
 \rowTable{Velocity}{$\vv\cConfig = [0,\,0,\,0]\cConfig\tp$}{zero 3D vector}
@@ -862,7 +862,7 @@ The item VNodePointGround has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on NodePointGround see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item ...
 \ei
 
 %
@@ -913,8 +913,8 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
 \rowTable{physicsMass}{$m$}{}
 \rowTable{nodeNumber}{$n0$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of translated local position; local (body) coordinate system = global coordinate system}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp$}{global displacement vector of mass point}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp$}{global velocity vector of mass point}
@@ -985,7 +985,7 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectMassPoint see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sparseMatrixSpringDamperTest.py}{\texttt{sparseMatrixSpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sparseMatrixSpringDamperTest.py}{\texttt{sparseMatrixSpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}}\ei
 
 %
 \newpage
@@ -1031,8 +1031,8 @@ The item VObjectMassPoint2D has the following parameters:\vspace{-1cm}\\
 \rowTable{physicsMass}{$m$}{}
 \rowTable{nodeNumber}{$n0$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of translated local position; local (body) coordinate system = global coordinate system}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$}{global displacement vector of mass point}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$}{global velocity vector of mass point}
@@ -1146,8 +1146,8 @@ The item VObjectMass1D has the following parameters:\vspace{-1cm}\\
 \rowTable{referencePosition}{$\LU{0}{\pv_0}$}{}
 \rowTable{referenceRotation}{$\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig$}{global position vector; for interpretation see intermediate variables}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig$}{global displacement vector; for interpretation see intermediate variables}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig $}{global velocity vector; for interpretation see intermediate variables}
@@ -1268,8 +1268,8 @@ The item VObjectRotationalMass1D has the following parameters:\vspace{-1cm}\\
 \rowTable{referencePosition}{$\LU{0}{\pv_0}$}{}
 \rowTable{referenceRotation}{$\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig$}{global position vector; for interpretation see intermediate variables}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig$}{global displacement vector; for interpretation see intermediate variables}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig $}{global velocity vector; for interpretation see intermediate variables}
@@ -1389,8 +1389,8 @@ The item VObjectRigidBody has the following parameters:\vspace{-1cm}\\
 \rowTable{physicsCenterOfMass}{$\LU{b}{\pv}_{COM}$}{}
 \rowTable{nodeNumber}{$n0$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of body-fixed point given by local position vector}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\LU{b}{\pv}$}{global displacement vector of body-fixed point given by local position vector}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig(\LU{b}{\pv}) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \LU{b}{\pv}\cConfig)$}{global velocity vector of body-fixed point given by local position vector}
@@ -1426,7 +1426,7 @@ The item VObjectRigidBody has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectRigidBody see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_moving_rigidbody.py}{\texttt{ANCF\_moving\_rigidbody.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_switchingSlidingJoint2D.py}{\texttt{ANCF\_switchingSlidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/performanceMultiThreadingNG.py}{\texttt{performanceMultiThreadingNG.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_moving_rigidbody.py}{\texttt{ANCF\_moving\_rigidbody.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_switchingSlidingJoint2D.py}{\texttt{ANCF\_switchingSlidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}}\item ...
 \ei
 
 %
@@ -1483,8 +1483,8 @@ The item VObjectRigidBody2D has the following parameters:\vspace{-1cm}\\
 \rowTable{physicsInertia}{$J$}{}
 \rowTable{nodeNumber}{$n_0$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}\cConfig(\LU{b}{\pv}) = \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef + \LU{0b}{\Rot}\LU{b}{\pv}$}{global position vector of body-fixed point given by local position vector}
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\LU{b}{\pv}$}{global displacement vector of body-fixed point given by local position vector}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig(\LU{b}{\pv}) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \LU{b}{\pv}\cConfig)$}{global velocity vector of body-fixed point given by local position vector}
@@ -1608,8 +1608,8 @@ A system of $n$ second order ordinary differential equations (ODE2), having a ma
     stiffnessMatrix &     NumpyMatrix &      &     Matrix[] &     stiffness matrix of object in python numpy format\\ \hline
     dampingMatrix &     NumpyMatrix &      &     Matrix[] &     damping matrix of object in python numpy format\\ \hline
     forceVector &     NumpyVector &      &     [] &     generalized force vector added to RHS\\ \hline
-    forceUserFunction &     PyFunctionVectorScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; see description below\\ \hline
-    massMatrixUserFunction &     PyFunctionMatrixScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the mass matrix instead of the constant mass matrix; see description below\\ \hline
+    forceUserFunction &     PyFunctionVectorMbsScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; see description below\\ \hline
+    massMatrixUserFunction &     PyFunctionMatrixMbsScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the mass matrix instead of the constant mass matrix; see description below\\ \hline
     coordinateIndexPerNode &     ArrayIndex &      &     [] &     this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed\\ \hline
     visualization & VObjectGenericODE2 & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -1641,13 +1641,23 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
 \rowTable{forceUserFunction}{$\fv_{user} \in \Rcal^{n}$}{}
 \rowTable{massMatrixUserFunction}{$\Mm_{user} \in \Rcal^{n\times n}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Coordinates}{}{all ODE2 coordinates}
 \rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
+\rowTable{Coordinates\_tt}{}{all ODE2 acceleration coordinates}
 \rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)}
 \finishTable
  \noindent
+    \mysubsubsubsection{Additional output variables for superelement node access}
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
+    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
+    Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
+
+    For this object, all nodes of \texttt{ObjectGenericODE2} map their \texttt{OutputVariableType} to the meshnode $\ra$
+    see at the according node for the list of \texttt{OutputVariableType}.
+    %
     \mysubsubsubsection{Equations of motion}
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
     \be
@@ -1657,31 +1667,33 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
     %
     \mysubsubsubsection{Equations of motion}
     \be \label{eq_ObjectGenericODE2_EOM}
-      \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
+      \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t,\qv,\dot \qv)
     \ee
-    Note that the user function $\fv_{user}(t,\qv,\dot \qv)$ may be empty (=0). 
+    Note that the user function $\fv_{user}(mbs, t,\qv,\dot \qv)$ may be empty (=0). 
     
     In case that a user mass matrix is specified, \eq{eq_ObjectGenericODE2_EOM} is replaced with
     \be
-      \Mm_{user}(t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(t,\qv,\dot \qv)
+      \Mm_{user}(mbs, t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t,\qv,\dot \qv)
     \ee
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(t, q, q\_t)}
+    \userFunction{forceUserFunction(mbs, t, q, q\_t)}
     A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     %
     %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{massMatrixUserFunction(t, q, q\_t)}
+    \userFunction{massMatrixUserFunction(mbs, t, q, q\_t)}
     A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
@@ -1710,17 +1722,17 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
     #user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
     KD = numpy.diag([200,100])
     #nonlinear force example
-    def UFforce(t, q, q\_t): 
+    def UFforce(mbs, t, q, q\_t): 
         return np.dot(KD, q_t*q) #add nonlinear function for q_t and q, q_t*q gives vector
     
     #non-constant mass matrix:
-    def UFmass(t, q, q\_t): 
+    def UFmass(mbs, t, q, q\_t): 
         return return (q[0]+1)*M #uses mass matrix from mini example
     
     #non-constant mass matrix:
-    def UFgraphics(mainSystem, objectNum):
-        t = mainSystem.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-        p = mainSystem.GetObjectOutputSuperElement(objectNumber=objectNum, variableType = exu.OutputVariableType.Position,
+    def UFgraphics(mbs, objectNum):
+        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+        p = mbs.GetObjectOutputSuperElement(objectNumber=objectNum, variableType = exu.OutputVariableType.Position,
                                             meshNodeNumber = 0, #get first node's position 
                                             configuration = exu.ConfigurationType.Visualization)
         graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
@@ -1805,8 +1817,8 @@ This object is used to represent equations modelled by the floating frame of ref
     stiffnessMatrixFF &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of stiffness matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format\\ \hline
     dampingMatrixFF &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of damping matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format\\ \hline
     forceVector &     NumpyVector &      &     [] &     generalized, global force vector added to RHS; the rigid body part $\fv_r$ is directly applied to rigid body coordinates while the flexible part $\fv_{ff}$ is transformed from global to local coordinates\\ \hline
-    forceUserFunction &     PyFunctionVectorScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; see description below\\ \hline
-    massMatrixUserFunction &     PyFunctionMatrixScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below\\ \hline
+    forceUserFunction &     PyFunctionVectorMbsScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t; see description below\\ \hline
+    massMatrixUserFunction &     PyFunctionMatrixMbsScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below\\ \hline
     computeFFRFterms &     Bool &      &     True &     flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector\\ \hline
     coordinateIndexPerNode &     ArrayIndex &      &     [] &     this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed\\ \hline
     objectIsInitialized &     Bool &      &     False &     flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed\\ \hline
@@ -1859,13 +1871,39 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
 \rowTable{tempRefPosSkew}{$\tilde\pv_{f} \in \Rcal^{n_{c_f} \times 3}$}{}
 \rowTable{tempVelSkew}{$\dot\tilde\cv_{f} \in \Rcal^{n_{c_f} \times 3}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Coordinates}{}{all ODE2 coordinates}
 \rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
+\rowTable{Coordinates\_tt}{}{all ODE2 acceleration coordinates}
 \rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)}
 \finishTable
  \noindent
+    \mysubsubsubsection{Additional output variables for superelement node access}
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
+    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
+    Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
+
+    \mysubsubsubsection{Super element output variables}\label{sec:objectffrf:superelementoutput}
+    \startTable{super element output variables}{symbol}{description}
+      \rowTable{Position}{$\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\rv}\cConfig + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$}{global position of mesh node $n_i$ including rigid body motion and flexible deformation}
+      \rowTable{Displacement}{$\LU{0}{\uv}\cConfig(n_i) = \LU{0}{\pv}\cConfig(n_i) - \LU{0}{\pv}\cRef(n_i)$}{global displacement of mesh node $n_i$ including rigid body motion and flexible deformation}
+      %
+      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \rv}\cConfig + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \xv}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\xv}\cConfig(n_i))$}{global velocity of mesh node $n_i$ including rigid body motion and flexible deformation}
+      %
+      \rowTable{Acceleration}{$\LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \rv}\cConfig + 
+                              \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \xv}\cConfig(n_i) + 
+                              2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \xv}\cConfig(n_i) +
+                              \LU{0}{\talpha}\cConfig \times \LU{0}{\xv}\cConfig(n_i)) + 
+                              \LU{0}{\tomega}\cConfig \times \LU{0}{\tomega}\cConfig \times \LU{0}{\xv}\cConfig(n_i))$}
+      {global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}\cConfig(n_i)$}
+      %
+      \rowTable{DisplacementLocal}{$\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\xv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$}{local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ !}
+      \rowTable{VelocityLocal}{$\LU{b}{\dot \xv}\cConfig(n_i)$}{local velocity of mesh node $n_i$, representing the rate of flexible deformation within the body frame}
+    \finishTable
+    %
+    %
     \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{object coordinates}{$\cv = [\cv_r,\,\qv_f]\tp$}{object coordinates}
@@ -1873,12 +1911,14 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
       \rowTable{rotation coordinates}{$\ttheta\cCur = [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\cCur\tp$}{rigid body coordinates in case of Euler parameters}
       \rowTable{flexible coordinates}{$\qv_f$}{flexible, body-fixed coordinates}
       \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am}_{bd} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
+      \rowTable{reference frame origin}{$\LU{0}{\rv}\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp$}{global position of underlying rigid body node $n_0$ which defines the reference frame origin}
+      \rowTable{reference frame orientation}{$\LU{0b}{\Rot}\cConfig$}{transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$}
     \finishTable
     %
     \mysubsubsubsection{Equations of motion}
-    Consider an object with $n = 1+ n_f$ nodes, $n_f$ being the 'flexible' nodes.
+    Consider an object with $n = 1+ n_f$ nodes, $n_f$ being the number of 'flexible' nodes.
     It has node numbers $[n_0,\,\ldots,\,n_{n_f}]$ and according numbers of 
-    nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$.
+    nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, where $n_0$ denotes the rigid body node.
     This gives $n_c$ total nodal coordinates, 
     \be
       n_c = \sum_{i=0}^{n_f} n_{c_i}.
@@ -1894,13 +1934,13 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
     
     {\bf Equations of motion}, in case that \texttt{computeFFRFterms = True}:
     \be
-      \left(\Mm_{user}(t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
+      \left(\Mm_{user}(mbs, t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
             \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \cv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \cv = 
-            \fv_Q(\cv,\dot \cv) + \vp{\fv_r}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv_{ff}} + \fv_{user}(t,\cv,\dot \cv)
+            \fv_Q(\cv,\dot \cv) + \vp{\fv_r}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv_{ff}} + \fv_{user}(mbs, t,\cv,\dot \cv)
     \ee
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
-    Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
+    Note that the user functions $\fv_{user}(mbs, t,\cv,\dot \cv)$ and $\Mm_{user}(mbs, t,\cv,\dot \cv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2020}.
     
     CoordinateLoads are integrated for each ODE2 coordinate on the RHS of the latter equation. 
@@ -1924,20 +1964,22 @@ The item VObjectFFRF has the following parameters:\vspace{-1cm}\\
     \ee
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(t, q, q\_t)}
+    \userFunction{forceUserFunction(mbs, t, q, q\_t)}
     A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     %
     %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n_c$}{object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_c$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n_c}$}{returns force vector for object}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{massMatrixUserFunction(t, q, q\_t)}
+    \userFunction{massMatrixUserFunction(mbs, t, q, q\_t)}
     A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n_c$}{object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_c$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
@@ -1981,8 +2023,8 @@ This object is used to represent modally reduced flexible bodies using the float
     massMatrixReduced &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)\\ \hline
     stiffnessMatrixReduced &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)\\ \hline
     dampingMatrixReduced &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)\\ \hline
-    forceUserFunction &     PyFunctionVectorScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; see description below\\ \hline
-    massMatrixUserFunction &     PyFunctionMatrixScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below\\ \hline
+    forceUserFunction &     PyFunctionVectorMbsScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the generalized user force vector for the ODE2 equations; see description below\\ \hline
+    massMatrixUserFunction &     PyFunctionMatrixMbsScalar2Vector &     \tabnewline  &     \tabnewline 0 &     A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below\\ \hline
     computeFFRFterms &     Bool &      &     True &     flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector\\ \hline
     modeBasis &     NumpyMatrix &      &     Matrix[] &     mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector $[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp$\\ \hline
     outputVariableModeBasis &     NumpyMatrix &      &     Matrix[] &     mode basis, which transforms reduced coordinates to output variables per mode; $s_{OV}$ is the size of the output variable, e.g., 6 for stress modes ($S_{xx},...,S_{xy}$)\\ \hline
@@ -2033,8 +2075,8 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
 \rowTable{tempRefPosSkew}{$\tilde\pv_{f} \in \Rcal^{n_{c_f} \times 3}$}{}
 \rowTable{tempVelSkew}{$\dot\tilde\cv_{f} \in \Rcal^{n_{c_f} \times 3}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Coordinates}{}{all ODE2 coordinates}
 \rowTable{Coordinates\_t}{}{all ODE2 velocity coordinates}
 \rowTable{Force}{}{generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)}
@@ -2042,8 +2084,32 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
 \rowTable{Strain}{}{allows to compute linearized, corotational nodal strains (in mesh nodes, in body frame) based on modal strain values provided in outputVariableModeBasis; the flag outputVariableTypeModeBasis must be set in this case to exu.Outputvariable.Strain}
 \finishTable
  \noindent
+    \mysubsubsubsection{Additional output variables for superelement node access}
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
+    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
+    Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
+
+    \mysubsubsubsection{Super element output variables}\label{sec:objectffrfreducedorder:superelementoutput}
+    \startTable{super element output variables}{symbol}{description}
+      \rowTable{Position}{$\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\rv}\cConfig + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$}{global position of mesh node $n_i$ including rigid body motion and flexible deformation}
+      \rowTable{Displacement}{$\LU{0}{\uv}\cConfig(n_i) = \LU{0}{\pv}\cConfig(n_i) - \LU{0}{\pv}\cRef(n_i)$}{global displacement of mesh node $n_i$ including rigid body motion and flexible deformation}
+      %
+      \rowTable{Velocity}{$\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \rv}\cConfig + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \xv}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\xv}\cConfig(n_i))$}{global velocity of mesh node $n_i$ including rigid body motion and flexible deformation}
+      %
+      \rowTable{Acceleration}{$\LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \rv}\cConfig + 
+                              \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \xv}\cConfig(n_i) + 
+                              2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \xv}\cConfig(n_i) +
+                              \LU{0}{\talpha}\cConfig \times \LU{0}{\xv}\cConfig(n_i)) + 
+                              \LU{0}{\tomega}\cConfig \times \LU{0}{\tomega}\cConfig \times \LU{0}{\xv}\cConfig(n_i))$}
+      {global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}\cConfig(n_i)$}
+      %
+      \rowTable{DisplacementLocal}{$\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\xv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$}{local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ !}
+      \rowTable{VelocityLocal}{$\LU{b}{\dot \xv}\cConfig(n_i)$}{local velocity of mesh node $n_i$, representing the rate of flexible deformation within the body frame}
+    \finishTable
+%
     \mysubsubsubsection{Definition of quantities}
-    The object additionally provides the following output variables for mesh nodes (use \\texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
+    The object additionally provides the following output variables for mesh nodes (use \texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
     \startTable{mesh node output variables}{symbol}{description}
       \rowTable{Position}{$\LU{0}{\rv}_{n_i}$}{position of node with mesh node number $n_i$ in global coordinates}
       \rowTable{Position}{$\LU{0}{\rv}_{n_i}$}{position of node with mesh node number $n_i$ in global coordinates}
@@ -2059,8 +2125,10 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
     \startTable{intermediate variables}{symbol}{description}
       \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am}_{bd} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
       \rowTable{coordinate vector}{$\qv = [\LU{0}{\qv}_t,\,\tpsi,\,\tzeta]$}{vector of object coordinates; $\qv_t$ and $\tpsi$ are the translation and rotation part of displacements of the reference frame, provided by the rigid body node (node number 0)}
-      \rowTable{reference frame position}{$\LU{0}{\pv}_{t,config} = \LU{0}{\qv}_{t,config} + \LU{0}{\qv}_{t,ref}$}{reference frame position in any configuration except reference}
-      \rowTable{reference frame rotation}{$\ttheta_{config} = \ttheta_{config} + \ttheta_{ref}$}{reference frame rotation parameters in any configuration except reference}
+      \rowTable{reference frame origin}{$\LU{0}{\rv}\cConfig = \LU{0}{\qv}_{t,config} + \LU{0}{\qv}_{t,ref}$}{reference frame position in any configuration except reference}
+      %\rowTable{reference frame origin}{$\LU{0}{\rv}\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp$}{global position of underlying rigid body node $n_0$ which defines the reference frame origin}
+      \rowTable{reference frame rotation}{$\ttheta\cConfig = \ttheta\cConfig + \ttheta_{ref}$}{reference frame rotation parameters in any configuration except reference}
+      \rowTable{reference frame orientation}{$\LU{0b}{\Rot}\cConfig$}{transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$}
 %
       \rowTable{vector of modal coordinates}{$\tzeta = [\zeta_0,\,\ldots,\zeta_{n_m-1}]\tp$}{vector of modal coordinates}
       \rowTable{vector of mesh coordinates}{$\LU{b}{\qv}_f = \tpsi \tzeta$}{vector of alternating x,y, an z coordinates of local (in body frame) mesh displacements reconstructed from modal coordinates $\tzeta$}
@@ -2085,33 +2153,35 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
     
     Equations of motion, in case that \texttt{computeFFRFterms = True}:
     \be
-      \left(\Mm_{user}(t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
+      \left(\Mm_{user}(mbs, t,\cv,\dot \cv) + \mr{\Mm_{tt}}{\Mm_{tr}}{\Mm_{tf}} {}{\Mm_{rr}}{\Mm_{rf}} {\mathrm{sym.}}{}{\Mm_{ff}} \right) \ddot \cv + 
             \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm_{ff}} \dot \cv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km_{ff}} \cv = 
-            \fv_Q(\cv,\dot \cv) + \fv_{user}(t,\cv,\dot \cv)
+            \fv_Q(\cv,\dot \cv) + \fv_{user}(mbs, t,\cv,\dot \cv)
     \ee
     $\ra$ will be completed later, see according literature of Zw\"olfer and Gerstmayr, 2020.
     
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm_{tt} \ldots \Mm_{ff}$ are zero (not computed) and
     the quadratic velocity vector $\fv_Q = \Null$.
-    Note that the user functions $\fv_{user}(t,\cv,\dot \cv)$ and $\Mm_{user}(t,\cv,\dot \cv)$ may be empty (=0). 
+    Note that the user functions $\fv_{user}(mbs, t,\cv,\dot \cv)$ and $\Mm_{user}(mbs, t,\cv,\dot \cv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2021}.
     
     CoordinateLoads are added for each ODE2 coordinate on the RHS of the latter equation. 
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{forceUserFunction(t, q, q\_t)}
+    \userFunction{forceUserFunction(mbs, t, q, q\_t)}
     A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     %
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n_{ODE2}}$}{returns force vector for object}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{massMatrixUserFunction(t, q, q\_t)}
+    \userFunction{massMatrixUserFunction(mbs, t, q, q\_t)}
     A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n_{ODE2}$}{FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n_{ODE2}$}{object velocity coordinates (time derivatives of \texttt{q}) in current configuration}
@@ -2129,7 +2199,7 @@ The item VObjectFFRFreducedOrder has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectFFRFreducedOrder see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py}{\texttt{NGsolveCrankShaftTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py}{\texttt{NGsolveCrankShaftTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
 
 %
 \newpage
@@ -2178,8 +2248,8 @@ The item VObjectANCFCable2D has the following parameters:\vspace{-1cm}\\
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of ObjectANCFCable2D:}
 \label{description_ObjectANCFCable2D}
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{}{global position vector of local axis (1) and cross section (2) position}
 \rowTable{Displacement}{}{global displacement vector of local axis (1) and cross section (2) position}
 \rowTable{Velocity}{}{global velocity vector of local axis (1) and cross section (2) position}
@@ -2206,7 +2276,7 @@ The item VObjectANCFCable2D has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectANCFCable2D see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\ei
 
 %
 \newpage
@@ -2257,8 +2327,8 @@ The item VObjectALEANCFCable2D has the following parameters:\vspace{-1cm}\\
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of ObjectALEANCFCable2D:}
 \label{description_ObjectALEANCFCable2D}
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{}{global position vector of local axis (1) and cross section (2) position}
 \rowTable{Displacement}{}{global displacement vector of local axis (1) and cross section (2) position}
 \rowTable{Velocity}{}{global velocity vector of local axis (1) and cross section (2) position}
@@ -2325,8 +2395,8 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of ObjectGround:}
 \label{description_ObjectGround}
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{}{global position vector of rotated and translated local position}
 \rowTable{Displacement}{}{global displacement vector of local position}
 \rowTable{Velocity}{}{global velocity vector of local position}
@@ -2364,8 +2434,8 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
     body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
     
     #user function for moving graphics:
-    def UFgraphics(mainSystem, objectNum):
-        t = mainSystem.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+    def UFgraphics(mbs, objectNum):
+        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
         #draw moving sphere on ground
         graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
                                      radius=0.1, color=color4red, nTiles=32)
@@ -2391,7 +2461,7 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectGround see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareFullModifiedNewton.py}{\texttt{compareFullModifiedNewton.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareFullModifiedNewton.py}{\texttt{compareFullModifiedNewton.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item ...
 \ei
 
 %
@@ -2420,7 +2490,7 @@ An simple spring-damper element with additional force; connects to position-base
     damping &     UReal &      &     0. &     damping [SI:N/(m s)] of damper; acts against d/dt(length)\\ \hline
     force &     UReal &      &     0. &     added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
-    springForceUserFunction &     PyFunctionScalar6 &     \tabnewline  &     0 &     A python function which defines the spring force with parameters; the python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below\\ \hline
+    springForceUserFunction &     PyFunctionMbsScalar6 &     \tabnewline  &     \tabnewline 0 &     A python function which defines the spring force with parameters; the python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below\\ \hline
     visualization & VObjectConnectorSpringDamper & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2447,8 +2517,8 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
 \rowTable{damping}{$d$}{}
 \rowTable{force}{$f_{a}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Distance}{}{distance between both points}
 \rowTable{Displacement}{}{relative displacement between both points}
 \rowTable{Velocity}{}{relative velocity between both points}
@@ -2489,7 +2559,7 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(t, L-L_0, \Delta\! \LU{0}{\vv}\tp \vv_{f}, k, d, f_{a})
+      f_{SD} = \mathrm{UF}(mbs, t, L-L_0, \Delta\! \LU{0}{\vv}\tp \vv_{f}, k, d, f_{a})
     \ee
     if \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
     The vector of the spring force applied at both markers finally reads
@@ -2497,12 +2567,13 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
       \fv = f_{SD}\vv_{f}
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(t, deltaL, deltaL\_t, stiffness, damping, force)}
+    \userFunction{springForceUserFunction(mbs, t, deltaL, deltaL\_t, stiffness, damping, force)}
     A user function, which computes the spring force depending on time, object variables (deltaL, deltaL\_t) and 
     object parameters (stiffness, damping, force).
     The object variables are provided to the function using the current values of the SpringDamper object
     %
     \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{deltaL}}{Real}{$L-L_0$, spring elongation}
       \rowTable{\texttt{deltaL\_t}}{Real}{$\Delta\! \LU{0}{\vv}\tp \vv_{f}$, spring velocity}
@@ -2517,7 +2588,7 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
     \pythonstyle
     \begin{lstlisting}[language=Python]
     #define nonlinear force
-    def UFforce(t, u, v, k, d, F0): 
+    def UFforce(mbs, t, u, v, k, d, F0): 
         return k*u + d*v + F0
     #markerNumbers taken from mini example
     mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
@@ -2586,7 +2657,7 @@ An 3D spring-damper element acting accordingly in three (global) directions (x,y
     stiffness &     Vector3D &      &     [0.,0.,0.] &     stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction\\ \hline
     damping &     Vector3D &      &     [0.,0.,0.] &     damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction\\ \hline
     offset &     Vector3D &      &     [0.,0.,0.] &     offset between two springs\\ \hline
-    springForceUserFunction &     PyFunctionVector3DScalar5Vector3D &     \tabnewline  &     \tabnewline 0 &     A python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below\\ \hline
+    springForceUserFunction &     PyFunctionVector3DmbsScalar5Vector3D &     \tabnewline  &     \tabnewline 0 &     A python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorCartesianSpringDamper & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -2613,8 +2684,8 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:\vsp
 \rowTable{damping}{$\dv$}{}
 \rowTable{offset}{$\vv_{\mathrm{off}}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Displacement}{$\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{relative displacement in global coordinates}
 \rowTable{Distance}{$L=|\Delta\! \LU{0}{\pv}|$}{scalar distance between both marker points}
 \rowTable{Velocity}{$\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{relative translational velocity in global coordinates}
@@ -2643,16 +2714,17 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:\vsp
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      \fv_{SD} = \mathrm{UF}(t, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
+      \fv_{SD} = \mathrm{UF}(mbs, t, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
     \ee
     if \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.:
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(t, displacement, velocity, stiffness, damping, offset)}
+    \userFunction{springForceUserFunction(mbs, t, displacement, velocity, stiffness, damping, offset)}
     A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL\_t) and object parameters 
     (stiffness, damping, force).
     The object variables are provided to the function using the current values of the SpringDamper object
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{displacement}}{Vector3D}{$\Delta\! \LU{0}{\pv}$}
       \rowTable{\texttt{velocity}}{Vector3D}{$\Delta\! \LU{0}{\vv}$}
@@ -2667,7 +2739,7 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:\vsp
     \pythonstyle
     \begin{lstlisting}[language=Python]
     #define simple force for spring-damper:
-    def UFforce(t, u, v, k, d, offset): 
+    def UFforce(mbs, t, u, v, k, d, offset): 
         return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
     
     #markerNumbers and parameters taken from mini example
@@ -2706,14 +2778,14 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:\vsp
 %
 \noindent For further examples on ObjectConnectorCartesianSpringDamper see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py}{\texttt{ANCF\_contact\_circle.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle2.py}{\texttt{ANCF\_contact\_circle2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py}{\texttt{ANCF\_contact\_circle.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle2.py}{\texttt{ANCF\_contact\_circle2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamper.py}{\texttt{cartesianSpringDamper.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}}\item ...
 \ei
 
 %
 %
 \noindent For further examples on ObjectConnectorCartesianSpringDamper see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py}{\texttt{sphericalJointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py}{\texttt{sphericalJointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item ...
 \ei
 
 %
@@ -2743,6 +2815,7 @@ An 3D spring-damper element acting on relative displacements and relative rotati
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
     offset &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     translational and rotational offset considered in the spring force calculation\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
+    springForceTorqueUserFunction &     PyFunctionVector6Dmbs4Vector3D2Matrix6D2Matrix3DVector6D &     \tabnewline  &     \tabnewline 0 &     A python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below\\ \hline
     visualization & VObjectConnectorRigidBodySpringDamper & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2761,8 +2834,8 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:\vsp
 \par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{DESCRIPTION of ObjectConnectorRigidBodySpringDamper:}
 \label{description_ObjectConnectorRigidBodySpringDamper}
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{relative displacement in local joint0 coordinates}
 \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{relative translational velocity in local joint0 coordinates}
 \rowTable{Rotation}{$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$}{relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.)}
@@ -2811,11 +2884,91 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:\vsp
     \ee
     For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
     if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.:
+
+    If the springForceTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
+	$\fv_{SD}$ instead becomes ($t$ is current time)
+    \be
+      \fv_{SD} = \mathrm{UF}(mbs, t, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\omega}, 
+	                         stiffness, damping, rotationMarker0, rotationMarker1, offset)
+    \ee
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceTorqueUserFunction(mbs, t, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)}
+    A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities 
+	(displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between 
+	both markers and which are defined in joint J0 coordinates. 
+	As relative rotations are defined by Tait-Bryan rotation parameters, it is recommended to use this connector for small relative rotations only 
+	(except for rotations about one axis).
+	Furthermore, the user function contains object parameters (stiffness, damping, rotationMarker0/1, offset).
+    
+	Detailed description of the parameters and local quantities:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{displacement}}{Vector3D}{$\LU{J0}{\Delta\pv}$}
+      \rowTable{\texttt{rotation}}{Vector3D}{$\LU{J0}{\ttheta}$}
+      \rowTable{\texttt{velocity}}{Vector3D}{$\LU{J0}{\Delta\vv}$}
+      \rowTable{\texttt{angularVelocity}}{Vector3D}{$\LU{J0}{\Delta\tomega}$}
+      %
+      \rowTable{\texttt{stiffness}}{Vector6D}{copied from object}
+      \rowTable{\texttt{damping}}{Vector6D}{copied from object}
+      \rowTable{\texttt{rotJ0}}{Matrix3D}{rotationMarker0 copied from object}
+      \rowTable{\texttt{rotJ1}}{Matrix3D}{rotationMarker1 copied from object}
+      \rowTable{\texttt{offset}}{Vector6D}{copied from object}
+      \rowTable{\returnValue}{Vector6D}{list or numpy array of computed spring force-torque}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #define simple force for spring-damper:
+    def UFforce(mbs, t, displacement, rotation, velocity, angularVelocity, 
+                stiffness, damping, rotJ0, rotJ1, offset): 
+        k = stiffness #passed as list
+        u = displacement
+        return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
+    
+    #markerNumbers and parameters taken from mini example
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                        stiffness = np.diag([k,k,k, 0,0,0]), 
+                                        damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                        offset = [0,0,0, 0,0,0],
+                                        springForceTorqueUserFunction = UFforce))
+    \end{lstlisting}
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper}
+\label{miniExample_ObjectConnectorRigidBodySpringDamper}
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #example with rigid body at [0,0,0], 1kg under initial velocity
+    k=500
+    nBody = mbs.AddNode(RigidRxyz(initialVelocities=[0,1e3,0, 0,0,0]))
+    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+                                    nodeNumber=nBody))
+    
+    mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
+                                            localPosition = [0,0,0]))
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                        stiffness = np.diag([k,k,k, 0,0,0]), 
+                                        damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                        offset = [0,0,0, 0,0,0]))
+    
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    
+    #check result at default integration time
+    testError = (mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
+                 - (-0.4612983535925061))
+
+\end{lstlisting}
+
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 %
 \noindent For further examples on ObjectConnectorRigidBodySpringDamper see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
 
 %
 \newpage
@@ -2844,7 +2997,7 @@ A 1D (scalar) spring-damper element acting on single ODE2 coordinates; connects 
     dryFriction &     Real &      &     0. &     dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$\\ \hline
     dryFrictionProportionalZone &     Real &      &     0. &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
-    springForceUserFunction &     PyFunctionScalar8 &     \tabnewline  &     0 &     A python function which defines the spring force with 8 parameters, see equations section / see description below\\ \hline
+    springForceUserFunction &     PyFunctionMbsScalar8 &     \tabnewline  &     \tabnewline 0 &     A python function which defines the spring force with 8 parameters, see equations section / see description below\\ \hline
     visualization & VObjectConnectorCoordinateSpringDamper & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2871,8 +3024,8 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 \rowTable{dryFriction}{$f_\mu$}{}
 \rowTable{dryFrictionProportionalZone}{$v_\mu$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Displacement}{$\Delta q$}{relative scalar displacement of marker coordinates}
 \rowTable{Velocity}{$\Delta v$}{difference of scalar marker velocity coordinates}
 \rowTable{Force}{$f_{SD}$}{scalar spring force}
@@ -2907,17 +3060,18 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(t, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+      f_{SD} = \mathrm{UF}(mbs, t, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
     \ee
     if \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{springForceUserFunction(t, displacement, velocity, stiffness, damping, offset, frictionForce, frictionProportionalZone)}
+    \userFunction{springForceUserFunction(mbs, t, displacement, velocity, stiffness, damping, offset, frictionForce, frictionProportionalZone)}
     A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
     and object parameters .
     The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
       \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
@@ -2934,7 +3088,7 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
     \pythonstyle
     \begin{lstlisting}[language=Python]
     #see also mini example!
-    def UFforce(t, u, v, k, d, offset, frictionForce, frictionProportionalZone): 
+    def UFforce(mbs, t, u, v, k, d, offset, frictionForce, frictionProportionalZone): 
         return k*(u-offset) + d*v
     \end{lstlisting}
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
@@ -2942,7 +3096,7 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 \label{miniExample_ObjectConnectorCoordinateSpringDamper}
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
-    def springForce(t, u, v, k, d, offset, frictionForce, frictionProportionalZone):
+    def springForce(mbs, t, u, v, k, d, offset, frictionForce, frictionProportionalZone):
         return 0.1*k*u+k*u**3+v*d
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
@@ -2969,13 +3123,13 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 %
 \noindent For further examples on ObjectConnectorCoordinateSpringDamper see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_switchingSlidingJoint2D.py}{\texttt{ANCF\_switchingSlidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationExample.py}{\texttt{geneticOptimizationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrankCMSacme.py}{\texttt{sliderCrankCMSacme.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorial.py}{\texttt{springDamperTutorial.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_switchingSlidingJoint2D.py}{\texttt{ANCF\_switchingSlidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationExample.py}{\texttt{geneticOptimizationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrankCMSacme.py}{\texttt{sliderCrankCMSacme.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorial.py}{\texttt{springDamperTutorial.py}}\ei
 
 %
 %
 \noindent For further examples on ObjectConnectorCoordinateSpringDamper see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}}\ei
 
 %
 \newpage
@@ -3023,8 +3177,8 @@ The item VObjectConnectorDistance has the following parameters:\vspace{-1cm}\\
 \rowTable{markerNumbers}{$[m0,m1]\tp$}{}
 \rowTable{distance}{$d_0$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Displacement}{$\LU{0}{\Delta\pv}$}{relative displacement in global coordinates}
 \rowTable{Velocity}{$\LU{0}{\Delta\vv}$}{relative translational velocity in global coordinates}
 \rowTable{Distance}{$|\LU{0}{\Delta\pv}|$}{distance between markers (should stay constant; shows constraint deviation)}
@@ -3120,8 +3274,8 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
     offset &     UReal &      &     0. &     An offset between the two values\\ \hline
     factorValue1 &     UReal &      &     1. &     An additional factor multiplied with value1 used in algebraic equation\\ \hline
     velocityLevel &     Bool &      &     False &     If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored\\ \hline
-    offsetUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent offset; see description below\\ \hline
-    offsetUserFunction\_t &     PyFunctionScalar2 &     \tabnewline  &     0 &     time derivative of offsetUserFunction; needed for velocity level constraints; see description below\\ \hline
+    offsetUserFunction &     PyFunctionMbsScalar2 &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent offset; see description below\\ \hline
+    offsetUserFunction\_t &     PyFunctionMbsScalar2 &     \tabnewline  &     \tabnewline 0 &     time derivative of offsetUserFunction; needed for velocity level constraints; see description below\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3146,11 +3300,11 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
 \rowTable{markerNumbers}{$[m0,m1]\tp$}{}
 \rowTable{offset}{$l_\mathrm{off}$}{}
 \rowTable{factorValue1}{$k_{m1}$}{}
-\rowTable{offsetUserFunction}{$\mathrm{UF}(t,l_\mathrm{off})$}{}
-\rowTable{offsetUserFunction\_t}{$\mathrm{UF}_t(t,l_\mathrm{off})$}{}
+\rowTable{offsetUserFunction}{$\mathrm{UF}(mbs, t,l_\mathrm{off})$}{}
+\rowTable{offsetUserFunction\_t}{$\mathrm{UF}_t(mbs, t,l_\mathrm{off})$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Displacement}{$\Delta q$}{relative scalar displacement of marker coordinates, not including factorValue1}
 \rowTable{Velocity}{$\Delta v$}{difference of scalar marker velocity coordinates, not including factorValue1}
 \rowTable{ConstraintEquation}{$\cv$}{(residuum of) constraint equation}
@@ -3173,7 +3327,7 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     \ee
     If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
     \be
-      \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(t,l_\mathrm{off}) = 0
+      \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(mbs, t,l_\mathrm{off}) = 0
     \ee
     The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
     \be
@@ -3182,7 +3336,7 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     The factor $d$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $d=l_\mathrm{off}$.
     If velocity level constraints are active and the velocity level offsetUserFunction\_t $\mathrm{UF}_t$ is defined, $\dot \cv$ instead becomes ($t$ is current time)
     \be
-      \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(t,l_\mathrm{off}) = 0
+      \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(mbs, t,l_\mathrm{off}) = 0
     \ee
     Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
     The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
@@ -3194,7 +3348,7 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     \ee
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction(t, lOffset)}
+    \userFunction{offsetUserFunction(mbs, t, lOffset)}
     %
     A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
     It is NECESSARY to use sufficiently smooth functions, having {\bf initial offsets} consistent with {\bf initial configuration} of bodies, 
@@ -3205,13 +3359,14 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     The user function gets time and the offset parameter as an input and returns the computed offset:
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
       \rowTable{\returnValue}{Real}{computed offset for given time}
     \finishTable
 %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction\_t(t, lOffset)}
+    \userFunction{offsetUserFunction\_t(mbs, t, lOffset)}
     %
     A user function, which computes scalar offset {\bf velocity} for the coordinate constraint.
     It is NECESSARY to use sufficiently smooth functions, having {\bf initial offset velocities} consistent with {\bf initial velocities} of bodies.
@@ -3221,6 +3376,7 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     The user function gets time and the offset parameter as an input and returns the computed offset velocity:
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
       \rowTable{\returnValue}{Real}{computed offset velocity for given time}
@@ -3232,10 +3388,10 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
     \begin{lstlisting}[language=Python]
     #see also mini example!
     from math import sin, cos, pi
-    def UFoffset(t, lOffset): 
+    def UFoffset(mbs, t, lOffset): 
         return 0.5*lOffset*(1-cos(0.5*pi*t))
     
-    def UFoffset_t(t, lOffset): #time derivative of UFoffset
+    def UFoffset_t(mbs, t, lOffset): #time derivative of UFoffset
         return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
@@ -3255,7 +3411,7 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
 \label{miniExample_ObjectConnectorCoordinate}
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
-    def OffsetUF(t, lOffset): #gives 0.05 at t=1
+    def OffsetUF(mbs, t, lOffset): #gives 0.05 at t=1
         return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
@@ -3341,8 +3497,8 @@ The item VObjectConnectorCoordinateVector has the following parameters:\vspace{-
 \rowTable{scalingMarker1}{$\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$}{}
 \rowTable{offset}{$\vv_\mathrm{off} \in \Rcal^{n_{ae}}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Displacement}{$\Delta \qv$}{relative scalar displacement of marker coordinates, not including scaling matrices}
 \rowTable{Velocity}{$\Delta \vv$}{difference of scalar marker velocity coordinates, not including scaling matrices}
 \rowTable{ConstraintEquation}{$\cv$}{(residuum of) constraint equations}
@@ -3380,7 +3536,7 @@ The item VObjectConnectorCoordinateVector has the following parameters:\vspace{-
     \ee
     If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
     \be
-      \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} - \Xm_{m0} \qv_{m0} -  \mathrm{UF}(t,\vv_\mathrm{off}) = 0
+      \cv(\qv_{m0}, \qv_{m1}) = \Xm_{m1} \cdot \qv_{m1} - \Xm_{m0} \qv_{m0} -  \mathrm{UF}(mbs, t,\vv_\mathrm{off}) = 0
     \ee
     The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
     \be
@@ -3391,7 +3547,7 @@ The item VObjectConnectorCoordinateVector has the following parameters:\vspace{-
     If velocity level constraints are active and the velocity level \texttt{offsetUserFunction\_t} $\mathrm{UF}_t$ is defined, 
     $\dot \cv$ instead becomes ($t$ is current time)
     \be
-      \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} - \Xm_{m0} \dot \qv_{m0} - \mathrm{UF}_t(t,\vv_\mathrm{off}) = 0
+      \dot \cv(\dot \qv_{m0}, \dot \qv_{m1}) = \Xm_{m1} \cdot \dot \qv_{m1} - \Xm_{m0} \dot \qv_{m0} - \mathrm{UF}_t(mbs, t,\vv_\mathrm{off}) = 0
     \ee
     Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
     The user functions include dependency on time $t$, but this time dependency is not respected in the computation of initial accelerations. Therefore,
@@ -3406,7 +3562,7 @@ The item VObjectConnectorCoordinateVector has the following parameters:\vspace{-
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectConnectorRollingDiscPenalty}
 \label{sec:item:ObjectConnectorRollingDiscPenalty}
-A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing.\vspace{12pt}
+A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.\vspace{12pt}
  \\{\bf Additional information for ObjectConnectorRollingDiscPenalty}:
 \bi
   \item The Object has the following types = \texttt{Connector}
@@ -3421,7 +3577,7 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
     nodeNumber &     NodeIndex &      &     MAXINT &     node number of a NodeGenericData (size=3) for 3 dataCoordinates\\ \hline
     dryFrictionAngle &     Real &      &     0. &     angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/m]\\ \hline
@@ -3461,8 +3617,8 @@ The item VObjectConnectorRollingDiscPenalty has the following parameters:\vspace
 \rowTable{dryFrictionProportionalZone}{$v_\mu$}{}
 \rowTable{rollingFrictionViscous}{$\mu_r$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}_{G}$}{current global position of contact point between rolling disc and ground}
 \rowTable{VelocityLocal}{$\LU{D}{\vv}_{G}$}{current velocity of the trail (contact) point in disc coordinates; this is the velocity with which the contact moves over the ground plane}
 \rowTable{ForceLocal}{$\LU{J1}{\fv}$}{disc-ground force in special marker 1 joint coordinates, $f_0$ being the lateral force, $f_1$ being the longitudinal force and $f_2$ being the normal force}
@@ -3789,8 +3945,8 @@ A generic joint in 3D; constrains components of the absolute position and rotati
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     offsetUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     vector of 6 parameters for joint's offsetUserFunction\\ \hline
-    offsetUserFunction &     PyFunctionVector6DScalarVector6D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters)\\ \hline
-    offsetUserFunction\_t &     PyFunctionVector6DScalarVector6D &     \tabnewline  &     \tabnewline 0 &     (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters\\ \hline
+    offsetUserFunction &     PyFunctionVector6DmbsScalarVector6D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)\\ \hline
+    offsetUserFunction\_t &     PyFunctionVector6DmbsScalarVector6D &     \tabnewline  &     \tabnewline 0 &     (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters\\ \hline
     visualization & VObjectJointGeneric & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -3817,11 +3973,11 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
 \rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{}
 \rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{}
 \rowTable{offsetUserFunctionParameters}{$\pv_{par}$}{}
-\rowTable{offsetUserFunction}{$UF(t, \pv_{par})$}{}
-\rowTable{offsetUserFunction\_t}{$UF_t(t, \pv_{par})$}{}
+\rowTable{offsetUserFunction}{$UF(mbs, t, \pv_{par})$}{}
+\rowTable{offsetUserFunction\_t}{$UF_t(mbs, t, \pv_{par})$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
 \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
 \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration}
@@ -3861,24 +4017,24 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
-    the translational index 3 constraints read ($UF_{0,1,2}(t, \pv_{par})$ is the translational part of the user function $UF$),
+    the translational index 3 constraints read ($UF_{0,1,2}(mbs, t, \pv_{par})$ is the translational part of the user function $UF$),
     \be
-      \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(t, \pv_{par}) = \Null
+      \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, \pv_{par}) = \Null
     \ee
     and the translational index 2 constraints read
     \be
-      \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(t, \pv_{par})= \Null    
+      \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, \pv_{par})= \Null    
     \ee
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
     the translational index 3 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\pv}$
     \bea
-      \LU{J0}{\Delta p_k} - UF_{k}(t, \pv_{par}) &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta p_k} - UF_{k}(mbs, t, \pv_{par}) &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
     \bea
-      \LU{J0}{\Delta v_k} - UF\_t_{k}(t, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
 %
@@ -3886,7 +4042,7 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
     Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
-    In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(t, \pv_{par}))$, in which the three components of 
+    In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(mbs, t, \pv_{par}))$, in which the three components of 
     $UF_{3,4,5}$ are interpreted as Tait-Bryan angles that are added to the joint frame.
     
     If {\bf 3 rotation axes are constrained},  $[j_3,\,\ldots,\,j_5] = [1,1,1]\tp$, the index 3 constraint equations read
@@ -3914,7 +4070,7 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
     \ee
 %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction(t, offsetUserFunctionParameters)}
+    \userFunction{offsetUserFunction(mbs, t, offsetUserFunctionParameters)}
     %
     A user function, which computes scalar offset for relative joint translation and joint rotation for the GenericJoint, 
     e.g., in order to move or rotate a body on a prescribed trajectory.
@@ -3927,13 +4083,14 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
     for all relative translational and rotational joint coordinates:
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
       \rowTable{\returnValue}{Real}{computed offset vector for given time}
     \finishTable
 %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{offsetUserFunction\_t(t, offsetUserFunctionParameters)}
+    \userFunction{offsetUserFunction\_t(mbs, t, offsetUserFunctionParameters)}
     %
     A user function, which computes an offset {\bf velocity} vector for the GenericJoint.
     It is NECESSARY to use sufficiently smooth functions, having {\bf initial offset velocities} consistent with {\bf initial velocities} of bodies.
@@ -3944,6 +4101,7 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
     for all relative translational and rotational joint coordinates:
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
       \rowTable{\returnValue}{Real}{computed offset velocity vector for given time}
@@ -3956,7 +4114,7 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
     \begin{lstlisting}[language=Python]
     #simple example, computing only the translational offset for x-coordinate
     from math import sin, cos, pi
-    def UFoffset(t, offsetUserFunctionParameters): 
+    def UFoffset(mbs, t, offsetUserFunctionParameters): 
         return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
 
     \end{lstlisting}
@@ -3964,13 +4122,13 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectJointGeneric see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}}\ei
 
 %
 %
 \noindent For further examples on ObjectJointGeneric see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}}\item ...
 \ei
 
 %
@@ -4019,8 +4177,8 @@ The item VObjectJointSpherical has the following parameters:\vspace{-1cm}\\
 \rowTable{markerNumbers}{$[m0,m1]\tp$}{}
 \rowTable{constrainedAxes}{$\jv=[j_0,\,\ldots,\,j_2]$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
 \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
 \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{constraint drift or relative motion, if not all axes fixed}
@@ -4078,7 +4236,7 @@ The item VObjectJointSpherical has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on ObjectJointSpherical see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py}{\texttt{sphericalJointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py}{\texttt{sphericalJointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
 
 %
 \newpage
@@ -4086,7 +4244,7 @@ The item VObjectJointSpherical has the following parameters:\vspace{-1cm}\\
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectJointRollingDisc}
 \label{sec:item:ObjectJointRollingDisc}
-A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. NOTE: the case of a moving ground body needs to be tested further, check your results!\vspace{12pt}
+A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the case of a moving ground body needs to be tested further, check your results!\vspace{12pt}
  \\{\bf Additional information for ObjectJointRollingDisc}:
 \bi
   \item The Object has the following types = \texttt{Connector}, \texttt{Constraint}
@@ -4100,7 +4258,7 @@ A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     discRadius &     Real &      &     0 &     defines the disc radius\\ \hline
@@ -4128,8 +4286,8 @@ The item VObjectJointRollingDisc has the following parameters:\vspace{-1cm}\\
 \rowTable{markerNumbers}{$[m0,m1]\tp$}{}
 \rowTable{constrainedAxes}{$\jv=[j_0,\,\ldots,\,j_2]$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}_{G}$}{current global position of contact point between rolling disc and ground}
 \rowTable{VelocityLocal}{$\LU{D}{\vv}_{G}$}{current velocity of the trail (contact) point in disc coordinates; this is the velocity with which the contact moves over the ground plane}
 \rowTable{ForceLocal}{$\LU{D}{\fv} = [-\zv^T \wv_l, \, -\zv^T \wv_2, \, -\zv_z]\tp$}{contact forces acting on disc, in special disc coordinates, $f_x$ being the lateral force, $f_y$ being the longitudinal force and $f_z$ being the normal force}
@@ -4387,8 +4545,8 @@ The item VObjectJointSliding2D has the following parameters:\vspace{-1cm}\\
 \rowTable{slidingMarkerOffsets}{$[d_{s0}, \ldots, d_{sn}]$}{}
 \rowTable{nodeNumber}{$n_{GD}$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{}{position vector of joint given by marker0}
 \rowTable{Velocity}{}{velocity vector of joint given by marker0}
 \rowTable{SlidingCoordinate}{}{global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements}
@@ -4573,8 +4731,8 @@ The item VObjectJointALEMoving2D has the following parameters:\vspace{-1cm}\\
 \rowTable{nodeNumbers}{$[n_{GD}, n_{ALE}]$}{}
 \rowTable{penaltyStiffness}{$k$}{}
 \finishTable
-{\bf The following output parameters are available as OutputVariableType in sensors and other functions}: 
-\startTable{output parameter}{symbol}{description}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
 \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
 \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
 \rowTable{SlidingCoordinate}{$s_g = q_{ALE} + s_{off}$}{current value of the global sliding ALE coordinate, including offset; note that reference coordinate of $q_{ALE}$ is ignored!}
@@ -4828,14 +4986,14 @@ The item VMarkerBodyRigid has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on MarkerBodyRigid see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py}{\texttt{ANCF\_contact\_circle.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle2.py}{\texttt{ANCF\_contact\_circle2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_tests2.py}{\texttt{ANCF\_tests2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_test_halfcircle.py}{\texttt{ANCF\_test\_halfcircle.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py}{\texttt{ANCF\_contact\_circle.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle2.py}{\texttt{ANCF\_contact\_circle2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_tests2.py}{\texttt{ANCF\_tests2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_test_halfcircle.py}{\texttt{ANCF\_test\_halfcircle.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}}\item ...
 \ei
 
 %
 %
 \noindent For further examples on MarkerBodyRigid see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py}{\texttt{genericJointUserFunctionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item ...
 \ei
 
 %
@@ -4933,7 +5091,7 @@ The item VMarkerNodeRigid has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on MarkerNodeRigid see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
 
 %
 \newpage
@@ -4983,7 +5141,7 @@ The item VMarkerNodeCoordinate has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on MarkerNodeCoordinate see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item ...
 \ei
 
 %
@@ -5163,7 +5321,7 @@ The item VMarkerSuperElementPosition has the following parameters:\vspace{-1cm}\
 %
 \noindent For further examples on MarkerSuperElementPosition see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
 
 %
 \newpage
@@ -5452,7 +5610,7 @@ Load with (3D) force vector; attached to position-based marker.\vspace{12pt}
     markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N]\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used\\ \hline
-    loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load\\ \hline
+    loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load\\ \hline
     visualization & VLoadForceVector & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -5479,10 +5637,11 @@ The item VLoadForceVector has the following parameters:\vspace{-1cm}\\
     The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadVectorUserFunction(t, loadVector)}
+    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
     A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{loadVector}}{Vector3D}{$\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
       \rowTable{\returnValue}{Vector3D}{computed force vector}
@@ -5492,7 +5651,7 @@ The item VLoadForceVector has the following parameters:\vspace{-1cm}\\
     \pythonstyle
     \begin{lstlisting}[language=Python]
     from math import sin, cos, pi
-    def UFforce(t, loadVector): 
+    def UFforce(mbs, t, loadVector): 
         return [loadVector[0]*sin(t*10*2*pi),0,0]
     \end{lstlisting}
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
@@ -5531,7 +5690,7 @@ Load with (3D) torque vector; attached to rigidbody-based marker.\vspace{12pt}
     markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N]\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used\\ \hline
-    loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
+    loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
     visualization & VLoadTorqueVector & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -5558,10 +5717,11 @@ The item VLoadTorqueVector has the following parameters:\vspace{-1cm}\\
     The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadVectorUserFunction(t, loadVector)}
+    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
     A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{loadVector}}{Vector3D}{$\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
       \rowTable{\returnValue}{Vector3D}{computed torque vector}
@@ -5571,7 +5731,7 @@ The item VLoadTorqueVector has the following parameters:\vspace{-1cm}\\
     \pythonstyle
     \begin{lstlisting}[language=Python]
     from math import sin, cos, pi
-    def UFforce(t, loadVector): 
+    def UFforce(mbs, t, loadVector): 
         return [loadVector[0]*sin(t*10*2*pi),0,0]
     \end{lstlisting}
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
@@ -5585,7 +5745,7 @@ The item VLoadTorqueVector has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on LoadTorqueVector see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item ...
 \ei
 
 %
@@ -5609,7 +5769,7 @@ Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vect
     name &     String &      &     '' &     load's unique name\\ \hline
     markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates\\ \hline
-    loadVectorUserFunction &     PyFunctionVector3DScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent loadVector.\\ \hline
+    loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent loadVector.\\ \hline
     visualization & VLoadMassProportional & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -5636,10 +5796,11 @@ The item VLoadMassProportional has the following parameters:\vspace{-1cm}\\
     The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadVectorUserFunction(t, loadVector)}
+    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
     A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
     %
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{loadVector}}{Vector3D}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
       \rowTable{\returnValue}{Vector3D}{computed load vector}
@@ -5699,7 +5860,7 @@ Load with scalar value, which is attached to a coordinate-based marker; the load
     name &     String &      &     '' &     load's unique name\\ \hline
     markerNumber &     MarkerIndex &      &     MAXINT &     marker's number to which load is applied\\ \hline
     load &     Real &      &     0. &     scalar load [SI:N]\\ \hline
-    loadUserFunction &     PyFunctionScalar2 &     \tabnewline  &     0 &     A python function which defines the time-dependent load; see description below\\ \hline
+    loadUserFunction &     PyFunctionMbsScalar2 &     \tabnewline  &     \tabnewline 0 &     A python function which defines the time-dependent load; see description below\\ \hline
     visualization & VLoadCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -5727,9 +5888,10 @@ The item VLoadCoordinate has the following parameters:\vspace{-1cm}\\
     on a rotation coordinate (but take care for its meaning).
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    \userFunction{loadUserFunction(t, load)}
+    \userFunction{loadUserFunction(mbs, t, load)}
     A user function, which computes the scalar load depending on time and the object's \texttt{load} parameter.
     \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
       \rowTable{\texttt{load}}{Real}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
       \rowTable{\returnValue}{Real}{computed load}
@@ -5740,7 +5902,7 @@ The item VLoadCoordinate has the following parameters:\vspace{-1cm}\\
     \begin{lstlisting}[language=Python]
     from math import sin, cos, pi
     #this example uses the object's stored parameter load to compute a time-dependent load
-    def UFload(t, load): 
+    def UFload(mbs, t, load): 
         return load*sin(10*(2*pi)*t)
 
     n0=mbs.AddNode(Point())
@@ -5753,13 +5915,13 @@ The item VLoadCoordinate has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on LoadCoordinate see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationExample.py}{\texttt{geneticOptimizationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Drunup.py}{\texttt{rigidRotor3Drunup.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorial.py}{\texttt{springDamperTutorial.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/coordinateSpringDamper.py}{\texttt{coordinateSpringDamper.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationExample.py}{\texttt{geneticOptimizationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperTutorial.py}{\texttt{springDamperTutorial.py}}\ei
 
 %
 %
 \noindent For further examples on LoadCoordinate see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}}\ei
 
 %
 
@@ -5804,13 +5966,13 @@ The item VSensorNode has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on SensorNode see Examples:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrankCMSacme.py}{\texttt{sliderCrankCMSacme.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrankCMSacme.py}{\texttt{sliderCrankCMSacme.py}}\ei
 
 %
 %
 \noindent For further examples on SensorNode see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py}{\texttt{pendulumFriction.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}}\item ...
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py}{\texttt{pendulumFriction.py}}\item ...
 \ei
 
 %
@@ -5858,7 +6020,7 @@ The item VSensorObject has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on SensorObject see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py}{\texttt{rollingCoinPenaltyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py}{\texttt{rollingCoinTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py}{\texttt{rollingCoinPenaltyTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py}{\texttt{rollingCoinTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}}\ei
 
 %
 \newpage
@@ -5927,7 +6089,7 @@ A sensor attached to a SuperElement-object with mesh node number. As a differenc
     meshNodeNumber &     Index &      &     -1 &     mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder\\ \hline
     writeToFile &     Bool &      &     True &     true: write sensor output to file\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
-    outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor\\ \hline
+    outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, \\refSection{sec:objectffrfreducedorder:superelementoutput})\\ \hline
     visualization & VSensorSuperElement & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -5954,7 +6116,7 @@ The item VSensorSuperElement has the following parameters:\vspace{-1cm}\\
 %
 \noindent For further examples on SensorSuperElement see TestModels:
 \bi
-\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
+\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}}\item\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}}\ei
 
 %
 \newpage

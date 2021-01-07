@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  support functions for robotics; 
-#			The library is built on Denavit-Hartenberg Parameters and
+# Details:  A library which includes support functions for robotics. 
+#			The library is built on standard Denavit-Hartenberg Parameters and
 #			Homogeneous Transformations (HT) to describe transformations and coordinate systems
 #
 # Author:   Johannes Gerstmayr
@@ -10,7 +10,10 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
+# Example:	see ComputeJointHT for the definition of the 'robot' dictionary.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 #constants and fixed structures:
 import numpy as np
 
@@ -137,7 +140,8 @@ def ComputeCOMHT(robot, HT):
 #compute static torques for robot defined by DH-parameters and for given HT
 #**function: compute list joint torques for serial robot under gravity (gravity and mass as given in robot)
 def ComputeStaticTorques(robot,HT):
-    jointTorques = np.zeros(6)
+    jointTorques = np.zeros(np.size(robot['links']))
+    #old, limited to 6 joints: jointTorques = np.zeros(6)
 
     #compute HTs for COM
     HTcom=ComputeCOMHT(robot, HT)
@@ -275,13 +279,19 @@ def MotionInterpolator(t, robotTrajectory, joint):
 #+++  create a SERIAL ROBOT from DH-parameters in the mbs +++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: add items to existing mbs from the robot structure, a baseMarker (can be ground object or body)
-# and the user function list for the joints
-#the function returns a dictionary containing information on nodes, objects, joints, markers, ...
-#there are options that can be passed as args / kwargs, which can contain the following flags:
-#       showCOM = size :    show center of mass as rectangular block with size
-#       bodyAlpha=val:      val [0..1] adds transparency to links if val < 1
-#       toolGraphicsSize=[sx,sy,sz]:size of tool for graphics representation; set sx=0 to disable tool drawing
-#       drawLinkSize = [r,w,0]:     size of links to draw: r=radius of joint, w=radius of link, set r=0 to disable link drawing
+#            and the user function list for the joints; there are options that can be passed as args / kwargs, which can contains options as described below. For details, see the python file and \texttt{serialRobotTest.py} in TestModels
+#**input: 
+#   mbs: the multibody system, which will be extended
+#   robot: the robot model as dictionary, described in function ComputeJointHT
+#   jointLoadUserFunctionList: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
+#   baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
+#   rotationMarkerBase: used in Generic joint between first joint and base; note, that for moving base, the static compensation does not work (base rotation must be updated)
+#   showCOM: a list of 3 floats [a,b,c], indicates to show center of mass as rectangular block with size [a,b,c]
+#   bodyAlpha: a float value in range [0..1], adds transparency to links if value < 1
+#   toolGraphicsSize: list of 3 floats [sx,sy,sz], giving the size of the tool for graphics representation; set sx=0 to disable tool drawing or do not provide this optional variable
+#   drawLinkSize: draw parameters for links as list of 3 floats [r,w,0], r=radius of joint, w=radius of link, set r=0 to disable link drawing
+#   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint
+#**output: the function returns a dictionary containing information on nodes, bodies, joints, markers, torques, for every joint
 def SerialRobot2MBS(mbs, robot, jointLoadUserFunctionList, baseMarker, *args, **kwargs):
     #build robot model:
     nodeList = []           #node number or rigid node for link
@@ -406,6 +416,11 @@ def SerialRobot2MBS(mbs, robot, jointLoadUserFunctionList, baseMarker, *args, **
         markerList0+=[mLink0]
         markerList1+=[mLink1]
         
+        rotation1 = np.identity(3) #only used for base rotation
+        if i == 0: #only for base we can add a transformation
+            if 'rotationMarkerBase' in kwargs:
+                rotation1 = kwargs['rotationMarkerBase']
+            
         #this configuration is less optimal for larger joint values:
     #    jointLink = mbs.AddObject(GenericJoint(markerNumbers=[lastMarker, mLink0],
     #                                           constrainedAxes=[1,1,1,1,1,0],
@@ -414,6 +429,7 @@ def SerialRobot2MBS(mbs, robot, jointLoadUserFunctionList, baseMarker, *args, **
         jointLink = mbs.AddObject(GenericJoint(markerNumbers=[mLink0, lastMarker],
                                                constrainedAxes=[1,1,1,1,1,0],
                                                rotationMarker0=A0T,
+                                               rotationMarker1=rotation1,
                                                visualization=VObjectJointGeneric(axesRadius = 0.01,axesLength=0.1, color=color4red)))
                 
         #load on previous body, negative sign

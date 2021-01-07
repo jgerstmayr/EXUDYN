@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -25,6 +25,8 @@
 #include "Graphics/VisualizationPrimitives.h"
 
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
+
+
 //#ifdef USE_GLFW_GRAPHICS
 //#endif
 
@@ -34,7 +36,8 @@ bool VisualizationSystemContainer::LinkToRenderEngine()
 
 	glfwRenderer.DetachVisualizationSystem(); //means, that every new systemcontainer links to the render engine and the old container is lost; necessary if an old systemcontainer is still linked
 
-	if (!glfwRenderer.LinkVisualizationSystem(&graphicsDataList, &settings, this, &rendererState)) //(&graphicsData, &settings, this, &rendererState))
+	if (!glfwRenderer.LinkVisualizationSystem(&graphicsDataList, &settings, this, &renderState)) 
+		//(&graphicsData, &settings, this, &renderState))
 	{
 		SysError("VisualizationSystem::LinkToRenderEngine: Visualization cannot be linked to several systems at the same time yet!");
 		return false;
@@ -69,12 +72,20 @@ void VisualizationSystemContainer::UpdateGraphicsData()
 	if (updateGraphicsDataNow) { updateGraphicsDataNowInternal = true; updateGraphicsDataNow = false; } //enables immediate new set of updateGraphicsDataNow
 	if (saveImage) { saveImageOpenGL = true; } //as graphics are updated now, the saveImageOpenGL flag can be set
 
+	Index cnt = 0;
 	for (auto item : visualizationSystems)
 	{
 		//pout << "UpdateGraphicsData1\n";
 		item->UpdateGraphicsData(*this);
 		//pout << "UpdateGraphicsData2\n";
+		if (cnt == 0 && settings.general.drawWorldBasis)
+		{
+			EXUvis::DrawOrthonormalBasis(Vector3D({ 0,0,0 }), EXUmath::unitMatrix3D, settings.general.worldBasisSize,
+				0.005*settings.general.worldBasisSize, item->GetGraphicsData());
+		}
+		cnt++;
 	}
+
 	updateGraphicsDataNowInternal = false; //only valid for one run; may not be earlier, as item->UpdateGraphicsData(...) needs this flag!
 }
 
@@ -155,24 +166,24 @@ bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
 void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	rendererState.centerPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
-	//rendererState.sceneCenterPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
-	rendererState.zoom = settings.openGL.initialZoom;
-	rendererState.maxSceneSize = settings.openGL.initialMaxSceneSize;
-	rendererState.currentWindowSize = settings.window.renderWindowSize;
+	renderState.centerPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
+	//renderState.sceneCenterPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
+	renderState.zoom = settings.openGL.initialZoom;
+	renderState.maxSceneSize = settings.openGL.initialMaxSceneSize;
+	renderState.currentWindowSize = settings.window.renderWindowSize;
 
 	//set modelRotation to identity matrix (4x4); Use rotation part only from Float9 initialModelRotation
-	rendererState.modelRotation.SetAll(0.f);
-	rendererState.modelRotation[0] = settings.openGL.initialModelRotation[0][0];
-	rendererState.modelRotation[1] = settings.openGL.initialModelRotation[0][1];
-	rendererState.modelRotation[2] = settings.openGL.initialModelRotation[0][2];
-	rendererState.modelRotation[4] = settings.openGL.initialModelRotation[1][0];
-	rendererState.modelRotation[5] = settings.openGL.initialModelRotation[1][1];
-	rendererState.modelRotation[6] = settings.openGL.initialModelRotation[1][2];
-	rendererState.modelRotation[8] = settings.openGL.initialModelRotation[2][0];
-	rendererState.modelRotation[9] = settings.openGL.initialModelRotation[2][1];
-	rendererState.modelRotation[10] = settings.openGL.initialModelRotation[2][2];
-	rendererState.modelRotation[15] = 1.;
+	renderState.modelRotation.SetAll(0.f);
+	renderState.modelRotation[0] = settings.openGL.initialModelRotation[0][0];
+	renderState.modelRotation[1] = settings.openGL.initialModelRotation[0][1];
+	renderState.modelRotation[2] = settings.openGL.initialModelRotation[0][2];
+	renderState.modelRotation[4] = settings.openGL.initialModelRotation[1][0];
+	renderState.modelRotation[5] = settings.openGL.initialModelRotation[1][1];
+	renderState.modelRotation[6] = settings.openGL.initialModelRotation[1][2];
+	renderState.modelRotation[8] = settings.openGL.initialModelRotation[2][0];
+	renderState.modelRotation[9] = settings.openGL.initialModelRotation[2][1];
+	renderState.modelRotation[10] = settings.openGL.initialModelRotation[2][2];
+	renderState.modelRotation[15] = 1.;
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -204,16 +215,16 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 		}
 		Vector3D center = 0.5*(pmin + pmax);
 
-		if (rendererState.centerPoint[0] == 0 && rendererState.centerPoint[1] == 0 && rendererState.centerPoint[2] == 0) {
-			rendererState.centerPoint.CopyFrom(center);
+		if (renderState.centerPoint[0] == 0 && renderState.centerPoint[1] == 0 && renderState.centerPoint[2] == 0) {
+			renderState.centerPoint.CopyFrom(center);
 		}
 
-		rendererState.maxSceneSize = (float)((pmax - pmin).GetL2Norm());
-		if (rendererState.maxSceneSize < settings.general.minSceneSize) 
+		renderState.maxSceneSize = (float)((pmax - pmin).GetL2Norm());
+		if (renderState.maxSceneSize < settings.general.minSceneSize) 
 		{ 
-			rendererState.maxSceneSize = settings.general.minSceneSize; 
+			renderState.maxSceneSize = settings.general.minSceneSize; 
 		}
-		rendererState.zoom = 0.5f*rendererState.maxSceneSize;
+		renderState.zoom = 0.5f*renderState.maxSceneSize;
 	}
 }
 
@@ -694,5 +705,4 @@ py::dict PyGetBodyGraphicsDataDictionary(const BodyGraphicsData& data)
 	d["TODO"] = std::string("Get graphics data to be implemented");
 	return d;
 }
-
 

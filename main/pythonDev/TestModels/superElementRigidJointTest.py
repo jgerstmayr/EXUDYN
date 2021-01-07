@@ -30,9 +30,7 @@ import numpy as np
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
-inputFileName = 'TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
-if exudynTestGlobals.useGraphics:
-    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
+inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
 
@@ -52,10 +50,10 @@ fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
 cms = ObjectFFRFreducedOrderInterface(fem)
 
 #user functions should be defined outside of class:
-def UFmassFFRFreducedOrder(t, qReduced, qReduced_t):
+def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
     return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-def UFforceFFRFreducedOrder(t, qReduced, qReduced_t):
+def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
     return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
 objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
@@ -65,10 +63,10 @@ objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[
                                               color=[0.1,0.9,0.1,1.])
 cms2 = ObjectFFRFreducedOrderInterface(fem)
 #user functions should be defined outside of class:
-def UFmassFFRFreducedOrder2(t, qReduced, qReduced_t):
+def UFmassFFRFreducedOrder2(mbs, t, qReduced, qReduced_t):
     return cms2.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-def UFforceFFRFreducedOrder2(t, qReduced, qReduced_t):
+def UFforceFFRFreducedOrder2(mbs, t, qReduced, qReduced_t):
     return cms2.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
 objFFRF2 = cms2.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0.5], eulerParametersRef=eulerParameters0, 
@@ -106,7 +104,7 @@ if False: #OPTIONAL: lock rigid body motion of reference frame (for tests):
 #find nodes at left and right surface:
 nodeListLeft = fem.GetNodesInPlane(pLeft, [0,0,1])
 nodeListRight = fem.GetNodesInPlane(pRight, [0,0,1])
-print("nodeListLeft=",nodeListLeft)
+#print("nodeListLeft=",nodeListLeft)
 #nLeft = fem.GetNodeAtPoint(pLeft)
 #nRight = fem.GetNodeAtPoint(pRight)
 
@@ -209,9 +207,10 @@ SC.visualizationSettings.contour.reduceRange = False
 simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
 
 h=1e-3
-tEnd = 1
-#if exudynTestGlobals.useGraphics:
-#    tEnd = 0.1
+tEnd = 0.005 #for test suite
+if not exudynTestGlobals.useGraphics:
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+    tEnd = 0.005
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
@@ -244,19 +243,19 @@ if exudynTestGlobals.useGraphics:
 
 exu.SolveDynamic(mbs, simulationSettings)
     
-
-data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
-result = abs(data).sum()
-#pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
-exu.Print('solution of ObjectFFRFreducedOrder=',result)
-
-exudynTestGlobals.testError = result - (0.5354530110580623) #2020-05-26(added EP-constraint): 0.5354530110580623; 2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
-exudynTestGlobals.testError *=0.1 #make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
-
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
     lastRenderState = SC.GetRenderState() #store model view for next simulation
+
+
+data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+result = abs(data).sum()
+#pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
+exu.Print('solution of superElementRigidJointTest=',result)
+
+exudynTestGlobals.testError = result - (0.015213599619996621) #2021-01-04: 0.015213599619996604 (Python3.7)
+#exudynTestGlobals.testError *=0.1 
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results

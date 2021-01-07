@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-09  00:35:51 (last modfied)
+* @date         2021-01-05  01:13:06 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,7 +109,9 @@ public: // AUTO:
         cLoadTorqueVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DSafely(d, "loadVector", cLoadTorqueVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "bodyFixed")) { cLoadTorqueVector->GetParameters().bodyFixed = py::cast<bool>(d["bodyFixed"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadVectorUserFunction"])) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(Real,StdVector3D)>>((py::function)d["loadVectorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}} 
+        if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["loadVectorUserFunction"])) 
+            { cLoadTorqueVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector3D)>>((py::function)d["loadVectorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            else {cLoadTorqueVector->GetParameters().loadVectorUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadTorqueVector->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -123,7 +125,7 @@ public: // AUTO:
         d["loadVector"] = (std::vector<Real>)cLoadTorqueVector->GetParameters().loadVector; //! AUTO: cast variables into python (not needed for standard types) 
         d["bodyFixed"] = (bool)cLoadTorqueVector->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
         if (cLoadTorqueVector->GetParameters().loadVectorUserFunction)
-            {d["loadVectorUserFunction"] = (std::function<StdVector(Real,StdVector3D)>)cLoadTorqueVector->GetParameters().loadVectorUserFunction;}
+            {d["loadVectorUserFunction"] = (std::function<StdVector(const MainSystem&,Real,StdVector3D)>)cLoadTorqueVector->GetParameters().loadVectorUserFunction;}
         else
             {d["loadVectorUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -139,7 +141,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadTorqueVector->GetParameters().markerNumber);} //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { return py::cast((std::vector<Real>)cLoadTorqueVector->GetParameters().loadVector);} //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cLoadTorqueVector->GetParameters().bodyFixed);} //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector(Real,StdVector3D)>)cLoadTorqueVector->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector3D)>)cLoadTorqueVector->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadTorqueVector->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("LoadTorqueVector::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -153,7 +155,8 @@ public: // AUTO:
         else if (parameterName.compare("markerNumber") == 0) { cLoadTorqueVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { EPyUtils::SetVector3DSafely(value, cLoadTorqueVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { cLoadTorqueVector->GetParameters().bodyFixed = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(Real,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cLoadTorqueVector->GetParameters().loadVectorUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector3D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+            if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationLoadTorqueVector->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadTorqueVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

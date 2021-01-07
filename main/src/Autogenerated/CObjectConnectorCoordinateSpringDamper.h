@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  14:57:52 (last modfied)
+* @date         2021-01-05  01:16:22 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorCoordinateSpringDamperParameters
 class CObjectConnectorCoordinateSpringDamperParameters // AUTO: 
@@ -35,7 +36,7 @@ public: // AUTO:
     Real dryFriction;                             //!< AUTO: dry friction force [SI:N] against relative velocity; assuming a normal force \f$f_N\f$, the friction force can be interpreted as \f$f_\mu = \mu f_N\f$
     Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with 8 parameters, see equations section / see description below
+    std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with 8 parameters, see equations section / see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateSpringDamperParameters()
     {
@@ -123,6 +124,9 @@ public: // AUTO:
     {
         return parameters.activeConnector;
     }
+
+    //! AUTO:  compute spring damper force helper function
+    void ComputeSpringForce(const MarkerDataStructure& markerData, Real& relPos, Real& relVel, Real& force) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

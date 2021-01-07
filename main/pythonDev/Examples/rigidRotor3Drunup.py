@@ -144,11 +144,6 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers=[groundMarker1, rotorAxisMarke
 rotorMarkerUy=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate=1))
 rotorMarkerUz=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate=2))
 
-#add coordinate load:
-#
-#mbs.AddLoad(LoadCoordinate(markerNumber = rotorMarkerUy, load = amp, loadUserFunction=userLoadBWy))
-#mbs.AddLoad(LoadCoordinate(markerNumber = rotorMarkerUz, load = amp, loadUserFunction=userLoadBWz))
-
 #add torque:
 rotorRigidMarker =mbs.AddMarker(MarkerBodyRigid(bodyNumber=rigid, localPosition=[0,0,0]))
 mbs.AddLoad(Torque(markerNumber=rotorRigidMarker, loadVector=[torque,0,0]))

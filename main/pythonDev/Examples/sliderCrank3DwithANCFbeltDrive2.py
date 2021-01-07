@@ -562,7 +562,7 @@ if sys_set == 0 or sys_set > 2:
                                        fileName="angular_velocity_disk0.txt",
                                        outputVariableType=exu.OutputVariableType.AngularVelocity))
     
-    def p_controller(t, loadVector):
+    def p_controller(mbs, t, loadVector):
         vel = mbs.GetSensorValues(s_disk0)[2]
         torque = controller_p * (controller_set_vel - vel)
         return [0,0,torque]

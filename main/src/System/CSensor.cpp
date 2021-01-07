@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -90,11 +90,11 @@ void CSensorLoad::GetSensorValues(const CSystemData& cSystemData, Vector& values
 
 	if (cLoad.IsVector()) //vector
 	{
-		values.CopyFrom(cLoad.GetLoadVector(time));
+		values.CopyFrom(cLoad.GetLoadVector(cSystemData.GetMainSystemBacklink(), time));
 	}
 	else //scalar
 	{
-		values.CopyFrom(Vector1D(cLoad.GetLoadValue(time)));
+		values.CopyFrom(Vector1D(cLoad.GetLoadValue(cSystemData.GetMainSystemBacklink(), time)));
 	}
 }
 

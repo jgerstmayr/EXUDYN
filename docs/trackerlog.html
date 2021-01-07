@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 482, 
-Number of resolved issues = 405 (37 in current version), 
-EXUDYN version = 1.0.37, 
-last change =  2020-12-02
+Number of issues = 539, 
+Number of resolved issues = 459 (91 in current version), 
+EXUDYN version = 1.0.91, 
+last change =  2021-01-07
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2020-12-02
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0478</td>
-    <td>link examples       </td>
+    <td>0538</td>
+    <td>monitorScaling      </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> automatically add links to examples in thedoc</td>
-    <td>DOCU</td>
+    <td> add monitorScaling to renderState and use this value for GUI.py in visualization settings</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2020-12-02</td>
-    <td>2021-01-31</td>
+    <td>2021-01-06</td>
+    <td>2021-03-07</td>
     <td></td>
     <td></td>
     <td></td>
@@ -55,15 +55,191 @@ last change =  2020-12-02
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0477</td>
-    <td>links in theDoc     </td>
+    <td>0533</td>
+    <td>ObjectGenericODE1   </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add links between user functions, add labels to item sections</td>
+    <td> add object ObjectGenericODE1 for generic first order ODEs</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2020-12-02</td>
-    <td>2021-01-31</td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0532</td>
+    <td>NodeGenericODE1     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add node NodeGenericODE1 for arbitrary number of ODE1 coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0531</td>
+    <td>extrusionBody       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add graphicsData for extrusion (prismatic) body</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0517</td>
+    <td>item number textures</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add special textures for item numbers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-22</td>
+    <td>2021-02-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0514</td>
+    <td>general wheel       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add general wheel model (with general rotation body); for mecanum wheel rolls</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0513</td>
+    <td>add RK4 integrator  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> put existing python RK4 integrator into CPP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0508</td>
+    <td>implicit Lie group integrator</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> implement implicit index2/index3 Lie group integrator as python function</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-17</td>
+    <td>2021-02-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0504</td>
+    <td>serialrobot         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> build completely from homogenouos transformations, COMs, inertia tensors, masses, axes, axesTypes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0503</td>
+    <td>serialrobot         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> adapt serial robot for prismatic joints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0496</td>
+    <td>controller          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add possibility to differentiate loads w.r.t. sensor?/object/node (use additional sensor numbers which provide dependencies); add optional dependence on sensors; integrateors using ODE1 or discrete implementation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-09</td>
+    <td>2021-02-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0495</td>
+    <td>add ODE1 coordinates</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend system (Jacobian, etc.) for ODE1 coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-09</td>
+    <td>2021-02-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0483</td>
+    <td>URDF file           </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check importing an URDF file for robots, urdf_parser_py</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-04</td>
+    <td>2021-02-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -103,38 +279,6 @@ last change =  2020-12-02
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0467</td>
-    <td>mouse coordinates   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> show mouse coordinates in render window (without transformation)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-11-19</td>
-    <td>2021-01-18</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0463</td>
-    <td>accelerations       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add accelerations Outputvariable to Super elements</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-11-18</td>
-    <td>2021-01-17</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0461</td>
     <td>ObjectRigidBody     </td>
     <td>JG</td>
@@ -150,23 +294,7 @@ last change =  2020-12-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0460</td>
-    <td>test accelerations  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> test GetODE2Coordinates_tt, nodal accelerations and rigidbody2D/3D accelerations</td>
-    <td>TEST</td>
-    <td></td>
-    <td>2020-11-12</td>
-    <td>2021-01-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0456</td>
     <td>ObjectFFRF bug with GenericJoint</td>
     <td>JG</td>
@@ -182,7 +310,7 @@ last change =  2020-12-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0455</td>
     <td>FEM help            </td>
     <td>JG</td>
@@ -253,22 +381,6 @@ last change =  2020-12-02
     <td>RAISED  </td>
     <td> ObjectGenericODE2 crashes without message when initialized with invalid node numbers</td>
     <td>BUG</td>
-    <td></td>
-    <td>2020-09-09</td>
-    <td>2020-11-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0447</td>
-    <td>test examples       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> test all examples with new index types</td>
-    <td>CHECK</td>
     <td></td>
     <td>2020-09-09</td>
     <td>2020-11-08</td>
@@ -519,38 +631,6 @@ last change =  2020-12-02
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0389</td>
-    <td>MainSystem includes </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file</td>
-    <td>CLEANUP</td>
-    <td></td>
-    <td>2020-05-13</td>
-    <td>2020-07-12</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0385</td>
-    <td>add solver eigenvalues example</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add Examples/solverFunctionsTestEigenvalues  to test suite</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-06</td>
-    <td>2020-07-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0384</td>
     <td>Solver interface    </td>
     <td>JG</td>
@@ -608,22 +688,6 @@ last change =  2020-12-02
     <td></td>
     <td>2020-04-10</td>
     <td>2020-06-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0357</td>
-    <td>solver flag prolong solution</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add flag for solvers that current state at end of computation is set as initial state for next solving</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-03-11</td>
-    <td>2020-05-10</td>
     <td></td>
     <td></td>
     <td></td>
@@ -736,22 +800,6 @@ last change =  2020-12-02
     <td></td>
     <td>2020-02-04</td>
     <td>2020-04-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0325</td>
-    <td>key callback        </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add key callback function into graphics module to enable interactive settings, etc.; transfer latin letters, SHIFT, CTRL, ALT, 0-9,A-Z,.,SPACE as ASCII code</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-26</td>
-    <td>2020-03-26</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1271,6 +1319,710 @@ last change =  2020-12-02
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0537</td>
+    <td>Render window       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> double calling of Render(...) function could happen from RunLoop/Render and glfwSetWindowRefreshCallback (set in InitCreateWindow(...)); check if semaphore would remove visualization problems</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-01-06</td>
+    <td>2021-03-07</td>
+    <td>2021-01-07 11:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added semaphore but FEM visualization anomalies are still there</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0536</td>
+    <td>GraphicsDataPlane   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add graphicsData for simple rectangular plane with option for checkerboard pattern</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-05</td>
+    <td>2021-03-06</td>
+    <td>2021-01-05 22:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0535</td>
+    <td>alternating color for cylinder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add alternatingColor argument in GraphicsDataCylinder for visualization of rotation of cylindric bodies</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-05</td>
+    <td>2021-03-06</td>
+    <td>2021-01-05 21:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0534</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> PlotSensor crashes for Load sensors because no outputVariableType exists</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td>2021-01-04 20:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added special treatment for load sensors</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0530</td>
+    <td>solidOfRevolution   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add graphicsData for solid of revoluation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td>2021-01-06 00:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0529</td>
+    <td>add MainSystem to userFunctions</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add MainSystem "mbs" to all user functions as first argument (WARNING: this changes ALL user functions!!!</td>
+    <td>CHANGE</td>
+    <td>HIGH</td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td>2021-01-05 14:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0528</td>
+    <td>textured fonts      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use TEXTURED based bitmap fonts based stored in glLists, allowing better interpolation, scalability (currently up to font size 64 without quality drop) and much higher performance</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-03</td>
+    <td>2021-03-04</td>
+    <td>2021-01-03 10:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0527</td>
+    <td>faces transparent   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add general transparency flag for faces in visualizationSettings.openGL, switchable with button "T"; allows to make node/marker/object numbers visible</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-03</td>
+    <td>2021-03-04</td>
+    <td>2021-01-03 21:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0526</td>
+    <td>solver.ComputeODE2Eigenvalues</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> dense mode returned unsorted eigenvalues==>add sorting</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-01-03</td>
+    <td>2021-03-04</td>
+    <td>2021-01-03 10:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0525</td>
+    <td>opengl write UTF8   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use UTF8 encoding in opengl text output</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-29</td>
+    <td>2021-02-27</td>
+    <td>2020-12-29 21:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0524</td>
+    <td>interpret UTF8      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add conversion from UTF8 to unicode to interpret most central European characters + some important characters correctly (see \refSection{sec:graphicsData})</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-12-29</td>
+    <td>2021-02-27</td>
+    <td>2021-01-02 20:13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0523</td>
+    <td>show version        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> show current version info in openGL window; can be switched off with showComputationInfo=False</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-27</td>
+    <td>2021-02-25</td>
+    <td>2020-12-27 01:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0522</td>
+    <td>fix openGl issues   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix positioning problems of coordinate system and contour colorbar</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-27</td>
+    <td>2021-02-25</td>
+    <td>2020-12-27 01:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>now using pixel coordinates for info texts and different font sizes</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0521</td>
+    <td>useWindowsMonitorScaleFactor</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new option useWindowsMonitorScaleFactor in visualizationSettings.general to include monitor scaling factor for font sizes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-27</td>
+    <td>2021-02-25</td>
+    <td>2020-12-27 01:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0520</td>
+    <td>useBitmapText       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new option useBitmapText in visualizationSettings.general to activate bitmap fonts (deprecated; now using textured fonts)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-27</td>
+    <td>2021-02-25</td>
+    <td>2020-12-27 01:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0519</td>
+    <td>correct coordinateSystemSize</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> set visualizationSettings.general.coordinateSystemSize relative to fontSize which scales better with larger screens</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-12-24</td>
+    <td>2021-02-22</td>
+    <td>2020-12-24 01:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0518</td>
+    <td>windows monitor scaling</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> include windows monitor (screen) scaling into drawing of texts to increase visibility on high dpi screens</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-24</td>
+    <td>2021-02-22</td>
+    <td>2020-12-24 00:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added flag in visualizationSettings: general.useWindowsMonitorScaleFactor</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0516</td>
+    <td>add bitmap font     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add font using OpenGL bitmaps to improve visibility of texts (deprecated, now using textured fonts)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-21</td>
+    <td>2021-02-19</td>
+    <td>2020-12-27 01:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0515</td>
+    <td>user function connector</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add forceUserFunction for ObjectConnectorRigidBodySpringDamper to enable User connector</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td>2021-01-07 11:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0512</td>
+    <td>testsuite           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> EXUDYN build date referred shows wrong path</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td>2020-12-19 00:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>refer now to installed module</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0511</td>
+    <td>GeneticOptimization </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example in TestModels</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td>2020-12-19 23:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0510</td>
+    <td>ParameterVariation  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example in TestModels</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td>2020-12-19 23:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0509</td>
+    <td>ComputeODE2Eigenvalues</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example in TestModels</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-12-18</td>
+    <td>2021-02-16</td>
+    <td>2021-01-03 10:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0507</td>
+    <td>changes             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> incorporate resolved issues and bugs into theDoc.pdf</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td>2020-12-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0506</td>
+    <td>utilities docu      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> complete documentation for all exudyn python utilities and add unique headers for documentation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td>2021-01-06 22:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0505</td>
+    <td>rigidBodyUtilities  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add description for RigidBodyInertia class</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td>2020-12-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0502</td>
+    <td>rigidbodyinertia</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add description for rigidBodyUtilities class RigidBodyInertia</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2020-12-14</td>
+    <td>2021-02-12</td>
+    <td>2020-12-19 23:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0501</td>
+    <td>geneticOptimization add crossover</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added crossover and improved parameters for GeneticOptimization</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-14</td>
+    <td>2021-02-12</td>
+    <td>2020-12-14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0500</td>
+    <td>FilterSignal        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> put in signal module, make it working for 1D signals as well</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-10</td>
+    <td>2021-02-08</td>
+    <td>2020-12-11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0499</td>
+    <td>key V gives error   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> keypress v for visualization dialog gives error</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-10</td>
+    <td>2021-02-08</td>
+    <td>2020-12-10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0498</td>
+    <td>SensorObject position</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> wrong position shown in sensor</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-10</td>
+    <td>2021-02-08</td>
+    <td>2020-12-10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0497</td>
+    <td>genetic algorithm   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if stochsearch or genetic algorithm has simpler interface</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-12-10</td>
+    <td>2021-02-08</td>
+    <td>2020-12-14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0494</td>
+    <td>add all tests       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add all TestModel/*.py to testsuite and also examples before making changes to solver</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-09</td>
+    <td>2021-02-07</td>
+    <td>2021-01-07 11:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0493</td>
+    <td>CheckForValidFunction</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> modify / add this check to setParameters; additional if for setting this to 0</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-09</td>
+    <td>2021-02-07</td>
+    <td>2020-12-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0492</td>
+    <td>FEMinterface GetNodesInOrthoCube</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function which returns all nodes lying in cube aligned with global coordinate system, using [pMin, pMax], with tolerance</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-08</td>
+    <td>2021-02-06</td>
+    <td>2020-12-11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0491</td>
+    <td>FEMinterface GetNodesOnCylinder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function which returns all nodes lying on specific cylinder, with tolerance</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-08</td>
+    <td>2021-02-06</td>
+    <td>2020-12-11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0490</td>
+    <td>keypress crash      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> find out causes for crash in keyPress user function; find way to deactivate the user function (set it to 0)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-07</td>
+    <td>2021-02-05</td>
+    <td>2020-12-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0489</td>
+    <td>add gradient background</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add according visualization.general option</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-06</td>
+    <td>2021-02-04</td>
+    <td>2020-12-06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0488</td>
+    <td>problem with coordinate sys</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix problems with drawing of coordinate system: text moves strangely and axes dissappear after rotation</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-12-06</td>
+    <td>2021-02-04</td>
+    <td>2020-12-06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0487</td>
+    <td>draw world basis    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to draw coordinate system at origin (world basis)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-06</td>
+    <td>2021-02-04</td>
+    <td>2020-12-06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0486</td>
+    <td>realtime            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag to time integration to simulate in realtime</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-05</td>
+    <td>2021-02-03</td>
+    <td>2020-12-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0485</td>
+    <td>mouse coordinates   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> store mouse coordinates in renderState</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-05</td>
+    <td>2021-02-03</td>
+    <td>2020-12-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0484</td>
+    <td>test DEAP           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test genetic optimization with DEAP</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-12-04</td>
+    <td>2021-02-02</td>
+    <td>2020-12-10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>too many parameters and too involved to simply include</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0482</td>
+    <td>store model view    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> store renderState in exudyn.sys dictionary after exu.StopRenderer() for subsequent simulations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-03</td>
+    <td>2021-02-01</td>
+    <td>2020-12-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0481</td>
     <td>eigenvalue solver   </td>
     <td>JG</td>
@@ -1317,6 +2069,38 @@ last change =  2020-12-02
     <td></td>
     <td></td>
     <td>added python interfaces and kept old cpp solvers</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0478</td>
+    <td>link examples       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> automatically add links to examples in thedoc</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td>2020-12-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0477</td>
+    <td>links in theDoc     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add links between user functions, add labels to item sections</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-02</td>
+    <td>2021-01-31</td>
+    <td>2020-12-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0476</td>
@@ -1428,6 +2212,22 @@ last change =  2020-12-02
     <td>JG</td>
     <td></td>
     <td></td>
+    <td>WSL2 now used to automatically create linux wheels</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0467</td>
+    <td>mouse coordinates   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> show mouse coordinates in render window (without transformation)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-19</td>
+    <td>2021-01-18</td>
+    <td>2020-12-05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
@@ -1479,6 +2279,22 @@ last change =  2020-12-02
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0463</td>
+    <td>accelerations       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add accelerations Outputvariable to Super elements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-18</td>
+    <td>2021-01-17</td>
+    <td>2020-12-03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0462</td>
     <td>AVX Celeron problems</td>
     <td>JG</td>
@@ -1489,6 +2305,22 @@ last change =  2020-12-02
     <td>2020-11-16</td>
     <td>2021-01-15</td>
     <td>2020-11-18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0460</td>
+    <td>test accelerations  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test GetODE2Coordinates_tt, nodal accelerations and rigidbody2D/3D accelerations</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2020-11-12</td>
+    <td>2021-01-11</td>
+    <td>2020-12-04</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1589,6 +2421,22 @@ last change =  2020-12-02
     <td></td>
     <td></td>
     <td>first tests made</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0447</td>
+    <td>test examples       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test all examples with new index types</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-09-09</td>
+    <td>2020-11-08</td>
+    <td>2021-01-05 14:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0446</td>
@@ -1816,10 +2664,10 @@ last change =  2020-12-02
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0428</td>
-    <td>implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules</td>
+    <td>queue user functions</td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> EXTENSION</td>
+    <td> implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-06-26</td>
@@ -2263,6 +3111,22 @@ last change =  2020-12-02
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0389</td>
+    <td>MainSystem includes </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file</td>
+    <td>CLEANUP</td>
+    <td></td>
+    <td>2020-05-13</td>
+    <td>2020-07-12</td>
+    <td>2020-12-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0388</td>
     <td>add 1D nodes and objects</td>
     <td>JG</td>
@@ -2309,6 +3173,22 @@ last change =  2020-12-02
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0385</td>
+    <td>add solver eigenvalues example</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Examples/solverFunctionsTestEigenvalues  to test suite</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-06</td>
+    <td>2020-07-05</td>
+    <td>2021-01-07 11:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added ComputeODE2EigenvaluesTest.py using new functionality exudyn.solver.ComputeODE2Eigenvalues(...)</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0383</td>
@@ -2677,6 +3557,22 @@ last change =  2020-12-02
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0357</td>
+    <td>solver flag prolong solution</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag for solvers that current state at end of computation is set as initial state for next solving</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-11</td>
+    <td>2020-05-10</td>
+    <td>2020-12-09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added into new python interface of solver</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0356</td>
@@ -3057,6 +3953,22 @@ last change =  2020-12-02
     <td>2020-01-27</td>
     <td>2020-03-27</td>
     <td>2020-01-31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0325</td>
+    <td>key callback        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add key callback function into graphics module to enable interactive settings, etc.; transfer latin letters, SHIFT, CTRL, ALT, 0-9,A-Z,.,SPACE as ASCII code</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-26</td>
+    <td>2020-03-26</td>
+    <td>2020-12-05</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3771,7 +4683,7 @@ last change =  2020-12-02
     <td>constraint action   </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> Add contraint action forces Cq^T * lambda via a function in csystem; eliminates need for computation of separate matrix during computation</td>
+    <td> Add constraint action forces $Cq^T \cdot lambda$ via a function in csystem; eliminates need for computation of separate matrix during computation</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2019-11-14</td>

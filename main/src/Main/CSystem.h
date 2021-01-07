@@ -11,7 +11,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -37,7 +37,8 @@ class TemporaryComputationData
 {
 public:
 	ResizableMatrix localMass;          //!< body mass matrix
-	ResizableVector localODE2RHS;       //!< body ODE2RHS vector
+	ResizableVector localODE2LHS;       //!< body ODE2LHS vector
+	ResizableVector localODE1RHS;       //!< body ODE1LHS vector
 	ResizableVector localAE;			//!< object (local) algebraic equations evaluation
 
 	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical/automatic differentiation
@@ -249,7 +250,7 @@ public:
 	void AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2, ArrayIndex& ltgListODE1, 
 		ArrayIndex& ltgListAE, ArrayIndex& ltgListData);
 
-	//! build ltg-coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices)
+	//! build ltg-coordinate lists for objects (used to build global ODE2LHS, MassMatrix, etc. vectors and matrices)
 	void AssembleLTGLists(const MainSystem& mainSystem);
 
 	////! NEEDED? prepare LinkedDataVectors for objects
@@ -265,11 +266,17 @@ public:
 	virtual void ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix);
 	//virtual void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
-	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation); return true, if object has localODE2Rhs, false otherwise
-	virtual bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Rhs);
+	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE2Lhs, false otherwise
+	virtual bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs);
 		
-	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
+	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE1Rhs, false otherwise
+	virtual bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs);
+
+	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'systemODE2Rhs' for ODE2 part
 	virtual void ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+
+	//! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'systemODE1Rhs' for ODE1 part
+	virtual void ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
 	virtual void ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs);

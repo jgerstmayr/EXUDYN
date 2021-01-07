@@ -1,14 +1,23 @@
-# Utility functions and structures for Exudyn
-"""
-Created on Fri Jul 26 10:53:30 2019
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN python utility library
+#
+# Details: 	Basic utility functions and constants, not depending on numpy or other python modules.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2020-03-10 (created)
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+# Notes: 	Additional constants are defined: \\
+#			pi = 3.1415926535897932 \\
+#			sqrt2 = 2**0.5\\
+#			g=9.81\\
+#			eye2D (2x2 diagonal matrix)\\
+#			eye3D (3x3 diagonal matrix)\\
+# 			Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-@author: Johannes Gerstmayr
 
-goal: support functions, which simplify the generation of models
-"""
-
-#pi = np.pi
-#sqrt2 = np.sqrt(2.)
 pi = 3.1415926535897932 #define pi in order to avoid importing large libraries
 sqrt2 = 2.**0.5
 g = 9.81 #gravity constant
@@ -97,7 +106,9 @@ def Normalize(v):
     v2=[0]*len(v)
 
     fact = NormL2(v)
-    fact = 1./fact
+    if fact != 0:
+        fact = 1./fact
+
     for i in range(len(v2)): 
         v2[i]=fact*v[i]
     return v2
@@ -132,7 +143,13 @@ gaussIntegrationWeights=[[2],
                          [0.23692688505618914, 0.47862867049936636, 0.5688888888888889, 0.47862867049936636, 0.23692688505618914],
                          ]
 
-#numerically integrate a scalar function with integration Order in interval [a,b]
+#**function: compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
+#**input: 
+#  functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable)
+#  integrationOrder: odd number in \{1,3,5,7,9\}; currently maximum order is 9
+#  a: integration range start 
+#  b: integration range end 
+#**output: (scalar or vectorized) integral value
 def GaussIntegrate(functionOfX, integrationOrder, a, b):
     cnt = 0
     value = 0*functionOfX(0) #initialize value with correct shape

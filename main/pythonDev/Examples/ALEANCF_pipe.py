@@ -85,9 +85,12 @@ for i in range(nElements):
     #nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[L*2/3.1415926,L*2/3.1415926,0,1]))
     nodeList+=[nLast]
     if useALE:
-        elem=mbs.AddObject(ALECable2D(physicsLength=lElem, physicsMassPerLength=rhoA, physicsBendingStiffness=EI, physicsAxialStiffness=EA, physicsMovingMassFactor=movingMassFactor, nodeNumbers=[nodeList[i],nodeList[i+1],nALE]))
+        elem=mbs.AddObject(ALECable2D(physicsLength=lElem, physicsMassPerLength=rhoA, 
+                                      physicsBendingStiffness=EI, physicsAxialStiffness=EA, physicsMovingMassFactor=movingMassFactor, 
+                                      nodeNumbers=[nodeList[i],nodeList[i+1],nALE]))
     else:
-        elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rhoA, physicsBendingStiffness=EI, physicsAxialStiffness=EA, nodeNumbers=[nc0+i,nc0+i+1]))
+        elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rhoA, physicsBendingStiffness=EI, 
+                                   physicsAxialStiffness=EA, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
 
     cableList+=[elem]
     mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber = elem))
@@ -95,9 +98,9 @@ for i in range(nElements):
 
 
 
-mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=0))
-mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=1))
-mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=3))
+mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=0))
+mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=1))
+mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=3))
 
 mANCF3 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nLast, coordinate=0)) #tip constraint
 mANCF4 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nLast, coordinate=1)) #tip constraint

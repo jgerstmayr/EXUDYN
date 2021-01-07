@@ -43,19 +43,21 @@ testMode = 1 #0=MarkerGeneric, 1=MarkerSuperElement
 modeNames = ['FFRF_MG','FFRF']
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#read finite element model
+#Use FEMinterface to import FEM model and create FFRFreducedOrder object
+fem = FEMinterface()
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if exudynTestGlobals.useGraphics:
-#    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
-#inputFileName = 'C:/DATA/cpp/FFRFrotor_svn/CAErotor/eigenvalues_rotorDisc_mod'
+nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
+elements = np.array(fem.elements[0]['Hex8'])
 
-fileInp = inputFileName + '.inp'
-result=ReadNodesFromAbaqusInp(fileInp, typeName='Instance', name='rotor-1', exportElements=True)
-nodes = result[0]
-elements = result[1]['elements']-1 #convert to zero base
-#print("elements=", elements)
-#print("nodes=", nodes)
+fem.ReadMassMatrixFromAbaqus(inputFileName+'MASS1.mtx')
+fem.ReadStiffnessMatrixFromAbaqus(inputFileName+'STIF1.mtx')
+fem.ScaleStiffnessMatrix(1e-2) #for larger deformations, stiffness is reduced to 1%
+
+massMatrix = fem.GetMassMatrix(sparse=False)
+stiffnessMatrix = fem.GetStiffnessMatrix(sparse=False)
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 exu.Print("nodes size=", nodes.shape)
 exu.Print("elements size=", elements.shape)
@@ -64,13 +66,6 @@ minZ = min(nodes[:,2])
 maxZ = max(nodes[:,2])
 midZ = 0.5*(minZ+maxZ)
 
-#exu.Print("min z =", minZ)
-#exu.Print("max z =", maxZ)
-
-#nodes[:,2] -=0.05 #offset of z-coordinate, included in Abaqus .inp file
-
-massMatrix = CompressedRowToDenseMatrix(np.loadtxt(inputFileName + 'MASS1.mtx'))
-stiffnessMatrix = 1e-2*CompressedRowToDenseMatrix(np.loadtxt(inputFileName + 'STIF1.mtx'))
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #nLeft = (78-1)
@@ -290,7 +285,7 @@ for node in nodes:
 #exu.Print("nForce=", nForce)
 
 #conventional user function:
-def UFforce(t, q, q_t):
+def UFforce(mbs, t, q, q_t):
     force = np.zeros(nODE2FFRF)
     Avec = mbs.GetNodeOutput(nRB,  exu.OutputVariableType.RotationMatrix)
     A = Avec.reshape((3,3))
@@ -336,7 +331,7 @@ def UFforce(t, q, q_t):
     return force
 
 #ffrf mass matrix:
-def UFmassGenericODE2(t, q, q_t):
+def UFmassGenericODE2(mbs, t, q, q_t):
     Avec = mbs.GetNodeOutput(nRB,  exu.OutputVariableType.RotationMatrix)
     A = Avec.reshape((3,3))
     ep = q[dim3D:nODE2rigid] + ep0 #add reference values, q are only the change w.r.t. reference values!

@@ -1,11 +1,15 @@
-# plot utilities for Exudyn
-"""
-Created on Wed Sept 16 11:00:00 2020
-
-@author: Johannes Gerstmayr
-
-goal: makes plotting a sensor value very easy and short
-"""
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN python utility library
+#
+# Details: 	Plot utility functions based on matplotlib, including plotting of sensors and FFT.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2020-09-16 (created)
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+# Notes:	For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...)
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 import matplotlib.pyplot as plt
@@ -62,8 +66,14 @@ def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
     for i in range(len(sensorList)):
         sensorNumber = sensorList[i]
         component = componentList[i]
-        variable = mbs.GetSensor(sensorNumber)['outputVariableType']
-        variableStr = str(variable).replace('OutputVariableType.','')
+        sensorDict = mbs.GetSensor(sensorNumber)
+        variableStr = ''
+        if 'outputVariableType' in sensorDict:
+            variable = sensorDict['outputVariableType']
+            variableStr = str(variable).replace('OutputVariableType.','')
+        elif sensorDict['sensorType'] == 'Load':
+            variableStr = 'Load'
+        
         if i == 0:
             checkStr = variableStr
         elif checkStr != variableStr:
@@ -84,10 +94,14 @@ def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
             raise ValueError('ERROR in PlotSensor: *args must contain valid sensor numbers')
 
         #retrieve sensor information:
-        sensorFileName = mbs.GetSensor(sensorNumber)['fileName']
-        sensorName = mbs.GetSensor(sensorNumber)['name']
-        variable = mbs.GetSensor(sensorNumber)['outputVariableType']
-        variableStr = str(variable).replace('OutputVariableType.','')
+        sensorDict = mbs.GetSensor(sensorNumber)
+        sensorFileName = sensorDict['fileName']
+        sensorName = sensorDict['name']
+        if 'outputVariableType' in sensorDict:
+            variable = sensorDict['outputVariableType']
+            variableStr = str(variable).replace('OutputVariableType.','')
+        elif sensorDict['sensorType'] == 'Load':
+            variableStr = 'Load'
 
         #now load sensor file:
         data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
@@ -122,4 +136,61 @@ def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
         plt.tight_layout()
         plt.show() 
         
+    
+#**function: plot fft spectrum of signal
+#**input: 
+#   frequency:  frequency vector (Hz, if time is in SECONDS)   
+#   data:       magnitude or phase as returned by ComputeFFT() in exudyn.signal
+#   xLabel:     label for x-axis, default=frequency
+#   yLabel:     label for y-axis, default=magnitude
+#   label:      either empty string ('') or name used in legend
+#   freqStart:  starting range for frequency
+#   freqEnd:    end of range for frequency; if freqEnd==-1 (default), the total range is plotted
+#   logScaleX:  use log scale for x-axis
+#   logScaleY:  use log scale for y-axis
+#   majorGrid:  if True, plot major grid with solid line 
+#   minorGrid:  if True, plot minor grid with dotted line 
+#**output: creates plot and returns plot (plt) handle
+def PlotFFT(frequency, data, 
+               xLabel='frequency', yLabel='magnitude', 
+               label = '',
+               freqStart = 0, freqEnd = -1, 
+               logScaleX = True, logScaleY = True,
+               majorGrid = True, minorGrid = True):
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
+
+    indStart = 0
+    indEnd = len(data)
+    for i in range(len(frequency)):
+        if frequency[i] <= freqStart:
+            indStart = i
+        if frequency[i] <= freqEnd:
+            indEnd = i
+
+    #print("fft ind=", indStart, indEnd)
+    if len(label) != 0:
+        plt.plot(frequency[indStart:indEnd], data[indStart:indEnd], label=label)
+        plt.legend() #show labels as legend
+    else:
+        plt.plot(frequency[indStart:indEnd], data[indStart:indEnd])
+    plt.xlabel(xLabel)
+    plt.ylabel(yLabel)
+    ax=plt.gca() # get current axes
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    xScale = 'linear'
+    yScale = 'linear'
+    if logScaleX:
+        plt.xscale('log')
+    if logScaleY:
+        plt.yscale('log')
+    ax.grid(b=True, which='major', color='k', linestyle='-')
+    ax.grid(b=True, which='minor', color='k', linestyle=':')
+    ax.minorticks_on()
+
+    plt.tight_layout()
+    plt.show() 
+
+    return plt
     

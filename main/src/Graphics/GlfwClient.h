@@ -8,7 +8,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #ifndef GLFWCLIENT__H
@@ -31,19 +31,33 @@
 
 #ifdef USE_GLFW_GRAPHICS
 
+//#define GLFW_INCLUDE_ES3 //open gl ES version
+#define GLFW_INCLUDE_GLEXT
+//#define GL_GLEXT_PROTOTYPES OpenGL3.2
 #include <GLFW/glfw3.h>
 
+#define USE_TEXTURED_BITMAP_FONTS //!< activate this flag for faster textured based fonts with glLists
 
 #include "Graphics/GlfwClientText.h" //link to external library; include only if copyright is appropriate
+#include "Graphics/GlfwClientBitmapText.h"
 
 
 enum class RendererMode {
 	_None, Move, Rotate, ZoomView, Select
 };
 
+//! size for bitmap fonts
+enum class FontSizeType {
+	small = 1,		//small text, e.g., for contour numbers
+	normal = 2,		//regular text
+	large = 4,		//large text
+	userText = 8,	//size of user texts
+};
+
+
 
 //! variables that describe the renderer's state machine ==> zoom, move, etc. with mouse
-class RendererStateMachine
+class RenderStateMachine
 {
 public:
 	bool leftMousePressed;
@@ -68,17 +82,33 @@ public:
 class GlfwRenderer
 {
 private:
-	//static RendererState state;
+	//static RenderState state;
 	static bool rendererActive;			//!< signal that shows that renderer is active
 	static bool stopRenderer;			//!< signal that shows that renderer should quit
 	static GLFWwindow* window;
-	static RendererState* state;		//!< this represents the current OpenGL parameters
-	static RendererStateMachine stateMachine; //!< all variables (mouse, keyboard, ...) used for state machine (zoom, zoom-view, move, ...)
+	static RenderState* state;		//!< this represents the current OpenGL parameters
+	static RenderStateMachine stateMachine; //!< all variables (mouse, keyboard, ...) used for state machine (zoom, zoom-view, move, ...)
 	static std::thread rendererThread;	//!< std::thread variable for rendererThread
 	static Index rendererError;			//!< 0 ... no error, 1 ... glfwInit() failed, 2 ... glfwCreateWindow failed, 3 ... other error
+	static Index firstRun; //zoom all in first run
+	static std::atomic_flag renderFunctionRunning;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice)
 
-	//done in graphicsData: static uint64_t visualizationCounter; //!< counter showing number for pulling last successful graphics content; must be set to zero when system is reset, otherwise nothing is drawn unless counter is higher than 
-
+	//+++++++++++++++++++++++++++++++++++++++++
+	static BitmapFont bitmapFont;				//!< bitmap font for regular texts and for textured fonts, initialized upon start of renderer
+	static float fontScale;						//!< monitor scaling factor from windows, to scale fonts
+	static constexpr float fontSmallFactor = 0.7500001f; //!< factor for small fonts
+	static constexpr float fontLargeFactor = 1.400001f;  //!< factor for large fonts
+	static constexpr float fontHugeFactor = 2.500001f;  //!< factor for large fonts
+#ifndef USE_TEXTURED_BITMAP_FONTS
+	static BitmapFont bitmapFontSmall;			//!< bitmap font for small texts, initialized upon start of renderer
+	static BitmapFont bitmapFontLarge;			//!< bitmap font for large texts, initialized upon start of renderer
+	static BitmapFont bitmapFontHuge;			//!< bitmap font for huge texts, initialized upon start of renderer
+#else
+	//+++ for textures with glLists +++:
+	static GLuint textureNumberRGBbitmap[256];	//!< store texture numbers for every character of bitmap font
+	static GLuint bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
+	static ResizableArray<GLubyte> charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
+#endif
 	//+++++++++++++++++++++++++++++++++++++++++
 	//link to GraphicsData and Settings:
 	static ResizableArray<GraphicsData*>* graphicsDataList;					//!< link to graphics data; only works for one MainSystem, but could also be realized for several systems
@@ -101,8 +131,8 @@ public:
 	//! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
 	static void StopRenderer();
 
-	//! Set all light functions for openGL
-	static void SetGLLights();
+	//! return renderState object
+	static RenderState GetRenderState() { return *state; }
 
 	static bool WindowIsInitialized()
 	{
@@ -114,14 +144,21 @@ public:
 	//! Only one data linked at one time
 	//! Returns true on success and false, if data is already linked (==> call DetachVisualizationSystem first)
 	static bool LinkVisualizationSystem(ResizableArray<GraphicsData*>* graphicsDataListInit, VisualizationSettings* settingsInit,
-										VisualizationSystemContainerBase* basicVisualizationSystemContainerInit, RendererState* rendererStateInit)
+										VisualizationSystemContainerBase* basicVisualizationSystemContainerInit, RenderState* renderStateInit)
 	{
 		if (graphicsDataList == nullptr)
 		{
 			graphicsDataList = graphicsDataListInit;
 			visSettings = settingsInit;
 			basicVisualizationSystemContainer = basicVisualizationSystemContainerInit;
-			state = rendererStateInit;
+			state = renderStateInit;
+			//now state can be initialized:
+			state->mouseCoordinates = Vector2D({ 0.,0. });
+			state->openGLcoordinates = Vector2D({ 0.,0. });
+			state->mouseLeftPressed = false;
+			state->mouseRightPressed = false;
+			state->mouseMiddlePressed = false;
+
 			return true;
 		}
 		else { return false; }
@@ -193,25 +230,47 @@ private: //to be called internally only!
 	static void SaveSceneToFile(const STDstring& filename);
 	
 	//! Render particulalry the graphics data of multibody system
-	static void RenderGraphicsData();
+	static void RenderGraphicsData(float fontScale);
 
 	//! Zoom all graphics objects (for current configuration)
 	static void ZoomAll();
 
-	//get lines for character (0-9NOML) inside a 2 x 4 matrix (x/y) of 'lines' and the number of lines 'nLines'
-	//(0,0) is located left bottom
-	//static void GetCharacterLines(char c, ConstSizeVector<2 * maxTextPoints>& lines)
+	//! Set all light functions for openGL
+	static void SetGLLights();
 
-	//! draw a 0-terminated text string with scaling (size=1: height=1; width=0.5 for one character; distance = 0.25)
-	static void DrawString(const char* text, float scale, const Float3& p, const Float4& color)
-	{
-#ifdef OPENGLTEXT_EXISTS //defined in GlfwClientText
-		glLineWidth(visSettings->openGL.textLineWidth);
-		if (visSettings->openGL.textLineSmooth) { glEnable(GL_LINE_SMOOTH); }
-		OpenGLText::DrawString(text, scale, p, color);
-		if (visSettings->openGL.textLineSmooth) { glDisable(GL_LINE_SMOOTH); }
-#endif
-	}
+	//!transform pixel coordinates (from bottom/left) into vertex coordinates
+	//!works if model view is initialized with 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
+	static Float2 PixelToVertexCoordinates(float x, float y);
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//FONTS
+	//! initialize bitmap for bitmap font (loaded from characterBitmap.h
+	static void InitFontBitmap(guint fontSize);// , guint fontSizeSmall, guint fontSizeLarge, guint fontSizeHuge);
+
+	//! draw a 0-terminated text string with fontSize, including monitor scaling factor; (for line-characters: size=1: height=1; width=0.5 for one character; distance = 0.25)
+	//! switches to strings drawn by textures (default) or lines
+	static void DrawString(const char* text, float fontSizeScaled, const Float3& p, const Float4& color);
+
+	//! draw string with scalable bitmap fonts, using textures
+	static void DrawStringWithTextures(const char* text, float fontSizeScaled, const Float3& p, const Float4& color,
+		BitmapFont& font, ResizableArray<GLubyte>& charBuffer, GLuint listBase);
+
+	//! create glTexImage2D objects for font characters, stored in textureNumberRGBbitmap
+	static void CreateFontTextures();
+
+	//! create glLists for texture with textureNumber
+	static void CreateTexturedQuadsLists(GLuint& listBase, GLuint* textureNumber,
+		guint nCharacters, guint wCharacter8, guint wCharacter, guint hCharacter, bool itemTags = false);
+
+	//draw string with GLlists, previously created by CreateTexturedQuadsLists
+	static void DrawStringWithGLlistTextures(const Float3& p, float fontSizeScaled, GLuint listBase, GLubyte *string, guint stringLen);
+
+	//! OpenGL testing functions for destructor
+	static void DeleteFonts();
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 };
 
 extern GlfwRenderer glfwRenderer; //this is the (static) location of the renderer class; could also be made dynamic

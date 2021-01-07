@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  15:23:12 (last modfied)
+* @date         2021-01-05  01:13:06 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadForceVectorParameters
 class CLoadForceVectorParameters // AUTO: 
@@ -31,7 +32,7 @@ public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N]
     bool bodyFixed;                               //!< AUTO: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used
-    std::function<StdVector(Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent load
+    std::function<StdVector(const MainSystem&,Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent load
     //! AUTO: default constructor with parameter initialization
     CLoadForceVectorParameters()
     {
@@ -107,8 +108,8 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  read access for force vector; returns user function in case it is defined
-    virtual Vector3D GetLoadVector(Real t) const override;
+    //! AUTO:  read access for force vector; returns user function result in case it is defined
+    virtual Vector3D GetLoadVector(const MainSystemBase& mbs, Real t) const override;
 
     //! AUTO:  per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system
     virtual bool IsBodyFixed() const override

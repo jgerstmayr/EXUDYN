@@ -105,6 +105,39 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+pyClass = 'KeyCode'
+
+descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for special key codes in keyPressUserFunction.\n\n'
+
+s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
+sLenum += DefLatexStartClass(sectionName = pyClass, 
+                            description=descriptionStr, 
+                            subSection=True)
+#keep this list synchronized with the accoring enum structure in C++!!!
+[s1,sL1] = AddEnumValue(pyClass, 'SPACE', 'space key'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ENTER', 'enter (return) key'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'TAB',   ''); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'BACKSPACE', ''); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'RIGHT', 'cursor right'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'LEFT', 'cursor left'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'DOWN', 'cursor down'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'UP', 'cursor up'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F1', 'function key F1'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F2', 'function key F2'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F3', 'function key F3'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F4', 'function key F4'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F5', 'function key F5'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F6', 'function key F6'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F7', 'function key F7'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F8', 'function key F8'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F9', 'function key F9'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'F10', 'function key F10'); s+=s1; sLenum+=sL1
+
+s +=	'		.export_values();\n\n'
+sLenum += DefLatexFinishClass()
+
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'LinearSolverType'
 
@@ -140,22 +173,24 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
                                 argList=['verbose'],
                                 description="Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation"); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'PyStopOpenGLRenderer', "Stop OpenGL rendering engine"); s+=s1; sL+=sL1
+#old, without [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'PyStopOpenGLRenderer', "Stop OpenGL rendering engine"); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(pyName='SolveStatic', 
+#new, defined in C++ as lambda function:
+[s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'no direct link to C++ here', "Stop OpenGL rendering engine"); sL+=sL1; #s+=s1
+
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
                                description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solver:equations}',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True']
                                ); sL+=sL1
                 
-[s1,sL1] = DefPyFunctionAccess('', 'SolveDynamic', '', ""); sL+=sL1
-[s1,sL1] = DefPyFunctionAccess(pyName='SolveDynamic', 
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
                                description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solver:equations}',
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True']
                                ); sL+=sL1
                 
-[s1,sL1] = DefPyFunctionAccess(pyName='ComputeODE2Eigenvalues', 
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='ComputeODE2Eigenvalues', cName='ComputeODE2Eigenvalues', 
                                description='Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:ComputeODE2Eigenvalues}',
                                argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False']); sL+=sL1
@@ -202,7 +237,7 @@ s += '        m.attr("variables") = exudynVariables;\n'
 sL += '  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\\\ \\hline  \n'
 
 s += '        m.attr("sys") = exudynSystemVariables;\n' 
-sL += '  sys & this dictionary is used by the system, e.g. for testsuite or solvers to store exudyn-wide data in order to avoid global python variables \\\\ \\hline  \n'
+sL += "  sys & this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations \\\\ \\hline  \n"
 
 [s1,sL1] = DefPyFinishClass('')
 s+=s1; sL+=sL1
@@ -260,7 +295,7 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderState', cName='PySetRenderState', 
                                 description="Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState",
-                                example = "SC = exu.SystemContainer()\\\\SC.GetRenderState(renderState)",
+                                example = "SC = exu.SystemContainer()\\\\SC.SetRenderState(renderState)",
                                 argList=['renderState'],
                                 ); sL+=sL1
 
@@ -272,6 +307,12 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
                                 description="Redraw openGL scene and save image (command waits until process is finished)"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cName='PyGetCurrentMouseCoordinates', 
+                                description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
+                                argList=['useOpenGLcoordinates'],
+                                defaultArgs=['False'],
+                                ); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                                 description="delete all systems and reset SystemContainer (including graphics)"); sL+=sL1
@@ -362,7 +403,7 @@ sL += DefLatexFinishClass()#only finalize latex table
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #NODE
 s += "\n//        NODES:\n"
-sL+=DefLatexStartClass(classStr+': Node', 'This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.', subSection=True)
+sL+=DefLatexStartClass(classStr+': Node', '\label{sec:mainsystem:node}\n This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.', subSection=True)
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainNode(itemDict); }', 
 #                                description="add a node with nodeDefinition in dictionary format; returns (global) node number of newly added node",
 #                                argList=['itemDict'],
@@ -435,7 +476,7 @@ sL += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #OBJECT
 s += "\n//        OBJECTS:\n"
-sL += DefLatexStartClass(classStr+': Object', 'This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.', subSection=True)
+sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.', subSection=True)
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainObject(itemDict); }', 
 #                                description="add a object with objectDefinition in dictionary format; returns (global) object number of newly added object",
 #                                argList=['itemDict'],
@@ -515,7 +556,7 @@ sL += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #MARKER
 s += "\n//        MARKER:\n"
-sL += DefLatexStartClass(classStr+': Marker', 'This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).', subSection=True)
+sL += DefLatexStartClass(classStr+': Marker', '\label{sec:mainsystem:marker}\n This section provides functions for adding, reading and modifying markers. Markers define how to measure primal kinematical quantities on objects or nodes (e.g., position, orientation or coordinates themselves), and how to act on the quantities which are dual to the kinematical quantities (e.g., force, torque and generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address these quantities independently of the structure of the object or node (e.g., rigid or flexible body).', subSection=True)
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainMarker(itemDict); }', 
 #                                description="add a marker with markerDefinition in dictionary format; returns (global) marker number of newly added marker",
 #                                argList=['itemDict'],
@@ -571,7 +612,7 @@ sL += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #LOAD
 s += "\n//        LOADS:\n"
-sL += DefLatexStartClass(classStr+': Load', 'This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.', subSection=True)
+sL += DefLatexStartClass(classStr+': Load', '\label{sec:mainsystem:load}\n This section provides functions for adding, reading and modifying operating loads. Loads are used to act on the quantities which are dual to the primal kinematic quantities, such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.', subSection=True)
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainLoad(itemDict); }', 
 #                                description="add a load with loadDefinition in dictionary format; returns (global) load number of newly added load",
 #                                argList=['itemDict'],
@@ -631,7 +672,7 @@ sL += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #SENSORS
 s += "\n//        SENSORS:\n"
-sL += DefLatexStartClass(classStr+': Sensor', 'This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.', subSection=True)
+sL += DefLatexStartClass(classStr+': Sensor', '\label{sec:mainsystem:sensor}\n This section provides functions for adding, reading and modifying operating sensors. Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.', subSection=True)
 #[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='[](MainSystem& mainSystem, py::dict itemDict) {return mainSystem.AddMainSensor(itemDict); }', 
 #                                description="add a sensor with sensor definition in dictionary format; returns (global) sensor number of newly added sensor",
 #                                argList=['itemDict'],

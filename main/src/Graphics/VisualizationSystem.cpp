@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -332,7 +332,8 @@ std::string VisualizationSystem::GetComputationMessage()
 {
 	postProcessData->accessState.test_and_set(std::memory_order_acquire); //computation thread must be interrupted before further update
 	
-	std::string str = std::string("EXUDYN\n") + postProcessData->GetVisualizationMessage() + "\ntime = " + EXUstd::ToString(postProcessData->visualizationTime);
+	std::string str = //std::string("EXUDYN\n") + //now printed in GlfwClient.cpp
+		postProcessData->GetVisualizationMessage() + "\ntime = " + EXUstd::ToString(postProcessData->visualizationTime);
 	postProcessData->accessState.clear(std::memory_order_release); //computation thread must be interrupted before further update
 
 	return str;

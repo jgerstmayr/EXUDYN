@@ -1,11 +1,20 @@
-# Utility functions and structures for Exudyn
-"""
-Created on Fri Jul 26 10:53:30 2019
-
-@author: Johannes Gerstmayr
-
-goal: support functions, which simplify the generation of models
-"""
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN python utility library
+#
+# Details: 	Utility functions for visualization, which provides functions for basic shapes
+#			like cube, cylinder, sphere, solid of revolution. Functions generate dictionaries
+#			which contain line, text or triangle primitives for drawing in Exudyn using OpenGL.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2020-07-26 (created)
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+# Notes: 	Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels
+#			in the range [0,1], e.g., red = [1,0,0,1].\\
+#			Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4lightred, color4lightgreen, color4steelblue, color4grey, color4darkgrey, color4lightgrey, color4white\\
+#			Additionally, a list of colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from exudyn.basicUtilities import *
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis
@@ -16,7 +25,7 @@ import copy as copy #to be able to copy e.g. lists
 #import time        #AnimateSolution
 
 # color definitions
-color4red = [1,0,0,1.]
+color4red = [1,0,0,1]
 color4green = [0,1,0,1]
 color4blue = [0,0,1,1]
 
@@ -38,7 +47,7 @@ color4white = [1.,1.,1.,1.]
 color4list = [color4red, color4green, color4blue, 
               color4cyan, color4magenta, color4yellow,
               color4lightred, color4lightgreen, color4steelblue, 
-              color4grey]
+              color4grey, color4darkgrey, color4lightgrey]
 
 #************************************************
 #**function: generate graphics data for 2D rectangle
@@ -88,7 +97,7 @@ def GraphicsDataOrthoCubePoint(centerPoint, size, color=[0.,0.,0.,1.]):
 
 #**function: generate graphics data for general cube with endpoints, according to given vertex definition
 #**input: 
-#  pList: is a list of points [[x0,y0,z0],[x1,y11,z1],...]
+#  pList: is a list of points [[x0,y0,z0],[x1,y1,z1],...]
 #  color: provided as list of 4 RGBA values
 #  faces: includes the list of six binary values (0/1), denoting active faces (value=1); set index to zero to hide face
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
@@ -211,18 +220,17 @@ def GraphicsDataSphere(point, radius, color=[0.,0.,0.,1.], nTiles = 8):
 #  angleRange: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]
 #  lastFace: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True
 #  cutPlain: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
+#  alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16, 
-                         angleRange=[0,2*np.pi], 
-                         lastFace = True, 
-                         cutPlain = True):  
+                         angleRange=[0,2*np.pi], lastFace = True, cutPlain = True, **kwargs):  
 
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
     
     #create points at left and right face
     points0=list(copy.deepcopy(pAxis)) #[pAxis[0],pAxis[1],pAxis[2]] #avoid change of pAxis
     pAxis1=[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]]
-    points1=copy.deepcopy(pAxis1) #[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]] #copy in order to avoid change of pAxis1 for use lateron
+    points1=list(copy.deepcopy(pAxis1)) #[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]] #copy in order to avoid change of pAxis1 for use lateron
     
     p0 = np.array(pAxis)
     p1 = np.array(pAxis) + np.array(vAxis)
@@ -271,9 +279,21 @@ def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16,
         normals0 += Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
 
     n = nTiles+1 #number of points of one ring+midpoint
+    color2 = color #alternating color
+    if 'alternatingColor' in kwargs:
+        color2 = kwargs['alternatingColor']
+
     colors=[]
-    for i in range(2*n+2*nTiles):
+    #for i in range(2*n+2*nTiles):
+    #    colors += color
+    n2 = int(nTiles/2)    
+    for i in range(2):
         colors += color
+    for j in range(4):
+        for i in range(n2):
+            colors += color
+        for i in range(nTiles-n2):
+            colors += color2
 
     triangles = []
     #circumference:
@@ -286,7 +306,6 @@ def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16,
                 triangles += [1+i,n+1,n+1+i]
                 triangles += [1+i,1,n+1]
             
-
     #sides faces left and right:
     nn=2*n #offset
     for i in range(nTiles):
@@ -464,4 +483,192 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
     return data
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#   unused: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
+#**function: generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color; 
+#**input:
+#   pAxis: axis point of one face of cylinder (3D list or np.array)
+#   vAxis: vector representing the cylinder's axis (3D list or np.array)
+#   contour: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]]
+#   color: provided as list of 4 RGBA values
+#   nTiles: used to determine resolution of solid; use larger values for finer resolution
+#   smoothContour: if True, the contour is made smooth by auto-computing normals to the contour
+#   alternatingColor: add a second color, which enables to see the rotation of the solid
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+#**example:
+##simple contour, using list of 2D points:
+#contour=[[0,0.2],[0.3,0.2],[0.5,0.3],[0.7,0.4],[1,0.4],[1,0.]]
+#rev1 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0], 
+#                                     contour=contour, color=color4red,
+#                                     alternatingColor=color4grey)
+##draw torus:
+#contour=[]
+#r = 0.2 #small radius of torus
+#R = 0.5 #big radius of torus
+#for i in range(nc+3): #+3 in order to remove boundary effects
+#    contour+=[[r*cos(i/nc*pi*2),R+r*sin(i/nc*pi*2)]]
+#
+##use smoothContour to make torus looking smooth
+#rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0], 
+#                                     contour=contour, color=color4red, 
+#                                     nTiles = 32*2, smoothContour=True)
+def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, smoothContour = False, **kwargs):  
 
+    if len(contour) < 2: 
+        raise ValueError("ERROR: GraphicsDataSolidOfRevolution: contour must contain at least 2 points")
+    if nTiles < 3: 
+        print("WARNING: GraphicsDataSolidOfRevolution: nTiles < 3: set nTiles=3")
+
+    p0 = np.array(pAxis)
+    #local coordinate system:
+    [v,n1,n2] = ComputeOrthonormalBasis(vAxis)
+
+    color2 = color
+    if 'alternatingColor' in kwargs:
+        color2 = kwargs['alternatingColor']
+
+    #compute contour normals, assuming flat cones
+    contourNormals = []
+    for j in range(len(contour)-1):
+        pc0 = np.array(contour[j])
+        pc1 = np.array(contour[j+1])
+        vc = pc1-pc0
+        nc = Normalize([-vc[1],vc[0]])
+        contourNormals += [nc]
+    contourNormals += [contourNormals[-1]] #normal for last point same as previous
+
+    if smoothContour:
+        contourNormals2 = [contourNormals[0]]
+        for j in range(len(contour)-1):
+            ns = Normalize(np.array(contourNormals[j]) + np.array(contourNormals[j+1])) #not fully correct, but sufficient
+            contourNormals2 += [list(ns)]
+        contourNormals = contourNormals2
+
+    points = []
+    normals = []
+    colors = []
+    nT2 = int(nTiles/2)
+
+    for j in range(len(contour)-1):
+        pc0 = np.array(contour[j])
+        pc1 = np.array(contour[j+1])
+        points0 = []
+        points1 = []
+        normals0 = []
+        normals1 = []
+        for i in range(nTiles):
+            phi = i*2*np.pi/nTiles
+            x0 = pc0[1]*np.sin(phi)
+            y0 = pc0[1]*np.cos(phi)
+            vv0 = x0*n1 + y0*n2
+
+            x1 = pc1[1]*np.sin(phi)
+            y1 = pc1[1]*np.cos(phi)
+            vv1 = x1*n1 + y1*n2
+
+            pz0 = p0 + vv0 + pc0[0]*v
+            pz1 = p0 + vv1 + pc1[0]*v
+            points0 += list(pz0)
+            points1 += list(pz1)
+
+            #vc = pc1-pc0
+            #nc = [-vc[1],vc[0]]
+            nc0 = contourNormals[j]
+            nUnit0 = Normalize(nc0[1]*np.sin(phi)*n1 + nc0[1]*np.cos(phi)*n2+nc0[0]*v)
+            nUnit1 = nUnit0
+            if smoothContour:
+                nc1 = contourNormals[j+1]
+                nUnit1 = Normalize(nc1[1]*np.sin(phi)*n1 + nc1[1]*np.cos(phi)*n2+nc1[0]*v)
+
+            normals0 = normals0 + nUnit0
+            normals1 = normals1 + nUnit1
+
+        cList = list(color)*nT2 + list(color2)*(nTiles-nT2)
+        colors += cList+cList
+        points += points0 + points1
+        normals += normals0 + normals1
+    
+    triangles = []
+    n = nTiles
+    #circumference:
+    for j in range(len(contour)-1):
+        k = j*2*n
+        for i in range(nTiles):
+            if i < nTiles-1:
+                triangles += [i+k,n+i+1+k,n+i+k]
+                triangles += [i+k,i+1+k,n+i+1+k]
+            else:
+                triangles += [i+k,n+k,n+i+k]
+                triangles += [i+k,k,n+k]
+
+    #triangle normals point inwards to object ...
+    data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+
+    return data
+
+#**function: generate graphics data for simple quad with option for checkerboard pattern;
+#  points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
+#**input: 
+#  pList: list of 4 quad points [[x0,y0,z0],[x1,y1,z1],...]
+#  color: provided as list of 4 RGBA values
+#  alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
+#  nTiles: number of tiles for checkerboard pattern (default: 10)
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+#**example:
+#plane = GraphicsDataQuad([[-8, 0, -8],[ 8, 0, -8,],[ 8, 0, 8],[-8, 0, 8]], 
+#                         color4darkgrey, nTiles=8, 
+#                         alternatingColor=color4lightgrey)
+#oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
+#                      visualization=VObjectGround(graphicsData=[plane])))
+def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs): 
+
+    color2 = color
+    nTiles = 1
+    if 'alternatingColor' in kwargs:
+        color2 = kwargs['alternatingColor']
+        nTiles = 10
+
+    if 'nTiles' in kwargs:
+        nTiles = kwargs['nTiles']
+
+    nPoints = nTiles*2 #number of points in one direction
+    p0 = np.array(pList[0])
+    p1 = np.array(pList[1])
+    p2 = np.array(pList[2])
+    p3 = np.array(pList[3])
+
+    dx = 1./nTiles
+    points = []
+    triangles = []
+    #points are given always for 1 quad of checkerboard pattern
+    ind = 0
+    for j in range(nTiles):
+        for i in range(nTiles):
+            f0 = j/(nTiles)
+            f1 = (j+1)/(nTiles)
+            pBottom0 = (nTiles-i)/nTiles  *((1-f0)*p0 + f0*p3) + (i)/nTiles  *((1-f0)*p1 + f0*p2)
+            pBottom1 = (nTiles-i-1)/nTiles*((1-f0)*p0 + f0*p3) + (i+1)/nTiles*((1-f0)*p1 + f0*p2)
+            pTop0 = (nTiles-i)/nTiles  *((1-f1)*p0 + f1*p3) + (i)/nTiles  *((1-f1)*p1 + f1*p2)
+            pTop1 = (nTiles-i-1)/nTiles*((1-f1)*p0 + f1*p3) + (i+1)/nTiles*((1-f1)*p1 + f1*p2)
+            points += list(pBottom0)+list(pBottom1)+list(pTop1)+list(pTop0)
+            #points += list(p0)+list(p1)+list(p2)+list(p3)
+            triangles += [0+ind,1+ind,2+ind,  0+ind,2+ind,3+ind]
+            ind+=4
+
+    colors=[]
+    for j in range(nTiles):
+        for i in range(nTiles):
+            a=1
+            if i%2 == 1:
+                a=-1
+            if j%2 == 1:
+                a=-1*a
+            if a==1:
+                c = color #if no checkerboard pattern, just this color
+            else:
+                c = color2
+            colors=colors+c+c+c+c #4 colors for one sub-quad
+
+    data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':triangles}
+    #print(data)
+    return data

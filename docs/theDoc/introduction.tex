@@ -213,7 +213,7 @@ Typical situations are:
 \ei
 
 \mysubsubsection{Loads}
-Loads are used to apply forces and torques to the system. The load values are static values. However, you can use Python functionality to modify loads either by linearly increasing them during static computation or by using the 'preStepPyExecute' structure in order to modify loads in every integration step depending on time or on measured quantities (thus, creating a controller).
+Loads are used to apply forces and torques to the system. The load values are static values. However, you can use Python functionality to modify loads either by linearly increasing them during static computation or by using the 'mbs.SetPreStepUserFunction(...)' structure in order to modify loads in every integration step depending on time or on measured quantities (thus, creating a controller).
 
 \mysubsubsection{Sensors}
 Sensors are only used to measure output variables (values) in order to simpler generate the requested output quantities.
@@ -308,6 +308,58 @@ The visualization settings structure can be accessed in the system container \te
 	SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
 \end{lstlisting}
 
+\mysubsubsubsection{Storing the model view}
+\label{sec:storing:modelview}
+There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.GetRenderState()} and \texttt{SC.SetRenderState()}.
+When executing 
+A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation:
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+import exudyn as exu
+exu.StartRenderer()
+if 'renderState' in exu.sys:
+    SC.SetRenderState(exu.sys['renderState']) 
+#+++++++++++++++
+#do simulation here and adjust model view settings with mouse
+#+++++++++++++++
+
+#store model view for next run:
+StopRenderer() #stores render state in exu.sys['renderState']
+\end{lstlisting}
+\par\noindent\rule{\textwidth}{0.4pt}
+%
+Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
+\pythonstyle
+\begin{lstlisting}
+In[1] : SC.GetRenderState()
+Out[1]: 
+{'centerPoint': [1.0, 0.0, 0.0],
+ 'maxSceneSize': 2.0,
+ 'zoom': 1.0,
+ 'currentWindowSize': [1024, 768],
+ 'modelRotation': [[ 0.34202015,  0.        ,  0.9396926 ],
+                   [-0.60402274,  0.76604444,  0.21984631],
+                   [-0.7198463 , -0.6427876 ,  0.26200265]])}
+\end{lstlisting}
+%
+which contains the last state of the renderer.
+Now copy the output and set this with \texttt{SC.SetRenderState} in your Python code to have a fixed model view in every simulation (\texttt{SC.SetRenderState} AFTER \texttt{exu.StartRenderer()}):
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+exu.StartRenderer()
+renderState={'centerPoint': [1.0, 0.0, 0.0],
+             'maxSceneSize': 2.0,
+             'zoom': 1.0,
+             'currentWindowSize': [1024, 768],
+             'modelRotation': [[ 0.34202015,  0.        ,  0.9396926 ],
+                               [-0.60402274,  0.76604444,  0.21984631],
+                               [-0.7198463 , -0.6427876 ,  0.26200265]])
+SC.SetRenderState(renderState)
+#.... further code for simulation here
+\end{lstlisting}
+\par\noindent\rule{\textwidth}{0.4pt}
+%
+%
 \mysubsubsection{Solver}
 Both in the static as well as in the dynamic case, the solver runs in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval.
 For the time integration (dynamic solver), \fig{fig_solver_time_integration} shows the basic loops for the solution process. The inner loops are shown in \fig{fig_solver_solve_steps} and\fig{fig_solver_discontinuous_iteration}.
@@ -459,7 +511,7 @@ The description of interfaces for solvers starts in \refSection{sec:MainSolverSt
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
   \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.6, every node/.style={scale=0.6}]
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.55, every node/.style={scale=0.55}]
 			% Place nodes
 			\node [cloud] (newtonIteration) {Newton()};
 			\node [wideblock, below of=newtonIteration] (initNewton) {state.current = state.startOfStep\\ current.AEcoords = 0};
@@ -762,9 +814,10 @@ Exceptions to the NO-ABBREVIATIONS-RULE:
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 \mysubsection{Changes}
+\label{sec:changes}
 
 The following list covers changes in the python interface and functionality:
-\bi
+\bi \small
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	%\item {\bf Version 0.1.2xx $\ra$ Version 0.1.2yy}
 	%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
@@ -776,7 +829,52 @@ The following list covers changes in the python interface and functionality:
 	  %\item $\ra$ 
 	%\ei
 	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.32$\ra$ Version 1.0.33}
+	\item {\bf Version 1.0.59$\ra$ Version 1.0.61}
+	\bi
+	  \item {\bf Major changes}: Changed interface of \texttt{processing.GeneticOptimization()}; 
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.56$\ra$ Version 1.0.57}
+	\bi
+	  \item {\bf Major changes}: added new submodule \texttt{exudyn.signal}; 
+		\item {\bf Major changes}: \texttt{FilterSignal} renamed into \texttt{FilterSensorOutput} and moved from \texttt{exudyn.utilities} to \texttt{exudyn.signal}
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.49$\ra$ Version 1.0.51}
+	\bi
+	\item user functions can now be set to zero, e.g.:
+	\item[] \phantom{XXXX} \texttt{mbs.AddObject(CoordinateSpringDamper(markerNumbers=[m0,m1],
+	\item[] \phantom{XXXXXXXX} stiffness=k, damping=0.01*k, 
+	\item[] \phantom{XXXXXXXX} springForceUserFunction=0)}
+	\item Exception: for \texttt{visualizationSettings.window.keyPressUserFunction} use \\ \texttt{SC.visualizationSettings.window.ResetKeyPressUserFunction()} to set it to zero
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.42$\ra$ Version 1.0.49}
+	\bi
+	\item {\bf Major changes}: OpenGL default settings for lights and material have been changed; slightly different appearance might result from that! per default, light1 is active as well.
+	\item {\bf Major changes}: Added key callback functionality \texttt{keyPressUserFunction} to \texttt{VisualizationSettings.window}
+	\item added mouse coordinates (OpenGL and screen pixels) to renderState and added a \texttt{GetCurrentMouseCoordinates()} function to SystemContainer
+	\item added mouse coordinates to renderer window (press 'F3')
+	\item identified problems with OpenGL lights; light1 is now working
+	\item solved problems with coordinateSystem
+	\item added a world basis (coordinate system) at origin of model (0,0,0); \\see \texttt{VisualizationSettings.general.drawWorldBasis}
+	\item added flag \texttt{simulateInRealtime} to \texttt{simulationSettings.timeIntegration}
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.38$\ra$ Version 1.0.42}
+	\bi
+	\item completed \texttt{Acceleration} output variables for all relevant objects and nodes; 
+	\item added FilterSignal(...) (\refSection{sec:signal:FilterSignal}) functionality to utilities, which enables numerical differentiation and filtering, using savgol filter, applied to all output values of data loaded from sensors.
+	\item for example, see \texttt{TestModels/objectFFRFreducedOrderAccelerations.py}.
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.37$\ra$ Version 1.0.38}
+	\bi
+	\item \texttt{SC.StopRenderer()} now stores the last renderState in \texttt{exu.sys['renderState']}, which can be used in subsequent simulations to always have the same view and zoom; 
+	for an example, see \refSection{sec:storing:modelview}.
+	\ei
+	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	\item {\bf Version 1.0.32$\ra$ Version 1.0.37}
 	\bi
 	\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
 	\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success

@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -36,7 +36,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //here, all implementations to compute load values are collected
 
-Real CLoadCoordinate::GetLoadValue(Real t) const
+Real CLoadCoordinate::GetLoadValue(const MainSystemBase& mbs, Real t) const
 {
 	if (!parameters.loadUserFunction)
 	{
@@ -49,13 +49,13 @@ Real CLoadCoordinate::GetLoadValue(Real t) const
 		Real returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = parameters.loadUserFunction(t, parameters.load);
+			returnValue = parameters.loadUserFunction((const MainSystem&)mbs, t, parameters.load);
 		}, "LoadCoordinate::loadVectorUserFunction");
 		return returnValue;
 	}
 }
 
-Vector3D CLoadForceVector::GetLoadVector(Real t) const
+Vector3D CLoadForceVector::GetLoadVector(const MainSystemBase& mbs, Real t) const
 {
 	if (!parameters.loadVectorUserFunction)
 	{
@@ -70,14 +70,14 @@ Vector3D CLoadForceVector::GetLoadVector(Real t) const
 		Vector3D returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = (Vector3D)parameters.loadVectorUserFunction(t, parameters.loadVector);
+			returnValue = (Vector3D)parameters.loadVectorUserFunction((const MainSystem&)mbs, t, parameters.loadVector);
 		},"LoadForceVector::loadVectorUserFunction");
 
 		return returnValue;
 	}
 }
 
-Vector3D CLoadTorqueVector::GetLoadVector(Real t) const
+Vector3D CLoadTorqueVector::GetLoadVector(const MainSystemBase& mbs, Real t) const
 {
 	if (!parameters.loadVectorUserFunction)
 	{
@@ -90,14 +90,14 @@ Vector3D CLoadTorqueVector::GetLoadVector(Real t) const
 		Vector3D returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = (Vector3D)parameters.loadVectorUserFunction(t, parameters.loadVector);
+			returnValue = (Vector3D)parameters.loadVectorUserFunction((const MainSystem&)mbs, t, parameters.loadVector);
 		}, "LoadTorqueVector::loadVectorUserFunction");
 		return returnValue;
 
 	}
 }
 
-Vector3D CLoadMassProportional::GetLoadVector(Real t) const
+Vector3D CLoadMassProportional::GetLoadVector(const MainSystemBase& mbs, Real t) const
 {
 	if (!parameters.loadVectorUserFunction)
 	{
@@ -110,22 +110,22 @@ Vector3D CLoadMassProportional::GetLoadVector(Real t) const
 		Vector3D returnValue;
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			returnValue = (Vector3D)parameters.loadVectorUserFunction(t, parameters.loadVector);
+			returnValue = (Vector3D)parameters.loadVectorUserFunction((const MainSystem&)mbs, t, parameters.loadVector);
 		}, "LoadMassProportional::loadVectorUserFunction");
 		return returnValue;
 	}
 }
 
 //! Get current load value(s); copies values==>slow!; can be scalar or vector-valued!
-py::object MainLoad::GetLoadValues(Real time) const
+py::object MainLoad::GetLoadValues(const MainSystemBase& mbs, Real time) const
 {
 	if (GetCLoad()->IsVector()) //vector
 	{
-		Vector3D value = GetCLoad()->GetLoadVector(time);
+		Vector3D value = GetCLoad()->GetLoadVector(mbs, time);
 		return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer());
 	}
 	else //scalar
 	{
-		return py::float_(GetCLoad()->GetLoadValue(time));
+		return py::float_(GetCLoad()->GetLoadValue(mbs, time));
 	}
 }

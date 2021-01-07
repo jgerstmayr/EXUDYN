@@ -171,7 +171,7 @@ for testCases in rangeTests:
     
     
     #user function for load; switch off load after 1 second
-    def userLoad(t, load):
+    def userLoad(mbs, t, load):
         if t <= 2: return load
         return 0
     

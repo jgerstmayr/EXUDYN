@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-11-30  20:42:27 (last modfied)
+* @date         2021-01-05  12:16:59 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,6 +27,7 @@
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix; 
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectGenericODE2Parameters
 class CObjectGenericODE2Parameters // AUTO: 
@@ -37,8 +38,8 @@ public: // AUTO:
     Matrix stiffnessMatrix;                       //!< AUTO: stiffness matrix of object in python numpy format
     Matrix dampingMatrix;                         //!< AUTO: damping matrix of object in python numpy format
     Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
-    std::function<StdVector(Real, StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the ODE2 equations; see description below
-    std::function<NumpyMatrix(Real, StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix; see description below
+    std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the ODE2 equations; see description below
+    std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix; see description below
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE2Parameters()
@@ -161,8 +162,17 @@ public: // AUTO:
     //! AUTO:  compute object coordinates composed from all nodal coordinates; does not include reference coordinates
     void ComputeObjectCoordinates(Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current) const;
 
+    //! AUTO:  compute object acceleration coordinates composed from all nodal coordinates
+    void ComputeObjectCoordinates_tt(Vector& coordinates_tt, ConfigurationType configuration = ConfigurationType::Current) const;
+
     //! AUTO:  initialize coordinateIndexPerNode array
     void InitializeCoordinateIndices();
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, const StdVector& coordinates, const StdVector& coordinates_t) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, const StdVector& coordinates, const StdVector& coordinates_t) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override
@@ -202,6 +212,7 @@ public: // AUTO:
         return (OutputVariableType)(
             (Index)OutputVariableType::Coordinates +
             (Index)OutputVariableType::Coordinates_t +
+            (Index)OutputVariableType::Coordinates_tt +
             (Index)OutputVariableType::Force );
     }
 

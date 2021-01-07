@@ -1,15 +1,15 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  support functions for finite element models
+# Details:  Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
 #
-# Author:   Johannes Gerstmayr
-# Date:     2020-03-10
+# Author:   Johannes Gerstmayr, Stefan Holzinger
+# Date:     2020-03-10 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Note that CSR matrices contain 3 numbers per row: [row, column, value]
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
+# Notes: 	CSR matrices contain 3 numbers per row: [row, column, value]
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
 from exudyn.itemInterface import *
@@ -274,7 +274,7 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 #   A MMF file can be created in Ansys by placing the following APDL code inside
 #   the solution tree in Ansys Workbench:
 #
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #   ! APDL code that exports sparse stiffnes and mass matrix in MMF format. If 
 #   ! the dense matrix is needed, replace *SMAT with *DMAT in the following
 #   ! APDL code.
@@ -286,17 +286,16 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 #   ! Export the mass matrix in MMF format
 #   *SMAT,MatMD,D,IMPORT,FULL,file.full,MASS
 #   *EXPORT,MatMD,MMF,fileNameMassMatrix,,,
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #
 # In case a lumped mass matrix is needed, place the following APDL Code inside 
 # the Modal Analysis Tree:
 #
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #   ! APDL code to force Ansys to use a lumped mass formulation (if available for
 #   ! used elements)
 #   LUMPM, ON, , 0
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++   
+#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def ReadMatrixFromAnsysMMF(fileName, verbose=False):
     if verbose: print("Start read matrix")
     # read file
@@ -393,7 +392,6 @@ def ReadMatrixDOFmappingVectorFromAnsysTxt(fileName):
 #   named selection tha was created and choose 'export' and save the nodal 
 #   coordinates as .txt file.
 #   
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
     
     # read file
@@ -473,8 +471,6 @@ def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
 #   to create the second named selection. Next, right click on the second 
 #   named selection tha was created and choose 'export' and save the elements 
 #   as .txt file.
-#   
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def ReadElementsFromAnsysTxt(fileName, verbose=False):
     
     # read file
@@ -844,8 +840,8 @@ class ObjectFFRFreducedOrderInterface:
     #  initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  UFforce: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
-    #  UFmassMatrix: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFforce: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFmassMatrix: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
     #  color: provided as list of 4 RGBA values
@@ -1537,6 +1533,44 @@ class FEMinterface:
                 if abs(np.dot(nodePoint - point, normal)) <= tolerance:
                     nodeList += [cnt]
                 cnt+=1
+        return nodeList
+
+    #**classFunction: get node numbers in cube, given by pMin and pMax, containing the minimum and maximum x, y, and z coordinates
+    #if not found, it returns an empty list
+    def GetNodesInCube(self, pMin, pMax):
+        cnt = 0
+        nodeList=[]
+        for nodeTypeName in self.nodes:
+            for nodePoint in self.nodes[nodeTypeName]:
+                if (nodePoint[0] >= pMin[0] and nodePoint[0] <= pMax[0] and
+                    nodePoint[1] >= pMin[1] and nodePoint[1] <= pMax[1] and
+                    nodePoint[2] >= pMin[2] and nodePoint[2] <= pMax[2]):
+                    nodeList += [cnt]
+                cnt+=1
+        return nodeList
+
+    #**classFunction: get node numbers on cylinder given by axes points p1 and p2, radius and tolerance
+    #if not found, it returns an empty list
+    def GetNodesOnCylinder(self, p1, p2, radius, tolerance=1e-5):
+        cnt = 0
+        v0 = np.array(p2) - np.array(p1)
+        lAxis = np.linalg.norm(v0)
+        if lAxis != 0:
+            v0 = v0/lAxis
+            
+        nodeList=[]
+        for nodeTypeName in self.nodes:
+            for nodePoint in self.nodes[nodeTypeName]:
+                p = np.array(nodePoint)
+                v1 = p-p1
+                s = v0 @ v1
+                
+                if s <= lAxis+tolerance and s >= -tolerance:
+                    pp = p1 + s*v0 #projected point
+                    r = np.linalg.norm(p-pp) #shortest distance to axis
+                    if abs(r-radius) <= tolerance:
+                        nodeList += [cnt]
+                        cnt+=1
         return nodeList
 
     #**classFunction: get node numbers on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r

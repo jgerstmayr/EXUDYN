@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  10:19:11 (last modfied)
+* @date         2021-01-05  12:13:02 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorCartesianSpringDamperParameters
 class CObjectConnectorCartesianSpringDamperParameters // AUTO: 
@@ -32,7 +33,7 @@ public: // AUTO:
     Vector3D stiffness;                           //!< AUTO: stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction
     Vector3D damping;                             //!< AUTO: damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction
     Vector3D offset;                              //!< AUTO: offset between two springs
-    std::function<StdVector(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)> springForceUserFunction;//!< AUTO: A python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below
+    std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)> springForceUserFunction;//!< AUTO: A python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCartesianSpringDamperParameters()
@@ -115,7 +116,10 @@ public: // AUTO:
     }
 
     //! AUTO:  compute spring damper force helper function
-    void ComputeSpringForce(const MarkerDataStructure& markerData, const CObjectConnectorCartesianSpringDamperParameters& parameters, Vector3D& vPos, Vector3D& vVel, Vector3D& fVec) const;
+    void ComputeSpringForce(const MarkerDataStructure& markerData, Vector3D& vPos, Vector3D& vVel, Vector3D& fVec) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Vector3D& vPos, Vector3D& vVel) const;
 
     //! AUTO:  return if connector is active-->speeds up computation
     virtual bool IsActive() const override

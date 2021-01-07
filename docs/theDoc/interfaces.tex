@@ -27,9 +27,9 @@ SolutionSettings has the following items:
     exportAccelerations &     bool &      &     True &     solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]\\ \hline
     exportAlgebraicCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]\\ \hline
     exportDataCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates\\ \hline
-    coordinatesSolutionFileName &     FileName &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist\\ \hline
-    solverInformationFileName &     FileName &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist\\ \hline
-    solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...)\\ \hline
+    coordinatesSolutionFileName &     FileName &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only\\ \hline
+    solverInformationFileName &     FileName &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only\\ \hline
+    solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)\\ \hline
     outputPrecision &     Index &      &     10 &     precision for floating point numbers written to solution and sensor files\\ \hline
     recordImagesInterval &     Real &      &     -1. &     record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages\\ \hline
 	  \end{longtable}
@@ -126,7 +126,8 @@ TimeIntegrationSettings has the following items:
     verboseMode &     Index &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
     verboseModeFile &     Index &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
     generalizedAlpha &     GeneralizedAlphaSettings &      &      &     parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)\\ \hline
-    preStepPyExecute &     String &      &     '' &     DEPRECATED, use preStepFunction in simulation settings; Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
+    preStepPyExecute &     String &      &     '' &     DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
+    simulateInRealtime &     bool &      &     False &     true: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -153,7 +154,7 @@ StaticSolverSettings has the following items:
     minimumStepSize &     UReal &      &     1e-8 &     lower limit of step size, before nonlinear solver stops\\ \hline
     verboseMode &     Index &      &     1 &     0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse\\ \hline
     verboseModeFile &     Index &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
-    preStepPyExecute &     String &      &     '' &     Python code to be executed prior to every load step and after last step, e.g. for postprocessing\\ \hline
+    preStepPyExecute &     String &      &     '' &     DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every load step and after last step, e.g. for postprocessing\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -198,11 +199,18 @@ VSettingsGeneral has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     graphicsUpdateInterval &     float &      &     0.1 &     interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed\\ \hline
     autoFitScene &     bool &      &     True &     automatically fit scene within first second after StartRenderer()\\ \hline
-    textSize &     float &      &     12. &     general text size if not overwritten\\ \hline
+    textSize &     float &      &     12. &     general text size (font size) in pixels if not overwritten; if useWindowsMonitorScaleFactor=True, the the textSize is multplied with the windows monitor scaling factor for larger texts on on high resolution monitors; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)\\ \hline
+    textColor &     Float4 &     4 &     [0.,0.,0.,1.0] &     \tabnewline general text color (default); used for system texts in render window\\ \hline
+    useWindowsMonitorScaleFactor &     bool &      &     True &     the windows monitor scaling is used for increased visibility of texts on high resolution monitors; based on GLFW glfwGetWindowContentScale\\ \hline
+    useBitmapText &     bool &      &     True &     if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown\\ \hline
     minSceneSize &     float &      &     0.1 &     minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO\\ \hline
-    backgroundColor &     Float4 &     4 &     [1.,1.,1.,1.] &     \tabnewline red, green, blue and alpha values for background of render window (white=[1,1,1,1]; black = [0,0,0,1])\\ \hline
-    coordinateSystemSize &     float &      &     0.4 &     size of coordinate system relative to screen\\ \hline
+    backgroundColor &     Float4 &     4 &     [1.0,1.0,1.0,1.0] &     \tabnewline red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])\\ \hline
+    backgroundColorBottom &     Float4 &     4 &     [0.8,0.8,1.0,1.0] &     \tabnewline red, green, blue and alpha values for bottom background color in case that useGradientBackground = True\\ \hline
+    useGradientBackground &     bool &      &     False &     true = use vertical gradient for background; \\ \hline
+    coordinateSystemSize &     float &      &     5. &     size of coordinate system relative to font size\\ \hline
     drawCoordinateSystem &     bool &      &     True &     false = no coordinate system shown\\ \hline
+    drawWorldBasis &     bool &      &     False &     true = draw world basis coordinate system at (0,0,0)\\ \hline
+    worldBasisSize &     float &      &     1.0 &     size of world basis coordinate system\\ \hline
     showComputationInfo &     bool &      &     True &     false = no info about computation (current time, solver, etc.) shown\\ \hline
     pointSize &     float &      &     0.01 &     global point size (absolute)\\ \hline
     circleTiling &     Index &      &     16 &     global number of segments for circles; if smaller than 2, 2 segments are used (flat)\\ \hline
@@ -224,7 +232,7 @@ VSettingsWindow has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of OpenGL render window in pixel\\ \hline
-    startupTimeout &     Index &      &     5000 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
+    startupTimeout &     Index &      &     2500 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
     alwaysOnTop &     bool &      &     False &     true: OpenGL render window will be always on top of all other windows\\ \hline
     maximize &     bool &      &     False &     true: OpenGL render window will be maximized at startup\\ \hline
     showWindow &     bool &      &     True &     true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
@@ -232,12 +240,16 @@ VSettingsWindow has the following items:
     mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
     keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
     zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
+    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: def f(key, action, mods): print('key=',key)\\; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
+    showMouseCoordinates &     bool &      &     False &     true: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
+    ignoreKeys &     bool &      &     False &     true: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'\\ \hline
+    ResetKeyPressUserFunction() &     void &      &      &     set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself\\ \hline
 	  \end{longtable}
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{VSettingsOpenGL} \label{sec:VSettingsOpenGL}
-OpenGL settings for 2D and 2D rendering.\\ 
+OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. \\ 
 %
 VSettingsOpenGL has the following items:
 %reference manual TABLE
@@ -256,20 +268,32 @@ VSettingsOpenGL has the following items:
     textLineWidth &     float &     1 &     1. &     width of lines used for representation of text\\ \hline
     textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
     showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
+    facesTransparent &     bool &     1 &     False &     true: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
     showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
     shadeModelSmooth &     bool &     1 &     True &     true: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
-    materialSpecular &     Float4 &     4 &     [1.,1.,1.,1.] &     \tabnewline 4f specular color of material\\ \hline
-    materialShininess &     float &     1 &     60. &     shininess of material\\ \hline
+    materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f ambient color of material\\ \hline
+    materialShininess &     float &     1 &     32. &     shininess of material\\ \hline
+    materialSpecular &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f specular color of material\\ \hline
+    enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
+    lightModelLocalViewer &     bool &     1 &     False &     select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
+    lightModelTwoSide &     bool &     1 &     True &     enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
+    lightModelAmbient &     Float4 &     4 &     [0.,0.,0.,1.] &     \tabnewline global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])\\ \hline
     enableLight0 &     bool &     1 &     True &     turn on/off light0\\ \hline
-    light0position &     Float4 &     4 &     [1.,1.,-10.,0.] &     \tabnewline 4f position vector of GL light0; 4th value should be 0, otherwise the vector obtains a special interpretation, see opengl manuals\\ \hline
-    light0ambient &     float &     1 &     0.25 &     ambient value of GL light0\\ \hline
-    light0diffuse &     float &     1 &     0.4 &     diffuse value of GL light0\\ \hline
-    light0specular &     float &     1 &     0.4 &     specular value of GL light0\\ \hline
+    light0position &     Float4 &     4 &     [0.2,0.2,10.,0.] &     \tabnewline 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
+    light0ambient &     float &     1 &     0.3 &     ambient value of GL\_LIGHT0\\ \hline
+    light0diffuse &     float &     1 &     0.6 &     diffuse value of GL\_LIGHT0\\ \hline
+    light0specular &     float &     1 &     0.5 &     specular value of GL\_LIGHT0\\ \hline
+    light0constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
+    light0linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT0, this is a linear factor for attenuation of the light source with distance\\ \hline
+    light0quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT0, this is a quadratic factor for attenuation of the light source with distance\\ \hline
     enableLight1 &     bool &     1 &     True &     turn on/off light1\\ \hline
-    light1position &     Float4 &     4 &     [0.,3.,2.,0.] &     \tabnewline 4f position vector of GL light1; 4th value should be 0, otherwise the vector obtains a special interpretation, see opengl manuals\\ \hline
-    light1ambient &     float &     1 &     0.25 &     ambient value of GL light1\\ \hline
-    light1diffuse &     float &     1 &     0.4 &     diffuse value of GL light1\\ \hline
-    light1specular &     float &     1 &     0. &     specular value of GL light1\\ \hline
+    light1position &     Float4 &     4 &     [1.,1.,-10.,0.] &     \tabnewline 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
+    light1ambient &     float &     1 &     0.0  &     ambient value of GL\_LIGHT1\\ \hline
+    light1diffuse &     float &     1 &     0.5 &     diffuse value of GL\_LIGHT1\\ \hline
+    light1specular &     float &     1 &     0.6 &     specular value of GL\_LIGHT1\\ \hline
+    light1constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1\\ \hline
+    light1linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT1, this is a linear factor for attenuation of the light source with distance\\ \hline
+    light1quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT1, this is a quadratic factor for attenuation of the light source with distance\\ \hline
     drawFaceNormals &     bool &     1 &     False &     draws triangle normals, e.g. at center of triangles; used for debugging of faces\\ \hline
     drawVertexNormals &     bool &     1 &     False &     draws vertex normals; used for debugging\\ \hline
     drawNormalsLength &     float &     1 &     0.1 &     length of normals; used for debugging\\ \hline

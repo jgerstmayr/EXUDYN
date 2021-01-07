@@ -27,7 +27,7 @@ mbs = SC.AddSystem()
 import numpy as np
 
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
@@ -42,7 +42,7 @@ fem.ScaleStiffnessMatrix(1e-2) #for larger deformations, stiffness is reduced to
 
 #nodeNumberUnbalance = 9  #on disc, max y-value
 nodeNumberUnbalance = fem.GetNodeAtPoint(point=[0. , 0.19598444, 0.15])
-print("nodeNumberUnbalance =",nodeNumberUnbalance)
+#exu.Print("nodeNumberUnbalance =",nodeNumberUnbalance)
 unbalance = 0.1
 fem.AddNodeMass(nodeNumberUnbalance, unbalance)
 #print(fem.GetMassMatrix()[8*3:11*3,:])
@@ -54,10 +54,10 @@ fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
 cms = ObjectFFRFreducedOrderInterface(fem)
 
 #user functions should be defined outside of class:
-def UFmassFFRFreducedOrder(t, qReduced, qReduced_t):
+def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
     return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-def UFforceFFRFreducedOrder(t, qReduced, qReduced_t):
+def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
     return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
 objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
@@ -66,7 +66,7 @@ objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[
                                               UFforce=UFforceFFRFreducedOrder, UFmassMatrix=UFmassFFRFreducedOrder,
                                               color=[0.1,0.9,0.1,1.])
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add markers and joints
 nodeDrawSize = 0.0025 #for joint drawing
 
@@ -123,6 +123,7 @@ if addSupports:
         oSJright= mbs.AddObject(SphericalJoint(markerNumbers=[mGroundPosRight,mRight], visualization=VObjectJointSpherical(jointRadius=nodeDrawSize)))
                                                     
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 fileDir = 'solution/'
 mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
                          fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
@@ -187,8 +188,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 
 if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
-    if 'lastRenderState' in vars():
-        SC.SetRenderState(lastRenderState) #load last model view
+    if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
 
     mbs.WaitForUserToContinue() #press space to continue
 
@@ -208,7 +208,7 @@ if exudynTestGlobals.useGraphics:
     exu.StopRenderer() #safely close rendering window!
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
-##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #plot results
 if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt

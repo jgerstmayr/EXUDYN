@@ -7,7 +7,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 
@@ -63,11 +63,7 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 			Vector6D userOffset(0.);
 			if (parameters.offsetUserFunction) //from here on it becomes much slower ... (python)
 			{
-				UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-				{
-					//user function args:(Real t, Real load)
-					userOffset = (Vector6D)(parameters.offsetUserFunction(t, parameters.offsetUserFunctionParameters));
-				}, "ObjectJointGeneric::offsetUserFunction");
+				EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t);
 
 				if (userOffset[3] != 0. || userOffset[4] != 0. || userOffset[5] != 0.)
 				{
@@ -330,11 +326,7 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 		if (parameters.offsetUserFunction) //from here on it becomes much slower ... (python)
 		{
 			Vector6D userOffset(0.);
-			UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-			{
-				//user function args:(Real t, Real load)
-				userOffset = (Vector6D)(parameters.offsetUserFunction(t, parameters.offsetUserFunctionParameters));
-			}, "ObjectJointGeneric::offsetUserFunction  (called from ComputeJacobianAE)");
+			EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t);
 
 			if (userOffset[3] != 0. || userOffset[4] != 0. || userOffset[5] != 0.)
 			{
@@ -570,6 +562,7 @@ void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variable
 	{
 		Vector3D torque({ GetCurrentAEcoordinate(3), GetCurrentAEcoordinate(4), GetCurrentAEcoordinate(5) });
 		value.CopyFrom(torque);
+		break;
 	}
 	default:
 		SysError("CObjectJointGeneric::GetOutputVariable failed"); //error should not occur, because types are checked!

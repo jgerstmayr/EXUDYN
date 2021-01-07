@@ -1,17 +1,17 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Lie group formulas for Lie group methods
-#           Refs.:  
-#               [Bruels2011]:      Bruels, O., Cardona, A.: Two Lie Group Formulations for Dynamic Multibody Systems With Large Rotations, Proceedings of the ASME 2011 International Design Engineering Technical Conferences & Computers and Information in Engineering Conference IDETC/CIE 2011, August 28-31, 2011, Washington, USA
-#               [Sonneville2014]: Sonneville, V., Cardona A., Bruels, O.: Geometrically exact beam finite element formulated on the special Euclidean group SE(3)
-#               [Sonneville2017]: Sonneville, Bruels, O., Bauchau, O.A.: Interpolation schemes for geometrically exact beams: A motion approach.  International Journal for Numerical Methods in Engineering 112, 1129-1153 (2017)
-#               [Terze2016]:      Terze, Z., Mueller, A., Zlatar, D.: Singularity-free time integration of rotational quaternions using non-redundant ordinary differential equations. Multibody System Dynamics 38(3), 201–225 (2016)
-#               [Henderson1977]:  Henderson, D.: Euler angles, quaternions, and transformation matrices for space shuttle analysis. Tech. rep., NASA (1977)
-#               [Holzinger2020]:  Holzinger, S., Gerstmayr, J.: Explicit time integration of multibody systems modelled with three rotation parameters. In: Proceedings of the ASME 2020 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference IDETC/CIE2020, August 17-19. Virtual, Online (2020)
-#               [Holzinger2021]:  Holzinger, S., Gerstmayr, J.: Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics 2021
-#               [Simo1988]:       Simo, J.C., Vu-Quoc, L.: On the dynamics in space of rods undergoing large motions-A geometrically exact approach. Computer methods in applied mechanics and engineering 66, 125-161 (1988)
-#               [Mueller2017]:     Mueller, A.: Coordinate Mappings for Rigid Body Motions. Journal of Computational and Nonlinear Dynamics 12(2), 10 (2017)
+# Details:  Lie group methods and formulas for Lie group integration.
+# References:   \\
+#				[Bruels2011]     Bruels, O., Cardona, A.: Two Lie Group Formulations for Dynamic Multibody Systems With Large Rotations, Proceedings of the ASME 2011 International Design Engineering Technical Conferences & Computers and Information in Engineering Conference IDETC/CIE 2011, August 28-31, 2011, Washington, USA\\
+#               [Sonneville2014] Sonneville, V., Cardona A., Bruels, O.: Geometrically exact beam finite element formulated on the special Euclidean group SE(3)\\
+#               [Sonneville2017] Sonneville, Bruels, O., Bauchau, O.A.: Interpolation schemes for geometrically exact beams: A motion approach.  International Journal for Numerical Methods in Engineering 112, 1129-1153 (2017)\\
+#               [Terze2016]      Terze, Z., Mueller, A., Zlatar, D.: Singularity-free time integration of rotational quaternions using non-redundant ordinary differential equations. Multibody System Dynamics 38(3), 201-225 (2016)\\
+#               [Henderson1977]  Henderson, D.: Euler angles, quaternions, and transformation matrices for space shuttle analysis. Tech. rep., NASA (1977)\\
+#               [Holzinger2020]  Holzinger, S., Gerstmayr, J.: Explicit time integration of multibody systems modelled with three rotation parameters. In: Proceedings of the ASME 2020 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference IDETC/CIE2020, August 17-19. Virtual, Online (2020)\\
+#               [Holzinger2021]  Holzinger, S., Gerstmayr, J.: Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics 2021\\
+#               [Simo1988]       Simo, J.C., Vu-Quoc, L.: On the dynamics in space of rods undergoing large motions-A geometrically exact approach. Computer methods in applied mechanics and engineering 66, 125-161 (1988)\\
+#               [Mueller2017]    Mueller, A.: Coordinate Mappings for Rigid Body Motions. Journal of Computational and Nonlinear Dynamics 12(2), 10 (2017)
 #               
 # Author:   Stefan Holzinger
 # Date:     2020-09-11
@@ -341,7 +341,7 @@ def CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector):
     return np.block([x, theta])
 
 
-#**function: compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see \cite{Holzinger2020}
+#**function: compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see \cite{HolzingerGerstmayr2020}
 #            the rotation vector is used as rotation parametrizations
 #            this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
 #**input: 

@@ -10,7 +10,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 ************************************************************************************************ */
@@ -21,6 +21,7 @@
 #include <iostream>     // std::cout, std::ostream
 //#include <iosfwd>		//forward declaration of ofstream; hopefully takes less compile time than fstream ... as this file is included in every .cpp file!!!
 #include <fstream>      // needed for outputbuffer write to file ...
+#include <functional> //! AUTO: needed for std::function
 
 //! buffer which enables output to python and/or to file
 class OutputBuffer : public std::stringbuf //uses solution of so:redirect-stdcout-to-a-custom-writer
@@ -74,6 +75,9 @@ void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber); //!<
 //! put executable string into queue, which is called from other thread
 void PyQueueExecutableString(STDstring str); //call python function and execute string as python code
 
+//! put executable key codes into queue, which is called from main thread
+void PyQueueKeyPressed(int key, int action, int mods, std::function<void(int, int, int)> keyPressUserFunctionInit); //call python user function
+
 //! function to be called from main (python) thread, as this thread holds the gil
 void PyProcessExecuteQueue(); //call python function and execute string as python code
 
@@ -91,3 +95,8 @@ extern OutputBuffer outputBuffer;  //!< link outputBuffer to change options
 //! works with local path
 bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName);
 
+class RendererKey
+{
+	char key;
+
+};

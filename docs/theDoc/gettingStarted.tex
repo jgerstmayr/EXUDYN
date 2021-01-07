@@ -37,11 +37,12 @@ The open source code HOTINT reached limits of further (efficient) development an
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see \refSection{sec:items}.
 %
-\mysubsubsection{Who is developing \codeName ?}
+\mysubsubsection{Developers of \codeName\ and thanks}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
 In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT. 15 years of development led to a lot of lessions learned and after 20 years, a code must be re-designed.
 
-Some specific codes regarding Pybind11 (by Jakob Wenzel, \texttt{https://github.com/pybind/pybind11}, thanks a lot!!!) interface and parallelization have been written by Stefan Holzinger, who also supported the upload to GitLab.
+Some specific earlier code parts for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
+For the interoperability between C++ and Python, we extensively use {\bf \texttt{Pybind11}}\cite{pybind11}, originally written by Jakob Wenzel, see \texttt{https://github.com/pybind/pybind11}. Without {\bf \texttt{Pybind11}} we couldn't have made this project.
 
 Important discussions with researchers from the community were important for the design and development of \codeName , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who boosted the design of the code with great concepts. 
 %During a Comet-K2 cooperation project, several discussions with the TMECH/LCM group in Linz influenced the code development.
@@ -430,7 +431,7 @@ Traceback (most recent call last):
   \texttt{SystemError: <built-in method TimeIntegrationSolve of PyCapsule object at 0x0CC63590> returned a result with an error set}}
 	\item[$\ra$] The prechecks, which are performed to enable a crash-free simulation are insufficient for your model.
 	\item[$\ra$] As a first try, restart the IPython console in order to get all error messages, which may be blocked due to a previous run of \codeName.
-	\item[$\ra$] Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(t,load), which tries to access load[4] will fail internally.
+	\item[$\ra$] Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(mbs,~t,~load), which tries to access load[4] will fail internally.
 	\item[$\ra$] Use the print(...) command in python at many places to find a possible error in user functions (e.g., put \texttt{print("Start user function XYZ")} at the beginning of every user function.
 	\item[$\ra$] It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
 	\item[$\ra$] see also {\it I do not understand the python errors -- how can I find the cause?}

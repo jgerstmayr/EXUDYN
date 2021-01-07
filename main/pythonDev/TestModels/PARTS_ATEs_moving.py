@@ -384,7 +384,7 @@ P0=n1["coordinatePoints"][0]
 
 
 #Johannes:
-def userLoad(t, loadVector):
+def userLoad(mbs, t, loadVector):
     f=0.01+0.99*(1-np.cos((t/0.05)*np.pi)) #use small initial value for solver
     if t>8:
         f = 1

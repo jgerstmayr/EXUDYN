@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ **/
 #ifndef MAINSOLVERBASE__H
@@ -25,6 +25,11 @@
 #include <pybind11/pybind11.h> //for integrated python connectivity (==>put functionality into separate file ...!!!)
 #include <pybind11/eval.h>
 #include <pybind11/numpy.h>       //interface to numpy
+#include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
+#include <pybind11/operators.h>
+#include <pybind11/numpy.h>       //interface to numpy
+#include <pybind11/functional.h> //for function handling ... otherwise gives a python error (no compilation error in C++ !)
 //
 #include "Linalg/BasicLinalg.h"
 #include "Linalg/LinearSolver.h"

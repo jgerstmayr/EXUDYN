@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  15:12:14 (last modfied)
+* @date         2021-01-05  13:38:32 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectJointGenericParameters
 class CObjectJointGenericParameters // AUTO: 
@@ -34,8 +35,8 @@ public: // AUTO:
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker \f$m1\f$; translation and rotation axes for marker \f$m1\f$ are defined in the local body coordinate system and additionally transformed by rotationMarker1
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     Vector6D offsetUserFunctionParameters;        //!< AUTO: vector of 6 parameters for joint's offsetUserFunction
-    std::function<StdVector(Real,StdVector6D)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (t, offsetUserFunctionParameters)
-    std::function<StdVector(Real,StdVector6D)> offsetUserFunction_t;//!< AUTO: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters
+    std::function<StdVector(const MainSystem&,Real,StdVector6D)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)
+    std::function<StdVector(const MainSystem&,Real,StdVector6D)> offsetUserFunction_t;//!< AUTO: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters
     //! AUTO: default constructor with parameter initialization
     CObjectJointGenericParameters()
     {
@@ -133,6 +134,12 @@ public: // AUTO:
     {
         return parameters.activeConnector;
     }
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionOffset(Vector6D& offset, const MainSystemBase& mainSystem, Real t) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionOffset_t(Vector6D& offset, const MainSystemBase& mainSystem, Real t) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

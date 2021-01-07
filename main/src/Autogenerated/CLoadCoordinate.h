@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  17:12:39 (last modfied)
+* @date         2021-01-05  01:13:06 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadCoordinateParameters
 class CLoadCoordinateParameters // AUTO: 
@@ -30,7 +31,7 @@ class CLoadCoordinateParameters // AUTO:
 public: // AUTO: 
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Real load;                                    //!< AUTO: scalar load [SI:N]
-    std::function<Real(Real,Real)> loadUserFunction;//!< AUTO: A python function which defines the time-dependent load; see description below
+    std::function<Real(const MainSystem&,Real,Real)> loadUserFunction;//!< AUTO: A python function which defines the time-dependent load; see description below
     //! AUTO: default constructor with parameter initialization
     CLoadCoordinateParameters()
     {
@@ -106,7 +107,7 @@ public: // AUTO:
     }
 
     //! AUTO:  read access for load value (IsVector=false)
-    virtual Real GetLoadValue(Real t) const override;
+    virtual Real GetLoadValue(const MainSystemBase& mbs, Real t) const override;
 
 };
 

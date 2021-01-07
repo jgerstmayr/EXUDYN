@@ -11,7 +11,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -173,10 +173,10 @@ public:
     //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'; time t not provided, as nodes can obtain time from CData
     virtual void ComputeODE2LHS(Vector& ode2Lhs) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHS"); }
 
-    //! compute left-hand-side (LHS) of first order ordinary differential equations (ODE) to 'ode1Lhs', which has dimension GetODE1Size(); q are the system coordinates
-    //virtual void ComputeODE1LHS(Vector& ode1Lhs, const Vector& q) {}
-    //! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE1Size() x GetODE1Size(); this is the tangent (stiffness) matrix; q are the system coordinates
-    //virtual void ComputeODE1LHS_q(Matrix& ode2Lhs, const Vector& q) {}
+    //! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs', which has dimension GetODE1Size()
+    virtual void ComputeODE1RHS(Vector& ode1Rhs) {}
+    //??compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE1Size() x GetODE1Size(); this is the tangent (stiffness) matrix; q are the system coordinates
+    //??virtual void ComputeODE1LHS_q(Matrix& ode2Lhs, const Vector& q) {}
 
     //! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeAlgebraicEquations"); }

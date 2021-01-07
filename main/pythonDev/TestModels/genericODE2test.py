@@ -71,13 +71,13 @@ def Sweep(t, t1, f0, f1):
     k = (f1-f0)/t1
     return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
-def UFgenericODE2(t, q, q_t):
+def UFgenericODE2(mbs, t, q, q_t):
     #f = np.sin(t*2*np.pi*10)*fdyn
     f = Sweep(t,10,1,100)*fdyn
     return f
     #exu.Print("t =", t, ", f =", f)
 
-def UFmassGenericODE2(t, q, q_t):
+def UFmassGenericODE2(mbs, t, q, q_t):
     return 1*M
 
 mbs.AddObject(ObjectGenericODE2(nodeNumbers = [n2], massMatrix=M, stiffnessMatrix=K, dampingMatrix=D, forceVector=fv, 

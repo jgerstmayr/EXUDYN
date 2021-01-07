@@ -70,10 +70,10 @@ else:
 if CMS:
     cms0 = ObjectFFRFreducedOrderInterface(femConrod)
     #user functions should be defined outside of class:
-    def UFmassFFRFreducedOrder0(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrder0(mbs, t, qReduced, qReduced_t):
         return cms0.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    def UFforceFFRFreducedOrder0(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrder0(mbs, t, qReduced, qReduced_t):
         return cms0.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 else:
     ffrf0=ObjectFFRFinterface(femConrod)
@@ -137,10 +137,10 @@ else:
 if CMS:
     cms1 = ObjectFFRFreducedOrderInterface(femCrank)
     #user functions should be defined outside of class:
-    def UFmassFFRFreducedOrder1(t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrder1(mbs, t, qReduced, qReduced_t):
         return cms1.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    def UFforceFFRFreducedOrder1(t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrder1(mbs, t, qReduced, qReduced_t):
         return cms1.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
     #crank represents the 0-reference of the system
@@ -224,7 +224,7 @@ else:
     mRBcrank = mbs.AddMarker(MarkerNodeRigid(nodeNumber=oFFRFcrank['nRigidBody']))
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #torque on reference frame of crank:
-def UFLoad(t, load):
+def UFLoad(mbs, t, load):
     if t < 0.025:
         return load
     else:

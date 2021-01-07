@@ -10,7 +10,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -34,6 +34,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
+#include <pybind11/functional.h>
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
 //! object graphics data for ground objects, rigid bodies and mass points
@@ -88,7 +89,7 @@ public: //declared as public for direct access via pybind
 	ResizableArray<GraphicsData*> graphicsDataList; //!< list of GraphicsData of every visualization System; this list is shared with OpenGL renderer and must be linked to GraphicsData of every VisualizationSystem
 	//GraphicsData graphicsData;			//!< data to be processed by OpenGL renderer
 	VisualizationSettings settings;		//!< general settings for visualization
-	RendererState rendererState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
+	RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	ResizableArray<VisualizationSystem*> visualizationSystems; //! linked to all visualization systems (placed in MainSystem); links need to be kept up-to-date by MainSystem Add/Delete
 	bool zoomAllRequest;				//! used to perform UpdateMaximumSceneCoordinates()
 	bool stopSimulationFlag;			//! used to wait for user to terminate simulation or render engine

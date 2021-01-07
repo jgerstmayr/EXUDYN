@@ -8,7 +8,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -121,6 +121,18 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				}
 			}
 		}
+		else if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::ODE1variables)
+		{
+			Index numberOfCoordinates = node->GetNumberOfODE1Coordinates();
+			if (numberOfCoordinates)
+			{
+				if (numberOfCoordinates != mainNode->GetInitialVector().NumberOfItems()) {
+					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
+						EXUstd::ToString(mainNode->GetInitialVector().NumberOfItems()) + ") != number of nodal ODE1 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+					systemIsInteger = false;
+				}
+			}
+		}
 		else if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables)
 		{
 			Index numberOfCoordinates = node->GetNumberOfDataCoordinates();
@@ -133,7 +145,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				}
 			}
 		}
-		else // ODE1 or AE variables
+		else // mixed ODE1, ODE2 and/or AE variables
 		{
 			Index numberOfCoordinates = node->GetNumberOfAccessibleCoordinates(); //ODE2+ODE1+AE
 			if (numberOfCoordinates)
@@ -697,7 +709,6 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 					ltgListODE2.Append(gIndex + i);
 				}
 			}
-			//if AEcoordinates==0 the function node->GetGlobalAECoordinateIndex() might be invalid!
 			if (node->GetNumberOfAECoordinates()) //this is for algebraic nodes (e.g. Euler Parameters)
 			{
 				Index gIndex = node->GetGlobalAECoordinateIndex();
@@ -706,7 +717,6 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 					ltgListAE.Append(gIndex + i);
 				}
 			}
-			//if Datacoordinates==0 the function node->GetGlobalAECoordinateIndex() might be invalid!
 			if (node->GetNumberOfDataCoordinates()) //data/history variables - contact, friction, plasticity
 			{
 				Index gIndex = node->GetGlobalDataCoordinateIndex();
@@ -716,12 +726,6 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 				}
 			}
 		}
-		//WOULD be an option to add object-constraints(e.g. Euler parameters) //now process algebraic coordinates of objects itself (may not be included in nodes)
-		//???
-		//if (object->GetAlgebraicEquationsSize() && !algebraicEquationsInNodes)
-		//{
-		//	ltgListAE.Append(gIndex + i);
-		//}
 	}
 	else if ((Index)object->GetType() & (Index)CObjectType::Connector)
 	{
@@ -737,6 +741,14 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 				for (Index i = 0; i < node->GetNumberOfDataCoordinates(); i++)
 				{
 					ltgListData.Append(gIndex + i);
+				}
+			}
+			if (node->GetNumberOfODE1Coordinates()) //controller: integrator; generic object with ODE1 coordinates
+			{
+				Index gIndex = node->GetGlobalODE1CoordinateIndex();
+				for (Index i = 0; i < node->GetNumberOfODE1Coordinates(); i++)
+				{
+					ltgListODE1.Append(gIndex + i);
 				}
 			}
 		}
@@ -786,7 +798,6 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 					}
 				}
 			}
-			//was before: else 
 			if (marker->GetType() & Marker::Node) //marker can be object + node ==> sliding joing
 			{
 				Index nodeNumber = marker->GetNodeNumber();
@@ -1199,12 +1210,12 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 			//work over bodies, connectors, etc.
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 
-			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(myTemp, cSystemData.GetCObjects()[j], myTemp.localODE2RHS))
+			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(myTemp, cSystemData.GetCObjects()[j], myTemp.localODE2LHS))
 			{
 				//now add RHS to system vector
-				for (Index k = 0; k < myTemp.localODE2RHS.NumberOfItems(); k++)
+				for (Index k = 0; k < myTemp.localODE2LHS.NumberOfItems(); k++)
 				{
-					systemODE2Rhs[ltgODE2[k]] -= myTemp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+					systemODE2Rhs[ltgODE2[k]] -= myTemp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
 				}
 			}
 		}
@@ -1238,12 +1249,12 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 			//work over bodies, connectors, etc.
 			ArrayIndex& ltgODE2 = this->cSystemData.GetLocalToGlobalODE2()[j];
 
-			if (ltgODE2.NumberOfItems() && this->ComputeObjectODE2LHS(myTemp, cSystemData.GetCObjects()[j], myTemp.localODE2RHS))//temp.localODE2RHS))
+			if (ltgODE2.NumberOfItems() && this->ComputeObjectODE2LHS(myTemp, cSystemData.GetCObjects()[j], myTemp.localODE2LHS))//temp.localODE2LHS))
 			{
 				//now add RHS to system vector
-				for (Index k = 0; k < myTemp.localODE2RHS.NumberOfItems(); k++)
+				for (Index k = 0; k < myTemp.localODE2LHS.NumberOfItems(); k++)
 				{
-					systemODE2Rhs[ltgODE2[k]] -= myTemp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+					systemODE2Rhs[ltgODE2[k]] -= myTemp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
 				}
 			}
 		}
@@ -1267,12 +1278,12 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 			//work over bodies, connectors, etc.
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 
-			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2RHS))//temp.localODE2RHS))
+			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2LHS))//temp.localODE2LHS))
 			{
 				//now add RHS to system vector
-				for (Index k = 0; k < temp.localODE2RHS.NumberOfItems(); k++)
+				for (Index k = 0; k < temp.localODE2LHS.NumberOfItems(); k++)
 				{
-					systemODE2Rhs[ltgODE2[k]] -= temp.localODE2RHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+					systemODE2Rhs[ltgODE2[k]] -= temp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
 				}
 			}
 		}
@@ -1282,6 +1293,54 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 	ComputeLoads(temp, systemODE2Rhs);
 }
 #endif
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//evaluate RHS of ODE1 objects (always right-hand-side as first order ODEs always read q_t=f(q, t) )
+bool CSystem::ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Rhs)
+{
+	if (!((Index)object->GetType() & (Index)CObjectType::Connector))
+	{
+		//must be body or similar object (in all cases, evaluate ComputeODE2LHS
+		object->ComputeODE1RHS(localODE1Rhs);
+	}
+	////currently, connectors have no ComputeODE1RHS
+	//else
+	//{
+	//	CObjectConnector* connector = (CObjectConnector*)object;
+
+	//	//compute MarkerData for connector:
+	//	const bool computeJacobian = true;
+	//	ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+
+	//	connector->ComputeODE1RHS(localODE1Rhs, temp.markerDataStructure);
+	//}
+	return true;
+
+}
+
+void CSystem::ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs)
+{
+	systemODE1Rhs.SetAll(0.);
+
+	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	{
+		if ((cSystemData.GetCObjects()[j])->IsActive())
+		{
+			//work over all objects bodies, connectors, etc.
+			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+
+			if (ltgODE1.NumberOfItems() && ComputeObjectODE1RHS(temp, cSystemData.GetCObjects()[j], temp.localODE1RHS))
+			{
+				//now add RHS to system vector
+				for (Index k = 0; k < temp.localODE1RHS.NumberOfItems(); k++)
+				{
+					systemODE1Rhs[ltgODE1[k]] += temp.localODE1RHS[k]; //positive sign as compared to ComputeSystemODE2RHS: in ODE1, everything is on RHS
+				}
+			}
+		}
+	}
+}
 
 //! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
 void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs)
@@ -1303,12 +1362,12 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs
 	{
 		if (cSystemData.GetCLoads()[j]->IsVector()) 
 		{ 
-			loadVector3D = cSystemData.GetCLoads()[j]->GetLoadVector(currentTime); 
+			loadVector3D = cSystemData.GetCLoads()[j]->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
 			loadVector3Ddefined = true;
 		}
 		else 
 		{ 
-			loadVector1D = Vector1D(cSystemData.GetCLoads()[j]->GetLoadValue(currentTime)); 
+			loadVector1D = Vector1D(cSystemData.GetCLoads()[j]->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
 			loadVector1Ddefined = true;
 		}
 

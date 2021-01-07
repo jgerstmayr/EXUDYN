@@ -11,6 +11,10 @@ currently: automatic generate structures with ostream and initialization
 from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex
 import os
 
+space4 = '    '
+space8 = space4+space4
+space12 = space8+space4
+
 #get list of filenames in folder dirPath which contain keyword (to find examples with specific items)
 def ExtractExamplesWithKeyword(keyword, dirPath):
     from os import listdir
@@ -133,33 +137,35 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
 
 #conversion list for python functions; names must always start with 'PyFunction'...
 pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&, Index)>',
-                            'PyFunctionScalar2': 'std::function<Real(Real,Real)>',
-                            'PyFunctionScalar6': 'std::function<Real(Real,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
-                            'PyFunctionScalar8': 'std::function<Real(Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
-                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
-                            'PyFunctionVector6DScalarVector6D': 'std::function<StdVector(Real,StdVector6D)>', #GenericJoint
-                            'PyFunctionVector3DScalar5Vector3D': 'std::function<StdVector(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
+                            'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',
+                            'PyFunctionMbsScalar8': 'std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
+                            'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
+                            'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',
+                            'PyFunctionMbsScalar6': 'std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
+                            'PyFunctionVector6DmbsScalarVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector6D)>', #GenericJoint
+                            'PyFunctionVector3DmbsScalar5Vector3D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
+                            'PyFunctionVectorMbsScalar2Vector': 'std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>', #ObjectGenericODE2
+                            'PyFunctionMatrixMbsScalar2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>', #ObjectGenericODE2
+                            'PyFunctionVector6Dmbs4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper
 #StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
-#                            'PyFunctionVector6DScalarVector6D': 'std::function<StdVector6D(Real,StdVector6D)>', #GenericJoint
-#                            'PyFunctionVector3DScalar5Vector3D': 'std::function<StdVector3D(Real, StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
-                            'PyFunctionVectorScalar2Vector': 'std::function<StdVector(Real, StdVector,StdVector)>', #ObjectGenericODE2
-                            'PyFunctionMatrixScalar2Vector': 'std::function<NumpyMatrix(Real, StdVector,StdVector)>' #ObjectGenericODE2
                             }
 
 #this function finds out, if a parameter is set with a special Set...Safely function in C++
 def IsASetSafelyParameter(parameterType):
-    if ((parameterType == 'String') |
-        (parameterType == 'Vector2D') | 
-        (parameterType == 'Vector3D') | 
-        (parameterType == 'Vector4D') | 
-        (parameterType == 'Vector6D') | 
-        (parameterType == 'Matrix3D') | 
-        (parameterType == 'Matrix6D') | 
-        (parameterType == 'NumpyMatrix') | 
-        (parameterType == 'NumpyMatrixI') | #for index arrays, mesh, ...
-        (parameterType == 'PyMatrixContainer') | 
-        (parameterType == 'NumpyVector') | 
-        (parameterType == 'Vector7D') ):
+    if ((parameterType == 'String') or
+        (parameterType == 'Vector2D') or 
+        (parameterType == 'Vector3D') or
+        (parameterType == 'Vector4D') or 
+        (parameterType == 'Vector6D') or
+        (parameterType == 'Matrix3D') or
+        (parameterType == 'Matrix6D') or
+        (parameterType == 'NumpyMatrix') or 
+        (parameterType == 'NumpyMatrixI') or #for index arrays, mesh, ...
+        (parameterType == 'PyMatrixContainer') or
+        (parameterType == 'NumpyVector') or 
+        (parameterType == 'Vector7D') 
+        #or (parameterType in pyFunctionTypeConversion)
+        ):
         return True
     else:
         return False
@@ -167,14 +173,14 @@ def IsASetSafelyParameter(parameterType):
 #check if type is a item index (NodeIndex, ...)
 def IsItemIndex(parameterType):
     if (
-        (parameterType == 'NodeIndex') |
-        (parameterType == 'ObjectIndex') | 
-        (parameterType == 'MarkerIndex') | 
-        (parameterType == 'LoadIndex') | 
-        (parameterType == 'SensorIndex') |
-        (parameterType == 'NodeIndex2') |
-        (parameterType == 'NodeIndex3') |
-        (parameterType == 'ArrayNodeIndex') |
+        (parameterType == 'NodeIndex') or
+        (parameterType == 'ObjectIndex') or
+        (parameterType == 'MarkerIndex') or
+        (parameterType == 'LoadIndex') or
+        (parameterType == 'SensorIndex') or
+        (parameterType == 'NodeIndex2') or
+        (parameterType == 'NodeIndex3') or
+        (parameterType == 'ArrayNodeIndex') or
         (parameterType == 'ArrayMarkerIndex')
         ):
         return True
@@ -244,9 +250,9 @@ def WriteMiniExample(className, miniExample):
     s+= miniExample
     s+= '\n'
     s+= 'except BaseException as e:\n'
-    s+= '    exu.Print("An error occured in test example for ' + className + ':", e)\n'
+    s+= space4+'exu.Print("An error occured in test example for ' + className + ':", e)\n'
     s+= 'else:\n'
-    s+= '    exu.Print("example for ' + className + ' completed, test error =", testError)\n'
+    s+= space4+'exu.Print("example for ' + className + ' completed, test error =", testError)\n'
     s+= '\n'
     
     fileExample=open('../../pythonDev/TestModels/MiniExamples/'+className+'.py','w') 
@@ -275,7 +281,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                  'Float9': 'std::vector<float>', 'Float16': 'std::vector<float>', #e.g. for OpenGL rotation matrix and homogenous transformation
                  'Index2': 'std::vector<Index>', 'Index3': 'std::vector<Index>'
                  } #convert parameter types to C++/EXUDYN types
-    
+
     typeCasts.update(pyFunctionTypeConversion)#add the list of python (user) functions
     
     classStr = parseInfo['class']
@@ -400,13 +406,13 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         sTemp  += '\\begin{center}\n'
         sTemp  += '  \\footnotesize\n'
         sTemp  += '  \\begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}\n'
-        sTemp  += '    \\hline\n'
-        sTemp  += '    \\bf Name & \\bf type & \\bf size & \\bf default value & \\bf description \\\\ \\hline\n'
+        sTemp  += space4+'\\hline\n'
+        sTemp  += space4+'\\bf Name & \\bf type & \\bf size & \\bf default value & \\bf description \\\\ \\hline\n'
         
         cLatex += sTemp
         vLatex += sTemp
     
-        #cLatex += '    \\multicolumn{4}{l}{\\parbox{10cm}{type = ' + "'" + sTypeName + "'" + '}} & \\multicolumn{1}{l}{\\parbox{6cm}{\\it item typename for initialization}}\\\\ \\hline\n'
+        #cLatex += space4+'\\multicolumn{4}{l}{\\parbox{10cm}{type = ' + "'" + sTypeName + "'" + '}} & \\multicolumn{1}{l}{\\parbox{6cm}{\\it item typename for initialization}}\\\\ \\hline\n'
 
         symbolList = ''
         requestedMarkerString = ''
@@ -433,11 +439,11 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if len(parameterTypeStr) > 18:
                     parameterDefaultValueStr = '\\tabnewline ' + parameterDefaultValueStr 
                 
-                sTemp   = '    ' + Str2Latex(parameter['pythonName']) + ' & '
-                sTemp  += '    ' + Str2Latex(parameterTypeStr) + ' & '
-                sTemp  += '    ' + Str2Latex(parameterSizeStr) + ' & '
-                sTemp  += '    ' + sString+Str2Latex(parameterDefaultValueStr, True)+sString + ' & '
-                sTemp  += '    ' + parameterDescription + '\\\\ \\hline\n'
+                sTemp   = space4 + Str2Latex(parameter['pythonName']) + ' & '
+                sTemp  += space4 + Str2Latex(parameterTypeStr) + ' & '
+                sTemp  += space4 + Str2Latex(parameterSizeStr) + ' & '
+                sTemp  += space4 + sString+Str2Latex(parameterDefaultValueStr, True)+sString + ' & '
+                sTemp  += space4 + parameterDescription + '\\\\ \\hline\n'
                 if parameter['destination'].find('V') != -1: #visualization
                     vLatex += sTemp
                 else:
@@ -454,7 +460,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 #print(parseInfo['classType']+':'+itemTypeString)
                 
 
-        cLatex += '    visualization & V' + parseInfo['class'] + ' & & & parameters for visualization of item \\\\ \\hline\n'
+        cLatex += space4+'visualization & V' + parseInfo['class'] + ' & & & parameters for visualization of item \\\\ \\hline\n'
         cLatex += '	  \\end{longtable}\n'
         cLatex += '	\\end{center}\n'
         vLatex += '	  \\end{longtable}\n'
@@ -487,7 +493,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #            sLatex += '{\\bf Output variables} (chose type, e.g., OutputVariableType.Position): \n\\begin{itemize}\n'
 #            dictOV = eval(parseInfo['outputVariables']) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
 #            for outputVariables in dictOV.items(): 
-#                sLatex += '    \\item {\\bf ' + outputVariables[0].replace('_','\_') + '}: ' + outputVariables[1].replace('_','\_') + '\n'
+#                sLatex += space4+'\\item {\\bf ' + outputVariables[0].replace('_','\_') + '}: ' + outputVariables[1].replace('_','\_') + '\n'
 #            
 #            sLatex += '\\end{itemize}\n'
 
@@ -501,8 +507,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
         #process outputVariables, including symbols
         if len(parseInfo['outputVariables']) != 0:
-            addLatex += "{\\bf The following output parameters are available as OutputVariableType in sensors and other functions}: \n"
-            addLatex += "\\startTable{output parameter}{symbol}{description}\n"
+            addLatex += "{\\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: \n"
+            addLatex += "\\startTable{output variable}{symbol}{description}\n"
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
@@ -554,7 +560,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     vPythonClass = '' #the python visualization interface class definition
     vPythonClassInit = '' #the init function body
     vPythonIter = ''  #the iterator member function
-    sIndent = '    ' #4 spaces indentation for python
+    sIndent = space4 #4 spaces indentation for python
 
 
     if hasPybindInterface: #otherwise do not include the description into latex doc
@@ -642,13 +648,13 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #add pointer to computation class in main class
     compClassVariable = compClassStr[0].lower()+compClassStr[1:]  #instance name is lower case
     visuClassVariable = visuClassStr[0].lower()+visuClassStr[1:]  #instance name is lower case
-    sList[3]+='    ' + compClassStr + '* ' + compClassVariable + '; //pointer to computational object (initialized in object factory) AUTO:\n'
-    sList[3]+='    ' + visuClassStr + '* ' + visuClassVariable + '; //pointer to computational object (initialized in object factory) AUTO:\n'
+    sList[3]+=space4 + compClassStr + '* ' + compClassVariable + '; //pointer to computational object (initialized in object factory) AUTO:\n'
+    sList[3]+=space4 + visuClassStr + '* ' + visuClassVariable + '; //pointer to computational object (initialized in object factory) AUTO:\n'
 
     #add parameter member variables
     for i in range(2): # 0...comp parameters, 1...main parameters
         if cntParameters[i] != 0:
-            sList[i+2]+='    ' + classNames[i] + ' parameters; //! AUTO: contains all parameters for '
+            sList[i+2]+=space4 + classNames[i] + ' parameters; //! AUTO: contains all parameters for '
             sList[i+2]+=classNames[i+2] + '\n'
             
 
@@ -659,7 +665,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             if parameter['cFlags'].find('U') != -1:
                 typeStr = 'mutable ' + typeStr #make this variable changable in GetMassMatrix(), ComputeODE2RHS(), ... functions
                 #print(typeStr)
-            temp = '    ' + typeStr + ' ' + parameter['cplusplusName']+ ';'
+            temp = space4 + typeStr + ' ' + parameter['cplusplusName']+ ';'
             nChar = len(temp)
             alignment = 50
             insertSpaces = ''
@@ -695,9 +701,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #constructor with default initialization:
     for i in range(nClasses):
         if cntDefaultParameters[i]:
-            sList[i]+='    //! AUTO: default constructor with parameter initialization\n'
-            sList[i]+='    '+classNames[i]+'()\n'
-            sList[i]+='    {\n'
+            sList[i]+=space4+'//! AUTO: default constructor with parameter initialization\n'
+            sList[i]+=space4+classNames[i]+'()\n'
+            sList[i]+=space4+'{\n'
         
             for parameter in parameterList:
                 if (parameter['lineType'].find('V') != -1): #only if it is a variable; include parent members
@@ -705,53 +711,53 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     if len(strDefault) | (parameter['type'] == 'String'): #only add initialization if default value exists
                         if parameter['type'] == 'String':
                             strDefault = '"' + strDefault + '"'
-                        tempStr='        ' + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'
+                        tempStr=space8 + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'
                         if (DestinationNr(parameter['destination']) == i):
                             sList[i]+=tempStr
         
-            sList[i]+='    };\n'
+            sList[i]+=space4+'};\n'
     
     sList[2]+='\n    // AUTO: access functions\n'
     sList[3]+='\n    // AUTO: access functions\n'
     sList[4]+='\n    // AUTO: access functions\n'
 
     #access functions to compClass pointer:
-    sList[3]+='    //! AUTO: Get pointer to computational class\n'
-    sList[3]+='    ' + compClassStr + '* Get' + compClassStr + '() { return ' + compClassVariable + '; }\n'
-    sList[3]+='    //! AUTO: Get const pointer to computational class\n'
-    sList[3]+='    const ' + compClassStr + '* Get' + compClassStr + '() const { return ' + compClassVariable + '; }\n'
-    sList[3]+='    //! AUTO: Set pointer to computational class (do this only in object factory!!!)\n'
-    sList[3]+='    void Set' + compClassStr + '(' + compClassStr + '* p' + compClassStr + ') { ' + compClassVariable + ' = p' + compClassStr + '; }\n\n'
+    sList[3]+=space4+'//! AUTO: Get pointer to computational class\n'
+    sList[3]+=space4 + compClassStr + '* Get' + compClassStr + '() { return ' + compClassVariable + '; }\n'
+    sList[3]+=space4+'//! AUTO: Get const pointer to computational class\n'
+    sList[3]+=space4+'const ' + compClassStr + '* Get' + compClassStr + '() const { return ' + compClassVariable + '; }\n'
+    sList[3]+=space4+'//! AUTO: Set pointer to computational class (do this only in object factory!!!)\n'
+    sList[3]+=space4+'void Set' + compClassStr + '(' + compClassStr + '* p' + compClassStr + ') { ' + compClassVariable + ' = p' + compClassStr + '; }\n\n'
 
     #access functions to visuClass pointer:
-    sList[3]+='    //! AUTO: Get pointer to visualization class\n'
-    sList[3]+='    ' + visuClassStr + '* Get' + visuClassStr + '() { return ' + visuClassVariable + '; }\n'
-    sList[3]+='    //! AUTO: Get const pointer to visualization class\n'
-    sList[3]+='    const ' + visuClassStr + '* Get' + visuClassStr + '() const { return ' + visuClassVariable + '; }\n'
-    sList[3]+='    //! AUTO: Set pointer to visualization class (do this only in object factory!!!)\n'
-    sList[3]+='    void Set' + visuClassStr + '(' + visuClassStr + '* p' + visuClassStr + ') { ' + visuClassVariable + ' = p' + visuClassStr + '; }\n\n'
+    sList[3]+=space4+'//! AUTO: Get pointer to visualization class\n'
+    sList[3]+=space4 + visuClassStr + '* Get' + visuClassStr + '() { return ' + visuClassVariable + '; }\n'
+    sList[3]+=space4+'//! AUTO: Get const pointer to visualization class\n'
+    sList[3]+=space4+'const ' + visuClassStr + '* Get' + visuClassStr + '() const { return ' + visuClassVariable + '; }\n'
+    sList[3]+=space4+'//! AUTO: Set pointer to visualization class (do this only in object factory!!!)\n'
+    sList[3]+=space4+'void Set' + visuClassStr + '(' + visuClassStr + '* p' + visuClassStr + ') { ' + visuClassVariable + ' = p' + visuClassStr + '; }\n\n'
 
     baseClass = parseInfo['classType']
     if len(baseClass) != 0:
         cBaseClass= 'C' + baseClass;
-        sList[3]+='    //! AUTO: Get const pointer to computational base class object\n' #added for better generalization of main/comp objects
-        sList[3]+='    virtual ' + cBaseClass + '* Get' + cBaseClass + '() const { return ' + compClassVariable + '; }\n'
-        sList[3]+='    //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)\n'
-        sList[3]+='    virtual void Set' + cBaseClass + '(' + cBaseClass + '* p' + cBaseClass + ') { ' + compClassVariable + ' = (' + compClassStr + '*)p' + cBaseClass + '; }\n\n'
+        sList[3]+=space4+'//! AUTO: Get const pointer to computational base class object\n' #added for better generalization of main/comp objects
+        sList[3]+=space4+'virtual ' + cBaseClass + '* Get' + cBaseClass + '() const { return ' + compClassVariable + '; }\n'
+        sList[3]+=space4+'//! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)\n'
+        sList[3]+=space4+'virtual void Set' + cBaseClass + '(' + cBaseClass + '* p' + cBaseClass + ') { ' + compClassVariable + ' = (' + compClassStr + '*)p' + cBaseClass + '; }\n\n'
         visuBaseClass= 'Visualization' + baseClass;
-        sList[3]+='    //! AUTO: Get const pointer to visualization base class object\n' #added for better generalization of main/comp objects
-        sList[3]+='    virtual ' + visuBaseClass + '* Get' + visuBaseClass + '() const { return ' + visuClassVariable + '; }\n'
-        sList[3]+='    //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)\n'
-        sList[3]+='    virtual void Set' + visuBaseClass + '(' + visuBaseClass + '* p' + visuBaseClass + ') { ' + visuClassVariable + ' = (' + visuClassStr + '*)p' + visuBaseClass + '; }\n\n'
+        sList[3]+=space4+'//! AUTO: Get const pointer to visualization base class object\n' #added for better generalization of main/comp objects
+        sList[3]+=space4+'virtual ' + visuBaseClass + '* Get' + visuBaseClass + '() const { return ' + visuClassVariable + '; }\n'
+        sList[3]+=space4+'//! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)\n'
+        sList[3]+=space4+'virtual void Set' + visuBaseClass + '(' + visuBaseClass + '* p' + visuBaseClass + ') { ' + visuClassVariable + ' = (' + visuClassStr + '*)p' + visuBaseClass + '; }\n\n'
 
     #print(cntParameters)
     #add parameter structures and access functions
     for i in range(2): # 0...comp parameters, 1...main parameters
         if cntParameters[i] != 0:
-            sList[i+2]+='    //! AUTO: Write (Reference) access to parameters\n'
-            sList[i+2]+='    virtual ' + classNames[i] + '& GetParameters() { return parameters; }\n'
-            sList[i+2]+='    //! AUTO: Read access to parameters\n'
-            sList[i+2]+='    virtual const ' + classNames[i] + '& GetParameters() const { return parameters; }\n\n'
+            sList[i+2]+=space4+'//! AUTO: Write (Reference) access to parameters\n'
+            sList[i+2]+=space4+'virtual ' + classNames[i] + '& GetParameters() { return parameters; }\n'
+            sList[i+2]+=space4+'//! AUTO: Read access to parameters\n'
+            sList[i+2]+=space4+'virtual const ' + classNames[i] + '& GetParameters() const { return parameters; }\n\n'
             
         
 
@@ -787,19 +793,19 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 refChar = ''
     
             if (i > 1) & (parameter['lineType'] != 'Vp'): #must be comp, main or visu class; don't do it, if variable of parent class
-                sList[i]+='    //! AUTO:  Write (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-                sList[i]+='    void Set' + functionStr + '(const ' + TypeConversion(parameter['type'], typeConversion)
+                sList[i]+=space4+'//! AUTO:  Write (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+                sList[i]+=space4+'void Set' + functionStr + '(const ' + TypeConversion(parameter['type'], typeConversion)
                 sList[i]+='& value) { ' + paramStr + ' = value; }\n'
-#                sList[i]+='    //! # Write (Reference) access to:' + parameter['parameterDescription'] + '\n'
-#                sList[i]+='    '+typeStr + '&' + ' '
+#                sList[i]+=space4+'//! # Write (Reference) access to:' + parameter['parameterDescription'] + '\n'
+#                sList[i]+=space4+typeStr + '&' + ' '
 #                sList[i]+='Get' + functionStr + '() { return ' + paramStr + '; }\n'
         
-                sList[i]+='    //! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-                sList[i]+='    const ' + typeStr + refChar + ' '
+                sList[i]+=space4+'//! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+                sList[i]+=space4+'const ' + typeStr + refChar + ' '
                 sList[i]+='Get' + functionStr + '() const { return '+paramStr+'; }\n'
                 if (i == 2) | (i == 4) : #in comp and visu class, also add the Get...() Reference access
-                    sList[i]+='    //! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-                    sList[i]+='    ' + typeStr + refChar + ' '
+                    sList[i]+=space4+'//! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+                    sList[i]+=space4 + typeStr + refChar + ' '
                     sList[i]+='Get' + functionStr + '() { return '+paramStr+'; }\n'
                 sList[i]+='\n'
 
@@ -832,10 +838,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 parRead = '' #used for dictionary read and for parameter read
                 parWrite = '' #used for dictionary write and for parameter write
                 if parameter['type'] == 'BodyGraphicsData': #special conversion routine
-                    dictListRead[i] +='        d["' + pyName + '"] = PyGetBodyGraphicsDataDictionary(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataDictionary(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
                 elif parameter['type'] == 'Matrix6D':
                     parRead = 'EXUmath::Matrix6DToStdArray66(' + destStr + ')'
-                    #dictListRead[i] +='        d["' + pyName + '"] = EXUmath::Matrix6DToStdArray66(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                    #dictListRead[i] +=space8+'d["' + pyName + '"] = EXUmath::Matrix6DToStdArray66(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
                 elif parameter['type'] == 'Matrix3D':
                     parRead = 'EXUmath::Matrix3DToStdArray33(' + destStr + ')'
                 elif parameter['type'] == 'NumpyMatrix':
@@ -862,21 +868,21 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 isPyFunction = False                
                 if parameter['type'].find('PyFunction') != -1: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
                     isPyFunction = True
-                    
+                   
                 if len(parRead) != 0:
-                    dictListRead[i] +='        '
+                    dictListRead[i] += space8
                     if isPyFunction: 
                         dictListRead[i]+='if ('+destStr+')\n            {' #avoid that 'None' is returned in dict due to empty user function
                     dictListRead[i] +='d["' + pyName + '"] = ' + parRead + ';'
                     if isPyFunction: 
                         dictListRead[i]+='}\n        else\n'
-                        dictListRead[i]+='            {d["' + pyName + '"] = 0;}\n'
+                        dictListRead[i]+=space8+'    {d["' + pyName + '"] = 0;}\n'
                             
                     dictListRead[i] +=' //! AUTO: cast variables into python (not needed for standard types) \n'
                                                     
                 #if (parameter['cFlags'].find('C') == -1) & (parameter['cFlags'].find('R') == -1): #'C' ... const access or 'R' means both read only!
                 if (parameter['cFlags'].find('R') == -1): #'R' means read only!
-                    dictListWrite[i]+='        '
+                    dictListWrite[i]+=space8
                     if parameter['cFlags'].find('O') != -1: #optional ==> means that we have to check first, if it exists in the dictionary
                         dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
@@ -888,7 +894,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     else:
                         dictStr = 'd["' + pyName + '"]'
                         if isPyFunction: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
-                            dictListWrite[i]+='if (EPyUtils::CheckForValidFunction(d["'+pyName+'"])) { '
+                            dictListWrite[i]+='if (EPyUtils::CheckForValidFunction(d["'+pyName+'"])) \n'+space12+'{ '
                             dictStr = '(py::function)'+dictStr
 
                         if typeCastStr != 'OutputVariableType':
@@ -900,8 +906,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                             dictListWrite[i]+=destStr + ' = (OutputVariableType)py::cast<Index>'
                             
                         dictListWrite[i]+='(' + dictStr + '); /* AUTO:  read out dictionary and cast to C++ type*/'
+
                         if isPyFunction: 
-                            dictListWrite[i]+='}'
+                            dictListWrite[i]+='}\n'+space12
+                            dictListWrite[i]+='else {' + destStr  + ' = 0;  /*AUTO: otherwise assign with zero!*/ }'
+                   
+                    if parameter['cFlags'].find('O') != -1: #optional ==> means that we have to check first, if it exists in the dictionary
+                        dictListWrite[i]+='} '
+                    dictListWrite[i]+='\n'
 
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
                     if IsASetSafelyParameter(parameter['type']):
@@ -912,14 +924,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     elif IsItemIndex(parameter['type']):
                         parWrite+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
                         parWrite+='(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/'
+                    elif isPyFunction:
+                        parWrite+='if (py::isinstance<py::function>(value)) {'
+                        parWrite+=destStr + ' = py::cast<' + typeCastStr + '>'
+                        parWrite+='(value); /* AUTO:  read out dictionary and cast to C++ type*/} else\n'+space12
+                        parWrite+='if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) '
+                        parWrite+='{PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }'
+                        
                     else:
                         parWrite+=destStr + ' = py::cast<' + typeCastStr + '>'
                         parWrite+='(value); /* AUTO:  read out dictionary and cast to C++ type*/'
 
-                   
-                    if parameter['cFlags'].find('O') != -1: #optional ==> means that we have to check first, if it exists in the dictionary
-                        dictListWrite[i]+='} '
-                    dictListWrite[i]+='\n'
 
                 if parRead != '':
                     if parameter['type'].find('Numpy') != -1: #do not add py::cast(...) NumpyMatrix/Vector
@@ -950,8 +965,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             typeStr = TypeConversion(parameter['type'], typeConversion)
             argsStr = parameter['args']
     
-            sList[i]+='    //! AUTO:  ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-            sList[i]+='    '+strVirtual + typeStr + ' '
+            sList[i]+=space4+'//! AUTO:  ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+            sList[i]+=space4+strVirtual + typeStr + ' '
             sList[i]+=functionStr + '(' + argsStr + ')' 
             if parameter['cFlags'].find('C') != -1:
                 sList[i]+=' const'
@@ -968,7 +983,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #add outputVariableType function automatically if defined:
     if len(parseInfo['outputVariables']) != 0:
         if (parseInfo['classType'] == 'Object') | (parseInfo['classType'] == 'Node'):
-            sList[indexComp] += '    virtual OutputVariableType GetOutputVariableTypes() const override\n    {\n        return (OutputVariableType)('
+            sList[indexComp] += space4+'virtual OutputVariableType GetOutputVariableTypes() const override\n    {\n        return (OutputVariableType)('
             dictOV = eval(parseInfo['outputVariables'].replace('\\','\\\\').replace('\n','\\n')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
                 sList[indexComp] += '\n            (Index)OutputVariableType::' + outputVariables[0] + ' +'
@@ -987,52 +1002,52 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #+++++++++++++++++++++++++++++++++++++++++++++++
     #now write dictionary read/write functions into main class:
     sList[3] += '\n    //! AUTO:  dictionary write access\n'
-    sList[3] += '    virtual void SetWithDictionary(const py::dict& d) override\n'
-    sList[3] += '    {\n'
+    sList[3] += space4+'virtual void SetWithDictionary(const py::dict& d) override\n'
+    sList[3] += space4+'{\n'
     for i in range(nClasses):
         sList[3] += dictListWrite[i]
     
     if parseInfo['classType'] == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
-        sList[3] += '        GetCObject()->ParametersHaveChanged();\n'
+        sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
         
-    sList[3] += '    }\n\n'
+    sList[3] += space4+'}\n\n'
 
     #+++++++++++++++++++++++++++++++++++++++++++++++
-    sList[3] += '    //! AUTO:  dictionary read access\n'
-    sList[3] += '    virtual py::dict GetDictionary() const override\n'
-    sList[3] += '    {\n'
-    sList[3] += '        auto d = py::dict();\n'
-    sList[3] += '        d["' + typeStr + '"] = (std::string)GetTypeName();\n'
+    sList[3] += space4+'//! AUTO:  dictionary read access\n'
+    sList[3] += space4+'virtual py::dict GetDictionary() const override\n'
+    sList[3] += space4+'{\n'
+    sList[3] += space8+'auto d = py::dict();\n'
+    sList[3] += space8+'d["' + typeStr + '"] = (std::string)GetTypeName();\n'
     for i in range(nClasses):
         sList[3] += dictListRead[i]
         
-    sList[3] += '        return d; \n'
-    sList[3] += '    }\n'
+    sList[3] += space8+'return d; \n'
+    sList[3] += space4+'}\n'
 
     #+++++++++++++++++++++++++++++++++++++++++++++++
     #now write parameter read/write functions into main class:
     sList[3] += '\n    //! AUTO:  parameter read access\n'
-    sList[3] += '    virtual py::object GetParameter(const STDstring& parameterName) const override \n'
-    sList[3] += '    {\n        '
+    sList[3] += space4+'virtual py::object GetParameter(const STDstring& parameterName) const override \n'
+    sList[3] += space4+'{\n        '
     sList[3] += parameterReadStr
     sList[3] += ' {PyError(STDstring("' + classStr + '::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user\n'
-    sList[3] += '        return py::object();\n'
+    sList[3] += space8+'return py::object();\n'
 #        if parseInfo['classType'] == 'Object': #if parameters have changed, some functions may be necessary to be reset
-#            sList[3] += '        GetCObject()->ParametersHaveChanged();\n'
-    sList[3] += '    }\n\n'
+#            sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
+    sList[3] += space4+'}\n\n'
 
     sList[3] += '\n    //! AUTO:  parameter write access\n'
-    sList[3] += '    virtual void SetParameter(const STDstring& parameterName, const py::object& value) override \n'
-    sList[3] += '    {\n        '
+    sList[3] += space4+'virtual void SetParameter(const STDstring& parameterName, const py::object& value) override \n'
+    sList[3] += space4+'{\n        '
     sList[3] += parameterWriteStr
     sList[3] += ' {PyError(STDstring("' + classStr + '::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user\n'
     #notify object that parameters have changed
     if parseInfo['classType'] == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
-        sList[3] += '        GetCObject()->ParametersHaveChanged();\n'
-    #sList[3] += '        \n'
+        sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
+    #sList[3] += space8+'\n'
 #        if parseInfo['classType'] == 'Object': #if parameters have changed, some functions may be necessary to be reset
-#            sList[3] += '        GetCObject()->ParametersHaveChanged();\n'
-    sList[3] += '    }\n\n'
+#            sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
+    sList[3] += space4+'}\n\n'
 
 
     #.def("__repr__", &Vector2::toString);
@@ -1045,10 +1060,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     # FULL ostream operator - THIS IS DONE LATERON:
 #    s+='  virtual void Print (std::ostream& os) const\n'
 #    s+='  {\n'
-#    s+='    os << "' + parseInfo['class'] + '";\n'
+#    s+=space4+'os << "' + parseInfo['class'] + '";\n'
 #    if len(parseInfo['parentClass']) != 0:
-#        s+='    os << ":"; \n'
-#        s+='    ' + parseInfo['parentClass'] + '::Print(os);\n'
+#        s+=space4+'os << ":"; \n'
+#        s+=space4+'' + parseInfo['parentClass'] + '::Print(os);\n'
 #        
 #    #output each parameter
 #    for parameter in parameterList:
@@ -1058,16 +1073,16 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #            refChar = ''
 #            if typeStr[len(typeStr)-1] == '*':
 #                refChar = '*' #print content of object, not the pointer address
-#            s+='    os << "  ' + paramStr + ' = " << ' + refChar + paramStr + ' << "\\n";\n'
+#            s+=space4+'os << "  ' + paramStr + ' = " << ' + refChar + paramStr + ' << "\\n";\n'
 #         
-#    s+='    os << "\\n";\n'
+#    s+=space4+'os << "\\n";\n'
 #    s+='  }\n\n' # end ostream operator
 #
 #    if len(parseInfo['parentClass']) == 0:
 #        s+=('  friend std::ostream& operator<<(std::ostream& os, const ' + parseInfo['class'] + '& object)\n')
 #        s+= '  {\n'
-#        s+= '    object.Print(os);\n'
-#        s+= '    return os;\n'
+#        s+= space4+'object.Print(os);\n'
+#        s+= space4+'return os;\n'
 #        s+= '  }\n\n' # end ostream operator
 #    
     for i in range(nClasses):
@@ -1088,8 +1103,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
     #print ('Create Pybind11 includes')
 
-    spaces1 = '    '            #first level
-    spaces2 = spaces1+'    '    #second level
+    spaces1 = space4            #first level
+    spaces2 = spaces1+space4    #second level
 
     s = spaces1 + '//++++++++++++++++++++++++++++++++\n' #create empty string
     #************************************
@@ -1213,8 +1228,8 @@ try: #still close file if crashes
     
     miniExamplesList = []    #generate file list for mini examples
     multiLineReading = False #for equations and miniExample
-    multiLineString = ''     #stored string from multiline reading
-    multiLineType = ''       #equations or miniExample
+    multiLineString = '' #stored string from multiline reading
+    multiLineType = ''   #equations or miniExample
     cnt = 0
     
     for line in fileLines:
@@ -1227,7 +1242,7 @@ try: #still close file if crashes
                     parseInfo[multiLineType] = multiLineString
                     #print('multiline=\n'+multiLineString)
                     multiLineReading = False #end 
-                    multiLineString = ''     #stored string from multiline reading
+                    multiLineString = '' #stored string from multiline reading
                     multiLineType = ''       #equations or miniExample
                 linecnt+=1
                 continue
@@ -1433,11 +1448,11 @@ try: #still close file if crashes
     #s += 'from exudyn import OutputVariableType\n\n' #do not import exudyn, causes problems e.g. with exudynFast, ...
     s += '#item interface diagonal matrix creator\n'
     s += 'def IIDiagMatrix(rowsColumns, value):\n'
-    s += '    m = []\n'
-    s += '    for i in range(rowsColumns):\n'
-    s += '        m += [rowsColumns*[0]]\n'
-    s += '        m[i][i] = value\n'
-    s += '    return m\n\n'
+    s += space4+'m = []\n'
+    s += space4+'for i in range(rowsColumns):\n'
+    s += space8+'m += [rowsColumns*[0]]\n'
+    s += space8+'m[i][i] = value\n'
+    s += space4+'return m\n\n'
     filePython.write(s)
     
     

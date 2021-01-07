@@ -88,7 +88,7 @@ else: #treat n elements
                                    physicsBendingStiffness=E*I, 
                                    physicsAxialStiffness=E*A, 
                                    #useReducedOrderIntegration=True,
-                                   nodeNumbers=[nc0+i,nc0+i+1]))
+                                   nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
         cableList+=[elem]
 
     mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))

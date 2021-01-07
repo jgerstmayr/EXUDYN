@@ -54,7 +54,8 @@ lElem = L / nElements
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
     nodeList+=[nLast]
-    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[nc0+i,nc0+i+1]))
+    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
+                               physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
     cableList+=[elem]
     mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber = elem))
     mbs.AddLoad(Gravity(markerNumber=mBody, loadVector=[0,-g,0]))
@@ -70,9 +71,9 @@ if addPointMass:
     mbs.AddObject(RevoluteJoint2D(markerNumbers=[mTip0,mTip1]))
 
 
-mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=0))
-mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=1))
-mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0+1*0, coordinate=3))
+mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=0))
+mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=1))
+mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = int(nc0)+1*0, coordinate=3))
     
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF0]))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF1]))

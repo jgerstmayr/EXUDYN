@@ -74,7 +74,7 @@ print('symmetric rotor resonance frequency (Hz)= '+str(fRes))
 #3D load vector
 loadFact = 1
 n1 = 0 #rotor node number, will be defined later
-def UFload(t, load):
+def UFload(mbs, t, load):
     #compute angle of rotation (only true if rotation about 1 axis)
     phi = mbs.GetNodeOutput(nodeNumber=n1, variableType=exu.OutputVariableType.Rotation)[0]
     return [0, sign*loadFact*cos(phi), loadFact*sin(phi)]
@@ -165,11 +165,6 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers=[groundMarker1, rotorAxisMarke
 #coordinate markers for loads:
 rotorMarkerUy=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate=1))
 rotorMarkerUz=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate=2))
-
-#add coordinate load:
-#
-#mbs.AddLoad(LoadCoordinate(markerNumber = rotorMarkerUy, load = amp, loadUserFunction=userLoadBWy))
-#mbs.AddLoad(LoadCoordinate(markerNumber = rotorMarkerUz, load = amp, loadUserFunction=userLoadBWz))
 
 #add torque:
 rotorRigidMarker =mbs.AddMarker(MarkerBodyRigid(bodyNumber=rigid, localPosition=[0,0,0]))

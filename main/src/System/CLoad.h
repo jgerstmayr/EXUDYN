@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 #ifndef CLOAD__H
@@ -58,13 +58,13 @@ public: //
   //! Write (Reference) access to: general load vector (e.g. force or torque); used if LoadType::IsVector = 1
   //DELETE: should not be needed: virtual Vector3D& GetLoadVector() { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector"); Vector3D* v = new Vector3D(0.); return *v; }
   //! Read (Reference) access to: general load vector (e.g. force or torque) as a function of time; used if LoadType::IsVector = 1
-  virtual Vector3D GetLoadVector(Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector(Real t) const"); Vector3D* v = new Vector3D(0.); return *v;
+  virtual Vector3D GetLoadVector(const MainSystemBase& mbs, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector(Real t) const"); Vector3D* v = new Vector3D(0.); return *v;
   }
 
   //! Write (Reference) access to: scalar load value (e.g. object/node coordinate); used if LoadType::IsVector = 0
   //DELETE: should not be needed: virtual Real& GetLoadValue() { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadValue"); Real* v = new Real(0.); return *v; }
   //! Read (Reference) access to: scalar load value (e.g. object/node coordinate) as a function of time; used if LoadType::IsVector = 0
-  virtual Real GetLoadValue(Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadValue(Real t) const");  Real* v = new Real(0.); return *v; }
+  virtual Real GetLoadValue(const MainSystemBase& mbs, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadValue(Real t) const");  Real* v = new Real(0.); return *v; }
 
   virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::RequestedMarkerType"); return Marker::_None; }
 

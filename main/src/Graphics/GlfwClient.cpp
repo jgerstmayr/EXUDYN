@@ -7,14 +7,14 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
+                - weblink: https://github.com/jgerstmayr/EXUDYN
                 
 ************************************************************************************************ */
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "Utilities/SlimArray.h"
 //#include <string>
-
 
 //void testtest()
 //{
@@ -36,13 +36,15 @@ using namespace std::string_literals; // enables s-suffix for std::string litera
 //#pragma comment(lib, "glu32")
 //#include <gl/gl.h>
 //#include <gl/glu.h>
+////#define GLFW_INCLUDE_ES3 //open gl ES version
+//#define GLFW_INCLUDE_GLEXT
+//#include <GLFW/glfw3.h>
 
-//#define GLFW_INCLUDE_ES3 //open gl ES version
-#define GLFW_INCLUDE_GLEXT
-#include <GLFW/glfw3.h>
 
-
+#include "Graphics/characterBitmap.h"
 #include "Graphics/GlfwClient.h"
+#include "System/versionCpp.h"
+
 
 extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
 //extern bool deactivateGlobalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
@@ -57,10 +59,24 @@ bool GlfwRenderer::rendererActive = false;
 bool GlfwRenderer::stopRenderer = false;
 Index GlfwRenderer::rendererError = 0;
 GLFWwindow* GlfwRenderer::window = nullptr;
-RendererState* GlfwRenderer::state;
-RendererStateMachine GlfwRenderer::stateMachine;
+RenderState* GlfwRenderer::state;
+RenderStateMachine GlfwRenderer::stateMachine;
 std::thread GlfwRenderer::rendererThread;
 //uint64_t GlfwRenderer::visualizationCounter = 0;
+Index GlfwRenderer::firstRun = 0; //zoom all in first run
+std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice); initialized with clear state
+
+BitmapFont GlfwRenderer::bitmapFont;				//!< bitmap font for regular texts, initialized upon start of renderer
+float GlfwRenderer::fontScale;						//!< monitor scaling factor from windows, to scale fonts
+#ifndef USE_TEXTURED_BITMAP_FONTS
+BitmapFont GlfwRenderer::bitmapFontSmall;			//!< bitmap font for small texts, initialized upon start of renderer
+BitmapFont GlfwRenderer::bitmapFontLarge;			//!< bitmap font for large texts, initialized upon start of renderer
+BitmapFont GlfwRenderer::bitmapFontHuge;			//!< bitmap font for huge texts, initialized upon start of renderer
+#else
+GLuint GlfwRenderer::textureNumberRGBbitmap[256];	//!< store texture number for our bitmap font
+GLuint GlfwRenderer::bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
+ResizableArray<GLubyte> GlfwRenderer::charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
+#endif
 
 ResizableArray<GraphicsData*>* GlfwRenderer::graphicsDataList = nullptr;
 //GraphicsData* GlfwRenderer::data = nullptr;
@@ -86,6 +102,8 @@ GlfwRenderer::GlfwRenderer()
 	stateMachine.lastMousePressedX = 0;	//!< last left mouse button position pressed
 	stateMachine.lastMousePressedY = 0;
 
+	fontScale = 1; //initialized if needed before bitmap initialization
+	//renderState state cannot be initialized here, because it will be linked later to visualizationSystemContainer
 };
 
 void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -93,125 +111,158 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		basicVisualizationSystemContainer->StopSimulation();
-		std::this_thread::sleep_for(std::chrono::milliseconds(200)); //give thread time to finish the stop simulation command
+		
+		//this leads to problems when closing:
+		//std::this_thread::sleep_for(std::chrono::milliseconds(200)); //give thread time to finish the stop simulation command
 
 		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-	
-	//keycode to quit simulation:
-	if (key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0)
-	{
 
-		basicVisualizationSystemContainer->StopSimulation();
+		return; //don't process keys or call user function
 	}
 
-	//keycode to continue paused simulation:
-	if ((key == GLFW_KEY_SPACE && action == GLFW_PRESS && mods == 0) || (key == GLFW_KEY_SPACE && mods == GLFW_MOD_SHIFT))
+	//switch ignore keys functionality
+	if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
 	{
-		basicVisualizationSystemContainer->ContinueSimulation();
+		visSettings->window.ignoreKeys = !visSettings->window.ignoreKeys;
+		rendererOut << "ignore keys mode switched to " << visSettings->window.ignoreKeys << "\n";
 	}
 
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//visualization update keys:
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == 0)
+	//do this first, as key may still have time to complete action
+	if (visSettings->window.ignoreKeys || !(key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0))
 	{
-		visSettings->general.graphicsUpdateInterval = 0.02f;
-		rendererOut << "Visualization update: 20ms\n";
+		PyQueueKeyPressed(key, action, mods, visSettings->window.keyPressUserFunction); //call python user function
 	}
 
-	if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == 0)
+	//+++++++++++++++++++++++++++++++++++++++++++++
+	//check if regular keys are ignored:
+	if (!visSettings->window.ignoreKeys)
 	{
-		visSettings->general.graphicsUpdateInterval = 0.2f;
-		rendererOut << "Visualization update: 200ms\n";
-	}
+		//keycode to quit simulation:
+		if (key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0)
+		{
+			basicVisualizationSystemContainer->StopSimulation();
+		}
 
-	if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == 0)
-	{
-		visSettings->general.graphicsUpdateInterval = 1.f;
-		rendererOut << "Visualization update: 1s\n";
-	}
+		//keycode to continue paused simulation:
+		if ((key == GLFW_KEY_SPACE && action == GLFW_PRESS && mods == 0) ||
+			(key == GLFW_KEY_SPACE && action == GLFW_REPEAT)) //changed shift to repeat 
+			//(key == GLFW_KEY_SPACE && mods == GLFW_MOD_SHIFT))
+		{
+			basicVisualizationSystemContainer->ContinueSimulation();
+		}
 
-	if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == 0)
-	{
-		visSettings->general.graphicsUpdateInterval = 10.f;
-		rendererOut << "Visualization update: 10s\n";
-	}
+		//switch ignore keys functionality
+		if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
+		{
+			visSettings->window.showMouseCoordinates = !visSettings->window.showMouseCoordinates;
+		}
 
-	if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == 0)
-	{
-		visSettings->general.graphicsUpdateInterval = 100.f;
-		rendererOut << "Visualization update: 100s\n";
-	}
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//visualization update keys:
+		if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == 0)
+		{
+			visSettings->general.graphicsUpdateInterval = 0.02f;
+			rendererOut << "Visualization update: 20ms\n";
+		}
 
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//process keys for showing nodes, bodies, ...
-	if (key == GLFW_KEY_N && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
-	{
-		visSettings->nodes.show = !visSettings->nodes.show; UpdateGraphicsDataNow();
-		rendererOut << "show nodes: " << visSettings->nodes.show << "\n";
-	}
-	if (key == GLFW_KEY_B && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
-	{
-		visSettings->bodies.show = !visSettings->bodies.show; UpdateGraphicsDataNow();
-		rendererOut << "show bodies: " << visSettings->bodies.show << "\n";
-	}
-	if (key == GLFW_KEY_C && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
-	{
-		visSettings->connectors.show = !visSettings->connectors.show; UpdateGraphicsDataNow();
-		rendererOut << "show connectors: " << visSettings->connectors.show << "\n";
-	}
-	if (key == GLFW_KEY_M && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
-	{
-		visSettings->markers.show = !visSettings->markers.show; UpdateGraphicsDataNow();
-		rendererOut << "show markers: " << visSettings->markers.show << "\n";
-	}
-	if (key == GLFW_KEY_L && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
-	{
-		visSettings->loads.show = !visSettings->loads.show; UpdateGraphicsDataNow();
-		rendererOut << "show loads: " << visSettings->loads.show << "\n";
-	}
-	if (key == GLFW_KEY_S && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
-	{
-		visSettings->sensors.show = !visSettings->sensors.show; UpdateGraphicsDataNow();
-		rendererOut << "show sensors: " << visSettings->sensors.show << "\n";
-	}
-	//show node, object, ... numbers:
-	if (key == GLFW_KEY_N && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		visSettings->nodes.showNumbers = !visSettings->nodes.showNumbers; UpdateGraphicsDataNow();
-		rendererOut << "show node numbers: " << visSettings->nodes.showNumbers << "\n";
-	}
-	if (key == GLFW_KEY_B && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		visSettings->bodies.showNumbers = !visSettings->bodies.showNumbers; UpdateGraphicsDataNow();
-		rendererOut << "show body numbers: " << visSettings->bodies.showNumbers << "\n";
-	}
-	if (key == GLFW_KEY_C && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		visSettings->connectors.showNumbers = !visSettings->connectors.showNumbers; UpdateGraphicsDataNow();
-		rendererOut << "show connector numbers: " << visSettings->connectors.showNumbers << "\n";
-	}
-	if (key == GLFW_KEY_M && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		visSettings->markers.showNumbers = !visSettings->markers.showNumbers; UpdateGraphicsDataNow();
-		rendererOut << "show marker numbers: " << visSettings->markers.showNumbers << "\n";
-	}
-	if (key == GLFW_KEY_L && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		visSettings->loads.showNumbers = !visSettings->loads.showNumbers; UpdateGraphicsDataNow();
-		rendererOut << "show load numbers: " << visSettings->loads.showNumbers << "\n";
-	}
-	if (key == GLFW_KEY_S && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		visSettings->sensors.showNumbers = !visSettings->sensors.showNumbers; UpdateGraphicsDataNow();
-		rendererOut << "show sensor numbers: " << visSettings->sensors.showNumbers << "\n";
-	}
-	if (key == GLFW_KEY_X && action == GLFW_PRESS)
-	{
-		//open window to execute a python command ... 
-		//trys to catch errors made by user in this window
-		//std::string str =
-		std::string str = R"(
+		if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == 0)
+		{
+			visSettings->general.graphicsUpdateInterval = 0.2f;
+			rendererOut << "Visualization update: 200ms\n";
+		}
+
+		if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == 0)
+		{
+			visSettings->general.graphicsUpdateInterval = 1.f;
+			rendererOut << "Visualization update: 1s\n";
+		}
+
+		if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == 0)
+		{
+			visSettings->general.graphicsUpdateInterval = 10.f;
+			rendererOut << "Visualization update: 10s\n";
+		}
+
+		if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == 0)
+		{
+			visSettings->general.graphicsUpdateInterval = 100.f;
+			rendererOut << "Visualization update: 100s\n";
+		}
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//process keys for showing nodes, bodies, ...
+		if (key == GLFW_KEY_N && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->nodes.show = !visSettings->nodes.show; UpdateGraphicsDataNow();
+			rendererOut << "show nodes: " << visSettings->nodes.show << "\n";
+		}
+		if (key == GLFW_KEY_B && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->bodies.show = !visSettings->bodies.show; UpdateGraphicsDataNow();
+			rendererOut << "show bodies: " << visSettings->bodies.show << "\n";
+		}
+		if (key == GLFW_KEY_C && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->connectors.show = !visSettings->connectors.show; UpdateGraphicsDataNow();
+			rendererOut << "show connectors: " << visSettings->connectors.show << "\n";
+		}
+		if (key == GLFW_KEY_M && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->markers.show = !visSettings->markers.show; UpdateGraphicsDataNow();
+			rendererOut << "show markers: " << visSettings->markers.show << "\n";
+		}
+		if (key == GLFW_KEY_L && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->loads.show = !visSettings->loads.show; UpdateGraphicsDataNow();
+			rendererOut << "show loads: " << visSettings->loads.show << "\n";
+		}
+		if (key == GLFW_KEY_S && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->sensors.show = !visSettings->sensors.show; UpdateGraphicsDataNow();
+			rendererOut << "show sensors: " << visSettings->sensors.show << "\n";
+		}
+		//show node, object, ... numbers:
+		if (key == GLFW_KEY_N && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			visSettings->nodes.showNumbers = !visSettings->nodes.showNumbers; UpdateGraphicsDataNow();
+			rendererOut << "show node numbers: " << visSettings->nodes.showNumbers << "\n";
+		}
+		if (key == GLFW_KEY_B && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			visSettings->bodies.showNumbers = !visSettings->bodies.showNumbers; UpdateGraphicsDataNow();
+			rendererOut << "show body numbers: " << visSettings->bodies.showNumbers << "\n";
+		}
+		if (key == GLFW_KEY_C && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			visSettings->connectors.showNumbers = !visSettings->connectors.showNumbers; UpdateGraphicsDataNow();
+			rendererOut << "show connector numbers: " << visSettings->connectors.showNumbers << "\n";
+		}
+		if (key == GLFW_KEY_M && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			visSettings->markers.showNumbers = !visSettings->markers.showNumbers; UpdateGraphicsDataNow();
+			rendererOut << "show marker numbers: " << visSettings->markers.showNumbers << "\n";
+		}
+		if (key == GLFW_KEY_L && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			visSettings->loads.showNumbers = !visSettings->loads.showNumbers; UpdateGraphicsDataNow();
+			rendererOut << "show load numbers: " << visSettings->loads.showNumbers << "\n";
+		}
+		if (key == GLFW_KEY_S && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			visSettings->sensors.showNumbers = !visSettings->sensors.showNumbers; UpdateGraphicsDataNow();
+			rendererOut << "show sensor numbers: " << visSettings->sensors.showNumbers << "\n";
+		}
+		if (key == GLFW_KEY_T && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
+		{
+			visSettings->openGL.facesTransparent = !visSettings->openGL.facesTransparent; UpdateGraphicsDataNow();
+			rendererOut << "all faces transparent: " << visSettings->openGL.facesTransparent << "\n";
+		}
+		if (key == GLFW_KEY_X && action == GLFW_PRESS)
+		{
+			//open window to execute a python command ... 
+			//trys to catch errors made by user in this window
+			//std::string str =
+			std::string str = R"(
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 
@@ -236,22 +287,28 @@ singleCommandEntry.grid(row=1, column=0)
 singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
 singleCommandMainwin.mainloop()
 )";
-		PyQueueExecutableString(str);
-		UpdateGraphicsDataNow();
-	}
-	//visualization settings dialog
-	if (key == GLFW_KEY_V && action == GLFW_PRESS)
-	{
-		//open window to execute a python command ... 
-		std::string str = "import exudyn.GUI\nvis=SC.visualizationSettings.GetDictionaryWithTypeInfo()\nSC.visualizationSettings.SetDictionary(exudyn.GUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))";
-		PyQueueExecutableString(str);
-		UpdateGraphicsDataNow();
-	}
-	//help key
-	if (key == GLFW_KEY_H && action == GLFW_PRESS)
-	{
-		//open window to execute a python command ... (THREADSAFE???)
-		std::string str = R"(import tkinter as tk
+			PyQueueExecutableString(str);
+			UpdateGraphicsDataNow();
+		}
+		//visualization settings dialog
+		if (key == GLFW_KEY_V && action == GLFW_PRESS)
+		{
+			//open window to execute a python command ... 
+			std::string str = R"(
+import exudyn.GUI
+vis=SC.visualizationSettings.GetDictionaryWithTypeInfo()
+#if 'keyPressUserFunction' in vis['window']: #removed from Get/SetDictionary(...)
+#    del vis['window']['keyPressUserFunction'] #not possible to edit
+SC.visualizationSettings.SetDictionary(exudyn.GUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))
+)";
+			PyQueueExecutableString(str);
+			UpdateGraphicsDataNow();
+		}
+		//help key
+		if (key == GLFW_KEY_H && action == GLFW_PRESS)
+		{
+			//open window to execute a python command ... (THREADSAFE???)
+			std::string str = R"(import tkinter as tk
 root = tk.Tk()
 root.title("Help on keyboard commands and mouse")
 scrollW = tk.Scrollbar(root)
@@ -277,6 +334,8 @@ SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
 CTRL+3,4,5,6          ... other views (with optional SHIFT key)
 CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements)
 KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
+F2                    ... ignore all keyboard input, except for KeyPress user function, F2 and escape
+F3                    ... show mouse coordinates
 A      ... zoom all
 C      ... show/hide connectors
 CTRL+C ... show/hide connector numbers
@@ -290,6 +349,7 @@ N      ... show/hide nodes
 CTRL+N ... show/hide node numbers
 S      ... show/hide sensors
 CTRL+S ... show/hide sensor numbers
+T      ... make all faces transparent
 Q      ... stop simulation
 X      ... execute command; dialog may appear behind the visualization window! may crash!
 V      ... visualization settings; dialog may appear behind the visualization window!
@@ -299,193 +359,195 @@ SPACE ... continue simulation
 textW.insert(tk.END, msg)
 tk.mainloop()
 )";
-		PyQueueExecutableString(str);
-		UpdateGraphicsDataNow();
-	}
+			PyQueueExecutableString(str);
+			UpdateGraphicsDataNow();
+		}
 
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//process keys for move, rotate, zoom
-	float rotStep = visSettings->window.keypressRotationStep; //degrees
-	float transStep = visSettings->window.keypressTranslationStep * state->zoom; //degrees
-	if (mods == GLFW_MOD_CONTROL) //only for rotStep and transStep
-	{
-		rotStep *= 0.1f;
-		transStep *= 0.1f;
-	}
-		
-	float zoomStep = visSettings->window.zoomStepFactor;
-	Float3 incRot({ 0.f,0.f,0.f });
-	if (key == GLFW_KEY_KP_2 && action == GLFW_PRESS) { incRot[0] = rotStep; }
-	if (key == GLFW_KEY_KP_8 && action == GLFW_PRESS) { incRot[0] = -rotStep; }
-	if (key == GLFW_KEY_KP_4 && action == GLFW_PRESS) { incRot[1] = rotStep; }
-	if (key == GLFW_KEY_KP_6 && action == GLFW_PRESS) { incRot[1] = -rotStep; }
-	if (key == GLFW_KEY_KP_7 && action == GLFW_PRESS) { incRot[2] = rotStep; }
-	if (key == GLFW_KEY_KP_9 && action == GLFW_PRESS) { incRot[2] = -rotStep; }
-
-	if (incRot[0] + incRot[1] + incRot[2] != 0.f)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		//glLoadIdentity();	//start with identity
-		glLoadMatrixf(state->modelRotation.GetDataPointer()); //load previous rotation
-		glRotatef(incRot[0], 1.f, 0.f, 0.f); //apply "incremental" rotation around x
-		glRotatef(incRot[1], 0.f, 1.f, 0.f); //apply "incremental" rotation around y
-		glRotatef(incRot[2], 0.f, 0.f, 1.f); //apply "incremental" rotation around z
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-	}
-
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//standard view:
-	//if ((key == GLFW_KEY_KP_0 || key == GLFW_KEY_0) && action == GLFW_PRESS) //reset all rotations
-	//{
-	//	glMatrixMode(GL_MODELVIEW);
-	//	glLoadIdentity();	//start with identity
-	//	glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-	//	rendererOut << "Reset OpenGL modelview\n";
-	//}
-
-	//change view:
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) 
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		//glRotated(180, 0.0, 1.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 1: 1-2-plane\n";
-	}
-
-	if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) 
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(-90, 1.0, 0.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 2: 1-3-plane\n";
-	}
-
-	if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) 
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(-90, 0.0, 1.0, 0.0);
-		glRotated(-90, 1.0, 0.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 3: 2-3-plane\n";
-	}
-
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT) 
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(180, 0.0, 1.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 1: 1-2-plane mirrored about vertical axis\n";
-	}
-
-	if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT) 
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(-90, 1.0, 0.0, 0.0);
-		glRotated(180, 0.0, 0.0, 1.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 2: 1-3-plane mirrored about vertical axis\n";
-	}
-
-	if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT) 
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(-90, 0.0, 1.0, 0.0);
-		glRotated(-90, 1.0, 0.0, 0.0);
-		glRotated(180, 0.0, 0.0, 1.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 3: 2-3-plane mirrored about vertical axis\n";
-	}
-
-	//second group of views:
-	if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(180, 0.0, 1.0, 0.0);
-		glRotated(90, 0.0, 0.0, 1.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 1: 2-1-plane\n";
-	}
-
-	if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(90, 0.0, 1.0, 0.0);
-		glRotated(90, 0.0, 0.0, 1.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 2: 3-1-plane\n";
-	}
-
-	if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(90, 0.0, 1.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 3: 3-2-plane\n";
-	}
-
-	if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(90, 0.0, 0.0, 1.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 1: 2-1-plane mirrored about vertical axis\n";
-	}
-
-	if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(-90, 1.0, 0.0, 0.0);
-		glRotated(-90, 0.0, 1.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 2: 3-1-plane mirrored about vertical axis\n";
-	}
-
-	if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();	//start with identity
-		glRotated(-90, 0.0, 1.0, 0.0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		rendererOut << "View 3: 3-2-plane mirrored about vertical axis\n";
-	}
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-	if (key == GLFW_KEY_UP && action == GLFW_PRESS) { state->centerPoint[1] -= transStep; }
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) { state->centerPoint[1] += transStep; }
-	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) { state->centerPoint[0] += transStep; }
-	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) { state->centerPoint[0] -= transStep; }
-	
-	if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_COMMA) && action == GLFW_PRESS) 
-	{ 
-		if (mods == GLFW_MOD_CONTROL)
-		{ state->zoom *= pow(zoomStep,0.1f); } //small zoom step
-		else { state->zoom *= zoomStep; }
-	}
-	if ((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_PERIOD) && action == GLFW_PRESS) 
-	{ 
-		if (mods == GLFW_MOD_CONTROL)
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//process keys for move, rotate, zoom
+		float rotStep = visSettings->window.keypressRotationStep; //degrees
+		float transStep = visSettings->window.keypressTranslationStep * state->zoom; //degrees
+		if (mods == GLFW_MOD_CONTROL) //only for rotStep and transStep
 		{
-			state->zoom /= pow(zoomStep, 0.1f);
-		} //small zoom step
-		else { state->zoom /= zoomStep;; }
+			rotStep *= 0.1f;
+			transStep *= 0.1f;
+		}
+
+		float zoomStep = visSettings->window.zoomStepFactor;
+		Float3 incRot({ 0.f,0.f,0.f });
+		if (key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = rotStep; }
+		if (key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = -rotStep; }
+		if (key == GLFW_KEY_KP_4 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[1] = rotStep; }
+		if (key == GLFW_KEY_KP_6 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[1] = -rotStep; }
+		if (key == GLFW_KEY_KP_7 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[2] = rotStep; }
+		if (key == GLFW_KEY_KP_9 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[2] = -rotStep; }
+
+		if (incRot[0] + incRot[1] + incRot[2] != 0.f)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			//glLoadIdentity();	//start with identity
+			glLoadMatrixf(state->modelRotation.GetDataPointer()); //load previous rotation
+			glRotatef(incRot[0], 1.f, 0.f, 0.f); //apply "incremental" rotation around x
+			glRotatef(incRot[1], 0.f, 1.f, 0.f); //apply "incremental" rotation around y
+			glRotatef(incRot[2], 0.f, 0.f, 1.f); //apply "incremental" rotation around z
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		}
+
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//standard view:
+		//if ((key == GLFW_KEY_KP_0 || key == GLFW_KEY_0) && action == GLFW_PRESS) //reset all rotations
+		//{
+		//	glMatrixMode(GL_MODELVIEW);
+		//	glLoadIdentity();	//start with identity
+		//	glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		//	rendererOut << "Reset OpenGL modelview\n";
+		//}
+
+		//change view:
+		if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			//glRotated(180, 0.0, 1.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 1: 1-2-plane\n";
+		}
+
+		if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(-90, 1.0, 0.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 2: 1-3-plane\n";
+		}
+
+		if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(-90, 0.0, 1.0, 0.0);
+			glRotated(-90, 1.0, 0.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 3: 2-3-plane\n";
+		}
+
+		if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(180, 0.0, 1.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 1: 1-2-plane mirrored about vertical axis\n";
+		}
+
+		if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(-90, 1.0, 0.0, 0.0);
+			glRotated(180, 0.0, 0.0, 1.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 2: 1-3-plane mirrored about vertical axis\n";
+		}
+
+		if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(-90, 0.0, 1.0, 0.0);
+			glRotated(-90, 1.0, 0.0, 0.0);
+			glRotated(180, 0.0, 0.0, 1.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 3: 2-3-plane mirrored about vertical axis\n";
+		}
+
+		//second group of views:
+		if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(180, 0.0, 1.0, 0.0);
+			glRotated(90, 0.0, 0.0, 1.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 1: 2-1-plane\n";
+		}
+
+		if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(90, 0.0, 1.0, 0.0);
+			glRotated(90, 0.0, 0.0, 1.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 2: 3-1-plane\n";
+		}
+
+		if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(90, 0.0, 1.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 3: 3-2-plane\n";
+		}
+
+		if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(90, 0.0, 0.0, 1.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 1: 2-1-plane mirrored about vertical axis\n";
+		}
+
+		if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(-90, 1.0, 0.0, 0.0);
+			glRotated(-90, 0.0, 1.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 2: 3-1-plane mirrored about vertical axis\n";
+		}
+
+		if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
+		{
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotated(-90, 0.0, 1.0, 0.0);
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+			rendererOut << "View 3: 3-2-plane mirrored about vertical axis\n";
+		}
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+		if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] -= transStep; }
+		if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] += transStep; }
+		if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] += transStep; }
+		if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] -= transStep; }
+
+		if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_COMMA) && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			if (mods == GLFW_MOD_CONTROL)
+			{
+				state->zoom *= pow(zoomStep, 0.1f);
+			} //small zoom step
+			else { state->zoom *= zoomStep; }
+		}
+		if ((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_PERIOD) && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		{
+			if (mods == GLFW_MOD_CONTROL)
+			{
+				state->zoom /= pow(zoomStep, 0.1f);
+			} //small zoom step
+			else { state->zoom /= zoomStep;; }
+		}
+
+		if (key == GLFW_KEY_A && action == GLFW_PRESS) { ZoomAll(); UpdateGraphicsDataNow(); }
 	}
-
-	if (key == GLFW_KEY_A && action == GLFW_PRESS) { ZoomAll(); UpdateGraphicsDataNow(); }
-
 }
 
 void GlfwRenderer::ZoomAll()
@@ -597,23 +659,22 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	{
 		//rendererOut << "mouse button left pressed\n";
 		stateMachine.leftMousePressed = true;
-		//if (stateMachine.mode != RendererMode::_None)
-		//{
+
 		stateMachine.lastMousePressedX = stateMachine.mousePositionX;
 		stateMachine.lastMousePressedY = stateMachine.mousePositionY; //now see if the mouse moves, then switch to move mode!
-		//}
+
+		state->mouseLeftPressed = true;
 	}
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
 		stateMachine.leftMousePressed = false;
-		//rendererOut << "mouse button left released\n";
+		state->mouseLeftPressed = false;
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//STATE MACHINE ROTATE
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && !stateMachine.leftMousePressed)
 	{
-		//rendererOut << "mouse button left pressed\n";
 		stateMachine.rightMousePressed = true;
 		stateMachine.lastMousePressedX = stateMachine.mousePositionX;
 		stateMachine.lastMousePressedY = stateMachine.mousePositionY; //now see if the mouse moves, then switch to move mode!
@@ -621,11 +682,28 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 	{
 		stateMachine.rightMousePressed = false;
-		//rendererOut << "mouse button left released\n";
 	}
 
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //unlimited cursor position (also outside of window) - might get negative coordinates
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		state->mouseRightPressed = true;
+	}
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	{
+		state->mouseRightPressed = false;
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+	{
+		state->mouseMiddlePressed = true;
+	}
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+	{
+		state->mouseMiddlePressed = false;
+	}
 
 }
 
@@ -634,6 +712,13 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 	//rendererOut << "mouse cursor: x=" << xpos << ", y=" << ypos << "\n";
 	stateMachine.mousePositionX = xpos;
 	stateMachine.mousePositionY = ypos;
+
+	float height = (float)state->currentWindowSize[1];
+	float factor = 2.f*state->zoom / height;
+
+	state->mouseCoordinates = Vector2D({ xpos, ypos });
+	state->openGLcoordinates = factor * Vector2D({ xpos - 0.5*state->currentWindowSize[0], -1.*(ypos - 0.5*state->currentWindowSize[1]) }) +
+		Vector2D({ (double)state->centerPoint[0], (double)state->centerPoint[1] });
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//MOUSE MOVE state machine:
@@ -653,8 +738,6 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 	{
 		if (stateMachine.leftMousePressed)
 		{
-			float height = (float)state->currentWindowSize[1];
-			float factor = 2.f*state->zoom / height;
 			state->centerPoint[0] = stateMachine.storedCenterPointX - (float)(xpos - stateMachine.lastMousePressedX) * factor;
 			state->centerPoint[1] = stateMachine.storedCenterPointY + (float)(ypos - stateMachine.lastMousePressedY) * factor;
 		}
@@ -704,9 +787,6 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 		else { stateMachine.mode = RendererMode::_None; } //finish move operation if button is released!
 	}
 
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//ZOOM SELECT state machine:
 
 }
 
@@ -768,14 +848,14 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 	return false; //not needed, but to suppress warnings
 }
 
-//! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
+//! stop the renderer engine and its thread
 void GlfwRenderer::StopRenderer()
 {
 	if (window)
 	{
 		stopRenderer = true;
 		glfwSetWindowShouldClose(window, 1);
-		Index timeOut = visSettings->window.startupTimeout / 10;
+		Index timeOut = 100; //2020-12-09: changed to 1000ms, because window can hang very long; visSettings->window.startupTimeout / 10;
 
 		Index i = 0;
 		while (i++ < timeOut && rendererActive) //wait 5 seconds for thread to answer
@@ -816,6 +896,7 @@ void GlfwRenderer::InitCreateWindow()
 	if (visSettings->openGL.multiSampling == 2 || visSettings->openGL.multiSampling == 4 || visSettings->openGL.multiSampling == 8 || visSettings->openGL.multiSampling == 16) //only 4 is possible right now ... otherwise no multisampling
 	{
 		glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
+		glEnable(GL_MULTISAMPLE); //usually activated by default, but better to have it anyway
 	}
 
 	if (visSettings->window.alwaysOnTop)
@@ -829,11 +910,17 @@ void GlfwRenderer::InitCreateWindow()
 	//window = glfwCreateWindow(visSettings->openGLWindowSize[0], visSettings->openGLWindowSize[1], "Exudyn OpenGL window", NULL, NULL);
 	int sizex = (int)state->currentWindowSize[0];
 	int sizey = (int)state->currentWindowSize[1];
-	if (sizex < 20) { sizex = 20; }//limit lower size: negative numbers or zero could make problems ...
-	if (sizey < 20) { sizey = 20; }
 
-	if (sizex > 8160) { sizex = 8160; } //limit upper size for now ...
-	if (sizey > 4320) { sizey = 4320; }
+	const int minWidth = 2; //avoid zero size
+	const int minHeight = 2; //avoid zero size
+	const int maxWidth = 2 * 8192; //limit upper size to 16K, 16:9 for now ...
+	const int maxHeight = 2 * 4608; //limit upper size to 16K, 16:9 for now ...
+
+	if (sizex < minWidth) { sizex = minWidth; }//limit lower size: negative numbers or zero could make problems ...
+	if (sizey < minHeight) { sizey = minHeight; }
+
+	if (sizex > maxWidth) { sizex = maxWidth; }
+	if (sizey > maxHeight) { sizey = maxHeight; }
 
 	window = glfwCreateWindow(sizex, sizey, "Exudyn OpenGL window", NULL, NULL);
 
@@ -844,9 +931,12 @@ void GlfwRenderer::InitCreateWindow()
 		SysError("GLFWRenderer::InitCreateWindow: Render window could not be created");
 		exit(EXIT_FAILURE);
 	}
+	//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
+	glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
 
 	rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
 
+	firstRun = 0; //zoom all on startup of window
 	//+++++++++++++++++++++++++++++++++
 	//set keyback functions
 	glfwSetKeyCallback(window, key_callback);			//keyboard input
@@ -863,15 +953,25 @@ void GlfwRenderer::InitCreateWindow()
 	glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
+
+	//std::cout << "OpenGL version=" << glGetString(GL_VERSION) << "\n";
+
 	//+++++++++++++++++
+	//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
+	float xWindowScale, yWindowScale;
+	glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
+	fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
+	if (!visSettings->general.useWindowsMonitorScaleFactor) { fontScale = 1; }
+
+	guint fontSize = (guint)(visSettings->general.textSize*fontScale);
+
+	InitFontBitmap(fontSize);
 
 	//+++++++++++++++++++++++++++++++++
 	//depending on flags, do some changes to window
-	
 	if (visSettings->window.showWindow)
 	{
 		glfwShowWindow(window); //show the window when created ... should by anyway done, but did not work in Spyder so far
-		//glfwFocusWindow(window); //show window and give focus to window; DANGEROUS, if user does not want this; will by anyway done automatically
 	}
 	else
 	{
@@ -883,6 +983,7 @@ void GlfwRenderer::InitCreateWindow()
 	}
 	RunLoop();
 }
+
 
 void GlfwRenderer::RunLoop()
 {
@@ -908,76 +1009,13 @@ void GlfwRenderer::RunLoop()
 	glfwTerminate(); //move to destructor
 	stopRenderer = false;	//if stopped by user
 
+	DeleteFonts();
 }
 
-void GlfwRenderer::SetGLLights()
-{
-	if (visSettings->openGL.shadeModelSmooth) { glShadeModel(GL_SMOOTH); }
-	else { glShadeModel(GL_FLAT); }
-
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	Float4 bg = visSettings->general.backgroundColor;
-	glClearColor(bg[0], bg[1], bg[2], bg[3]); //(float red, float green, float blue, float alpha);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// the text should not be affected by the lighting effects
-	glDisable(GL_LIGHTING);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-
-
-	//+++++++++++++++++++++++++++++++++++
-	//light; see https://www.glprogramming.com/red/chapter05.html#name4
-	;
-	//GLfloat mat_specular[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	//GLfloat mat_shininess = 10.0f;
-	//GLfloat light_position[] = { 2.0f, 3.0f, 4.0f, 0.0f };
-	//GLfloat light_position2[] = { 100.0f, 100.0f, 100.0f, 0.0f };
-	//GLfloat light0_ambient[] = { 0.3f, 0.3f, 0.3f};
-	//GLfloat light0_diffuse[] = { 0.3f, 0.3f, 0.3f };
-	//GLfloat light0_specular[] = { 0.3f, 0.3f, 0.3f };
-
-	glLightf(GL_LIGHT0, GL_AMBIENT, visSettings->openGL.light0ambient);
-	glLightf(GL_LIGHT0, GL_DIFFUSE, visSettings->openGL.light0diffuse);
-	glLightf(GL_LIGHT0, GL_SPECULAR, visSettings->openGL.light0specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, visSettings->openGL.light0position.GetDataPointer());
-	if (visSettings->openGL.enableLight0) { glEnable(GL_LIGHT0); }
-	else { glDisable(GL_LIGHT0); }
-
-	glLightf(GL_LIGHT1, GL_AMBIENT, visSettings->openGL.light1ambient);
-	glLightf(GL_LIGHT1, GL_DIFFUSE, visSettings->openGL.light1diffuse);
-	glLightf(GL_LIGHT1, GL_SPECULAR, visSettings->openGL.light1specular);
-	glLightfv(GL_LIGHT1, GL_POSITION, visSettings->openGL.light1position.GetDataPointer());
-	if (visSettings->openGL.enableLight0) { glEnable(GL_LIGHT1); }
-	else { glDisable(GL_LIGHT1); }
-
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, visSettings->openGL.materialShininess);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, visSettings->openGL.materialSpecular.GetDataPointer());
-	glEnable(GL_COLOR_MATERIAL);
-
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
-	GLint localViewer = 0;
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, localViewer);
-
-	//glCullFace(GL_FRONT); //only view one side of faces
-	//glEnable(GL_CULL_FACE);
-	glDisable(GL_CULL_FACE);
-
-	//+++++++++++++++++++++++++++++++++++
-	glPopMatrix();
-
-	glEnable(GL_LIGHTING);
-}
-
-
-Index firstRun = 0; //zoom all in first run
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
+	renderFunctionRunning.test_and_set(std::memory_order_acquire); //lock Render(...) function, no second call possible
+
 	//rendererOut << "Render\n";
 	float ratio;
 	int width, height;
@@ -988,21 +1026,38 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	state->currentWindowSize[0] = width;
 	state->currentWindowSize[1] = height;
 
-	ratio = width / (float)height;
+	ratio = (float)width;
+	if (height != 0)
+	{
+		ratio = width / (float)height;
+	}
 
 	GLfloat zoom = state->zoom;
+	
+	//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
+	//float xWindowScale, yWindowScale;
+	//glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
+	//fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
+
+	////do not use font scaling with bitmaps (they are internally scaled ...)
+	//if (!visSettings->general.useWindowsMonitorScaleFactor/* || visSettings->general.useBitmapText*/) { fontScale = 1; }
+
+	float fontSize = visSettings->general.textSize * fontScale; //use this size for fonts throughout
 
 	glViewport(0, 0, width, height);
-	//glEnable(0x809D);// GL_MULTISAMPLE is not defined, but 0x809D does the job; settings?
-	SetGLLights(); //must be very early, before anything to draw
+	//std::cout << "h=" << height << ", w=" << width << "\n";
+
+	//original 2020-12-05: SetGLLights(); //must be very early, before anything to draw
 
 	//get available line width range:
 	//GLfloat LineRange[2];
 	//glGetFloatv(GL_LINE_WIDTH_RANGE, LineRange);
-	//rendererOut << "Minimum Line Width " << LineRange[0] << " – ";		//gives 0.5 run with VS2017
-	//rendererOut << "Maximum Line Width " << LineRange[1] << std::endl;	//gives 10  run with VS2017
 
-	glDisable(GL_LIGHTING);
+	Float4 bg = visSettings->general.backgroundColor;
+	glClearColor(bg[0], bg[1], bg[2], bg[3]); //(float red, float green, float blue, float alpha);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//glDisable(GL_LIGHTING);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	GLdouble zFactor = 100.; //original:100
@@ -1012,6 +1067,29 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	//create special background, looking more professional ...
+	if (visSettings->general.useGradientBackground)
+	{
+		Float4 bg2 = visSettings->general.backgroundColorBottom;
+		glDisable(GL_DEPTH_TEST);
+		glBegin(GL_QUADS);
+		//red color
+		glColor3f(bg2[0], bg2[1], bg2[2]);
+		float ax = zoom * ratio;
+		float ay = zoom;
+		glVertex2f(-ax, -ay);
+		glVertex2f(ax, -ay);
+		//blue color
+		glColor3f(bg[0], bg[1], bg[2]);
+		glVertex2f(ax, ay);
+		glVertex2f(-ax, ay);
+		glEnd();
+		glEnable(GL_DEPTH_TEST);
+	}
+
+	//put here, will be fixed light seen from camera:
+	SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
+
 	glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f); 
 
 	glMultMatrixf(state->modelRotation.GetDataPointer());
@@ -1019,38 +1097,110 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//glRotatef(state->rotations[1], 0.f, 1.f, 0.f);
 	//glRotatef(state->rotations[0], 1.f, 0.f, 0.f);
 
-	RenderGraphicsData();
+	//put here, will rotate with model-view:
+	//SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
+
+	RenderGraphicsData(fontScale);
+
 	//glPushMatrix(); //store current matrix
 	//glPopMatrix(); //restore matrix
-	Float4 textColor({ 0.2f,0.2f,0.2f,1.f }); //chosen text color (add to settings?)
+	const int textIndentPixels = 10;
+	const int verticalPixelOffset = (int)(0.5f*fontSize*fontLargeFactor); //vertical offset of computation info
+	Float4 textColor = visSettings->general.textColor;
 
-	if (visSettings->general.showComputationInfo) //draw coordinate system
+	if (visSettings->general.showComputationInfo || visSettings->window.showMouseCoordinates) //draw coordinate system
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		float factor = 0.35f*zoom * 2.6f;
-		glTranslated(-factor*ratio*1.05, factor, 0.f);
+		//glTranslated(-factor*ratio*1.05, factor, 0.f); //old ; DELETE
+		glDepthMask(GL_FALSE); //draw lines always in front
 
-		float scale = 2.f*visSettings->general.textSize*zoom / ((float)height);
-		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front
-		Float3 poff({ 0.f,0.05f*zoom,hOff }); //offset
+		float scale = 2.f*fontSize*zoom / ((float)height);
+		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front; NEEDED since glDepthMask(GL_FALSE) ?
 
-		DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
+
+		if (visSettings->general.showComputationInfo)
+		{
+			Float2 pInfo = PixelToVertexCoordinates((float)textIndentPixels, 
+				(float)(height) - fontSize*fontLargeFactor - (float)verticalPixelOffset); //fixed position, very top left window position
+			Float3 poff({ pInfo[0], pInfo[1], hOff });
+			Float2 pInfo2 = PixelToVertexCoordinates((float)textIndentPixels, 
+				(float)(height) - fontSize*(2.f*fontLargeFactor) - (float)verticalPixelOffset); //fixed position, very top left window position
+			Float3 poff2({ pInfo2[0], pInfo2[1], hOff });
+
+			DrawString("EXUDYN", fontSize*fontLargeFactor, poff, textColor);
+			//DrawString("EXUDYN", fontSize*fontLargeFactor, poff, Float4({1,0,0,1}));
+
+			DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), fontSize, poff2, textColor);
+
+			//+++++++++++++++++++
+			//print version:
+			Float2 pInfo3 = PixelToVertexCoordinates((float)(width-fontSize*fontSmallFactor*13),
+				5.f); //fixed position, very bottom right window position
+			Float3 poff3({ pInfo3[0], pInfo3[1], hOff });
+			DrawString((STDstring("version ")+EXUstd::exudynVersion).c_str(), fontSize*fontSmallFactor, poff3, textColor);
+		}
+
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		if (visSettings->window.showMouseCoordinates)
+		{
+			Vector2D mp = state->mouseCoordinates;
+			Real xpos = mp[0];
+			Real ypos = mp[1];
+
+			float height = (float)state->currentWindowSize[1];
+			float factor = 2.f*state->zoom / height;
+
+			Vector2D ploc = factor * Vector2D({ xpos - 0.5*state->currentWindowSize[0], -1.*(ypos - 0.5*state->currentWindowSize[1]) });
+			Vector2D cp({(double)state->centerPoint[0], (double)state->centerPoint[1] });
+
+			Vector2D lastPressedCoords = factor * Vector2D({ stateMachine.lastMousePressedX - 0.5*state->currentWindowSize[0],
+				-1.*(stateMachine.lastMousePressedY - 0.5*state->currentWindowSize[1]) }) + cp;
+
+			char glx[16];
+			char gly[16];
+			sprintf(glx, "%7.3g", state->openGLcoordinates[0]);
+			sprintf(gly, "%7.3g", state->openGLcoordinates[1]);
+			char lpx[16];
+			char lpy[16];
+			sprintf(lpx, "%7.3g", lastPressedCoords[0]);
+			sprintf(lpy, "%7.3g", lastPressedCoords[1]);
+			char dist[16];
+			sprintf(dist,"%7.3g", (state->openGLcoordinates - lastPressedCoords).GetL2Norm());
+
+			STDstring mouseStr = STDstring("mouse=(") + glx + "," + gly + ")" +
+				", last=(" + lpx + "," + lpy + "), dist=" + dist;
+				//", cp=(" + EXUstd::ToString(cp[0]) + "," + EXUstd::ToString(cp[1]) + ")"+
+				//", ploc=(" + EXUstd::ToString(ploc[0]) + "," + EXUstd::ToString(ploc[1]) + ")";
+
+			//Float3 poff({ 0.f*zoom,-1.88f*zoom, hOff }); //old, using vertex coordinates
+			Float2 pMouse = PixelToVertexCoordinates((float)textIndentPixels, 5); //fixed position, very bottom left window position
+			Float3 poff({ pMouse[0], pMouse[1], hOff });
+
+			DrawString(mouseStr.c_str(), fontSize*fontSmallFactor, poff, textColor);
+		}
+		glDepthMask(GL_TRUE); //draw lines always in front
 	}
 
 	if (visSettings->contour.showColorBar && visSettings->contour.outputVariable != OutputVariableType::_None) //draw coordinate system
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		float factor = 0.35f*zoom * 2.6f;
-		glTranslated(-factor * ratio*1.05, factor, 0.f);
+		//float factor = 0.35f*zoom * 2.6f;
+		//glTranslated(-factor * ratio*1.05, factor, 0.f); //old: now use pixel coordinates
 
-		float d = 0.05f*zoom;
+		glDepthMask(GL_FALSE); //draw lines always in front
 		float hOff = 0.9f*(float)zFactor * 2.f*state->maxSceneSize;   //quads in front
 		float hOff2 = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //lines in front
 
-		float scale = 2.f*visSettings->general.textSize*zoom / ((float)height);
-		Float3 p0({ 0.f,-2*d,hOff2 }); //offset
+		float scale = 2.f*fontSize*zoom / ((float)height);
+		Float2 pContourBar = PixelToVertexCoordinates((float)textIndentPixels, 
+			(float)height - (float)verticalPixelOffset - 6.5f*(float)fontSize);
+		Float3 p0({ pContourBar[0], pContourBar[1],hOff2 }); //offset
+		//Float3 p0({ 0.f,-2 * d,hOff2 }); //old, using vertex coordinates
+		//float d = 0.05f*zoom; //old, using vertex coordinates
+		float d = scale*1.6f;
 
 		float minVal = 0;
 		float maxVal = 1;
@@ -1064,8 +1214,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		//DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
 		STDstring contourStr = STDstring(GetOutputVariableTypeString(visSettings->contour.outputVariable)) + "(" + EXUstd::ToString(visSettings->contour.outputVariableComponent) + ")" +
 			"\nmin=" + EXUstd::ToString(minVal) + ",max=" + EXUstd::ToString(maxVal);
-		DrawString(contourStr.c_str(), scale, p0, textColor);
-		p0 += Float3({0.f,-2*d,0.f});
+		DrawString(contourStr.c_str(), fontSize, p0, textColor);
+		p0 += Float3({0.f,-2*scale,0.f});
 
 
 		//now draw boxes for contour plot colors and add texts
@@ -1074,13 +1224,15 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		for (float i = 0; i < n; i++)
 		{
 			float value = i / n * range + minVal;
-			const float sizeX = 0.06f*zoom;
-			const float sizeY = 0.05f*zoom * n / 12.f;
-			const float sizeY2 = 0.05f*zoom * n / 12.f; //avoid spaces between fields
+			const float sizeX = 1.25f*d;
+			const float sizeY = d;
+			const float sizeY2 = d; //avoid spaces between fields
+			//const float sizeX = 0.06f*zoom; //old, based on vertex coordinates
+			//const float sizeY = 0.05f*zoom * n / 12.f;
+			//const float sizeY2 = 0.05f*zoom * n / 12.f; //avoid spaces between fields
 
 			bool drawFacesContourPlot = true;
 			Float4 color0 = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, value);
-			glDepthMask(GL_FALSE); //draw lines always in front
 
 			if (drawFacesContourPlot)
 			{
@@ -1109,12 +1261,9 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			glEnd();
 			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
 
-			glDepthMask(GL_TRUE);
-
 			char str[20];
 			std::sprintf(str, "% .2g", value);
-			DrawString(str, scale*0.8f, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0}), textColor);
-			//DrawString(EXUstd::ToString(value).c_str(), scale*0.8, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0. }), textColor);
+			DrawString(str, fontSize*fontSmallFactor, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0}), textColor);
 
 			p0 += Float3({ 0.f,-sizeY,0.f });
 
@@ -1127,16 +1276,20 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		//		glColor3f(0.f, 0.f, 1.f);
 		//		glVertex3f(0.f+i, 0.6f+j, 0.f);
 		//		glEnd();
+		glDepthMask(GL_TRUE);
 	}
 
 	if (visSettings->general.drawCoordinateSystem) //draw coordinate system
 	{
 		//float d = zoom * 0.1;
-		float d = visSettings->general.coordinateSystemSize*zoom;
+		float scale = 2.f*fontSize*zoom / ((float)height); //text size in vertex coordinates
+		//float d = visSettings->general.coordinateSystemSize*zoom;
+		float d = visSettings->general.coordinateSystemSize*scale;
 		//float a = d * 0.05f; //distance of text
 
-		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front
-		Float3 p0({ 0.f,0.f,hOff });
+		//2020-12-05: no hOff, as it makes problems showing the coordinate system! float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front
+		//Float3 p0({ 0.f,0.f,hOff }); //
+		Float3 p0({ 0.f,0.f,0 });
 		Float3 v1({ d,  0.f,0.f });
 		Float3 v2({ 0.f,  d,0.f });
 		Float3 v3({ 0.f,0.f,  d }); //check why z-coordinates are flipped ...
@@ -1152,8 +1305,13 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		//glOrtho(0.0f, ratio, 1, 0.0f, 0.0f, 1.0f);
 		//float factor = -0.35f;
 
-		glTranslated(factor*ratio, factor, 0.f);
+		Float2 pPix = PixelToVertexCoordinates(10 + visSettings->general.coordinateSystemSize*fontSize, 
+			10 + (visSettings->general.coordinateSystemSize+0.f)*fontSize); //+1.f because of possible status line at bottom
+		glTranslated(pPix[0], pPix[1], 0.f);
+
+		//glTranslated(factor*ratio, factor, 0.f);
 		glMultMatrixf(state->modelRotation.GetDataPointer());
+		glDepthMask(GL_FALSE);
 
 		glLineWidth(visSettings->openGL.lineWidth);
 		if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
@@ -1172,36 +1330,36 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		const char* X2 = "X2";
 		const char* X3 = "X3";
 
-		float scale = 2.f*visSettings->general.textSize*zoom/((float)height);
-
 		Float16 m = state->modelRotation;
 		Float16 matTp({m[0],m[4],m[ 8],m[12],
 					   m[1],m[5],m[ 9],m[13],
 					   m[2],m[6],m[10],m[14],
 					   m[3],m[7],m[11],m[15]});
-		Float3 poff({ 0.005f,0.005f,0.f }); //small offset from axes
+
+		Float3 poff({ 0.5f*scale, 0.5f*scale,0.f }); //small offset from axes
 
 		glPushMatrix(); //store current matrix -> before rotation
 		glTranslated(p1[0], p1[1], p1[2]);
 		glMultMatrixf(matTp.GetDataPointer());
 		glLineWidth(0.25f);
-		DrawString(X1, scale, poff, textColor);
+		DrawString(X1, fontSize, poff, textColor);
 		glPopMatrix(); //restore matrix
 
 		glPushMatrix(); //store current matrix -> before rotation
 		glTranslated(p2[0], p2[1], p2[2]);
 		glMultMatrixf(matTp.GetDataPointer());
 		glLineWidth(0.5f);
-		DrawString(X2, scale, poff, textColor);
+		DrawString(X2, fontSize, poff, textColor);
 		glPopMatrix(); //restore matrix
 
 		glPushMatrix(); //store current matrix -> before rotation
 		glTranslated(p3[0], p3[1], p3[2]);
 		glMultMatrixf(matTp.GetDataPointer());
 		glLineWidth(1.f);
-		DrawString(X3, scale, poff, textColor);
+		DrawString(X3, fontSize, poff, textColor);
 		glPopMatrix(); //restore matrix
 
+		glDepthMask(GL_TRUE);
 	}
 
 
@@ -1214,7 +1372,9 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//if (firstRun == 10) { ZoomAll(); }
 
 	if ((firstRun *  visSettings->general.graphicsUpdateInterval) < 1. && visSettings->general.autoFitScene) { ZoomAll(); }
-	
+
+	//++++++++++++++++++++++++++++++++++++++++++
+	renderFunctionRunning.clear(std::memory_order_release); //clear PostProcessData
 }
 
 void GlfwRenderer::SaveImage()
@@ -1275,7 +1435,7 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 }
 
 
-void GlfwRenderer::RenderGraphicsData()
+void GlfwRenderer::RenderGraphicsData(float fontScale)
 {
 	if (graphicsDataList)
 	{
@@ -1359,22 +1519,80 @@ void GlfwRenderer::RenderGraphicsData()
 				}
 			}
 
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW TEXT (before triangles, in order to make texts visible in case of transparency
+			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
+
+			float textheight = visSettings->general.textSize;
+			float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
+
+			Float16 m = state->modelRotation;
+
+			Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
+						   m[1],m[5],m[9],m[13],
+						   m[2],m[6],m[10],m[14],
+						   m[3],m[7],m[11],m[15] });
+
+			float textFontSize;
+
+			for (const GLText& t : data->glTexts)
+			{
+				//delete: float scale = textheight * scaleFactor;
+				//delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
+				textFontSize = textheight * fontScale;
+				if (t.size != 0.f) { textFontSize = t.size * fontScale; }
+
+				float offx = t.offsetX * scaleFactor * textFontSize;
+				float offy = t.offsetY * scaleFactor * textFontSize;
+				//draw strings without applying the rotation:
+				glPushMatrix(); //store current matrix -> before rotation
+				glTranslated(t.point[0], t.point[1], t.point[2]);
+				glMultMatrixf(matTp.GetDataPointer());
+				DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), t.color);
+				//delete: DrawString(t.text, fontScale*scale, Float3({ offx,offy,0.f }), t.color);
+				glPopMatrix(); //restore matrix
+			}
+			//glPopMatrix(); //restore matrix
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW TRIANGLES
 			if (visSettings->openGL.showFaces)
 			{
-				glEnable(GL_LIGHTING);
-				for (const GLTriangle& trig : data->glTriangles)
-				{ //draw faces
-					//glColor4f(0.2f, 0.2f, 0.9f, 1.f);
-					glBegin(GL_TRIANGLES);
-					for (Index i = 0; i < 3; i++)
-					{
-						glColor4fv(trig.colors[i].GetDataPointer());
-						glNormal3fv(trig.normals[i].GetDataPointer());
-						glVertex3fv(trig.points[i].GetDataPointer());
+				if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
+				glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+				if (!visSettings->openGL.facesTransparent)
+				{
+					for (const GLTriangle& trig : data->glTriangles)
+					{ //draw faces
+						glBegin(GL_TRIANGLES);
+						for (Index i = 0; i < 3; i++)
+						{
+							glColor4fv(trig.colors[i].GetDataPointer());
+							glNormal3fv(trig.normals[i].GetDataPointer());
+							glVertex3fv(trig.points[i].GetDataPointer());
+						}
+						glEnd();
 					}
-					glEnd();
 				}
-				glDisable(GL_LIGHTING);
+				else //for global transparency of faces; slower
+				{
+					const float transparencyLimit = 0.4f; //use at least this transparency
+					for (const GLTriangle& trig : data->glTriangles)
+					{ //draw faces
+						glBegin(GL_TRIANGLES);
+						for (Index i = 0; i < 3; i++)
+						{
+							Float4 col = trig.colors[i];
+							if (col[3] > transparencyLimit) { col[3] = transparencyLimit; }
+							glColor4fv(col.GetDataPointer());
+							glNormal3fv(trig.normals[i].GetDataPointer());
+							glVertex3fv(trig.points[i].GetDataPointer());
+						}
+						glEnd();
+					}
+				}
+				if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces
+				//glDisable(GL_LIGHTING);
 			}
 
 			//draw normals
@@ -1417,46 +1635,6 @@ void GlfwRenderer::RenderGraphicsData()
 				}
 			}
 
-			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
-
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW TEXT
-			//float scale = 0.025f; //scaling of text
-			float textheight = visSettings->general.textSize;
-			float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
-			//float scale = 2.f*textheight * state->zoom / ((float)state->currentWindowSize[1]);
-
-			Float16 m = state->modelRotation;
-
-			Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
-						   m[1],m[5],m[9],m[13],
-						   m[2],m[6],m[10],m[14],
-						   m[3],m[7],m[11],m[15] });
-
-			//if not called from modelview, use the following transformations
-			//glMatrixMode(GL_MODELVIEW);
-			//glPushMatrix(); //store current matrix -> before rotation
-			//glLoadIdentity();
-			//glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f);
-			//glMultMatrixf(state->modelRotation.GetDataPointer());
-
-			//Float3 p0({ 0.f,0.f,0.f }); //texts are drawn at position 0,0,0 ==> everything else done by tranformations
-
-			for (const GLText& t : data->glTexts)
-			{
-				float scale = textheight * scaleFactor;
-				if (t.size != 0.f) { scale = t.size * scaleFactor; }
-
-				float offx = t.offsetX * scale;
-				float offy = t.offsetX * scale;
-				//draw strings without applying the rotation:
-				glPushMatrix(); //store current matrix -> before rotation
-				glTranslated(t.point[0], t.point[1], t.point[2]);
-				glMultMatrixf(matTp.GetDataPointer());
-				DrawString(t.text, scale, Float3({ offx,offy,0.f }), t.color);
-				glPopMatrix(); //restore matrix
-			}
-			//glPopMatrix(); //restore matrix
 		}
 	}
 }

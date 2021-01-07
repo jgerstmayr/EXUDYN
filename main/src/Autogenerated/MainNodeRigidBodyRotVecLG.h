@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2020-12-09  17:44:24 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,9 +114,6 @@ public: // AUTO:
     {
         return "RigidBodyRotVecLG";
     }
-
-    //! AUTO:  Call a specific node function ==> automatically generated in future
-    virtual py::object CallFunction(STDstring functionName, py::dict args) const override;
 
     //! AUTO:  return internally stored initial coordinates (displacements) of node
     virtual LinkedDataVector GetInitialVector() const override

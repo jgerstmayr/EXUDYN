@@ -1,11 +1,17 @@
-# Utility functions and structures for Exudyn
-"""
-Created on Fri Jul 26 10:53:30 2019
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN python utility library
+#
+# Details: 	Advanced utility/mathematical functions for reference frames, rigid body kinematics
+#			and dynamics. Useful Euler parameter and Tait-Bryan angle conversion functions
+#			are included. A class for rigid body inertia creating and transformation is available.
+#
+# Author:   Johannes Gerstmayr, Stefan Holzinger (rotation vector and Tait-Bryan angles)
+# Date:     2020-03-10 (created)
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-@author: Johannes Gerstmayr
-
-goal: support functions, which simplify the generation of models
-"""
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
 from exudyn.itemInterface import *
@@ -15,6 +21,7 @@ from exudyn.basicUtilities import NormL2
 
 eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle is zero (rotation axis arbitrary)
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); if vector0 == [0,0,0], then any normal basis is returned
 def ComputeOrthonormalBasis(vector0):
     v = np.array([vector0[0],vector0[1],vector0[2]])
@@ -38,6 +45,7 @@ def ComputeOrthonormalBasis(vector0):
     #print("basis=", v,n1,n2)
     return [v, n1, n2]
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
 def GramSchmidt(vector0, vector1):
 
@@ -57,6 +65,7 @@ def GramSchmidt(vector0, vector1):
     return [v0, v1, n2]
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
 def Skew(vector):
     skewsymmetricMatrix = np.array([[ 0.,       -vector[2], vector[1]], 
@@ -64,8 +73,8 @@ def Skew(vector):
                                     [-vector[1], vector[0], 0.]])
     return skewsymmetricMatrix
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: convert skew symmetric matrix m to vector
-#def Skew2Vec(m):
 def Skew2Vec(skew):
     shape = skew.shape
     if shape == (3,3):
@@ -84,6 +93,7 @@ def Skew2Vec(skew):
     return vec
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute (3 x 3*n) skew matrix from (3*n) vector
 def ComputeSkewMatrix(v):
     n = int(len(v)/3) #number of nodes
@@ -105,7 +115,7 @@ def ComputeSkewMatrix(v):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #helper functions for RIGID BODY KINEMATICS:
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: convert Euler parameters (ep) to G-matrix (=$\partial \tomega  / \partial \pv_t$)
 #**input: vector of 4 eulerParameters as list or np.array
 #**output: 3x4 matrix G as np.array
@@ -133,6 +143,7 @@ def EulerParameters2RotationMatrix(eulerParameters):
                      [ 2.0*ep[3]*ep[0] + 2.0*ep[2]*ep[1], -2.0*ep[3]*ep[3] - 2.0*ep[1]*ep[1] + 1.0, 2.0*ep[3]*ep[2] - 2.0*ep[1]*ep[0]],
                      [-2.0*ep[2]*ep[0] + 2.0*ep[3]*ep[1], 2.0*ep[3]*ep[2] + 2.0*ep[1]*ep[0], -2.0*ep[2]*ep[2] - 2.0*ep[1]*ep[1] + 1.0] ])
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute Euler parameters from given rotation matrix
 #**input: 3x3 rotation matrix as list of lists or as np.array
 #**output: vector of 4 eulerParameters as np.array
@@ -169,6 +180,7 @@ def RotationMatrix2EulerParameters(rotationMatrix):
 
     return np.array([ep0,ep1,ep2,ep3])
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute time derivative of Euler parameters from (global) angular velocity vector
 #note that for Euler parameters $\pv$, we have $\tomega=\Gm \pv_t$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \pv_t$ ==> $\Gm^T \Gm=4(\Im_{4x4} - \pv\cdot \pv^T)\pv_t = 4 (\Im_{4x4}) \pv_t$
 #**input: 
@@ -181,9 +193,9 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
     return 0.25*(GT.dot(angularVelocity))
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            ROTATION VECTOR
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: rotaton matrix from rotation vector, see appendix B in \cite{Simo1988}
 #**input: 3D rotation vector as list or np.array
 #**output: 3x3 rotation matrix as np.array
@@ -236,7 +248,7 @@ def ComputeRotationAxisFromRotationVector(rotationVector):
 
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            TAIT BRYAN ANGLES
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -313,7 +325,7 @@ def RotXYZ2EulerParameters(alpha):
     return np.array([q0, q1, q2, q3])
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute rotation matrix w.r.t. X-axis (first axis)
 #**input: angle around X-axis in radiant
@@ -340,6 +352,7 @@ def RotationMatrixZ(angleRad):
                       [0,	    0,        1] ]);
 
     
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute homogeneous transformation matrix from rotation matrix A and translation vector r
 def HomogeneousTransformation(A, r):
     T = np.zeros((4,4))
@@ -386,6 +399,7 @@ def HT2translation(T):
 def HT2rotationMatrix(T):
     return T[0:3,0:3]
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: return inverse homogeneous transformation such that inv(T)*T = np.eye(4)
 def InverseHT(T):
     Tinv = np.eye(4)
@@ -405,53 +419,64 @@ def InverseHT(T):
 
 ################################################################################
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#helper classes for rigid body inertia
-
-#structure to define mass, inertia and center of mass (com) of a rigid body
-#the inertia tensor and center of mass must correspond when initializing the body!
-#it is recommended to start with com=[0,0,0] and then to TranslateCenterOfRotation
-#THIS METHOD IS NOT VERIFIED AND SUBJECT TO PROGRAMMING ERRORS ==> check your results!
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**class: helper class for rigid body inertia (see also derived classes Inertia...).
+#Provides a structure to define mass, inertia and center of mass (com) of a rigid body.
+#The inertia tensor and center of mass must correspond when initializing the body!
+#**notes:
+#   It is recommended to start with com=[0,0,0] and then to use Translated(...) and Rotated(...) to get transformed inertia parameters.
+#**example:
+#i0 = RigidBodyInertia(10,np.diag([1,2,3]))
+#i1 = i0.Rotated(RotationMatrixX(np.pi/2))
+#i2 = i1.Translated([1,0,0])
 class RigidBodyInertia:
+    #**classFunction: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor and center of mass com
     def __init__(self, mass=0, inertiaTensor=np.zeros([3,3]), com=np.zeros(3)):
         
         if inertiaTensor.shape != (3,3): #shape is a tuple
             raise ValueError('RigidBodyInertia: must have dimensions (3,3), but received'+str(inertiaTensor.shape))
-        self.mass = np.array(mass)
+        self.mass = mass
         self.inertiaTensor = np.array(inertiaTensor)
-        self.com = com
+        self.com = np.array(com)
         
-    #allows adding another inertia information with SAME local coordinate system
+    #**classFunction: add (+) operator allows adding another inertia information with SAME local coordinate system
     #only inertias with same center of rotation can be added!
+    #**example: 
+    #J = InertiaSphere(2,0.1) + InertiaRodX(1,2)
     def __add__(self, otherBodyInertia):
         sumMass = self.mass + otherBodyInertia.mass
         return RigidBodyInertia(mass=sumMass,
                                 inertiaTensor = self.inertiaTensor + otherBodyInertia.inertiaTensor,
                                 com=1./sumMass*(self.mass*self.com + otherBodyInertia.mass*otherBodyInertia.com))
         
-    #shifts the com with vector vec and transforms the inertiaTensor to the new center of rotation
+    #**classFunction: returns a RigidBodyInertia with center of mass com shifted by vec; $\ra$ transforms the returned inertiaTensor to the new center of rotation
     def Translated(self, vec):
         #transform inertia to com=[0,0,0]
         inertia = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
-        newCOM = self.com + vec
+        try:
+            newCOM = self.com + vec
+        except:
+            raise ValueError("ERROR in RigidBodyInertia.Translated(vec): vec must be a vector with 3 components")
         inertia += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
         return RigidBodyInertia(mass=self.mass, 
                                 inertiaTensor=inertia,
                                 com=newCOM)
 
-    #rotates the inertia tensor with transformation matrix rot; Jnew = rot*J*rot^T
-    #only allowed if COM=0 !
+    #**classFunction: returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot*J*rot.T
+    #**notes: only allowed if COM=0 !
     def Rotated(self, rot):
         if NormL2(self.com) != 0:
             print("ERROR: RigidBodyInertia.Rotated only allowed in case of com=0")
             return 0
-        
-        inertia = np.dot(rot,np.dot(self.inertiaTensor,rot.transpose()))
+        try:
+            inertia = np.dot(np.array(rot),np.dot(self.inertiaTensor,rot.transpose()))
+        except:
+            raise ValueError("ERROR in RigidBodyInertia.Rotated(rot): rot must be a 3x3 rotation matrix")
         return RigidBodyInertia(mass=self.mass, 
                                 inertiaTensor=inertia,
                                 com=self.com)
 
-    #get vector with 6 inertia components: Jxx, Jyy, Jzz, Jyz, Jxz, Jxy
+    #**classFunction: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) as needed in ObjectRigidBody
     def GetInertia6D(self):
         J = self.inertiaTensor
         return [J[0][0], J[1][1], J[2][2],  J[1][2], J[0][2], J[0][1]]
@@ -465,8 +490,8 @@ class RigidBodyInertia:
         return str(self)
 
 
-#set moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=0
-#example: InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])
+#**class: create RigidBodyInertia with moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=[0,0,0]
+#**example: InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])
 class InertiaCuboid(RigidBodyInertia):
     def __init__(self, density, sideLengths):
         L1=sideLengths[0]
@@ -477,21 +502,21 @@ class InertiaCuboid(RigidBodyInertia):
                                   inertiaTensor=newMass/12.*np.diag([(L2**2 + L3**2),(L1**2 + L3**2),(L1**2 + L2**2)]),
                                   com=np.zeros(3))
 
-#set moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=0
+#**class: create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaRodX(RigidBodyInertia):
     def __init__(self, mass, length):
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=mass/12.*np.diag([0.,length**2,length**2]),
                                   com=np.zeros(3))
         
-#set moment of inertia and mass of mass point with 'mass'; inertia w.r.t. center of mass, com=0
+#**class: create RigidBodyInertia with moment of inertia and mass of mass point with 'mass'; inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaMassPoint(RigidBodyInertia):
     def __init__(self, mass):
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=np.zeros([3,3]),
                                   com=np.zeros(3))
 
-#set moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=0
+#**class: create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaSphere(RigidBodyInertia):
     def __init__(self, mass, radius):
         J = 2.*mass/5.*radius**2
@@ -499,7 +524,7 @@ class InertiaSphere(RigidBodyInertia):
                                   inertiaTensor=np.diag([J,J,J]),
                                   com=np.zeros(3))
         
-#set moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
+#**class: create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
 class InertiaHollowSphere(RigidBodyInertia):
     def __init__(self, mass, radius):
         J = 2.*mass/3.*radius**2
@@ -507,7 +532,7 @@ class InertiaHollowSphere(RigidBodyInertia):
                                   inertiaTensor=np.diag([J,J,J]),
                                   com=np.zeros(3))
 
-#set moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=0
+#**class: create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaCylinder(RigidBodyInertia):
     def __init__(self, density, length, outerRadius, axis, innerRadius=0):
         m = density*length*np.pi*(outerRadius**2-innerRadius**2)
@@ -534,12 +559,16 @@ class InertiaCylinder(RigidBodyInertia):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body
-#either the initial rotation is given by the rotationMatrix (while rotationParameters=[]) or by rotationParameters (while rotationMatrix=[]) (non empty)
-#position ... initial position, etc.
-#all quantities (esp. velocity and angular velocity) are given in global coordinates!
-#returns node number and body number
-#adds gravity force, i.e., m*gravity
+#**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
+#**input:
+#   position: reference position as list or numpy array with 3 components
+#   velocity: initial translational velocity as list or numpy array with 3 components
+#   rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
+#   rotationParameters: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
+#   angularVelocity: initial angular velocity as list or numpy array with 3 components
+#   gravity: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity
+#   graphicsDataList: list of graphicsData objects to define appearance of body
+#**output: returns list containing node number and body number: [nodeNumber, bodyNumber]
 def AddRigidBody(mainSys, inertia, nodeType, 
                  position=[0,0,0], velocity=[0,0,0], 
                  rotationMatrix= [],

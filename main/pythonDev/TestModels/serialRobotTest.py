@@ -218,17 +218,17 @@ def ComputeJointLoad(t, load, joint):
     return torque * np.array(load) #includes sign in both torques
 
 #load user functions which provide simple PD control per axis:
-def UFloadJoint0(t, load):
+def UFloadJoint0(mbs, t, load):
     return ComputeJointLoad(t, load, 0)
-def UFloadJoint1(t, load):
+def UFloadJoint1(mbs, t, load):
     return ComputeJointLoad(t, load, 1)
-def UFloadJoint2(t, load):
+def UFloadJoint2(mbs, t, load):
     return ComputeJointLoad(t, load, 2)
-def UFloadJoint3(t, load):
+def UFloadJoint3(mbs, t, load):
     return ComputeJointLoad(t, load, 3)
-def UFloadJoint4(t, load):
+def UFloadJoint4(mbs, t, load):
     return ComputeJointLoad(t, load, 4)
-def UFloadJoint5(t, load):
+def UFloadJoint5(mbs, t, load):
     return ComputeJointLoad(t, load, 5)
 
 #def ff(x, *args, **kwargs):

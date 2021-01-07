@@ -232,7 +232,7 @@ u = mbs.systemData.GetODE2Coordinates()
 data = mbs.systemData.GetDataCoordinates()
 
 #Add drive via ALE:
-def userLoadDriveAle(t, load):
+def userLoadDriveAle(mbs, t, load):
     #if t < 1:
     return t*50000*5
     #else: return 0

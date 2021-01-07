@@ -264,7 +264,7 @@ sFlyWheelAngle = mbs.AddSensor(SensorNode(nodeNumber=nDT4, fileName="solution/se
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add torque (could also use LoadTorqueVector() on mDT0Rigid)
-def UFLoad(t, load):
+def UFLoad(mbs, t, load):
     if t < 0.25:
         return load
     else:

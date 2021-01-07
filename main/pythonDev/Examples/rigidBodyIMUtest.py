@@ -85,7 +85,7 @@ oGyro = mbs.AddObject(ObjectRigidBody(physicsMass=mass,
 angleXX = 0.5*2*pi #amount of rotation caused by torque
 angleYY = 0.25*2*pi #amount of rotation caused by torque
 angleZZ = 0.25*2*pi #amount of rotation caused by torque
-def UFtorque1(t, load):
+def UFtorque1(mbs, t, load):
     fx = 0    
     fy = 0    
     fz = 0    
@@ -109,7 +109,7 @@ def UFtorque1(t, load):
         fx = -Ixx*angleXX*4*0.5
     return [fx,fy,fz]
 
-def UFtorque2(t, load):
+def UFtorque2(mbs, t, load):
     fx = 0    
     fy = 0    
     fz = 0    
@@ -132,7 +132,7 @@ if mStr.find('GeneralRot') != -1:
 #apply COM force
 aX = 10*forceFact
 aY = 2*forceFact
-def UFforce(t, load):
+def UFforce(mbs, t, load):
     fx = 0
     fy = 0    
     fz = 0    

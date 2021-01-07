@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-10  16:56:16 (last modfied)
+* @date         2020-12-09  17:05:05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -84,6 +84,7 @@ protected: // AUTO:
 
 public: // AUTO: 
     static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
+    static constexpr Index maxObject0Coordinates = 12; //this is a non-optimal solution; used for a constsizevector in the computation of the action on the body of marker0
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

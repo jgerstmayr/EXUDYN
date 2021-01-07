@@ -11,7 +11,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -201,7 +201,13 @@ public:
 
 	//! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
 	virtual Vector3D GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
-		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetNodeLocalVelocity");
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetMeshNodeLocalVelocity");
+		return Vector3D({ 0., 0., 0. });
+	}
+
+	//! return the (local) acceleration of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
+	virtual Vector3D GetMeshNodeLocalAcceleration(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetMeshNodeLocalAcceleration");
 		return Vector3D({ 0., 0., 0. });
 	}
 
@@ -214,6 +220,12 @@ public:
 	//! return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
 	virtual Vector3D GetMeshNodeVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
 		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetMeshNodeVelocity");
+		return Vector3D({ 0., 0., 0. });
+	}
+
+	//! return the (global) acceleration of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
+	virtual Vector3D GetMeshNodeAcceleration(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetMeshNodeAcceleration");
 		return Vector3D({ 0., 0., 0. });
 	}
 

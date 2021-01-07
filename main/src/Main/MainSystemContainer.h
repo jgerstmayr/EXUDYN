@@ -9,7 +9,7 @@
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -49,32 +49,58 @@ public:
 
 	void RedrawAndSaveImage() { visualizationSystems.RedrawAndSaveImage(); }
 
-	//! return current render state to a dictionary; can be used afterwards for initilization of modelview matrix
-	py::dict PyGetRenderState() const
+	//can be also used outside MainSystemContainer
+	static py::dict RenderState2PyDict(const RenderState& state)
 	{
 		auto d = py::dict();
-		const RendererState& state = visualizationSystems.rendererState;
-
 		d["centerPoint"] = (const std::vector<float>)state.centerPoint;
 		d["maxSceneSize"] = state.maxSceneSize;
 		d["zoom"] = state.zoom;
 		d["currentWindowSize"] = (const std::vector<Index>)state.currentWindowSize;
-		
+
 		//current orientation:
 		const Float16& A = state.modelRotation;
 		//Float9 A33({ A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] }); //convert 4x4 into 3x3 matrix as position part of A is [0,0,0]
 		//d["modelRotation"] = EXUmath::SlimVectorF9ToStdArray33F(A33);
-		
+
 		Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
-		d["modelRotation"] = EPyUtils::MatrixF2NumPy(rotMatrix);
+		
+		//++++++++++++++++++++++++++++++++++++++++++++
+		//old, with numpy, gives problems in output ("array( ...", "dtype=float32")
+		//auto rot = EPyUtils::MatrixF2NumPy(rotMatrix);
+		
+		//++++++++++++++++++++++++++++++++++++++++++++
+		//new, list of lists:
+		std::array<float, 3> A1 = { A[0], A[1], A[2]  };
+		std::array<float, 3> A2 = { A[4], A[5], A[6]  };
+		std::array<float, 3> A3 = { A[8], A[9], A[10] };
+
+		py::list rot;
+		rot.append(A1);
+		rot.append(A2);
+		rot.append(A3);
+
+		d["modelRotation"] = rot;
+
+		d["mouseCoordinates"] = (std::array<Real, 2>)(state.mouseCoordinates);
+		d["openGLcoordinates"] = (std::array<Real, 2>)(state.openGLcoordinates);
+
 		return d;
+	}
+
+	//! return current render state to a dictionary; can be used afterwards for initilization of modelview matrix
+	py::dict PyGetRenderState() const
+	{
+		const RenderState& state = visualizationSystems.renderState;
+
+		return RenderState2PyDict(state);
 	}
 	//! set current render state with a dictionary
 	void PySetRenderState(py::dict renderState)
 	{
 		try
 		{
-			RendererState& state = visualizationSystems.rendererState;
+			RenderState& state = visualizationSystems.renderState;
 			
 			Vector3D centerPoint;
 			EPyUtils::SetVectorTemplateSafely<float,3>(renderState["centerPoint"], state.centerPoint);
@@ -110,6 +136,18 @@ public:
 			SysError("Unexpected exception during SetRenderState(...)! Check dictionary format.\n");
 		}
 	}
+
+	py::list PyGetCurrentMouseCoordinates(bool useOpenGLcoordinates = false) const
+	{
+		if (!useOpenGLcoordinates) 
+		{ 
+			return py::cast((std::array<Real, 2>)(visualizationSystems.renderState.mouseCoordinates)); 
+		}
+		else 
+		{ 
+			return py::cast((std::array<Real, 2>)(visualizationSystems.renderState.openGLcoordinates));
+		}
+	}
 	//*********************************************************************
 	//object factory functions
 
@@ -121,6 +159,7 @@ public:
 		GetCSystems().Append(cSystem);
 
 		MainSystem* mainSystem = new MainSystem();
+		cSystem->GetSystemData().SetMainSystemBacklink(mainSystem);
 		mainSystem->mainSystemData.SetCSystemData(&(cSystem->GetSystemData()));
 		mainSystem->cSystem = cSystem;
 		mainSystem->LinkToRenderEngine(); //links the system to be rendered in OpenGL

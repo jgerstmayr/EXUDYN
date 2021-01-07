@@ -16,7 +16,7 @@
 * @copyright		This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at
-* 				- weblink: missing
+* 				- weblink: https://github.com/jgerstmayr/EXUDYN
 * 				
 *
 * *** Example code ***
@@ -504,7 +504,9 @@ typedef std::array<Real, 3> StdVector3D;
 typedef std::array<Real, 4> StdVector4D;
 //typedef std::array<Real, 5> StdVector5D;
 typedef std::array<Real, 6> StdVector6D;
+
 typedef std::array<StdVector3D, 3> StdMatrix3D;
+typedef std::array<StdVector6D, 6> StdMatrix6D;
 
 //this way would allow direct size check, but invalid size casted to std::vector<T>
 //template<> inline SlimVectorBase<T, 2>::SlimVector(const T(&listOfItems)[2]) {

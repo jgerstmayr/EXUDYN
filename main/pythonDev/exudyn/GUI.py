@@ -8,6 +8,7 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
+# Notes:	This is an internal library, which is only used inside Exudyn for modifying settings.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import tkinter as tk
@@ -284,7 +285,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 for (key, value) in value.items():
                     self.AddNodeFromDictionaryWithTypeInfo(value, id, key)
         else:
-            print("Error in AddNodeFromDictionaryWithTypeInfo")
+            print("Error in AddNodeFromDictionaryWithTypeInfo with item:", value, ", parent=", parentNode, ", key=", key)
             #self.tree.item(id, values=(value))
 
     #create treeview from plain dictionary
@@ -449,7 +450,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             self.comboItem.lower(self.editItem) #bring entry item to front
 
 
-#edit dictionaryData and return modified (new) dictionary
+#**function: edit dictionaryData and return modified (new) dictionary
+#**input: 
+#   dictionaryData: dictionary obtained from SC.visualizationSettings.GetDictionaryWithTypeInfo()
+#   exu: exudyn module
+#   dictionaryName: name displayed in dialog
+#**output: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
 def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
     master = tk.Tk()
     master.title(dictionaryName)

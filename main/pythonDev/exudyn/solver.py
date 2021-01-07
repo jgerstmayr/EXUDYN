@@ -1,12 +1,12 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN example
+# This is an EXUDYN python utility library
 #
-# Details:  The solver module provides solver functionality
-#           Most of the solvers are implemented inside the C++ core
+# Details:  The solver module provides interfaces to static, dynamic and eigenvalue solvers.
+#           Most of the solvers are implemented inside the C++ core.
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2020-12-02
-# Notes:    This module is still under construction and for testing purposes only!
+# Notes:    Solver functions are included directly in exudyn and can be used with exu.SolveStatic(...)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -129,7 +129,7 @@ def SolveDynamic(mbs,
 #   mbs: the MainSystem containing the assembled system
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
 #   useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
-#   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed
+#   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger problems!)
 #   convert2Frequencies: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]
 #**output: [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 #**example:
@@ -141,7 +141,7 @@ def SolveDynamic(mbs,
 def ComputeODE2Eigenvalues(mbs, 
                            simulationSettings = exudyn.SimulationSettings(),
                            useSparseSolver = False, 
-                           numberOfEigenvalues = -1,
+                           numberOfEigenvalues = 0,
                            setInitialValues = True,
                            convert2Frequencies = False):
     import numpy as np
@@ -165,10 +165,14 @@ def ComputeODE2Eigenvalues(mbs,
 
     if not useSparseSolver:
         from scipy.linalg import eigh  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
-        [eigenValues, eigenVectors] = eigh(K, M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+        [eigenValuesUnsorted, eigenVectors] = eigh(K, M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+        eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
+        if numberOfEigenvalues > 0:
+            eigenValues = eigenValues[0:numberOfEigenvalues]
+            eigenVectors = eigenVectors[0:numberOfEigenvalues]
     else:
-        if numberOfEigenvalues < 1:
-            raise ValueError("ComputeODE2Eigenvalues: numberOfEigenvalues must be > 0")
+        if numberOfEigenvalues == 0: #compute all eigenvalues
+            numberOfEigenvalues = nODE2
 
         from scipy.sparse.linalg import eigsh, csr_matrix #eigh for symmetric matrices, positive definite
 
@@ -180,8 +184,8 @@ def ComputeODE2Eigenvalues(mbs,
         [eigenValues, eigenVectors] = eigsh(A=Kcsr, k=numberOfEigenvalues, M=Mcsr, 
                                    which='LM', sigma=0, mode='normal') 
 
-    #sort eigenvalues
-    eigenValues = np.sort(a=abs(eigenValues))
+        #sort eigenvalues
+        eigenValues = np.sort(a=abs(eigenValues))
 
     if convert2Frequencies:
         eigenFrequencies = np.sqrt(eigenValues)/(2*np.pi)

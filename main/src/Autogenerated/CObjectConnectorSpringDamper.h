@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-01  08:50:14 (last modfied)
+* @date         2021-01-05  12:27:48 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,6 +23,7 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorSpringDamperParameters
 class CObjectConnectorSpringDamperParameters // AUTO: 
@@ -34,7 +35,7 @@ public: // AUTO:
     Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against d/dt(length)
     Real force;                                   //!< AUTO: added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    std::function<Real(Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with parameters; the python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below
+    std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with parameters; the python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorSpringDamperParameters()
     {
@@ -127,6 +128,12 @@ public: // AUTO:
     {
         return parameters.activeConnector;
     }
+
+    //! AUTO:  compute connector force and further properties (relative position, etc.) for unique functionality and output
+    void ComputeConnectorProperties(const MarkerDataStructure& markerData, Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Real deltaL, Real deltaL_t) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

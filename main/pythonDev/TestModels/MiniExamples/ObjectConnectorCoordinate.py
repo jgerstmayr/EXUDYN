@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectConnectorCoordinate")
 try: #puts example in safe environment
-    def OffsetUF(t, lOffset): #gives 0.05 at t=1
+    def OffsetUF(mbs, t, lOffset): #gives 0.05 at t=1
         return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))

@@ -1,12 +1,18 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN python utility library
+#
+# Details:  Basic support functions for simpler creation of Exudyn models.
+#			Advanced functions for loading and animating solutions and for drawing a graph of the mbs system.
+#           This library requires numpy (as well as time and copy)
+#
+# Author:   Johannes Gerstmayr
+# Date:     2019-07-26 (created)
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 # Utility functions and structures for Exudyn
-"""
-Created on Fri Jul 26 10:53:30 2019
 
-@author: Johannes Gerstmayr
-
-goal: support functions, which simplify the generation of models
-"""
-#constants and fixed structures:
 import numpy as np #LoadSolutionFile
 import time        #AnimateSolution
 import copy as copy #to be able to copy e.g. lists
@@ -83,6 +89,25 @@ def SweepCos(t, t1, f0, f1):
 #**output: frequency in Hz
 def FrequencySweep(t, t1, f0, f1):
     return t*(f1-f0)/t1 + f0
+
+#**function: get index from value in given data vector (numpy array); usually used to get specific index of time vector
+#**input: 
+#  data: containing (almost) equidistant values of time
+#  value: e.g., time to be found in data
+#  tolerance: tolerance, which is accepted (default: tolerance=1e-7)
+#**output: index
+def IndexFromValue(data, value, tolerance=1e-7):
+    bestTol = 1e37
+    index  = -1
+    for i in range(len(data)):
+        if abs(data[i] - value) < min(bestTol, tolerance):
+            index = i
+            bestTol = abs(data[i] - value)
+    if index == -1:
+        raise ValueError("IndexFromValue: value not found with given tolerance")
+    return index
+
+
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix
