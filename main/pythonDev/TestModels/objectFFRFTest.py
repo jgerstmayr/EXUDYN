@@ -620,6 +620,7 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRF=',result)
 
 exudynTestGlobals.testError = result - (0.006445369560936511) #2020-05-17 (tEnd=0.001, h=1e-4): 0.006445369560936511
+exudynTestGlobals.testResult = result
 
     
 if exudynTestGlobals.useGraphics:

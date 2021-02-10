@@ -357,8 +357,8 @@ public:
 		glPixelStorei(GL_UNPACK_LSB_FIRST, GL_TRUE);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		GLsizei w = characterWidth;
-		GLsizei h = characterHeight;
+		//GLsizei w = characterWidth;
+		//GLsizei h = characterHeight;
 
 		//Draws the bitmap specified by bitmap, which is a pointer to the bitmap image.
 		//The origin of the bitmap is placed at the current raster position.If the current raster position is invalid, nothing is drawn, and the raster position remains invalid.

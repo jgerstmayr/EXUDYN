@@ -65,8 +65,8 @@ void CObjectJointSpherical::ComputeAlgebraicEquations(Vector& algebraicEquations
 }
 
 
-void CObjectJointSpherical::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectJointSpherical::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
@@ -80,25 +80,25 @@ void CObjectJointSpherical::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index nColumnsJac0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
 		Index nColumnsJac1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns();
-		jacobian.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+		jacobian_ODE2.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 		if (!(parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1))
 		{
-			jacobian.SetAll(0);
+			jacobian_ODE2.SetAll(0);
 		}
 
 		//global equations
 		//vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //local equations (marker0-fixed)
 		for (Index i = 0; i < nColumnsJac0; i++)
 		{
-			if (parameters.constrainedAxes[0]) { jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i); } //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
-			if (parameters.constrainedAxes[1]) { jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i); }
-			if (parameters.constrainedAxes[2]) { jacobian(2, i) = -markerData.GetMarkerData(0).positionJacobian(2, i); }
+			if (parameters.constrainedAxes[0]) { jacobian_ODE2(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i); } //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
+			if (parameters.constrainedAxes[1]) { jacobian_ODE2(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i); }
+			if (parameters.constrainedAxes[2]) { jacobian_ODE2(2, i) = -markerData.GetMarkerData(0).positionJacobian(2, i); }
 		}
 		for (Index i = 0; i < nColumnsJac1; i++)
 		{
-			if (parameters.constrainedAxes[0]) { jacobian(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i); }
-			if (parameters.constrainedAxes[1]) { jacobian(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i); }
-			if (parameters.constrainedAxes[2]) { jacobian(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i); }
+			if (parameters.constrainedAxes[0]) { jacobian_ODE2(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i); }
+			if (parameters.constrainedAxes[1]) { jacobian_ODE2(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i); }
+			if (parameters.constrainedAxes[2]) { jacobian_ODE2(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i); }
 		}
 	}
 	else

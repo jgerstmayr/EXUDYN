@@ -16,8 +16,67 @@ import matplotlib.pyplot as plt
 import numpy as np #for loading
 import matplotlib.ticker as ticker
 import exudyn #for sensor index
+from exudyn.utilities import PlotLineCode
 
 #from exudyn.utilities import PlotLineCode
+
+#**function: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
+#**output: return dictionary with 'type'=['sensor','solution','geneticOptimization'], 'variableType', 
+def ParseOutputFileHeader(lines):
+    output = {}
+    output['type'] = 'unknown'
+    columns = []
+    if len(lines) < 1:
+        return {} #empty dictionary
+    variableTypes = []
+    if lines[0].find('EXUDYN genetic optimization results file') != -1:
+        output['type'] = 'geneticOptimization'
+        for i in range(10): #header is max. 10 lines
+            if i+1 < len(lines) and lines[i][0:9] == '#columns:':
+                cols = lines[i+1].strip('#').split(',')
+                for j in range(len(cols)):
+                    variableTypes += [cols[j].strip()]
+                break
+    elif lines[0].find('sensor output file') != -1:
+        #print("SENSOR")
+        output['type'] = 'sensor'
+        outputVariableType = ''
+        for i in range(10): #header is max. 10 lines
+            if lines[i].find('Object number') != -1:
+                output['objectNumber'] = int(lines[i].split('=')[1])
+            elif lines[i].find('OutputVariableType') != -1:
+                outputVariableType = lines[i].split('=')[1].strip() #without spaces
+            elif lines[i].find('number of sensor values') != -1:
+                output['numberOfSensors'] = int(lines[i].split('=')[1])
+            if lines[i][0] != '#': #break after comment
+                break
+        variableTypes = ['time']
+        for i in range(output['numberOfSensors']):
+            variableTypes += [outputVariableType+str(i)] #e.g., Position0, Position1, ...
+    elif lines[0].find('solution file') != -1: #coordinates solution file
+        output['type'] = 'solution'
+        writtenCoordinateTypes = []
+        writtenCoordinates = []
+        for i in range(10): #header is max. 10 lines
+            if lines[i].find('number of written coordinates') != -1:
+                line = lines[i]
+                writtenCoordinateTypes = line.split('=')[0].split('[')[1].split(']')[0].replace(' ','').split(',')
+                writtenCoordinates = line.split('=')[1].split('[')[1].split(']')[0].replace(' ','').split(',')
+                variableTypes = ['time']
+                print('writtenCoordinates=',writtenCoordinates)
+                for j in range(len(writtenCoordinateTypes)):
+                    for k in range(int(writtenCoordinates[j])):
+                       variableTypes += [writtenCoordinateTypes[j].strip('n')+'-'+str(k)]
+                #variableTypes += [writtenCoordinateTypes[j]]*int(writtenCoordinates[j])
+            elif lines[i].find('number of time steps') != -1:
+                output['numberOfSteps'] = int(lines[i].split('=')[1])
+
+            if lines[i][0] != '#': #break after comment
+                break
+
+    output['columns'] = variableTypes
+    return output
+   
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper for matplotlib in order to easily visualize sensor output
@@ -37,7 +96,7 @@ import exudyn #for sensor index
 #  Plot(mbs, sensorNumbers=[s0,s1], components=[0,2], xlabel='time in seconds')
 def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
     #could also be imported from exudyn.utilities import PlotLineCode
-    CC = ['k-','g-','b-','r-','c-','m-','y-','k:','g:','b:','r:','c:','m:','y:','k--','g--','b--','r--','c--','m--','y--','k-.','g-.','b-.','r-.','c-.','m-.','y-.']
+    #CC = ['k-','g-','b-','r-','c-','m-','y-','k:','g:','b:','r:','c:','m:','y:','k--','g--','b--','r--','c--','m--','y--','k-.','g-.','b-.','r-.','c-.','m-.','y-.']
     
     if isinstance(sensorNumbers,list):
         sensorList = sensorNumbers
@@ -107,9 +166,10 @@ def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
         data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
 
         #select color and style for sensor
-        col = 'k-.'
-        if i < len(CC):
-            col = CC[i]
+        #col = 'k-.'
+        # if i < len(CC):
+        #     col = CC[i]
+        col = PlotLineCode(i)
         
         #extract additional paramters
         xLabel = 'time (s)'

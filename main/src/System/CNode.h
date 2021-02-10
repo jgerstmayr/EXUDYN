@@ -60,7 +60,9 @@ namespace Node {
 		RotationLieGroup = 1 << 10,			//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
 		//General
 		GenericODE2 = 1 << 11,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
-		GenericData = 1 << 12				//!< used for node with data coordinates
+		GenericODE1 = 1 << 12,				//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
+		GenericAE = 1 << 13,				//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
+		GenericData = 1 << 14				//!< used for node with data coordinates
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//keep these lists synchronized with PybindModule.cpp lists
 	};
@@ -99,12 +101,8 @@ enum class CNodeGroup {
 //keep these lists synchronized with PybindModule.cpp lists
 };
 
-//Question A: how to sort nodal DOF in global list:
-// 1) separate into ODE1, ODE2, AlgebraicEquations-global coordinates lists
-// 2) allow only ODE1 or ODE2 or AE coordinates (needs 2 separate nodes for EulerParameter Rigid Body)
-// ==> having two nodes is not a problem for an object
-
-//Question B: where to put CData* (into node or object, or none of them?)
+// allow only ODE1 or ODE2 or AE coordinates 
+//open Question: where to put CData* (into node or object, or none of them?)
 
 class CNode
 {
@@ -334,6 +332,80 @@ public:
 	virtual void GetRotationJacobian(Matrix& value) const { CHECKandTHROWstring("CNodeODE2::GetRotationJacobian: call illegal"); }
 
 };
+
+//! node with ODE1 variables: for first order differential equations, e.g., linear state space systems
+class CNodeODE1 : public CNode
+{
+protected:
+	Index globalODE1CoordinateIndex; //!< refers to the place in the global ODE1 coordinate vector
+public:
+	CNodeODE1()
+	{
+		globalODE1CoordinateIndex = EXUstd::InvalidIndex; //mark that globalODE1CoordinateIndex cannot be accessed
+	}
+	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
+	virtual CNodeODE1* GetClone() const { return new CNodeODE1(*this); }
+
+	virtual void Print(std::ostream& os) const {
+		os << "CNodeODE1(ODE1Index=" << globalODE1CoordinateIndex << ", size=" << GetNumberOfODE1Coordinates() << "):";
+		CNode::Print(os);
+	}
+
+	virtual CNodeGroup GetNodeGroup() const { return CNodeGroup::ODE1variables; }
+	virtual void SetGlobalODE1CoordinateIndex(Index globalIndex) { globalODE1CoordinateIndex = globalIndex; }
+
+	virtual Index GetGlobalODE1CoordinateIndex() const {
+		return globalODE1CoordinateIndex;
+	}
+
+	//! read single coordinate in current configuration
+	virtual const Real& GetCurrentCoordinate(Index i) const override;
+
+	//! read single velocity coordinate in current configuration
+	virtual const Real& GetCurrentCoordinate_t(Index i) const;
+
+	//! read globally stored current coordinates (displacements)
+	virtual LinkedDataVector GetCurrentCoordinateVector() const override;
+
+	//! read globally stored current coordinates (velocities)
+	virtual LinkedDataVector GetCurrentCoordinateVector_t() const;
+
+	//! read globally stored initial coordinates (displacements)
+	virtual LinkedDataVector GetInitialCoordinateVector() const override;
+
+	//! read globally stored initial coordinates (velocities)
+	virtual LinkedDataVector GetInitialCoordinateVector_t() const;
+
+	//! read visualization coordinates (displacements)
+	virtual LinkedDataVector GetVisualizationCoordinateVector() const override;
+
+	//! read visualization coordinates (velocities)
+	virtual LinkedDataVector GetVisualizationCoordinateVector_t() const;
+
+	virtual LinkedDataVector GetCoordinateVector(ConfigurationType configuration) const override
+	{
+		switch (configuration)
+		{
+		case ConfigurationType::Current: return GetCurrentCoordinateVector();
+		case ConfigurationType::Initial: return GetInitialCoordinateVector();
+		case ConfigurationType::Reference: return GetReferenceCoordinateVector();
+		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
+		default: CHECKandTHROWstring("CNodeODE1::GetCoordinateVector: invalid ConfigurationType"); return LinkedDataVector();
+		}
+	}
+
+	virtual LinkedDataVector GetCoordinateVector_t(ConfigurationType configuration) const
+	{
+		switch (configuration)
+		{
+		case ConfigurationType::Current: return GetCurrentCoordinateVector_t();
+		case ConfigurationType::Initial: return GetInitialCoordinateVector_t();
+		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_t();
+		default: CHECKandTHROWstring("CNodeODE1::GetCoordinateVector_t: invalid ConfigurationType"); return LinkedDataVector();
+		}
+	}
+};
+
 
 ////! node with mixed ODE2 and algebraic equations coordinates
 //class CNodeODE2AE : public CNodeODE2

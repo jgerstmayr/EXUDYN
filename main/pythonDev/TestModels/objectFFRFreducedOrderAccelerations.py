@@ -228,7 +228,7 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrderAccelerations=',result)
 
 exudynTestGlobals.testError = (result - (61576.266114362006 ))/(2*result) #2021-01-03: added '/(2*result)' as error is too large (2e-10); 2020-12-19: (dense eigenvalue solver gives repeatable results!) 61576.266114362006 
-exu.Print('error of ObjectFFRFreducedOrderAccelerations=',exudynTestGlobals.testError)
+exudynTestGlobals.testResult = result/(2*61576.266114362006)
 
 if exudynTestGlobals.useGraphics:
     #SC.WaitForRenderEngineStopFlag()

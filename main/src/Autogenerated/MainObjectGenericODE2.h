@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  01:41:05 (last modfied)
+* @date         2021-01-22  19:12:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -158,6 +158,9 @@ public: // AUTO:
             {d["massMatrixUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
         d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectGenericODE2->GetParameters().coordinateIndexPerNode; //! AUTO: cast variables into python (not needed for standard types) 
+        d["tempCoordinates"] = EPyUtils::Vector2NumPy(cObjectGenericODE2->GetTempCoordinates()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["tempCoordinates_t"] = EPyUtils::Vector2NumPy(cObjectGenericODE2->GetTempCoordinates_t()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["tempCoordinates_tt"] = EPyUtils::Vector2NumPy(cObjectGenericODE2->GetTempCoordinates_tt()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectGenericODE2->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectGenericODE2->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -183,6 +186,9 @@ public: // AUTO:
         else if (parameterName.compare("forceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>)cObjectGenericODE2->GetParameters().forceUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return py::cast((std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>)cObjectGenericODE2->GetParameters().massMatrixUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectGenericODE2->GetParameters().coordinateIndexPerNode);} //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE2->GetTempCoordinates());} //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE2->GetTempCoordinates_t());} //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinates_tt") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE2->GetTempCoordinates_tt());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericODE2->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectGenericODE2->GetColor());} //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::MatrixI2NumPy(visualizationObjectGenericODE2->GetTriangleMesh());} //! AUTO: get parameter

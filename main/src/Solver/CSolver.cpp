@@ -31,17 +31,8 @@
 //! compute sum of all timer parts (should be nearly the total time)
 Real CSolverTimer::Sum() const
 {
-	return factorization + newtonIncrement + integrationFormula + ODE2RHS + AERHS + totalJacobian + massMatrix + reactionForces +
-		postNewton + writeSolution + overhead + python + visualization;
-}
-
-void CSolverTimer::StartTimer(Real& value)
-{
-	if (useTimer) { value -= EXUstd::GetTimeInSeconds(); }
-}
-void CSolverTimer::StopTimer(Real& value)
-{
-	if (useTimer) { value += EXUstd::GetTimeInSeconds(); }
+	return factorization + newtonIncrement + integrationFormula + ODE2RHS + ODE1RHS + AERHS + totalJacobian + massMatrix + reactionForces +
+		postNewton + errorEstimator + writeSolution + overhead + python + visualization;
 }
 
 STDstring CSolverTimer::ToString() const
@@ -60,14 +51,17 @@ STDstring CSolverTimer::ToString() const
 		ostr << "  newtonIncrement   = " << newtonIncrement / sum << "%\n";
 		ostr << "  integrationFormula= " << integrationFormula / sum << "%\n";
 		ostr << "  ODE2RHS           = " << ODE2RHS / sum << "%\n";
+		ostr << "  ODE1RHS           = " << ODE1RHS / sum << "%\n";
 		ostr << "  AERHS             = " << AERHS / sum << "%\n";
 		ostr << "  totalJacobian     = " << totalJacobian / sum << "%\n";
 		ostr << "  jacobianODE2_t    = " << jacobianODE2_t / sum << "%\n";
 		ostr << "  jacobianODE2      = " << jacobianODE2 / sum << "%\n";
+		ostr << "  jacobianODE1      = " << jacobianODE1 / sum << "%\n";
 		ostr << "  jacobianAE        = " << jacobianAE / sum << "%\n";
 		ostr << "  massMatrix        = " << massMatrix / sum << "%\n";
 		ostr << "  reactionForces    = " << reactionForces / sum << "%\n";
 		ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
+		ostr << "  errorEstimator    = " << errorEstimator / sum << "%\n";
 		ostr << "  writeSolution     = " << writeSolution / sum << "%\n";
 		ostr << "  overhead          = " << overhead / sum << "%\n";
 		ostr << "  python            = " << python / sum << "%\n";

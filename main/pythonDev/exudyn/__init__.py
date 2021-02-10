@@ -25,6 +25,8 @@ except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
 
+__version__ = GetVersionString() #add __version__ to exudyn module ...
+
 
 #add a functionality to check the current version
 def RequireVersion(requiredVersionString):

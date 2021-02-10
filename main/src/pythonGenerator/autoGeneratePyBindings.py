@@ -31,7 +31,7 @@ descriptionStr += 'Available output variables and the interpreation of the outpu
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
                             description=descriptionStr, 
-                            subSection=True)
+                            subSection=True, labelName=pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
 [s1,sL1] = AddEnumValue(pyClass, '_None', 'no value; used, e.g., to select no output variable in contour plot'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Distance', 'e.g., measure distance in spring damper connector'); s+=s1; sLenum+=sL1
@@ -75,7 +75,7 @@ descriptionStr = 'This section shows the ' + pyClass + ' structure, which is use
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
                             description=descriptionStr, 
-                            subSection=True)
+                            subSection=True, labelName=pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
 [s1,sL1] = AddEnumValue(pyClass, '_None', 'no configuration; usually not valid, but may be used, e.g., if no configurationType is required'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Initial', 'initial configuration prior to static or dynamic solver; is computed during mbs.Assemble() or AssembleInitializeSystemCoordinates()'); s+=s1; sLenum+=sL1
@@ -96,12 +96,18 @@ descriptionStr = 'This section shows the ' + pyClass + ' structure, which is use
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
                             description=descriptionStr, 
-                            subSection=True)
+                            subSection=True, labelName=pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
 [s1,sL1] = AddEnumValue(pyClass, 'GeneralizedAlpha', 'an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'TrapezoidalIndex2', 'an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'ExplicitEuler', '[NOT IMPLEMENTED YET] an explicit first order solver for systems without constraints'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'RK45', '[NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ExplicitEuler',    'an explicit 1st order solver (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ExplicitMidpoint', 'an explicit 2nd order solver (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'RK33',     'an explicit 3 stage 3rd order Runge-Kutta method, aka "Heun"; (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'RK44',     'an explicit 4 stage 4th order Runge-Kutta method, aka "classical Runge Kutta" (generally not compatible with constraints), compatible with Lie group integration and elimination of CoordinateConstraints'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'RK67',     "an explicit 7 stage 6th order Runge-Kutta method, see 'On Runge-Kutta Processes of High Order', J. C. Butcher, J. Austr Math Soc 4, (1964); can be used for very accurate (reference) solutions, but without step size control!"); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'ODE23',    'an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'DOPRI5',   "an explicit Runge Kutta method with automatic step size selection with 5th order of accuracy and 4th order error estimation, see  Dormand and Prince, 'A Family of Embedded Runge-Kutta Formulae.', J. Comp. Appl. Math. 6, 1980"); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'DVERK6', '[NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection'); s+=s1; sLenum+=sL1
 
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
@@ -114,7 +120,7 @@ descriptionStr = 'This section shows the ' + pyClass + ' structure, which is use
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
                             description=descriptionStr, 
-                            subSection=True)
+                            subSection=True, labelName=pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
 [s1,sL1] = AddEnumValue(pyClass, 'SPACE', 'space key'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ENTER', 'enter (return) key'); s+=s1; sLenum+=sL1
@@ -147,7 +153,7 @@ descriptionStr = 'This section shows the ' + pyClass + ' structure, which is use
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
                             description=descriptionStr, 
-                            subSection=True)
+                            subSection=True, labelName=pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
 [s1,sL1] = AddEnumValue(pyClass, '_None', 'no value; used, e.g., if no solver is selected'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EXUdense', 'use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)'); s+=s1; sLenum+=sL1
@@ -179,13 +185,13 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'no direct link to C++ here', "Stop OpenGL rendering engine"); sL+=sL1; #s+=s1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solver:equations}',
+                               description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True']
                                ); sL+=sL1
                 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solver:equations}',
+                               description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True']
                                ); sL+=sL1
@@ -224,7 +230,10 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
                             #argList=['pyObject'] #not compatible with py::args
                             ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess('', 'InfoStat', 'PythonInfoStat', 'Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.'); s+=s1; sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='InfoStat', cName='PythonInfoStat', 
+                               description='Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag',
+                               argList=['writeOutput'],
+                               defaultArgs=['true']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs'); s+=s1; sL+=sL1
 
@@ -346,7 +355,7 @@ s+=s1; sL+=sL1
                                 description="assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleLTGLists', cName='AssembleLTGLists', 
-                                description="build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices)"); s+=s1; sL+=sL1
+                                description="build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleInitializeSystemCoordinates', cName='AssembleInitializeSystemCoordinates', 
                                 description="initialize all system-wide coordinates based on initial values given in nodes"); s+=s1; sL+=sL1

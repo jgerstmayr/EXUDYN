@@ -154,7 +154,10 @@ if __name__ == '__main__': #include this to enable parallel processing
     n = 16
     start_time = time.time()
     [pDict, values] = ParameterVariation(parameterFunction=ParameterFunction, 
-                                         parameters = {'mass':(1,2,n), 'spring':(2000,8000,n)},
+                                         parameters = {'mass':(1,2,n), 
+                                                       'spring':(2000,8000,n),
+                                                       #'test':(1,3,4)
+                                                       },
                                          debugMode=False,
                                          addComputationIndex=True,
                                          useMultiProcessing=True,

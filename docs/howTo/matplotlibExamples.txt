@@ -110,5 +110,17 @@ fig2.savefig("figure_displacement"+str(casesList[0])+".pdf")
 #close all open figures:
 plt.close("all")
 
+#use tex in labels:
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "serif",
+    "font.serif": ["Palatino"],
+})
+plt.ylabel(r'\bf{phase field} $\phi$', {'color': 'C0', 'fontsize': 20})
+plt.xticks((-1, 0, 1), ('$-1$', r'$\pm 0$', '$+1$'), color='k', size=20)
+plt.text(-1, .30, r'gamma: $\gamma$', {'color': 'r', 'fontsize': 20})
+#see: https://matplotlib.org/3.1.0/gallery/text_labels_and_annotations/usetex_demo.html
+
+
 
 

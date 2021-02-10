@@ -47,10 +47,12 @@ public:
 	virtual Real ComputeLoadFactor(const SimulationSettings& simulationSettings) const override { return (it.currentTime - it.startTime) / simulationSettings.staticSolver.loadStepDuration; }
 
 	//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
-	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index severity) override;
+	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, 
+		Index severity, Real suggestedStepSize = -1.) override;
 
 	//! increase step size if convergence is good
-	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override
+	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
+		Real suggestedStepSize = -1.) override
 	{
 		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, 2.*it.currentStepSize);
 	}
@@ -64,11 +66,11 @@ public:
 	//! post-initialize for solver specific tasks; called at the end of InitializeSolver
 	virtual void PostInitializeSolverSpecific(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
-	//! compute residual for Newton method (e.g. static or time step); store result in systemResidual
-	virtual void ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
+	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual
+	virtual Real ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! compute update for currentState from newtonSolution (decrement from residual and jacobian)
-	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
+	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial = false) override;
 
 	//! compute jacobian for newton method of given solver method; store result in systemJacobian
 	virtual void ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;

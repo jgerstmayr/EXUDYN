@@ -44,16 +44,16 @@ mbs = SC.AddSystem()
 #parse command line arguments:
 # -quiet
 writeToConsole = True  #do not output to console / shell
-copyLog = False         #copy log to final WorkingRelease
-if sys.version_info.major == 3 and sys.version_info.minor == 7:
-    copyLog = True #for P3.7 tests always copy log to WorkingRelease
+#copyLog = False         #copy log to final TestSuiteLogs
+# if sys.version_info.major == 3 and sys.version_info.minor == 7:
+#     copyLog = True #for P3.7 tests always copy log to WorkingRelease
 if len(sys.argv) > 1:
     for i in range(len(sys.argv)-1):
         #print("arg", i+1, "=", sys.argv[i+1])
         if sys.argv[i+1] == '-quiet':
             writeToConsole = False
-        elif sys.argv[i+1] == '-copylog':
-            copyLog = True
+        # elif sys.argv[i+1] == '-copylog': #not needed any more
+        #     copyLog = True
         else:
             print("ERROR in runTestSuite: unknown command line argument '"+sys.argv[i+1]+"'")
 
@@ -62,10 +62,24 @@ if len(sys.argv) > 1:
 runUnitTests = True
 runTestExamples = True
 runMiniExamples = True
+printTestResults = False #print list, which can be imported for new reference values
 if platform.architecture()[0] == '64bit':
     testTolerance = 5e-11 #larger tolerance, because reference values are computed with 32bit version (WHY?)
 else:
     testTolerance = 3e-14
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+#additional options for old trapezoidal solver, NOT active any more!
+# exudynTestGlobals.useCorrectedAccGenAlpha = True                        #use corrected reference values in test suite Examples
+# exu.CorrectOldImplicitSolver(exudynTestGlobals.useCorrectedAccGenAlpha) #add algorithmic acceleration correction to old solver
+
+# #switch tests between old/new dynamic solver
+# exudynTestGlobals.useNewGenAlphaSolver = True
+# if exudynTestGlobals.useNewGenAlphaSolver: 
+#     exu.sys['experimentalNewSolver']='' #solver checks only if variable exists
+# else:
+#     if 'experimentalNewSolver' in exu.sys: #delete if exists already
+#         del exu.sys['experimentalNewSolver']
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #current date and time
 def NumTo2digits(n):
@@ -113,12 +127,6 @@ exu.Print('testsuite date (now)= '+dateStr)
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.SetWriteToConsole(writeToConsole) #stop output from now on
 
-#testFileList = ['Examples/fourBarMechanism.py', 
-#                'Examples/sparseMatrixSpringDamperTest.py',
-#                'Examples/springDamperUserFunctionTest.py',
-#                'Examples/ANCF_contact_circle_test.py',
-#                'Examples/sliderCrankFloating.py']
-
 testFileList = [
                 'ANCFcontactCircleTest.py',
                 'ANCFcontactFrictionTest.py',
@@ -129,6 +137,7 @@ testFileList = [
                 'compareFullModifiedNewton.py',
                 'computeODE2EigenvaluesTest.py',
                 'driveTrainTest.py',
+                'explicitLieGroupIntegratorPythonTest.py',
                 'explicitLieGroupIntegratorTest.py',
                 'fourBarMechanismTest.py', 
                 'genericJointUserFunctionTest.py',
@@ -151,6 +160,7 @@ testFileList = [
                 'serialRobotTest.py',
                 'sliderCrank3Dbenchmark.py',
                 'sliderCrankFloatingTest.py',
+                'solverExplicitODE1ODE2test.py',
                 'sparseMatrixSpringDamperTest.py',
                 'sphericalJointTest.py',
                 'springDamperUserFunctionTest.py',
@@ -168,7 +178,11 @@ exudynTestGlobals.performTests = True
 
 timeStart= -time.time()
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#small (old) unit tests
 testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
+                              # useCorrectedAccGenAlpha = exudynTestGlobals.useCorrectedAccGenAlpha,
+                              # useNewGenAlphaSolver = exudynTestGlobals.useNewGenAlphaSolver)
 rv = False
 if runUnitTests:
     exu.Print('\n***********************')
@@ -177,21 +191,36 @@ if runUnitTests:
     rv = RunAllModelUnitTests(mbs, testInterface)
 SC.Reset()
 
-#test manual examples
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#run general test examples
+examplesTestSolList={}
+examplesTestErrorList={}
+invalidResult = 1234567890123456 #should not happen occasionally
 if runTestExamples:
+    from runTestSuiteRefSol import TestExamplesReferenceSolution
+    examplesTestRefSol = TestExamplesReferenceSolution()
+    
     testExamplesCnt = 0
     for file in testFileList:
+        name = file #.split('.')[0] #without '.py'
         exu.Print('\n\n******************************************')
         exu.Print('  START EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         exu.Print('******************************************')
         SC.Reset()
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
+        exudynTestGlobals.testResult = invalidResult #strange default value to see if there is a missing testResult
         try:
             exec(open(file).read(), globals())
         except Exception as e:
             exu.Print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
             print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
 
+        examplesTestErrorList[name] = exudynTestGlobals.testError
+        examplesTestSolList[name] = exudynTestGlobals.testResult
+
+        #compute error from reference solution
+        if examplesTestRefSol[name] != invalidResult:
+            exudynTestGlobals.testError = exudynTestGlobals.testResult - examplesTestRefSol[name]
         if abs(exudynTestGlobals.testError) < testTolerance:
             exu.Print('******************************************')
             exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
@@ -205,28 +234,48 @@ if runTestExamples:
         
         testExamplesCnt += 1
 
+    #create new reference values set for runTestSuiteRefSol.py:
+    if printTestResults: #print reference solution list:
+        for key,value in examplesTestSolList.items(): print("'"+key+"':"+str(value)+",")
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #test mini examples which are generated with objects
 from MiniExamples.miniExamplesFileList import miniExamplesFileList
 miniExamplesFailed = []
-
 if runMiniExamples:
+    from runTestSuiteRefSol import MiniExamplesReferenceSolution
+
+    miniExamplesRefSol = MiniExamplesReferenceSolution()
     testExamplesCnt = 0
+    miniExamplesTestSolList={}
+    miniExamplesTestErrorList={}
+
     for file in miniExamplesFileList:
+        name = file
         exu.Print('\n\n******************************************')
         exu.Print('  START MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         SC.Reset()
         testError = -1
         fileDir = 'MiniExamples/'+file
         exec(open(fileDir).read(), globals())
-        if abs(testError) < testTolerance:
+        exudynTestGlobals.testError = exudynTestGlobals.testResult-miniExamplesRefSol[name]
+        if abs(exudynTestGlobals.testError) < testTolerance:
             exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+            exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
+            exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
         else:
             exu.Print('******************************************')
             exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FAILED')
-            exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
+            exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
+            exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
             exu.Print('******************************************')
             miniExamplesFailed += [testExamplesCnt]
+        miniExamplesTestSolList[name] = exudynTestGlobals.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
+        miniExamplesTestErrorList[name] = exudynTestGlobals.testError #this list contains errors
         testExamplesCnt+=1
+
+    if printTestResults: #print reference solution list:
+        for key,value in miniExamplesTestSolList.items(): print("'"+key+"':"+str(value)+",")
     
 
 timeStart += time.time()
@@ -259,36 +308,44 @@ exu.Print('time elapsed =',round(timeStart,3),'seconds')
 #10+29+12tests: 2020-09-10: 17.001 seconds on Surface Pro
 #10+36+13tests: 2021-01-04: 23.54 seconds on i9
 
-if rv == True:
-    exu.Print('ALL UNIT TESTS SUCCESSFUL')
-else:
-    if runUnitTests:
+if runUnitTests:
+    if rv == True:
+        exu.Print('ALL UNIT TESTS SUCCESSFUL')
+    else:
         exu.Print('UNIT TESTS FAILED: see above section UNIT TESTS for detailed information')
+else:
+    exu.Print('UNIT TESTS SKIPPED')
     
-if len(testsFailed) == 0:
-    if runTestExamples:
+if runTestExamples:
+    if len(testsFailed) == 0:
         exu.Print('ALL ' + str(totalTests) + ' EXAMPLE TESTS SUCCESSFUL')
+    else:
+        exu.Print(str(len(testsFailed)) + ' EXAMPLE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
+        for i in testsFailed:
+            exu.Print('  EXAMPLE ' + str(i) + ' (' + testFileList[i] + ') FAILED')
 else:
-    exu.Print(str(len(testsFailed)) + ' EXAMPLE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
-    for i in testsFailed:
-        exu.Print('  EXAMPLE ' + str(i) + ' (' + testFileList[i] + ') FAILED')
-        
-if len(miniExamplesFailed) == 0:
-    exu.Print('ALL ' + str(len(miniExamplesFileList)) + ' MINI EXAMPLE TESTS SUCCESSFUL')
+    exu.Print('EXAMPLE TESTS SKIPPED')
+    
+if runMiniExamples:
+    if len(miniExamplesFailed) == 0:
+        exu.Print('ALL ' + str(len(miniExamplesFileList)) + ' MINI EXAMPLE TESTS SUCCESSFUL')
+    else:
+        exu.Print(str(len(miniExamplesFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
+    exu.Print('******************************************\n')
 else:
-    exu.Print(str(len(miniExamplesFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
-exu.Print('******************************************\n')
+    exu.Print('MINI EXAMPLE TESTS SKIPPED')
 
     
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
 
 
-if copyLog:
-    file=open(logFileName,'r') 
-    strLog = file.read()
-    file.close()
+#delete in future: (logs anyway written in testsuitelogs)
+# if copyLog:
+#     file=open(logFileName,'r') 
+#     strLog = file.read()
+#     file.close()
     
-    workingReleaseLog = workingReleasePath+"/testSuiteLog.txt"
-    file = open(workingReleaseLog,'w')
-    file.write(strLog)
-    file.close()
+#     workingReleaseLog = workingReleasePath+"/testSuiteLog.txt"
+#     file = open(workingReleaseLog,'w')
+#     file.write(strLog)
+#     file.close()

@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectConnectorCoordinateSpringDamper")
 try: #puts example in safe environment
-    def springForce(mbs, t, u, v, k, d, offset, frictionForce, frictionProportionalZone):
+    def springForce(mbs, t, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone):
         return 0.1*k*u+k*u**3+v*d
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
@@ -41,7 +41,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result at default integration time
-    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0] - 0.0019995158325691875
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorCoordinateSpringDamper:", e)

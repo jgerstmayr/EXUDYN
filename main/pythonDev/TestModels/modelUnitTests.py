@@ -22,14 +22,19 @@ class TestInterface:
         self.exu = exudyn
         self.SC = systemContainer
         self.useGraphics = useGraphics
+        self.useCorrectedAccGenAlpha = True #always corrected
+        self.useNewGenAlphaSolver = True    #active by default
 
 #this class is for interaction of test suite with examples given as (autonomous) .py file
 class ExudynTestStructure:
-    def __init__(self, useGraphics = True, performTests = False, testError = 0):
+    def __init__(self, useGraphics = True, performTests = False, testError = 0, testResult = 0):
         self.useGraphics = useGraphics
-        self.testError = testError
+        self.testError = testError      #for regular test models (store reference solution inside)
+        self.testResult = testResult    #mini examples
         self.performTests = performTests #this variable is only used for testing if example is calculated outside test mode
-
+        self.useCorrectedAccGenAlpha = True  #always corrected
+        self.useNewGenAlphaSolver = True    #active by default
+        
 exudynTestGlobals = ExudynTestStructure() #variable used as global variable during testing
 
 
@@ -113,7 +118,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     simulationSettings.timeIntegration.numberOfSteps = 1000
     #simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
     simulationSettings.timeIntegration.endTime = 0.1
-    simulationSettings.timeIntegration.verboseMode = 1
+    simulationSettings.timeIntegration.verboseMode = 0
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
@@ -127,7 +132,10 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     #tip displacements:
     u = sol[n-4];v = sol[n-3] #15.12.2019:(-1.040678127615946 -1.444419986874761); 20.10.2019: (-1.0406781266430292 -1.4444199866881322); 17.10.2019: sol= -1.040678126647053 -1.4444199866858678; #28.7.2009: -1.040678126643273, -1.444419986688082
-    totalError += u+v - (-1.0391620828192676 -1.4443521331339881)  ###2019-12-26: (-1.0391620828192676 -1.4443521331339881) old (before correct initial accelerations): (-1.040678127615946 -1.444419986874761)
+    if testInterface.useCorrectedAccGenAlpha:
+        totalError += u+v - (-1.0611305415779122 -1.4396907464583975)  #2021-02-04: (-1.0611305415779122 -1.4396907464583975)
+    else:
+        totalError += u+v - (-1.0391620828192676 -1.4443521331339881)  #2019-12-26: (-1.0391620828192676 -1.4443521331339881) old (before correct initial accelerations): (-1.040678127615946 -1.444419986874761)
     testInterface.exu.Print('sol dynamic=',u,v)
     #testInterface.exu.Print('time integration error =',totalError)
 
@@ -232,7 +240,11 @@ def SpringDamperMesh(mbs, testInterface):
 
     u = mbs.GetNodeOutput(nBodies-2, testInterface.exu.OutputVariableType.Position) #tip node
     testInterface.exu.Print('dynamic tip displacement (y)=', u[1])
-    dynamicError = u[1]-(-0.6383785907891227)  #2019-12-26: -0.6383785907891227; 2019-12-15: (-0.6349442849103891); before 15.12.2019: (-0.6349442850473246)
+    if testInterface.useCorrectedAccGenAlpha:
+        dynamicError = u[1]-(-0.6385807469187298 )  #2021-02-04: -0.6385807469187298 
+    else:
+        dynamicError = u[1]-(-0.6383785907891227)  #2019-12-26: -0.6383785907891227; 2019-12-15: (-0.6349442849103891); before 15.12.2019: (-0.6349442850473246)
+       
     #dynamic tip displacement for                                             s=1000: -0.6386766492418571,s=10000: -0.6386985511667669, s=100000: -0.6387006546281098
     #dynamic tip displacement for index2 Newmark: s=100: -0.6386060431598312, s=1000: -0.638699952155624, s=10000: -0.6387008780175608, s=100000: -0.6387008872717617
 
@@ -315,13 +327,17 @@ def MathematicalPendulumTest(mbs, testInterface):
         testInterface.SC.WaitForRenderEngineStopFlag()
         testInterface.exu.StopRenderer() #safely close rendering window!
 
-    u = mbs.GetNodeOutput(nodeList[0], testInterface.exu.OutputVariableType.Position) #tip node
-    errorConstraint= u[1] - (-0.0714264053422459)  #2019-12-26: -0.0714264053422459; 15.12.2019: -0.07242503089584812; before 15.12.2019: (-0.0724256565815142) #-(-0.7823882479152345) with endtime=10 and 10000 steps
-    testInterface.exu.Print('solution mathematicalPendulum Constraint=',u[1])
+    u1 = mbs.GetNodeOutput(nodeList[0], testInterface.exu.OutputVariableType.Position) #tip node
+    testInterface.exu.Print('solution mathematicalPendulum Constraint=',u1[1])
 
-    u = mbs.GetNodeOutput(nodeList[1], testInterface.exu.OutputVariableType.Position) #tip node
-    errorSpringDamper= u[1] - (-0.07477852383438113) #2019-12-26: -0.07477852383438113; 15.12.2019: (-0.07579968609949864); before 15.12.2019: (-0.07579967194309412)  #-(-0.7738842923525007)
-    testInterface.exu.Print('solution mathematicalPendulum SpringDamper=',u[1])
+    u2 = mbs.GetNodeOutput(nodeList[1], testInterface.exu.OutputVariableType.Position) #tip node
+    testInterface.exu.Print('solution mathematicalPendulum SpringDamper=',u2[1])
+    if testInterface.useCorrectedAccGenAlpha:
+        errorConstraint= u1[1] -   (-0.06808284314701757)   #2021-02-04: -0.06808284314701757
+        errorSpringDamper= u2[1] - (-0.07148800507819238)   #2021-02-04: -0.07148800507819238
+    else:
+        errorConstraint= u1[1] - (-0.0714264053422459)  #2019-12-26: -0.0714264053422459; 15.12.2019: -0.07242503089584812; before 15.12.2019: (-0.0724256565815142) #-(-0.7823882479152345) with endtime=10 and 10000 steps
+        errorSpringDamper= u2[1] - (-0.07477852383438113) #2019-12-26: -0.07477852383438113; 15.12.2019: (-0.07579968609949864); before 15.12.2019: (-0.07579967194309412)  #-(-0.7738842923525007)
 
     return abs(errorConstraint)+abs(errorSpringDamper)
 
@@ -371,7 +387,7 @@ def RigidPendulumTest(mbs, testInterface):
     simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
-    simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
+    #simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
 
     #simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
     #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -388,7 +404,12 @@ def RigidPendulumTest(mbs, testInterface):
 
 
     u = mbs.GetNodeOutput(nRigid, testInterface.exu.OutputVariableType.Position) #tip node
-    errorRigidPendulum = u[1] - (-0.4979662392961769) #2019-12-26(new initial acc): -0.4979662392961769; 15.12.2019: (-0.4980200584148534); before 15.12.2019: (-0.4980200584133354) # old test (load at tip)   0*(- 0.4905431986572512) #0*(-0.037344780490849015) #yield-displacement
+    # if testInterface.useNewGenAlphaSolver:
+    #     errorRigidPendulum = u[1] - (-0.49796067298096375 ) #2021-02-06: --0.49796067298096375 
+    if testInterface.useCorrectedAccGenAlpha:
+        errorRigidPendulum = u[1] - (-0.4979606729809297) #2021-02-04: -0.4979606729809297
+    else:
+        errorRigidPendulum = u[1] - (-0.4979662392961769) #2019-12-26(new initial acc): -0.4979662392961769; 15.12.2019: (-0.4980200584148534); before 15.12.2019: (-0.4980200584133354) # old test (load at tip)   0*(- 0.4905431986572512) #0*(-0.037344780490849015) #yield-displacement
     testInterface.exu.Print('solution rigid pendulum=',u[1])
 
     return abs(errorRigidPendulum)
@@ -486,7 +507,10 @@ def SliderCrank2DTest(mbs, testInterface):
     testInterface.exu.SolveDynamic(mbs, simulationSettings)
 
     u = mbs.GetNodeOutput(nMass, testInterface.exu.OutputVariableType.Position) #tip node
-    errorSliderCrankIndex3 = u[0] - 1.353298442702153 #2019-12-26: 1.353298442702153; 15.12.2019: 1.3513750614337234; before 15.12.2019: 1.3513750614326427 #2019-11-22; previous: 1.3513750614331235 #x-position of slider
+    if testInterface.useCorrectedAccGenAlpha:
+        errorSliderCrankIndex3 = u[0] - 1.3550008762955048 #2021-02-04: 1.3550008762955048
+    else:
+        errorSliderCrankIndex3 = u[0] - 1.353298442702153  #2019-12-26: 1.353298442702153; 15.12.2019: 1.3513750614337234; before 15.12.2019: 1.3513750614326427 #2019-11-22; previous: 1.3513750614331235 #x-position of slider
     testInterface.exu.Print('solution SliderCrankIndex3  =',u[0])
     testInterface.exu.Print('error errorSliderCrankIndex3=',errorSliderCrankIndex3)
 
@@ -645,7 +669,12 @@ def SlidingJoint2DTest(mbs, testInterface):
     error = 0
     if nRigid != -1:
         u = mbs.GetNodeOutput(nRigid, testInterface.exu.OutputVariableType.Position) #tip node
-        error = u[1] - (-0.14920151345936586) #2019-12-26: -0.14920151345936586; 15.12.2019: (-0.1489879442762764); before 15.12.2019: (-0.14898795617249422) #2019-11-22; #20.10.2019: (-0.1489879501348149); 17.10.2019:-0.14898795468724652; old? :(-0.14898795002032308) #old error before projected sliding joint: (-0.14898792622401774) #y-position of COM of sliding body
+        if testInterface.useNewGenAlphaSolver:
+            error = u[1] - (-0.14920182499994944 ) #2021-02-06: -0.14920182499994944 (1e-9 different from old solver) 
+        elif testInterface.useCorrectedAccGenAlpha:
+            error = u[1] - (-0.14920182666080586) #2021-02-04: -0.14920182666080586
+        else:
+            error = u[1] - (-0.14920151345936586) #2019-12-26: -0.14920151345936586; 15.12.2019: (-0.1489879442762764); before 15.12.2019: (-0.14898795617249422) #2019-11-22; #20.10.2019: (-0.1489879501348149); 17.10.2019:-0.14898795468724652; old? :(-0.14898795002032308) #old error before projected sliding joint: (-0.14898792622401774) #y-position of COM of sliding body
                         
         testInterface.exu.Print('value SlidingJoint2DTest=',u[1])
         #testInterface.exu.Print('error SlidingJoint2DTest=',error)
@@ -702,7 +731,10 @@ def CartesianSpringDamperTest(mbs, testInterface):
 
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCartesianSpringDamper= u[0] - L
-    errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407594783 #15.12.2019: 0.011834933407594783; beofre 15.12.2019: 0.011834933407038783 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution
+    if testInterface.useCorrectedAccGenAlpha:
+        errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407364412 #2021-02-04: 0.011834933407364412 
+    else:
+        errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407594783 #15.12.2019: 0.011834933407594783; beofre 15.12.2019: 0.011834933407038783 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution
     testInterface.exu.Print('solution cartesianSpringDamper=',uCartesianSpringDamper)
 
     return abs(errorCartesianSpringDamper)
@@ -768,7 +800,11 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCoordinateSpringDamper= u[0] - L
-    errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933406690284 #15.12.2019: 0.011834933406690284; beofre 15.12.2019: 0.011834933407047 #for 1000 steps, endtime=1; this is different from CartesianSpringDamper because of offset L (rounding errors around 1e-14)
+    if testInterface.useCorrectedAccGenAlpha:
+        errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933407368853 #2021-02-04: 0.011834933407368853
+    else:
+        errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933406690284 #15.12.2019: 0.011834933406690284; beofre 15.12.2019: 0.011834933407047 #for 1000 steps, endtime=1; this is different from CartesianSpringDamper because of offset L (rounding errors around 1e-14)
+    
 
     testInterface.exu.Print('solution CoordinateSpringDamper=',uCoordinateSpringDamper)
     return abs(errorCoordinateSpringDamper)
@@ -832,10 +868,11 @@ def SwitchingConstraintsTest(mbs, testInterface):
     
     mbs.SetPreStepUserFunction(UFswitchConnector)
 
+    #simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
     simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
-    #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
+    #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum with switching constraints"
@@ -866,7 +903,8 @@ def RunAllModelUnitTests(mbs, testInterface):
     totalTests = 0 #number of tests accomplished
     testsFailed = [] #number of tests failed
     
-    errTol = 1e-13
+    #errTol = 1e-13
+    errTol = 4e-13 #changed this since the new solver
     
     testInterface.exu.Print("\n\n****************\n GraphicsDataTest:[TEST " + str(totalTests+1) + "]\n****************\n")
     err = GraphicsDataTest(mbs, testInterface); totalError += err; totalTests += 1; 

@@ -121,6 +121,7 @@ p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
 exu.Print('solution of rollingCoinTest=',p0[0]) #use x-coordinate
 
 exudynTestGlobals.testError = p0[0] - (0.002004099927340136) #2020-06-20: 0.002004099927340136; 2020-06-19: 0.002004099760845168 #4s looks visually similar to Rill, but not exactly ...
+exudynTestGlobals.testResult = p0[0]
 
 
 if exudynTestGlobals.useGraphics:

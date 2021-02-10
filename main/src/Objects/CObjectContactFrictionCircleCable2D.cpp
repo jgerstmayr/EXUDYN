@@ -67,9 +67,8 @@ void CObjectContactFrictionCircleCable2D::ComputeGap(const MarkerDataStructure& 
 	}
 }
 
-bool CObjectContactFrictionCircleCable2D::IsActive() const
+bool CObjectContactFrictionCircleCable2D::IsContactActive() const
 {
-	if (!parameters.activeConnector) { return false; }
 	for (Index i = 0; i < parameters.numberOfContactSegments; i++)
 	{
 		if (GetCNode(0)->GetCurrentCoordinate(i) <= 0) { return true; }
@@ -92,7 +91,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 	//	if (GetCNode(0)->GetCurrentCoordinate(i) <= 0) { isContact = true; }
 	//}
 
-	if (parameters.activeConnector/* && isContact*/)
+	if (parameters.activeConnector && IsContactActive())
 	{
 		const MarkerData& markerData0 = markerData.GetMarkerData(0); //position based marker
 		const MarkerData& markerData1 = markerData.GetMarkerData(1); //ANCFCable2DShape
@@ -173,14 +172,6 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 				torqueSum[2] += fTangent * parameters.circleRadius;
 			}
 		}
-
-		//if (!cSystemData->isODE2RHSjacobianComputation && forcePerPoint.GetL2Norm() != 0) {
-		//	pout << "forcePerPoint=" << forcePerPoint << "\n";
-		//	pout << "gapPerSegment=" << gapPerSegment << "\n";
-		//	pout << "referenceCoordinatePerSegment=" << referenceCoordinatePerSegment << "\n";
-		//	pout << "xDirectionGap=" << xDirectionGap << "\n";
-		//	pout << "yDirectionGap=" << yDirectionGap << "\n";
-		//}
 
 		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian

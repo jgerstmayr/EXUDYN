@@ -124,4 +124,5 @@ u = sol[1]; #y-displacement of first node of four bar mechanism
 exu.Print('solution of fourbar mechanism =',u)
 
 exudynTestGlobals.testError = u - (-2.354666317492353) #2020-01-09: -2.354666317492353; 2019-12-15: (-2.3546596670554125); 2019-11-22:(-2.354659593986869);  previous: (-2.354659593986899)
+exudynTestGlobals.testResult = u
 

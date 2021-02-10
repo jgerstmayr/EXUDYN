@@ -1549,8 +1549,13 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #**classFunction: get node numbers on cylinder given by axes points p1 and p2, radius and tolerance
-    #if not found, it returns an empty list
+    #**classFunction: get node numbers lying on line defined by points p1 and p2 and tolerance, which is accepted for points slightly outside the surface
+    def GetNodesOnLine(self, p1, p2, tolerance=1e-5):
+        return GetNodesOnCylinder(self, p1, p2, radius=0, tolerance=1e-5)
+
+    #**classFunction: get node numbers lying on cylinder surface; cylinder defined by cylinder axes (points p1 and p2), 
+    #  cylinder radius and tolerance, which is accepted for points slightly outside the surface
+    #  if not found, it returns an empty list
     def GetNodesOnCylinder(self, p1, p2, radius, tolerance=1e-5):
         cnt = 0
         v0 = np.array(p2) - np.array(p1)
@@ -1573,7 +1578,7 @@ class FEMinterface:
                         cnt+=1
         return nodeList
 
-    #**classFunction: get node numbers on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
+    #**classFunction: get node numbers lying on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
     #using a tolerance for the distance to the plane
     #if not found, it returns an empty list
     def GetNodesOnCircle(self, point, normal, r, tolerance = 1e-5):

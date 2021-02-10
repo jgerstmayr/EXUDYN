@@ -322,6 +322,7 @@ exu.Print("phiFlyWheel",phiFlyWheel)
 u = phiCrank-phiFlyWheel
 exu.Print("solution of driveTrainTest=", u)
 exudynTestGlobals.testError = u - (0.8813172426357362 - 0.8813173353288565) #2020-05-28: 0.8813172426357362 - 0.8813173353288565
+exudynTestGlobals.testResult = u
 
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()

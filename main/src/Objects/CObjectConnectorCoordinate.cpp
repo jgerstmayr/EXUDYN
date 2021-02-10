@@ -58,21 +58,21 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 
 }
 
-void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
 		ResizableMatrix* usedJac;
-		if (parameters.velocityLevel) //in this case, always the jacobian_t must be used
+		if (parameters.velocityLevel) //in this case, always the jacobian_ODE2_t must be used
 		{
-			usedJac = &jacobian_t;
-			jacobian.SetNumberOfRowsAndColumns(0, 0); //for safety - needed?
+			usedJac = &jacobian_ODE2_t;
+			jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); //for safety - needed?
 		}
 		else
 		{
-			usedJac = &jacobian;
-			jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety - needed?
+			usedJac = &jacobian_ODE2;
+			jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety - needed?
 		}
 
 		usedJac->SetNumberOfRowsAndColumns(1, markerData.GetMarkerData(0).jacobian.NumberOfColumns()
@@ -89,8 +89,8 @@ void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian, Re
 		jacobian_AE.SetNumberOfRowsAndColumns(1, 1);
 		jacobian_AE(0, 0) = 1; //represents derivative of algebraic equation 'lambdaCoordinate = 0'
 
-		//jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
-		//jacobian.SetNumberOfRowsAndColumns(0, 0);//for safety!
+		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		//jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0);//for safety!
 	}
 
 }

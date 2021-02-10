@@ -32,7 +32,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result, get current mass position at local position [0,0,0]
-    testError = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0] - 2
+    exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
     #final x-coordinate of position shall be 2
 
 except BaseException as e:

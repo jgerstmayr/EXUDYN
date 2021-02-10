@@ -210,21 +210,23 @@ void CObjectRigidBody::ComputeAlgebraicEquations(Vector& algebraicEquations, boo
 }
 
 //! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
-void CObjectRigidBody::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const
+void CObjectRigidBody::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, 
+	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const
 {
 	if (GetCNode(0)->GetNumberOfAECoordinates() != 0)
 	{
-		jacobian.SetNumberOfRowsAndColumns(((CNodeRigidBody*)GetCNode(0))->GetNumberOfAECoordinates(), GetODE2Size());
-		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_ODE2.SetNumberOfRowsAndColumns(((CNodeRigidBody*)GetCNode(0))->GetNumberOfAECoordinates(), GetODE2Size());
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_ODE1.SetNumberOfRowsAndColumns(0, 0); //for safety!
 		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
 
 		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
 
 		//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
-		for (Index i = 0; i < nDisplacementCoordinates; i++) { jacobian(0, i) = 0.; }
+		for (Index i = 0; i < nDisplacementCoordinates; i++) { jacobian_ODE2(0, i) = 0.; }
 		for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(0))->GetNumberOfRotationCoordinates(); i++) 
 		{ 
-			jacobian(0, 3 + i) = 2.*ep[i]; 
+			jacobian_ODE2(0, 3 + i) = 2.*ep[i];
 		}
 	}
 	else

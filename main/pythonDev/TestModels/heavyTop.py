@@ -150,6 +150,7 @@ exu.Print('solution of heavy top =',u)
 #RotXYZ solution EXUDYN:           29.86975964,-0.7683481513,-1.002841906
 
 exudynTestGlobals.testError = u - (33.423125751773306) #2020-02-04 added RigidRxyz: (33.423125751773306) 2020-02-03: (1.7821760506326125)
+exudynTestGlobals.testResult = u
 
 
 

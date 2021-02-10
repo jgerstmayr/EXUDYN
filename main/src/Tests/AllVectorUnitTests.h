@@ -508,10 +508,10 @@ const lest::test linkedDataVector_specific_test[] =
                 EXPECT(v1[0] == 3. / sqrt(25.));
                 EXPECT(v1[1] == 4. / sqrt(25.));
             }
-            SECTION("MultiplyAdd and Sum, SetVector")
+            SECTION("MultAdd and Sum, SetVector")
             {
                 v1.SetVector({ 1, 2});
-                v2.MultiplyAdd(2.5, v1);
+                v2.MultAdd(2.5, v1);
                 EXPECT(ToString(v2) == "[6.5 10]");
 
                 EXPECT(v1.Sum() == 3);

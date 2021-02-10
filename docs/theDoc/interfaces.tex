@@ -15,19 +15,20 @@ SolutionSettings has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    writeSolutionToFile &     bool &      &     True &     flag (true/false), which determines if (global) solution vector is written to file\\ \hline
+    writeSolutionToFile &     bool &      &     True &     flag (true/false), which determines if (global) solution vector is written to file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below\\ \hline
     appendToFile &     bool &      &     False &     flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created)\\ \hline
     writeFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)\\ \hline
     writeFileFooter &     bool &      &     True &     flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics\\ \hline
     solutionWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the solution is written during a simulation\\ \hline
+    exportVelocities &     bool &      &     True &     add ODE2 velocities to solution file\\ \hline
+    exportAccelerations &     bool &      &     True &     add ODE2 accelerations to solution file\\ \hline
+    exportODE1Velocities &     bool &      &     True &     add coordinatesODE1\_t to solution file\\ \hline
+    exportAlgebraicCoordinates &     bool &      &     True &     add algebraicCoordinates (=Lagrange multipliers) to solution file\\ \hline
+    exportDataCoordinates &     bool &      &     True &     add DataCoordinates to solution file\\ \hline
+    coordinatesSolutionFileName &     FileName &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only\\ \hline
     sensorsAppendToFile &     bool &      &     False &     flag (true/false); if true, sensor output is appended to existing file (otherwise created)\\ \hline
     sensorsWriteFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)\\ \hline
     sensorsWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the sensor output is written during a simulation\\ \hline
-    exportVelocities &     bool &      &     True &     solution is written as displacements, velocities[, accelerations] [,algebraicCoordinates] [,DataCoordinates]\\ \hline
-    exportAccelerations &     bool &      &     True &     solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]\\ \hline
-    exportAlgebraicCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]\\ \hline
-    exportDataCoordinates &     bool &      &     True &     solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates\\ \hline
-    coordinatesSolutionFileName &     FileName &      &     'coordinatesSolution.txt' &     \tabnewline filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only\\ \hline
     solverInformationFileName &     FileName &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only\\ \hline
     solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)\\ \hline
     outputPrecision &     Index &      &     10 &     precision for floating point numbers written to solution and sensor files\\ \hline
@@ -54,6 +55,23 @@ NumericalDifferentiationSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{DiscontinuousSettings} \label{sec:DiscontinuousSettings}
+Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.\\ 
+%
+DiscontinuousSettings has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    maxIterations &     Index &      &     5 &     maximum number of discontinuous (post Newton) iterations\\ \hline
+    ignoreMaxIterations &     bool &      &     True &     continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)\\ \hline
+    iterationTolerance &     UReal &      &     1 &     absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NewtonSettings} \label{sec:NewtonSettings}
 Settings for Newton method used in static or dynamic simulation.\\ 
 %
@@ -70,7 +88,7 @@ NewtonSettings has the following items:
     relativeTolerance &     UReal &      &     1e-8 &     relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)\\ \hline
     absoluteTolerance &     UReal &      &     1e-10 &     absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance\\ \hline
     weightTolerancePerCoordinate &     bool &      &     False &     flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size\\ \hline
-    newtonResidualMode &     Index &      &     0 &     0 ... use residual for computation of error (standard); 1 ... use change of solution increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag\\ \hline
+    newtonResidualMode &     Index &      &     0 &     0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag\\ \hline
     adaptInitialResidual &     bool &      &     True &     flag (true/false); false = standard; true: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration\\ \hline
     modifiedNewtonContractivity &     UReal &      &     0.5 &     maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed\\ \hline
     useModifiedNewton &     bool &      &     False &     true: compute Jacobian only at first step; no Jacobian updates per step; false: Jacobian computed in every step\\ \hline
@@ -79,10 +97,6 @@ NewtonSettings has the following items:
     maxModifiedNewtonIterations &     Index &      &     8 &     maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated\\ \hline
     maxModifiedNewtonRestartIterations &     \tabnewline Index &      &     7 &     maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step\\ \hline
     maximumSolutionNorm &     UReal &      &     1e38 &     this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=$u_1^2$+$u_2^2$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)\\ \hline
-    maxDiscontinuousIterations &     Index &      &     5 &     maximum number of discontinuous (post Newton) iterations\\ \hline
-    ignoreMaxDiscontinuousIterations &     \tabnewline bool &      &     True &     continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)\\ \hline
-    discontinuousIterationTolerance &     \tabnewline UReal &      &     1 &     absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high\\ \hline
-    stepInformation &     Index &      &     2 &     0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -107,6 +121,23 @@ GeneralizedAlphaSettings has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ExplicitIntegrationSettings} \label{sec:ExplicitIntegrationSettings}
+Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.\\ 
+%
+ExplicitIntegrationSettings has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    eliminateConstraints &     bool &      &     True &     True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!\\ \hline
+    useLieGroupIntegration &     bool &      &     True &     True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes, but also improves integration of other rigid body nodes. Only available for RK44 integrator.\\ \hline
+    dynamicSolverType &     DynamicSolverType &      &     DynamicSolverType::DOPRI5 &     \tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{TimeIntegrationSettings} \label{sec:TimeIntegrationSettings}
 General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.\\ 
 %
@@ -118,16 +149,26 @@ TimeIntegrationSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     newton &     NewtonSettings &      &      &     parameters for Newton method; used for implicit time integration methods only\\ \hline
-    startTime &     UReal &      &     0 &     start time of time integration (usually set to zero)\\ \hline
-    endTime &     UReal &      &     1 &     end time of time integration\\ \hline
-    numberOfSteps &     UInt &      &     100 &     number of steps in time integration; stepsize is computed from (endTime-startTime)/numberOfSteps\\ \hline
-    adaptiveStep &     bool &      &     True &     true: use step reduction if step fails; false: constant step size\\ \hline
-    minimumStepSize &     UReal &      &     1e-8 &     lower limit of time step size, before integrator stops\\ \hline
+    discontinuous &     DiscontinuousSettings &      &      &     parameters for treatment of discontinuities\\ \hline
+    startTime &     UReal &      &     0 &     $t_{start}$: start time of time integration (usually set to zero)\\ \hline
+    endTime &     UReal &      &     1 &     $t_{end}$: end time of time integration\\ \hline
+    numberOfSteps &     UInt &      &     100 &     $n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$\\ \hline
+    adaptiveStep &     bool &      &     True &     True: the step size may be reduced if step fails; no automatic stepsize control\\ \hline
+    automaticStepSize &     bool &      &     True &     True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; false: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads $h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}$\\ \hline
+    minimumStepSize &     UReal &      &     1e-8 &     $h_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)\\ \hline
+    initialStepSize &     UReal &      &     0 &     $h_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.\\ \hline
+    absoluteTolerance &     UReal &      &     1e-8 &     $a_{tol}$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill $a_{tol} > 0$; see \refSection{sec:ExplicitSolver}\\ \hline
+    relativeTolerance &     UReal &      &     1e-8 &     $r_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r_{tol} \ge 0$; see \refSection{sec:ExplicitSolver}\\ \hline
+    stepSizeSafety &     UReal &      &     0.90 &     $r_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.\\ \hline
+    stepSizeMaxIncrease &     UReal &      &     2 &     $f_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but $> 1$) if too many rejected steps\\ \hline
+    preStepPyExecute &     String &      &     '' &     DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
+    simulateInRealtime &     bool &      &     False &     True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues\\ \hline
+    realtimeFactor &     UReal &      &     1 &     if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)\\ \hline
     verboseMode &     Index &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
     verboseModeFile &     Index &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
+    stepInformation &     Index &      &     2 &     0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step\\ \hline
     generalizedAlpha &     GeneralizedAlphaSettings &      &      &     parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)\\ \hline
-    preStepPyExecute &     String &      &     '' &     DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
-    simulateInRealtime &     bool &      &     False &     true: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues\\ \hline
+    explicitIntegration &     ExplicitIntegrationSettings &      &      &     special parameters for explicit time integration\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -143,6 +184,7 @@ StaticSolverSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     newton &     NewtonSettings &      &      &     parameters for Newton method (e.g. in static solver or time integration)\\ \hline
+    discontinuous &     DiscontinuousSettings &      &      &     parameters for treatment of discontinuities\\ \hline
     numberOfLoadSteps &     Index &      &     1 &     number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once\\ \hline
     loadStepDuration &     UReal &      &     1 &     quasi-time for all load steps (added to current time in load steps)\\ \hline
     loadStepStart &     UReal &      &     0 &     a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user\\ \hline
@@ -154,6 +196,7 @@ StaticSolverSettings has the following items:
     minimumStepSize &     UReal &      &     1e-8 &     lower limit of step size, before nonlinear solver stops\\ \hline
     verboseMode &     Index &      &     1 &     0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse\\ \hline
     verboseModeFile &     Index &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
+    stepInformation &     Index &      &     2 &     0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step\\ \hline
     preStepPyExecute &     String &      &     '' &     DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every load step and after last step, e.g. for postprocessing\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -211,92 +254,15 @@ VSettingsGeneral has the following items:
     drawCoordinateSystem &     bool &      &     True &     false = no coordinate system shown\\ \hline
     drawWorldBasis &     bool &      &     False &     true = draw world basis coordinate system at (0,0,0)\\ \hline
     worldBasisSize &     float &      &     1.0 &     size of world basis coordinate system\\ \hline
-    showComputationInfo &     bool &      &     True &     false = no info about computation (current time, solver, etc.) shown\\ \hline
+    showComputationInfo &     bool &      &     True &     true = show (hide) all computation information including EXUDYN and version\\ \hline
+    showSolutionInformation &     bool &      &     True &     true = show solution information (from simulationSettings.solution)\\ \hline
+    showSolverInformation &     bool &      &     True &     true = solver name and further information shown in render window\\ \hline
+    showSolverTime &     bool &      &     True &     true = solver current time shown in render window\\ \hline
     pointSize &     float &      &     0.01 &     global point size (absolute)\\ \hline
     circleTiling &     Index &      &     16 &     global number of segments for circles; if smaller than 2, 2 segments are used (flat)\\ \hline
     cylinderTiling &     Index &      &     16 &     global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)\\ \hline
     sphereTiling &     Index &      &     6 &     global number of segments for spheres; if smaller than 2, 2 segments are used (flat)\\ \hline
     axesTiling &     Index &      &     12 &     global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
-	  \end{longtable}
-	\end{center}
-
-%+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsWindow} \label{sec:VSettingsWindow}
-Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.\\ 
-%
-VSettingsWindow has the following items:
-%reference manual TABLE
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
-    \hline
-    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of OpenGL render window in pixel\\ \hline
-    startupTimeout &     Index &      &     2500 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
-    alwaysOnTop &     bool &      &     False &     true: OpenGL render window will be always on top of all other windows\\ \hline
-    maximize &     bool &      &     False &     true: OpenGL render window will be maximized at startup\\ \hline
-    showWindow &     bool &      &     True &     true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
-    keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
-    mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
-    keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
-    zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
-    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: def f(key, action, mods): print('key=',key)\\; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
-    showMouseCoordinates &     bool &      &     False &     true: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
-    ignoreKeys &     bool &      &     False &     true: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'\\ \hline
-    ResetKeyPressUserFunction() &     void &      &      &     set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself\\ \hline
-	  \end{longtable}
-	\end{center}
-
-%+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsOpenGL} \label{sec:VSettingsOpenGL}
-OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. \\ 
-%
-VSettingsOpenGL has the following items:
-%reference manual TABLE
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
-    \hline
-    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True\\ \hline
-    initialZoom &     float &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
-    initialMaxSceneSize &     float &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
-    initialModelRotation &     StdArray33F &     3x3 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]\\ \hline
-    multiSampling &     Index &     1 &     1 &     multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
-    lineWidth &     float &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
-    lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
-    textLineWidth &     float &     1 &     1. &     width of lines used for representation of text\\ \hline
-    textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
-    showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
-    facesTransparent &     bool &     1 &     False &     true: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
-    showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
-    shadeModelSmooth &     bool &     1 &     True &     true: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
-    materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f ambient color of material\\ \hline
-    materialShininess &     float &     1 &     32. &     shininess of material\\ \hline
-    materialSpecular &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f specular color of material\\ \hline
-    enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
-    lightModelLocalViewer &     bool &     1 &     False &     select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
-    lightModelTwoSide &     bool &     1 &     True &     enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
-    lightModelAmbient &     Float4 &     4 &     [0.,0.,0.,1.] &     \tabnewline global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])\\ \hline
-    enableLight0 &     bool &     1 &     True &     turn on/off light0\\ \hline
-    light0position &     Float4 &     4 &     [0.2,0.2,10.,0.] &     \tabnewline 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
-    light0ambient &     float &     1 &     0.3 &     ambient value of GL\_LIGHT0\\ \hline
-    light0diffuse &     float &     1 &     0.6 &     diffuse value of GL\_LIGHT0\\ \hline
-    light0specular &     float &     1 &     0.5 &     specular value of GL\_LIGHT0\\ \hline
-    light0constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
-    light0linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT0, this is a linear factor for attenuation of the light source with distance\\ \hline
-    light0quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT0, this is a quadratic factor for attenuation of the light source with distance\\ \hline
-    enableLight1 &     bool &     1 &     True &     turn on/off light1\\ \hline
-    light1position &     Float4 &     4 &     [1.,1.,-10.,0.] &     \tabnewline 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
-    light1ambient &     float &     1 &     0.0  &     ambient value of GL\_LIGHT1\\ \hline
-    light1diffuse &     float &     1 &     0.5 &     diffuse value of GL\_LIGHT1\\ \hline
-    light1specular &     float &     1 &     0.6 &     specular value of GL\_LIGHT1\\ \hline
-    light1constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1\\ \hline
-    light1linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT1, this is a linear factor for attenuation of the light source with distance\\ \hline
-    light1quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT1, this is a quadratic factor for attenuation of the light source with distance\\ \hline
-    drawFaceNormals &     bool &     1 &     False &     draws triangle normals, e.g. at center of triangles; used for debugging of faces\\ \hline
-    drawVertexNormals &     bool &     1 &     False &     draws vertex normals; used for debugging\\ \hline
-    drawNormalsLength &     float &     1 &     0.1 &     length of normals; used for debugging\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -319,24 +285,6 @@ VSettingsContour has the following items:
     reduceRange &     bool &      &     True &     if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)\\ \hline
     showColorBar &     bool &      &     True &     show the colour bar with minimum and maximum values for the contour plot\\ \hline
     colorBarTiling &     Index &     1 &     12 &     number of tiles (segements) shown in the colorbar for the contour plot\\ \hline
-	  \end{longtable}
-	\end{center}
-
-%+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsExportImages} \label{sec:VSettingsExportImages}
-Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.\\ 
-%
-VSettingsExportImages has the following items:
-%reference manual TABLE
-\begin{center}
-  \footnotesize
-  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
-    \hline
-    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    saveImageTimeOut &     Index &      &     5000 &     timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
-    saveImageFileName &     FileName &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); ; directory will be created if it does not exist\\ \hline
-    saveImageFileCounter &     Index &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
-    saveImageSingleFile &     bool &      &     False &     true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -483,6 +431,104 @@ VSettingsSensors has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsWindow} \label{sec:VSettingsWindow}
+Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.\\ 
+%
+VSettingsWindow has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of OpenGL render window in pixel\\ \hline
+    startupTimeout &     Index &      &     2500 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
+    alwaysOnTop &     bool &      &     False &     true: OpenGL render window will be always on top of all other windows\\ \hline
+    maximize &     bool &      &     False &     true: OpenGL render window will be maximized at startup\\ \hline
+    showWindow &     bool &      &     True &     true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
+    keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
+    mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
+    keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
+    zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
+    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: def f(key, action, mods): print('key=',key)\\; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
+    showMouseCoordinates &     bool &      &     False &     true: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
+    ignoreKeys &     bool &      &     False &     true: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'\\ \hline
+    ResetKeyPressUserFunction() &     void &      &      &     set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsOpenGL} \label{sec:VSettingsOpenGL}
+OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. \\ 
+%
+VSettingsOpenGL has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True\\ \hline
+    initialZoom &     float &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
+    initialMaxSceneSize &     float &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
+    initialModelRotation &     StdArray33F &     3x3 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]\\ \hline
+    multiSampling &     Index &     1 &     1 &     multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
+    lineWidth &     float &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
+    lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
+    textLineWidth &     float &     1 &     1. &     width of lines used for representation of text\\ \hline
+    textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
+    showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
+    facesTransparent &     bool &     1 &     False &     true: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
+    showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
+    shadeModelSmooth &     bool &     1 &     True &     true: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
+    materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f ambient color of material\\ \hline
+    materialShininess &     float &     1 &     32. &     shininess of material\\ \hline
+    materialSpecular &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f specular color of material\\ \hline
+    enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
+    lightModelLocalViewer &     bool &     1 &     False &     select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
+    lightModelTwoSide &     bool &     1 &     True &     enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
+    lightModelAmbient &     Float4 &     4 &     [0.,0.,0.,1.] &     \tabnewline global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])\\ \hline
+    enableLight0 &     bool &     1 &     True &     turn on/off light0\\ \hline
+    light0position &     Float4 &     4 &     [0.2,0.2,10.,0.] &     \tabnewline 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
+    light0ambient &     float &     1 &     0.3 &     ambient value of GL\_LIGHT0\\ \hline
+    light0diffuse &     float &     1 &     0.6 &     diffuse value of GL\_LIGHT0\\ \hline
+    light0specular &     float &     1 &     0.5 &     specular value of GL\_LIGHT0\\ \hline
+    light0constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
+    light0linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT0, this is a linear factor for attenuation of the light source with distance\\ \hline
+    light0quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT0, this is a quadratic factor for attenuation of the light source with distance\\ \hline
+    enableLight1 &     bool &     1 &     True &     turn on/off light1\\ \hline
+    light1position &     Float4 &     4 &     [1.,1.,-10.,0.] &     \tabnewline 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
+    light1ambient &     float &     1 &     0.0  &     ambient value of GL\_LIGHT1\\ \hline
+    light1diffuse &     float &     1 &     0.5 &     diffuse value of GL\_LIGHT1\\ \hline
+    light1specular &     float &     1 &     0.6 &     specular value of GL\_LIGHT1\\ \hline
+    light1constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1\\ \hline
+    light1linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT1, this is a linear factor for attenuation of the light source with distance\\ \hline
+    light1quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT1, this is a quadratic factor for attenuation of the light source with distance\\ \hline
+    drawFaceNormals &     bool &     1 &     False &     draws triangle normals, e.g. at center of triangles; used for debugging of faces\\ \hline
+    drawVertexNormals &     bool &     1 &     False &     draws vertex normals; used for debugging\\ \hline
+    drawNormalsLength &     float &     1 &     0.1 &     length of normals; used for debugging\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsExportImages} \label{sec:VSettingsExportImages}
+Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.\\ 
+%
+VSettingsExportImages has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    saveImageTimeOut &     Index &      &     5000 &     timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
+    saveImageFileName &     FileName &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); ; directory will be created if it does not exist\\ \hline
+    saveImageFileCounter &     Index &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
+    saveImageSingleFile &     bool &      &     False &     true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{VisualizationSettings} \label{sec:VisualizationSettings}
 Settings for visualization. \\ 
 %
@@ -494,16 +540,16 @@ VisualizationSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     general &     VSettingsGeneral &      &      &     general visualization settings\\ \hline
-    window &     VSettingsWindow &      &      &     visualization window and interaction settings\\ \hline
-    openGL &     VSettingsOpenGL &      &      &     OpenGL rendering settings\\ \hline
     contour &     VSettingsContour &      &      &     contour plot visualization settings\\ \hline
-    exportImages &     VSettingsExportImages &      &      &     settings for exporting (saving) images to files in order to create animations\\ \hline
     nodes &     VSettingsNodes &      &      &     node visualization settings\\ \hline
     bodies &     VSettingsBodies &      &      &     body visualization settings\\ \hline
     connectors &     VSettingsConnectors &      &      &     connector visualization settings\\ \hline
     markers &     VSettingsMarkers &      &      &     marker visualization settings\\ \hline
     loads &     VSettingsLoads &      &      &     load visualization settings\\ \hline
     sensors &     VSettingsSensors &      &      &     sensor visualization settings\\ \hline
+    window &     VSettingsWindow &      &      &     visualization window and interaction settings\\ \hline
+    openGL &     VSettingsOpenGL &      &      &     OpenGL rendering settings\\ \hline
+    exportImages &     VSettingsExportImages &      &      &     settings for exporting (saving) images to files in order to create animations\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -528,14 +574,17 @@ CSolverTimer has the following items:
     newtonIncrement &     Real &      &     0. &     Jac$^{-1}$ * RHS; backsubstitution\\ \hline
     integrationFormula &     Real &      &     0. &     time spent for evaluation of integration formulas\\ \hline
     ODE2RHS &     Real &      &     0. &     time for residual evaluation of ODE2 right-hand-side\\ \hline
+    ODE1RHS &     Real &      &     0. &     time for residual evaluation of ODE1 right-hand-side\\ \hline
     AERHS &     Real &      &     0. &     time for residual evaluation of algebraic equations right-hand-side\\ \hline
     totalJacobian &     Real &      &     0. &     time for all jacobian computations\\ \hline
+    jacobianODE1 &     Real &      &     0. &     jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)\\ \hline
     jacobianODE2 &     Real &      &     0. &     jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)\\ \hline
     jacobianODE2\_t &     Real &      &     0. &     jacobian w.r.t. coordinates\_t of ODE2 equations (not counted in sum)\\ \hline
     jacobianAE &     Real &      &     0. &     jacobian of algebraic equations (not counted in sum)\\ \hline
     massMatrix &     Real &      &     0. &     mass matrix computation\\ \hline
     reactionForces &     Real &      &     0. &     CqT * lambda\\ \hline
     postNewton &     Real &      &     0. &     post newton step\\ \hline
+    errorEstimator &     Real &      &     0. &     for explicit solvers, additional evaluation\\ \hline
     writeSolution &     Real &      &     0. &     time for writing solution\\ \hline
     overhead &     Real &      &     0. &     overhead, such as initialization, copying and some matrix-vector multiplication\\ \hline
     python &     Real &      &     0. &     time spent for python functions\\ \hline
@@ -571,6 +620,8 @@ SolverLocalData has the following items:
     temp2ODE2 &     ResizableVector &      &      &     second temporary vector for ODE2 quantities; use in static computation\\ \hline
     tempODE2F0 &     ResizableVector &      &      &     temporary vector for ODE2 Jacobian\\ \hline
     tempODE2F1 &     ResizableVector &      &      &     temporary vector for ODE2 Jacobian\\ \hline
+    tempODE1F0 &     ResizableVector &      &      &     temporary vector for ODE1 Jacobian\\ \hline
+    tempODE1F1 &     ResizableVector &      &      &     temporary vector for ODE1 Jacobian\\ \hline
     startOfStepStateAAlgorithmic &     ResizableVector &      &      &     additional term needed for generalized alpha (startOfStep state)\\ \hline
     aAlgorithmic &     ResizableVector &      &      &     additional term needed for generalized alpha (current state)\\ \hline
     CleanUpMemory() &     void &      &      &     if desired, temporary data is cleaned up to safe memory\\ \hline
@@ -591,11 +642,14 @@ SolverIterationData has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     maxStepSize &     Real &      &     0. &     constant or maximum stepSize\\ \hline
-    minStepSize &     Real &      &     0. &     minimum stepSize for static/dynamic solver; only used, if adaptive step is activated\\ \hline
+    minStepSize &     Real &      &     0. &     minimum stepSize for static/dynamic solver; only used, if automaticStepSize is activated\\ \hline
+    initialStepSize &     Real &      &     1e-6 &     initial stepSize for dynamic solver; only used, if automaticStepSize is activated\\ \hline
+    lastStepSize &     Real &      &     0. &     stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated\\ \hline
     currentStepSize &     Real &      &     0. &     stepSize of current step\\ \hline
     numberOfSteps &     Index &      &     0 &     number of time steps (if fixed size); $n$\\ \hline
     currentStepIndex &     Index &      &     0 &     current step index; $i$\\ \hline
-    adaptiveStep &     bool &      &     True &     if true, the step size may be adaptively controlled\\ \hline
+    adaptiveStep &     bool &      &     True &     True: the step size may be reduced if step fails; no automatic stepsize control\\ \hline
+    automaticStepSize &     bool &      &     True &     True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); false: constant step size used (step may be reduced if adaptiveStep=True)\\ \hline
     currentTime &     Real &      &     0. &     holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration\\ \hline
     startTime &     Real &      &     0. &     time at beginning of time integration\\ \hline
     endTime &     Real &      &     0. &     end time of static/dynamic solver\\ \hline
@@ -605,6 +659,8 @@ SolverIterationData has the following items:
     newtonJacobiCount &     Index &      &     0 &     count total Newton jacobian computations\\ \hline
     rejectedModifiedNewtonSteps &     Index &      &     0 &     count the number of rejected modified Newton steps (switch to full Newton)\\ \hline
     discontinuousIterationsCount &     Index &      &     0 &     count total number of discontinuous iterations (min. 1 per step)\\ \hline
+    rejectedAutomaticStepSizeSteps &     \tabnewline Index &      &     0 &     count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)\\ \hline
+    automaticStepSizeError &     Real &      &     0 &     estimated error (relative to atol + rtol*solution) of last step; must be $\le 1$  for a step to be accepted\\ \hline
     ToString() &     String &      &      &     convert iteration statistics to string; used for displayStatistics option\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -621,7 +677,7 @@ SolverConvergenceData has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     stepReductionFailed &     bool &      &     False &     true, if iterations over time/static steps failed (finally, cannot be recovered)\\ \hline
-    discontinuousIterationsFailed &     \tabnewline bool &      &     False &     true, if discontinuous iterations failed (may be recovered if adaptive step is active)\\ \hline
+    discontinuousIterationSuccessful &     \tabnewline bool &      &     True &     true, if last discontinuous iteration had success (failure may be recovered by adaptive step)\\ \hline
     linearSolverFailed &     bool &      &     False &     true, if linear solver failed to factorize\\ \hline
     newtonConverged &     bool &      &     False &     true, if Newton has (finally) converged\\ \hline
     newtonSolutionDiverged &     bool &      &     False &     true, if Newton diverged (may be recovered)\\ \hline
@@ -650,6 +706,7 @@ SolverOutputData has the following items:
     finishedSuccessfully &     bool &      &     False &     flag is false until solver finshed successfully (can be used as external trigger)\\ \hline
     verboseMode &     Index &      &     0 &     this is a copy of the solvers verboseMode used for console output\\ \hline
     verboseModeFile &     Index &      &     0 &     this is a copy of the solvers verboseModeFile used for file\\ \hline
+    stepInformation &     Index &      &     0 &     this is a copy of the solvers stepInformation used for console output\\ \hline
     writeToSolutionFile &     bool &      &     False &     if false, no solution file is generated and no file is written\\ \hline
     writeToSolverFile &     bool &      &     False &     if false, no solver output file is generated and no file is written\\ \hline
     sensorValuesTemp &     ResizableVector &      &      &     temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor)\\ \hline
@@ -704,8 +761,8 @@ MainSolverStatic has the following items:
     FinishStep(...) &     void &      &     mainSystem, simulationSettings &     finish static step / time step; write output of results to file\\ \hline
     DiscontinuousIteration(...) &     bool &      &     mainSystem, simulationSettings &     perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual\\ \hline
     Newton(...) &     bool &      &     mainSystem, simulationSettings &     perform Newton method for given solver method\\ \hline
-    ComputeNewtonResidual(...) &     void &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store result in systemResidual\\ \hline
-    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings &     compute update for currentState from newtonSolution (decrement from residual and jacobian)\\ \hline
+    ComputeNewtonResidual(...) &     Real &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)\\ \hline
+    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=true &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
     WriteSolutionFileHeader(...) &     void &      &     mainSystem, simulationSettings &     write unique file header, depending on static/ dynamic simulation\\ \hline
     WriteCoordinatesToFile(...) &     void &      &     mainSystem, simulationSettings &     write unique coordinates solution file\\ \hline
@@ -733,11 +790,11 @@ MainSolverStatic has the following items:
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{MainSolverImplicitSecondOrder} \label{sec:MainSolverImplicitSecondOrder}
-PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to python interfaces, and should thus be used for small systems. To access the solver in python, write \bi
+PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to python interfaces, and should thus be used for small systems. To access the solver in python, write \bi
  \item[] solver = MainSolverImplicitSecondOrder() 
 \ei
  and hereafter you can access all data and functions via 'solver'.
- In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance.\\ 
+ In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction...(...), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.\\ 
 %
 MainSolverImplicitSecondOrder has the following items:
 %reference manual TABLE
@@ -746,11 +803,12 @@ MainSolverImplicitSecondOrder has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    timer &     CSolverTimer &      &      &     timer which measures the CPU time of solver sub functions\\ \hline
+    timer &     CSolverTimer &      &      &     timer which measures the CPU time of solver sub functions; note that solver structures can only be written indirectly, e.g.,  timer=dynamicSolver.timer; timer.useTimer = False; dynamicSolver.timer=timer; however, dynamicSolver.timer.useTimer cannot be written.\\ \hline
     it &     SolverIterationData &      &      &     all information about iterations (steps, discontinuous iteration, newton,...)\\ \hline
     conv &     SolverConvergenceData &      &      &     all information about tolerances, errors and residua\\ \hline
     output &     SolverOutputData &      &      &     output modes and timers for exporting solver information and solution\\ \hline
     newton &     NewtonSettings &      &      &     copy of newton settings from timeint or staticSolver\\ \hline
+    useOldAccBasedSolver &     bool &      &     False &     set this flag True, to use old (until 2021-02-05) accelerations based generalized alpha solver; this is outdated, but kept in order to ensure compatibility for some time (will be ERASED in FUTURE!)\\ \hline
     newmarkBeta &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
     newmarkGamma &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
     alphaM &     Real &      &      &     copy of parameter in timeIntegration.generalizedAlpha\\ \hline
@@ -789,8 +847,8 @@ MainSolverImplicitSecondOrder has the following items:
     FinishStep(...) &     void &      &     mainSystem, simulationSettings &     finish static step / time step; write output of results to file\\ \hline
     DiscontinuousIteration(...) &     bool &      &     mainSystem, simulationSettings &     perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual\\ \hline
     Newton(...) &     bool &      &     mainSystem, simulationSettings &     perform Newton method for given solver method\\ \hline
-    ComputeNewtonResidual(...) &     void &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store result in systemResidual\\ \hline
-    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings &     compute update for currentState from newtonSolution (decrement from residual and jacobian)\\ \hline
+    ComputeNewtonResidual(...) &     Real &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)\\ \hline
+    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=true &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
     ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
     WriteSolutionFileHeader(...) &     void &      &     mainSystem, simulationSettings &     write unique file header, depending on static/ dynamic simulation\\ \hline
     WriteCoordinatesToFile(...) &     void &      &     mainSystem, simulationSettings &     write unique coordinates solution file\\ \hline
@@ -812,6 +870,70 @@ MainSolverImplicitSecondOrder has the following items:
     ComputeJacobianODE2RHS\_t(...) &     \tabnewline void &      &     mainSystem, scalarFactor=1. &     add jacobian of ODE2RHS\_t (multiplied with factor) to systemJacobian in cSolver\\ \hline
     ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2\_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level\\ \hline
     ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)\\ \hline
+    ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)\\ \hline
     ComputeAlgebraicEquations(...) &     \tabnewline void &      &     mainSystem, velocityLevel=false &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{MainSolverExplicit} \label{sec:MainSolverExplicit}
+PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to python interfaces, and should thus be used for small systems. To access the solver in python, write \bi
+ \item[] solver = MainSolverExplicit() 
+\ei
+ and hereafter you can access all data and functions via 'solver'.
+ In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme ...).\\ 
+%
+MainSolverExplicit has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    timer &     CSolverTimer &      &      &     timer which measures the CPU time of solver sub functions\\ \hline
+    it &     SolverIterationData &      &      &     all information about iterations (steps, discontinuous iteration, newton,...)\\ \hline
+    conv &     SolverConvergenceData &      &      &     all information about tolerances, errors and residua\\ \hline
+    output &     SolverOutputData &      &      &     output modes and timers for exporting solver information and solution\\ \hline
+    ComputeLoadFactor(...) &     Real &      &     simulationSettings &     for static solver, this is a factor in interval [0,1]; MUST be overwritten\\ \hline
+    GetNumberOfStages() &     Index &      &      &     return number of stages in current method\\ \hline
+    GetMethodOrder() &     Index &      &      &     return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5)\\ \hline
+    GetSolverName() &     std::string &      &      &     get solver name - needed for output file header and visualization window\\ \hline
+    IsStaticSolver() &     bool &      &      &     return true, if static solver; needs to be overwritten in derived class\\ \hline
+    GetSimulationEndTime(...) &     Real &      &     simulationSettings &     compute simulation end time (depends on static or time integration solver)\\ \hline
+    ReduceStepSize(...) &     bool &      &     mainSystem, simulationSettings, severity &     reduce step size (1..normal, 2..severe problems); return true, if reduction was successful\\ \hline
+    IncreaseStepSize(...) &     void &      &     mainSystem, simulationSettings &     increase step size if convergence is good\\ \hline
+    InitializeSolver(...) &     bool &      &     mainSystem, simulationSettings &     initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files\\ \hline
+    PreInitializeSolverSpecific(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset\\ \hline
+    InitializeSolverOutput(...) &     void &      &     mainSystem, simulationSettings &     initialize output files; called from InitializeSolver()\\ \hline
+    InitializeSolverPreChecks(...) &     \tabnewline bool &      &     mainSystem, simulationSettings &     check if system is solvable; initialize dense/sparse computation modes\\ \hline
+    InitializeSolverData(...) &     void &      &     mainSystem, simulationSettings &     initialize all data,it,conv; called from InitializeSolver()\\ \hline
+    InitializeSolverInitialConditions(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     set/compute initial conditions (solver-specific!); called from InitializeSolver()\\ \hline
+    PostInitializeSolverSpecific(...) &     \tabnewline void &      &     mainSystem, simulationSettings &     post-initialize for solver specific tasks; called at the end of InitializeSolver\\ \hline
+    SolveSystem(...) &     bool &      &     mainSystem, simulationSettings &     solve System: InitializeSolver, SolveSteps, FinalizeSolver\\ \hline
+    FinalizeSolver(...) &     void &      &     mainSystem, simulationSettings &     write concluding information (timer statistics, messages) and close files\\ \hline
+    SolveSteps(...) &     bool &      &     mainSystem, simulationSettings &     main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else\\ \hline
+    UpdateCurrentTime(...) &     void &      &     mainSystem, simulationSettings &     update currentTime (and load factor); MUST be overwritten in special solver class\\ \hline
+    InitializeStep(...) &     void &      &     mainSystem, simulationSettings &     initialize static step / time step; python-functions; do some outputs, checks, etc.\\ \hline
+    FinishStep(...) &     void &      &     mainSystem, simulationSettings &     finish static step / time step; write output of results to file\\ \hline
+    DiscontinuousIteration(...) &     bool &      &     mainSystem, simulationSettings &     perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual\\ \hline
+    Newton(...) &     bool &      &     mainSystem, simulationSettings &     perform Newton method for given solver method\\ \hline
+    ComputeNewtonResidual(...) &     Real &      &     mainSystem, simulationSettings &     compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)\\ \hline
+    ComputeNewtonUpdate(...) &     void &      &     mainSystem, simulationSettings, initial=true &     compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0\\ \hline
+    ComputeNewtonJacobian(...) &     void &      &     mainSystem, simulationSettings &     compute jacobian for newton method of given solver method; store result in systemJacobian\\ \hline
+    WriteSolutionFileHeader(...) &     void &      &     mainSystem, simulationSettings &     write unique file header, depending on static/ dynamic simulation\\ \hline
+    WriteCoordinatesToFile(...) &     void &      &     mainSystem, simulationSettings &     write unique coordinates solution file\\ \hline
+    IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
+    VerboseWrite(...) &     void &      &     level, str &     write to console and/or file in case of level\\ \hline
+    GetODE2size() &     Index &      &      &     number of ODE2 equations in solver\\ \hline
+    GetODE1size() &     Index &      &      &     number of ODE1 equations in solver (not yet implemented)\\ \hline
+    GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
+    GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
+    GetSystemMassMatrix() &     NumpyMatrix &      &      &     get locally stored / last computed mass matrix of solver\\ \hline
+    GetSystemResidual() &     NumpyVector &      &      &     get locally stored / last computed system residual\\ \hline
+    SetSystemMassMatrix(...) &     void &      &     systemMassMatrix &     set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE\\ \hline
+    SetSystemResidual(...) &     void &      &     systemResidual &     set locally stored system residual; must have size nODE2+nODE1+nAE\\ \hline
+    ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix\\ \hline
+    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)\\ \hline
+    ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)\\ \hline
 	  \end{longtable}
 	\end{center}

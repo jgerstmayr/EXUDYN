@@ -16,7 +16,7 @@
 \usepackage{longtable} %for tables in reference manual
 \usepackage{mathtools} %for \prescript
 
-\usepackage[latin1]{inputenc} %Achtung, dies ist die File-Encodierung (wird meist als ANSI angezeigt) und sollte nicht auf UTF-8 stehen (in Notepad++ umstellen!)
+\usepackage[latin1]{inputenc} %this is the file encoding; should be ANSI if special characters (german) are used
 \usepackage[T1]{fontenc}
 
 %\input{docincludes}
@@ -36,6 +36,7 @@
 						}
 \newcommand{\exuUrl}[2]{\href{#1}{\underline{#2}}} %\exuUrl{github.com}{link to github}
 \newcommand{\refSection}[1]{\hyperref[#1]{\underline{Section \ref*{#1}}}} %see \refSection{sec_label}
+\newcommand{\refChapter}[1]{\hyperref[#1]{\underline{Chapter \ref*{#1}}}} %see \refSection{sec_label}
 
 \usepackage{enumitem} %for adjustable indentation in itemize (leftmargin=...)
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -193,7 +194,7 @@ numberstyle=\ttm    						% line number style
 \setcounter{page}{0}
 \pagestyle{empty}
 
-\headsep3cm 
+\headsep1cm 
 \begin{center}
 %{\Large {\it Python based Multibody System Dynamics Simulation}}\vspace{1cm}\\
 %{\Large {\it fleXible multibody system DYNAmics Parallelized with Python interface}}\vspace{1cm}\\
@@ -204,7 +205,7 @@ numberstyle=\ttm    						% line number style
 %\vspace{6cm}
 \vspace{0.2cm}
 \begin{center}
-	\includegraphics[height=11cm]{intro2.png}\\
+	\includegraphics[height=14cm]{intro2.png}\\
 	{\tiny (mesh and FEM-model generated with NETGEN and NGsolve -- 647058 total coordinates)}
 \end{center}
 \vspace{0.2cm}
@@ -313,6 +314,38 @@ Furthermore, angles are generally provided in radian ($2\pi$ equals 360$^o$) and
 
 Functions have been implemented, if not otherwise mentioned, by Johannes Gerstmayr.
 
+
+\mysubsection{Utility: ResultsMonitor}
+\label{sec:resultsMonitor}
+The results monitor is a special tool, which allows to monitor results during simulation.
+This is intended, e.g., to show results for long-term simulations or to visualize results for teaching.
+The tool can visualize time dependent data (e.g., from sensors or solution files) or data from optimization.
+The tool automatically detects the type of file and visualizes all given columns (default) or selected 
+columns of the file.
+
+For running the results monitor, start a terminal (linux) or an Anaconda prompt (windows). 
+Either you copy the \texttt{resultsLoader.py}, located in the \texttt{main/pythonDev/exudyn} subfolder of the repository, to your desired/current directory or you call it from a relative path from your current directory.
+%Just run the tool, if \codeName\ is installed, by typing \texttt{python resultsMonitor.py file.txt} to continuously visualize the results in \texttt{file.txt}.
+Usage is described by typing \texttt{python resultsMonitor.py -h}, as given in the following listing:
+\plainlststyle
+{\ttfamily \footnotesize
+\begin{lstlisting}[breaklines=true]
+usage for resultsLoader:
+  python resultsLoader.py file.txt
+options:
+  -xcols i,j,..: comma-separated columns (NO SPACES!) to be plotted on x-axis
+  -ycols i,j,..: comma-separated columns (NO SPACES!) to be plotted on y-axis
+  -logx: use log scale for x-axis
+  -logy: use log scale for y-axis
+  -sizex float: float = x-size of one subplot in inches (default=5)
+  -sizey float: float = y-size of one subplot in inches (default=5)
+  -update float: float = update period in seconds
+  -color char: char = line color code according to pyplot, default=b (blue)
+  -style char: char = line symbol according to pyplot, default="-"
+example: (to be called from windows Anaconda prompt or in linux terminal in the directory where file.txt lies)
+  python resultsMonitor.py file.txt -logy -xcols 0,1 -ycols 2,3 -update 0.2
+\end{lstlisting} }
+\pythonstyle
 \input{pythonUtilitiesDescription}
 
 
@@ -382,15 +415,16 @@ The cross product or vector product '$\times$' is often replaced by the skew sym
   \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |}
     \hline
     \bf python name (or description) & \bf symbol & \bf description \\ \hline
-    displacement coordinates & $\qv = [q_0,\, \ldots,\, q_n]\tp$ & vector of $n$ displacement based coordinates in any configuration\\ \hline
-    rotation coordinates & $\tpsi = [\psi_0,\, \ldots,\, \psi_\eta]\tp$ & vector of $\eta$ {\bf rotation based coordinates} in any configuration; this coordinates are added to reference rotation parameters to provide the current rotation parameters\\ \hline
+    displacement coordinates (ODE2) & $\qv = [q_0,\, \ldots,\, q_n]\tp$ & vector of $n$ displacement based coordinates in any configuration; used for second order differential equations\\ \hline
+    rotation coordinates (ODE2) & $\tpsi = [\psi_0,\, \ldots,\, \psi_\eta]\tp$ & vector of $\eta$ {\bf rotation based coordinates} in any configuration; these coordinates are added to reference rotation parameters to provide the current rotation parameters; used for second order differential equations\\ \hline
+    coordinates (ODE1) & $\yv = [y_0,\, \ldots,\, y_n]\tp$ & vector of $n$ coordinates for first order ordinary differential equations (ODE1) in any configuration\\ \hline
     algebraic coordinates & $\zv = [z_0,\, \ldots,\, z_m]\tp$ & vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration\\ \hline
     Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates) in any configuration\\ \hline
     data coordinates & $\xv = [x_0,\, \ldots,\, x_l]\tp$ & vector of $l$ data coordinates in any configuration\\ \hline
 %+++++++++++++++++++++++++++++++++++++++++++++++++++
     \hline %new part of table
 		\bf python name: OutputVariable & \bf symbol & \bf description \\ \hline
-    Coordinate & $\cv = [c_0,\, \ldots,\, c_n]\tp$ & coordinate vector with $n$ generalized coordinates $c_i$ in any configuration\\ \hline
+    Coordinate & $\cv = [c_0,\, \ldots,\, c_n]\tp$ & coordinate vector with $n$ generalized coordinates $c_i$ in any configuration; the letter $c$ is used both for ODE1 and ODE2 coordinates\\ \hline
     Coordinate\_t & $\dot \cv = [c_0,\, \ldots,\, c_n]\tp$ & time derivative of coordinate vector\\ \hline
     Displacement & $\LU{0}{\uv} = [u_0,\, u_1,\, u_2]\tp$ & global displacement vector with 3 displacement coordinates $u_i$ in any configuration; in 1D or 2D objects, some of there coordinates may be zero\\ \hline
     Rotation & $\ttheta = [\theta_0,\, \ldots,\, \theta_n]\tp$ & vector of {\bf rotation parameters} (e.g., Euler parameters, Tait Bryan angles, ...) with $n$ coordinates $\theta_i$ in any configuration\\ \hline
@@ -454,8 +488,9 @@ in which $\LU{0,m0}{\Rot}$ is the transformation matrix of (the body or node of)
 \input{itemDefinition}
 
 
-\mysection{\codeName\ Settings}
-This section includes the reference manual for settings which are available in the python interface, e.g.\ simulation settings, visualization settings, and others.
+\mysection{\codeName\ Settings and Solver Structures}
+This section includes the reference manual for settings which are available in the python interface, e.g.\ simulation settings, visualization settings, and structures for solvers. The data is auto-generated from the according interfaces in order to keep fully 
+up-to-date with changes.
 
 \input{interfaces}
 
@@ -642,50 +677,7 @@ Greek characters include: $\alpha, \beta, \gamma, \delta, \varepsilon, \zeta, \e
 Note, that unicode character codes are shown only for completeness, but they {\bf cannot be encoded by \codeName}!
 
 
-
-
-%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysection{System of equations}
-The general idea of the code is to have objects, which provide equations (ODE2, ODE1, AE).
-The solver then assembles these equations and solves the static or dynamic problem.
-The system structure and solver follow partially the previous implementation in HOTINT \cite{GerstmayrStangl2004,Gerstmayr2009,GerstmayrEtAl2013}.
-
-\mysubsection{LHS-RHS naming conventions in EXUDYN} \label{eq_equationLHSRHS}
-
-Functions and variables contain the abbreviations LHS ({\it left-hand-side}) and RHS ({\it right-hand-side}), sometimes lower-case, in order
-to distinguish if terms are computed at the LHS or RHS.
-
-The objects have the following LHS--RHS conventions:
-\bi
-		\item the acceleration term, e.g., $m \cdot \ddot q$ is always positive on the LHS
-	  \item objects, connectors, etc., use LHS conventions for most terms: mass, stiffness matrix, elastic forces, damping, etc., are computed at LHS of the object equation
-		\item object forces are written at the RHS of the object equation
-		\item in case of constraint or connector equations, there is no LHS or RHS, as there is no acceleration term. 
-		Therefore, the computation function evaluates the term as given in the description of the object, adding it to the LHS.
-\ei
-Object equations may read, e.g., for one coordinate $q$, mass $m$, damping coefficient $d$, stiffness $k$ and applied force $f$,
-\be
-  \underbrace{m \cdot \ddot q + d \cdot \dot q + k \cdot q}_{LHS} = \underbrace{f}_{RHS}
-\ee 
-In this case, the C++ function \texttt{ComputeODE2LHS(const Vector\& ode2Lhs)} will compute the term
-$d \cdot \dot q + k \cdot q$ with positive sign. Note that the acceleration term $m \cdot \ddot q$ is computed separately, as it 
-is computed from mass matrix and acceleration.
-
-However, system quantities (e.g.\ within the solver) are always written on RHS, except for the acceleration and mass matrix: 
-\be 
-  \underbrace{M_{sys} \cdot \ddot q_{sys}}_{LHS} = \underbrace{f_{sys}}_{RHS} \,.
-\ee
-In the case of the object equation
-\be
-  m \cdot \ddot q + d \cdot \dot q + k \cdot q = f \, ,
-\ee 
-the RHS term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is computed by the C++ function \texttt{ComputeSystemODE2RHS}.
-
-This means, that during computation, terms which appear at the LHS of the object are transferred to the RHS of the system equation.
-This enables a simpler setup of equations for the solver.
-
-\mysection{Solver}\label{sec:solver:equations}
+%equations of motion and solver
 \input{solver}
 
 \mysection{Issues and bugs}

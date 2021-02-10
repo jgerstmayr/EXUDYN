@@ -7,6 +7,7 @@ This section will show:
 	\item Coordinates: reference coordinates and displacements
 	\item Nodes, Objects, Markers and Loads
 \ei
+For an introduction to the solvers, see \refSection{sec:solvers}.
 
 \mysubsubsection{Overview of modules}
 Currently, the module structure is simple:
@@ -311,11 +312,14 @@ The visualization settings structure can be accessed in the system container \te
 \mysubsubsubsection{Storing the model view}
 \label{sec:storing:modelview}
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.GetRenderState()} and \texttt{SC.SetRenderState()}.
-When executing 
-A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation:
+%
+A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\footnote{
+note that \texttt{visualizationSettings.general.autoFitScene} should be set False if you want to use the stored zoom factor}:
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
 import exudyn as exu
+SC=exu.SystemContainer()
+SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
 exu.StartRenderer()
 if 'renderState' in exu.sys:
     SC.SetRenderState(exu.sys['renderState']) 
@@ -346,6 +350,7 @@ which contains the last state of the renderer.
 Now copy the output and set this with \texttt{SC.SetRenderState} in your Python code to have a fixed model view in every simulation (\texttt{SC.SetRenderState} AFTER \texttt{exu.StartRenderer()}):
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
+SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
 exu.StartRenderer()
 renderState={'centerPoint': [1.0, 0.0, 0.0],
              'maxSceneSize': 2.0,
@@ -360,237 +365,6 @@ SC.SetRenderState(renderState)
 \par\noindent\rule{\textwidth}{0.4pt}
 %
 %
-\mysubsubsection{Solver}
-Both in the static as well as in the dynamic case, the solver runs in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval.
-For the time integration (dynamic solver), \fig{fig_solver_time_integration} shows the basic loops for the solution process. The inner loops are shown in \fig{fig_solver_solve_steps} and\fig{fig_solver_discontinuous_iteration}.
-The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.
-
-Settings for the solver substructures, like timer, output, iterations, etc.\, are described in Sections \ref{sec:CSolverTimer} -- \ref{sec:SolverOutputData}.
-The description of interfaces for solvers starts in \refSection{sec:MainSolverStatic}.
-%
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
-			% Place nodes
-			\node [cloud] (solveSystem) {SolveSystem()};
-%			\node [wideblock, below of=init_solver_specific] (initializeSolver) {InitializeSolver()};
-			\node [decision, below of=solveSystem] (decisionInitSolver) {InitializeSolver()?};
-			\node [wideblock, right of=decisionInitSolver, node distance=6cm] (initFailed) {InitializeSolver() failed};
-			\node [wideblock, below of=decisionInitSolver, node distance=2.5cm] (solveSteps) {SolveSteps()};
-			\node [wideblock, below of=solveSteps] (finalizeSolver) {FinalizeSolver()};
-			
-			\path [arrow] (solveSystem) -- (decisionInitSolver);
-			\path [arrow] (decisionInitSolver) -- node [near start] {False}(initFailed);
-			\path [arrow] (decisionInitSolver) -- node [near start] {True}(solveSteps);
-			\path [arrow] (solveSteps) -- (finalizeSolver);
-			\path [arrow] (initFailed) |- (finalizeSolver);
-	\end{tikzpicture}
-  \caption{Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.}
-	\label{fig_solver_time_integration}
-\end{figure}
-
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
-			% Place nodes
-			\node [cloud] (initializeSolver) {InitializeSolver()};
-			\node [wideblock, text width=5cm, below of=initializeSolver] (preInitializeSolverSpecific) {PreInitializeSolverSpecific()};
-			\node [wideblock, text width=5cm, below of=preInitializeSolverSpecific] (initializeSolverOutput) {InitializeSolverOutput()};
-			\node [decision, aspect=4, text width=6cm, below of=initializeSolverOutput] (initializeSolverPreChecks) {InitializeSolverPreChecks()?};
-			
-			\node [wideblock, text width=6cm, right of=initializeSolverPreChecks, node distance=8cm] (initFailed) {InitializeSolverPreChecks() failed; return False};
-			\node [wideblock, below of=initializeSolverPreChecks, node distance=2.5cm] (initializeSolverData) {InitializeSolverData()};
-			\node [wideblock, text width=6cm, below of=initializeSolverData] (initializeSolverInitialConditions) {InitializeSolverInitialConditions()};
-			\node [wideblock, text width=5cm, below of=initializeSolverInitialConditions] (postInitializeSolverSpecific) {PostInitializeSolverSpecific()};
-			\node [wideblock, below of=postInitializeSolverSpecific] (finished) {return True};
-			
-			\path [arrow] (initializeSolver) -- (preInitializeSolverSpecific);
-			\path [arrow] (preInitializeSolverSpecific) -- (initializeSolverOutput);
-			\path [arrow] (initializeSolverOutput) -- (initializeSolverPreChecks);
-			\path [arrow] (initializeSolverPreChecks) -- node [near start] {False}(initFailed);
-			\path [arrow] (initializeSolverPreChecks) -- node [near start] {True}(initializeSolverData);
-			\path [arrow] (initializeSolverData) -- (initializeSolverInitialConditions);
-			\path [arrow] (initializeSolverInitialConditions) -- (postInitializeSolverSpecific);
-			\path [arrow] (postInitializeSolverSpecific) -- (finished);
-	\end{tikzpicture}
-  \caption{Basic solver flow chart for function InitializeSolver().}
-	\label{fig_solver_initialize_solver}
-\end{figure}
-
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
-			% Place nodes
-			\node [cloud] (solveSteps) {SolveSteps()};
-			\node [decision, aspect=4, text width=5cm, below of=solveSteps] (solveStepsLoop) {simulation finished or solver failed/stopped?};
-			
-			\node [wideblock, text width=4cm, right of=solveStepsLoop, node distance=7cm] (solveStepsLoopFinished) {return True if solver reached end time, else return False};
-			\node [wideblock, below of=solveStepsLoop, node distance=2.5cm] (setStartOfStepState) {state.startOfStep = state.current};
-			\node [decision, below of=setStartOfStepState] (stepReduction) {step finished?};
-			\node [wideblock, text width=5cm, left of=stepReduction, node distance=6cm] (finishStep) {increment step counter};
-			\node [wideblock, below of=stepReduction, yshift = -0.5cm] (initializeStep) {update current time\\InitializeStep()};
-			\node [decision, aspect=4, text width=5cm, below of=initializeStep] (discontinuousIteration) {DiscontinuousIteration()?};
-			\node [wideblock, text width=6cm, right of=discontinuousIteration, node distance=8cm] (discontinuousIterationFailed) {perform step reduction (return False if reached min step size)\\state.current = state.startOfStep};
-			\node [wideblock, below of=discontinuousIteration, node distance=2.5cm] (finishDiscIt) {FinishStep(); check increase of step size};
-			
-			\path [arrow] (solveSteps) -- (solveStepsLoop);
-			\path [arrow] (solveStepsLoop) -- node [near start] {no}(setStartOfStepState);
-			\path [arrow] (solveStepsLoop) -- node [near start] {yes}(solveStepsLoopFinished);
-			\path [arrow] (setStartOfStepState) -- (stepReduction);
-			\path [arrow] (stepReduction) -- node [near start] {no}(initializeStep);
-			\path [arrow] (stepReduction) -- node [near start] {yes}(finishStep);
-			\path [arrow] (finishStep) |- (solveStepsLoop);
-			
-			\path [arrow] (initializeStep) -- (discontinuousIteration);
-			\path [arrow] (discontinuousIteration) -- node [near start] {False}(discontinuousIterationFailed);
-			\path [arrow] (discontinuousIteration) -- node [near start] {True}(finishDiscIt);
-			\path [arrow] (solveSteps) -- (solveStepsLoop);
-			\path [arrow] (discontinuousIterationFailed) |- (stepReduction);
-			\path [arrow] (finishDiscIt) -| (finishStep);
-	\end{tikzpicture}
-  \caption{Solver flow chart for SolveSteps(), which is the inner loop of the solver.}
-	\label{fig_solver_solve_steps}
-\end{figure}
-
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
-			% Place nodes
-			\node [cloud] (discontinuousIteration) {DiscontinuousIteration()};
-			\node [decision, aspect=4, text width=5cm, below of=discontinuousIteration] (discontinuousIterationLoop) {disc.\ it.\ converged or disc.it.>=max it.};
-			\node [wideblock, left of=discontinuousIterationLoop, node distance=6cm, xshift=-1cm] (discItTerminate) {return True if successful; False if max it.\ reached};
-			
-			%\node [wideblock, text width=4cm, right of=discontinuousIterationLoop, node distance=7cm] (discontinuousIterationLoopFinished) {return True if converged, else return False};
-			
-			\node [decision, below of=discontinuousIterationLoop, yshift = -0.5cm] (newtonLoop) {Newton() ?};
-			\node [wideblock, left of=newtonLoop, node distance=6cm] (newtonFailed) {return False};
-			\node [wideblock, below of=newtonLoop, yshift = -0.5cm] (postNewtonStep) {disc.it.++\\PostNewtonStep()};
-
-			\node [decision, below of=postNewtonStep] (postNewtonStepError) {disc.\ iter.\ error\\ <= tol ?};
-			\node [wideblock, right of=postNewtonStepError, node distance=6cm] (resetDiscIt) {state.current = state.startOfStep};
-			\node [wideblock, below of=postNewtonStepError, yshift = -0.5cm] (discItSuccessful) {disc.\ iter.\ successful; return True};
-			
-			%compute Residual
-			%check Residual
-			%compute jacobian
-			%steepest decent
-			%check convergence
-			%... end of Newton: set state back to start of step (except for data variables)
-			
-			\path [arrow] (discontinuousIteration) -- (discontinuousIterationLoop);
-			\path [arrow] (discontinuousIterationLoop) -- node [near start] {no}(newtonLoop);
-			\path [arrow] (discontinuousIterationLoop) -- node [near start] {yes}(discItTerminate);
-			
-			%\path [arrow] (discontinuousIterationLoop) -- (newtonLoop);
-			\path [arrow] (newtonLoop) -- node [near start] {failed}(newtonFailed);
-			\path [arrow] (newtonLoop) -- node [near start] {converged}(postNewtonStep);
-
-			\path [arrow] (postNewtonStep) -- (postNewtonStepError);
-			\path [arrow] (postNewtonStepError) -- node [near start] {no}(resetDiscIt);
-			\path [arrow] (postNewtonStepError) -- node [near start] {yes}(discItSuccessful);
-
-			\path [arrow] (resetDiscIt) |- (discontinuousIterationLoop);
-			%\path [arrow] (finishStep) |- (solveStepsLoop);
-			%
-			%\path [arrow] (initializeStep) -- (discontinuousIteration);
-			%\path [arrow] (discontinuousIteration) -- node [near start] {False}(discontinuousIterationFailed);
-			%\path [arrow] (discontinuousIteration) -- node [near start] {True}(finishDiscIt);
-			%\path [arrow] (solveSteps) -- (solveStepsLoop);
-			%\path [arrow] (discontinuousIterationFailed) |- (stepReduction);
-	\end{tikzpicture}
-  \caption{Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, 
-	SolveSteps() will try to reduce the step size.}
-	\label{fig_solver_discontinuous_iteration}
-\end{figure}
-
-
-%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.55, every node/.style={scale=0.55}]
-			% Place nodes
-			\node [cloud] (newtonIteration) {Newton()};
-			\node [wideblock, below of=newtonIteration] (initNewton) {state.current = state.startOfStep\\ current.AEcoords = 0};
-			\node [wideblock, below of=initNewton] (residual) {R=ComputeResidual()\\res=|/nCoords|};
-			\node [wideblock, below of=residual] (initResidual) {initRes = res};
-
-			\node [decision, aspect=2.5, text width=4cm, below of=initResidual, yshift = -0.25cm] (newtonLoop) {newtonSuccess?\\newtonFailed?\\newton it.>=max it.?};
-			\node [wideblock, left of=newtonLoop, node distance=6cm, xshift=-1cm] (newtonTerminate) {return True if successful else False};
-			\node [block, right of=newtonLoop, node distance=6cm] (continueNewton) {continue Newton};
-			\node [decision, below of=newtonLoop, yshift = -0.75cm] (jacUpdate) {jacobian requested?};
-
-			\node [wideblock, text width = 5cm, left of=jacUpdate, node distance=7cm] (updateJacobian) {ComputeNewtonJacobian()};
-			\node [decision, text width = 4cm, below of=updateJacobian, yshift = -0.0cm] (factorizeJacobian) {jacobian.Factorize()?};
-			\node [wideblock, below of=factorizeJacobian, yshift = -1.0cm] (jacFactorizeFailed) {return False};
-
-			\node [wideblock, below of=jacUpdate, yshift = -0.5cm] (jacobianSolve) {sol=jacobian.Solve(res)};
-			\node [wideblock, below of=jacobianSolve, text width=4.5cm, yshift = -0.0cm] (newtonUpdate) {ComputeNewtonUpdate() using sol};
-			\node [wideblock, below of=newtonUpdate] (residual2) {R=ComputeResidual()\\res=|/nCoords|};
-
-			%\node [wideblock, below of=residual2] (adaptInitResidual) {initResidual = max(res,initRes)};
-			\node [decision, below of=residual2] (evalTolerances) {res <= absTol or res/initRes <= relTol?};
-			\node [wideblock, left of=evalTolerances, node distance=6cm] (newtonConverged) {newtonSuccess = True};
-			\node [wideblock, below of=evalTolerances, yshift=-1cm] (checkDivergence) {if isNAN(u,v,$\lambda$)\\ $\ra$ restart Newton or stop Newton};
-			\node [wideblock, below of=checkDivergence, yshift=-0.25cm] (checkIterations) {if it > maxModNewtonIt $\ra$ jacUpdate + restart Newton};
-			\node [wideblock, below of=checkIterations, yshift=-0.25cm] (checkIterations2) {if it > maxModNewtonIt+maxModRestartIt $\ra$ full Newton};
-			\node [wideblock, below of=checkIterations2, yshift=-0.cm] (checkContractivity) {contractivity=res/lastRes\\lastRes=res};
-			\node [decision, text width=4.5cm, below of=checkContractivity, yshift=-0.5cm] (restartNewton) {check contractivity, diverged/restart flags};
-			
-			\node [wideblock, below of=restartNewton, yshift=-1.25cm] (restartNewtonIteration) {state.current = state.startOfStep\\ state.AEcoords = 0\\ComputeResidual()};
-
-			%adapt initial residual
-			%!converged: 
-			%  - check divergence
-			%  if modNewton:
-			%    - check max mod newton its reached? yes: compute Jac
-			%    - check contractivity ==> compute Jac / switch to full newton
-
-
-			%\node [decision, below of=postNewtonStep] (postNewtonStepError) {disc.\ iter.\ error\\ <= tol ?};
-			%\node [wideblock, right of=postNewtonStepError, node distance=6cm] (resetDiscIt) {state.current = state.startOfStep};
-			%\node [wideblock, below of=postNewtonStepError, yshift = -0.5cm] (discItSuccessful) {disc.\ iter.\ successful; return True};
-			
-	
-			\path [arrow] (newtonIteration) -- (initNewton);
-			\path [arrow] (initNewton) -- (residual);
-			\path [arrow] (residual) -- (initResidual);
-
-			\path [arrow] (initResidual) -- (newtonLoop);
-			\path [arrow] (newtonLoop) -- node [near start] {no}(jacUpdate);
-			\path [arrow] (newtonLoop) -- node [near start] {yes}(newtonTerminate);
-			%
-			\path [arrow] (jacUpdate) -- node [near start] {no}(jacobianSolve);
-			\path [arrow] (jacUpdate) -- node [near start] {yes}(updateJacobian);
-
-			\path [arrow] (updateJacobian) -- (factorizeJacobian);
-			\path [arrow] (factorizeJacobian) -- node [near start] {failed}(jacFactorizeFailed);
-			\path [arrow] (factorizeJacobian) -- node [near start] {success}(jacobianSolve);
-%
-			\path [arrow] (jacobianSolve) -- (newtonUpdate);
-			\path [arrow] (newtonUpdate) -- (residual2);
-
-			\path [arrow] (residual2) -- (evalTolerances);
-			\path [arrow] (evalTolerances) -- node [near start] {yes}(newtonConverged);
-			\path [arrow] (evalTolerances) -- node [near start] {no}(checkDivergence);
-			\path [arrow] (checkDivergence) -- (checkIterations);
-			\path [arrow] (checkIterations) -- (checkIterations2);
-			\path [arrow] (checkIterations2) -- (checkContractivity);
-			\path [arrow] (checkContractivity) -- (restartNewton);
-			\path [arrow] (restartNewton) -- node [near start] {restart}(restartNewtonIteration);
-			\path [arrow] (restartNewton) -| node [near start] {continue}(continueNewton);
-			\path [arrow] (restartNewtonIteration) -| (continueNewton);
-			
-			\path [arrow] (continueNewton) -- (newtonLoop);
-
-	\end{tikzpicture}
-  \caption{Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for newtonResidualMode = 0.}
-	\label{fig_solver_newton_iteration}
-\end{figure}
-
 
 \mysubsubsection{Generating output and results}
 %

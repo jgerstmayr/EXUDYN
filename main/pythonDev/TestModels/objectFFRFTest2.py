@@ -198,6 +198,7 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRFtest2=',result)
 
 exudynTestGlobals.testError = result - (0.03553746369388042) #2020-05-26 (tEnd=0.0025, h=1e-4): 0.03553746369388042 
+exudynTestGlobals.testResult = result
 
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()

@@ -90,6 +90,7 @@ u = omega[0]-omegaNumerical[0]
 exu.Print('omega difference=',u)
 
 exudynTestGlobals.testError = 1e-6*(u - (-2.7613614363986017e-05)) #2021-01-04: added factor 1e-6, because of larger errors/differences in 32/64bit eigenvalue solvers; 2020-12-18: (nElements=32) -2.7613614363986017e-05
+exudynTestGlobals.testResult = 1e-6*u
 
 
 

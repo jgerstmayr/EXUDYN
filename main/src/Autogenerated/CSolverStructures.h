@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,14 +32,17 @@ public: // AUTO:
   Real newtonIncrement;                           //!< AUTO: Jac\f$^{-1}\f$ * RHS; backsubstitution
   Real integrationFormula;                        //!< AUTO: time spent for evaluation of integration formulas
   Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of ODE2 right-hand-side
+  Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of ODE1 right-hand-side
   Real AERHS;                                     //!< AUTO: time for residual evaluation of algebraic equations right-hand-side
   Real totalJacobian;                             //!< AUTO: time for all jacobian computations
+  Real jacobianODE1;                              //!< AUTO: jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)
   Real jacobianODE2;                              //!< AUTO: jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)
   Real jacobianODE2_t;                            //!< AUTO: jacobian w.r.t. coordinates\_t of ODE2 equations (not counted in sum)
   Real jacobianAE;                                //!< AUTO: jacobian of algebraic equations (not counted in sum)
   Real massMatrix;                                //!< AUTO: mass matrix computation
   Real reactionForces;                            //!< AUTO: CqT * lambda
   Real postNewton;                                //!< AUTO: post newton step
+  Real errorEstimator;                            //!< AUTO: for explicit solvers, additional evaluation
   Real writeSolution;                             //!< AUTO: time for writing solution
   Real overhead;                                  //!< AUTO: overhead, such as initialization, copying and some matrix-vector multiplication
   Real python;                                    //!< AUTO: time spent for python functions
@@ -56,14 +59,17 @@ public: // AUTO:
     newtonIncrement = 0.;
     integrationFormula = 0.;
     ODE2RHS = 0.;
+    ODE1RHS = 0.;
     AERHS = 0.;
     totalJacobian = 0.;
+    jacobianODE1 = 0.;
     jacobianODE2 = 0.;
     jacobianODE2_t = 0.;
     jacobianAE = 0.;
     massMatrix = 0.;
     reactionForces = 0.;
     postNewton = 0.;
+    errorEstimator = 0.;
     writeSolution = 0.;
     overhead = 0.;
     python = 0.;
@@ -79,9 +85,15 @@ public: // AUTO:
   //! AUTO: compute sum of all timers (except for those counted multiple, e.g., jacobians
   Real Sum() const;
   //! AUTO: start timer function for a given variable; subtracts current CPU time from value
-  void StartTimer(Real& value);
+  void StartTimer(Real& value) {
+    if (useTimer) { value -= EXUstd::GetTimeInSeconds();}
+  }
+
   //! AUTO: stop timer function for a given variable; adds current CPU time to value
-  void StopTimer(Real& value);
+  void StopTimer(Real& value) {
+    if (useTimer) { value += EXUstd::GetTimeInSeconds();}
+  }
+
   //! AUTO: converts the current timings to a string
   std::string ToString() const;
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -94,14 +106,17 @@ public: // AUTO:
     os << "  newtonIncrement = " << newtonIncrement << "\n";
     os << "  integrationFormula = " << integrationFormula << "\n";
     os << "  ODE2RHS = " << ODE2RHS << "\n";
+    os << "  ODE1RHS = " << ODE1RHS << "\n";
     os << "  AERHS = " << AERHS << "\n";
     os << "  totalJacobian = " << totalJacobian << "\n";
+    os << "  jacobianODE1 = " << jacobianODE1 << "\n";
     os << "  jacobianODE2 = " << jacobianODE2 << "\n";
     os << "  jacobianODE2_t = " << jacobianODE2_t << "\n";
     os << "  jacobianAE = " << jacobianAE << "\n";
     os << "  massMatrix = " << massMatrix << "\n";
     os << "  reactionForces = " << reactionForces << "\n";
     os << "  postNewton = " << postNewton << "\n";
+    os << "  errorEstimator = " << errorEstimator << "\n";
     os << "  writeSolution = " << writeSolution << "\n";
     os << "  overhead = " << overhead << "\n";
     os << "  python = " << python << "\n";
@@ -124,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -154,10 +169,12 @@ public: // AUTO:
   ResizableVector temp2ODE2;                      //!< AUTO: second temporary vector for ODE2 quantities; use in static computation
   ResizableVector tempODE2F0;                     //!< AUTO: temporary vector for ODE2 Jacobian
   ResizableVector tempODE2F1;                     //!< AUTO: temporary vector for ODE2 Jacobian
+  ResizableVector tempODE1F0;                     //!< AUTO: temporary vector for ODE1 Jacobian
+  ResizableVector tempODE1F1;                     //!< AUTO: temporary vector for ODE1 Jacobian
   ResizableVector startOfStepStateAAlgorithmic;   //!< AUTO: additional term needed for generalized alpha (startOfStep state)
   ResizableVector aAlgorithmic;                   //!< AUTO: additional term needed for generalized alpha (current state)
   GeneralMatrix* systemJacobian;                  //!< AUTO: link to dense or sparse system jacobian
-  GeneralMatrix* systemMassMatrix;                //!< AUTO: link to dense or sparse system matrix
+  GeneralMatrix* systemMassMatrix;                //!< AUTO: link to dense or sparse system mass matrix; in explicit solver, after a step, this will contain the factorized mass matrix
   GeneralMatrix* jacobianAE;                      //!< AUTO: link to dense or sparse algebraic equations jacobian
   TemporaryComputationData tempCompData;          //!< AUTO: temporary data used during item-related residual and jacobian computation; duplicated for parallel computation
 
@@ -216,6 +233,8 @@ public: // AUTO:
     os << "  temp2ODE2 = " << temp2ODE2 << "\n";
     os << "  tempODE2F0 = " << tempODE2F0 << "\n";
     os << "  tempODE2F1 = " << tempODE2F1 << "\n";
+    os << "  tempODE1F0 = " << tempODE1F0 << "\n";
+    os << "  tempODE1F1 = " << tempODE1F1 << "\n";
     os << "  startOfStepStateAAlgorithmic = " << startOfStepStateAAlgorithmic << "\n";
     os << "  aAlgorithmic = " << aAlgorithmic << "\n";
     os << "  linearSolverType = " << linearSolverType << "\n";
@@ -243,7 +262,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -262,11 +281,14 @@ class SolverIterationData // AUTO:
 {
 public: // AUTO: 
   Real maxStepSize;                               //!< AUTO: constant or maximum stepSize
-  Real minStepSize;                               //!< AUTO: minimum stepSize for static/dynamic solver; only used, if adaptive step is activated
+  Real minStepSize;                               //!< AUTO: minimum stepSize for static/dynamic solver; only used, if automaticStepSize is activated
+  Real initialStepSize;                           //!< AUTO: initial stepSize for dynamic solver; only used, if automaticStepSize is activated
+  Real lastStepSize;                              //!< AUTO: stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated
   Real currentStepSize;                           //!< AUTO: stepSize of current step
   Index numberOfSteps;                            //!< AUTO: number of time steps (if fixed size); \f$n\f$
   Index currentStepIndex;                         //!< AUTO: current step index; \f$i\f$
-  bool adaptiveStep;                              //!< AUTO: if true, the step size may be adaptively controlled
+  bool adaptiveStep;                              //!< AUTO: True: the step size may be reduced if step fails; no automatic stepsize control
+  bool automaticStepSize;                         //!< AUTO: True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); false: constant step size used (step may be reduced if adaptiveStep=True)
   Real currentTime;                               //!< AUTO: holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration
   Real startTime;                                 //!< AUTO: time at beginning of time integration
   Real endTime;                                   //!< AUTO: end time of static/dynamic solver
@@ -276,6 +298,8 @@ public: // AUTO:
   Index newtonJacobiCount;                        //!< AUTO: count total Newton jacobian computations
   Index rejectedModifiedNewtonSteps;              //!< AUTO: count the number of rejected modified Newton steps (switch to full Newton)
   Index discontinuousIterationsCount;             //!< AUTO: count total number of discontinuous iterations (min. 1 per step)
+  Index rejectedAutomaticStepSizeSteps;           //!< AUTO: count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)
+  Real automaticStepSizeError;                    //!< AUTO: estimated error (relative to atol + rtol*solution) of last step; must be \f$\le 1\f$  for a step to be accepted
 
 
 public: // AUTO: 
@@ -284,10 +308,13 @@ public: // AUTO:
   {
     maxStepSize = 0.;
     minStepSize = 0.;
+    initialStepSize = 1e-6;
+    lastStepSize = 0.;
     currentStepSize = 0.;
     numberOfSteps = 0;
     currentStepIndex = 0;
     adaptiveStep = true;
+    automaticStepSize = true;
     currentTime = 0.;
     startTime = 0.;
     endTime = 0.;
@@ -297,6 +324,8 @@ public: // AUTO:
     newtonJacobiCount = 0;
     rejectedModifiedNewtonSteps = 0;
     discontinuousIterationsCount = 0;
+    rejectedAutomaticStepSizeSteps = 0;
+    automaticStepSizeError = 0;
   };
 
   // AUTO: access functions
@@ -308,10 +337,13 @@ public: // AUTO:
     os << "SolverIterationData" << ":\n";
     os << "  maxStepSize = " << maxStepSize << "\n";
     os << "  minStepSize = " << minStepSize << "\n";
+    os << "  initialStepSize = " << initialStepSize << "\n";
+    os << "  lastStepSize = " << lastStepSize << "\n";
     os << "  currentStepSize = " << currentStepSize << "\n";
     os << "  numberOfSteps = " << numberOfSteps << "\n";
     os << "  currentStepIndex = " << currentStepIndex << "\n";
     os << "  adaptiveStep = " << adaptiveStep << "\n";
+    os << "  automaticStepSize = " << automaticStepSize << "\n";
     os << "  currentTime = " << currentTime << "\n";
     os << "  startTime = " << startTime << "\n";
     os << "  endTime = " << endTime << "\n";
@@ -321,6 +353,8 @@ public: // AUTO:
     os << "  newtonJacobiCount = " << newtonJacobiCount << "\n";
     os << "  rejectedModifiedNewtonSteps = " << rejectedModifiedNewtonSteps << "\n";
     os << "  discontinuousIterationsCount = " << discontinuousIterationsCount << "\n";
+    os << "  rejectedAutomaticStepSizeSteps = " << rejectedAutomaticStepSizeSteps << "\n";
+    os << "  automaticStepSizeError = " << automaticStepSizeError << "\n";
     os << "\n";
   }
 
@@ -339,7 +373,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -358,7 +392,7 @@ class SolverConvergenceData // AUTO:
 {
 public: // AUTO: 
   bool stepReductionFailed;                       //!< AUTO: true, if iterations over time/static steps failed (finally, cannot be recovered)
-  bool discontinuousIterationsFailed;             //!< AUTO: true, if discontinuous iterations failed (may be recovered if adaptive step is active)
+  bool discontinuousIterationSuccessful;          //!< AUTO: true, if last discontinuous iteration had success (failure may be recovered by adaptive step)
   bool linearSolverFailed;                        //!< AUTO: true, if linear solver failed to factorize
   bool newtonConverged;                           //!< AUTO: true, if Newton has (finally) converged
   bool newtonSolutionDiverged;                    //!< AUTO: true, if Newton diverged (may be recovered)
@@ -376,7 +410,7 @@ public: // AUTO:
   SolverConvergenceData()
   {
     stepReductionFailed = false;
-    discontinuousIterationsFailed = false;
+    discontinuousIterationSuccessful = true;
     linearSolverFailed = false;
     newtonConverged = false;
     newtonSolutionDiverged = false;
@@ -400,7 +434,7 @@ public: // AUTO:
   {
     os << "SolverConvergenceData" << ":\n";
     os << "  stepReductionFailed = " << stepReductionFailed << "\n";
-    os << "  discontinuousIterationsFailed = " << discontinuousIterationsFailed << "\n";
+    os << "  discontinuousIterationSuccessful = " << discontinuousIterationSuccessful << "\n";
     os << "  linearSolverFailed = " << linearSolverFailed << "\n";
     os << "  newtonConverged = " << newtonConverged << "\n";
     os << "  newtonSolutionDiverged = " << newtonSolutionDiverged << "\n";
@@ -429,7 +463,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -450,6 +484,7 @@ public: // AUTO:
   bool finishedSuccessfully;                      //!< AUTO: flag is false until solver finshed successfully (can be used as external trigger)
   Index verboseMode;                              //!< AUTO: this is a copy of the solvers verboseMode used for console output
   Index verboseModeFile;                          //!< AUTO: this is a copy of the solvers verboseModeFile used for file
+  Index stepInformation;                          //!< AUTO: this is a copy of the solvers stepInformation used for console output
   bool writeToSolutionFile;                       //!< AUTO: if false, no solution file is generated and no file is written
   bool writeToSolverFile;                         //!< AUTO: if false, no solver output file is generated and no file is written
   ResizableVector sensorValuesTemp;               //!< AUTO: temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor)
@@ -467,6 +502,7 @@ public: // AUTO:
     finishedSuccessfully = false;
     verboseMode = 0;
     verboseModeFile = 0;
+    stepInformation = 0;
     writeToSolutionFile = false;
     writeToSolverFile = false;
     lastSolutionWritten = 0.;
@@ -489,6 +525,7 @@ public: // AUTO:
     os << "  finishedSuccessfully = " << finishedSuccessfully << "\n";
     os << "  verboseMode = " << verboseMode << "\n";
     os << "  verboseModeFile = " << verboseModeFile << "\n";
+    os << "  stepInformation = " << stepInformation << "\n";
     os << "  writeToSolutionFile = " << writeToSolutionFile << "\n";
     os << "  writeToSolverFile = " << writeToSolverFile << "\n";
     os << "  sensorValuesTemp = " << sensorValuesTemp << "\n";
@@ -515,7 +552,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

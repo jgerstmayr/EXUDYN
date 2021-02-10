@@ -249,6 +249,7 @@ exu.Print("omegay=", omegay)
 #pos=mbs.GetNodeOutput(nRB,exu.OutputVariableType.Position)[2] #z-component of pos
 #exu.Print("pos=", pos)
 exudynTestGlobals.testError = omegay - (0) #2020-02-11: 
+exudynTestGlobals.testResult = omegay
 
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()

@@ -32,6 +32,8 @@
 #define EXUexception std::runtime_error
 #endif
 
+//#define __FAST_EXUDYN_LINALG //defined as preprocessor flags
+
 #ifndef __FAST_EXUDYN_LINALG
 #define __ASSERT_IN_RELEASE_MODE__ //slows down release, but faster than debug mode (for debugging large scale problems)
 #define __PYTHON_USERFUNCTION_CATCH__  //performs try/catch in all python user functions
@@ -51,7 +53,6 @@
 #define CHECKandTHROWcond(_checkExpression)
 #define CHECKandTHROWstring(_exceptionMessage)
 #endif
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //a specific flag _MYDEBUG is used as the common _NDEBUG flag does not work in Visual Studio

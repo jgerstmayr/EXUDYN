@@ -39,8 +39,10 @@ color4steelblue = [0.4,0.4,0.9,1.]
 
 color4grey = [0.5,0.5,0.5,1.]
 
-color4darkgrey = [0.25,0.25,0.25,1.]
-color4lightgrey = [0.75,0.75,0.75,1.]
+color4darkgrey = [0.2,0.2,0.2,1.]
+color4darkgrey2 = [0.35,0.35,0.35,1.]
+color4lightgrey = [0.7,0.7,0.7,1.]
+color4lightgrey2 = [0.85,0.85,0.85,1.]
 color4white = [1.,1.,1.,1.]
 
 #define a list of 4 colors for numbered colors
@@ -48,6 +50,40 @@ color4list = [color4red, color4green, color4blue,
               color4cyan, color4magenta, color4yellow,
               color4lightred, color4lightgreen, color4steelblue, 
               color4grey, color4darkgrey, color4lightgrey]
+
+#**function: helper function to switch order of three items in a list; mostly used for reverting normals in triangles
+#**input: 3D vector as list or as np.array
+#**output: interchanged 2nd and 3rd component of list
+def SwitchTripletOrder(vector):
+    v=copy.deepcopy(vector) #copy, such that vector is not changed
+    a = v[2]
+    v[2] = v[1]
+    v[1] = a
+    return v
+
+#************************************************
+#**function: merge 2 different graphics data with triangle lists
+#**input: graphicsData dictionaries g1 and g2 obtained from GraphicsData functions
+#**output: one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects
+def MergeGraphicsDataTriangleList(g1,g2):
+    np = int(len(g1['points'])/3) #number of points
+    if np*3 != len(g1['normals']):
+        raise ValueError('MergeGraphicsDataTriangleList: incompatible normals and points in lists; MergeGraphicsDataTriangleList only works if both objects provide normals')
+    if np*4 != len(g1['colors']):
+        raise ValueError('MergeGraphicsDataTriangleList: incompatible colors and points in lists')
+
+    #nt = len(g1['triangles'])
+    data = {'type':'TriangleList', 'colors':copy.copy(g1['colors']), 'normals':copy.copy(g1['normals']), 
+            'points': copy.copy(g1['points']), 'triangles': copy.copy(g1['triangles'])}
+
+    data['normals'] += g2['normals']
+    data['colors'] += g2['colors']
+    data['points'] += g2['points']
+    for p in g2['triangles']:
+        data['triangles'] += [int(p + np)] #add point offset for correct connectivity
+
+    return data
+
 
 #************************************************
 #**function: generate graphics data for 2D rectangle
@@ -144,16 +180,6 @@ def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1]):
 
     return data
 
-#**function: switch order of three items in a list; mostly used for reverting normals in triangles
-#**input: 3D vector as list or as np.array
-#**output: interchanged 2nd and 3rd component of list
-def SwitchTripletOrder(vector):
-    v=copy.deepcopy(vector) #copy, such that vector is not changed
-    a = v[2]
-    v[2] = v[1]
-    v[1] = a
-    return v
-
 #**function: generate graphics data for a sphere with point p and radius
 #**input:
 #  point: center of sphere (3D list or np.array)
@@ -210,7 +236,7 @@ def GraphicsDataSphere(point, radius, color=[0.,0.,0.,1.], nTiles = 8):
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
     return data
             
-#**function: generate graphics data for a cylinder with given axis, radius and color; nFaces gives the number of tiles (minimum=3)
+#**function: generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3)
 #**input:
 #  pAxis: axis point of one face of cylinder (3D list or np.array)
 #  vAxis: vector representing the cylinder's axis (3D list or np.array)
@@ -484,11 +510,11 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
     return data
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#   unused: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
+#   unused argument yet: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
 #**function: generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color; 
 #**input:
-#   pAxis: axis point of one face of cylinder (3D list or np.array)
-#   vAxis: vector representing the cylinder's axis (3D list or np.array)
+#   pAxis: axis point of one face of solid of revolution (3D list or np.array)
+#   vAxis: vector representing the solid of revolution's axis (3D list or np.array)
 #   contour: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]]
 #   color: provided as list of 4 RGBA values
 #   nTiles: used to determine resolution of solid; use larger values for finer resolution
@@ -606,6 +632,47 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
 
     return data
 
+
+#**function: generate graphics data for an arrow with given origin, axis, shaft radius, optional size factors for head and color; nTiles gives the number of tiles (minimum=3)
+#**input:
+#  pAxis: axis point of the origin (base) of the arrow (3D list or np.array)
+#  vAxis: vector representing the vector pointing from the origin to the tip (head) of the error (3D list or np.array)
+#  radius: positive value representing radius of shaft cylinder
+#  headFactor: positive value representing the ratio between head's radius and the shaft radius
+#  headStretch: positive value representing the ratio between the head's radius and the head's length
+#  color: provided as list of 4 RGBA values
+#  nTiles: used to determine resolution of arrow (of revolution object) >=3; use larger values for finer resolution
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataArrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2, headStretch = 4, nTiles = 12):  
+    L = NormL2(vAxis)
+    rHead = radius * headFactor
+    xHead = L - headStretch*rHead
+    contour=[[0,0],[0,radius],[xHead,radius],[xHead,rHead],[L,0]]
+    return GraphicsDataSolidOfRevolution(pAxis=pAxis, vAxis=vAxis, contour=contour, color=color,nTiles=nTiles)
+
+#**function: generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
+#**input:
+#  origin: point of the origin of the base (3D list or np.array)
+#  length: positive value representing lengths of arrows for basis
+#  colors: provided as list of 3 colors (list of 4 RGBA values)
+#  headFactor: positive value representing the ratio between head's radius and the shaft radius
+#  headStretch: positive value representing the ratio between the head's radius and the head's length
+#  nTiles: used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
+#  radius: positive value representing radius of arrows; default: radius = 0.01*length
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataBasis(origin=[0,0,0], length = 1, colors=[color4red, color4green, color4blue], 
+                      headFactor = 2, headStretch = 4, nTiles = 12, **kwargs):  
+    radius = 0.01*length
+    if 'radius' in kwargs:
+        radius = kwargs['length']
+
+    g1 = GraphicsDataArrow(origin,[length,0,0],radius, colors[0], headFactor, headStretch, nTiles)
+    g2 = GraphicsDataArrow(origin,[0,length,0],radius, colors[1], headFactor, headStretch, nTiles)
+    g3 = GraphicsDataArrow(origin,[0,0,length],radius, colors[2], headFactor, headStretch, nTiles)
+
+    return MergeGraphicsDataTriangleList(MergeGraphicsDataTriangleList(g1,g2),g3)
+
+
 #**function: generate graphics data for simple quad with option for checkerboard pattern;
 #  points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
 #**input: 
@@ -613,6 +680,7 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
 #  color: provided as list of 4 RGBA values
 #  alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
 #  nTiles: number of tiles for checkerboard pattern (default: 10)
+#  nTilesY: if defined, use number of tiles in y-direction different from x-direction (=nTiles)
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 #**example:
 #plane = GraphicsDataQuad([[-8, 0, -8],[ 8, 0, -8,],[ 8, 0, 8],[-8, 0, 8]], 
@@ -630,22 +698,23 @@ def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs):
 
     if 'nTiles' in kwargs:
         nTiles = kwargs['nTiles']
+    nTilesY= nTiles
+    if 'nTilesY' in kwargs:
+        nTilesY = kwargs['nTilesY']
 
-    nPoints = nTiles*2 #number of points in one direction
     p0 = np.array(pList[0])
     p1 = np.array(pList[1])
     p2 = np.array(pList[2])
     p3 = np.array(pList[3])
 
-    dx = 1./nTiles
     points = []
     triangles = []
     #points are given always for 1 quad of checkerboard pattern
     ind = 0
-    for j in range(nTiles):
+    for j in range(nTilesY):
         for i in range(nTiles):
-            f0 = j/(nTiles)
-            f1 = (j+1)/(nTiles)
+            f0 = j/(nTilesY)
+            f1 = (j+1)/(nTilesY)
             pBottom0 = (nTiles-i)/nTiles  *((1-f0)*p0 + f0*p3) + (i)/nTiles  *((1-f0)*p1 + f0*p2)
             pBottom1 = (nTiles-i-1)/nTiles*((1-f0)*p0 + f0*p3) + (i+1)/nTiles*((1-f0)*p1 + f0*p2)
             pTop0 = (nTiles-i)/nTiles  *((1-f1)*p0 + f1*p3) + (i)/nTiles  *((1-f1)*p1 + f1*p2)
@@ -656,7 +725,7 @@ def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs):
             ind+=4
 
     colors=[]
-    for j in range(nTiles):
+    for j in range(nTilesY):
         for i in range(nTiles):
             a=1
             if i%2 == 1:
@@ -672,3 +741,219 @@ def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs):
     data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':triangles}
     #print(data)
     return data
+
+
+#**function: function to generate checkerboard background;
+#  points are arranged counter-clock-wise, e.g.: 
+#**input: 
+#  point: midpoint of pattern provided as list or np.array
+#  normal: normal to plane provided as list or np.array
+#  size: dimension of first side length of quad
+#  size2: dimension of second side length of quad
+#  color: provided as list of 4 RGBA values
+#  alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
+#  nTiles: number of tiles for checkerboard pattern in first direction
+#  nTiles2: number of tiles for checkerboard pattern in second direction; default: nTiles
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+#**example:
+#plane = GraphicsDataQuad([[-8, 0, -8],[ 8, 0, -8,],[ 8, 0, 8],[-8, 0, 8]], 
+#                         color4darkgrey, nTiles=8, 
+#                         alternatingColor=color4lightgrey)
+#oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
+#                      visualization=VObjectGround(graphicsData=[plane])))
+def GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
+                             color=color4lightgrey, alternatingColor=color4lightgrey2, nTiles=10, **kwargs):
+    nTiles2 = nTiles
+    if 'nTiles2' in kwargs:
+        nTiles2 = kwargs['nTiles2']
+    size2 = size
+    if 'size2' in kwargs:
+        size2 = kwargs['size2']
+
+    [v,n1,n2] = ComputeOrthonormalBasis(normal)
+    p0=np.array(point)
+    points = [list(p0-0.5*size*n1-0.5*size2*n2),
+              list(p0+0.5*size*n1-0.5*size2*n2),
+              list(p0+0.5*size*n1+0.5*size2*n2),
+              list(p0-0.5*size*n1+0.5*size2*n2)]
+
+    return GraphicsDataQuad(points, color=color, alternatingColor=alternatingColor, 
+                            nTiles=nTiles, nTilesY=nTiles2)
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to compute triangular mesh from list of vertices (=points) and segments;
+#   computes triangular meshes for non-convex case. In order to make it efficient, it first computes
+#   neighbors and then defines triangles at segments to be inside/outside. Finally neighboring
+#   relations are used to define all triangles inside/outside
+#   finally only returns triangles that are inside the segments
+#**input:
+#  vertices: list of pairs of coordinates of vertices in mesh [x,y]
+#  segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
+#            the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:\\
+#  
+#     inside
+#  V1         V2
+#  O----------O
+#    outside
+#**output:
+#  triangulation structure of Delaunay(...), see scipy.spatial.Delaunaystructure, containing all simplices (=triangles)
+#**example:
+# points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
+# segments = [len(points)-1,0]
+# for i in range(len(points)-1):
+#     segments += [i,i+1]
+# tri = ComputeTriangularMesh(points, segments)
+# print(tri.simplices)
+def ComputeTriangularMesh(vertices, segments):
+    from scipy.spatial import Delaunay
+    from copy import deepcopy
+
+    nVertices = len(vertices)
+    tri = Delaunay(np.array(vertices))
+    trigs = deepcopy(tri.simplices)
+    
+    #+++++++++++++++++++++++++++++++++
+    #compute vertices2simplices list:
+    vertices2simplices = [[]]*nVertices
+    cnt = 0
+    for trig in trigs:
+        for i in trig:
+            alist=list(vertices2simplices[i])
+            alist.append(cnt)
+            vertices2simplices[i] = alist    
+        cnt += 1 #trig counter
+        
+    #print(trigs)
+    #print(vertices2simplices)
+    
+    #+++++++++++++++++++++++++++++++++
+    #compute neighbors:
+    trigNeighbors = 0*trigs #-1 means no neighbor trig!
+    trigNeighbors[:,:] = -1
+    #run over all triangles
+    for i in range(len(trigs)):
+        for j in range(3):
+            i0 = trigs[i,j]
+            i1 = trigs[i,(j+1)%3]
+            actSeg = [i0, i1]
+            listTest = vertices2simplices[i0] + vertices2simplices[i1]
+            for trigIndex in listTest:
+                if trigIndex < i:
+                    for k in range(3):
+                        t0 = trigs[trigIndex, k]
+                        t1 = trigs[trigIndex, (k+1)%3]
+                        if (i0 == t1) and (i1 == t0): #opposite trig orientation is reversed ...
+                            trigNeighbors[i,j] = trigIndex
+                            trigNeighbors[trigIndex,k] = i
+
+    #print("neighbors=", trigNeighbors)                
+
+    #+++++++++++++++++++++++++++++++++
+    #compute inside triangles:
+    trianglesInside = [-1]*len(trigs) #-1 is undefined, 0=outside, 1=inside
+    
+    for seg in segments: #triangles left to segment are inside
+        listTest = vertices2simplices[seg[0]] + vertices2simplices[seg[1]]
+        for trigIndex in listTest:
+            for k in range(3):
+                t0 = trigs[trigIndex, k]
+                t1 = trigs[trigIndex, (k+1)%3]
+                if (seg[0] == t0) and (seg[1] == t1): #inside triangle
+                    trianglesInside[trigIndex] = 1
+                elif (seg[0] == t1) and (seg[1] == t0): #outside triangle
+                    trianglesInside[trigIndex] = 0
+    #print(trianglesInside)
+
+    #finally find remaining triangles (usually all triangles are on boundary, so nothing remains):
+    undefinedTrigs = True
+    while undefinedTrigs: #iterate as long as there are undefined triangles; usually only few iterations necessary
+        undefinedTrigs = False
+        #print("iterate neighbors")
+        for i in range(len(trigs)):
+            if trianglesInside[i] == -1: #still undefined
+                found = False
+                for j in range(3): #look at all neighbors
+                    tn = trigNeighbors[i, j]
+                    if trianglesInside[tn] != -1:
+                        trianglesInside[i] = trianglesInside[tn]
+                        found = True
+                if not found:
+                    undefinedTrigs = True
+
+    #now create new list of interior triangles
+    interiorTrigs = []
+    for i in range(len(trigs)):
+        if trianglesInside[i] == 1: 
+            interiorTrigs += [list(trigs[i])]
+    #print("interiorTrigs=",interiorTrigs)
+    
+    tri.simplices = np.array(interiorTrigs)
+    
+    return tri
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: create graphicsData for solid extrusion based on 2D points and segments;
+#            additional transformations are possible to translate and rotate
+#**input:
+#  vertices: list of pairs of coordinates of vertices in mesh [x,y], see ComputeTriangularMesh(...)
+#  segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
+#            the ordering of the nodes is such that left triangle = inside, right triangle = outside; see ComputeTriangularMesh(...)
+#  height:   height of extruded object
+#  rot:      rotation matrix, which the extruded object point coordinates are multiplied with before adding offset
+#  pOff:     3D offset vector added to extruded coordinates; the z-coordinate of the extrusion object obtains 0 for the base plane, z=height for the top plane
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0,0,0], color = [0,0,0,1]):
+    from copy import copy
+    n = len(vertices)
+    n2 = n*2 #total number of vertices
+    ns = len(segments)
+    colors=[]
+    for i in range(n2):
+        colors+=color
+    #print("colors=",colors)
+
+    points = [[]]*n2
+    for i in range(n):
+        points[i] = [vertices[i][0],vertices[i][1],0]
+    for i in range(n):
+        points[i+n] = [vertices[i][0],vertices[i][1],height]
+
+    #transform points:
+    pointsTransformed = []
+    npRot = np.array(rot)
+    npPoff = np.array(pOff)
+    for i in range(n2):
+        # print(points[i])
+        # print(npRot)
+        # print(npPoff)
+        p = np.array(npRot @ points[i] + npPoff)
+        # print(p)
+        pointsTransformed += list(p)
+    
+    #compute triangulation:    
+    tri = ComputeTriangularMesh(vertices, segments)
+    trigs = tri.simplices
+    nt =len(trigs)
+    trigList = [[]] * (nt*2+ns*2) #top trigs, bottom trigs, circumference trigs (2 per quad)
+    
+    for i in range(nt):
+        #print(list(trigs[i]))
+        trigList[i] = list(trigs[i])
+    for i in range(nt):
+        t = list(trigs[i]+n)
+        t.reverse()
+        trigList[i+nt] = copy(t)
+        
+    #print("ns=",ns)
+    #print("nt=",nt)
+    for i in range(ns):
+        trigList[2*nt+2*i  ] = [segments[i][0],segments[i][1]+n,segments[i][1]]
+        trigList[2*nt+2*i+1] = [segments[i][0],segments[i][0]+n,segments[i][1]+n]
+    #print("trigList=",trigList)
+    triangles = []
+    for t in trigList:
+        triangles += t
+   
+    data = {'type':'TriangleList', 'colors': colors, 'points':pointsTransformed, 'triangles':triangles}
+    return data
+

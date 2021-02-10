@@ -33,7 +33,7 @@ testDataDir = "testData/"
 ###############################################################################
 
 #read finite element model
-
+exudynTestGlobals.testResult = 0
 for testNumber in range(2):
     if testNumber == 1:
         useSparseSolverRoutine = True
@@ -61,6 +61,8 @@ for testNumber in range(2):
     exu.Print('natural frequencies from Ansys model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
     errorResult += f6
 
+    exudynTestGlobals.testResult += 1e-6*fem.GetEigenFrequenciesHz()[6]
+
     ###############################################################################
     # Abaqus
     ###############################################################################
@@ -87,6 +89,7 @@ for testNumber in range(2):
     f6*=1e-6 #use offset also for abaqus, as it gives non-reproducible results in dense case (32/64bit?)
     exu.Print('natural frequencies from Abaqus model, sparse=',str(useSparseSolverRoutine),":", fem.GetEigenFrequenciesHz()[6] )
     errorResult += f6
+    exudynTestGlobals.testResult += 1e-6*fem.GetEigenFrequenciesHz()[6]
 
 exu.Print('error of compareAbaqusAnsysRotorEigenfrequencies (due to sparse solver)=',errorResult)
 if abs(errorResult) < 1e-15: #usually of size 1e-17
@@ -94,6 +97,7 @@ if abs(errorResult) < 1e-15: #usually of size 1e-17
     
 exu.Print('solution of compareAbaqusAnsysRotorEigenfrequencies (with treshold)=',errorResult)
 exudynTestGlobals.testError = errorResult #2020-05-22: 0
+#exudynTestGlobals.testResult computed above
 
 
 

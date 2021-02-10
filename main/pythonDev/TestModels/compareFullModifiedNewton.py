@@ -1,8 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  car with wheels modeled by ObjectConnectorRollingDiscPenalty
-#           formulation is still under development and needs more testing
+# Details:  pendulum example: check difference of full and modified newton
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-06-19
@@ -50,13 +49,13 @@ mbs.AddObject(RevoluteJoint2D(markerNumbers=[mG0,mR1]))
 mbs.AddLoad(Force(markerNumber = mR2, loadVector = [0, -massRigid*g, 0]))
 
 mbs.Assemble()
-exu.Print(mbs)
+#exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.timeIntegration.numberOfSteps = 100
+simulationSettings.timeIntegration.numberOfSteps = 100 #100
 simulationSettings.timeIntegration.endTime = 2
-simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-4
 simulationSettings.timeIntegration.verboseMode = 1
 
@@ -70,11 +69,11 @@ simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/modifiedNewton.txt"
-exu.SolveDynamic(mbs, simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=False)
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/fullNewton.txt"
-exu.SolveDynamic(mbs, simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=False)
 
 
 #%%*****************************************
@@ -83,10 +82,14 @@ exu.SolveDynamic(mbs, simulationSettings)
 dataM = np.loadtxt('solution/modifiedNewton.txt', comments='#', delimiter=',')
 dataF = np.loadtxt('solution/fullNewton.txt', comments='#', delimiter=',')
 
+# exu.Print("solFullNewton     =",sum(abs(dataF[:,5])))
+# exu.Print("solModifiedNewton =",sum(abs(dataM[:,5])))
+
 u=sum(abs(dataM[:,5]-dataF[:,5]))
 exu.Print("compareFullModifiedNewton u=",u)
 
 exudynTestGlobals.testError = u - (0.0001583478719999567 ) #2020-12-18: 0.0001583478719999567 
+exudynTestGlobals.testResult = u
 
 
 if exudynTestGlobals.useGraphics:

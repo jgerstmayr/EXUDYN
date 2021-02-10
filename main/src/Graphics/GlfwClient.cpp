@@ -814,6 +814,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 			rendererThread.join();
 			//rendererThread.~thread(); //this would make the thread unusable?
 		}
+
 		rendererThread = std::thread(GlfwRenderer::InitCreateWindow);
 		Index timeOut = visSettings->window.startupTimeout / 10;
 
@@ -826,8 +827,10 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 		if (rendererActive)
 		{
 			if (verbose) { pout << "OpenGL renderer started!\n"; return true; }
+			basicVisualizationSystemContainer->SetVisualizationIsRunning(true); //render engine runs, graphicsupdate shall be done
 		}
 		else { 
+			basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //render engine did not start
 			if (rendererError == 1)
 			{
 				SysError("Start of OpenGL renderer failed: glfwInit() failed");
@@ -853,6 +856,8 @@ void GlfwRenderer::StopRenderer()
 {
 	if (window)
 	{
+		basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //no further WaitForUserToContinue or GraphicsDataUpdates
+
 		stopRenderer = true;
 		glfwSetWindowShouldClose(window, 1);
 		Index timeOut = 100; //2020-12-09: changed to 1000ms, because window can hang very long; visSettings->window.startupTimeout / 10;
@@ -1105,39 +1110,44 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//glPushMatrix(); //store current matrix
 	//glPopMatrix(); //restore matrix
 	const int textIndentPixels = 10;
-	const int verticalPixelOffset = (int)(0.5f*fontSize*fontLargeFactor); //vertical offset of computation info
+	const float verticalPixelOffset = (1.5f*fontSize*fontLargeFactor); //vertical offset of computation info
 	Float4 textColor = visSettings->general.textColor;
 
+	Index computationMessageNumberOfLines = 0; //compute offset for contour plot
 	if (visSettings->general.showComputationInfo || visSettings->window.showMouseCoordinates) //draw coordinate system
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		float factor = 0.35f*zoom * 2.6f;
+		//float factor = 0.35f*zoom * 2.6f;
 		//glTranslated(-factor*ratio*1.05, factor, 0.f); //old ; DELETE
 		glDepthMask(GL_FALSE); //draw lines always in front
 
-		float scale = 2.f*fontSize*zoom / ((float)height);
+		//float scale = 2.f*fontSize*zoom / ((float)height);
 		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front; NEEDED since glDepthMask(GL_FALSE) ?
 
 
 		if (visSettings->general.showComputationInfo)
 		{
 			Float2 pInfo = PixelToVertexCoordinates((float)textIndentPixels, 
-				(float)(height) - fontSize*fontLargeFactor - (float)verticalPixelOffset); //fixed position, very top left window position
+				(float)(height) - (float)verticalPixelOffset); //fixed position, very top left window position
 			Float3 poff({ pInfo[0], pInfo[1], hOff });
 			Float2 pInfo2 = PixelToVertexCoordinates((float)textIndentPixels, 
-				(float)(height) - fontSize*(2.f*fontLargeFactor) - (float)verticalPixelOffset); //fixed position, very top left window position
+				(float)(height) - fontSize*(1.f*fontLargeFactor) - (float)verticalPixelOffset); //fixed position, very top left window position
 			Float3 poff2({ pInfo2[0], pInfo2[1], hOff });
 
 			DrawString("EXUDYN", fontSize*fontLargeFactor, poff, textColor);
-			//DrawString("EXUDYN", fontSize*fontLargeFactor, poff, Float4({1,0,0,1}));
-
-			DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), fontSize, poff2, textColor);
+			
+			std::string message = basicVisualizationSystemContainer->GetComputationMessage(visSettings->general.showSolverInformation,
+				visSettings->general.showSolutionInformation, visSettings->general.showSolverTime);
+			for (char c : message)
+			{
+				if (c == '\n') { computationMessageNumberOfLines++; }
+			}
+			DrawString(message.c_str(), fontSize, poff2, textColor);
 
 			//+++++++++++++++++++
 			//print version:
-			Float2 pInfo3 = PixelToVertexCoordinates((float)(width-fontSize*fontSmallFactor*13),
-				5.f); //fixed position, very bottom right window position
+			Float2 pInfo3 = PixelToVertexCoordinates((float)(width-fontSize*fontSmallFactor*13), 5.f); //fixed position, very bottom right window position
 			Float3 poff3({ pInfo3[0], pInfo3[1], hOff });
 			DrawString((STDstring("version ")+EXUstd::exudynVersion).c_str(), fontSize*fontSmallFactor, poff3, textColor);
 		}
@@ -1196,7 +1206,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 		float scale = 2.f*fontSize*zoom / ((float)height);
 		Float2 pContourBar = PixelToVertexCoordinates((float)textIndentPixels, 
-			(float)height - (float)verticalPixelOffset - 6.5f*(float)fontSize);
+			(float)height - (float)verticalPixelOffset - 
+			(3.f+(float)computationMessageNumberOfLines)*(float)fontSize*1.54f); //factor 1.2f because space is slightly larger than fontSize for every line ... WHY?
 		Float3 p0({ pContourBar[0], pContourBar[1],hOff2 }); //offset
 		//Float3 p0({ 0.f,-2 * d,hOff2 }); //old, using vertex coordinates
 		//float d = 0.05f*zoom; //old, using vertex coordinates
@@ -1212,10 +1223,10 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			maxVal = graphicsDataList->GetItem(0)->GetContourCurrentMaxValue();
 		}
 		//DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
-		STDstring contourStr = STDstring(GetOutputVariableTypeString(visSettings->contour.outputVariable)) + "(" + EXUstd::ToString(visSettings->contour.outputVariableComponent) + ")" +
+		STDstring contourStr = STDstring("contour plot: ")+GetOutputVariableTypeString(visSettings->contour.outputVariable) + "\ncomponent=" + EXUstd::ToString(visSettings->contour.outputVariableComponent) +
 			"\nmin=" + EXUstd::ToString(minVal) + ",max=" + EXUstd::ToString(maxVal);
 		DrawString(contourStr.c_str(), fontSize, p0, textColor);
-		p0 += Float3({0.f,-2*scale,0.f});
+		p0 += Float3({0.f,-3.2f*scale,0.f});
 
 
 		//now draw boxes for contour plot colors and add texts
@@ -1284,7 +1295,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		//float d = zoom * 0.1;
 		float scale = 2.f*fontSize*zoom / ((float)height); //text size in vertex coordinates
 		//float d = visSettings->general.coordinateSystemSize*zoom;
-		float d = visSettings->general.coordinateSystemSize*scale;
+		float d = 1.2f*visSettings->general.coordinateSystemSize*scale;
 		//float a = d * 0.05f; //distance of text
 
 		//2020-12-05: no hOff, as it makes problems showing the coordinate system! float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front
@@ -1301,7 +1312,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		float factor = -0.35f*zoom * 2.5f;
+		//float factor = -0.35f*zoom * 2.5f;
 		//glOrtho(0.0f, ratio, 1, 0.0f, 0.0f, 1.0f);
 		//float factor = -0.35f;
 
@@ -1326,9 +1337,9 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		glEnd();
 		if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
 
-		const char* X1 = "X1";
-		const char* X2 = "X2";
-		const char* X3 = "X3";
+		const char* X1 = "X(0)";
+		const char* X2 = "Y(1)";
+		const char* X3 = "Z(2)";
 
 		Float16 m = state->modelRotation;
 		Float16 matTp({m[0],m[4],m[ 8],m[12],
@@ -1336,7 +1347,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 					   m[2],m[6],m[10],m[14],
 					   m[3],m[7],m[11],m[15]});
 
-		Float3 poff({ 0.5f*scale, 0.5f*scale,0.f }); //small offset from axes
+		Float3 poff({ 0.4f*scale, 0.4f*scale,0.f }); //small offset from axes
 
 		glPushMatrix(); //store current matrix -> before rotation
 		glTranslated(p1[0], p1[1], p1[2]);

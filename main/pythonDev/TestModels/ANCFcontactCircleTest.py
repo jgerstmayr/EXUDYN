@@ -160,7 +160,7 @@ SC.visualizationSettings.connectors.showContact = 1
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
 
 simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-10 #can be quite small; WHY?
-simulationSettings.staticSolver.verboseMode = 0 #otherwise, load steps are shown ...
+simulationSettings.staticSolver.verboseMode = 2 #otherwise, load steps are shown ...
 simulationSettings.staticSolver.numberOfLoadSteps  = 40
 simulationSettings.staticSolver.loadStepGeometric = True;
 simulationSettings.staticSolver.loadStepGeometricRange = 1e4;
@@ -169,7 +169,7 @@ simulationSettings.staticSolver.newton.relativeTolerance = 1e-7 #10000
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
 simulationSettings.staticSolver.newton.maxIterations = 30 #50 for bending into circle
 
-simulationSettings.staticSolver.newton.discontinuousIterationTolerance = 1
+simulationSettings.staticSolver.discontinuous.iterationTolerance = 1
 simulationSettings.staticSolver.stabilizerODE2term = 2 #may only act on position degrees of freedom
 
 if exudynTestGlobals.useGraphics: 
@@ -191,3 +191,4 @@ if exudynTestGlobals.useGraphics:
     exu.StopRenderer() #safely close rendering window!
 
 exudynTestGlobals.testError = sol[n-3] - (-0.4842656547442095) #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
+exudynTestGlobals.testResult = sol[n-3]

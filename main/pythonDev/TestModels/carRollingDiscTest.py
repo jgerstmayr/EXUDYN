@@ -210,8 +210,8 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 
 
-#simulationSettings.timeIntegration.newton.ignoreMaxDiscontinuousIterations = False #reduce step size for contact switching
-#simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 0.1
+#simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations = False #reduce step size for contact switching
+#simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.drawNodesAsPoint  = False
@@ -229,6 +229,7 @@ u=sum(c)
 exu.Print("carRollingDiscTest u=",u)
 
 exudynTestGlobals.testError = u - (-0.23940048717113419) #2020-12-18: -0.23940048717113419
+exudynTestGlobals.testResult = u
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results

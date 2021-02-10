@@ -393,7 +393,8 @@ void CObjectFFRFreducedOrder::ComputeAlgebraicEquations(Vector& algebraicEquatio
 }
 
 //! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
-void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const
+void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, 
+	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const
 {
 	//Index offset = 0;
 	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
@@ -402,10 +403,11 @@ void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		//Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
 		//Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
 
-		jacobian.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
-		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_ODE2.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_ODE1.SetNumberOfRowsAndColumns(0, 0); //for safety!
 		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
-		jacobian.SetAll(0.); //only few rigid body entries zero ==> for simplicity
+		jacobian_ODE2.SetAll(0.); //only few rigid body entries zero ==> for simplicity
 
 		if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
 		{
@@ -414,14 +416,14 @@ void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 			//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
 			for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); i++)
 			{
-				jacobian(0, ffrfNodeDim + i) = 2.*ep[i];
+				jacobian_ODE2(0, ffrfNodeDim + i) = 2.*ep[i];
 			}
 		}
 	}
 	else
 	{
-		jacobian.SetNumberOfRowsAndColumns(0, 0);
-		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+		jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0);
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
 		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
 	}
 }

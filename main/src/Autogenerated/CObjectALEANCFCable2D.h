@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-16  11:24:28 (last modfied)
+* @date         2021-01-22  17:05:59 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -154,6 +154,12 @@ public: // AUTO:
     virtual Index GetODE2Size() const override
     {
         return nODE2Coordinates+1;
+    }
+
+    //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
+    virtual bool HasConstantMassMatrix() const override
+    {
+        return false;
     }
 
     //! AUTO:  This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed

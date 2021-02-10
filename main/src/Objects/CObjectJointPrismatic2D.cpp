@@ -73,7 +73,7 @@ void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 }
 
 
-void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, 
+void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
@@ -81,7 +81,7 @@ void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index cols0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(); //equal to rotationJacobian.NumberOfColumns() !
 		Index cols1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns(); //equal to rotationJacobian.NumberOfColumns() !
-		jacobian.SetNumberOfRowsAndColumns(2, cols0 + cols1);
+		jacobian_ODE2.SetNumberOfRowsAndColumns(2, cols0 + cols1);
 
 		Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 		Matrix3D A0 = markerData.GetMarkerData(0).orientation;
@@ -100,28 +100,28 @@ void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		for (Index i = 0; i < cols0; i++) //derivatives for marker0
 		{
 			Vector3D vRotJac0({rotJac0(0,i), rotJac0(1,i), rotJac0(2,i) }); //temporary vector
-			jacobian(0, i) = -posJac0(0, i)*n1[0] - posJac0(1, i)*n1[1];// +vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
+			jacobian_ODE2(0, i) = -posJac0(0, i)*n1[0] - posJac0(1, i)*n1[1];// +vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
 			if (parameters.constrainRotation)
 			{
-				jacobian(1, i) = -(A0*(parameters.axisMarker0.CrossProduct(vRotJac0))*n1);
+				jacobian_ODE2(1, i) = -(A0*(parameters.axisMarker0.CrossProduct(vRotJac0))*n1);
 			}
-			else { jacobian(1, i) = 0; }
+			else { jacobian_ODE2(1, i) = 0; }
 		}
 		for (Index i = 0; i < cols1; i++) //derivatives for marker1
 		{
 			Vector3D vRotJac1({ rotJac1(0,i), rotJac1(1,i), rotJac1(2,i) }); //temporary vector
-			//jacobian(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] + vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
-			jacobian(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] - vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
+			//jacobian_ODE2(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] + vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
+			jacobian_ODE2(0, i + cols0) = posJac1(0, i)*n1[0] + posJac1(1, i)*n1[1] - vPos * (A1*parameters.normalMarker1.CrossProduct(vRotJac1));
 			if (parameters.constrainRotation)
 			{
-				jacobian(1, i + cols0) = -(t0 * (A1*parameters.normalMarker1.CrossProduct(vRotJac1)));
+				jacobian_ODE2(1, i + cols0) = -(t0 * (A1*parameters.normalMarker1.CrossProduct(vRotJac1)));
 			}
-			else { jacobian(1, i + cols0) = 0; }
+			else { jacobian_ODE2(1, i + cols0) = 0; }
 
 		}
 
 		//pout << "jac=" << jacobian << "\n";
-		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
 		
 		if (!parameters.constrainRotation)
 		{

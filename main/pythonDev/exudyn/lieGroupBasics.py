@@ -1,5 +1,5 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN example
+# This is an EXUDYN python utility library
 #
 # Details:  Lie group methods and formulas for Lie group integration.
 # References:   \\

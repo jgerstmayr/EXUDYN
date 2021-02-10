@@ -72,7 +72,7 @@ bool visualizationSystemUpdateGraphicsDataTimeoutWarned = false;
 void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visualizationSystemContainer)
 {
 	postProcessData->accessState.test_and_set(std::memory_order_acquire); //computation thread must be interrupted before further update
-	postProcessData->visualizationIsRunning = true; //signal, that visualization is running
+	//now done in separate function: postProcessData->visualizationIsRunning = true; //signal, that visualization is running
 
 	if (postProcessData->updateCounter == postProcessData->recordImageCounter) //this is the signal that a frame shall be recorded
 	{
@@ -328,12 +328,14 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
-std::string VisualizationSystem::GetComputationMessage()
+std::string VisualizationSystem::GetComputationMessage(bool solverInformation, bool solutionInformation, bool solverTime)
 {
 	postProcessData->accessState.test_and_set(std::memory_order_acquire); //computation thread must be interrupted before further update
 	
-	std::string str = //std::string("EXUDYN\n") + //now printed in GlfwClient.cpp
-		postProcessData->GetVisualizationMessage() + "\ntime = " + EXUstd::ToString(postProcessData->visualizationTime);
+	std::string str;
+	if (solverInformation) { str += postProcessData->GetSolverMessage() + '\n'; }
+	if (solutionInformation && !postProcessData->GetSolutionMessage().empty()) { str += postProcessData->GetSolutionMessage() + '\n'; }
+	if (solverTime) { str += "time = " + EXUstd::ToString(postProcessData->visualizationTime); }
 	postProcessData->accessState.clear(std::memory_order_release); //computation thread must be interrupted before further update
 
 	return str;

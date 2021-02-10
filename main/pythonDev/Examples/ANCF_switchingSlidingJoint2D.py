@@ -157,8 +157,8 @@ simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
 simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
-simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 1e-5
-simulationSettings.timeIntegration.newton.maxDiscontinuousIterations = 2 #only two for selection of correct sliding cable element
+simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-5
+simulationSettings.timeIntegration.discontinuous.maxIterations = 2 #only two for selection of correct sliding cable element
 
 useIndex2 = False
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = useIndex2

@@ -157,10 +157,11 @@ def UserFunctionNewton(mainSolver, mainSys, sims):
     nODE2 = mainSolver.GetODE2size()
     nAE = mainSolver.GetAEsize()
     #nSys = nODE2+nAE
-     
+    #print("u=", mainSys.systemData.GetODE2Coordinates())
     dynamicSolver.ComputeODE2RHS(mbs)
     res = dynamicSolver.GetSystemResidual()
     Fode2 = res[0:nODE2]
+    #print("res=", Fode2)
 
     dynamicSolver.ComputeMassMatrix(mbs)
     M = dynamicSolver.GetSystemMassMatrix()
@@ -180,6 +181,7 @@ dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
 simulationSettings.timeIntegration.numberOfSteps = 5000 #1000 steps for test suite/error
 simulationSettings.timeIntegration.endTime = 0.05              #1s for test suite / error
+
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 #simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
@@ -192,7 +194,9 @@ dynamicSolver.SolveSystem(mbs, simulationSettings)
 
 uy=mbs.GetNodeOutput(nLast,exu.OutputVariableType.Position)[1] #y-coordinate of tip
 exu.Print("uy=", uy)
+exu.Print("testResult=", testRefVal + uy)
 exudynTestGlobals.testError = testRefVal + uy - (2.280183538481952-0.2204849087896498) #2020-01-16: 2.280183538481952-0.2204849087896498
+exudynTestGlobals.testResult = testRefVal + uy
 
 if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
     SC.WaitForRenderEngineStopFlag()

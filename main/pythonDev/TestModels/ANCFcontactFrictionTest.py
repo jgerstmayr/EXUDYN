@@ -22,12 +22,7 @@ from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-exu.Print('DYNAFLEX version='+exu.GetVersionString())
 
-#testInterface = TestInterface(dynaflex = df, systemContainer = SC, useGraphics=False)
-#RunAllModelUnitTests(mbs, testInterface)
-
-exu.SimulationSettings
 #background
 rect = [-0.5,-1,2.5,1] #xmin,ymin,xmax,ymax
 background0 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
@@ -182,8 +177,6 @@ if solveDynamic:
     sol = mbs.systemData.GetODE2Coordinates()
     u = sol[len(sol)-3]
     exu.Print('tip displacement: y='+str(u))
-    exudynTestGlobals.testError = u - (-0.014188649931870346) #2019-12-26: -0.014188649931870346; 2019-12-16: (-0.01418281035370442);
-
 else:
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-10*100 #can be quite small; WHY?
     simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation = False
@@ -197,8 +190,8 @@ else:
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
     simulationSettings.staticSolver.newton.maxIterations = 30 #50 for bending into circle
 
-    simulationSettings.staticSolver.newton.discontinuousIterationTolerance = 0.1
-    #simulationSettings.staticSolver.newton.maxDiscontinuousIterations = 5
+    simulationSettings.staticSolver.discontinuous.iterationTolerance = 0.1
+    #simulationSettings.staticSolver.discontinuous.maxIterations = 5
     simulationSettings.staticSolver.pauseAfterEachStep = False
     simulationSettings.staticSolver.stabilizerODE2term = 50 
 
@@ -206,7 +199,13 @@ else:
 
     sol = mbs.systemData.GetODE2Coordinates()
     n = len(sol)
+    u=sol[n-4]
     exu.Print('static tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
+
+#put outside if
+exudynTestGlobals.testError = u - (-0.014188649931870346) #2019-12-26: -0.014188649931870346; 2019-12-16: (-0.01418281035370442);
+exudynTestGlobals.testResult = u
+exu.Print("test result=",exudynTestGlobals.testResult)
 
 if exudynTestGlobals.useGraphics: 
     SC.WaitForRenderEngineStopFlag()

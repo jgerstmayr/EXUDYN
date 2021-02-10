@@ -67,9 +67,8 @@ void CObjectContactCircleCable2D::ComputeGap(const MarkerDataStructure& markerDa
 	}
 }
 
-bool CObjectContactCircleCable2D::IsActive() const
+bool CObjectContactCircleCable2D::IsContactActive() const
 {
-	if (!parameters.activeConnector) { return false; }
 	for (Index i = 0; i < parameters.numberOfContactSegments; i++)
 	{
 		if (GetCNode(0)->GetCurrentCoordinate(i) <= 0) { return true; }
@@ -85,7 +84,7 @@ void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDa
 	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
 	ode2Lhs.SetAll(0.);
 
-	if (parameters.activeConnector)
+	if (parameters.activeConnector && IsContactActive())
 	{
 		//gap>0: no contact, gap<0: contact
 	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
@@ -122,16 +121,6 @@ void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDa
 				forceSum[1] += forcePerPoint[(i + 1) * 2 + 1];
 			}
 		}
-
-		//if (!cSystemData->isODE2RHSjacobianComputation && forcePerPoint.GetL2Norm() != 0) {
-		//	pout << "forcePerPoint=" << forcePerPoint << "\n";
-		//	pout << "gapPerSegment=" << gapPerSegment << "\n";
-		//	pout << "referenceCoordinatePerSegment=" << referenceCoordinatePerSegment << "\n";
-		//	pout << "xDirectionGap=" << xDirectionGap << "\n";
-		//	pout << "yDirectionGap=" << yDirectionGap << "\n";
-		//}
-
-		//if (forceSum.GetL2Norm() != 0) pout << "forceSum=" << forceSum << "\n";
 
 		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
@@ -179,7 +168,7 @@ Real CObjectContactCircleCable2D::PostNewtonStep(const MarkerDataStructure& mark
 	//  the contact force (also negative) is returned as measure of the error
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
-	if (parameters.activeConnector)
+	if (parameters.activeConnector) //always perform this computation to update CNode(0) state, also if IsContactActive() = false
 	{
 		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
 

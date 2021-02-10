@@ -31,9 +31,8 @@ try: #puts example in safe environment
     mbs.Assemble()
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
-    #check result
     #check result, get current rotor z-rotation at local position [0,0,0]
-    testError = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0]) - 2
+    exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
     #final z-angle of rotor shall be 2
 
 except BaseException as e:

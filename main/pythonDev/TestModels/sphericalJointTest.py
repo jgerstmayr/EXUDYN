@@ -116,6 +116,7 @@ for i in range(14): #take coordinates of first two bodies
 exu.Print('solution of sphericalJointTest=',u)
 
 exudynTestGlobals.testError = u - (4.409004179180698) #2020-04-04: 4.409004179180698
+exudynTestGlobals.testResult = u
 
 
 if exudynTestGlobals.useGraphics:

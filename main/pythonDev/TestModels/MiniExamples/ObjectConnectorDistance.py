@@ -40,7 +40,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
 
     #check result at default integration time
-    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] - (-0.9845225086606828)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorDistance:", e)

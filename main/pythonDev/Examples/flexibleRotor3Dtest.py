@@ -38,7 +38,7 @@ omega0=np.sqrt(2*k/(2*m)) #linear system; without flexibility of rotor
 #case 4: no external damping with small internal damping: D0=0, D0int=0.001
 attr = 'g-' #color in plot
 D0 = 0.002              #0.002 default; dimensionless damping
-D0int = 0.001*0 #*200      #default 0.001; dimensionless damping (not fully); value > 0.08 gives instability
+D0int = 0.001*200 #*200      #default 0.001; dimensionless damping (not fully); value > 0.08 gives instability
 
 d = 2*omega0*D0*(2*m)       #damping constant for external damping in N/(m/s)
 
@@ -140,7 +140,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.solutionSettings.solutionWritePeriod = 1e-5  #output interval
 simulationSettings.timeIntegration.numberOfSteps = steps
-simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.timeIntegration.endTime = 30#tEnd
 simulationSettings.timeIntegration.newton.useModifiedNewton=True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -174,9 +174,11 @@ import matplotlib.ticker as ticker
 if True:
     data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     n=steps
+    plt.rcParams.update({'font.size': 24})
+
     #plt.plot(data[:,2], data[:,3], 'r-') #numerical solution
     #plt.plot(data[:,0], data[:,2], 'b-') #numerical solution
-    plt.plot(data[:,0], data[:,3], attr) #numerical solution
+    plt.plot(data[:,0], data[:,3], 'r-') #numerical solution
     #plt.plot(data[n-500:n-1,1], data[n-500:n-1,2], 'r-') #numerical solution
     
     ax=plt.gca() # get current axes

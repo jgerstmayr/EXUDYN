@@ -109,6 +109,7 @@ u=NormL2(u1) + NormL2(u2)
 exu.Print('solution of genericODE2test=',u)
 
 exudynTestGlobals.testError = u - (0.03604546349898683) #2020-04-22: 0.03604546349898683
+exudynTestGlobals.testResult = u
 
 
 

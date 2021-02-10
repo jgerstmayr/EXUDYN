@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,7 +40,10 @@ public: // AUTO:
   bool drawCoordinateSystem;                      //!< AUTO: false = no coordinate system shown
   bool drawWorldBasis;                            //!< AUTO: true = draw world basis coordinate system at (0,0,0)
   float worldBasisSize;                           //!< AUTO: size of world basis coordinate system
-  bool showComputationInfo;                       //!< AUTO: false = no info about computation (current time, solver, etc.) shown
+  bool showComputationInfo;                       //!< AUTO: true = show (hide) all computation information including EXUDYN and version
+  bool showSolutionInformation;                   //!< AUTO: true = show solution information (from simulationSettings.solution)
+  bool showSolverInformation;                     //!< AUTO: true = solver name and further information shown in render window
+  bool showSolverTime;                            //!< AUTO: true = solver current time shown in render window
   float pointSize;                                //!< AUTO: global point size (absolute)
   Index circleTiling;                             //!< AUTO: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
   Index cylinderTiling;                           //!< AUTO: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
@@ -67,6 +70,9 @@ public: // AUTO:
     drawWorldBasis = false;
     worldBasisSize = 1.0f;
     showComputationInfo = true;
+    showSolutionInformation = true;
+    showSolverInformation = true;
+    showSolverTime = true;
     pointSize = 0.01f;
     circleTiling = 16;
     cylinderTiling = 16;
@@ -109,6 +115,9 @@ public: // AUTO:
     os << "  drawWorldBasis = " << drawWorldBasis << "\n";
     os << "  worldBasisSize = " << worldBasisSize << "\n";
     os << "  showComputationInfo = " << showComputationInfo << "\n";
+    os << "  showSolutionInformation = " << showSolutionInformation << "\n";
+    os << "  showSolverInformation = " << showSolverInformation << "\n";
+    os << "  showSolverTime = " << showSolverTime << "\n";
     os << "  pointSize = " << pointSize << "\n";
     os << "  circleTiling = " << circleTiling << "\n";
     os << "  cylinderTiling = " << cylinderTiling << "\n";
@@ -127,12 +136,594 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsContour
+* @brief        Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsContour // AUTO: 
+{
+public: // AUTO: 
+  Index outputVariableComponent;                  //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; if this component is not available by certain objects or nodes, no value is drawn
+  OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.
+  float minValue;                                 //!< AUTO: minimum value for contour plot; set manually, if automaticRange == False
+  float maxValue;                                 //!< AUTO: maximum value for contour plot; set manually, if automaticRange == False
+  bool automaticRange;                            //!< AUTO: if true, the contour plot value range is chosen automatically to the maximum range
+  bool reduceRange;                               //!< AUTO: if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)
+  bool showColorBar;                              //!< AUTO: show the colour bar with minimum and maximum values for the contour plot
+  Index colorBarTiling;                           //!< AUTO: number of tiles (segements) shown in the colorbar for the contour plot
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsContour()
+  {
+    outputVariableComponent = 0;
+    outputVariable = OutputVariableType::_None;
+    minValue = 0;
+    maxValue = 1;
+    automaticRange = true;
+    reduceRange = true;
+    showColorBar = true;
+    colorBarTiling = 12;
+  };
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsContour" << ":\n";
+    os << "  outputVariableComponent = " << outputVariableComponent << "\n";
+    os << "  outputVariable = " << GetOutputVariableTypeString(outputVariable) << "\n";
+    os << "  minValue = " << minValue << "\n";
+    os << "  maxValue = " << maxValue << "\n";
+    os << "  automaticRange = " << automaticRange << "\n";
+    os << "  reduceRange = " << reduceRange << "\n";
+    os << "  showColorBar = " << showColorBar << "\n";
+    os << "  colorBarTiling = " << colorBarTiling << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsContour& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsNodes
+* @brief        Visualization settings for nodes.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsNodes // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the nodes are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the node number is shown
+  bool drawNodesAsPoint;                          //!< AUTO: simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines
+  bool showBasis;                                 //!< AUTO: show basis (three axes) of coordinate system in 3D nodes
+  float basisSize;                                //!< AUTO: size of basis for nodes
+  Index tiling;                                   //!< AUTO: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
+  float defaultSize;                              //!< AUTO: global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for nodes; 4th value is alpha-transparency
+  Index showNodalSlopes;                          //!< AUTO: draw nodal slope vectors, e.g. in ANCF beam finite elements
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsNodes()
+  {
+    show = true;
+    showNumbers = false;
+    drawNodesAsPoint = true;
+    showBasis = false;
+    basisSize = 0.2f;
+    tiling = 4;
+    defaultSize = -1.f;
+    defaultColor = Float4({0.2f,0.2f,1.f,1.f});
+    showNodalSlopes = false;
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for nodes; 4th value is alpha-transparency
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for nodes; 4th value is alpha-transparency
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsNodes" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  drawNodesAsPoint = " << drawNodesAsPoint << "\n";
+    os << "  showBasis = " << showBasis << "\n";
+    os << "  basisSize = " << basisSize << "\n";
+    os << "  tiling = " << tiling << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "  showNodalSlopes = " << showNodalSlopes << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsNodes& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsBeams
+* @brief        Visualization settings for beam finite elements.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsBeams // AUTO: 
+{
+public: // AUTO: 
+  Index axialTiling;                              //!< AUTO: number of segments to discretise the beams axis
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsBeams()
+  {
+    axialTiling = 8;
+  };
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsBeams" << ":\n";
+    os << "  axialTiling = " << axialTiling << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsBeams& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsBodies
+* @brief        Visualization settings for bodies.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsBodies // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the bodies are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the body(=object) number is shown
+  Float3 defaultSize;                             //!< AUTO: global body size of xyz-cube
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for bodies; 4th value is 
+  float deformationScaleFactor;                   //!< AUTO: global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.
+  VSettingsBeams beams;                           //!< AUTO: visualization settings for beams (e.g. ANCFCable or other beam elements)
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsBodies()
+  {
+    show = true;
+    showNumbers = false;
+    defaultSize = Float3({1.f,1.f,1.f});
+    defaultColor = Float4({0.3f,0.3f,1.f,1.f});
+    deformationScaleFactor = 1;
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: global body size of xyz-cube
+  void PySetDefaultSize(const std::array<float,3>& defaultSizeInit) { defaultSize = defaultSizeInit; }
+  //! AUTO: Read (Copy) access to: global body size of xyz-cube
+  std::array<float,3> PyGetDefaultSize() const { return (std::array<float,3>)(defaultSize); }
+
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for bodies; 4th value is 
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for bodies; 4th value is 
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsBodies" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "  deformationScaleFactor = " << deformationScaleFactor << "\n";
+    os << "  beams = " << beams << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsBodies& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsConnectors
+* @brief        Visualization settings for connectors.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsConnectors // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the connectors are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the connector(=object) number is shown
+  float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
+  bool showJointAxes;                             //!< AUTO: flag to decide, whether contact joint axes of 3D joints are shown
+  float jointAxesLength;                          //!< AUTO: global joint axes length
+  float jointAxesRadius;                          //!< AUTO: global joint axes radius
+  bool showContact;                               //!< AUTO: flag to decide, whether contact points, lines, etc. are shown
+  Index springNumberOfWindings;                   //!< AUTO: number of windings for springs drawn as helical spring
+  float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for connectors; 4th value is alpha-transparency
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsConnectors()
+  {
+    show = true;
+    showNumbers = false;
+    defaultSize = 0.1f;
+    showJointAxes = false;
+    jointAxesLength = 0.2f;
+    jointAxesRadius = 0.02f;
+    showContact = false;
+    springNumberOfWindings = 8;
+    contactPointsDefaultSize = 0.02f;
+    defaultColor = Float4({0.2f,0.2f,1.f,1.f});
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for connectors; 4th value is alpha-transparency
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for connectors; 4th value is alpha-transparency
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsConnectors" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  showJointAxes = " << showJointAxes << "\n";
+    os << "  jointAxesLength = " << jointAxesLength << "\n";
+    os << "  jointAxesRadius = " << jointAxesRadius << "\n";
+    os << "  showContact = " << showContact << "\n";
+    os << "  springNumberOfWindings = " << springNumberOfWindings << "\n";
+    os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsConnectors& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsMarkers
+* @brief        Visualization settings for markers.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsMarkers // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the markers are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the marker numbers are shown
+  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
+  float defaultSize;                              //!< AUTO: global marker size; if -1.f, marker size is relative to maxSceneSize
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for markers; 4th value is alpha-transparency
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsMarkers()
+  {
+    show = true;
+    showNumbers = false;
+    drawSimplified = true;
+    defaultSize = -1.f;
+    defaultColor = Float4({0.1f,0.5f,0.1f,1.f});
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for markers; 4th value is alpha-transparency
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for markers; 4th value is alpha-transparency
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsMarkers" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsMarkers& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsLoads
+* @brief        Visualization settings for loads.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsLoads // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the loads are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the load numbers are shown
+  float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
+  float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
+  bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
+  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
+  float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for loads; 4th value is alpha-transparency
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsLoads()
+  {
+    show = true;
+    showNumbers = false;
+    defaultSize = 0.2f;
+    defaultRadius = 0.005f;
+    fixedLoadSize = true;
+    drawSimplified = true;
+    loadSizeFactor = 0.1f;
+    defaultColor = Float4({0.7f,0.1f,0.1f,1.f});
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for loads; 4th value is alpha-transparency
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for loads; 4th value is alpha-transparency
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsLoads" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultRadius = " << defaultRadius << "\n";
+    os << "  fixedLoadSize = " << fixedLoadSize << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
+    os << "  loadSizeFactor = " << loadSizeFactor << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsLoads& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
+* @class        VSettingsSensors
+* @brief        Visualization settings for sensors.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsSensors // AUTO: 
+{
+public: // AUTO: 
+  bool show;                                      //!< AUTO: flag to decide, whether the sensors are shown
+  bool showNumbers;                               //!< AUTO: flag to decide, whether the sensor numbers are shown
+  bool drawSimplified;                            //!< AUTO: draw sensors with simplified symbols
+  float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
+  Float4 defaultColor;                            //!< AUTO: default cRGB olor for sensors; 4th value is alpha-transparency
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsSensors()
+  {
+    show = true;
+    showNumbers = false;
+    drawSimplified = true;
+    defaultSize = -1.f;
+    defaultColor = Float4({0.6f,0.6f,0.1f,1.f});
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: default cRGB olor for sensors; 4th value is alpha-transparency
+  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
+  //! AUTO: Read (Copy) access to: default cRGB olor for sensors; 4th value is alpha-transparency
+  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsSensors" << ":\n";
+    os << "  show = " << show << "\n";
+    os << "  showNumbers = " << showNumbers << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
+    os << "  defaultSize = " << defaultSize << "\n";
+    os << "  defaultColor = " << defaultColor << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsSensors& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsWindow
 * @brief        Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -226,7 +817,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -417,85 +1008,12 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
-* @class        VSettingsContour
-* @brief        Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsContour // AUTO: 
-{
-public: // AUTO: 
-  Index outputVariableComponent;                  //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; if this component is not available by certain objects or nodes, no value is drawn
-  OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.
-  float minValue;                                 //!< AUTO: minimum value for contour plot; set manually, if automaticRange == False
-  float maxValue;                                 //!< AUTO: maximum value for contour plot; set manually, if automaticRange == False
-  bool automaticRange;                            //!< AUTO: if true, the contour plot value range is chosen automatically to the maximum range
-  bool reduceRange;                               //!< AUTO: if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)
-  bool showColorBar;                              //!< AUTO: show the colour bar with minimum and maximum values for the contour plot
-  Index colorBarTiling;                           //!< AUTO: number of tiles (segements) shown in the colorbar for the contour plot
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsContour()
-  {
-    outputVariableComponent = 0;
-    outputVariable = OutputVariableType::_None;
-    minValue = 0;
-    maxValue = 1;
-    automaticRange = true;
-    reduceRange = true;
-    showColorBar = true;
-    colorBarTiling = 12;
-  };
-
-  // AUTO: access functions
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsContour" << ":\n";
-    os << "  outputVariableComponent = " << outputVariableComponent << "\n";
-    os << "  outputVariable = " << GetOutputVariableTypeString(outputVariable) << "\n";
-    os << "  minValue = " << minValue << "\n";
-    os << "  maxValue = " << maxValue << "\n";
-    os << "  automaticRange = " << automaticRange << "\n";
-    os << "  reduceRange = " << reduceRange << "\n";
-    os << "  showColorBar = " << showColorBar << "\n";
-    os << "  colorBarTiling = " << colorBarTiling << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsContour& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
 * @class        VSettingsExportImages
 * @brief        Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -551,521 +1069,12 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
-* @class        VSettingsNodes
-* @brief        Visualization settings for nodes.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsNodes // AUTO: 
-{
-public: // AUTO: 
-  bool show;                                      //!< AUTO: flag to decide, whether the nodes are shown
-  bool showNumbers;                               //!< AUTO: flag to decide, whether the node number is shown
-  bool drawNodesAsPoint;                          //!< AUTO: simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines
-  bool showBasis;                                 //!< AUTO: show basis (three axes) of coordinate system in 3D nodes
-  float basisSize;                                //!< AUTO: size of basis for nodes
-  Index tiling;                                   //!< AUTO: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
-  float defaultSize;                              //!< AUTO: global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize
-  Float4 defaultColor;                            //!< AUTO: default cRGB olor for nodes; 4th value is alpha-transparency
-  Index showNodalSlopes;                          //!< AUTO: draw nodal slope vectors, e.g. in ANCF beam finite elements
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsNodes()
-  {
-    show = true;
-    showNumbers = false;
-    drawNodesAsPoint = true;
-    showBasis = false;
-    basisSize = 0.2f;
-    tiling = 4;
-    defaultSize = -1.f;
-    defaultColor = Float4({0.2f,0.2f,1.f,1.f});
-    showNodalSlopes = false;
-  };
-
-  // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB olor for nodes; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB olor for nodes; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
-
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsNodes" << ":\n";
-    os << "  show = " << show << "\n";
-    os << "  showNumbers = " << showNumbers << "\n";
-    os << "  drawNodesAsPoint = " << drawNodesAsPoint << "\n";
-    os << "  showBasis = " << showBasis << "\n";
-    os << "  basisSize = " << basisSize << "\n";
-    os << "  tiling = " << tiling << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
-    os << "  defaultColor = " << defaultColor << "\n";
-    os << "  showNodalSlopes = " << showNodalSlopes << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsNodes& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
-* @class        VSettingsBeams
-* @brief        Visualization settings for beam finite elements.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsBeams // AUTO: 
-{
-public: // AUTO: 
-  Index axialTiling;                              //!< AUTO: number of segments to discretise the beams axis
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsBeams()
-  {
-    axialTiling = 8;
-  };
-
-  // AUTO: access functions
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsBeams" << ":\n";
-    os << "  axialTiling = " << axialTiling << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsBeams& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
-* @class        VSettingsBodies
-* @brief        Visualization settings for bodies.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsBodies // AUTO: 
-{
-public: // AUTO: 
-  bool show;                                      //!< AUTO: flag to decide, whether the bodies are shown
-  bool showNumbers;                               //!< AUTO: flag to decide, whether the body(=object) number is shown
-  Float3 defaultSize;                             //!< AUTO: global body size of xyz-cube
-  Float4 defaultColor;                            //!< AUTO: default cRGB olor for bodies; 4th value is 
-  float deformationScaleFactor;                   //!< AUTO: global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.
-  VSettingsBeams beams;                           //!< AUTO: visualization settings for beams (e.g. ANCFCable or other beam elements)
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsBodies()
-  {
-    show = true;
-    showNumbers = false;
-    defaultSize = Float3({1.f,1.f,1.f});
-    defaultColor = Float4({0.3f,0.3f,1.f,1.f});
-    deformationScaleFactor = 1;
-  };
-
-  // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: global body size of xyz-cube
-  void PySetDefaultSize(const std::array<float,3>& defaultSizeInit) { defaultSize = defaultSizeInit; }
-  //! AUTO: Read (Copy) access to: global body size of xyz-cube
-  std::array<float,3> PyGetDefaultSize() const { return (std::array<float,3>)(defaultSize); }
-
-  //! AUTO: Set function (needed in pybind) for: default cRGB olor for bodies; 4th value is 
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB olor for bodies; 4th value is 
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
-
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsBodies" << ":\n";
-    os << "  show = " << show << "\n";
-    os << "  showNumbers = " << showNumbers << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
-    os << "  defaultColor = " << defaultColor << "\n";
-    os << "  deformationScaleFactor = " << deformationScaleFactor << "\n";
-    os << "  beams = " << beams << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsBodies& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
-* @class        VSettingsConnectors
-* @brief        Visualization settings for connectors.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsConnectors // AUTO: 
-{
-public: // AUTO: 
-  bool show;                                      //!< AUTO: flag to decide, whether the connectors are shown
-  bool showNumbers;                               //!< AUTO: flag to decide, whether the connector(=object) number is shown
-  float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
-  bool showJointAxes;                             //!< AUTO: flag to decide, whether contact joint axes of 3D joints are shown
-  float jointAxesLength;                          //!< AUTO: global joint axes length
-  float jointAxesRadius;                          //!< AUTO: global joint axes radius
-  bool showContact;                               //!< AUTO: flag to decide, whether contact points, lines, etc. are shown
-  Index springNumberOfWindings;                   //!< AUTO: number of windings for springs drawn as helical spring
-  float contactPointsDefaultSize;                 //!< AUTO: global contact points size; if -1.f, connector size is relative to maxSceneSize
-  Float4 defaultColor;                            //!< AUTO: default cRGB olor for connectors; 4th value is alpha-transparency
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsConnectors()
-  {
-    show = true;
-    showNumbers = false;
-    defaultSize = 0.1f;
-    showJointAxes = false;
-    jointAxesLength = 0.2f;
-    jointAxesRadius = 0.02f;
-    showContact = false;
-    springNumberOfWindings = 8;
-    contactPointsDefaultSize = 0.02f;
-    defaultColor = Float4({0.2f,0.2f,1.f,1.f});
-  };
-
-  // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB olor for connectors; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB olor for connectors; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
-
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsConnectors" << ":\n";
-    os << "  show = " << show << "\n";
-    os << "  showNumbers = " << showNumbers << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
-    os << "  showJointAxes = " << showJointAxes << "\n";
-    os << "  jointAxesLength = " << jointAxesLength << "\n";
-    os << "  jointAxesRadius = " << jointAxesRadius << "\n";
-    os << "  showContact = " << showContact << "\n";
-    os << "  springNumberOfWindings = " << springNumberOfWindings << "\n";
-    os << "  contactPointsDefaultSize = " << contactPointsDefaultSize << "\n";
-    os << "  defaultColor = " << defaultColor << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsConnectors& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
-* @class        VSettingsMarkers
-* @brief        Visualization settings for markers.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsMarkers // AUTO: 
-{
-public: // AUTO: 
-  bool show;                                      //!< AUTO: flag to decide, whether the markers are shown
-  bool showNumbers;                               //!< AUTO: flag to decide, whether the marker numbers are shown
-  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
-  float defaultSize;                              //!< AUTO: global marker size; if -1.f, marker size is relative to maxSceneSize
-  Float4 defaultColor;                            //!< AUTO: default cRGB olor for markers; 4th value is alpha-transparency
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsMarkers()
-  {
-    show = true;
-    showNumbers = false;
-    drawSimplified = true;
-    defaultSize = -1.f;
-    defaultColor = Float4({0.1f,0.5f,0.1f,1.f});
-  };
-
-  // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB olor for markers; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB olor for markers; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
-
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsMarkers" << ":\n";
-    os << "  show = " << show << "\n";
-    os << "  showNumbers = " << showNumbers << "\n";
-    os << "  drawSimplified = " << drawSimplified << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
-    os << "  defaultColor = " << defaultColor << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsMarkers& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
-* @class        VSettingsLoads
-* @brief        Visualization settings for loads.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsLoads // AUTO: 
-{
-public: // AUTO: 
-  bool show;                                      //!< AUTO: flag to decide, whether the loads are shown
-  bool showNumbers;                               //!< AUTO: flag to decide, whether the load numbers are shown
-  float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
-  float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
-  bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
-  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
-  float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
-  Float4 defaultColor;                            //!< AUTO: default cRGB olor for loads; 4th value is alpha-transparency
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsLoads()
-  {
-    show = true;
-    showNumbers = false;
-    defaultSize = 0.2f;
-    defaultRadius = 0.005f;
-    fixedLoadSize = true;
-    drawSimplified = true;
-    loadSizeFactor = 0.1f;
-    defaultColor = Float4({0.7f,0.1f,0.1f,1.f});
-  };
-
-  // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB olor for loads; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB olor for loads; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
-
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsLoads" << ":\n";
-    os << "  show = " << show << "\n";
-    os << "  showNumbers = " << showNumbers << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
-    os << "  defaultRadius = " << defaultRadius << "\n";
-    os << "  fixedLoadSize = " << fixedLoadSize << "\n";
-    os << "  drawSimplified = " << drawSimplified << "\n";
-    os << "  loadSizeFactor = " << loadSizeFactor << "\n";
-    os << "  defaultColor = " << defaultColor << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsLoads& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
-* @class        VSettingsSensors
-* @brief        Visualization settings for sensors.
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
-class VSettingsSensors // AUTO: 
-{
-public: // AUTO: 
-  bool show;                                      //!< AUTO: flag to decide, whether the sensors are shown
-  bool showNumbers;                               //!< AUTO: flag to decide, whether the sensor numbers are shown
-  bool drawSimplified;                            //!< AUTO: draw sensors with simplified symbols
-  float defaultSize;                              //!< AUTO: global sensor size; if -1.f, sensor size is relative to maxSceneSize
-  Float4 defaultColor;                            //!< AUTO: default cRGB olor for sensors; 4th value is alpha-transparency
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsSensors()
-  {
-    show = true;
-    showNumbers = false;
-    drawSimplified = true;
-    defaultSize = -1.f;
-    defaultColor = Float4({0.6f,0.6f,0.1f,1.f});
-  };
-
-  // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default cRGB olor for sensors; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default cRGB olor for sensors; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
-
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsSensors" << ":\n";
-    os << "  show = " << show << "\n";
-    os << "  showNumbers = " << showNumbers << "\n";
-    os << "  drawSimplified = " << drawSimplified << "\n";
-    os << "  defaultSize = " << defaultSize << "\n";
-    os << "  defaultColor = " << defaultColor << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsSensors& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
 * @class        VisualizationSettings
 * @brief        Settings for visualization
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1084,16 +1093,16 @@ class VisualizationSettings // AUTO:
 {
 public: // AUTO: 
   VSettingsGeneral general;                       //!< AUTO: general visualization settings
-  VSettingsWindow window;                         //!< AUTO: visualization window and interaction settings
-  VSettingsOpenGL openGL;                         //!< AUTO: OpenGL rendering settings
   VSettingsContour contour;                       //!< AUTO: contour plot visualization settings
-  VSettingsExportImages exportImages;             //!< AUTO: settings for exporting (saving) images to files in order to create animations
   VSettingsNodes nodes;                           //!< AUTO: node visualization settings
   VSettingsBodies bodies;                         //!< AUTO: body visualization settings
   VSettingsConnectors connectors;                 //!< AUTO: connector visualization settings
   VSettingsMarkers markers;                       //!< AUTO: marker visualization settings
   VSettingsLoads loads;                           //!< AUTO: load visualization settings
   VSettingsSensors sensors;                       //!< AUTO: sensor visualization settings
+  VSettingsWindow window;                         //!< AUTO: visualization window and interaction settings
+  VSettingsOpenGL openGL;                         //!< AUTO: OpenGL rendering settings
+  VSettingsExportImages exportImages;             //!< AUTO: settings for exporting (saving) images to files in order to create animations
 
 
 public: // AUTO: 
@@ -1104,16 +1113,16 @@ public: // AUTO:
   {
     os << "VisualizationSettings" << ":\n";
     os << "  general = " << general << "\n";
-    os << "  window = " << window << "\n";
-    os << "  openGL = " << openGL << "\n";
     os << "  contour = " << contour << "\n";
-    os << "  exportImages = " << exportImages << "\n";
     os << "  nodes = " << nodes << "\n";
     os << "  bodies = " << bodies << "\n";
     os << "  connectors = " << connectors << "\n";
     os << "  markers = " << markers << "\n";
     os << "  loads = " << loads << "\n";
     os << "  sensors = " << sensors << "\n";
+    os << "  window = " << window << "\n";
+    os << "  openGL = " << openGL << "\n";
+    os << "  exportImages = " << exportImages << "\n";
     os << "\n";
   }
 

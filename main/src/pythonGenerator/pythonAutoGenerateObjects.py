@@ -25,11 +25,13 @@ def ExtractExamplesWithKeyword(keyword, dirPath):
     filesWithKeyword = []
 
     for fileName in fileNames:
-        file = open(dirPath+'/'+fileName)
-        text = file.read()
-        if text.find(keyword) != -1:
-            filesWithKeyword += [fileName]
-        file.close()
+        if fileName[-3:]=='.py':
+            #print("extract example:",fileName)
+            file = open(dirPath+'/'+fileName)
+            text = file.read()
+            if text.find(keyword) != -1:
+                filesWithKeyword += [fileName]
+            file.close()
     return filesWithKeyword
 
 #generate latex string containing a list of file references (and hyperref links), 
@@ -146,7 +148,9 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
                             'PyFunctionVector3DmbsScalar5Vector3D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
                             'PyFunctionVectorMbsScalar2Vector': 'std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>', #ObjectGenericODE2
                             'PyFunctionMatrixMbsScalar2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>', #ObjectGenericODE2
+                            'PyFunctionVectorMbsScalarVector': 'std::function<StdVector(const MainSystem&,Real,StdVector)>', #ObjectGenericODE1
                             'PyFunctionVector6Dmbs4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper
+                            'PyFunctionVectorMbs4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
 #StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             }
 
@@ -1314,6 +1318,7 @@ try: #still close file if crashes
                                 mode = 0
                                 #++++++++++++++++++++++++++++++
                                 #now write C++ header file for defined class
+                                #print(parseInfo)
                                 fileStr = WriteFile(parseInfo, parameterList, typeConversion)
                                 sLatexItemList += fileStr[4]
                                 
@@ -1447,6 +1452,8 @@ try: #still close file if crashes
     s += '#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
     #s += 'from exudyn import OutputVariableType\n\n' #do not import exudyn, causes problems e.g. with exudynFast, ...
     s += '#item interface diagonal matrix creator\n'
+    s += '\n'
+    s += 'import exudyn #for exudyn.InvalidIndex() needed in RigidBodySpringDamper\n\n'
     s += 'def IIDiagMatrix(rowsColumns, value):\n'
     s += space4+'m = []\n'
     s += space4+'for i in range(rowsColumns):\n'

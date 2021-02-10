@@ -50,9 +50,16 @@
 
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index vector_new_counts; //global counter of item allocations; is increased every time a new is called
+extern Index linkedDataVectorCast_counts; //global counter for unwanted type conversion from LinkedDataVector to Vector
 extern Index vector_delete_counts; //global counter of item deallocations; is increased every time a delete is called
 #endif
 
+enum class VectorType {
+	Vector = 1,
+	LinkedDataVector = 2,
+	ResizableVector = 3,
+	ConstVector = 4
+};
 
 template <typename T, Index dataSize> class SlimVectorBase;
 template <typename T> class LinkedDataVectorBase;
@@ -91,6 +98,7 @@ public:
 
 private:
 	VectorBase(LinkedDataVectorBase<T>&& other) = delete; //this move constructor is forbidden, as it will lead to crash as memory will be deleted wrongly
+	VectorBase(const LinkedDataVectorBase<T>& other) = delete; //this copy constructor is forbidden, as it will unintendedly copy memory
 public:
 
 	//! constructor with std::vector
@@ -135,6 +143,8 @@ public:
     
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
     virtual VectorBase* GetClone() const { return new VectorBase(*this); }
+
+	virtual VectorType GetType() const { return VectorType::Vector; }
 
 protected:
     //! allocate memory if numberOfRealsInit!=0; set data to allocated array of Reals or to nullptr
@@ -359,10 +369,29 @@ public:
     }
 
     //! add two vectors, result = v1+v2 (for each component)
-	friend VectorBase operator+(const VectorBase& v1, const VectorBase& v2);
-
+	friend VectorBase operator+(const VectorBase& v1, const VectorBase& v2)
+	{
+		CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator+: incompatible size of vectors");
+		VectorBase<T> result(v1.NumberOfItems());
+		Index cnt = 0;
+		for (auto &item : result) {
+			item = v1[cnt] + v2[cnt];
+			cnt++;
+		}
+		return result;
+	}
     //! add two vectors, result = v1-v2 (for each component)
-	friend VectorBase operator-(const VectorBase& v1, const VectorBase& v2);
+	friend VectorBase operator-(const VectorBase& v1, const VectorBase& v2)
+	{
+		CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator-: incompatible size of vectors");
+		VectorBase<T> result(v1.NumberOfItems());
+		Index cnt = 0;
+		for (auto &item : result) {
+			item = v1[cnt] - v2[cnt];
+			cnt++;
+		}
+		return result;
+	}
 
     //! scalar multiply, result = scalar * v (for each component)
 	friend VectorBase operator*(const VectorBase& v, T scalar)
@@ -430,8 +459,18 @@ public:
 		{
 			data[i] += scalar * v[i];
 		}
-
 	}
+	//DELETE: duplicate
+	////! add factor*vector to *this; no memory allocated; might be more efficient than doing this separatly
+	//void MultiplyAdd(const T& factor, const VectorBase& vector)
+	//{
+	//	CHECKandTHROW((NumberOfItems() == vector.NumberOfItems()), "VectorBase::MultiplyAdd(): incompatible sizes");
+
+	//	Index cnt = 0;
+	//	for (auto &item : *this) {
+	//		item += factor * vector[cnt++];
+	//	}
+	//}
 
 
     //! returns the sum of squared components (v[0]^2 + v[1]^2 + v[2]^2 ....)
@@ -487,16 +526,6 @@ public:
 	//VectorBase Append(const VectorBase& vector) const;
 	VectorBase<T> Append(const VectorBase<T>& vector) const;
 
-    //! add factor*vector to *this; no memory allocated; might be more efficient than doing this separatly
-    void MultiplyAdd(const T& factor, const VectorBase& vector)
-    {
-		CHECKandTHROW((NumberOfItems() == vector.NumberOfItems()), "VectorBase::MultiplyAdd(): incompatible sizes");
-
-        Index cnt = 0;
-        for (auto &item : *this) {
-            item += factor * vector[cnt++];
-        }
-    }
 
     //! Returns the sum of all components of a vector in range [0, numberOfItems]
     T Sum() const
@@ -546,6 +575,13 @@ VectorBase<T>::VectorBase(Index numberOfItemsInit, T initializationValue)
 template<typename T>
 VectorBase<T>::VectorBase(const VectorBase<T>& vector)
 {
+#ifdef __EXUDYN_RUNTIME_CHECKS__
+	if (vector.GetType() == VectorType::LinkedDataVector)
+	{
+		linkedDataVectorCast_counts++;
+	}
+#endif
+
 	AllocateMemory(vector.NumberOfItems());
 
 	Index cnt = 0;

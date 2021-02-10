@@ -67,7 +67,7 @@ void CSystem::Assemble(const MainSystem& mainSystem)
 		//now system is consistent and can safely be drawn
 		SetSystemIsConsistent(true);
 		postProcessData.postProcessDataReady = true;
-		cSystemData.isODE2RHSjacobianComputation = false; //hack
+		//cSystemData.isODE2RHSjacobianComputation = false; //hack
 	}
 	else
 	{
@@ -642,7 +642,8 @@ void CSystem::AssembleCoordinates(const MainSystem& mainSystem)
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! build ltg-coordinate lists for objects (used to build system ODE2RHS, MassMatrix, etc. vectors and matrices)
+//! build ltg-coordinate lists for objects (used to build system ODE2RHS, MassMatrix, etc. vectors and matrices) 
+//! and store special object lists (body, connector, constraint, ...)
 void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 {
 	//pout << "Assemble LTG Lists\n";
@@ -677,6 +678,8 @@ void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 	//pout << "local to global ODE1 Indices:\n" << listODE1 << "\n\n";
 	//pout << "local to global AE Indices:\n" << listAE << "\n\n";
 	//pout << "local to global Data Indices:\n" << listData << "\n\n";
+
+	PreComputeItemLists();
 }
 
 
@@ -691,22 +694,31 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 
 	CObject* object = cSystemData.GetCObjects()[objectIndex];
 
-	if ((Index)object->GetType() & (Index)CObjectType::Body) //single and multinoded objects
+	//body not necessary here, works for all objects: if ((Index)object->GetType() & (Index)CObjectType::Body) //single and multinoded objects
+	if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
 	{
-		CObjectBody* objectBody = (CObjectBody*)object;
+		//CObjectBody* objectBody = (CObjectBody*)object;
 
 		//bool algebraicEquationsInNodes = false;
 		//node-based elements (bodies, finite elements, ...)
 		//for (Index nodeNumber : objectBody->GetCNode())
-		for (Index j = 0; j < objectBody->GetNumberOfNodes(); j++)
+		for (Index j = 0; j < object->GetNumberOfNodes(); j++)
 		{
-			CNode* node = objectBody->GetCNode(j);
+			CNode* node = object->GetCNode(j);
 			if (node->GetNumberOfODE2Coordinates())
 			{
 				Index gIndex = node->GetGlobalODE2CoordinateIndex();
 				for (Index i = 0; i < node->GetNumberOfODE2Coordinates(); i++)
 				{
 					ltgListODE2.Append(gIndex + i);
+				}
+			}
+			if (node->GetNumberOfODE1Coordinates())
+			{
+				Index gIndex = node->GetGlobalODE1CoordinateIndex();
+				for (Index i = 0; i < node->GetNumberOfODE1Coordinates(); i++)
+				{
+					ltgListODE1.Append(gIndex + i);
 				}
 			}
 			if (node->GetNumberOfAECoordinates()) //this is for algebraic nodes (e.g. Euler Parameters)
@@ -727,7 +739,7 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 			}
 		}
 	}
-	else if ((Index)object->GetType() & (Index)CObjectType::Connector)
+	else
 	{
 		CObjectConnector* connector = (CObjectConnector*)object;
 
@@ -850,15 +862,135 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 			}
 		}
 	}
-	else
-	{
-		pout << "ERROR: ObjectType Nr. " << (Index)object->GetType() << " not implemented in CSystem::AssembleLTGLists!\n";
-	}
+	//else
+	//{
+	//	pout << "ERROR: ObjectType Nr. " << (Index)object->GetType() << " not implemented in CSystem::AssembleLTGLists!\n";
+	//}
 
-	//pout << "ltgODE2=" << ltgListODE2 << "\n";
+	//pout << "ltgODE1=" << ltgListODE1 << "\n";
 	//pout << "ltgAE=" << ltgListAE << "\n";
 }
 
+//! precompute item lists (special lists for constraints, connectors, etc.)
+void CSystem::PreComputeItemLists()
+{
+	cSystemData.objectsBodyWithODE2Coords.Flush();
+	cSystemData.listComputeObjectODE2Lhs.Flush();
+	cSystemData.listComputeObjectODE1Rhs.Flush();
+	cSystemData.listDiscontinuousIteration.Flush();
+
+	cSystemData.objectsBodyWithAE.Flush();
+	cSystemData.objectsConstraintWithAE.Flush();
+	cSystemData.objectsWithAlgebraicEquations.Flush();
+	cSystemData.listObjectProjectedReactionForces.Flush();
+
+
+	//compute localToGlobalODE2 coordinate indices
+	for (Index i = 0; i < cSystemData.GetCObjects().NumberOfItems(); i++)
+	{
+		//unused
+		CObject* object = cSystemData.GetCObjects()[i];
+
+		//if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+		//{
+		//	cSystemData.objectsConnectors.Append(i);
+		//}
+		////unused
+		//if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
+		//{
+		//	cSystemData.objectsConstraints.Append(i);
+		//}
+
+		
+		//for ComputeObjectODE2Lhs
+		if (cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0 &&  //ground
+			!EXUstd::IsOfType(object->GetType(), CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
+		{
+			//if object is a body, it must have ODE2RHS
+			if (EXUstd::IsOfType(object->GetType(), CObjectType::Body) ||
+				EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+			{
+				cSystemData.listComputeObjectODE2Lhs.Append(i);
+			}
+			else 
+			{ 
+				SysError("CSystem::PreComputeItemLists(...): object "+EXUstd::ToString(i) + ": ODE2 type not implemented"); 
+			}
+		}
+
+
+		//for ComputeObjectODE1Rhs
+		if (cSystemData.GetLocalToGlobalODE1()[i].NumberOfItems() != 0)
+		{
+			if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector)) //connector for ODE1 not implemented
+			{
+				cSystemData.listComputeObjectODE1Rhs.Append(i);
+			}
+			else
+			{
+				SysError("CSystem::PreComputeItemLists(...): object " + EXUstd::ToString(i) + ": ODE1 type not implemented");
+			}
+		}
+
+		//for ComputeMassMatrix
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Body))
+		{
+			if (cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
+			{
+				cSystemData.objectsBodyWithODE2Coords.Append(i);
+				//pout << "body+ODE2=" << i << "\n";
+			}
+		}
+		//ComputeAlgebraicEquations:
+		if (cSystemData.GetLocalToGlobalAE()[i].NumberOfItems() != 0)
+		{
+			if (EXUstd::IsOfType(object->GetType(), CObjectType::Body) &&
+				object->GetAlgebraicEquationsSize() != 0)
+			{
+				cSystemData.objectsBodyWithAE.Append(i);
+				cSystemData.objectsWithAlgebraicEquations.Append(i);
+			}
+			else if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
+			{
+				cSystemData.objectsConstraintWithAE.Append(i);
+				cSystemData.objectsWithAlgebraicEquations.Append(i);
+			}
+			//NOT AVAILABLE NOW: connectors or pure objects
+			else if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+			{
+				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for Connectors with AE");
+			}
+			else
+			{
+				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for pure objects with AE");
+			}
+
+			if (cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
+			{
+				cSystemData.listObjectProjectedReactionForces.Append(i); //for constraints, reaction forces on ODE2 coordinates
+			}
+
+		}
+
+		//PostNewtonStep, PostDiscontinuousIteration:
+		//for constraint, algebraic equations depend on Markers
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+		{
+			//CObjectConnector* connector = (CObjectConnector*)object;
+
+			if (((CObjectConnector*)object)->HasDiscontinuousIteration())
+			{
+				cSystemData.listDiscontinuousIteration.Append(i);
+			}
+		}
+	}
+	//std::cout << "cSystemData.objectsBodyWithODE2Coords = " << cSystemData.objectsBodyWithODE2Coords << "\n";
+	//std::cout << "cSystemData.listComputeObjectODE2Lhs = " << cSystemData.listComputeObjectODE2Lhs << "\n";
+	//std::cout << "cSystemData.listComputeObjectODE1Rhs = " << cSystemData.listComputeObjectODE1Rhs << "\n";
+	//std::cout << "cSystemData.objectsBodyWithAE = " << cSystemData.objectsBodyWithAE << "\n";
+	//std::cout << "cSystemData.listObjectProjectedReactionForces = " << cSystemData.listObjectProjectedReactionForces << "\n";
+
+}
 
 //! Use initial values of nodes to compute system-wide initial coordinate vectors
 void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
@@ -872,9 +1004,9 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 	Vector data =	Vector(cSystemData.GetNumberOfCoordinatesData());
 	Vector AE =		Vector(cSystemData.GetNumberOfCoordinatesAE(), 0.); //algebraic variables initialized with zero!
 
-	Vector ODE2uRef = Vector(cSystemData.GetNumberOfCoordinatesODE2()); //reference coordinates currently only exist for ODE2 coordinates
+	Vector ODE2uRef = Vector(cSystemData.GetNumberOfCoordinatesODE2()); 
+	Vector ODE1xRef = Vector(cSystemData.GetNumberOfCoordinatesODE1());  
 	//Vector ODE2vRef = Vector(cSystemData.GetNumberOfCoordinatesODE2(), 0.);
-	//Vector ODE1xRef = Vector(cSystemData.GetNumberOfCoordinatesODE1(), 0.); //might be useful in future ...?
 	//Vector dataRef =  Vector(cSystemData.GetNumberOfCoordinatesData(), 0.);
 	//Vector AERef =    Vector(cSystemData.GetNumberOfCoordinatesAE(), 0.);
 
@@ -915,6 +1047,10 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				LinkedDataVector x(ODE1x, coordIndex, numberOfCoordinates);
 
 				x = mainNode->GetInitialVector(); //size must be compatible and is not checked!
+
+				//also initialize global reference coordinate vector (used for differentiation and in finite elements)
+				LinkedDataVector uRef(ODE1xRef, coordIndex, numberOfCoordinates);
+				uRef = node->GetReferenceCoordinateVector();
 			}
 		}
 		else if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables)
@@ -937,12 +1073,13 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 	cSystemData.GetCData().initialState.ODE2Coords_t = ODE2v;
 	cSystemData.GetCData().initialState.ODE2Coords_tt = 0*ODE2v; //use same size as in velocities for accelerations, but initialize with zeros
 	cSystemData.GetCData().initialState.ODE1Coords = ODE1x;
+	cSystemData.GetCData().initialState.ODE1Coords_t = 0*ODE1x; //use same size as at position level, but with zeros; could be necessary for some evaluations at initial state
 	cSystemData.GetCData().initialState.dataCoords = data;
 	cSystemData.GetCData().initialState.AECoords = AE;
 
 	cSystemData.GetCData().referenceState.ODE2Coords = ODE2uRef;
+	cSystemData.GetCData().referenceState.ODE1Coords = ODE1xRef;
 	//cSystemData.GetCData().referenceState.ODE2Coords_t = ODE2vRef; //access to these coordinates will lead to crash
-	//cSystemData.GetCData().referenceState.ODE1Coords = ODE1xRef;
 	//cSystemData.GetCData().referenceState.dataCoords = dataRef;
 	//cSystemData.GetCData().referenceState.AECoords = AERef; 
 
@@ -1122,26 +1259,51 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 
-	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	//only call bodies with ODE2
+	for (Index j: cSystemData.objectsBodyWithODE2Coords)
 	{
-		//work over bodies, connectors, etc.
-		CObject& object = *(cSystemData.GetCObjects()[j]);
+		ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
+		((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.localMass);
 
-		//if object is a body, it must have a mass matrix
-		if ((Index)object.GetType() & (Index)CObjectType::Body)
-		{
-			ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
-			if (ltg.NumberOfItems() != 0) //to exclude bodies attached to ground nodes
-			{
-				((CObjectBody&)object).ComputeMassMatrix(temp.localMass);
-
-				massMatrix.AddSubmatrix(temp.localMass, 1., ltg, ltg);
-			}
-		}
+		massMatrix.AddSubmatrix(temp.localMass, 1., ltg, ltg);
 	}
+
+
+	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	//{
+	//	//work over bodies, connectors, etc.
+	//	CObject& object = *(cSystemData.GetCObjects()[j]);
+
+	//	//if object is a body, it must have a mass matrix
+	//	if ((Index)object.GetType() & (Index)CObjectType::Body)
+	//	{
+	//		ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
+	//		if (ltg.NumberOfItems() != 0) //to exclude bodies attached to ground nodes
+	//		{
+	//			((CObjectBody&)object).ComputeMassMatrix(temp.localMass);
+
+	//			massMatrix.AddSubmatrix(temp.localMass, 1., ltg, ltg);
+	//		}
+	//	}
+	//}
 
 }
 #endif
+
+//! run through all bodies and check if has constant mass matrix; used for solver
+bool CSystem::HasConstantMassMatrix()
+{
+	bool isConstant = true;
+	for (Index j: cSystemData.objectsBodyWithODE2Coords)
+	{
+		//if object is a body, it must have a mass matrix
+		if (!(((CObjectBody*)cSystemData.GetCObjects()[j])->HasConstantMassMatrix()) )
+		{
+			isConstant = false;
+		}
+	}
+	return isConstant;
+}
 
 //Index TScomputeODE2LHSobject;
 //TimerStructureRegistrator TSRcomputeODE2LHSobject("computeODE2LHSobject", TScomputeODE2LHSobject, globalTimers);
@@ -1154,36 +1316,24 @@ TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, global
 
 //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Lhs, false otherwise
-bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs)
+inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs)
 {
-	//Index i = 0;
-	//std::cout << "ComputeSystemODE2RHS" << i++ << ": " << (Index)object->GetType() << "\n";
-	if (!((Index)object->GetType() & (Index)CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
+	if (object->IsActive()) //usually is active ...
 	{
-		//if object is a body, it must have ODE2RHS
-		if ((Index)object->GetType() & (Index)CObjectType::Body)
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Body))
 		{
-			//STARTGLOBALTIMER(TScomputeODE2LHSobject);
 			object->ComputeODE2LHS(localODE2Lhs);
-			//STOPGLOBALTIMER(TScomputeODE2LHSobject);
 		}
-		else if ((Index)object->GetType() & (Index)CObjectType::Connector)
+		else if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
 		{
 			CObjectConnector* connector = (CObjectConnector*)object;
 
 			//compute MarkerData for connector:
 			const bool computeJacobian = true;
-			//STARTGLOBALTIMER(TScomputeODE2LHSmarkerData);
 			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
-			//STOPGLOBALTIMER(TScomputeODE2LHSmarkerData);
 
-			//STARTGLOBALTIMER(TScomputeODE2LHSconnector);
 			connector->ComputeODE2LHS(localODE2Lhs, temp.markerDataStructure);
-			//STOPGLOBALTIMER(TScomputeODE2LHSconnector);
-
 		}
-		else { CHECKandTHROWstring("CSystem::ComputeODE2LHS(...): object type not implemented"); return false; }
-
 		return true;
 	}
 	return false;
@@ -1271,23 +1421,39 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 {
 	systemODE2Rhs.SetAll(0.);
 
-	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	for (Index j : cSystemData.listComputeObjectODE2Lhs)
 	{
-		if ((cSystemData.GetCObjects()[j])->IsActive())
-		{
-			//work over bodies, connectors, etc.
-			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 
-			if (ltgODE2.NumberOfItems() && ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2LHS))//temp.localODE2LHS))
+		if (ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2LHS))
+		{
+			//now add RHS to system vector
+			for (Index k = 0; k < temp.localODE2LHS.NumberOfItems(); k++)
 			{
-				//now add RHS to system vector
-				for (Index k = 0; k < temp.localODE2LHS.NumberOfItems(); k++)
-				{
-					systemODE2Rhs[ltgODE2[k]] -= temp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
-				}
+				systemODE2Rhs[ltgODE2[k]] -= temp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
 			}
 		}
 	}
+
+
+	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	//{
+	//	if ((cSystemData.GetCObjects()[j])->IsActive())
+	//	{
+	//		//work over bodies, connectors, etc.
+	//		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+
+	//		if (ltgODE2.NumberOfItems() && !EXUstd::IsOfType(cSystemData.GetCObjects()[j]->GetType(), CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
+	//		{
+	//			ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2LHS);
+	//			//now add RHS to system vector
+	//			for (Index k = 0; k < temp.localODE2LHS.NumberOfItems(); k++)
+	//			{
+	//				systemODE2Rhs[ltgODE2[k]] -= temp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
+	//			}
+	//		}
+	//	}
+	//}
 	//pout << "systemODE2Rhs=" << systemODE2Rhs << "\n";
 
 	ComputeLoads(temp, systemODE2Rhs);
@@ -1297,49 +1463,36 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //evaluate RHS of ODE1 objects (always right-hand-side as first order ODEs always read q_t=f(q, t) )
-bool CSystem::ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Rhs)
+inline bool CSystem::ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Rhs)
 {
-	if (!((Index)object->GetType() & (Index)CObjectType::Connector))
+	if (object->IsActive())
 	{
-		//must be body or similar object (in all cases, evaluate ComputeODE2LHS
+		//must be body or similar object (in all cases, evaluate ComputeODE1LHS)
 		object->ComputeODE1RHS(localODE1Rhs);
+		return true;
 	}
-	////currently, connectors have no ComputeODE1RHS
-	//else
-	//{
-	//	CObjectConnector* connector = (CObjectConnector*)object;
-
-	//	//compute MarkerData for connector:
-	//	const bool computeJacobian = true;
-	//	ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
-
-	//	connector->ComputeODE1RHS(localODE1Rhs, temp.markerDataStructure);
-	//}
-	return true;
-
+	return false;
 }
 
 void CSystem::ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs)
 {
 	systemODE1Rhs.SetAll(0.);
+	//std::cout << "ComputeSystemODE1RHS start\n";
 
-	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	for (Index j : cSystemData.listComputeObjectODE1Rhs)
 	{
-		if ((cSystemData.GetCObjects()[j])->IsActive())
-		{
-			//work over all objects bodies, connectors, etc.
-			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+		ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
 
-			if (ltgODE1.NumberOfItems() && ComputeObjectODE1RHS(temp, cSystemData.GetCObjects()[j], temp.localODE1RHS))
+		if (ComputeObjectODE1RHS(temp, cSystemData.GetCObjects()[j], temp.localODE1RHS))
+		{
+			//now add RHS to system vector
+			for (Index k = 0; k < temp.localODE1RHS.NumberOfItems(); k++)
 			{
-				//now add RHS to system vector
-				for (Index k = 0; k < temp.localODE1RHS.NumberOfItems(); k++)
-				{
-					systemODE1Rhs[ltgODE1[k]] += temp.localODE1RHS[k]; //positive sign as compared to ComputeSystemODE2RHS: in ODE1, everything is on RHS
-				}
+				systemODE1Rhs[ltgODE1[k]] += temp.localODE1RHS[k]; //positive sign as compared to ComputeSystemODE2RHS: in ODE1, everything is on RHS
 			}
 		}
 	}
+	//std::cout << "ComputeSystemODE1RHS end\n";
 }
 
 //! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
@@ -1488,56 +1641,38 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 	algebraicEquations.SetAll(0.);
 
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+
+	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	for (Index j : cSystemData.objectsBodyWithAE)
 	{
 		//work over bodies, connectors, etc.
-		CObject& object = *(cSystemData.GetCObjects()[j]);
 		ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[j];
-		bool localAEfilled = false; //if object does not provide algebraic equation, shall not produce error (ObjectGenericODE2)
 
-		if (ltg.NumberOfItems())
+		cSystemData.GetCObjects()[j]->ComputeAlgebraicEquations(temp.localAE, velocityLevel); //no time given for objects for now (only Euler parameters...)
+
+		CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+		//now add RHS to system vector
+		for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
 		{
-			//for body, evaluate algebraic equations directly --> depend only on body coordinates
-			if ((Index)object.GetType() & (Index)CObjectType::Body)
-			{
-				if (object.GetAlgebraicEquationsSize()) //either body or constraint
-				{
-					object.ComputeAlgebraicEquations(temp.localAE, velocityLevel); //no time given for objects for now (only Euler parameters...)
-					localAEfilled = true;
-				}
-
-			}
-			//for constraint, algebraic equations depend on Markers
-			else if ((Index)object.GetType() & (Index)CObjectType::Constraint)
-			{
-				CObjectConstraint& constraint = (CObjectConstraint&)object;
-
-				const bool computeJacobian = false;
-				ComputeMarkerDataStructure(&constraint, computeJacobian, temp.markerDataStructure);
-
-				constraint.ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, velocityLevel);
-				localAEfilled = true;
-			}
-			//for connectors, linked to objects that contain algebraic variables (e.g. Euler-Parameter based rigid bodies)
-			else if ((Index)object.GetType() & (Index)CObjectType::Connector)
-			{
-				CHECKandTHROW(object.GetAlgebraicEquationsSize() == 0, "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
-				temp.localAE.SetNumberOfItems(0); //no algebraic equations are processed
-			}
-			else { CHECKandTHROWstring("CSystem::ComputeAlgebraicEquations(...): object type not implemented"); }
-
-			if (localAEfilled)
-			{
-				CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
-				//now add RHS to system vector
-				for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
-				{
-					algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
-				}
-			}
+			algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
 		}
 	}
+	for (Index j : cSystemData.objectsConstraintWithAE)
+	{
+		CObjectConstraint* constraint = (CObjectConstraint*)(cSystemData.GetCObjects()[j]);
+		ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[j];
 
+		const bool computeJacobian = false;
+		ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
+
+		constraint->ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, velocityLevel);
+		CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+		//now add RHS to system vector
+		for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+		{
+			algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
+		}
+	}
 
 }
 
@@ -1561,27 +1696,6 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 //	}
 //}
 
-//markerdata computed in CSystemData because needed for sensors
-void CSystemData::ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
-{
-	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
-	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-	if (nMarkers != 2) { CHECKandTHROWstring("CSystemData::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
-	markerDataStructure.SetTime(GetCData().currentState.GetTime());
-
-	if ((Index)connector->GetType() & (Index)CObjectType::Constraint)
-	{
-		const CObjectConstraint* constraint = (CObjectConstraint*)connector;
-		Index AEindex = constraint->GetGlobalAECoordinateIndex();
-		Index nAEcoords = constraint->GetAlgebraicEquationsSize();
-		markerDataStructure.GetLagrangeMultipliers().LinkDataTo(GetCData().currentState.AECoords, AEindex, nAEcoords);
-	}
-	for (Index k = 0; k < 2; k++)
-	{
-		GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(*this, computeJacobian, markerDataStructure.GetMarkerData(k));
-	}
-}
-
 //! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity
 Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
 {
@@ -1589,31 +1703,25 @@ Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
 	PostNewtonFlags::Type postNewtonFlags;
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
 
-	for (Index objectIndex = 0; objectIndex < cSystemData.GetCObjects().NumberOfItems(); objectIndex++)
+	//for (Index objectIndex = 0; objectIndex < cSystemData.GetCObjects().NumberOfItems(); objectIndex++)
+	for (Index j : cSystemData.listDiscontinuousIteration)
 	{
-		CObject* object = cSystemData.GetCObjects()[objectIndex];
+		CObjectConnector* connector = (CObjectConnector*)(cSystemData.GetCObjects()[j]);
 
-		//for constraint, algebraic equations depend on Markers
-		if ((Index)object->GetType() & (Index)CObjectType::Connector)
+		if (connector->IsActive()) //usually is active ...
 		{
-			CObjectConnector* connector = (CObjectConnector*)object;
+			const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
+			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
-			if (connector->HasDiscontinuousIteration())
+			PNerror = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, postNewtonFlags), PNerror);
+
+			if (postNewtonFlags&PostNewtonFlags::UpdateLTGLists)
 			{
+				//now update specific ltg lists, if e.g. due to contact or switching the connectivity has changed
+				AssembleObjectLTGLists(j, cSystemData.GetLocalToGlobalODE2()[j], cSystemData.GetLocalToGlobalODE1()[j],
+					cSystemData.GetLocalToGlobalAE()[j], cSystemData.GetLocalToGlobalData()[j]);
 
-				const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
-				ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
-
-				PNerror = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, postNewtonFlags), PNerror);
-
-				if (postNewtonFlags&PostNewtonFlags::UpdateLTGLists)
-				{
-					//now update specific ltg lists, if e.g. due to contact or switching the connectivity has changed
-					AssembleObjectLTGLists(objectIndex, cSystemData.GetLocalToGlobalODE2()[objectIndex], cSystemData.GetLocalToGlobalODE1()[objectIndex],
-						cSystemData.GetLocalToGlobalAE()[objectIndex], cSystemData.GetLocalToGlobalData()[objectIndex]);
-
-					//pout << "Connector" << objectIndex << ", new LTGlist=" << cSystemData.GetLocalToGlobalODE2()[objectIndex] << "\n";
-				}
+				//pout << "Connector" << objectIndex << ", new LTGlist=" << cSystemData.GetLocalToGlobalODE2()[objectIndex] << "\n";
 			}
 		}
 	}
@@ -1623,14 +1731,14 @@ Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
 //! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
 void CSystem::PostDiscontinuousIterationStep()
 {
-	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-	for (CObject* object: cSystemData.GetCObjects())
+	//for (CObject* object : cSystemData.GetCObjects())
+	for (Index j : cSystemData.listDiscontinuousIteration)
 	{
-		//for constraint, algebraic equations depend on Markers
-		if ((Index)object->GetType() & (Index)CObjectType::Connector)
+		CObjectConnector* connector = (CObjectConnector*)(cSystemData.GetCObjects()[j]);
+
+		if (connector->IsActive()) //usually is active ...
 		{
-			CObjectConnector* connector = (CObjectConnector*)object;
-			if (connector->HasDiscontinuousIteration()) { connector->PostDiscontinuousIterationStep(); }
+			connector->PostDiscontinuousIterationStep();
 		}
 	}
 }
@@ -1652,7 +1760,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 
-	cSystemData.isODE2RHSjacobianComputation = true; //hack, use rarely this flag or only for debug!
+	//cSystemData.isODE2RHSjacobianComputation = true; //hack, use rarely this flag or only for debug!
 	
 	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
 	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
@@ -1665,22 +1773,14 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 
 	if (!numDiff.doSystemWideDifferentiation)
 	{
-		//GeneralMatrixEXUdense mat;
-		//if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianODE2RHS: illegal LinearSolverType!"); }
-		//ResizableMatrix& jacobian = jacobianGM.GetMatrixEXUdense();
 		ResizableMatrix& localJacobian = temp.localJacobian;
 
 		//size already set by solver: jacobian.SetNumberOfRowsAndColumns(nODE2, nODE2);
-		//NEW: set whole matrix zero
-		//jacobianGM.SetAllZero(); //now done outside
-
-		//this only sets a sub-part to zero:
-		//for (Index i = 0; i < nODE2; i++) {//SetAll(0.) does not work, because jacobian matrix could be larger
-		//	for (Index j = 0; j < nODE2; j++) { jacobian(i, j) = 0.; } }
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++
 
-		for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+		//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+		for (Index j : cSystemData.listComputeObjectODE2Lhs)
 		{
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 			Index nLocalODE2 = ltgODE2.NumberOfItems();
@@ -1688,44 +1788,41 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 			f1.SetNumberOfItems(nLocalODE2);
 			CObject* object = cSystemData.GetCObjects()[j];
 
-			if (object->IsActive() && ltgODE2.NumberOfItems())
-			{
 #ifdef USE_AUTODIFF
-				if (object->GetAvailableJacobians() & (JacobianType::ODE2_ODE2_function))
-				{
-					localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-					temp.localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-					object->ComputeJacobianODE2_ODE2(localJacobian, temp.localJacobian_t);
-					jacobianGM.AddSubmatrix(localJacobian, -1., ltgODE2, ltgODE2); //-1. because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
-				}
-				else 
+			if (object->GetAvailableJacobians() & (JacobianType::ODE2_ODE2_function))
+			{
+				localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				temp.localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				object->ComputeJacobianODE2_ODE2(localJacobian, temp.localJacobian_t);
+				jacobianGM.AddSubmatrix(localJacobian, -1., ltgODE2, ltgODE2); //-1. because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
+			}
+			else
 #endif
-				if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+			if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+			{
+				localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				Real xRefVal = 0;
+				for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
 				{
-					localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-					Real xRefVal = 0;
-					for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+					Real& xVal = x[ltgODE2[i]];
+					if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE2[i]]; }
+
+					eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
+
+					xStore = xVal;
+					xVal += eps;
+					ComputeObjectODE2LHS(temp, object, f1);
+					xVal = xStore;
+
+					epsInv = (1. / eps) * scalarFactor;
+
+					for (Index k = 0; k < nLocalODE2; k++)
 					{
-						Real& xVal = x[ltgODE2[i]];
-						if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE2[i]]; }
-
-						eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
-
-						xStore = xVal;
-						xVal += eps;
-						ComputeObjectODE2LHS(temp, object, f1);
-						xVal = xStore;
-
-						epsInv = (1. / eps) * scalarFactor;
-
-						for (Index k = 0; k < nLocalODE2; k++)
-						{
-							//use local jacobian:
-							localJacobian(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
-						}
+						//use local jacobian:
+						localJacobian(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
 					}
-					jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2);
 				}
+				jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2);
 			}
 		}
 	}
@@ -1757,7 +1854,7 @@ void CSystem::NumericalJacobianODE2RHS(TemporaryComputationData& temp, const Num
 		}
 	}
 	//pout << "ODE2jac=" << jacobian << "\n";
-	cSystemData.isODE2RHSjacobianComputation = false; //hack! only for debugging
+	//cSystemData.isODE2RHSjacobianComputation = false; //hack! only for debugging
 }
 
 //! compute numerical differentiation of ODE2RHS; result is a jacobian;  multiply the added entries with scalarFactor
@@ -1782,7 +1879,7 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 		//size already set by solver: jacobian.SetNumberOfRowsAndColumns(nODE2, nODE2);
 		//jacobianGM.SetAllZero(); //now done in caller function
 
-		for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+		for (Index j : cSystemData.listComputeObjectODE2Lhs)
 		{
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 			Index nLocalODE2 = ltgODE2.NumberOfItems();
@@ -1790,41 +1887,38 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 			f1.SetNumberOfItems(nLocalODE2);
 			CObject* object = cSystemData.GetCObjects()[j];
 
-			if (object->IsActive() && ltgODE2.NumberOfItems())
-			{
 #ifdef USE_AUTODIFF
-				if (object->GetAvailableJacobians() & (JacobianType::ODE2_ODE2_t_function))
-				{
-					//temp.localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-					//localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-					//object->ComputeJacobianODE2_ODE2(temp.localJacobian, localJacobian_t);
-					//jacobianGM.AddSubmatrix(localJacobian_t, -1., ltgODE2, ltgODE2);//-1. because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
-				}
-				else
+			if (object->GetAvailableJacobians() & (JacobianType::ODE2_ODE2_t_function))
+			{
+				//temp.localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				//localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				//object->ComputeJacobianODE2_ODE2(temp.localJacobian, localJacobian_t);
+				//jacobianGM.AddSubmatrix(localJacobian_t, -1., ltgODE2, ltgODE2);//-1. because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
+			}
+			else
 #endif
-				if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+			if (ComputeObjectODE2LHS(temp, object, f0)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+			{
+				localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
 				{
-					localJacobian_t.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-					for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+					Real& xVal = x[ltgODE2[i]];
+					eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal)));
+
+					xStore = xVal;
+					xVal += eps;
+					ComputeObjectODE2LHS(temp, object, f1);
+					xVal = xStore;
+
+					epsInv = (1. / eps) * scalarFactor;
+
+					for (Index k = 0; k < nLocalODE2; k++)
 					{
-						Real& xVal = x[ltgODE2[i]];
-						eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal)));
-
-						xStore = xVal;
-						xVal += eps;
-						ComputeObjectODE2LHS(temp, object, f1);
-						xVal = xStore;
-
-						epsInv = (1. / eps) * scalarFactor;
-
-						for (Index k = 0; k < nLocalODE2; k++)
-						{
-							//use local jacobian:
-							localJacobian_t(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
-						}
+						//use local jacobian:
+						localJacobian_t(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
 					}
-					jacobianGM.AddSubmatrix(localJacobian_t, 1., ltgODE2, ltgODE2);
 				}
+				jacobianGM.AddSubmatrix(localJacobian_t, 1., ltgODE2, ltgODE2);
 			}
 		}
 
@@ -1861,15 +1955,107 @@ void CSystem::NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const N
 	//pout << "ODE2jac_t=" << jacobian << "\n";
 }
 
+//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
+//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
+void CSystem::NumericalJacobianODE1RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+	Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor)
+{
+	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
+
+	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
+	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
+	Real eps, epsInv; //coordinate(column)-wise differentiation parameter; depends on size of coordinate
+
+	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+	Vector& x = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
+	Vector& xRef = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
+	Real xStore; //store value of x; avoid roundoff error effects in numerical differentiation
+
+	if (!numDiff.doSystemWideDifferentiation)
+	{
+		ResizableMatrix& localJacobian = temp.localJacobian;
+
+		for (Index j : cSystemData.listComputeObjectODE1Rhs)
+		{
+			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+			CObject* object = cSystemData.GetCObjects()[j];
+
+			Index nLocalODE1 = ltgODE1.NumberOfItems();
+			f0.SetNumberOfItems(nLocalODE1);
+			f1.SetNumberOfItems(nLocalODE1);
+			if (ComputeObjectODE1RHS(temp, object, f0))
+			{
+				localJacobian.SetNumberOfRowsAndColumns(nLocalODE1, nLocalODE1); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				Real xRefVal = 0;
+				for (Index i = 0; i < nLocalODE1; i++) //differentiate w.r.t. every ltgODE1 coordinate
+				{
+					Real& xVal = x[ltgODE1[i]];
+					if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE1[i]]; }
+
+					eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
+
+					xStore = xVal;
+					xVal += eps;
+					ComputeObjectODE1RHS(temp, object, f1);
+					xVal = xStore;
+
+					epsInv = (1. / eps) * scalarFactor;
+
+					for (Index k = 0; k < nLocalODE1; k++)
+					{
+						//use local jacobian:
+						localJacobian(k, i) = epsInv * (f1[k] - f0[k]); 
+					}
+				}
+				jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1, ltgODE1, nODE2, nODE2);
+			}
+		}
+	}
+	else
+	{
+
+		//++++++++++++++++++++++++++++++++++++++++++++++++
+		f0.SetNumberOfItems(nODE1);
+		f1.SetNumberOfItems(nODE1);
+		ComputeSystemODE1RHS(temp, f0); //compute nominal value for jacobian
+		Index rowOffset = nODE2;
+		Real xRefVal = 0;
+
+		for (Index i = 0; i < nODE1; i++) //compute column i
+		{
+			if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[i]; }
+			eps = relEps * (EXUstd::Maximum(minCoord, fabs(x[i] + xRefVal)));
+
+			xStore = x[i];
+			x[i] += eps;
+			ComputeSystemODE1RHS(temp, f1);
+			x[i] = xStore;
+
+			epsInv = (1. / eps) * scalarFactor;
+
+			f1 -= f0;
+			f1 *= epsInv;
+			jacobianGM.AddColumnVector(nODE2+i, f1, rowOffset);//add rowOffset argument to AddColumnVector(..)
+		}
+	}
+	//pout << "ODE2jac=" << jacobian << "\n";
+	//cSystemData.isODE2RHSjacobianComputation = false; //hack! only for debugging
+}
+
+
+
+
+
 //! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
 //! factorODE2 is used to scale the ODE2-part of the jacobian (to avoid postmultiplication); 
 //! velocityLevel = velocityLevel constraints are used, if available; 
 //! fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
-//! fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
+//! fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0) ???REALLY
 template<class TGeneralMatrix>
 void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-	Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t,
-	bool velocityLevel, bool fillIntoSystemMatrix)
+	Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, 
+	bool velocityLevel, Real factorODE2_AE, Real factorAE_AE)
 {
 	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
 	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
@@ -1877,9 +2063,19 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 
 	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
+	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+	
+	//DELETE: CHECKandTHROW(nODE1 == 0, "CSystem::NumericalJacobianAE: nODE1 must be zero"); //check that offsetAE is correctly added
+	Index offsetAE = nODE2 + nODE1; //offset for algebraic equations in system jacobian
+
 	Vector& x = cSystemData.GetCData().currentState.ODE2Coords;
 	Vector& x_t = cSystemData.GetCData().currentState.ODE2Coords_t; //velocity coordinates
 	Real xStore; //store value of x; avoid roundoff error effects in numerical differentiation
+
+	Vector& y = cSystemData.GetCData().currentState.ODE1Coords;
+	//Vector& y_t = cSystemData.GetCData().currentState.ODE1Coords_t; //velocity coordinates
+	Real yStore; //store value of y; avoid roundoff error effects in numerical differentiation
+
 
 	Vector& z = cSystemData.GetCData().currentState.AECoords;
 	Real zStore; //store value of x; avoid roundoff error effects in numerical differentiation
@@ -1887,7 +2083,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute total jacobian ==> very time consuming ==> change this to local jacobian (use flag in numDiffParameters?)
 
-	if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: illegal LinearSolverType!"); }
+	if (jacobianGM.GetSystemMatrixType() != LinearSolverType::EXUdense) { CHECKandTHROWstring("CSystem::NumericalJacobianAE: only works for LinearSolverType.EXUdense; illegal LinearSolverType!"); }
 	ResizableMatrix& jacobian = ((GeneralMatrixEXUdense&)jacobianGM).GetMatrixEXUdense();
 
 	f0.SetNumberOfItems(nAE);
@@ -1911,15 +2107,15 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 		for (Index j = 0; j < nAE; j++)
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
-			if (fillIntoSystemMatrix)
-			{
-				jacobian(nODE2 + j, i) = factorAE_ODE2 * x; //add Cq ==> factor only used for Position constraints ...
-				jacobian(i, nODE2 + j) = /*factorAE_ODE2 * */ x; //add CqT
-			}
-			else
-			{
-				jacobian(j, i) = /*factorAE_ODE2 * */ x; //add Cq which is lateron used as transposed matrix; factor is usually 1 in this case
-			}
+			//if (fillIntoSystemMatrix)
+			//{
+			jacobian(offsetAE + j, i) = factorAE_ODE2 * x; //add Cq ==> factor only used for Position constraints ...
+			jacobian(i, offsetAE + j) = factorODE2_AE * x; //add CqT ==> new factor
+			//}
+			//else
+			//{
+			//	jacobian(j, i) = /*factorAE_ODE2 * */ x; //add Cq which is lateron used as transposed matrix; factor is usually 1 in this case
+			//}
 		}
 	}
 
@@ -1939,35 +2135,54 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 		for (Index j = 0; j < nAE; j++)
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
-			if (fillIntoSystemMatrix)
-			{
-				jacobian(nODE2 + j, i) += factorAE_ODE2_t * x; //add Cq ==> factor only used for Position constraints ...
-				jacobian(i, nODE2 + j) += x; //add CqT; this term MUST be added for purly velocity-formulated constraints (e.g. velocity coordinate constraint, rolling joint, ...)
-			}
-			else
-			{
-				jacobian(j, i) += x; //add Cq which is lateron used as transposed matrix; this term MUST be added for purly velocity-formulated constraints (e.g. velocity coordinate constraint, rolling joint, ...)
-			}
+			//if (fillIntoSystemMatrix)
+			//{
+			jacobian(offsetAE + j, i) += factorAE_ODE2_t * x; //add Cq ==> factor only used for Position constraints ...
+			jacobian(i, offsetAE + j) += factorODE2_AE * x; //add CqT; this term MUST be added for purly velocity-formulated constraints (e.g. velocity coordinate constraint, rolling joint, ...)
+			//}
+			//else
+			//{
+			//	jacobian(j, i) += x; //add Cq which is lateron used as transposed matrix; this term MUST be added for purly velocity-formulated constraints (e.g. velocity coordinate constraint, rolling joint, ...)
+			//}
+		}
+	}
+
+	//differentiation w.r.t. ODE1 coordinates
+	for (Index i = 0; i < nODE1; i++)
+	{
+		eps = relEps * (EXUstd::Maximum(minCoord, fabs(y[i])));
+		//pout << "Jac i=" << i << ", diffEps = " << eps << "\n";
+
+		yStore = y[i];
+		y[i] += eps;
+		ComputeAlgebraicEquations(temp, f1, velocityLevel);
+		y[i] = yStore;
+
+		epsInv = 1. / eps;
+
+		for (Index j = 0; j < nAE; j++)
+		{
+			Real y = epsInv * (f1[j] - f0[j]);
+
+			jacobian(offsetAE + j, i+nODE2) = y; //add Cq1
+			jacobian(i+nODE2, offsetAE + j) = y; //add Cq1T
 		}
 	}
 
 	//differentiation w.r.t. AE coordinates
-	if (fillIntoSystemMatrix) //also add AE_AE terms
+	for (Index i = 0; i < nAE; i++)
 	{
-		for (Index i = 0; i < nAE; i++)
+		eps = relEps * (EXUstd::Maximum(minCoord, fabs(z[i])));
+
+		zStore = z[i];
+		z[i] += eps;
+		ComputeAlgebraicEquations(temp, f1, velocityLevel);
+		z[i] = zStore;
+		epsInv = 1. / eps;
+
+		for (Index j = 0; j < nAE; j++)
 		{
-			eps = relEps * (EXUstd::Maximum(minCoord, fabs(z[i])));
-
-			zStore = z[i];
-			z[i] += eps;
-			ComputeAlgebraicEquations(temp, f1, velocityLevel);
-			z[i] = zStore;
-			epsInv = 1. / eps;
-
-			for (Index j = 0; j < nAE; j++)
-			{
-				jacobian(nODE2 + j, nODE2 + i) = epsInv * (f1[j] - f0[j]);
-			}
+			jacobian(offsetAE + j, offsetAE + i) = (factorAE_AE * epsInv) * (f1[j] - f0[j]);
 		}
 	}
 }
@@ -2030,7 +2245,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 //! returns ltgAE and ltgODE2 lists, and several flags on object velocity level equation and which jacobian parts have been computed
 //! returns true, if jacobian is available, or false if not (e.g. body or ground object)
 void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
-	bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_AEfilled)
+	bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled)
 {
 	objectUsesVelocityLevel = false;
 	CObject& object = *(cSystemData.GetCObjects()[j]);
@@ -2038,6 +2253,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	//Index markerType[2]; //markertypes stored; NOT USED
 	flagAE_ODE2filled = false; //true, if the jacobian AE_ODE2 is inserted
 	flagAE_ODE2_tFilled = false; //true, if the jacobian AE_ODE2 is inserted
+	flagAE_ODE1filled = false; //true, if the jacobian AE_ODE1 is inserted
 	flagAE_AEfilled = false;   //true, if the jacobian AE_AE is inserted
 	Real currentTime = cSystemData.GetCData().currentState.time;
 
@@ -2046,9 +2262,10 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	{
 		if (object.GetAlgebraicEquationsSize()) //either body or constraint
 		{
-			object.ComputeJacobianAE(temp.localJacobianAE, temp.localJacobianAE_t, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
-			if (temp.localJacobianAE.NumberOfColumns()   * temp.localJacobianAE.NumberOfRows() != 0) { flagAE_ODE2filled = true; }
-			if (temp.localJacobianAE_t.NumberOfColumns() * temp.localJacobianAE_t.NumberOfRows() != 0) { flagAE_ODE2_tFilled = true; }
+			object.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
+			if (temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0) { flagAE_ODE2filled = true; }
+			if (temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0) { flagAE_ODE2_tFilled = true; }
+			if (temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0) { flagAE_ODE1filled = true; }
 			if (temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0) { flagAE_AEfilled = true; }
 		}
 	}
@@ -2071,15 +2288,21 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 			flagAE_ODE2_tFilled = true;
 			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t_function), "CSystem::JacobianAE: jacobian AE_ODE2_t not implemented");
 		}
+		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE1)
+		{
+			flagAE_ODE1filled = true;
+			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE1_function), "CSystem::JacobianAE: jacobian AE_ODE1 not implemented");
+		}
 		if (constraint.GetAvailableJacobians() & JacobianType::AE_AE)
 		{
 			flagAE_AEfilled = true;
 			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_AE_function), "CSystem::JacobianAE: jacobian AE_AE not implemented");
 		}
 
-		if (flagAE_ODE2filled || flagAE_ODE2_tFilled || flagAE_AEfilled)
+		if (flagAE_ODE2filled || flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled)
 		{
-			constraint.ComputeJacobianAE(temp.localJacobianAE, temp.localJacobianAE_t, temp.localJacobianAE_AE, temp.markerDataStructure, currentTime);
+			constraint.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, 
+				temp.localJacobianAE_AE, temp.markerDataStructure, currentTime);
 			objectUsesVelocityLevel = constraint.UsesVelocityLevel();
 			//if (constraint.UsesVelocityLevel()) {factorVelocityLevel = factorAE_ODE2_t; } //in this case, always use the velocity level factor; then, the jacobian is interpreted as diff(AE_t, ODE2_t)
 		}
@@ -2096,132 +2319,81 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 //! compute constraint jacobian of AE with respect to ODE2 (fillIntoSystemMatrix=true: also w.r.t. ODE1 and AE) coordinates ==> direct computation given by access functions
 //! factorODE2 is used to scale the ODE2-part of the jacobian (to avoid postmultiplication); 
 //! velocityLevel = velocityLevel constraints are used, if available; 
-//! fillIntoSystemMatrix: fill in both Cq and Cq^T into system matrix
 //template<class TGeneralMatrix>
-bool warnedCSystemJacobianAE = false;
+//bool warnedCSystemJacobianAE = false;
 void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
-	Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel, bool fillIntoSystemMatrix)
+	Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel, Real factorODE2_AE, Real factorAE_AE)
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 
-	//bool debugJacobian = true;
-	//ResizableMatrix numJac; //for debug ...
 	if (newton.useNumericalDifferentiation) 
 	{
-		NumericalJacobianAE(temp, newton.numericalDifferentiation, temp.numericalJacobianf0, temp.numericalJacobianf1, jacobianGM, factorAE_ODE2, factorAE_ODE2_t, velocityLevel, fillIntoSystemMatrix);
-		//if (debugJacobian) { numJac = jacobian; }
+		NumericalJacobianAE(temp, newton.numericalDifferentiation, temp.numericalJacobianf0, temp.numericalJacobianf1, jacobianGM, factorAE_ODE2, factorAE_ODE2_t, velocityLevel);// , fillIntoSystemMatrix);
 	}
 	else
 	{
 		if (velocityLevel) { CHECKandTHROWstring("CSystem::JacobianAE_ODE2: velocityLevel=true not implemented"); }
 		//Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 		Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-		//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
-
-		if (!fillIntoSystemMatrix) //FUTURE: delete the whole if ... else... clause!
-		{
-			//this case should not be in use any more!
-			if (!warnedCSystemJacobianAE) { PyWarning("CSystem::JacobianAE: Cq^T mode should not be used any more!"); warnedCSystemJacobianAE = true; }
-		}
+		Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+		
+		//DELETE: CHECKandTHROW(nODE1 == 0, "CSystem::JacobianAE: nODE1 must be zero"); //check that offsetAE is correctly added
+		Index offsetAE = nODE2 + nODE1; //offset for algebraic equations in system jacobian
+		Real factorAE_ODE1 = 1.; //currently no scaling from integrators
+		Real factorODE1_AE = 1.; //currently no scaling from integrators
 
 		//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-		for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+		//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+		for (Index j: cSystemData.objectsWithAlgebraicEquations)
 		{
 			//work over bodies, connectors, etc.
 			//CObject& object = *(cSystemData.GetCObjects()[j]);
 			ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[j];
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
-			
+			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+
 			bool objectUsesVelocityLevel;// = false;
 			bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
 			bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+			bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
 			bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
-			if (ltgAE.NumberOfItems()!=0 /*&& ltgODE2.NumberOfItems()!=0*/) //omit bodies and ground objects ...
+			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
+
+			if (flagAE_ODE2filled)
 			{
-
-				ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
-
-				//now add local jacobian to system jacobian
-				if (!fillIntoSystemMatrix) //this is either the dC/dq or the dC_t/dq_t matrix for reaction forces ==> does not need factor for time integration and may only be added once (e.g. for non-holonomic constraints such as rolling wheel)
-				{
-					CHECKandTHROW((factorAE_ODE2 == 1.) && (factorAE_ODE2_t == 1.), "CSystem::JacobianAE(...): for reaction jacobian, factors must be 1.");
-					if (flagAE_ODE2filled && !objectUsesVelocityLevel)
-					{
-						jacobianGM.AddSubmatrix(temp.localJacobianAE, 1., ltgAE, ltgODE2);
-
-					}
-					else if (flagAE_ODE2_tFilled) //newly added; only add one of the two jacobians!
-					{
-						jacobianGM.AddSubmatrix(temp.localJacobianAE_t, 1., ltgAE, ltgODE2);
-					}
-					//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag");}
-				}
-				else
-				{
-					//now add all dependencies; this is the derivative of the constraint equations w.r.t. position and velocity level coordinates, but all transformed to the quantities needed in time integration (usually acceleration)
-					if (flagAE_ODE2filled)
-					{
-						jacobianGM.AddSubmatrix(temp.localJacobianAE, factorAE_ODE2, ltgAE, ltgODE2, nODE2);//depends, if velocity or position level is used
-
-					}
-					if (flagAE_ODE2_tFilled) //velocity or mixed pos/vel constraints
-					{
-						jacobianGM.AddSubmatrix(temp.localJacobianAE_t, factorAE_ODE2_t, ltgAE, ltgODE2, nODE2); //depends, if velocity or position level is used 
-					}
-
-					//this is either the dC/dq or the dC_t/dq_t matrix for reaction forces ==> does not need factor for time integration and may only be added once (e.g. for non-holonomic constraints such as rolling wheel)
-					if (flagAE_ODE2filled && !objectUsesVelocityLevel)
-					{
-						jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE, 1., ltgODE2, ltgAE, 0, nODE2); //this is the dC/dq^T part, which is independent of index reduction
-					}
-					else if (flagAE_ODE2_tFilled) //newly added
-					{
-						jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_t, 1., ltgODE2, ltgAE, 0, nODE2); //this is the dC_t/dq_t^T part, which is independent of index reduction
-					}
-					//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
-
-					if (flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
-					{
-						jacobianGM.AddSubmatrix(temp.localJacobianAE_AE, 1., ltgAE, ltgAE, nODE2, nODE2);
-					}
-				}
-
-
+				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2, factorAE_ODE2, ltgAE, ltgODE2, offsetAE);//depends, if velocity or position level is used
 			}
+			if (flagAE_ODE2_tFilled) //velocity or mixed pos/vel constraints
+			{
+				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2_t, factorAE_ODE2_t, ltgAE, ltgODE2, offsetAE); //depends, if velocity or position level is used 
+			}
+
+			//this is either the dC/dq or the dC_t/dq_t matrix for reaction forces ==> may only be added once for ODE2 OR ODE2_t(e.g. for non-holonomic constraints such as rolling wheel)
+			if (flagAE_ODE2filled && !objectUsesVelocityLevel)
+			{
+				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2, factorODE2_AE, ltgODE2, ltgAE, 0, offsetAE); //this is the dC/dq^T part, which is independent of index reduction
+			}
+			else if (flagAE_ODE2_tFilled) //newly added
+			{
+				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2_t, factorODE2_AE, ltgODE2, ltgAE, 0, offsetAE); //this is the dC_t/dq_t^T part, which is independent of index reduction
+			}
+			//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
+
+			if (flagAE_ODE1filled)
+			{
+				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE1, factorAE_ODE1, ltgAE, ltgODE1, nODE2);
+				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE1, factorODE1_AE, ltgODE1, ltgAE, 0, nODE2);
+			}
+
+			if (flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
+			{
+				jacobianGM.AddSubmatrix(temp.localJacobianAE_AE, factorAE_AE, ltgAE, ltgAE, offsetAE, offsetAE);
+			}
+
 		}//for cSystemData.GetCObjects()
 	}//if(newton.useNumericalDifferentiation)
 
-	//pout << "numJac   = " << numJac << "\n";
-	//pout << "Jacobian = " << jacobian << "\n";
-	//jacobian = numJac;
-
-	//if (/*!fillIntoSystemMatrix && */debugJacobian) 
-	//{
-	//	Real diff = 0;
-	//	if (fillIntoSystemMatrix)
-	//	{
-	//		Index nAE = cSystemData.GetNumberOfCoordinatesAE();
-	//		Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
-	//		Index nRows = nAE + nODE2;	//nAE / nAE+nODE2
-	//		Index rowStart = 0;			//0 / nODE2
-
-	//		diff = (jacobian.GetSubmatrix(rowStart,0,nRows,nODE2+nAE) - numJac.GetSubmatrix(rowStart, 0, nRows, nODE2 + nAE)).MaxNorm();
-	//		if (diff > 1e-8) {
-	//			pout << "jacobianAnalytical=" << jacobian.GetSubmatrix(rowStart, 0, nRows, nODE2 + nAE) << "\n";
-	//			pout << "jacobianNumerical =" << numJac.GetSubmatrix(rowStart, 0, nRows, nODE2 + nAE) << "\n";
-	//		}
-	//	}
-	//	else { 
-	//		diff = (jacobian - numJac).MaxNorm(); 
-	//		if (diff > 1e-8) {
-	//			pout << "jacobianAnalytical=" << jacobian << "\n";
-	//			pout << "jacobianNumerical =" << numJac << "\n";
-	//		}
-	//	}
-	//	pout << "diff=" << diff << "\n";
-	//	//WaitForUserToContinue();
-	//}
 }
 
 //! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
@@ -2236,46 +2408,53 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 	CHECKandTHROW(ode2ReactionForces.NumberOfItems() == nODE2, "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
 
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	for (Index j : cSystemData.listObjectProjectedReactionForces)
 	{
 		//work over bodies, connectors, etc.
-		//CObject& object = *(cSystemData.GetCObjects()[j]);
 		ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[j];
 		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+		ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
 
 		bool objectUsesVelocityLevel;// = false;
 		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
 		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
 		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
-		if (ltgAE.NumberOfItems() != 0 && ltgODE2.NumberOfItems() != 0) //omit bodies and ground objects ...; for deactivated constraints, ltgAE!=0 and ltgODE2!=0
-		{
-
-			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
+		ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
 			
-			if (flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
+		if (flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
+		{
+			if ((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
 			{
-				if ((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
-				{
-					ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
+				const ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
 
-					//multiply Cq^T * lambda:
-					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+				//multiply Cq^T * lambda:
+				for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+				{
+					for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
 					{
-						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
-						{
-							ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
-						}
+						ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
 					}
 				}
-				//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! CHECKandTHROWstring("CSystem::ComputeODE2ProjectedReactionForces(...): ObjectJacobians inconsistent!");
-					//pout << "object " << j << ": CSystem::ComputeODE2ProjectedReactionForces(...): ObjectJacobians inconsistent\n";
-					//pout << "flagAE_ODE2filled=" << flagAE_ODE2filled << "\n";
-					//pout << "objectUsesVelocityLevel=" << objectUsesVelocityLevel << "\n";
-					//pout << "flagAE_ODE2_tFilled=" << flagAE_ODE2_tFilled << "\n";
+			}
+		}
+		else if (flagAE_ODE1filled)
+		{
+			const ResizableMatrix& jac = temp.localJacobianAE_ODE1;
+
+			//multiply Cq^T * lambda:
+			for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+			{
+				for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+				{
+					ode2ReactionForces[ltgODE1[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
+				}
 			}
 
 		}
+		//else  //for pure algebraic constraints(e.g. if joints are deactivated), no projected reaction forces ...! 
 	}
 }
 
@@ -2356,18 +2535,19 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 		bool objectUsesVelocityLevel;// = false;
 		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
 		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
 		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
 		if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems() && cSystemData.GetCObjects()[j]->GetAlgebraicEquationsSize()) //omit bodies and ground objects ...
 		{
-
-			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_AEfilled);
+			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
 			
 			if (!objectUsesVelocityLevel) //for velocity constraints, only Ct_t would be needed!
 			{
 				if (flagAE_ODE2filled)
 				{
-					ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE : temp.localJacobianAE_t;
+					//ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
+					ResizableMatrix& jac = temp.localJacobianAE_ODE2;
 
 					//multiply Cq^T * lambda:
 					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
@@ -2378,14 +2558,14 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 						}
 					}
 				}
-				else
-				{
-					STDstring str = "CSystem::ComputeConstraintJacobianTimesVector(...) : not implemented for velocity level, objectNr = ";
-					str += EXUstd::ToString(j);
-					PyWarning(str);
-					//CHECKandTHROWstring("CSystem::ComputeConstraintJacobianTimesVector(...): not implemented for velocity level!"); 
-				} //needs different strategies for velocity level constraints!
 			}
+
+			if (flagAE_ODE1filled) //could be just ignored ==> check as soon as first ODE1 constraint jacobian exists
+			{
+				STDstring str = "CSystem::ComputeConstraintJacobianTimesVector(...) : not implemented for ODE1 coordinates, objectNr = ";
+				str += EXUstd::ToString(j);
+				PyWarning(str);
+			} 
 		}
 	}
 
@@ -2438,11 +2618,11 @@ void PostProcessData::SendRedrawSignal()
 //! wait for user to press space
 void PostProcessData::WaitForUserToContinue()
 {
-	if (visualizationIsRunning)
+	if (visualizationIsRunning) //do this only if visualization is running, otherwise application cannot recognize SPACE press
 	{
 		simulationPaused = true;
-		STDstring str = GetVisualizationMessage();
-		SetVisualizationMessage("Computation paused... (press SPACE to continue)");
+		STDstring strSolver = GetSolverMessage();
+		SetSolverMessage("Computation paused... (press SPACE to continue)");
 		pout << "Computation paused... (press SPACE in render window to continue)\n";
 
 		while (simulationPaused && visualizationIsRunning && !stopSimulation)
@@ -2452,7 +2632,7 @@ void PostProcessData::WaitForUserToContinue()
 			ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
 		}
 		simulationPaused = false; //in case that visualization system was closed in the meantime
-		SetVisualizationMessage(str);
+		SetSolverMessage(strSolver);
 	}
 }
 

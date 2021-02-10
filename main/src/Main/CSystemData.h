@@ -44,25 +44,40 @@ protected: //
 	ResizableArray<CMarker*> cMarkers;              //!< container for computational markers
 	ResizableArray<CLoad*> cLoads;                  //!< container for computational loads
 	ResizableArray<CSensor*> cSensors;               //!< container for computational sensors
+
 	ObjectContainer<ArrayIndex> localToGlobalODE2;  //!< CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalODE1;  //!< CObject local to global ODE1 (first order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalAE;    //!< CObject local to global AE (algebraic variables) coordinate indices transformation
 	ObjectContainer<ArrayIndex> localToGlobalData;  //!< CObject local to global Data coordinate indices transformation
+
 	Index numberOfCoordinatesODE2;                  //!< global number of ODE2 coordinates (sum of all node ODE2 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
 	Index numberOfCoordinatesODE1;                  //!< global number of ODE1 coordinates (sum of all node ODE1 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
 	Index numberOfCoordinatesAE;                    //!< global number of AE coordinates (sum of all node AE coordinates); must be synchronous to NumberOfItems in SystemState Vectors
 	Index numberOfCoordinatesData;                  //!< global number of Data variables/coordinates (sum of all node Data variables); must be synchronous to NumberOfItems in SystemState Vectors
 
+
+public:
+	//use lists that are directly accessible for now; performance?
+	ResizableArray<Index> objectsBodyWithODE2Coords;//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects)
+	ResizableArray<Index> listComputeObjectODE2Lhs;		//!< list of objects that need to evaluate ComputeObjectODE2Lhs
+	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
+	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
+
+	ResizableArray<Index> objectsBodyWithAE;			//!< list of objects that are bodies and have AE
+	ResizableArray<Index> objectsConstraintWithAE;		//!< list of objects that are constraints and have AE
+	ResizableArray<Index> objectsWithAlgebraicEquations;//!< list of objects that have algebraic equations (AE)
+	ResizableArray<Index> listObjectProjectedReactionForces;//!< list of objects that produce projected reaction forces for constraints
+
 public: //
 
-	bool isODE2RHSjacobianComputation;
+	//bool isODE2RHSjacobianComputation;
 
 	// access functions
 	//! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
 	CSystemData* GetClone() const { return new CSystemData(*this); }
 
 	//! Specific destructor do deallocate data (allocated in MainSystem/ObjectFactory)
-	virtual ~CSystemData() { Reset(); }
+	~CSystemData() { Reset(); }
 
 	void Reset()
 	{
@@ -93,9 +108,19 @@ public: //
 		localToGlobalAE.Flush();
 		localToGlobalData.Flush();
 
+		objectsBodyWithODE2Coords.Flush();
+		listComputeObjectODE2Lhs.Flush();
+		listComputeObjectODE1Rhs.Flush();
+		listDiscontinuousIteration.Flush();
+
+		objectsBodyWithAE.Flush();
+		objectsConstraintWithAE.Flush();
+		objectsWithAlgebraicEquations.Flush();
+		listObjectProjectedReactionForces.Flush();
 	}
 
-
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Write (Reference) access to:computational data for all configurations (current, initial, etc.); this data is available in CNode
 	CData& GetCData() { return cData; }
 	//! Read (Reference) access to:computational data for all configurations (current, initial, etc.); this data is available in CNode
@@ -107,6 +132,8 @@ public: //
 	//! Read (Reference) access to:computational data for all configurations (current, initial, etc.); this data is available in CNode
 	const MainSystemBase& GetMainSystemBacklink() const { return *mainSystemBacklink; }
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Write (Reference) access to:container for computational objects
 	ResizableArray<CObject*>& GetCObjects() { return cObjects; }
 	//! Read (Reference) access to:container for computational objects
@@ -150,6 +177,8 @@ public: //
 	//! Read (Reference) access to:container for computational sensors
 	const ResizableArray<CSensor*>& GetCSensors() const { return cSensors; }
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Write (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2() { return localToGlobalODE2; }
 	//! Read (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
@@ -170,6 +199,18 @@ public: //
 	//! Read (Reference) access to:CObject local to global Data variable indices transformation
 	const ObjectContainer<ArrayIndex>& GetLocalToGlobalData() const { return localToGlobalData; }
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//no access functions during development; test preformance
+	////! Write (Reference) access 
+	//ResizableArray<Index>& GetListComputeObjectODE2Lhs() { return listComputeObjectODE2Lhs; }
+	////! Read (Reference) access
+	//const ResizableArray<Index>& GetListComputeObjectODE2Lhs() const { return listComputeObjectODE2Lhs; }
+	
+
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Number of coordinates which determines the number of unknowns in system of equations and the matrix sizes
 	void GetNumberOfComputationCoordinates(Index& nODE2, Index& nODE1, Index& nAE, Index& nData) const 
 	{ nODE2 = numberOfCoordinatesODE2; nODE1 = numberOfCoordinatesODE1; nAE = numberOfCoordinatesAE; nData = numberOfCoordinatesData;	}
@@ -198,10 +239,10 @@ public: //
 	const Index& GetNumberOfCoordinatesData() const { return numberOfCoordinatesData; }
 
 	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.; implemented in CSystem.cpp
-	virtual void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const;
+	void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const;
 
 
-	virtual void Print(std::ostream& os) const
+	void Print(std::ostream& os) const
 	{
 		os << "CSystemData";
 		os << "  cData = " << cData << "\n";
@@ -229,5 +270,29 @@ public: //
 	}
 
 };
+
+//markerdata computed in CSystemData because needed for sensors
+inline void CSystemData::ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
+{
+	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
+	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
+	if (nMarkers != 2) { CHECKandTHROWstring("CSystemData::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
+	markerDataStructure.SetTime(GetCData().currentState.GetTime());
+
+	if ((Index)connector->GetType() & (Index)CObjectType::Constraint)
+	{
+		const CObjectConstraint* constraint = (CObjectConstraint*)connector;
+		Index AEindex = constraint->GetGlobalAECoordinateIndex();
+		Index nAEcoords = constraint->GetAlgebraicEquationsSize();
+		markerDataStructure.GetLagrangeMultipliers().LinkDataTo(GetCData().currentState.AECoords, AEindex, nAEcoords);
+	}
+	for (Index k = 0; k < 2; k++)
+	{
+		GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(*this, computeJacobian, markerDataStructure.GetMarkerData(k));
+	}
+}
+
+
+
 
 #endif

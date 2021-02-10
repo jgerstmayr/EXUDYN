@@ -90,5 +90,6 @@ result = p0[0]+p0[1]
 exu.Print('solution of connectorRigidBodySpringDamperTest=',result) #use x-coordinate
 
 exudynTestGlobals.testError = result - (0.18276224743714353) #2021-01-07: 
+exudynTestGlobals.testResult = result
 
 

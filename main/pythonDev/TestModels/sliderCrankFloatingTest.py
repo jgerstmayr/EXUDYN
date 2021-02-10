@@ -249,6 +249,7 @@ for testCases in rangeTests:
 
 exu.Print('solutionSliderCrankIndex2=',solutionSliderCrankIndex2)
 exudynTestGlobals.testError = solutionSliderCrankIndex2 - 0.5916491633788333 #2020-01-15: 0.5916491633788333(corrected PrismaticJoint); 2019-12-26: 0.5916499441339551; 2019-12-15: 0.591689710999802 (absTol: 1e-8 now; 1e-2 before); before 2019-12-15: 0.5896009710727431
+exudynTestGlobals.testResult = solutionSliderCrankIndex2
 
 
 #plotResults = True#constrainGroundBody #comparison only works in case of fixed ground

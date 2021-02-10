@@ -291,7 +291,7 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
     
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-fact = 200000 #200000
+fact = 20 #200000
 if not exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
     fact = 20
 
@@ -346,6 +346,7 @@ result = mbs.GetNodeOutput(2,exu.OutputVariableType.Velocity)[1] #y-velocity of 
 exu.Print('solution of stiffFlyballGovernor=',result)
 
 exudynTestGlobals.testError = result - (0.8962488779114738) #2021-01-04: 0.015213599619996604 (Python3.7)
+exudynTestGlobals.testResult = result
 
 
 plist=[]

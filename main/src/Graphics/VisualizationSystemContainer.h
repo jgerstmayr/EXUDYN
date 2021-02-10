@@ -162,7 +162,7 @@ public:
 	//! OpenGL renderer sends message that graphics shall be updated; update is only done, if current state has higher counter than already existing state
 	//  update is sent to all attached visualization systems
 	virtual void UpdateGraphicsData() override;
-
+	
 	//! internal signal to update the graphics data; reset to false after redraw 
 	virtual bool UpdateGraphicsDataNowInternal() const { return updateGraphicsDataNowInternal; } 
 
@@ -174,6 +174,9 @@ public:
 
 	//! renderer reports to simulation that simulation can be continued
 	virtual void ContinueSimulation() override;
+
+	//! renderer signals that visualizationIsRunning flag should be set to "flag"; used to know whether WaitForUserToContinue or UpdatePostProcessData shall be called by solver
+	virtual void SetVisualizationIsRunning(bool flag = true) override;
 
 	//! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box
 	virtual void UpdateMaximumSceneCoordinates() override;
@@ -204,8 +207,9 @@ public:
 		return false;
 	}
 
-												//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
-	virtual std::string GetComputationMessage() override; 
+	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
+	virtual std::string GetComputationMessage(bool solverInformation = true, 
+		bool solutionInformation = true, bool solverTime = true) override;
 
 	virtual void Print(std::ostream& os) const
 	{

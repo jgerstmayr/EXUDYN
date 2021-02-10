@@ -232,7 +232,7 @@ void MainSolverBase::ComputeJacobianAE(MainSystem& mainSystem/*, const Simulatio
 	CheckInitialized(mainSystem);
 
 	//only add terms!
-	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompData, GetCSolver().newton, *(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, velocityLevel, true);
+	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompData, GetCSolver().newton, *(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, velocityLevel);// , true);
 }
 
 //! compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)
@@ -241,7 +241,16 @@ void MainSolverBase::ComputeODE2RHS(MainSystem& mainSystem/*, const SimulationSe
 	CheckInitialized(mainSystem);
 	LinkedDataVector linkODE2residual(GetCSolver().data.systemResidual, 0, GetCSolver().data.nODE2);
 
-	mainSystem.cSystem->ComputeSystemODE2RHS(GetCSolver().data.tempCompData, linkODE2residual); //entries set to zero in ComputeSystemODE2RHS
+	mainSystem.cSystem->ComputeSystemODE2RHS(GetCSolver().data.tempCompData, linkODE2residual); //entries initialized in ComputeSystemODE2RHS
+}
+
+//! compute the RHS of ODE1 equations in systemResidual in range(nODE2,nODE2+nODE1)
+void MainSolverBase::ComputeODE1RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/)
+{
+	CheckInitialized(mainSystem);
+	LinkedDataVector linkODE1residual(GetCSolver().data.systemResidual, GetCSolver().data.nODE2, GetCSolver().data.nODE2+ GetCSolver().data.nODE1);
+
+	mainSystem.cSystem->ComputeSystemODE1RHS(GetCSolver().data.tempCompData, linkODE1residual); //entries initialized in ComputeSystemODE1RHS
 }
 
 //! compute the algebraic equations in systemResidual in range(nODE2+nODE1,nODE2+nODE1+nAE)

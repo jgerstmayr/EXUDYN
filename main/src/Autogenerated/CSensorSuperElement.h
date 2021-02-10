@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-03  18:41:45 (last modfied)
+* @date         2021-01-27  17:50:23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ public: // AUTO:
     Index meshNodeNumber;                         //!< AUTO: mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder
     bool writeToFile;                             //!< AUTO: true: write sensor output to file
     std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
-    OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, \\refSection{sec:objectffrfreducedorder:superelementoutput})
+    OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, \refSection{sec:objectffrfreducedorder:superelementoutput})
     //! AUTO: default constructor with parameter initialization
     CSensorSuperElementParameters()
     {

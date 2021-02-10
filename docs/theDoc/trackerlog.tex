@@ -9,16 +9,291 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.91, 
-  \item last change =  2021-01-07
+  \item EXUDYN version = 1.0.130, 
+  \item last change =  2021-02-10
 
-  \item Number of issues = 539, 
-  \item Number of resolved issues = 459 (91 in current version), 
+  \item Number of issues = 580, 
+  \item Number of resolved issues = 498 (130 in current version), 
 \ei
 
-\mysubsection{Resolved issues}
+\mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi
+  \item {\bf Version 1.0.130}: \vspace{-6pt} 
+  Issue 0576: {\bf add ClearWorkspace}
+(extension)
+  \bi
+  \item {\small description: add ClearWorkspace() to basicUtilities which allows simple and save cleanup of globals() in python environment; recommended to be called at beginning of complex models}
+  \item   date resolved: {\bf 2021-02-10 12:35},
+date raised: 2021-02-08   \ei
+  \item {\bf Version 1.0.129}: \vspace{-6pt} 
+  Issue 0569: {\bf fix contour text}
+(fix)
+  \bi
+  \item {\small description: add space to computation info text before contour plot text}
+  \item   date resolved: {\bf 2021-02-10 12:35},
+date raised: 2021-02-05   \ei
+  \item {\bf Version 1.0.128}: \vspace{-6pt} 
+  Issue 0568: {\bf fix Renderer axes}
+(fix)
+  \bi
+  \item {\small description: use X(0), Y(1) and Z(2) for axes description to be compliant with Python indexing starting with 0 as well as contour components}
+  \item   date resolved: {\bf 2021-02-10 12:35},
+date raised: 2021-02-05   \ei
+  \item {\bf Version 1.0.127}: \vspace{-6pt} 
+  Issue 0579: {\bf ClearWorkspace}
+(extension)
+  \bi
+  \item {\small description: add ClearWorkspacefunction to exudyn.basicUtilities, which allows to reset global variables in ipython; see example in function description}
+  \item   date resolved: {\bf 2021-02-10 12:13},
+date raised: 2021-02-10   \ei
+  \item {\bf Version 1.0.126}: \vspace{-6pt} 
+  Issue 0578: {\bf SmoothStep}
+(extension)
+  \bi
+  \item {\small description: add SmoothStep function to exudyn.utilities, which produces a smooth step function using cosine}
+  \item   date resolved: {\bf 2021-02-10 12:13},
+date raised: 2021-02-10   \ei
+  \item {\bf Version 1.0.125}: \vspace{-6pt} 
+  Issue 0572: {\bf void}
+(fix)
+  \bi
+  \item {\small description: redundant with issue 568}
+  \item   date resolved: {\bf 2021-02-10 12:05},
+date raised: 2021-02-05   \ei
+  \item {\bf Version 1.0.124}: \vspace{-6pt} 
+  Issue 0571: {\bf void}
+(fix)
+  \bi
+  \item {\small description: redundant with issue 568}
+  \item   date resolved: {\bf 2021-02-10 12:05},
+date raised: 2021-02-05   \ei
+  \item {\bf Version 1.0.123}: \vspace{-6pt} 
+  Issue 0570: {\bf void}
+(fix)
+  \bi
+  \item {\small description: redundant with issue 568}
+  \item   date resolved: {\bf 2021-02-10 12:05},
+date raised: 2021-02-05   \ei
+  \item {\bf Version 1.0.122}: \vspace{-6pt} 
+{\bf \color{warningRed}  BUG 0577}: {\bf PostNewtonStep}
+  \bi
+  \item {\small description: perform PostNewtonStep and PostDiscontinuousIterationStep only for active objects}
+  \item   date resolved: {\bf 2021-02-09 14:00},
+date raised: 2021-02-09   \ei
+  \item {\bf Version 1.0.121}: \vspace{-6pt} 
+  Issue 0355: {\bf generalized alpha}
+(extension)
+  \bi
+  \item {\small description: implement version of Brüls and Arnold for generalized alpha solver}
+  \item {\small \bf notes:  WARNING: switched to new solver based on displacement increments (Arnold/Bruls,2007), which leads to DIFFERENT (but improved) RESULTS than previous dynamic implicit integrator; new implicit solver now works with ODE1 variables}
+  \item   date resolved: {\bf 2021-02-08 01:56},
+date raised: 2020-03-08   \ei
+  \item {\bf Version 1.0.120}: \vspace{-6pt} 
+  Issue 0573: {\bf merge solver documentation}
+(docu)
+  \bi
+  \item {\small description: merge docu on solver in EXUDYN overview and in solver section}
+  \item   date resolved: {\bf 2021-02-07 17:33},
+date raised: 2021-02-07   \ei
+  \item {\bf Version 1.0.119}: \vspace{-6pt} 
+  Issue 0567: {\bf solvers description}
+(docu)
+  \bi
+  \item {\small description: extend description for equations of motion, explicit and implicit solvers}
+  \item   date resolved: {\bf 2021-02-04 01:14},
+date raised: 2021-02-03   \ei
+  \item {\bf Version 1.0.118}: \vspace{-6pt} 
+  Issue 0560: {\bf Impl integrator ODE1}
+(extension)
+  \bi
+  \item {\small description: add ODE1 coordinates to implicit integrator}
+  \item   date resolved: {\bf 2021-02-02 15:16},
+date raised: 2021-01-26   \ei
+  \item {\bf Version 1.0.117}: \vspace{-6pt} 
+  Issue 0508: {\bf implicit Lie group integrator}
+(extension)
+  \bi
+  \item {\small description: implement implicit index2/index3 Lie group integrator as python function}
+  \item {\small \bf notes: cancelled, because will be directly done in C++}
+  \item   date resolved: {\bf 2021-02-02 15:15},
+date raised: 2020-12-17   \ei
+  \item {\bf Version 1.0.116}: \vspace{-6pt} 
+  Issue 0566: {\bf memory alloc cnt}
+(check)
+  \bi
+  \item {\small description: add control to check whether large amount of memory allocations happen during time integration+test suite}
+  \item   date resolved: {\bf 2021-02-01 01:38},
+date raised: 2021-01-29   \ei
+  \item {\bf Version 1.0.115}: \vspace{-6pt} 
+  Issue 0541: {\bf objectODE1/2, constraint lists}
+(extension)
+  \bi
+  \item {\small description: add lists of ODE1 and ODE2 objects, constraints, etc. in cSystemData in order to speed up processing}
+  \item   date resolved: {\bf 2021-02-01 01:38},
+date raised: 2021-01-13   \ei
+  \item {\bf Version 1.0.114}: \vspace{-6pt} 
+  Issue 0557: {\bf RK with constraints}
+(extension)
+  \bi
+  \item {\small description: add CoordinateConstraints to explict Runge-Kutta solvers}
+  \item {\small \bf notes: only ground constraints included for now}
+  \item   date resolved: {\bf 2021-01-27 17:38},
+date raised: 2021-01-26   \ei
+  \item {\bf Version 1.0.113}: \vspace{-6pt} 
+  Issue 0558: {\bf Lie group tests}
+(test)
+  \bi
+  \item {\small description: add Lie group integrator simple tests}
+  \item   date resolved: {\bf 2021-01-27 12:00},
+date raised: 2021-01-26   \ei
+  \item {\bf Version 1.0.112}: \vspace{-6pt} 
+  Issue 0550: {\bf GraphicsDataArrow}
+(extension)
+  \bi
+  \item {\small description: add arrow to graphicsDataUtilities}
+  \item {\small \bf notes: also added GraphicsDataBasis(...) for drawing 3 orthogonal basis vectors, GraphicsDataCheckerBoard(...) for simple drawing of checker board background and MergeGraphicsDataTriangleList(...) for merging graphicsData triangle lists}
+  \item   date resolved: {\bf 2021-01-27 00:10},
+date raised: 2021-01-17   \ei
+  \item {\bf Version 1.0.111}: \vspace{-6pt} 
+  Issue 0495: {\bf add ODE1 coordinates}
+(extension)
+  \bi
+  \item {\small description: extend system (Jacobian, etc.) for ODE1 coordinates}
+  \item   date resolved: {\bf 2021-01-26 13:21},
+date raised: 2020-12-09   \ei
+  \item {\bf Version 1.0.110}: \vspace{-6pt} 
+  Issue 0556: {\bf explicit RK tests}
+(test)
+  \bi
+  \item {\small description: add tests for explicit Runge Kutta integrators to TestModels}
+  \item   date resolved: {\bf 2021-01-26 13:17},
+date raised: 2021-01-25   \ei
+  \item {\bf Version 1.0.109}: \vspace{-6pt} 
+  Issue 0555: {\bf explicit Lie group integrator}
+(extension)
+  \bi
+  \item {\small description: add existing Lie group integrator in C++}
+  \item   date resolved: {\bf 2021-01-26 13:17},
+date raised: 2021-01-25   \ei
+  \item {\bf Version 1.0.108}: \vspace{-6pt} 
+  Issue 0554: {\bf explicit integrator}
+(extension)
+  \bi
+  \item {\small description: add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout \refSection{sec:ExplicitSolver} for description of explicit solvers and \refSection{sec:DynamicSolverType} for available solver types}
+  \item   date resolved: {\bf 2021-01-25 00:54},
+date raised: 2021-01-24   \ei
+  \item {\bf Version 1.0.107}: \vspace{-6pt} 
+  Issue 0513: {\bf add RK4 integrator}
+(extension)
+  \bi
+  \item {\small description: put existing python RK4 integrator into CPP}
+  \item   date resolved: {\bf 2021-01-25 00:54},
+date raised: 2020-12-19   \ei
+  \item {\bf Version 1.0.106}: \vspace{-6pt} 
+  Issue 0533: {\bf ObjectGenericODE1}
+(extension)
+  \bi
+  \item {\small description: add object ObjectGenericODE1 for generic first order ODEs}
+  \item   date resolved: {\bf 2021-01-21 17:27},
+date raised: 2021-01-04   \ei
+  \item {\bf Version 1.0.105}: \vspace{-6pt} 
+  Issue 0553: {\bf create physics submodule}
+(extension)
+  \bi
+  \item {\small description: create exudyn.physics and add friction functions}
+  \item   date resolved: {\bf 2021-01-20 10:25},
+date raised: 2021-01-20   \ei
+  \item {\bf Version 1.0.104}: \vspace{-6pt} 
+{\bf \color{warningRed}  BUG 0552}: {\bf DrawSystemGraph}
+  \bi
+  \item {\small description: does not work with RigidBodySpringDamper due to invalid GenericNodeData number}
+  \item   date resolved: {\bf 2021-01-19 14:43},
+date raised: 2021-01-19   \ei
+  \item {\bf Version 1.0.103}: \vspace{-6pt} 
+  Issue 0551: {\bf InteractiveDialog}
+(extension)
+  \bi
+  \item {\small description: add interactive tkinter dialog and new submodule exudyn.interactive to interact with models}
+  \item   date resolved: {\bf 2021-01-19 00:26},
+date raised: 2021-01-19   \ei
+  \item {\bf Version 1.0.102}: \vspace{-6pt} 
+  Issue 0549: {\bf show solver name and time}
+(extension)
+  \bi
+  \item {\small description: add options to show/hide solver name and current time in render window}
+  \item   date resolved: {\bf 2021-01-17 17:42},
+date raised: 2021-01-17   \ei
+  \item {\bf Version 1.0.101}: \vspace{-6pt} 
+{\bf \color{warningRed}  BUG 0545}: {\bf mbs.WaitForUserToContinue()}
+  \bi
+  \item {\small description: call to WaitForUserToContinue() does not always wait for keypress. Check StartRender() function and flag settings}
+  \item   date resolved: {\bf 2021-01-17 16:55},
+date raised: 2021-01-15   \ei
+  \item {\bf Version 1.0.100}: \vspace{-6pt} 
+{\bf \color{warningRed}  BUG 0548}: {\bf SolveDynamic/SolveStatic}
+  \bi
+  \item {\small description: option updateInitialValues not working}
+  \item {\small \bf notes: corrected SetSystemState call}
+  \item   date resolved: {\bf 2021-01-17 00:08},
+date raised: 2021-01-17   \ei
+  \item {\bf Version 1.0.99}: \vspace{-6pt} 
+  Issue 0542: {\bf GeneticOptimization}
+(extension)
+  \bi
+  \item {\small description: store values continuously to file, add automatic loader and animate optimized values}
+  \item {\small \bf notes: added resultsMonitor.py to exudyn module}
+  \item   date resolved: {\bf 2021-01-15 15:18},
+date raised: 2021-01-13   \ei
+  \item {\bf Version 1.0.98}: \vspace{-6pt} 
+  Issue 0547: {\bf realtimeSimulation}
+(extension)
+  \bi
+  \item {\small description: add factor for timeIntegration.simulateInRealtime}
+  \item   date resolved: {\bf 2021-01-15 15:16},
+date raised: 2021-01-15   \ei
+  \item {\bf Version 1.0.97}: \vspace{-6pt} 
+  Issue 0546: {\bf add \_\_version\_\_ version to module}
+(extension)
+  \bi
+  \item {\small description: enable exudyn.\_\_version\_\_ as commonly used in other modules}
+  \item   date resolved: {\bf 2021-01-15 15:05},
+date raised: 2021-01-15   \ei
+  \item {\bf Version 1.0.96}: \vspace{-6pt} 
+  Issue 0544: {\bf geneticOptimization}
+(extension)
+  \bi
+  \item {\small description: add optional argument resultsFile to specify a file for output of results data}
+  \item   date resolved: {\bf 2021-01-14 23:17},
+date raised: 2021-01-14   \ei
+  \item {\bf Version 1.0.95}: \vspace{-6pt} 
+  Issue 0543: {\bf add results monitor}
+(extension)
+  \bi
+  \item {\small description: add resultsMonitor.py to be called from command line for doing continuous visualization of sensors and geneticOptimization output}
+  \item   date resolved: {\bf 2021-01-14 23:08},
+date raised: 2021-01-14   \ei
+  \item {\bf Version 1.0.94}: \vspace{-6pt} 
+  Issue 0532: {\bf NodeGenericODE1}
+(extension)
+  \bi
+  \item {\small description: add node NodeGenericODE1 for arbitrary number of ODE1 coordinates}
+  \item   date resolved: {\bf 2021-01-13 20:12},
+date raised: 2021-01-04   \ei
+  \item {\bf Version 1.0.93}: \vspace{-6pt} 
+  Issue 0531: {\bf solidExtrusion}
+(extension)
+  \bi
+  \item {\small description: add graphicsData for solid extrusion (prismatic) body; based on 2D point and segment list for flat boundaries}
+  \item   date resolved: {\bf 2021-01-10 20:43},
+date raised: 2021-01-04   \ei
+  \item {\bf Version 1.0.92}: \vspace{-6pt} 
+  Issue 0539: {\bf RigidBodySpringDamper}
+(extension)
+  \bi
+  \item {\small description: add postNewtonStepUserFunction and dataCoordinates}
+  \item   date resolved: {\bf 2021-01-08 14:34},
+date raised: 2021-01-08   \ei
   \item {\bf Version 1.0.91}: \vspace{-6pt} 
 {\bf \color{warningRed}  BUG 0537}: {\bf Render window}
   \bi
@@ -674,6 +949,10 @@ date raised: 2020-07-20   \ei
 \ei
 \mysubsection{Known open bugs}
 \bi
+  \item open {\bf BUG 0575}:  {\bf new genAlpha solver}
+  \bi
+  \item {\small description: new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top}
+  \item date raised: 2021-02-08   \ei
   \item open {\bf BUG 0456}:  {\bf ObjectFFRF bug with GenericJoint}
   \bi
   \item {\small description: raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity\_qt not implemented; cannot compute jacobian for orientation}

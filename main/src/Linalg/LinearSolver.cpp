@@ -98,6 +98,22 @@ void GeneralMatrixEigenSparse::SetMatrix(const Matrix& otherMatrix)
 
 }
 
+//! add a diagonal (or unit) matrix located at a certain (rowOffset, columnOffset) position
+void GeneralMatrixEigenSparse::AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset, Index columnOffset)
+{
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddDiagonalMatrix(...): only possible in triplet mode!");
+
+	SetMatrixIsFactorized(false);
+	if (diagValue != 0.)
+	{
+		for (Index i = 0; i < numberOfRowsColumns; i++)
+		{
+			triplets.push_back(EigenTriplet((StorageIndex)(rowOffset + i), (StorageIndex)(columnOffset + i), diagValue));
+		}
+	}
+}
+
+
 //! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 //! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 //! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
@@ -210,16 +226,30 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix& submatrix, Inde
 }
 
 //! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec)
+void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec, Index rowOffset)
 {
 	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddColumnVector(...): matrix must be in triplet mode !");
 
-	for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+	if (!rowOffset)
 	{
-		Real value = vec[i];
-		if (value != 0.)
+		for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
 		{
-			triplets.push_back(EigenTriplet((StorageIndex)i, (StorageIndex)column, value));
+			Real value = vec[i];
+			if (value != 0.)
+			{
+				triplets.push_back(EigenTriplet((StorageIndex)i, (StorageIndex)column, value));
+			}
+		}
+	}
+	else
+	{
+		for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+		{
+			Real value = vec[i];
+			if (value != 0.)
+			{
+				triplets.push_back(EigenTriplet((StorageIndex)(i+rowOffset), (StorageIndex)column, value));
+			}
 		}
 	}
 }

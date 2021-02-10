@@ -96,7 +96,7 @@ public:
 	virtual void StopSimulation();		
 
 	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
-	virtual std::string GetComputationMessage();
+	virtual std::string GetComputationMessage(bool solverInformation = true, bool solutionInformation = true, bool solverTime = true);
 
 	//! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box
 	//virtual void UpdateMaximumSceneCoordinates();

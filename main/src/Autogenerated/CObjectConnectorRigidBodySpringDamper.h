@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-07  10:18:37 (last modfied)
+* @date         2021-01-09  20:07:21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,6 +30,7 @@ class CObjectConnectorRigidBodySpringDamperParameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)
     Matrix6D stiffness;                           //!< AUTO: stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis
     Matrix6D damping;                             //!< AUTO: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector
     Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0
@@ -37,10 +38,12 @@ public: // AUTO:
     Vector6D offset;                              //!< AUTO: translational and rotational offset considered in the spring force calculation
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> springForceTorqueUserFunction;//!< AUTO: A python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below
+    std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> postNewtonStepUserFunction;//!< AUTO: A python function which computes the error of the PostNewtonStep; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorRigidBodySpringDamperParameters()
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
+        nodeNumber = EXUstd::InvalidIndex;
         stiffness = Matrix6D(6,6,0.);
         damping = Matrix6D(6,6,0.);
         rotationMarker0 = EXUmath::unitMatrix3D;
@@ -48,6 +51,7 @@ public: // AUTO:
         offset = Vector6D({0.,0.,0.,0.,0.,0.});
         activeConnector = true;
         springForceTorqueUserFunction = 0;
+        postNewtonStepUserFunction = 0;
     };
 };
 
@@ -92,6 +96,19 @@ public: // AUTO:
         return parameters.markerNumbers;
     }
 
+    //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
+    virtual Index GetNodeNumber(Index localIndex) const override
+    {
+        release_assert(localIndex == 0);
+        return parameters.nodeNumber;
+    }
+
+    //! AUTO:  number of nodes; needed for every object
+    virtual Index GetNumberOfNodes() const override
+    {
+        return (parameters.postNewtonStepUserFunction!=0);
+    }
+
     //! AUTO:  connector uses penalty formulation
     virtual bool IsPenaltyConnector() const override
     {
@@ -125,11 +142,29 @@ public: // AUTO:
         return parameters.activeConnector;
     }
 
+    //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration
+    virtual bool HasDiscontinuousIteration() const override
+    {
+        return (parameters.postNewtonStepUserFunction!=0);
+    }
+
+    //! AUTO:  function called after Newton method; returns a residual error (force)
+    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags) override;
+
+    //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
+    virtual void PostDiscontinuousIterationStep() override
+    {
+        
+    }
+
     //! AUTO:  compute spring damper force-torque helper function
     void ComputeSpringForceTorque(const MarkerDataStructure& markerData, Matrix3D& A0all, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Vector6D& uLoc6D, Vector6D& vLoc6D) const;
+
+    //! AUTO:  call to post Newton step user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionPostNewtonStep(Vector& returnValue, const MainSystemBase& mainSystem, Real t, Vector& dataCoordinates, Vector6D& uLoc6D, Vector6D& vLoc6D) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

@@ -1,5 +1,5 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN example
+# This is an EXUDYN python utility library
 #
 # Details:  The processing module supports multiple execution of EXUDYN models.
 #           It includes parameter variation and (genetic) optimization functionality.
@@ -70,7 +70,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
             print("", flush=True) #newline after tqdm progress bar output....
         else:
             #simpler approach without tqdm:
-            with Pool(numberOfThreads) as p:
+            with Pool(processes=numberOfThreads) as p:
                 values = p.map(parameterFunction, vInput)
     return values
 
@@ -150,17 +150,12 @@ def ParameterVariation(parameterFunction, parameters,
         pEnd = parameters[key][1]
         pRange = parameters[key][2]
         
-        range1 = nParams[0:cnt].sum()
-        range2 = nParams[cnt+1:dim+1].sum()
+        range1 = nParams[0:cnt].prod()
+        range2 = nParams[cnt+1:dim+1].prod()
         if range1 == 0:
             range1 = 1 #otherwise kronecker product won't work
         if range2 == 0:
             range2 = 1 #otherwise kronecker product won't work
-
-        # if debugMode:
-        #     print("parameter", cnt, ":")
-        #     print("  range1 =", range1)
-        #     print("  range2 =", range2)
             
         #now create list of parameters, using duplicates according to dimensionality
         if useLogSpace:
@@ -216,6 +211,7 @@ def ParameterVariation(parameterFunction, parameters,
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
 #    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
+#    resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
 #    numberOfChildren: (DEPRECATED, UNUSED) number childrens of surviving population
 #    survivingIndividuals: (DEPRECATED) number of surviving individuals after children are born
 #**output:
@@ -238,6 +234,46 @@ def GeneticOptimization(objectiveFunction, parameters,
                         showProgress = True,
                         **kwargs):
 
+    #write header or values to output file and increase counter
+    def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, writeHeader = False):
+        if resultsFile != '':
+            #print('write to file')
+            if writeHeader:
+                file = open(resultsFile, 'w')
+                file.write('#EXUDYN genetic optimization results file:'+resultsFile+'\n')
+                file.write('#results stored columnwise for every parameter and individual\n')
+                file.write('#\n')
+                file.write('#\n')
+                file.write('#columns: globalIndex, parameters, computationIndex:\n')
+                s = '#globalIndex,value'
+                for (key,value) in parameters.items():
+                    s += ',' + key
+                s += ',computationIndex'
+                file.write(s+'\n')
+                file.write('#parameter ranges (separated with ";"):\n')
+                sep = '#'
+                s = ''
+                for (key,value) in parameters.items():
+                    s += sep + str(value)
+                    sep = ';'
+                file.write(s+'\n')
+                file.close()
+            
+            file = open(resultsFile, 'a')
+            for i in range(len(values)):
+                s = ''
+                s += str(globalCnt) + ', '
+                s += str(values[i])
+                for (key,value) in currentGeneration[i].items():
+                    #print(currentGeneration[i])
+                    s += ', ' + str(value)
+                file.write(s+'\n')
+                globalCnt += 1 #for every line of values
+                
+            file.close()
+            #print('... done')
+        return globalCnt
+    
     #get number of threads:
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
@@ -248,11 +284,15 @@ def GeneticOptimization(objectiveFunction, parameters,
         numberOfThreads = kwargs['numberOfThreads']
 
     if useMultiProcessing:
-        print("number of threads used =", numberOfThreads) #very useful information
+        print("number of threads used =", numberOfThreads,flush=True) #very useful information
 
     initialPopulationSize = populationSize
     if 'initialPopulationSize' in kwargs: 
         initialPopulationSize = kwargs['initialPopulationSize']
+
+    resultsFile = ''
+    if 'resultsFile' in kwargs: 
+        resultsFile = kwargs['resultsFile']
 
 
     #+++++++++++++++++++++++++++++++++++++++++++++++
@@ -286,6 +326,7 @@ def GeneticOptimization(objectiveFunction, parameters,
         ranges += [r]
         rangesDict[key] = r
     
+    #+++++++++++++++++++++++++++++++++++++++++++++++
     #generate first generation:
     currentGeneration = []
     for i in range(initialPopulationSize):
@@ -299,6 +340,7 @@ def GeneticOptimization(objectiveFunction, parameters,
             ind['computationIndex'] = i #unique index for one set of computations
 
         currentGeneration += [ind]
+    #+++++++++++++++++++++++++++++++++++++++++++++++
 
     if debugMode:
         print("initial population =", currentGeneration)
@@ -310,6 +352,7 @@ def GeneticOptimization(objectiveFunction, parameters,
     newGenerationValues = []#surviving individuals' values, not re-computed!
     
     totalEvaluations = 0
+    resultsFileCnt = 0 #counter for output file
 
     for popCnt in range(numberOfGenerations):
         if debugMode:
@@ -318,6 +361,7 @@ def GeneticOptimization(objectiveFunction, parameters,
         totalEvaluations += len(currentGeneration)
         values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
         #print("values=",values)
+        resultsFileCnt = WriteToFile(resultsFile, parameters, currentGeneration, values, resultsFileCnt, writeHeader = (popCnt == 0))
 
         #remove computationIndex from new generation
         for item in currentGeneration:

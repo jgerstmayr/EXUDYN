@@ -226,6 +226,7 @@ for i in range(14): #take coordinates of first two bodies
 exu.Print('solution of 3D slidercrank iftomm benchmark=',u)
 
 exudynTestGlobals.testError = u - (3.36427617809219) #2020-04-22(corrected GenericJoint): 3.36427617809219;2020-02-19: 3.3642838177004832
+exudynTestGlobals.testResult = u
 
 
 if exudynTestGlobals.useGraphics:

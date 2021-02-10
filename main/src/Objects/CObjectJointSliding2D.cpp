@@ -156,15 +156,15 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 }
 
 
-void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	//CHECKandTHROWstring("CObjectJointSliding2D::ComputeJacobianAE");
 
 	const Index ns = 4; //number of ANCF shape functions
 	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
-	jacobian.SetNumberOfRowsAndColumns(3, columnsOffset + 2 * ns);
-	jacobian.SetAll(0.);
+	jacobian_ODE2.SetNumberOfRowsAndColumns(3, columnsOffset + 2 * ns);
+	jacobian_ODE2.SetAll(0.);
 
 	if (parameters.activeConnector)
 	{
@@ -208,16 +208,16 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 
 			for (Index i = 0; i < columnsOffset; i++)
 			{
-				jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
-				jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
+				jacobian_ODE2(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
+				jacobian_ODE2(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
 			}
 			for (Index i = 0; i < ns; i++)
 			{
-				jacobian(0, 2 * i + columnsOffset) = SV[i];
-				jacobian(1, 2 * i + 1 + columnsOffset) = SV[i];
+				jacobian_ODE2(0, 2 * i + columnsOffset) = SV[i];
+				jacobian_ODE2(1, 2 * i + 1 + columnsOffset) = SV[i];
 
-				jacobian(2, 2 * i + columnsOffset) = SV_x[i] * forceX;
-				jacobian(2, 2 * i + 1 + columnsOffset) = SV_x[i] * forceY;
+				jacobian_ODE2(2, 2 * i + columnsOffset) = SV_x[i] * forceX;
+				jacobian_ODE2(2, 2 * i + 1 + columnsOffset) = SV_x[i] * forceY;
 			}
 		}
 		else
@@ -266,24 +266,24 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resizab
 			jacobian_AE(1, 2) = slidingPosition * normalVector_x + slopeVector * normalVector;	//d(vPos * normalVector)/ds = r'*n + r*n'
 			jacobian_AE(2, 2) = slopeVector*slopeVector + vPos*slopeVector_x;	//deq2/dq2 = d(vPos * slopeVector)/ds = r'*r' + vPos*r'' ; vPos = r(s) - p0
 
-			//jacobian(1, part1) = -posJac*n
-			//jacobian(2, part1) = -posJac*r
+			//jacobian_ODE2(1, part1) = -posJac*n
+			//jacobian_ODE2(2, part1) = -posJac*r
 			for (Index i = 0; i < columnsOffset; i++)
 			{
 				Vector2D posJaci({ -markerData.GetMarkerData(0).positionJacobian(0, i), -markerData.GetMarkerData(0).positionJacobian(1, i) });
-				jacobian(1, i) = posJaci * normalVector;
-				jacobian(2, i) = posJaci * slopeVector;
+				jacobian_ODE2(1, i) = posJaci * normalVector;
+				jacobian_ODE2(2, i) = posJaci * slopeVector;
 			}
 
 			for (Index i = 0; i < ns; i++)
 			{
-				//jacobian(1, part2) = d(r(s) - p0)*n / dq1 = SV*n + (r(s) - p0) * [-SV'[1],SV'[0]] 
-				jacobian(1, 2 * i + columnsOffset) = SV[i] * normalVector[0] + vPos[1] * SV_x[i]; //special sign, follows from normal!
-				jacobian(1, 2 * i + 1 + columnsOffset) = SV[i] * normalVector[1] - vPos[0] * SV_x[i];
+				//jacobian_ODE2(1, part2) = d(r(s) - p0)*n / dq1 = SV*n + (r(s) - p0) * [-SV'[1],SV'[0]] 
+				jacobian_ODE2(1, 2 * i + columnsOffset) = SV[i] * normalVector[0] + vPos[1] * SV_x[i]; //special sign, follows from normal!
+				jacobian_ODE2(1, 2 * i + 1 + columnsOffset) = SV[i] * normalVector[1] - vPos[0] * SV_x[i];
 
-				//jacobian(2, part2) = d(r(s) - p0)*r'/ dq1 = SV*r' + (r(s) - p0) * SV' = SV*r' + SV' * (r(s) - p0)
-				jacobian(2, 2 * i + columnsOffset)     = SV[i] * slopeVector[0] + SV_x[i] * vPos[0];
-				jacobian(2, 2 * i + 1 + columnsOffset) = SV[i] * slopeVector[1] + SV_x[i] * vPos[1];
+				//jacobian_ODE2(2, part2) = d(r(s) - p0)*r'/ dq1 = SV*r' + (r(s) - p0) * SV' = SV*r' + SV' * (r(s) - p0)
+				jacobian_ODE2(2, 2 * i + columnsOffset)     = SV[i] * slopeVector[0] + SV_x[i] * vPos[0];
+				jacobian_ODE2(2, 2 * i + 1 + columnsOffset) = SV[i] * slopeVector[1] + SV_x[i] * vPos[1];
 			}
 
 		}

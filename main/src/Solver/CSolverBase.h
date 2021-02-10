@@ -45,6 +45,7 @@ public: //made public for simpler access via pybind; nevertheless, C++ functions
 	SolverOutputData output;
 	SolverFileData file;
 	NewtonSettings newton; //copy of timeInt or staticSolver (depending on solver)
+	DiscontinuousSettings discontinuous; //copy of discontinuous from timeInt or staticSolver
 public:
 	CSolverBase()
 	{
@@ -74,14 +75,16 @@ public:
 	//	else { return simulationSettings.timeIntegration.endTime; }
 	//}
 
-	//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
-	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index severity)
+	//! reduce step size (0 .. with given step size, 1..normal, 2..severe problems); return true, if reduction was successful
+	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, 
+		Index severity, Real suggestedStepSize = -1.)
 	{
 		return false;
 	}
 
-	//! increase step size if convergence is good
-	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings) {}
+	//! increase step size if convergence is good; if suggestedStepSize == -1, a solver-specific factor will be used
+	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
+		Real suggestedStepSize = -1.) {	}
 
 	//! for static solver, this is a factor in interval [0,1]; MUST be overwritten
 	virtual Real ComputeLoadFactor(const SimulationSettings& simulationSettings) const { CHECKandTHROWstring("CSolverBase::illegal call"); return 0; }
@@ -145,13 +148,13 @@ public:
 	//! perform Newton method for given solver method
 	virtual bool Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
-	//! compute residual for Newton method (e.g. static or time step); store result in systemResidual
+	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++
-	virtual void ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { CHECKandTHROWstring("CSolverBase::illegal call"); }
+	virtual Real ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { CHECKandTHROWstring("CSolverBase::illegal call"); return 0; }
 
-	//! compute update for currentState from newtonSolution (decrement from residual and jacobian)
+	//! compute update for currentState from newtonSolution (decrement from residual and jacobian); for initial=true, this is the initial update with data.newtonSolution=0
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++
-	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { CHECKandTHROWstring("CSolverBase::illegal call"); }
+	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial = false) { CHECKandTHROWstring("CSolverBase::illegal call"); }
 
 	//! compute jacobian for newton method of given solver method; store result in systemJacobian
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++

@@ -57,7 +57,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
 
     #check result at default integration time
-    testError = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0] - (1.0039999999354785)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
 
 except BaseException as e:
     exu.Print("An error occured in test example for MarkerSuperElementPosition:", e)

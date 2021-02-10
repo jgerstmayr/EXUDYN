@@ -16,6 +16,7 @@
 import numpy as np #LoadSolutionFile
 import time        #AnimateSolution
 import copy as copy #to be able to copy e.g. lists
+from math import sin, cos, pi
 
 from exudyn.basicUtilities import *
 from exudyn.rigidBodyUtilities import *
@@ -67,7 +68,7 @@ def FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn):
 #**output: evaluation of sin sweep (in range -1..+1)
 def SweepSin(t, t1, f0, f1):
     k = (f1-f0)/t1
-    return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
+    return sin(2*pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 #**function: compute cos sweep at given time t
 #**input: 
@@ -78,7 +79,7 @@ def SweepSin(t, t1, f0, f1):
 #**output: evaluation of cos sweep (in range -1..+1)
 def SweepCos(t, t1, f0, f1):
     k = (f1-f0)/t1
-    return np.cos(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
+    return cos(2*pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 #**function: frequency according to given sweep functions SweepSin, SweepCos
 #**input: 
@@ -89,6 +90,25 @@ def SweepCos(t, t1, f0, f1):
 #**output: frequency in Hz
 def FrequencySweep(t, t1, f0, f1):
     return t*(f1-f0)/t1 + f0
+
+#**function: step function with smooth transition from value0 to value1; transition is computed with cos function
+#**input:
+#  x: argument at which function is evaluated
+#  x0: start of step (f(x) = value0)
+#  x1: end of step (f(x) = value1)
+#  value0: value before smooth step
+#  value1: value at end of smooth step
+#**output: returns f(x)
+def SmoothStep(x, x0, x1, value0, value1): 
+    loadValue = value0
+
+    if x > x0:
+        if x < x1:
+            dx = x1-x0
+            loadValue = value0 + (value1-value0) * 0.5*(1-cos((x-x0)/dx*pi)) #t=[0 .. 25]
+        else:
+            loadValue = value1
+    return loadValue
 
 #**function: get index from value in given data vector (numpy array); usually used to get specific index of time vector
 #**input: 
@@ -209,6 +229,7 @@ def CheckInputIndexArray(indexArray, length=-1):
 
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   LOAD SOLUTION AND ANIMATION   ++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -302,6 +323,7 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
 
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph
 #**input:
 #   showLoads: toggle appearance of loads in mbs
@@ -312,13 +334,14 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, 
                     useItemNames = False, useItemTypes = False):
     
+    import exudyn
     try:
         #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
         import numpy as np
         import networkx as nx #for generating graphs and graph arrangement
         import matplotlib.pyplot as plt #for drawing
     except ImportError as e:
-        raise ImportError("numpy, networkx and matplotlib reuired for DrawSystemGraph(...)") from e
+        raise ImportError("numpy, networkx and matplotlib required for DrawSystemGraph(...)") from e
     except :
         print("DrawSystemGraph(...): unexpected error during import of numpy, networkx and matplotlib")
         raise
@@ -419,7 +442,8 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             nodeNumbers[j] = int(nodeNumbers[j])
     
         for j in nodeNumbers:
-            G.add_edge(itemNames[objectsToItems[i]],itemNames[nodesToItems[j]],color=objectNodeColor)
+            if j != exudyn.InvalidIndex(): #for RigidBodySpringDamper
+                G.add_edge(itemNames[objectsToItems[i]],itemNames[nodesToItems[j]],color=objectNodeColor)
     
         #for connectors, contact, joint: add edges to these objects
         markerNumbers = []
@@ -570,7 +594,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
     plt.draw() #force redraw after colors have changed
     
 
-
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -591,6 +615,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
 #  fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
 #  vALE: used for ObjectALEANCFCable2D objects
 #**output: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
+#**example: see Examples/ANCF_cantilever_test.py
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                 vALE=0, ConstrainAleCoordinate=True):

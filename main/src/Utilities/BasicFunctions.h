@@ -24,14 +24,24 @@
 #include <cmath> //(math.h is not available in CLANG)
 #include <sstream>
 
+#include <typeinfo> //for ISCPPTYPE
+#include <typeindex>
+
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //defines Real
 #include "Utilities/BasicTraits.h"
 
-
+//macro, because types are checked, not variables; alternative?
+#define ISCPPTYPE(_type1,_type2) (std::type_index(typeid(_type1)) == std::type_index(typeid(_type2)))
 
 //! namespace EXUstd = Exudyn standard functions
 namespace EXUstd {
+
+	//template<typename T1, typename T2>
+	//inline bool IsCppType(T1, T2)
+	//{
+	//	return std::type_index(typeid(T1)) == std::type_index(typeid(T2));
+	//}
 
     //! checks whether a number is a valid real number: NAN and not INFINITE
     inline int IsValidReal(Real x)

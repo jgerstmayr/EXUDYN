@@ -12,8 +12,8 @@ These are the access functions to the \codeName\ module.
   RequireVersion(requiredVersionString) & Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")\\ \hline 
   StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
-  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
-  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solver:equations}\\ \hline 
+  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
   ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
   SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)\\ \hline 
   SetLinalgOutputFormatPython(flagPythonFormat) & true: use python format for output of vectors and matrices; false: use matlab format\\ \hline 
@@ -26,7 +26,7 @@ These are the access functions to the \codeName\ module.
     exu.SetWriteToFile('', False) \#terminate writing to file which closes the file}}\\ \hline 
   SetPrintDelayMilliSeconds(delayMilliSeconds) & add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0\\ \hline 
   Print() & this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false\\ \hline 
-  InfoStat() & Print some global (debug) information: linear algebra, memory allocation, threads, computational efficiency, etc.\\ \hline 
+  InfoStat(writeOutput = true) & Retrieve list of global information on memory allocation and other counts as list:[array\_new\_counts, array\_delete\_counts, vector\_new\_counts, vector\_delete\_counts, matrix\_new\_counts, matrix\_delete\_counts, linkedDataVectorCast\_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with \_\_FAST\_EXUDYN\_LINALG flag\\ \hline 
   Go() & Creates a SystemContainer SC and a main system mbs\\ \hline 
   InvalidIndex() & This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; in future, the invalid index may be changed to -1, therefore you should use this variable\\ \hline 
   variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
@@ -90,7 +90,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
 {\bf function/structure name} & {\bf description}\\ \hline
   Assemble() & assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), and AssembleInitializeSystemCoordinates()\\ \hline 
   AssembleCoordinates() & assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)\\ \hline 
-  AssembleLTGLists() & build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices)\\ \hline 
+  AssembleLTGLists() & build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)\\ \hline 
   AssembleInitializeSystemCoordinates() & initialize all system-wide coordinates based on initial values given in nodes\\ \hline 
   Reset() & reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory\\ \hline 
   WaitForUserToContinue() & interrupt further computation until user input --> 'pause' function\\ \hline 
@@ -452,6 +452,7 @@ Conversion to integer is possible:
 
 %++++++++++++++++++++
 \mysubsubsection{OutputVariableType}
+\label{sec:OutputVariableType}
 This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.
 
 Available output variables and the interpreation of the output variable can be found at the object definitions. 
@@ -497,6 +498,7 @@ Available output variables and the interpreation of the output variable can be f
 
 %++++++++++++++++++++
 \mysubsubsection{ConfigurationType}
+\label{sec:ConfigurationType}
 This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.
 
 
@@ -518,6 +520,7 @@ This section shows the ConfigurationType structure, which is used for selecting 
 
 %++++++++++++++++++++
 \mysubsubsection{DynamicSolverType}
+\label{sec:DynamicSolverType}
 This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.
 
 
@@ -529,13 +532,20 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 {\bf function/structure name} & {\bf description}\\ \hline
   GeneralizedAlpha & an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers\\ \hline 
   TrapezoidalIndex2 & an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction\\ \hline 
-  ExplicitEuler & [NOT IMPLEMENTED YET] an explicit first order solver for systems without constraints\\ \hline 
-  RK45 & [NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection\\ \hline 
+  ExplicitEuler & an explicit 1st order solver (generally not compatible with constraints)\\ \hline 
+  ExplicitMidpoint & an explicit 2nd order solver (generally not compatible with constraints)\\ \hline 
+  RK33 & an explicit 3 stage 3rd order Runge-Kutta method, aka "Heun"; (generally not compatible with constraints)\\ \hline 
+  RK44 & an explicit 4 stage 4th order Runge-Kutta method, aka "classical Runge Kutta" (generally not compatible with constraints), compatible with Lie group integration and elimination of CoordinateConstraints\\ \hline 
+  RK67 & an explicit 7 stage 6th order Runge-Kutta method, see 'On Runge-Kutta Processes of High Order', J. C. Butcher, J. Austr Math Soc 4, (1964); can be used for very accurate (reference) solutions, but without step size control!\\ \hline 
+  ODE23 & an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB\\ \hline 
+  DOPRI5 & an explicit Runge Kutta method with automatic step size selection with 5th order of accuracy and 4th order error estimation, see  Dormand and Prince, 'A Family of Embedded Runge-Kutta Formulae.', J. Comp. Appl. Math. 6, 1980\\ \hline 
+  DVERK6 & [NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection\\ \hline 
 \end{longtable}
 \end{center}
 
 %++++++++++++++++++++
 \mysubsubsection{KeyCode}
+\label{sec:KeyCode}
 This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.
 
 
@@ -568,6 +578,7 @@ This section shows the KeyCode structure, which is used for special key codes in
 
 %++++++++++++++++++++
 \mysubsubsection{LinearSolverType}
+\label{sec:LinearSolverType}
 This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.
 
 

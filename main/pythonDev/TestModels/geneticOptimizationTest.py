@@ -152,6 +152,7 @@ if __name__ == '__main__': #include this to enable parallel processing
     u = vOpt
     exu.Print("optimum=",u)
     exudynTestGlobals.testError = u - (0.0030262381385228617) #2020-12-18: (nElements=32) -2.7613614363986017e-05
+    exudynTestGlobals.testResult = u
 
     if exudynTestGlobals.useGraphics and False:
         # from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
@@ -170,5 +171,6 @@ if __name__ == '__main__': #include this to enable parallel processing
     #exu.Print("vList=", v)
     u=v[3]
     exudynTestGlobals.testError += u - (0.09814894553377107) #2020-12-18: (nElements=32) -2.7613614363986017e-05
+    exudynTestGlobals.testResult += u
     
 

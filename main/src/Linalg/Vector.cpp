@@ -23,6 +23,7 @@ Index array_delete_counts = 0; //global counter of item deallocations; is increa
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 Index vector_new_counts = 0; //global counter of item allocations; is increased every time a new is called
 Index vector_delete_counts = 0; //global counter of item deallocations; is increased every time a delete is called
+Index linkedDataVectorCast_counts = 0; //global counter for unwanted type conversion from LinkedDataVector to Vector
 #endif
 
 //put this into Matrix.cpp
@@ -33,33 +34,33 @@ Index matrix_delete_counts = 0; //global counter of item deallocations; is incre
 
 bool linalgPrintUsePythonFormat = true; //!< true: use python format for output of vectors and matrices; false: use matlab format
 
-//! add two vectors, result = v1+v2 (for each component)
-template<typename T>
-VectorBase<T> operator+(const VectorBase<T>& v1, const VectorBase<T>& v2)
-{
-	CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator+: incompatible size of vectors");
-	VectorBase<T> result(v1.NumberOfItems());
-	Index cnt = 0;
-	for (auto &item : result) {
-		item = v1[cnt] + v2[cnt];
-		cnt++;
-	}
-	return result;
-}
+////! add two vectors, result = v1+v2 (for each component)
+//template<typename T>
+//VectorBase<T> operator+(const VectorBase<T>& v1, const VectorBase<T>& v2)
+//{
+//	CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator+: incompatible size of vectors");
+//	VectorBase<T> result(v1.NumberOfItems());
+//	Index cnt = 0;
+//	for (auto &item : result) {
+//		item = v1[cnt] + v2[cnt];
+//		cnt++;
+//	}
+//	return result;
+//}
 
-//! add two vectors, result = v1-v2 (for each component)
-template<typename T>
-VectorBase<T> operator-(const VectorBase<T>& v1, const VectorBase<T>& v2)
-{
-	CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator-: incompatible size of vectors");
-	VectorBase<T> result(v1.NumberOfItems());
-	Index cnt = 0;
-	for (auto &item : result) {
-		item = v1[cnt] - v2[cnt];
-		cnt++;
-	}
-	return result;
-}
+////! add two vectors, result = v1-v2 (for each component)
+//template<typename T>
+//VectorBase<T> operator-(const VectorBase<T>& v1, const VectorBase<T>& v2)
+//{
+//	CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "Vector::operator-: incompatible size of vectors");
+//	VectorBase<T> result(v1.NumberOfItems());
+//	Index cnt = 0;
+//	for (auto &item : result) {
+//		item = v1[cnt] - v2[cnt];
+//		cnt++;
+//	}
+//	return result;
+//}
 
 //the following code gives a linker error on MSVC17; cannot resolve this for double: why?
 ////! scalar multiply, result = scalar * v (for each component)

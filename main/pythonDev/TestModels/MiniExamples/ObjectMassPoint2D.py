@@ -32,7 +32,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result
-    testError = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] - 2 
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
     #final x-coordinate of position shall be 2
 
 except BaseException as e:

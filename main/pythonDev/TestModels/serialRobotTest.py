@@ -363,6 +363,7 @@ exu.Print("torques at tEnd=", VSum(measuredTorques))
 
 #add larger test tolerance for 32/64bits difference
 exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 77.13193176752571 ) #2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
+exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)
 
 if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt

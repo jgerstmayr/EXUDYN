@@ -134,13 +134,13 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 	}
 }
 
-void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	const Index ns = 4;
 	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(); //moving body coordinates length
-	jacobian.SetNumberOfRowsAndColumns(2, columnsOffset + 2 * ns + 1); //add 1 coordinate for sALE
-	jacobian.SetAll(0.);
+	jacobian_ODE2.SetNumberOfRowsAndColumns(2, columnsOffset + 2 * ns + 1); //add 1 coordinate for sALE
+	jacobian_ODE2.SetAll(0.);
 
 	//GetAvailableJacobians() always requires jacobian AND jacobian_AE ==> always initialize both matrices!!!
 
@@ -165,22 +165,22 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 
 		for (Index i = 0; i < columnsOffset; i++) //moving body 
 		{
-			jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
-			jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
+			jacobian_ODE2(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
+			jacobian_ODE2(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
 		}
 		for (Index i = 0; i < ns; i++) //ANCF
 		{
-			jacobian(0, 2 * i + columnsOffset) = SV[i];
-			jacobian(1, 2 * i + 1 + columnsOffset) = SV[i];
+			jacobian_ODE2(0, 2 * i + columnsOffset) = SV[i];
+			jacobian_ODE2(1, 2 * i + 1 + columnsOffset) = SV[i];
 		}
 		
 		//additional component for ALE coordinate
-		jacobian(0, 2 * ns + columnsOffset) = r_x[0];
-		jacobian(1, 2 * ns + columnsOffset) = r_x[1];
+		jacobian_ODE2(0, 2 * ns + columnsOffset) = r_x[0];
+		jacobian_ODE2(1, 2 * ns + columnsOffset) = r_x[1];
 
 		if (parameters.usePenaltyFormulation)
 		{
-			//jacobian *= parameters.penaltyStiffness;
+			//jacobian_ODE2 *= parameters.penaltyStiffness;
 			jacobian_AE.SetScalarMatrix(2, -1./ parameters.penaltyStiffness);
 			//pout << jacobian_AE << "\n";
 		}

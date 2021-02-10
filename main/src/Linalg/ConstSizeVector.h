@@ -73,7 +73,7 @@ public:
 		this->data = &constData[0];
 		this->numberOfItems = numberOfItemsInit;
 
-        Index cnt = 0;
+        //Index cnt = 0;
         for (auto &value : *this) {
             value = initializationValue;
         }
@@ -131,6 +131,7 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // BASIC FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	virtual VectorType GetType() const { return VectorType::ConstVector; }
 
     //override iterator functions from VectorBase<T>, check performance!
     T* begin() const override { return &this->data[0]; }				//!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.

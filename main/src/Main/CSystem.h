@@ -46,8 +46,9 @@ public:
 
 	ResizableVector generalizedLoad;    //!< generalized load vector added to ODE2 right-hand-side
 	ResizableMatrix loadJacobian;       //!< Jacobian for application of load
-	ResizableMatrix localJacobianAE;    //!< local constraint Jacobian during constraint jacobian computation
-	ResizableMatrix localJacobianAE_t;  //!< local constraint Jacobian (w.r.t. ODE_t part) during constraint jacobian computation
+	ResizableMatrix localJacobianAE_ODE1;//!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
+	ResizableMatrix localJacobianAE_ODE2;    //!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
+	ResizableMatrix localJacobianAE_ODE2_t;  //!< local constraint Jacobian (w.r.t. ODE2_t part) during constraint jacobian computation
 	ResizableMatrix localJacobianAE_AE; //!< local constraint Jacobian w.r.t. algebraic variables; during constraint jacobian computation
 	ResizableMatrix localJacobianODE2;  //!< local (object) Jacobian during jacobian computation
 
@@ -67,7 +68,8 @@ class VisualizationSystem; //for backlink to VisualizationSystem for PythonUserF
 class PostProcessData
 {
 private:
-	std::string visualizationMessage;	//!< any additional text message shown in renderer window; this variable is private, because it cannot be accessed safely in multithreading
+	std::string solverMessage;			//!< additional solver message shown in renderer window regarding solver and state; this variable is private, because it cannot be accessed safely in multithreading
+	std::string solutionMessage;		//!< additional solution information shown in renderer window; this variable is private, because it cannot be accessed safely in multithreading
 
 public:
 	std::atomic_flag accessState;		//!< flag, which is locked / released to access data
@@ -101,21 +103,36 @@ public:
 	void WaitForUserToContinue();
 
 	//! set a visualization message into openGL window
-	void SetVisualizationMessage(std::string message)
+	void SetSolverMessage(const std::string& solverMessageInit)
 	{
 		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
-		visualizationMessage = message;
+		solverMessage = solverMessageInit;
 		accessState.clear(std::memory_order_release); //clear PostProcessData
 	}
 
-	//! get the current visualization message string
-	std::string GetVisualizationMessage()
+	void SetSolutionMessage(const std::string& solutionMessageInit)
 	{
 		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
-		std::string message = visualizationMessage; //copy message
+		solutionMessage = solutionMessageInit;
 		accessState.clear(std::memory_order_release); //clear PostProcessData
-		//now safely return message:
-		return message;
+	}
+
+	//! get the current solver message string
+	std::string GetSolverMessage()
+	{
+		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+		std::string message = solverMessage; 		//copy message
+		accessState.clear(std::memory_order_release); //clear PostProcessData
+		return message; //now safely return message
+	}
+
+	//! get the current solution message string
+	std::string GetSolutionMessage()
+	{
+		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+		std::string message = solutionMessage; 		//copy message
+		accessState.clear(std::memory_order_release); //clear PostProcessData
+		return message; //now safely return message
 	}
 
 	void ProcessUserFunctionDrawing();
@@ -177,7 +194,7 @@ protected:
 	bool systemIsConsistent;				//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
 
 public:
-	virtual ~CSystem() {} //added for correct deletion of derived classes
+	~CSystem() {} //added for correct deletion of derived classes
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ACCESS FUNCTIONS for member variables
@@ -253,6 +270,9 @@ public:
 	//! build ltg-coordinate lists for objects (used to build global ODE2LHS, MassMatrix, etc. vectors and matrices)
 	void AssembleLTGLists(const MainSystem& mainSystem);
 
+	//! precompute item lists (special lists for constraints, connectors, etc.)
+	void PreComputeItemLists();
+
 	////! NEEDED? prepare LinkedDataVectors for objects
 	//void AssembleObjects();
 
@@ -263,47 +283,49 @@ public:
     // CSystem computation functions
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //! compute system massmatrix and ADD to given massMatrix; matrix needs to have according size; set entries to zero beforehand, if only the mass matrix is required
-	virtual void ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix);
-	//virtual void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
+	void ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix);
+	//! run through all bodies and check if has constant mass matrix; used for solver
+	bool HasConstantMassMatrix();
+	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
 	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE2Lhs, false otherwise
-	virtual bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs);
+	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs);
 		
 	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE1Rhs, false otherwise
-	virtual bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs);
+	bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs);
 
 	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'systemODE2Rhs' for ODE2 part
-	virtual void ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+	void ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs);
 
 	//! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'systemODE1Rhs' for ODE1 part
-	virtual void ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs);
+	void ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
-	virtual void ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+	void ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs);
 
 	//! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
-	virtual void ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp, const Vector& reactionForces, Vector& ode2ReactionForces);
+	void ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp, const Vector& reactionForces, Vector& ode2ReactionForces);
 
 	//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector
 	//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
-	virtual void ComputeConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1, 
+	void ComputeConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1, 
 		const Vector& v, GeneralMatrix& jacobianCqV, Real scalarFactor = 1., Index rowOffset = 0, Index columnOffset = 0);
 
 	//! compute (C_{q2} * v), v being an arbitrary vector
-	virtual void ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result);
+	void ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result);
 
 	//! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity; returns an error (residual)
-	virtual Real PostNewtonStep(TemporaryComputationData& temp);
+	Real PostNewtonStep(TemporaryComputationData& temp);
 
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
-	virtual void PostDiscontinuousIterationStep();
+	void PostDiscontinuousIterationStep();
 
 	//! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
-	virtual void ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel = false);
+	void ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel = false);
 
 	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.
-	virtual void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
+	void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
 	{ cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure); }
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -314,42 +336,49 @@ public:
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	void NumericalJacobianODE2RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
 		Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor = 1.); // ResizableMatrix& jacobian);
-	//template<class TGeneralMatrix>
-	//void NumericalJacobianODE2RHS(TemporaryComputationData& temp, const NumericalDifferentiation& numDiff,
-	//	Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM); // ResizableMatrix& jacobian);
 
 	//! compute numerical differentiation of ODE2RHS with respect to velocity coordinates; result is a jacobian; multiply the added entries with scalarFactor
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	void NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
 		Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor = 1.);
 
-	//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
+	//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
+	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
+	void NumericalJacobianODE1RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+		Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor = 1.);
+
+																					//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	//! factorODE2 is used to scale the ODE2-part of the jacobian (to avoid postmultiplication); 
 	//! velocityLevel = velocityLevel constraints are used, if available; 
-	//! fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
-	//! fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
+	//! always true: fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
+	//! DEPRECATED: fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
 	template<class TGeneralMatrix>
 	void NumericalJacobianAE(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-		Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel = false, bool fillIntoSystemMatrix = false); //ResizableMatrix& jacobian
+		Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, 
+		bool velocityLevel = false, Real factorODE2_AE = 1., Real factorAE_AE = 1.);// , bool fillIntoSystemMatrix = false); //ResizableMatrix& jacobian
 
 	////! compute numerical differentiation of AE with respect to ODE2 velocity coordinates; if fillIntoSystemMatrix==true, the jacobian is filled directly into the system matrix; result is a jacobian; THIS FUNCTION IS ONLY FOR COMPARISON (SLOW!!!)
 	//void NumericalJacobianAE_ODE2_t(const NumericalDifferentiation& numDiff,
 	//	TemporaryComputationData& temp, Vector& f0, Vector& f1, ResizableMatrix& jacobian, Real factor, bool velocityLevel = false);
 
 
-	//! compute numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2_t coordinates; results are 2 jacobians
+	//! compute object-wise jacobian of ODE2RHS w.r.t. ODE2 and ODE2_t coordinates; results are 2 jacobians
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	//! The factors 'factor_ODE2' and 'factor_ODE2_t' are used to scale the two jacobians; if a factor is set to zero, the jacobian is not computed!
 	void JacobianODE2RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& newton, Real factorODE2, Real factorODE2_t,
-		ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, Real scalarFactor = 1.) {}; //used in future!
+		ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t) {}; //used in future!
+
+	//! compute object-wise jacobian of ODE1RHS w.r.t. ODE1 coordinates
+	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
+	//! The factor 'factor_ODE1' is used to scale the jacobian
+	void JacobianODE1RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& newton, Real factorODE1,
+		ResizableMatrix& jacobian_ODE1) {}; //used in future!
 
 	//!compute per-object jacobians for object j, providing TemporaryComputationData;
-	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	//! returns ltgAE and ltgODE2 lists, and several flags on object velocity level equation and which jacobian parts have been computed
-	//! returns true, if jacobian is available, or false if not (e.g. body or ground object)
-	virtual void ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
-		bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_AEfilled);
+	//! the jacobian computed in according temp structure
+	void ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
+		bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled);
 
 	//! compute constraint jacobian of AE with respect to ODE2 (fillIntoSystemMatrix=true: also w.r.t. ODE1 and AE) coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
@@ -357,10 +386,10 @@ public:
 	//! factorAE_ODE2 is used to scale the ODE2-part of the jacobian, depending on index2 or index3 formulation (to avoid later multiplication at system level); 
 	//! factorAE_ODE2_t is used to scale the ODE2_t-part of the jacobian for velocity level constraints (to avoid later multiplication at system level); 
 	//! velocityLevel = velocityLevel constraints are used, if available; 
-	//! fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
-	//! fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
+	//! ALWAYS TRUE: fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
+	//! DEPRECATED: fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
 	void JacobianAE(TemporaryComputationData& temp, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
-		Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel = false, bool fillIntoSystemMatrix = false);
+		Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel = false, Real factorODE2_AE = 1., Real factorAE_AE=1.);// , bool fillIntoSystemMatrix = false);
 	//template<class TGeneralMatrix>
 	//void JacobianAE(TemporaryComputationData& temp, const Newton& newton, TGeneralMatrix& jacobianGM,
 	//	Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel = false, bool fillIntoSystemMatrix = false);

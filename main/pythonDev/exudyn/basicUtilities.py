@@ -18,10 +18,35 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-pi = 3.1415926535897932 #define pi in order to avoid importing large libraries
+#define some constants which would require external libraries
+pi = 3.1415926535897932 #define pi in order to avoid importing large libraries; identical to from math import pi
 sqrt2 = 2.**0.5
 g = 9.81 #gravity constant
 
+
+#**function: clear all workspace variables except for system variables with '\_' at beginning, 
+#           'func' or 'module' in name
+#**notes:   It is recommended to call ClearWorkspace() at the very beginning of your models
+#**example:
+##do this at the very beginning!
+#from exudyn.utilities import ClearWorkspace
+#ClearWorkspace()       #clear old SC and mbs variables
+#
+##now import modules
+#import exudyn as exu
+#from exudyn.itemInterface import *
+#SC = exu.SystemContainer()
+#mbs = SC.AddSystem()
+def ClearWorkspace():
+    if __name__ == "__main__":  #run only in main thread
+        gl = globals().copy()
+        for var in gl:
+            if var[0] == '_': continue
+            if 'func' in str(globals()[var]): continue
+            if 'module' in str(globals()[var]): continue
+    
+            del globals()[var]
+    
 
 #**function: create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
 #**input: 

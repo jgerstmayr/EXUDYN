@@ -51,14 +51,14 @@ void CObjectConnectorDistance::ComputeAlgebraicEquations(Vector& algebraicEquati
 	}
 }
 
-void CObjectConnectorDistance::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, 
+void CObjectConnectorDistance::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
-		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
+		//markerData contains already the correct jacobians ==> transformed to constraint jacobian_ODE2
 		Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
-		jacobian.SetNumberOfRowsAndColumns(1, columnsOffset + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+		jacobian_ODE2.SetNumberOfRowsAndColumns(1, columnsOffset + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 
 		Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 		Real currentDistance = vPos.GetL2Norm();
@@ -73,14 +73,14 @@ void CObjectConnectorDistance::ComputeJacobianAE(ResizableMatrix& jacobian, Resi
 			Vector3D jacVec({ markerData.GetMarkerData(0).positionJacobian(0,i),
 				markerData.GetMarkerData(0).positionJacobian(1,i),
 				markerData.GetMarkerData(0).positionJacobian(2,i) });
-			jacobian(0, i) = -currentDistanceInv * (vPos * jacVec);
+			jacobian_ODE2(0, i) = -currentDistanceInv * (vPos * jacVec);
 		}
 		for (Index i = 0; i < markerData.GetMarkerData(1).positionJacobian.NumberOfColumns(); i++)
 		{
 			Vector3D jacVec({ markerData.GetMarkerData(1).positionJacobian(0,i),
 				markerData.GetMarkerData(1).positionJacobian(1,i),
 				markerData.GetMarkerData(1).positionJacobian(2,i) });
-			jacobian(0, i + columnsOffset) = currentDistanceInv * (vPos * jacVec);
+			jacobian_ODE2(0, i + columnsOffset) = currentDistanceInv * (vPos * jacVec);
 		}
 	}
 	else

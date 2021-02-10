@@ -25,13 +25,17 @@
 
 namespace py = pybind11;	//for py::object
 
+//+++++++++++++++++++++++++++++++++
+//DELETE at 2021-07-01
+bool correctOldImplicitSolver = true; //!< experimental flag, will be erased in future; default=true; algorthmic accelerations now corrected
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++   IMPLICIT SECOND ORDER SOLVER   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
-bool CSolverImplicitSecondOrderTimeInt::ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index severity)
+bool CSolverImplicitSecondOrderTimeInt::ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, 
+	Index severity, Real suggestedStepSize)
 {
 	//it.currentTime is the only important value to be updated in order to reset the step time:
 	it.currentTime = computationalSystem.GetSystemData().GetCData().currentState.time;
@@ -81,13 +85,13 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 		Real factorAE_ODE2 = 1.;			//for position level constraints: depends, if index reduction is used
 		Real factorAE_ODE2_t = 1.;			//for velocity constraints ==> C_qt*q_tt term from velocity level, if C=C(q_t)
-		bool fillIntoSystemMatrix = true;
+		//bool fillIntoSystemMatrix = true;
 		bool velocityLevel = false;
 
 		//+++++++++++++++++++++++++++++
 		//Jacobian of algebraic equations
 		//Real factorAE = EXUstd::Square(stepSize) * newmarkBeta; //Index3
-		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, velocityLevel, fillIntoSystemMatrix);
+		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, velocityLevel);// , fillIntoSystemMatrix);
 
 		//Mass matrix - may also be directly filled into data.systemJacobian?
 		data.systemMassMatrix->SetAllZero();
@@ -211,6 +215,8 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 //! post-initialize for solver specific tasks; called at the end of InitializeSolver
 void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+	if (data.nODE1 != 0) { SysError("SolverImplicitSecondOrder cannot solve first order differential equations (ODE1) for now", file.solverFile); }
+
 	if (IsVerbose(2))
 	{
 		if (simulationSettings.timeIntegration.generalizedAlpha.useNewmark)
@@ -236,7 +242,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 //!       - aAlgorithmic is the acceleration in the integration scheme (==solutionODE2_tt for pure Newmark)
 //!       - solutionODE2 and solutionODE2_t are computed from integration formulas, based on [u0, u_t0, u_tt0, aAlgorithmic0] and aAlgorithmic
 //! OUTPUT: data.systemResidual is updated
-void CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	//const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 
@@ -304,9 +310,11 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 	STARTTIMER(timer.reactionForces);
 	computationalSystem.ComputeODE2ProjectedReactionForces(data.tempCompData, solutionAE, ode2Residual); //add the forces directly!
 	STOPTIMER(timer.reactionForces);
+
+	return data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor;
 }
 
-void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial)
 {
 	STARTTIMER(timer.integrationFormula);
 	Vector& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
@@ -314,8 +322,16 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 	LinkedDataVector newtonSolutionODE2(data.newtonSolution, 0, data.nODE2); //temporary subvector for ODE2 components
 	LinkedDataVector newtonSolutionAE(data.newtonSolution, data.startAE, data.nAE); //temporary subvector for ODE2 components
 
-	solutionODE2_tt -= newtonSolutionODE2;  //compute new accelerations; newtonSolution contains the Newton correction
-	solutionAE -= newtonSolutionAE;			//compute new Lagrange multipliers; newtonSolution contains the Newton correction
+	if (initial)
+	{
+		solutionODE2_tt.SetAll(0.); //use zero accelerations as start guess for Newton iterations; previously in CSolverBase::Newton(...)
+	}
+	else
+	{
+		//not necessary in initial update, because newtonSolution=0
+		solutionODE2_tt -= newtonSolutionODE2;  //compute new accelerations; newtonSolution contains the Newton correction
+		solutionAE -= newtonSolutionAE;			//compute new Lagrange multipliers; newtonSolution contains the Newton correction
+	}
 
 	//new code moved here from computeResidual:
 	//link current system vectors for ODE2
@@ -342,15 +358,29 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 
 	//now use Newmark formulas to update solutionODE2 and solutionODE2_t
-	//uT = u0 + h*u_t0 + h^2/2*(1-2*beta)*u_tt0 + h^2*beta*aT
+	//uT = u0 + h*u_t0 + h^2/2*(1-2*beta)*a0 + h^2*beta*aT //previously u0_tt instead of a0 (2021-02-04)!
 	solutionODE2 = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords;
 	solutionODE2.MultAdd(it.currentStepSize, computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_t);
-	solutionODE2.MultAdd(fact1, computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_tt);
+	if (correctOldImplicitSolver)
+	{
+		solutionODE2.MultAdd(fact1, data.startOfStepStateAAlgorithmic);
+	}
+	else
+	{
+		solutionODE2.MultAdd(fact1, computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_tt);
+	}
 	solutionODE2.MultAdd(fact2, data.aAlgorithmic);
 
-	//vT = u_t0 + h*(1-gamma)*u_tt0 + h*gamma*aT
+	//vT = u_t0 + h*(1-gamma)*a0 + h*gamma*aT //previously u0_tt instead of a0 (2021-02-04)!
 	solutionODE2_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_t;
-	solutionODE2_t.MultAdd(fact3, computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_tt);
+	if (correctOldImplicitSolver)
+	{
+		solutionODE2_t.MultAdd(fact3, data.startOfStepStateAAlgorithmic);
+	}
+	else
+	{
+		solutionODE2_t.MultAdd(fact3, computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_tt);
+	}
 	solutionODE2_t.MultAdd(fact4, data.aAlgorithmic);
 
 	STOPTIMER(timer.integrationFormula);
@@ -394,7 +424,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, false, true);
+	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, false);// , true);
 	STOPTIMER(timer.jacobianAE);
 
 	STARTTIMER(timer.massMatrix);
@@ -445,16 +475,16 @@ bool CSolverImplicitSecondOrderTimeIntUserFunction::Newton(CSystem& computationa
 	else { return userFunctionNewton(*mainSolver, *mainSystem, simulationSettings); }
 }
 
-void CSolverImplicitSecondOrderTimeIntUserFunction::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+Real CSolverImplicitSecondOrderTimeIntUserFunction::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	if (userFunctionComputeNewtonResidual == 0) { CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(computationalSystem, simulationSettings); }
-	else { userFunctionComputeNewtonResidual(*mainSolver, *mainSystem, simulationSettings); }
+	if (userFunctionComputeNewtonResidual == 0) { return CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(computationalSystem, simulationSettings); }
+	else { return userFunctionComputeNewtonResidual(*mainSolver, *mainSystem, simulationSettings); }
 }
 
-void CSolverImplicitSecondOrderTimeIntUserFunction::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+void CSolverImplicitSecondOrderTimeIntUserFunction::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial)
 {
-	if (userFunctionComputeNewtonUpdate == 0) { CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(computationalSystem, simulationSettings); }
-	else { userFunctionComputeNewtonUpdate(*mainSolver, *mainSystem, simulationSettings); }
+	if (userFunctionComputeNewtonUpdate == 0) { CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(computationalSystem, simulationSettings, initial); }
+	else { userFunctionComputeNewtonUpdate(*mainSolver, *mainSystem, simulationSettings, initial); }
 }
 
 void CSolverImplicitSecondOrderTimeIntUserFunction::ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings)

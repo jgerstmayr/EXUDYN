@@ -157,6 +157,7 @@ u=NormL2(p0) + NormL2(p1)
 exu.Print('solution of rigidBodyCOMtest=',u)
 
 exudynTestGlobals.testError = u - (3.409431467726293) #2020-04-22: 3.409431467726293
+exudynTestGlobals.testResult = u
 
 
 if exudynTestGlobals.useGraphics:

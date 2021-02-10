@@ -15,6 +15,9 @@
 #import is necessary, otherwise the solvers cannot be called
 import exudyn
 
+solverCheckMemoryAllocations = True
+solverCheckMemoryAllocationsThreshold = 100000 #treshold for warning on too many news during solving
+
 #**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
@@ -52,7 +55,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
     
     if updateInitialValues:
         currentState = mbs.systemData.GetSystemState() #get current values
-        mbs.systemData.SetSystemState(sysStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
+        mbs.systemData.SetSystemState(systemStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
 
     if storeSolver:
         mbs.sys['staticSolver'] = staticSolver #copy solver structure to sys variable
@@ -66,6 +69,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 #   solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
 #   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'] 
+#   experimentalNewSolver: this allows to use the new solver; flag only used during development - will be removed in future!
 #**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf section \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**example:
 # import exudyn as exu
@@ -92,32 +96,53 @@ def SolveDynamic(mbs,
                 simulationSettings = exudyn.SimulationSettings(), 
                 solverType = exudyn.DynamicSolverType.GeneralizedAlpha,
                 updateInitialValues = False,
-                storeSolver = True):
+                storeSolver = True,
+                ):
 
-    if (solverType != exudyn.DynamicSolverType.TrapezoidalIndex2 and 
-        solverType != exudyn.DynamicSolverType.GeneralizedAlpha):
+    if (solverType == exudyn.DynamicSolverType.TrapezoidalIndex2 or solverType == exudyn.DynamicSolverType.GeneralizedAlpha):
+    
+        dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
+        #if (experimentalNewSolver or #solver flag
+        #    ('experimentalNewSolver' in exudyn.sys)): #flag set in test suite
+        #    dynamicSolver.experimentalUseSolverNew = True #must be set at the very beginning when MainSolverImplicitSecondOrder() is initialized
+    
+        #store old settings:
+        newmarkOld = simulationSettings.timeIntegration.generalizedAlpha.useNewmark
+        index2Old = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
+
+        if solverType == exudyn.DynamicSolverType.TrapezoidalIndex2:
+            #manually override settings for integrator
+            simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
+            simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+    
+        stat = exudyn.InfoStat(False)
+        success = dynamicSolver.SolveSystem(mbs, simulationSettings)
+        CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.newtonStepsCount) #now check if these statistics are ok
+
+        #restore old settings:
+        simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
+        simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
+    elif (solverType == exudyn.DynamicSolverType.ExplicitEuler or 
+          solverType == exudyn.DynamicSolverType.ExplicitMidpoint or
+          solverType == exudyn.DynamicSolverType.RK33 or
+          solverType == exudyn.DynamicSolverType.RK44 or
+          solverType == exudyn.DynamicSolverType.RK67 or
+          solverType == exudyn.DynamicSolverType.ODE23 or
+          solverType == exudyn.DynamicSolverType.DOPRI5
+          ):
+        simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType = solverType
+        dynamicSolver = exudyn.MainSolverExplicit()
+
+        stat = exudyn.InfoStat(False)
+        success = dynamicSolver.SolveSystem(mbs, simulationSettings)
+        CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.currentStepIndex*dynamicSolver.GetNumberOfStages()) #now check if these statistics are ok
+    else:
         raise ValueError("SolveDynamic: solver type not implemented: ", solverType)
-    
-    dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
-    
-    #store old settings:
-    newmarkOld = simulationSettings.timeIntegration.generalizedAlpha.useNewmark
-    index2Old = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
-
-    if solverType == exudyn.DynamicSolverType.TrapezoidalIndex2:
-        #manually override settings for integrator
-        simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-        simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-    
-    success = dynamicSolver.SolveSystem(mbs, simulationSettings)
-
-    #restore old settings:
-    simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
-    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
     
     if updateInitialValues:
         currentState = mbs.systemData.GetSystemState() #get current values
-        mbs.systemData.SetSystemState(sysStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
+        mbs.systemData.SetSystemState(systemStateList=currentState, 
+                                      configuration = exudyn.ConfigurationType.Initial)
 
     if storeSolver:
         mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
@@ -193,4 +218,17 @@ def ComputeODE2Eigenvalues(mbs,
     else:
         return [eigenValues, eigenVectors]
     
+#**function: helper function for solvers to check e.g. if high number of memory allocations happened during simulation
+#            This can happen, if large amount of sensors are attached and output is written in every time step
+#**input: stat=exudyn.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method
+def CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations):
+    import numpy as np
 
+    stat = np.array(exudyn.InfoStat(False)) - np.array(infoStat)
+
+    newCnt = max(stat[0],stat[2],stat[4]) #array, vector, matrix new counts
+
+    if newCnt > solverCheckMemoryAllocationsThreshold and newCnt >= numberOfEvaluations:
+        exudyn.Print("WARNING: "+solverName+" detected large amount ("+str(newCnt)+") of memory allocations, which seem to occur in every time step; solver may be slow")
+
+    #print("newcnt=", newCnt)

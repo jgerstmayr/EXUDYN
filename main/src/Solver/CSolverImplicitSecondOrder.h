@@ -1,11 +1,10 @@
 /** ***********************************************************************************************
 * @class		CSolverImplicitSecondOrderTimeInt
-* @brief		This is the new implicit second order solver (incl. generalized alpha)
+* @brief		This is the implicit second order solver (incl. generalized alpha)
 * @details		Details:
 * 				- solves a dynamic system with constraints
 *               - either use Newmark-based formulas with index-2 reduction, or use generalized-alpha with index 3 constraints
 *				- step is solved by nonlinear iteration and Newton's method for accelerations
-*				- step reduction is not implemented yet, as well as the initial accelerations are not computed accordingly
 *
 * @author		Gerstmayr Johannes
 * @date			2019-12-11 (generated)
@@ -22,7 +21,7 @@
 
 #include "Solver/CSolverBase.h" 
 
-//! this is the new general implicit second order time integration solver
+//! this is the general implicit second order time integration solver
 //! includes trapezoidal rule, Newmark and generalized alpha
 class CSolverImplicitSecondOrderTimeInt: public CSolverBase
 {
@@ -44,11 +43,13 @@ public:
 	//! get solver name - needed for output file header and visualization window
 	virtual const STDstring GetSolverName() const override { return "implicit second order time integration"; }
 
-	//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
-	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index severity) override;
+	//! reduce step size (0 .. with given step size, 1..normal, 2..severe problems); return true, if reduction was successful
+	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
+		Index severity, Real suggestedStepSize = -1.) override;
 
-	//! increase step size if convergence is good
-	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override
+	//! increase step size if convergence is good; if suggestedStepSize == -1, a solver-specific factor will be used
+	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
+		Real suggestedStepSize = -1.) override
 	{
 		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, 2.*it.currentStepSize);
 	}
@@ -65,11 +66,11 @@ public:
 	//! update currentTime (and load factor); MUST be overwritten in special solver class
 	virtual void UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
-	//! compute residual for Newton method (e.g. static or time step); store result in systemResidual
-	virtual void ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
+	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual
+	virtual Real ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! compute update for currentState from newtonSolution (decrement from residual and jacobian)
-	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
+	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial = false) override;
 
 	//! compute jacobian for newton method of given solver method; store result in systemJacobian
 	virtual void ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
@@ -78,8 +79,9 @@ public:
 };
 
 class MainSolverImplicitSecondOrder;
-//makes no sense: could do everything by hand; typedef std::function<bool(MainSolverStatic&, MainSystem&, const SimulationSettings&)> MainSolverStaticUserFunction;
 typedef std::function<bool(MainSolverImplicitSecondOrder&, MainSystem&, const SimulationSettings&)> MainSolverImplicitSecondOrderUserFunction;
+typedef std::function<bool(MainSolverImplicitSecondOrder&, MainSystem&, const SimulationSettings&, bool)> MainSolverImplicitSecondOrderUserFunctionBool;
+typedef std::function<Real(MainSolverImplicitSecondOrder&, MainSystem&, const SimulationSettings&)> MainSolverImplicitSecondOrderUserFunctionReal;
 
 //! second order integrator with user functions capability
 class CSolverImplicitSecondOrderTimeIntUserFunction: public CSolverImplicitSecondOrderTimeInt
@@ -93,8 +95,8 @@ private:
 	MainSolverImplicitSecondOrderUserFunction userFunctionFinishStep;//!< User function to override FinishStep()
 	MainSolverImplicitSecondOrderUserFunction userFunctionDiscontinuousIteration;//!< User function to override DiscontinuousIteration()
 	MainSolverImplicitSecondOrderUserFunction userFunctionNewton;//!< User function to override Newton()
-	MainSolverImplicitSecondOrderUserFunction userFunctionComputeNewtonUpdate;//!< User function to override ComputeNewtonUpdate()
-	MainSolverImplicitSecondOrderUserFunction userFunctionComputeNewtonResidual;//!< User function to override ComputeNewtonResidual()
+	MainSolverImplicitSecondOrderUserFunctionBool userFunctionComputeNewtonUpdate;//!< User function to override ComputeNewtonUpdate()
+	MainSolverImplicitSecondOrderUserFunctionReal userFunctionComputeNewtonResidual;//!< User function to override ComputeNewtonResidual()
 	MainSolverImplicitSecondOrderUserFunction userFunctionComputeNewtonJacobian;//!< User function to override ComputeNewtonJacobian()
 
 	MainSolverImplicitSecondOrder* mainSolver; //!< pointer to main solver, needed in user function; this is dangerous, but cannot be avoided!
@@ -140,11 +142,11 @@ public:
 	{
 		mainSolver = mainSolverInit; mainSystem = mainSystemInit; userFunctionNewton = uf;
 	}
-	virtual void SetUserFunctionComputeNewtonUpdate(MainSolverImplicitSecondOrder* mainSolverInit, MainSystem* mainSystemInit, const MainSolverImplicitSecondOrderUserFunction& uf)
+	virtual void SetUserFunctionComputeNewtonUpdate(MainSolverImplicitSecondOrder* mainSolverInit, MainSystem* mainSystemInit, const MainSolverImplicitSecondOrderUserFunctionBool& uf)
 	{
 		mainSolver = mainSolverInit; mainSystem = mainSystemInit; userFunctionComputeNewtonUpdate = uf;
 	}
-	virtual void SetUserFunctionComputeNewtonResidual(MainSolverImplicitSecondOrder* mainSolverInit, MainSystem* mainSystemInit, const MainSolverImplicitSecondOrderUserFunction& uf)
+	virtual void SetUserFunctionComputeNewtonResidual(MainSolverImplicitSecondOrder* mainSolverInit, MainSystem* mainSystemInit, const MainSolverImplicitSecondOrderUserFunctionReal& uf)
 	{
 		mainSolver = mainSolverInit; mainSystem = mainSystemInit; userFunctionComputeNewtonResidual = uf;
 	}
@@ -168,15 +170,23 @@ public:
 	//! perform Newton method for given solver method
 	virtual bool Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
-	//! compute residual for Newton method (e.g. static or time step); store result in systemResidual
-	virtual void ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
+	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual
+	virtual Real ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! compute update for currentState from newtonSolution (decrement from residual and jacobian)
-	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
+	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial = false) override;
 
 	//! compute jacobian for newton method of given solver method; store result in systemJacobian
 	virtual void ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 };
+
+
+////! new solver for experimental developement of ImplicitTrapezoidal with Generalized Alpha Brüls, GGL, +Lie group integrator, step size control
+//
+//class CSolverImplicitSecondOrderTimeIntNew : public CSolverImplicitSecondOrderTimeIntUserFunction
+//{
+//
+//};
 
 #endif

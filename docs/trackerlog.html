@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 539, 
-Number of resolved issues = 459 (91 in current version), 
-EXUDYN version = 1.0.91, 
-last change =  2021-01-07
+Number of issues = 580, 
+Number of resolved issues = 498 (130 in current version), 
+EXUDYN version = 1.0.130, 
+last change =  2021-02-10
 
 
 <table style = "width:100%">
@@ -39,6 +39,150 @@ last change =  2021-01-07
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
+    <td>0575</td>
+    <td>new genAlpha solver </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-02-08</td>
+    <td>2021-04-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0574</td>
+    <td>initialAccelerations</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add dg/dq*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-07</td>
+    <td>2021-04-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0565</td>
+    <td>Drift inspector     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add functionality to check whether drift gets too large</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-29</td>
+    <td>2021-03-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0564</td>
+    <td>NodeRigidBodyEP     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> transfer EP constraint from object to node, for future application to 3D beams</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-01-28</td>
+    <td>2021-03-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0563</td>
+    <td>ODE1Coordinate      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add MarkerODE1Coordinate and extend LoadCoordinate for ODE1</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-27</td>
+    <td>2021-03-28</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0562</td>
+    <td>Gen alpha Lie       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add Lie groups to new generalized alpha integrator</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-26</td>
+    <td>2021-03-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0561</td>
+    <td>Gen alpha2          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> setup new generalized alpha integrator with GGL</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-26</td>
+    <td>2021-03-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0559</td>
+    <td>Lie group tests2    </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add Lie group integrator flybar governor</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-01-26</td>
+    <td>2021-03-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0540</td>
+    <td>github              </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> update README.rst file and make it similar to other packages (e.g. pydy)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-09</td>
+    <td>2021-03-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
     <td>0538</td>
     <td>monitorScaling      </td>
     <td>JG</td>
@@ -48,54 +192,6 @@ last change =  2021-01-07
     <td></td>
     <td>2021-01-06</td>
     <td>2021-03-07</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0533</td>
-    <td>ObjectGenericODE1   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add object ObjectGenericODE1 for generic first order ODEs</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-01-04</td>
-    <td>2021-03-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0532</td>
-    <td>NodeGenericODE1     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add node NodeGenericODE1 for arbitrary number of ODE1 coordinates</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-01-04</td>
-    <td>2021-03-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0531</td>
-    <td>extrusionBody       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add graphicsData for extrusion (prismatic) body</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-01-04</td>
-    <td>2021-03-05</td>
     <td></td>
     <td></td>
     <td></td>
@@ -135,38 +231,6 @@ last change =  2021-01-07
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0513</td>
-    <td>add RK4 integrator  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> put existing python RK4 integrator into CPP</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-12-19</td>
-    <td>2021-02-17</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0508</td>
-    <td>implicit Lie group integrator</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> implement implicit index2/index3 Lie group integrator as python function</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-12-17</td>
-    <td>2021-02-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0504</td>
     <td>serialrobot         </td>
     <td>JG</td>
@@ -198,7 +262,7 @@ last change =  2021-01-07
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0496</td>
     <td>controller          </td>
     <td>JG</td>
@@ -214,23 +278,7 @@ last change =  2021-01-07
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0495</td>
-    <td>add ODE1 coordinates</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> extend system (Jacobian, etc.) for ODE1 coordinates</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-12-09</td>
-    <td>2021-02-07</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0483</td>
     <td>URDF file           </td>
     <td>JG</td>
@@ -246,7 +294,7 @@ last change =  2021-01-07
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0471</td>
     <td>geometrically exact beam3D</td>
     <td>JG</td>
@@ -262,7 +310,7 @@ last change =  2021-01-07
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0470</td>
     <td>geometrically exact beam2D</td>
     <td>JG</td>
@@ -278,7 +326,7 @@ last change =  2021-01-07
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0461</td>
     <td>ObjectRigidBody     </td>
     <td>JG</td>
@@ -688,22 +736,6 @@ last change =  2021-01-07
     <td></td>
     <td>2020-04-10</td>
     <td>2020-06-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0355</td>
-    <td>generalized alpha   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> implement version of Brüls and Arnold for generalized alpha solver</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-03-08</td>
-    <td>2020-05-07</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1319,6 +1351,518 @@ last change =  2021-01-07
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0579</td>
+    <td>ClearWorkspace      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ClearWorkspacefunction to exudyn.basicUtilities, which allows to reset global variables in ipython; see example in function description</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-10</td>
+    <td>2021-04-11</td>
+    <td>2021-02-10 12:13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0578</td>
+    <td>SmoothStep          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add SmoothStep function to exudyn.utilities, which produces a smooth step function using cosine</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-10</td>
+    <td>2021-04-11</td>
+    <td>2021-02-10 12:13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0577</td>
+    <td>PostNewtonStep      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> perform PostNewtonStep and PostDiscontinuousIterationStep only for active objects</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-02-09</td>
+    <td>2021-04-10</td>
+    <td>2021-02-09 14:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0576</td>
+    <td>add ClearWorkspace  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ClearWorkspace() to basicUtilities which allows simple and save cleanup of globals() in python environment; recommended to be called at beginning of complex models</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-08</td>
+    <td>2021-04-09</td>
+    <td>2021-02-10 12:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0573</td>
+    <td>merge solver documentation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> merge docu on solver in EXUDYN overview and in solver section</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-02-07</td>
+    <td>2021-04-08</td>
+    <td>2021-02-07 17:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0572</td>
+    <td>void                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> redundant with issue 568</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-05</td>
+    <td>2021-04-06</td>
+    <td>2021-02-10 12:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0571</td>
+    <td>void                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> redundant with issue 568</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-05</td>
+    <td>2021-04-06</td>
+    <td>2021-02-10 12:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0570</td>
+    <td>void                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> redundant with issue 568</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-05</td>
+    <td>2021-04-06</td>
+    <td>2021-02-10 12:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0569</td>
+    <td>fix contour text    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add space to computation info text before contour plot text</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-05</td>
+    <td>2021-04-06</td>
+    <td>2021-02-10 12:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0568</td>
+    <td>fix Renderer axes   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use X(0), Y(1) and Z(2) for axes description to be compliant with Python indexing starting with 0 as well as contour components</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-05</td>
+    <td>2021-04-06</td>
+    <td>2021-02-10 12:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0567</td>
+    <td>solvers description </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend description for equations of motion, explicit and implicit solvers</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-02-03</td>
+    <td>2021-04-04</td>
+    <td>2021-02-04 01:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0566</td>
+    <td>memory alloc cnt    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add control to check whether large amount of memory allocations happen during time integration+test suite</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-01-29</td>
+    <td>2021-03-30</td>
+    <td>2021-02-01 01:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0560</td>
+    <td>Impl integrator ODE1</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ODE1 coordinates to implicit integrator</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-26</td>
+    <td>2021-03-27</td>
+    <td>2021-02-02 15:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0558</td>
+    <td>Lie group tests     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Lie group integrator simple tests</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-01-26</td>
+    <td>2021-03-27</td>
+    <td>2021-01-27 12:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0557</td>
+    <td>RK with constraints </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add CoordinateConstraints to explict Runge-Kutta solvers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-26</td>
+    <td>2021-03-27</td>
+    <td>2021-01-27 17:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>only ground constraints included for now</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0556</td>
+    <td>explicit RK tests   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add tests for explicit Runge Kutta integrators to TestModels</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-01-25</td>
+    <td>2021-03-26</td>
+    <td>2021-01-26 13:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0555</td>
+    <td>explicit Lie group integrator</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add existing Lie group integrator in C++</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-25</td>
+    <td>2021-03-26</td>
+    <td>2021-01-26 13:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0554</td>
+    <td>explicit integrator </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout \refSection{sec:ExplicitSolver} for description of explicit solvers and \refSection{sec:DynamicSolverType} for available solver types</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-24</td>
+    <td>2021-03-25</td>
+    <td>2021-01-25 00:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0553</td>
+    <td>create physics submodule</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> create exudyn.physics and add friction functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-20</td>
+    <td>2021-03-21</td>
+    <td>2021-01-20 10:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0552</td>
+    <td>DrawSystemGraph     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> does not work with RigidBodySpringDamper due to invalid GenericNodeData number</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-01-19</td>
+    <td>2021-03-20</td>
+    <td>2021-01-19 14:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0551</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add interactive tkinter dialog and new submodule exudyn.interactive to interact with models</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-19</td>
+    <td>2021-03-20</td>
+    <td>2021-01-19 00:26</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0550</td>
+    <td>GraphicsDataArrow   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add arrow to graphicsDataUtilities</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-17</td>
+    <td>2021-03-18</td>
+    <td>2021-01-27 00:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>also added GraphicsDataBasis(...) for drawing 3 orthogonal basis vectors, GraphicsDataCheckerBoard(...) for simple drawing of checker board background and MergeGraphicsDataTriangleList(...) for merging graphicsData triangle lists</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0549</td>
+    <td>show solver name and time</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add options to show/hide solver name and current time in render window</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-17</td>
+    <td>2021-03-18</td>
+    <td>2021-01-17 17:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0548</td>
+    <td>SolveDynamic/SolveStatic</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> option updateInitialValues not working</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-01-17</td>
+    <td>2021-03-18</td>
+    <td>2021-01-17 00:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>corrected SetSystemState call</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0547</td>
+    <td>realtimeSimulation  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add factor for timeIntegration.simulateInRealtime</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-15</td>
+    <td>2021-03-16</td>
+    <td>2021-01-15 15:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0546</td>
+    <td>add __version__ version to module</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> enable exudyn.__version__ as commonly used in other modules</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-15</td>
+    <td>2021-03-16</td>
+    <td>2021-01-15 15:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0545</td>
+    <td>mbs.WaitForUserToContinue()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> call to WaitForUserToContinue() does not always wait for keypress. Check StartRender() function and flag settings</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-01-15</td>
+    <td>2021-03-16</td>
+    <td>2021-01-17 16:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0544</td>
+    <td>geneticOptimization </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add optional argument resultsFile to specify a file for output of results data</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-14</td>
+    <td>2021-03-15</td>
+    <td>2021-01-14 23:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0543</td>
+    <td>add results monitor </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add resultsMonitor.py to be called from command line for doing continuous visualization of sensors and geneticOptimization output</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-14</td>
+    <td>2021-03-15</td>
+    <td>2021-01-14 23:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0542</td>
+    <td>GeneticOptimization </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> store values continuously to file, add automatic loader and animate optimized values</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-13</td>
+    <td>2021-03-14</td>
+    <td>2021-01-15 15:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added resultsMonitor.py to exudyn module</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0541</td>
+    <td>objectODE1/2, constraint lists</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add lists of ODE1 and ODE2 objects, constraints, etc. in cSystemData in order to speed up processing</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-13</td>
+    <td>2021-03-14</td>
+    <td>2021-02-01 01:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0539</td>
+    <td>RigidBodySpringDamper</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add postNewtonStepUserFunction and dataCoordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-08</td>
+    <td>2021-03-09</td>
+    <td>2021-01-08 14:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0537</td>
     <td>Render window       </td>
     <td>JG</td>
@@ -1381,6 +1925,54 @@ last change =  2021-01-07
     <td></td>
     <td></td>
     <td>added special treatment for load sensors</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0533</td>
+    <td>ObjectGenericODE1   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add object ObjectGenericODE1 for generic first order ODEs</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td>2021-01-21 17:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0532</td>
+    <td>NodeGenericODE1     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add node NodeGenericODE1 for arbitrary number of ODE1 coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td>2021-01-13 20:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0531</td>
+    <td>solidExtrusion      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add graphicsData for solid extrusion (prismatic) body; based on 2D point and segment list for flat boundaries</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-04</td>
+    <td>2021-03-05</td>
+    <td>2021-01-10 20:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0530</td>
@@ -1623,6 +2215,22 @@ last change =  2021-01-07
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0513</td>
+    <td>add RK4 integrator  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> put existing python RK4 integrator into CPP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td>2021-01-25 00:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0512</td>
     <td>testsuite           </td>
     <td>JG</td>
@@ -1685,6 +2293,22 @@ last change =  2021-01-07
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0508</td>
+    <td>implicit Lie group integrator</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> implement implicit index2/index3 Lie group integrator as python function</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-17</td>
+    <td>2021-02-15</td>
+    <td>2021-02-02 15:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>cancelled, because will be directly done in C++</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0507</td>
@@ -1825,6 +2449,22 @@ last change =  2021-01-07
     <td>2020-12-10</td>
     <td>2021-02-08</td>
     <td>2020-12-14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0495</td>
+    <td>add ODE1 coordinates</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend system (Jacobian, etc.) for ODE1 coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-09</td>
+    <td>2021-02-07</td>
+    <td>2021-01-26 13:21</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3589,6 +4229,22 @@ last change =  2021-01-07
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0355</td>
+    <td>generalized alpha   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> implement version of Brüls and Arnold for generalized alpha solver</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-08</td>
+    <td>2020-05-07</td>
+    <td>2021-02-08 01:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td> WARNING: switched to new solver based on displacement increments (Arnold/Bruls,2007), which leads to DIFFERENT (but improved) RESULTS than previous dynamic implicit integrator; new implicit solver now works with ODE1 variables</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0353</td>

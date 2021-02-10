@@ -4,6 +4,9 @@
 #created: 2019-07-01
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #item interface diagonal matrix creator
+
+import exudyn #for exudyn.InvalidIndex() needed in RigidBodySpringDamper
+
 def IIDiagMatrix(rowsColumns, value):
     m = []
     for i in range(rowsColumns):
@@ -292,6 +295,29 @@ class NodeGenericODE2:
         yield 'numberOfODE2Coordinates', self.numberOfODE2Coordinates
         yield 'Vshow', dict(self.visualization)["show"]
 
+class VNodeGenericODE1:
+    def __init__(self, show = False):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class NodeGenericODE1:
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = {'show': False}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialCoordinates = initialCoordinates
+        self.numberOfODE1Coordinates = numberOfODE1Coordinates
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'GenericODE1'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'numberOfODE1Coordinates', self.numberOfODE1Coordinates
+        yield 'Vshow', dict(self.visualization)["show"]
+
 class VNodeGenericData:
     def __init__(self, show = False):
         self.show = show
@@ -354,7 +380,7 @@ class VObjectMassPoint:
         yield 'graphicsData', self.graphicsData
 
 class ObjectMassPoint:
-    def __init__(self, name = '', physicsMass = 0., nodeNumber = -1, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.nodeNumber = nodeNumber
@@ -382,7 +408,7 @@ class VObjectMassPoint2D:
         yield 'graphicsData', self.graphicsData
 
 class ObjectMassPoint2D:
-    def __init__(self, name = '', physicsMass = 0., nodeNumber = -1, visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.nodeNumber = nodeNumber
@@ -410,7 +436,7 @@ class VObjectMass1D:
         yield 'graphicsData', self.graphicsData
 
 class ObjectMass1D:
-    def __init__(self, name = '', physicsMass = 0., nodeNumber = -1, referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.nodeNumber = nodeNumber
@@ -442,7 +468,7 @@ class VObjectRotationalMass1D:
         yield 'graphicsData', self.graphicsData
 
 class ObjectRotationalMass1D:
-    def __init__(self, name = '', physicsInertia = 0., nodeNumber = -1, referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
         self.physicsInertia = physicsInertia
         self.nodeNumber = nodeNumber
@@ -476,7 +502,7 @@ class VObjectRigidBody:
         yield 'graphicsData', self.graphicsData
 
 class ObjectRigidBody:
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = -1, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
@@ -511,7 +537,7 @@ class VObjectRigidBody2D:
         yield 'graphicsData', self.graphicsData
 
 class ObjectRigidBody2D:
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = -1, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
@@ -574,6 +600,31 @@ class ObjectGenericODE2:
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
+
+class VObjectGenericODE1:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class ObjectGenericODE1:
+    def __init__(self, name = '', nodeNumbers = [], systemMatrix = [], rhsVector = [], rhsUserFunction = 0, visualization = {'show': True}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.systemMatrix = systemMatrix
+        self.rhsVector = rhsVector
+        self.rhsUserFunction = rhsUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'GenericODE1'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'systemMatrix', self.systemMatrix
+        yield 'rhsVector', self.rhsVector
+        yield 'rhsUserFunction', self.rhsUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
 
 class VObjectFFRF:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
@@ -683,7 +734,7 @@ class VObjectANCFCable2D:
         yield 'color', self.color
 
 class ObjectANCFCable2D:
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., nodeNumbers = [-1, -1], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.physicsLength = physicsLength
         self.physicsMassPerLength = physicsMassPerLength
@@ -730,7 +781,7 @@ class VObjectALEANCFCable2D:
         yield 'color', self.color
 
 class ObjectALEANCFCable2D:
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, nodeNumbers = [-1, -1, -1], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.physicsLength = physicsLength
         self.physicsMassPerLength = physicsMassPerLength
@@ -809,7 +860,7 @@ class VObjectConnectorSpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.referenceLength = referenceLength
@@ -850,7 +901,7 @@ class VObjectConnectorCartesianSpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorCartesianSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness
@@ -889,9 +940,10 @@ class VObjectConnectorRigidBodySpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorRigidBodySpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, springForceTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, springForceTorqueUserFunction = 0, postNewtonStepUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
+        self.nodeNumber = nodeNumber
         self.stiffness = stiffness
         self.damping = damping
         self.rotationMarker0 = rotationMarker0
@@ -899,12 +951,14 @@ class ObjectConnectorRigidBodySpringDamper:
         self.offset = offset
         self.activeConnector = activeConnector
         self.springForceTorqueUserFunction = springForceTorqueUserFunction
+        self.postNewtonStepUserFunction = postNewtonStepUserFunction
         self.visualization = visualization
 
     def __iter__(self):
         yield 'objectType', 'ConnectorRigidBodySpringDamper'
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
         yield 'stiffness', self.stiffness
         yield 'damping', self.damping
         yield 'rotationMarker0', self.rotationMarker0
@@ -912,6 +966,7 @@ class ObjectConnectorRigidBodySpringDamper:
         yield 'offset', self.offset
         yield 'activeConnector', self.activeConnector
         yield 'springForceTorqueUserFunction', self.springForceTorqueUserFunction
+        yield 'postNewtonStepUserFunction', self.postNewtonStepUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
@@ -932,7 +987,7 @@ class VObjectConnectorCoordinateSpringDamper:
         yield 'color', self.color
 
 class ObjectConnectorCoordinateSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], stiffness = 0., damping = 0., offset = 0., dryFriction = 0., dryFrictionProportionalZone = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., dryFriction = 0., dryFrictionProportionalZone = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness
@@ -975,7 +1030,7 @@ class VObjectConnectorDistance:
         yield 'color', self.color
 
 class ObjectConnectorDistance:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.distance = distance
@@ -1008,7 +1063,7 @@ class VObjectConnectorCoordinate:
         yield 'color', self.color
 
 class ObjectConnectorCoordinate:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.offset = offset
@@ -1047,7 +1102,7 @@ class VObjectConnectorCoordinateVector:
         yield 'color', self.color
 
 class ObjectConnectorCoordinateVector:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], scalingMarker0 = [], scalingMarker1 = [], offset = [], velocityLevel = False, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], offset = [], velocityLevel = False, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.scalingMarker0 = scalingMarker0
@@ -1085,7 +1140,7 @@ class VObjectConnectorRollingDiscPenalty:
         yield 'color', self.color
 
 class ObjectConnectorRollingDiscPenalty:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1134,7 +1189,7 @@ class VObjectContactCoordinate:
         yield 'color', self.color
 
 class ObjectContactCoordinate:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, contactStiffness = 0., contactDamping = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1169,7 +1224,7 @@ class VObjectContactCircleCable2D:
         yield 'color', self.color
 
 class ObjectContactCircleCable2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1208,7 +1263,7 @@ class VObjectContactFrictionCircleCable2D:
         yield 'color', self.color
 
 class ObjectContactFrictionCircleCable2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], nodeNumber = -1, numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1255,7 +1310,7 @@ class VObjectJointGeneric:
         yield 'color', self.color
 
 class ObjectJointGeneric:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
@@ -1299,7 +1354,7 @@ class VObjectJointSpherical:
         yield 'color', self.color
 
 class ObjectJointSpherical:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1], activeConnector = True, visualization = {'show': True, 'jointRadius': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, visualization = {'show': True, 'jointRadius': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
@@ -1332,7 +1387,7 @@ class VObjectJointRollingDisc:
         yield 'color', self.color
 
 class ObjectJointRollingDisc:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
@@ -1369,7 +1424,7 @@ class VObjectJointRevolute2D:
         yield 'color', self.color
 
 class ObjectJointRevolute2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.activeConnector = activeConnector
@@ -1400,7 +1455,7 @@ class VObjectJointPrismatic2D:
         yield 'color', self.color
 
 class ObjectJointPrismatic2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.axisMarker0 = axisMarker0
@@ -1437,7 +1492,7 @@ class VObjectJointSliding2D:
         yield 'color', self.color
 
 class ObjectJointSliding2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = -1, classicalFormulation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), classicalFormulation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.slidingMarkerNumbers = slidingMarkerNumbers
@@ -1476,7 +1531,7 @@ class VObjectJointALEMoving2D:
         yield 'color', self.color
 
 class ObjectJointALEMoving2D:
-    def __init__(self, name = '', markerNumbers = [ -1, -1 ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ -1, -1 ], usePenaltyFormulation = False, penaltyStiffness = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], usePenaltyFormulation = False, penaltyStiffness = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.slidingMarkerNumbers = slidingMarkerNumbers
@@ -1517,7 +1572,7 @@ class VMarkerBodyMass:
         yield 'show', self.show
 
 class MarkerBodyMass:
-    def __init__(self, name = '', bodyNumber = -1, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.visualization = visualization
@@ -1536,7 +1591,7 @@ class VMarkerBodyPosition:
         yield 'show', self.show
 
 class MarkerBodyPosition:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
@@ -1557,7 +1612,7 @@ class VMarkerBodyRigid:
         yield 'show', self.show
 
 class MarkerBodyRigid:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
@@ -1578,7 +1633,7 @@ class VMarkerNodePosition:
         yield 'show', self.show
 
 class MarkerNodePosition:
-    def __init__(self, name = '', nodeNumber = -1, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.visualization = visualization
@@ -1597,7 +1652,7 @@ class VMarkerNodeRigid:
         yield 'show', self.show
 
 class MarkerNodeRigid:
-    def __init__(self, name = '', nodeNumber = -1, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.visualization = visualization
@@ -1616,7 +1671,7 @@ class VMarkerNodeCoordinate:
         yield 'show', self.show
 
 class MarkerNodeCoordinate:
-    def __init__(self, name = '', nodeNumber = -1, coordinate = -1, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
@@ -1637,7 +1692,7 @@ class VMarkerNodeRotationCoordinate:
         yield 'show', self.show
 
 class MarkerNodeRotationCoordinate:
-    def __init__(self, name = '', nodeNumber = -1, rotationCoordinate = -1, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.rotationCoordinate = rotationCoordinate
@@ -1660,7 +1715,7 @@ class VMarkerSuperElementPosition:
         yield 'showMarkerNodes', self.showMarkerNodes
 
 class MarkerSuperElementPosition:
-    def __init__(self, name = '', bodyNumber = -1, meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.meshNodeNumbers = meshNodeNumbers
@@ -1686,7 +1741,7 @@ class VMarkerSuperElementRigid:
         yield 'showMarkerNodes', self.showMarkerNodes
 
 class MarkerSuperElementRigid:
-    def __init__(self, name = '', bodyNumber = -1, referencePosition = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.referencePosition = referencePosition
@@ -1712,7 +1767,7 @@ class VMarkerObjectODE2Coordinates:
         yield 'show', self.show
 
 class MarkerObjectODE2Coordinates:
-    def __init__(self, name = '', objectNumber = -1, visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.objectNumber = objectNumber
         self.visualization = visualization
@@ -1731,7 +1786,7 @@ class VMarkerBodyCable2DShape:
         yield 'show', self.show
 
 class MarkerBodyCable2DShape:
-    def __init__(self, name = '', bodyNumber = -1, numberOfSegments = 3, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), numberOfSegments = 3, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.numberOfSegments = numberOfSegments
@@ -1752,7 +1807,7 @@ class VMarkerBodyCable2DCoordinates:
         yield 'show', self.show
 
 class MarkerBodyCable2DCoordinates:
-    def __init__(self, name = '', bodyNumber = -1, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.visualization = visualization
@@ -1773,7 +1828,7 @@ class VLoadForceVector:
         yield 'show', self.show
 
 class LoadForceVector:
-    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = loadVector
@@ -1802,7 +1857,7 @@ class VLoadTorqueVector:
         yield 'show', self.show
 
 class LoadTorqueVector:
-    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = loadVector
@@ -1831,7 +1886,7 @@ class VLoadMassProportional:
         yield 'show', self.show
 
 class LoadMassProportional:
-    def __init__(self, name = '', markerNumber = -1, loadVector = [0.,0.,0.], loadVectorUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.loadVector = loadVector
@@ -1858,7 +1913,7 @@ class VLoadCoordinate:
         yield 'show', self.show
 
 class LoadCoordinate:
-    def __init__(self, name = '', markerNumber = -1, load = 0., loadUserFunction = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction = 0, visualization = {'show': True}):
         self.name = name
         self.markerNumber = markerNumber
         self.load = load
@@ -1883,7 +1938,7 @@ class VSensorNode:
         yield 'show', self.show
 
 class SensorNode:
-    def __init__(self, name = '', nodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.writeToFile = writeToFile
@@ -1908,7 +1963,7 @@ class VSensorObject:
         yield 'show', self.show
 
 class SensorObject:
-    def __init__(self, name = '', objectNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.objectNumber = objectNumber
         self.writeToFile = writeToFile
@@ -1933,7 +1988,7 @@ class VSensorBody:
         yield 'show', self.show
 
 class SensorBody:
-    def __init__(self, name = '', bodyNumber = -1, localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.localPosition = localPosition
@@ -1960,7 +2015,7 @@ class VSensorSuperElement:
         yield 'show', self.show
 
 class SensorSuperElement:
-    def __init__(self, name = '', bodyNumber = -1, meshNodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
         self.meshNodeNumber = meshNodeNumber
@@ -1987,7 +2042,7 @@ class VSensorLoad:
         yield 'show', self.show
 
 class SensorLoad:
-    def __init__(self, name = '', loadNumber = -1, writeToFile = True, fileName = '', visualization = {'show': True}):
+    def __init__(self, name = '', loadNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', visualization = {'show': True}):
         self.name = name
         self.loadNumber = loadNumber
         self.writeToFile = writeToFile

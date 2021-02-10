@@ -533,6 +533,7 @@ nLast = mbs.systemData.NumberOfNodes()-1#just take last node-1 (last node is gro
 uy=mbs.GetNodeOutput(nLast-1,exu.OutputVariableType.Position)[1] #y-coordinate of last node
 exu.Print("uy=", uy)
 exudynTestGlobals.testError = uy - (0.44656762760262225) #2020-01-16: 0.44656762760262225
+exudynTestGlobals.testResult = uy
 
 
 

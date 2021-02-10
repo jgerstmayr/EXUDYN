@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2021-01-20  20:05:18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeGenericODE2
-* @brief        A node containing a number of ODE2 variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element.
+* @brief        A node containing a number of ODE2 variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element. Note that referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -136,8 +136,8 @@ public: // AUTO:
     {
         cNodeGenericODE2->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(d["referenceCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cNodeGenericODE2->GetParameters().numberOfODE2Coordinates = py::cast<Index>(d["numberOfODE2Coordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "initialCoordinates_t")) { GetParameters().initialCoordinates_t = py::cast<std::vector<Real>>(d["initialCoordinates_t"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        GetParameters().initialCoordinates_t = py::cast<std::vector<Real>>(d["initialCoordinates_t"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeGenericODE2->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }

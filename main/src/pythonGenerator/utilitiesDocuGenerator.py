@@ -14,7 +14,10 @@ filesParsed=[
              'basicUtilities.py',
              'FEM.py',
              'graphicsDataUtilities.py',
+             'GUI.py', 
+             'interactive.py',
              'lieGroupBasics.py', #Stefan Holzinger
+             'physics.py',
              'plot.py',
              'processing.py',
              'rigidBodyUtilities.py',

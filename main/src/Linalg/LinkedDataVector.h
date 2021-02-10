@@ -68,9 +68,12 @@ public:
 		CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index), startPosition < 0");
 		CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index, Index), size mismatch");
 
-		const T* ptr = &vector[startPosition];
-		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
-		this->numberOfItems = numberOfItemsLinked;
+		if (numberOfItemsLinked) //otherwise, data and numberOfItems are initialized as 0 / nullptr
+		{
+			const T* ptr = &vector[startPosition];
+			this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
+			this->numberOfItems = numberOfItemsLinked; //0 is also possible (appears, if e.g. no ODE2, AE or ODE1 coordinates)
+		}
 	}
 
 	//! links data to SlimVector<dataSize>; data given by vector at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items);
@@ -95,19 +98,32 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // MEMBER FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	virtual VectorType GetType() const { return VectorType::LinkedDataVector; }
 
-    //! set vector to values given by initializer list; used to modify data which the LinkedDataVectorBase is linked to
-    void SetVector(std::initializer_list<T> listOfReals)
-    {
-        CHECKandTHROW(this->numberOfItems == listOfReals.size(), "ERROR: LinkedDataVectorBase::SetVector(...), initializer_list must have same size as LinkedDataVectorBase");
+	//! set vector to values given by initializer list; used to modify data which the LinkedDataVectorBase is linked to
+	void SetVector(std::initializer_list<T> listOfReals)
+	{
+		CHECKandTHROW(this->numberOfItems == listOfReals.size(), "ERROR: LinkedDataVectorBase::SetVector(...), initializer_list must have same size as LinkedDataVectorBase");
 
-        Index cnt = 0;
-        for (auto value : listOfReals) {
+		Index cnt = 0;
+		for (auto value : listOfReals) {
 			this->data[cnt++] = value;
-        }
-    }
+		}
+	}
 
-    //! link data to VectorBase<T> (also resizable VectorBase<T>); no copying!
+	//! set vector to values given by initializer list; used to modify data which the LinkedDataVectorBase is linked to
+	template<Index dataSize>
+	void SetVector(const SlimVectorBase<T, dataSize>& vector)
+	{
+		CHECKandTHROW(this->numberOfItems == dataSize, "ERROR: LinkedDataVectorBase::SetVector(SlimVectorBase<>...), SlimVectorBase must have same size as LinkedDataVectorBase");
+
+		Index cnt = 0;
+		for (auto value : vector) {
+			this->data[cnt++] = value;
+		}
+	}
+
+	//! link data to VectorBase<T> (also resizable VectorBase<T>); no copying!
     void LinkDataTo(const VectorBase<T>& vector)
     {
 		this->data = vector.GetDataPointer();

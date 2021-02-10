@@ -742,7 +742,7 @@ public:
 			for (Index j = 0; j < sm.numberOfColumns; j++)
 			{
 				data[(LTGrows[i] + row)*numberOfColumns + column + LTGcolumns[j]] += factor * sm(i, j);
-				//jacobian(nODE2 + ltgAE[ii], ltgODE2[jj]) += factorAE_ODE2 * temp.localJacobianAE(ii, jj); //depends, if velocity or position level is used //factorVelocityLevel
+				//jacobian(nODE2 + ltgAE[ii], ltgODE2[jj]) += factorAE_ODE2 * temp.localJacobianAE_ODE2(ii, jj); //depends, if velocity or position level is used //factorVelocityLevel
 			}
 		}
 	}
@@ -756,7 +756,7 @@ public:
 			for (Index i = 0; i < sm.numberOfColumns; i++)
 			{
 				data[(LTGrows[i] + row)*numberOfColumns + column + LTGcolumns[j]] += factor * sm(j, i);
-				//jacobian(nODE2 + ltgAE[ii], ltgODE2[jj]) += factorAE_ODE2 * temp.localJacobianAE(ii, jj); //depends, if velocity or position level is used //factorVelocityLevel
+				//jacobian(nODE2 + ltgAE[ii], ltgODE2[jj]) += factorAE_ODE2 * temp.localJacobianAE_ODE2(ii, jj); //depends, if velocity or position level is used //factorVelocityLevel
 			}
 		}
 	}

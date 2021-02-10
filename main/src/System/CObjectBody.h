@@ -117,7 +117,10 @@ public:
 	// Computation FUNCTIONS
 
 	//! compute object massmatrix to massMatrix ==> only possible for bodies!!!
-	virtual void ComputeMassMatrix(Matrix& massMatrix) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeMassMatrix"); }
+	virtual void ComputeMassMatrix(Matrix& massMatrix) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
+
+	//! return true if object has time and coordinate independent (=constant) mass matrix; used by solver
+	virtual bool HasConstantMassMatrix() const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::HasConstantMassMatrix"); return false; }
 
 }; //CObjectBody
 

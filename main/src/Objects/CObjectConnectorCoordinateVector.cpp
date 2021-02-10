@@ -122,22 +122,22 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 
 }
 
-void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	Index nAE = GetAlgebraicEquationsSize();
 	if (parameters.activeConnector)
 	{
 		ResizableMatrix* usedJac;
-		if (parameters.velocityLevel) //in this case, always the jacobian_t must be used
+		if (parameters.velocityLevel) //in this case, always the jacobian_ODE2_t must be used
 		{
-			usedJac = &jacobian_t;
-			jacobian.SetNumberOfRowsAndColumns(0, 0); 
+			usedJac = &jacobian_ODE2_t;
+			jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); 
 		}
 		else
 		{
-			usedJac = &jacobian;
-			jacobian_t.SetNumberOfRowsAndColumns(0, 0); 
+			usedJac = &jacobian_ODE2;
+			jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
 		}
 
 		usedJac->SetNumberOfRowsAndColumns(nAE, markerData.GetMarkerData(0).jacobian.NumberOfColumns()
@@ -159,8 +159,8 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 	else
 	{
 		jacobian_AE.SetScalarMatrix(nAE, 1.); //represents derivative of algebraic equation 'lambda = 0'
-		//jacobian_t.SetNumberOfRowsAndColumns(0, 0); //not necessary, because of CObjectConnectorCoordinateVector::GetAvailableJacobians()
-		//jacobian.SetNumberOfRowsAndColumns(0, 0);	  ////not necessary, because of CObjectConnectorCoordinateVector::GetAvailableJacobians()
+		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //not necessary, because of CObjectConnectorCoordinateVector::GetAvailableJacobians()
+		//jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0);	  ////not necessary, because of CObjectConnectorCoordinateVector::GetAvailableJacobians()
 	}
 
 }

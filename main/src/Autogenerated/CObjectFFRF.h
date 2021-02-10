@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  12:22:55 (last modfied)
+* @date         2021-02-02  13:19:15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -232,8 +232,8 @@ public: // AUTO:
     //! AUTO:  Compute algebraic equations part of rigid body
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
 
-    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
-    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const override;
+    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2, ODE2_t, ODE1, AE
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
@@ -296,6 +296,12 @@ public: // AUTO:
     virtual CObjectType GetType() const override
     {
         return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);
+    }
+
+    //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
+    virtual bool HasConstantMassMatrix() const override
+    {
+        return false;
     }
 
     //! AUTO:  This flag is reset upon change of parameters; says that the vector of coordinate indices has changed

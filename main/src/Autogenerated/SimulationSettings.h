@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -26,19 +26,20 @@
 class SolutionSettings // AUTO: 
 {
 public: // AUTO: 
-  bool writeSolutionToFile;                       //!< AUTO: flag (true/false), which determines if (global) solution vector is written to file
+  bool writeSolutionToFile;                       //!< AUTO: flag (true/false), which determines if (global) solution vector is written to file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below
   bool appendToFile;                              //!< AUTO: flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created)
   bool writeFileHeader;                           //!< AUTO: flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)
   bool writeFileFooter;                           //!< AUTO: flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics
   Real solutionWritePeriod;                       //!< AUTO: time span (period), determines how often the solution is written during a simulation
+  bool exportVelocities;                          //!< AUTO: add ODE2 velocities to solution file
+  bool exportAccelerations;                       //!< AUTO: add ODE2 accelerations to solution file
+  bool exportODE1Velocities;                      //!< AUTO: add coordinatesODE1\_t to solution file
+  bool exportAlgebraicCoordinates;                //!< AUTO: add algebraicCoordinates (=Lagrange multipliers) to solution file
+  bool exportDataCoordinates;                     //!< AUTO: add DataCoordinates to solution file
+  std::string coordinatesSolutionFileName;        //!< AUTO: filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only
   bool sensorsAppendToFile;                       //!< AUTO: flag (true/false); if true, sensor output is appended to existing file (otherwise created)
   bool sensorsWriteFileHeader;                    //!< AUTO: flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)
   Real sensorsWritePeriod;                        //!< AUTO: time span (period), determines how often the sensor output is written during a simulation
-  bool exportVelocities;                          //!< AUTO: solution is written as displacements, velocities[, accelerations] [,algebraicCoordinates] [,DataCoordinates]
-  bool exportAccelerations;                       //!< AUTO: solution is written as displacements, [velocities,] accelerations [,algebraicCoordinates] [,DataCoordinates]
-  bool exportAlgebraicCoordinates;                //!< AUTO: solution is written as displacements, [velocities,] [accelerations,], algebraicCoordinates (=Lagrange multipliers) [,DataCoordinates]
-  bool exportDataCoordinates;                     //!< AUTO: solution is written as displacements, [velocities,] [accelerations,] [,algebraicCoordinates (=Lagrange multipliers)] ,DataCoordinates
-  std::string coordinatesSolutionFileName;        //!< AUTO: filename and (relative) path of solution file containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only
   std::string solverInformationFileName;          //!< AUTO: filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only
   std::string solutionInformation;                //!< AUTO: special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)
   Index outputPrecision;                          //!< AUTO: precision for floating point numbers written to solution and sensor files
@@ -54,14 +55,15 @@ public: // AUTO:
     writeFileHeader = true;
     writeFileFooter = true;
     solutionWritePeriod = 0.01;
-    sensorsAppendToFile = false;
-    sensorsWriteFileHeader = true;
-    sensorsWritePeriod = 0.01;
     exportVelocities = true;
     exportAccelerations = true;
+    exportODE1Velocities = true;
     exportAlgebraicCoordinates = true;
     exportDataCoordinates = true;
     coordinatesSolutionFileName = "coordinatesSolution.txt";
+    sensorsAppendToFile = false;
+    sensorsWriteFileHeader = true;
+    sensorsWritePeriod = 0.01;
     solverInformationFileName = "solverInformation.txt";
     outputPrecision = 10;
     recordImagesInterval = -1.;
@@ -77,14 +79,15 @@ public: // AUTO:
     os << "  writeFileHeader = " << writeFileHeader << "\n";
     os << "  writeFileFooter = " << writeFileFooter << "\n";
     os << "  solutionWritePeriod = " << solutionWritePeriod << "\n";
-    os << "  sensorsAppendToFile = " << sensorsAppendToFile << "\n";
-    os << "  sensorsWriteFileHeader = " << sensorsWriteFileHeader << "\n";
-    os << "  sensorsWritePeriod = " << sensorsWritePeriod << "\n";
     os << "  exportVelocities = " << exportVelocities << "\n";
     os << "  exportAccelerations = " << exportAccelerations << "\n";
+    os << "  exportODE1Velocities = " << exportODE1Velocities << "\n";
     os << "  exportAlgebraicCoordinates = " << exportAlgebraicCoordinates << "\n";
     os << "  exportDataCoordinates = " << exportDataCoordinates << "\n";
     os << "  coordinatesSolutionFileName = " << coordinatesSolutionFileName << "\n";
+    os << "  sensorsAppendToFile = " << sensorsAppendToFile << "\n";
+    os << "  sensorsWriteFileHeader = " << sensorsWriteFileHeader << "\n";
+    os << "  sensorsWritePeriod = " << sensorsWritePeriod << "\n";
     os << "  solverInformationFileName = " << solverInformationFileName << "\n";
     os << "  solutionInformation = " << solutionInformation << "\n";
     os << "  outputPrecision = " << outputPrecision << "\n";
@@ -107,7 +110,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -163,12 +166,70 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        DiscontinuousSettings
+* @brief        Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class DiscontinuousSettings // AUTO: 
+{
+public: // AUTO: 
+  Index maxIterations;                            //!< AUTO: maximum number of discontinuous (post Newton) iterations
+  bool ignoreMaxIterations;                       //!< AUTO: continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)
+  Real iterationTolerance;                        //!< AUTO: absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  DiscontinuousSettings()
+  {
+    maxIterations = 5;
+    ignoreMaxIterations = true;
+    iterationTolerance = 1;
+  };
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "DiscontinuousSettings" << ":\n";
+    os << "  maxIterations = " << maxIterations << "\n";
+    os << "  ignoreMaxIterations = " << ignoreMaxIterations << "\n";
+    os << "  iterationTolerance = " << iterationTolerance << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const DiscontinuousSettings& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        NewtonSettings
 * @brief        Settings for Newton method used in static or dynamic simulation.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -192,7 +253,7 @@ public: // AUTO:
   Real relativeTolerance;                         //!< AUTO: relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
   Real absoluteTolerance;                         //!< AUTO: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
   bool weightTolerancePerCoordinate;              //!< AUTO: flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size
-  Index newtonResidualMode;                       //!< AUTO: 0 ... use residual for computation of error (standard); 1 ... use change of solution increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
+  Index newtonResidualMode;                       //!< AUTO: 0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   bool adaptInitialResidual;                      //!< AUTO: flag (true/false); false = standard; true: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration
   Real modifiedNewtonContractivity;               //!< AUTO: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
   bool useModifiedNewton;                         //!< AUTO: true: compute Jacobian only at first step; no Jacobian updates per step; false: Jacobian computed in every step
@@ -201,10 +262,6 @@ public: // AUTO:
   Index maxModifiedNewtonIterations;              //!< AUTO: maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
   Index maxModifiedNewtonRestartIterations;       //!< AUTO: maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
   Real maximumSolutionNorm;                       //!< AUTO: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
-  Index maxDiscontinuousIterations;               //!< AUTO: maximum number of discontinuous (post Newton) iterations
-  bool ignoreMaxDiscontinuousIterations;          //!< AUTO: continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)
-  Real discontinuousIterationTolerance;           //!< AUTO: absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high
-  Index stepInformation;                          //!< AUTO: 0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step
 
 
 public: // AUTO: 
@@ -225,10 +282,6 @@ public: // AUTO:
     maxModifiedNewtonIterations = 8;
     maxModifiedNewtonRestartIterations = 7;
     maximumSolutionNorm = 1e38;
-    maxDiscontinuousIterations = 5;
-    ignoreMaxDiscontinuousIterations = true;
-    discontinuousIterationTolerance = 1;
-    stepInformation = 2;
   };
 
   // AUTO: access functions
@@ -251,10 +304,6 @@ public: // AUTO:
     os << "  maxModifiedNewtonIterations = " << maxModifiedNewtonIterations << "\n";
     os << "  maxModifiedNewtonRestartIterations = " << maxModifiedNewtonRestartIterations << "\n";
     os << "  maximumSolutionNorm = " << maximumSolutionNorm << "\n";
-    os << "  maxDiscontinuousIterations = " << maxDiscontinuousIterations << "\n";
-    os << "  ignoreMaxDiscontinuousIterations = " << ignoreMaxDiscontinuousIterations << "\n";
-    os << "  discontinuousIterationTolerance = " << discontinuousIterationTolerance << "\n";
-    os << "  stepInformation = " << stepInformation << "\n";
     os << "\n";
   }
 
@@ -273,7 +322,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -335,12 +384,70 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        ExplicitIntegrationSettings
+* @brief        Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-02-08 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class ExplicitIntegrationSettings // AUTO: 
+{
+public: // AUTO: 
+  bool eliminateConstraints;                      //!< AUTO: True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!
+  bool useLieGroupIntegration;                    //!< AUTO: True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes, but also improves integration of other rigid body nodes. Only available for RK44 integrator.
+  DynamicSolverType dynamicSolverType;            //!< AUTO: selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  ExplicitIntegrationSettings()
+  {
+    eliminateConstraints = true;
+    useLieGroupIntegration = true;
+    dynamicSolverType = DynamicSolverType::DOPRI5;
+  };
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "ExplicitIntegrationSettings" << ":\n";
+    os << "  eliminateConstraints = " << eliminateConstraints << "\n";
+    os << "  useLieGroupIntegration = " << useLieGroupIntegration << "\n";
+    os << "  dynamicSolverType = " << dynamicSolverType << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const ExplicitIntegrationSettings& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        TimeIntegrationSettings
 * @brief        General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -359,16 +466,26 @@ class TimeIntegrationSettings // AUTO:
 {
 public: // AUTO: 
   NewtonSettings newton;                          //!< AUTO: parameters for Newton method; used for implicit time integration methods only
-  Real startTime;                                 //!< AUTO: start time of time integration (usually set to zero)
-  Real endTime;                                   //!< AUTO: end time of time integration
-  Index numberOfSteps;                            //!< AUTO: number of steps in time integration; stepsize is computed from (endTime-startTime)/numberOfSteps
-  bool adaptiveStep;                              //!< AUTO: true: use step reduction if step fails; false: constant step size
-  Real minimumStepSize;                           //!< AUTO: lower limit of time step size, before integrator stops
+  DiscontinuousSettings discontinuous;            //!< AUTO: parameters for treatment of discontinuities
+  Real startTime;                                 //!< AUTO: \f$t_{start}\f$: start time of time integration (usually set to zero)
+  Real endTime;                                   //!< AUTO: \f$t_{end}\f$: end time of time integration
+  Index numberOfSteps;                            //!< AUTO: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$
+  bool adaptiveStep;                              //!< AUTO: True: the step size may be reduced if step fails; no automatic stepsize control
+  bool automaticStepSize;                         //!< AUTO: True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; false: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads \f$h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}\f$
+  Real minimumStepSize;                           //!< AUTO: \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
+  Real initialStepSize;                           //!< AUTO: \f$h_{init}\f$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
+  Real absoluteTolerance;                         //!< AUTO: \f$a_{tol}\f$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill \f$a_{tol} > 0\f$; see \refSection{sec:ExplicitSolver}
+  Real relativeTolerance;                         //!< AUTO: \f$r_{tol}\f$: if automaticStepSize=True, relative tolerance for the error control; must fulfill \f$r_{tol} \ge 0\f$; see \refSection{sec:ExplicitSolver}
+  Real stepSizeSafety;                            //!< AUTO: \f$r_{sfty}\f$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.
+  Real stepSizeMaxIncrease;                       //!< AUTO: \f$f_{maxInc}\f$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but \f$> 1\f$) if too many rejected steps
+  std::string preStepPyExecute;                   //!< AUTO: DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing
+  bool simulateInRealtime;                        //!< AUTO: True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues
+  Real realtimeFactor;                            //!< AUTO: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
   Index verboseMode;                              //!< AUTO: 0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   Index verboseModeFile;                          //!< AUTO: same behaviour as verboseMode, but outputs all solver information to file
+  Index stepInformation;                          //!< AUTO: 0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step
   GeneralizedAlphaSettings generalizedAlpha;      //!< AUTO: parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)
-  std::string preStepPyExecute;                   //!< AUTO: DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing
-  bool simulateInRealtime;                        //!< AUTO: true: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues
+  ExplicitIntegrationSettings explicitIntegration;//!< AUTO: special parameters for explicit time integration
 
 
 public: // AUTO: 
@@ -379,10 +496,18 @@ public: // AUTO:
     endTime = 1;
     numberOfSteps = 100;
     adaptiveStep = true;
+    automaticStepSize = true;
     minimumStepSize = 1e-8;
+    initialStepSize = 0;
+    absoluteTolerance = 1e-8;
+    relativeTolerance = 1e-8;
+    stepSizeSafety = 0.90;
+    stepSizeMaxIncrease = 2;
+    simulateInRealtime = false;
+    realtimeFactor = 1;
     verboseMode = 0;
     verboseModeFile = 0;
-    simulateInRealtime = false;
+    stepInformation = 2;
   };
 
   // AUTO: access functions
@@ -391,16 +516,26 @@ public: // AUTO:
   {
     os << "TimeIntegrationSettings" << ":\n";
     os << "  newton = " << newton << "\n";
+    os << "  discontinuous = " << discontinuous << "\n";
     os << "  startTime = " << startTime << "\n";
     os << "  endTime = " << endTime << "\n";
     os << "  numberOfSteps = " << numberOfSteps << "\n";
     os << "  adaptiveStep = " << adaptiveStep << "\n";
+    os << "  automaticStepSize = " << automaticStepSize << "\n";
     os << "  minimumStepSize = " << minimumStepSize << "\n";
-    os << "  verboseMode = " << verboseMode << "\n";
-    os << "  verboseModeFile = " << verboseModeFile << "\n";
-    os << "  generalizedAlpha = " << generalizedAlpha << "\n";
+    os << "  initialStepSize = " << initialStepSize << "\n";
+    os << "  absoluteTolerance = " << absoluteTolerance << "\n";
+    os << "  relativeTolerance = " << relativeTolerance << "\n";
+    os << "  stepSizeSafety = " << stepSizeSafety << "\n";
+    os << "  stepSizeMaxIncrease = " << stepSizeMaxIncrease << "\n";
     os << "  preStepPyExecute = " << preStepPyExecute << "\n";
     os << "  simulateInRealtime = " << simulateInRealtime << "\n";
+    os << "  realtimeFactor = " << realtimeFactor << "\n";
+    os << "  verboseMode = " << verboseMode << "\n";
+    os << "  verboseModeFile = " << verboseModeFile << "\n";
+    os << "  stepInformation = " << stepInformation << "\n";
+    os << "  generalizedAlpha = " << generalizedAlpha << "\n";
+    os << "  explicitIntegration = " << explicitIntegration << "\n";
     os << "\n";
   }
 
@@ -419,7 +554,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -438,6 +573,7 @@ class StaticSolverSettings // AUTO:
 {
 public: // AUTO: 
   NewtonSettings newton;                          //!< AUTO: parameters for Newton method (e.g. in static solver or time integration)
+  DiscontinuousSettings discontinuous;            //!< AUTO: parameters for treatment of discontinuities
   Index numberOfLoadSteps;                        //!< AUTO: number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once
   Real loadStepDuration;                          //!< AUTO: quasi-time for all load steps (added to current time in load steps)
   Real loadStepStart;                             //!< AUTO: a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user
@@ -449,6 +585,7 @@ public: // AUTO:
   Real minimumStepSize;                           //!< AUTO: lower limit of step size, before nonlinear solver stops
   Index verboseMode;                              //!< AUTO: 0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse
   Index verboseModeFile;                          //!< AUTO: same behaviour as verboseMode, but outputs all solver information to file
+  Index stepInformation;                          //!< AUTO: 0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step
   std::string preStepPyExecute;                   //!< AUTO: DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every load step and after last step, e.g. for postprocessing
 
 
@@ -467,6 +604,7 @@ public: // AUTO:
     minimumStepSize = 1e-8;
     verboseMode = 1;
     verboseModeFile = 0;
+    stepInformation = 2;
   };
 
   // AUTO: access functions
@@ -475,6 +613,7 @@ public: // AUTO:
   {
     os << "StaticSolverSettings" << ":\n";
     os << "  newton = " << newton << "\n";
+    os << "  discontinuous = " << discontinuous << "\n";
     os << "  numberOfLoadSteps = " << numberOfLoadSteps << "\n";
     os << "  loadStepDuration = " << loadStepDuration << "\n";
     os << "  loadStepStart = " << loadStepStart << "\n";
@@ -486,6 +625,7 @@ public: // AUTO:
     os << "  minimumStepSize = " << minimumStepSize << "\n";
     os << "  verboseMode = " << verboseMode << "\n";
     os << "  verboseModeFile = " << verboseModeFile << "\n";
+    os << "  stepInformation = " << stepInformation << "\n";
     os << "  preStepPyExecute = " << preStepPyExecute << "\n";
     os << "\n";
   }
@@ -505,7 +645,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-01-05 (last modfied)
+* @date         AUTO: 2021-02-08 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

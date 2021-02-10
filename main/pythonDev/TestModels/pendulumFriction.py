@@ -117,6 +117,7 @@ u=NormL2(p0)
 exu.Print('solution of pendulumFriction=',u)
 
 exudynTestGlobals.testError = u - (0.3999999877698205) #2020-04-22: 0.3999999877698205
+exudynTestGlobals.testResult = u
 
 
 if exudynTestGlobals.useGraphics:

@@ -51,7 +51,7 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 	{
 
 		algebraicEquations.SetNumberOfItems(nConstraints);
-		LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
+		const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 		const Matrix3D& A0off = parameters.rotationMarker0;
@@ -162,7 +162,7 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 			}
 
 		}
-		else
+		else //index2
 		{
 			//CHECKandTHROWstring("CObjectJointGeneric: velocity level not implemented");
 			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointGeneric::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
@@ -296,8 +296,8 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 }
 
 
-void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
@@ -311,7 +311,7 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index nColumnsJac0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
 		Index nColumnsJac1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns();
-		jacobian.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+		jacobian_ODE2.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 
 		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 		const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
@@ -338,19 +338,33 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 		if (parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1)
 		{
 			//global equations
+			const ResizableMatrix& posJac0 = markerData.GetMarkerData(0).positionJacobian;
 			//vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); //local equations (marker0-fixed)
 			for (Index i = 0; i < nColumnsJac0; i++)
 			{
-				jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i); //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
-				jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
-				jacobian(2, i) = -markerData.GetMarkerData(0).positionJacobian(2, i);
+				jacobian_ODE2(0, i) = -posJac0(0, i); //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
+				jacobian_ODE2(1, i) = -posJac0(1, i);
+				jacobian_ODE2(2, i) = -posJac0(2, i);
 			}
+			const ResizableMatrix& posJac1 = markerData.GetMarkerData(1).positionJacobian;
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
-				jacobian(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i);
-				jacobian(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i);
-				jacobian(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i);
+				jacobian_ODE2(0, i + nColumnsJac0) = posJac1(0, i);
+				jacobian_ODE2(1, i + nColumnsJac0) = posJac1(1, i);
+				jacobian_ODE2(2, i + nColumnsJac0) = posJac1(2, i);
 			}
+			//for (Index i = 0; i < nColumnsJac0; i++)
+			//{
+			//	jacobian_ODE2(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i); //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
+			//	jacobian_ODE2(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
+			//	jacobian_ODE2(2, i) = -markerData.GetMarkerData(0).positionJacobian(2, i);
+			//}
+			//for (Index i = 0; i < nColumnsJac1; i++)
+			//{
+			//	jacobian_ODE2(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i);
+			//	jacobian_ODE2(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i);
+			//	jacobian_ODE2(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i);
+			//}
 		}
 		else
 		{
@@ -371,23 +385,23 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 				Vector3D Gvec0 = markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
 				Vector3D jacPos0 = markerData.GetMarkerData(0).positionJacobian.GetColumnVector<3>(i);
 				Vector3D v = A0allT * (vPosTilde*Gvec0 - jacPos0);  //A0allT*vPosTilde*Gvec0  - A0allT * jacPos0;
-				if (parameters.constrainedAxes[0]) { jacobian(0, i) = v[0]; }
-				else { jacobian(0, i) = 0; }
-				if (parameters.constrainedAxes[1]) { jacobian(1, i) = v[1]; }
-				else { jacobian(1, i) = 0; }
-				if (parameters.constrainedAxes[2]) { jacobian(2, i) = v[2]; }
-				else { jacobian(2, i) = 0; }
+				if (parameters.constrainedAxes[0]) { jacobian_ODE2(0, i) = v[0]; }
+				else { jacobian_ODE2(0, i) = 0; }
+				if (parameters.constrainedAxes[1]) { jacobian_ODE2(1, i) = v[1]; }
+				else { jacobian_ODE2(1, i) = 0; }
+				if (parameters.constrainedAxes[2]) { jacobian_ODE2(2, i) = v[2]; }
+				else { jacobian_ODE2(2, i) = 0; }
 			}
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
 				Vector3D jacPos1 = markerData.GetMarkerData(1).positionJacobian.GetColumnVector<3>(i);
 				Vector3D v = A0allT * jacPos1;
-				if (parameters.constrainedAxes[0]) { jacobian(0, i + nColumnsJac0) = v[0]; }
-				else { jacobian(0, i + nColumnsJac0) = 0; }
-				if (parameters.constrainedAxes[1]) { jacobian(1, i + nColumnsJac0) = v[1]; }
-				else { jacobian(1, i + nColumnsJac0) = 0; }
-				if (parameters.constrainedAxes[2]) { jacobian(2, i + nColumnsJac0) = v[2]; }
-				else { jacobian(2, i + nColumnsJac0) = 0; }
+				if (parameters.constrainedAxes[0]) { jacobian_ODE2(0, i + nColumnsJac0) = v[0]; }
+				else { jacobian_ODE2(0, i + nColumnsJac0) = 0; }
+				if (parameters.constrainedAxes[1]) { jacobian_ODE2(1, i + nColumnsJac0) = v[1]; }
+				else { jacobian_ODE2(1, i + nColumnsJac0) = 0; }
+				if (parameters.constrainedAxes[2]) { jacobian_ODE2(2, i + nColumnsJac0) = v[2]; }
+				else { jacobian_ODE2(2, i + nColumnsJac0) = 0; }
 			}
 		}
 
@@ -411,16 +425,16 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 			for (Index i = 0; i < nColumnsJac0; i++)
 			{
 				Vector3D Gvec0 = -1.*markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
-				jacobian(3, i) = vy1 * (RigidBodyMath::Vector2SkewMatrix(vz0) * Gvec0);
-				jacobian(4, i) = vx1 * (RigidBodyMath::Vector2SkewMatrix(vz0) * Gvec0);
-				jacobian(5, i) = vy1 * (RigidBodyMath::Vector2SkewMatrix(vx0) * Gvec0);
+				jacobian_ODE2(3, i) = vy1 * (RigidBodyMath::Vector2SkewMatrix(vz0) * Gvec0);
+				jacobian_ODE2(4, i) = vx1 * (RigidBodyMath::Vector2SkewMatrix(vz0) * Gvec0);
+				jacobian_ODE2(5, i) = vy1 * (RigidBodyMath::Vector2SkewMatrix(vx0) * Gvec0);
 			}
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
 				Vector3D Gvec1 = -1.*markerData.GetMarkerData(1).rotationJacobian.GetColumnVector<3>(i);
-				jacobian(3, i + nColumnsJac0) = vz0 * (RigidBodyMath::Vector2SkewMatrix(vy1) * Gvec1);
-				jacobian(4, i + nColumnsJac0) = vz0 * (RigidBodyMath::Vector2SkewMatrix(vx1) * Gvec1);
-				jacobian(5, i + nColumnsJac0) = vx0 * (RigidBodyMath::Vector2SkewMatrix(vy1) * Gvec1);
+				jacobian_ODE2(3, i + nColumnsJac0) = vz0 * (RigidBodyMath::Vector2SkewMatrix(vy1) * Gvec1);
+				jacobian_ODE2(4, i + nColumnsJac0) = vz0 * (RigidBodyMath::Vector2SkewMatrix(vx1) * Gvec1);
+				jacobian_ODE2(5, i + nColumnsJac0) = vx0 * (RigidBodyMath::Vector2SkewMatrix(vy1) * Gvec1);
 			}
 		}
 		else if (constraintRotations == 2) //Revolute joint
@@ -437,20 +451,36 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 			//algebraicEquations[lockedAxis1 + 3] = vRot0 * vLocked1;
 			//algebraicEquations[lockedAxis2 + 3] = vRot0 * vLocked2;
 
+			//vRot0_t = omegaTilde * vRot0 = -vRot0tilde * omega ==> vRot0/dTheta = -vRot0tilde * G
 			for (Index i = 0; i < nColumnsJac0; i++)
 			{
 				Vector3D Gvec0 = -1.*markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
-				jacobian(3 + lockedAxis1, i) = vLocked1 * (RigidBodyMath::Vector2SkewMatrix(vRot0) * Gvec0);
-				jacobian(3 + lockedAxis2, i) = vLocked2 * (RigidBodyMath::Vector2SkewMatrix(vRot0) * Gvec0);
-				jacobian(3 + freeAxis, i) = 0;
+				jacobian_ODE2(3 + lockedAxis1, i) = vLocked1 * (RigidBodyMath::Vector2SkewMatrix(vRot0) * Gvec0);
+				jacobian_ODE2(3 + lockedAxis2, i) = vLocked2 * (RigidBodyMath::Vector2SkewMatrix(vRot0) * Gvec0);
+				jacobian_ODE2(3 + freeAxis, i) = 0;
 			}
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
 				Vector3D Gvec1 = -1.*markerData.GetMarkerData(1).rotationJacobian.GetColumnVector<3>(i);
-				jacobian(3 + lockedAxis1, i + nColumnsJac0) = vRot0 * (RigidBodyMath::Vector2SkewMatrix(vLocked1) * Gvec1);
-				jacobian(3 + lockedAxis2, i + nColumnsJac0) = vRot0 * (RigidBodyMath::Vector2SkewMatrix(vLocked2) * Gvec1);
-				jacobian(3 + freeAxis, i + nColumnsJac0) = 0;
+				jacobian_ODE2(3 + lockedAxis1, i + nColumnsJac0) = vRot0 * (RigidBodyMath::Vector2SkewMatrix(vLocked1) * Gvec1);
+				jacobian_ODE2(3 + lockedAxis2, i + nColumnsJac0) = vRot0 * (RigidBodyMath::Vector2SkewMatrix(vLocked2) * Gvec1);
+				jacobian_ODE2(3 + freeAxis, i + nColumnsJac0) = 0;
 			}
+			//Matrix3D A0_t = markerData.GetMarkerData(0).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(0).angularVelocityLocal);
+			//Matrix3D A1_t = markerData.GetMarkerData(1).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(1).angularVelocityLocal);
+			//Vector3D vRot0 = A0all.GetColumnVector<3>(freeAxis);
+			//Vector3D vLocked1 = A1all.GetColumnVector<3>(lockedAxis1);
+			//Vector3D vLocked2 = A1all.GetColumnVector<3>(lockedAxis2);
+
+			//Vector3D vRot0_t = A0all_t.GetColumnVector<3>(freeAxis);
+			//Vector3D vLocked1_t = A1all_t.GetColumnVector<3>(lockedAxis1);
+			//Vector3D vLocked2_t = A1all_t.GetColumnVector<3>(lockedAxis2);
+
+			////free axis leads to Lagrange multiplier; locked axes must be perpendicular to rotation axis of marker0 (vRot0)
+			//algebraicEquations[freeAxis + 3] = lambda[freeAxis + 3];
+			//algebraicEquations[lockedAxis1 + 3] = vRot0_t * vLocked1 + vRot0 * vLocked1_t;
+			//algebraicEquations[lockedAxis2 + 3] = vRot0_t * vLocked2 + vRot0 * vLocked2_t;
+
 		}
 		else if (constraintRotations == 1) //Universal joint
 		{
@@ -464,35 +494,35 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian, Resizable
 			for (Index i = 0; i < nColumnsJac0; i++)
 			{
 				Vector3D Gvec0 = -1.*markerData.GetMarkerData(0).rotationJacobian.GetColumnVector<3>(i);
-				jacobian(3 + lockedAxis, i) = vFree2 * (RigidBodyMath::Vector2SkewMatrix(vFree1) * Gvec0);
-				jacobian(3 + freeAxis1, i) = 0;
-				jacobian(3 + freeAxis2, i) = 0;
+				jacobian_ODE2(3 + lockedAxis, i) = vFree2 * (RigidBodyMath::Vector2SkewMatrix(vFree1) * Gvec0);
+				jacobian_ODE2(3 + freeAxis1, i) = 0;
+				jacobian_ODE2(3 + freeAxis2, i) = 0;
 			}
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
 				Vector3D Gvec1 = -1.*markerData.GetMarkerData(1).rotationJacobian.GetColumnVector<3>(i);
-				jacobian(3 + lockedAxis, i + nColumnsJac0) = vFree1 * (RigidBodyMath::Vector2SkewMatrix(vFree2) * Gvec1);
-				jacobian(3 + freeAxis1, i + nColumnsJac0) = 0;
-				jacobian(3 + freeAxis2, i + nColumnsJac0) = 0;
+				jacobian_ODE2(3 + lockedAxis, i + nColumnsJac0) = vFree1 * (RigidBodyMath::Vector2SkewMatrix(vFree2) * Gvec1);
+				jacobian_ODE2(3 + freeAxis1, i + nColumnsJac0) = 0;
+				jacobian_ODE2(3 + freeAxis2, i + nColumnsJac0) = 0;
 			}
 		}
 		else //no rotations constrained
 		{
 			for (Index i = 0; i < nColumnsJac0; i++)
 			{
-				jacobian(3, i) = 0;
-				jacobian(4, i) = 0;
-				jacobian(5, i) = 0;
+				jacobian_ODE2(3, i) = 0;
+				jacobian_ODE2(4, i) = 0;
+				jacobian_ODE2(5, i) = 0;
 			}
 			for (Index i = 0; i < nColumnsJac1; i++)
 			{
-				jacobian(3, i + nColumnsJac0) = 0;
-				jacobian(4, i + nColumnsJac0) = 0;
-				jacobian(5, i + nColumnsJac0) = 0;
+				jacobian_ODE2(3, i + nColumnsJac0) = 0;
+				jacobian_ODE2(4, i + nColumnsJac0) = 0;
+				jacobian_ODE2(5, i + nColumnsJac0) = 0;
 			}
 		}
 
-		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
 		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
 	}
 	else
@@ -516,7 +546,7 @@ JacobianType::Type CObjectJointGeneric::GetAvailableJacobians() const
 //! provide according output variable in "value"
 void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
-	LinkedDataVector lambda = markerData.GetLagrangeMultipliers();
+	//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 
 	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 	const Matrix3D& A0off = parameters.rotationMarker0;

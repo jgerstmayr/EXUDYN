@@ -2,7 +2,6 @@
 # This is an EXUDYN example
 #
 # Details:  Test for GenericJoint with userFunction
-#           Ref.: https://www.iftomm-multibody.org/benchmark/problem/... spatial rigid slider-crank mechanism
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-04-22
@@ -118,7 +117,7 @@ if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)#, experimentalNewSolver=True)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++
@@ -132,6 +131,7 @@ for i in range(3): #take sum of all coordinates
 exu.Print('solution of GenericJointTest=',u)
 
 exudynTestGlobals.testError = u - (1.1878327690760586) #2020-04-22: 1.1878327690760586
+exudynTestGlobals.testResult = u
 
 
 if exudynTestGlobals.useGraphics:

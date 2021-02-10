@@ -263,6 +263,7 @@ accumulatedError += mbs.GetNodeOutput(nMid,exu.OutputVariableType.Position)[0] #
 exu.Print('solution of ObjectGenericODE2=',accumulatedError)
 
 exudynTestGlobals.testError = accumulatedError - (-2.2737401292182432e-05) #2020-05-18: -2.2737401292182432e-05 
+exudynTestGlobals.testResult = accumulatedError
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results

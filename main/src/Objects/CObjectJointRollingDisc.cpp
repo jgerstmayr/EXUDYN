@@ -80,7 +80,7 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 		//pout << " w3=" << w3 << "\n";
 
 		constraintVec = vCm1- vCm0;
-		//object always uses velocity level for all components! ==> otherwise, splitting of jacobian and jacobian_t would be necessary for CqT action!
+		//object always uses velocity level for all components! ==> otherwise, splitting of jacobian and jacobian_ODE2_t would be necessary for CqT action!
 		//if (!velocityLevel) //only for normal direction
 		//{
 		//	constraintVec[2] = pC[2] - p0[2];
@@ -107,8 +107,8 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 }
 
 
-void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
@@ -122,10 +122,10 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index nColumnsJac0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
 		Index nColumnsJac1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns();
-		//jacobian.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-		//jacobian.SetAll(0);
-		jacobian_t.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-		jacobian_t.SetAll(0);
+		//jacobian_ODE2.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+		//jacobian_ODE2.SetAll(0);
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+		jacobian_ODE2_t.SetAll(0);
 
 		const Vector3D& p1 = markerData.GetMarkerData(1).position;
 		const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
@@ -157,19 +157,19 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 			{
 				if (parameters.constrainedAxes[j] == 1)
 				{
-					jacobian_t(j, i) = -vJacPosI[j]; //negative sign due to constraint
+					jacobian_ODE2_t(j, i) = -vJacPosI[j]; //negative sign due to constraint
 				}
 				else
 				{
-					jacobian_t(j, i) = 0;
+					jacobian_ODE2_t(j, i) = 0;
 				}
 			}
 
 			//for ground contraint:
 			////currently, no action on marker 0 body (must be computed via rigid body motion)
-			//jacobian_t(0, i) = 0; // -markerData.GetMarkerData(0).positionJacobian(0, i); //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
-			//jacobian_t(1, i) = 0; // -markerData.GetMarkerData(0).positionJacobian(1, i);
-			//jacobian_t(2, i) = 0; // -markerData.GetMarkerData(0).positionJacobian(2, i);
+			//jacobian_ODE2_t(0, i) = 0; // -markerData.GetMarkerData(0).positionJacobian(0, i); //negative sign in marker0 because of eq: (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position)
+			//jacobian_ODE2_t(1, i) = 0; // -markerData.GetMarkerData(0).positionJacobian(1, i);
+			//jacobian_ODE2_t(2, i) = 0; // -markerData.GetMarkerData(0).positionJacobian(2, i);
 		}
 		for (Index i = 0; i < nColumnsJac1; i++)
 		{
@@ -180,18 +180,18 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian, Resiz
 			{
 				if (parameters.constrainedAxes[j] == 1)
 				{
-					jacobian_t(j, i + nColumnsJac0) = vJacPosI[j];
+					jacobian_ODE2_t(j, i + nColumnsJac0) = vJacPosI[j];
 				}
 				else
 				{
-					jacobian_t(j, i + nColumnsJac0) = 0;
+					jacobian_ODE2_t(j, i + nColumnsJac0) = 0;
 				}
 			}
 		}
 
-		//pout << "jac=" << jacobian_t << "\n";
+		//pout << "jac=" << jacobian_ODE2_t << "\n";
 
-		jacobian.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
+		jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
 	}
 	else
 	{

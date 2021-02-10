@@ -46,26 +46,26 @@ void CObjectJointRevolute2D::ComputeAlgebraicEquations(Vector& algebraicEquation
 }
 
 
-void CObjectJointRevolute2D::ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, 
-	const MarkerDataStructure& markerData, Real t) const
+void CObjectJointRevolute2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
-		jacobian.SetNumberOfRowsAndColumns(2, columnsOffset + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
+		jacobian_ODE2.SetNumberOfRowsAndColumns(2, columnsOffset + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 
 		for (Index i = 0; i < columnsOffset; i++)
 		{
-			jacobian(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
-			jacobian(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
+			jacobian_ODE2(0, i) = -markerData.GetMarkerData(0).positionJacobian(0, i);
+			jacobian_ODE2(1, i) = -markerData.GetMarkerData(0).positionJacobian(1, i);
 		}
 		for (Index i = 0; i < markerData.GetMarkerData(1).positionJacobian.NumberOfColumns(); i++)
 		{
-			jacobian(0, i + columnsOffset) = markerData.GetMarkerData(1).positionJacobian(0, i);
-			jacobian(1, i + columnsOffset) = markerData.GetMarkerData(1).positionJacobian(1, i);
+			jacobian_ODE2(0, i + columnsOffset) = markerData.GetMarkerData(1).positionJacobian(0, i);
+			jacobian_ODE2(1, i + columnsOffset) = markerData.GetMarkerData(1).positionJacobian(1, i);
 		}
-		jacobian_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
+		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
 		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
 	}
 	else

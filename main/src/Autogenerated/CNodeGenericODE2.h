@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-11-12  23:05:47 (last modfied)
+* @date         2021-01-20  20:05:18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,7 +40,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeGenericODE2
-* @brief        A node containing a number of ODE2 variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element.
+* @brief        A node containing a number of ODE2 variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element. Note that referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

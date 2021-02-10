@@ -32,7 +32,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result
-    testError = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] - (-9.81/2)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
     #final z-coordinate of position shall be -g/2 due to constant acceleration with g=-9.81
     #result independent of mass
 

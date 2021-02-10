@@ -449,9 +449,82 @@ namespace RigidBodyMath {
 			skewMatrix.SetSubmatrix(RigidBodyMath::Vector2SkewMatrix(Vector3D({ vector[j], vector[j + 1], vector[j + 2] })), j, 0);
 		}
 	}
+} //namespace RigidBodyMath
 
+namespace EXUlie {
 
+	//! compute rotation axis from given rotation vector
+	template <class T>
+	inline void RotationVector2RotationAxis(const T& rotationVector, T& rotationAxis)
+	{
+		//compute rotation angle
+		Real rotationAngle = rotationVector.GetL2Norm();
 
-}
+		if (rotationAngle == 0.) { rotationAxis.SetAll(0.); }
+		else
+		{
+			rotationAxis.CopyFrom(rotationVector);
+			rotationAxis *= 1. / rotationAngle;
+		}
+	}
 
+	//! compute composition operation for rotation vectors v0 and incremental rotation vector Omega, see \cite{Holzinger2021}
+	inline Vector3D CompositionRotationVector(const Vector3D& v0, const Vector3D& Omega)
+	{
+		Real w1Half = 0.5*v0.GetL2Norm();
+		Real w2Half = 0.5*Omega.GetL2Norm();
+		Real c0 = cos(w1Half);
+		Real c1 = cos(w2Half);
+		Real s0 = EXUmath::Sinc(w1Half);
+		Real s1 = EXUmath::Sinc(w2Half);
+		Real x = c0*c1 - 0.25*s0*s1*(v0 * Omega);
+		Real xTemp = sqrt(fabs(1 - EXUstd::Square(x))); //fabs added, because term may be slightly smaller than zero
+		Real w = EXUstd::pi - 2.*atan2(x, xTemp);
+		Vector3D rho = s0*c1 * v0 + c0*s1 * Omega + 0.5*s0*s1* v0.CrossProduct(Omega);
+		Vector3D n;
+		RotationVector2RotationAxis(rho, n);
+		return w * n;
+	}
+
+	//! compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}; improved version of Stefan Holzinger
+	//! outputs 3x3 matrix
+	inline Matrix3D TExpSO3Inv(const Vector3D& Omega)
+	{
+		Real phi = Omega.GetL2Norm();
+		Matrix3D Tinv = EXUmath::unitMatrix3D;
+		if (phi != 0.)
+		{
+			Real phi2 = EXUstd::Square(phi);
+			Matrix3D omegaDiadicOmega(3,3);
+			for (Index i = 0; i < 3; i++)
+			{
+				for (Index j = 0; j < 3; j++)
+				{
+					omegaDiadicOmega(i, j) = Omega[i] * Omega[j];
+				}
+			}
+
+			if (phi <= 0.02)
+			{
+				Real c = (1. / 12.) + (1. / 720.)*phi2 + (1. / 30240.)*EXUstd::Square(phi2);//  + (1. / 1209600.)*phi**6 # + (1. / 47900160.)*phi**8
+				Real b = 1 - c * phi2;
+				Tinv *= b; //Tinv = b*I
+
+				Tinv += RigidBodyMath::Vector2SkewMatrix(0.5*Omega) + c * omegaDiadicOmega;
+			}
+			else
+			{
+				Real epsilon = 0.5*phi;
+				Real beta = epsilon * EXUmath::Cot(epsilon);
+				Real gamma = (1 - beta) / (phi2);
+				Tinv *= beta;
+				Tinv += RigidBodyMath::Vector2SkewMatrix(0.5*Omega) + gamma * omegaDiadicOmega;
+
+			}
+		}
+		return Tinv;
+
+	}
+
+} //namespace LieGroup
 #endif

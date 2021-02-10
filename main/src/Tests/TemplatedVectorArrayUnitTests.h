@@ -146,10 +146,10 @@ void case_template_purevector_test(lest::env & lest_env)
             EXPECT(v2[1] == 4.4);
             EXPECT(v2[2] == 5.5);
         }
-        SECTION("MultiplyAdd and Sum")
+        SECTION("MultAdd  and Sum")
         {
             v1.SetVector({ 1, 2, 4.4 });
-            v2.MultiplyAdd(2.5, v1);
+            v2.MultAdd(2.5, v1);
             EXPECT(ToString(v2) == "[6.5 10 18]");
 
             EXPECT(v1.Sum() == 7.4);

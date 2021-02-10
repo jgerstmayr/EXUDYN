@@ -32,8 +32,8 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result
-    testError = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] - 2
-    testError+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2] - 0.75*np.pi
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+    exudynTestGlobals.testResult+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
     #final x-coordinate of position shall be 2, angle theta shall be np.pi
 
 except BaseException as e:

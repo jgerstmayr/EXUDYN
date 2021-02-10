@@ -73,12 +73,16 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	{
 		output.verboseMode = staticSolver.verboseMode;
 		output.verboseModeFile = staticSolver.verboseModeFile; //verbose mode of file
+		output.stepInformation = staticSolver.stepInformation;
 		newton = staticSolver.newton;
+		discontinuous = staticSolver.discontinuous;
 	} else
 	{
 		output.verboseMode = timeint.verboseMode;
 		output.verboseModeFile = timeint.verboseModeFile; //verbose mode of file
+		output.stepInformation = timeint.stepInformation;
 		newton = timeint.newton;
+		discontinuous = timeint.discontinuous;
 	}
 
 	//timer.Reset(simulationSettings.displayComputationTime); //done in SolveSteps
@@ -173,12 +177,9 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 //! initialize dense/sparse computation modes
 bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	STDstring msg = STDstring(GetSolverName()) + " started";
-	if (!simulationSettings.solutionSettings.solutionInformation.empty())
-	{
-		msg += ": " + simulationSettings.solutionSettings.solutionInformation;
-	}
-	computationalSystem.GetPostProcessData()->SetVisualizationMessage(msg);
+	//now done separately
+	computationalSystem.GetPostProcessData()->SetSolverMessage(STDstring(GetSolverName()) + " started");
+	computationalSystem.GetPostProcessData()->SetSolutionMessage(simulationSettings.solutionSettings.solutionInformation);
 
 	//some pre-checks for solver
 	if (!computationalSystem.IsSystemConsistent()) { PyError("SolverGeneralizedAlpha: system is inconsistent and cannot be solved (call Assemble() and check error messages, file.solverFile)"); return false; }
@@ -188,14 +189,14 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	data.startAE = data.nODE2 + data.nODE1;
 	if (data.startAE == data.nODE2 + data.nODE1 + data.nAE) { data.startAE = 0; } //data.startAE == data.nSys would lead to invalid pointer in LinkedDataVector; can only happen, if data.nAE==0
 
-	if (data.nODE1 != 0) { SysError("Solver cannot solve first order differential equations (ODE1) for now", file.solverFile); }
+	//check for static solver, dynamic solver checked in solver specific implementation!
+	if (IsStaticSolver() && data.nODE1 != 0) { SysError("StaticSolver cannot solve first order differential equations (ODE1) for now", file.solverFile); }
 
 	if (data.nSys == 0)
 	{
-		SysError("Solver cannot solve for system size = 0", file.solverFile);
+		PyError("Solver cannot solve for system size = 0", file.solverFile);
 		return false;
 	}
-	if (data.nODE1 != 0) { SysError("Solver cannot solve first order differential equations (ODE1) for now", file.solverFile); }
 
 
 	if (simulationSettings.linearSolverType == LinearSolverType::EXUdense)
@@ -216,12 +217,6 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 		data.SetLinearSolverType(LinearSolverType::_None);
 		return false;
 	}
-
-	//done now in InitializeSolverInitialConditions(...)
-	//if (IsStaticSolver() && (simulationSettings.staticSolver.adaptiveStep && simulationSettings.staticSolver.loadStepGeometric))
-	//{
-	//	PyWarning("CSolverBase::InitializeSolverPreChecks: staticSolver.adaptiveStep is not possible for staticSolver.loadStepGeometric; adaptiveStep will be ignored", file.solverFile);
-	//}
 
 	computationalSystem.GetPostProcessData()->stopSimulation = false;
 	computationalSystem.GetSolverData().Reset(); //e.g. set load factor to 1
@@ -259,6 +254,9 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	data.tempODE2.SetNumberOfItems(data.nODE2);			//temporary vector for ODE2 quantities; use in initial accelerations and during Newton
 	data.tempODE2F0.SetNumberOfItems(data.nODE2);		//temporary vector for ODE2 Jacobian
 	data.tempODE2F1.SetNumberOfItems(data.nODE2);		//temporary vector for ODE2 Jacobian
+	data.tempODE1F0.SetNumberOfItems(data.nODE1);		//temporary vector for ODE1 Jacobian
+	data.tempODE1F1.SetNumberOfItems(data.nODE1);		//temporary vector for ODE1 Jacobian
+	//data.tempODE1.SetNumberOfItems(data.nODE1);			//temporary vector for ODE1 quantities
 
 	data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
 
@@ -266,10 +264,6 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	//  done in CleanUpMemory(): data.startOfDiscIteration.Reset();
 	data.startOfStepStateAAlgorithmic.SetNumberOfItems(data.nODE2);
 
-	//data.u_tt0.SetNumberOfItems(data.nODE2);			//accelerations at start of time step
-	//data.aAlgorithmic0.SetNumberOfItems(data.nODE2);	//algorithmic accelerations for gen-alpha at start of time step
-	//data.lambda0.SetNumberOfItems(data.nAE);			//Lagrange multipliers at start of time step
-	//data.lambda0.SetAll(0.);				
 
 	it.newtonStepsCount = 0;				//count total number of Newton iterations
 	it.newtonJacobiCount = 0;				//count total number of Jacobian computations and factorizations
@@ -282,8 +276,11 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	if (newton.weightTolerancePerCoordinate && data.nSys) { conv.errorCoordinateFactor = sqrt((Real)data.nSys); }
 	else { conv.errorCoordinateFactor = 1.; }
 
-	//it.timeSteps = 0;						//total time steps count (incl. step reduction)
-	//it.staticSteps = 0;						//total static steps count (incl. step reduction)
+	if (newton.newtonResidualMode != 0 && newton.newtonResidualMode != 1) //check residual mode: 0/1, otherwise not implemented by solvers!
+	{ 
+		PyError("MainSolverBase::InitializeSolverData: NewtonSettings.newtonResidualMode: unsupported mode"); 
+	}
+
 
 }
 
@@ -308,8 +305,16 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 
 		it.minStepSize = timeint.minimumStepSize;
 		it.maxStepSize = (it.endTime - it.startTime) / (Real)(it.numberOfSteps);
+		if (timeint.automaticStepSize) 
+		{ 
+			if (timeint.initialStepSize != 0.) { it.initialStepSize = timeint.initialStepSize; }
+			else { it.initialStepSize = it.maxStepSize; } //chose max step size as initial guess if not provided
+		}
 
 		it.adaptiveStep = timeint.adaptiveStep;
+		it.automaticStepSize = timeint.automaticStepSize;
+		it.automaticStepSizeError = 0;			//initialize stored step size error
+		it.rejectedAutomaticStepSizeSteps = 0;	//initialize counter for rejected steps
 	}
 	else
 	{
@@ -322,6 +327,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 		it.maxStepSize = staticSolver.loadStepDuration / (Real)(it.numberOfSteps);
 
 		it.adaptiveStep = staticSolver.adaptiveStep;
+		it.automaticStepSize = false; //not available for static solver, set false to be safe
 		if (staticSolver.loadStepGeometric && staticSolver.adaptiveStep)
 		{
 			PyWarning("CSolverBase::InitializeSolverPreChecks: staticSolver.adaptiveStep is not possible for staticSolver.loadStepGeometric; adaptiveStep will be ignored", file.solverFile);
@@ -330,12 +336,12 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	}
 	if (IsVerbose(3))
 	{
-		Verbose(3, "number of steps = " + EXUstd::ToString(it.numberOfSteps));
-		Verbose(3, "start time = " + EXUstd::ToString(it.startTime));
-		Verbose(3, "end time = " + EXUstd::ToString(it.endTime));
-		Verbose(3, "minStepSize = " + EXUstd::ToString(it.minStepSize));
-		Verbose(3, "maxStepSize = " + EXUstd::ToString(it.maxStepSize));
-		Verbose(3, "adaptiveStep = " + EXUstd::ToString(it.adaptiveStep));
+		Verbose(3, "number of steps = " + EXUstd::ToString(it.numberOfSteps) + "\n");
+		Verbose(3, "start time = " + EXUstd::ToString(it.startTime) + "\n");
+		Verbose(3, "end time = " + EXUstd::ToString(it.endTime) + "\n");
+		Verbose(3, "minStepSize = " + EXUstd::ToString(it.minStepSize) + "\n");
+		Verbose(3, "maxStepSize = " + EXUstd::ToString(it.maxStepSize) + "\n");
+		Verbose(3, "adaptiveStep = " + EXUstd::ToString(it.adaptiveStep) + "\n");
 	}
 
 	//current values = initial values
@@ -348,6 +354,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 		//set according size of vectors, which are not initialized:
 		data.aAlgorithmic.SetNumberOfItems(data.nODE2);
 		computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt.SetNumberOfItems(data.nODE2);
+		computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t.SetNumberOfItems(data.nODE1);
 	}
 
 	//+++++++++++++++++++++++++++++++++++++
@@ -366,6 +373,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 //! specific call to the start solver
 bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+
 #ifdef USE_NGSOLVE_TASKMANAGER
 	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
 	Index nThreads = simulationSettings.numberOfThreads;
@@ -508,7 +516,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		file.solutionFile << "#simulation finished=" << EXUstd::GetDateTimeString() << "\n";
 		file.solutionFile << "#Solver Info:";
 		file.solutionFile << " stepReductionFailed(or step failed)=" << conv.stepReductionFailed;
-		file.solutionFile << ",discontinuousIterationsFailed=" << conv.discontinuousIterationsFailed;
+		file.solutionFile << ",discontinuousIterationSuccessful=" << conv.discontinuousIterationSuccessful;
 		file.solutionFile << ",newtonSolutionDiverged=" << conv.newtonSolutionDiverged;
 		file.solutionFile << ",massMatrixNotInvertible=" << conv.massMatrixNotInvertible;
 		file.solutionFile << ",total time steps=" << it.currentStepIndex-1; //initial step is also counted in it.currentStepIndex
@@ -523,9 +531,9 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (!conv.stepReductionFailed)
 	{
-		computationalSystem.GetPostProcessData()->SetVisualizationMessage("Solver finished successfully");
+		computationalSystem.GetPostProcessData()->SetSolverMessage("Solver finished successfully");
 	}
-	else { computationalSystem.GetPostProcessData()->SetVisualizationMessage("Solver finished with errors"); }
+	else { computationalSystem.GetPostProcessData()->SetSolverMessage("Solver finished with errors"); }
 
 	//++++++++++++++++++++++++++++++++++
 	//final finalize: close files (NO EARLIER!)
@@ -551,7 +559,9 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 {
 	if (IsVerbose(2)) { Verbose(2, "\nStart steps solving loop\n"); }
 
-	it.currentStepSize = it.maxStepSize; //initial value for step size
+	if (it.automaticStepSize) { it.currentStepSize = it.initialStepSize; }
+	else { it.currentStepSize = it.maxStepSize; }//initial value for step size
+
 	it.currentStepIndex = 0;
 	conv.stepReductionFailed = false;
 	conv.jacobianUpdateRequested = true;	//for modified Newton, only request Newton at first step
@@ -587,28 +597,29 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 			//Post Newton iteration for one time step
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			if (newton.modifiedNewtonJacUpdatePerStep) { conv.jacobianUpdateRequested = true; }
-
+			it.lastStepSize = it.currentStepSize; //store step size to check if automatic step size and adaptive step size fit
+			
 			if (!DiscontinuousIteration(computationalSystem, simulationSettings))
 			{
 				//try to reduce step size
 
-				if (it.adaptiveStep)
+				if (it.adaptiveStep || it.automaticStepSize)
 				{
 					computationalSystem.GetSystemData().GetCData().currentState = computationalSystem.GetSystemData().GetCData().startOfStepState; //completely reset state including data variables and time
 
-					if (!ReduceStepSize(computationalSystem, simulationSettings, 1))
+					if (!ReduceStepSize(computationalSystem, simulationSettings, 1)) //only for adaptiveStep; automaticStepSize already done in Newton()
 					{
 						conv.stepReductionFailed = true;
 						if (IsVerboseCheck(1))
 						{
-							VerboseWrite(1, "Solve steps: step reduction reached minimum step size; stop solver\n");
+							VerboseWrite(1, "Solve steps: adaptive step reduction reached minimum step size; stop solver\n");
 						}
 					}
 					else
 					{
-						if (IsVerboseCheck(1))
+						if (IsVerboseCheck(1) && !it.automaticStepSize)
 						{
-							VerboseWrite(1, STDstring("  Solve steps: reduce step size to ") + EXUstd::ToString(it.currentStepSize) + "\n");
+							VerboseWrite(1, STDstring("  Solve steps: adaptive step reduction to size = ") + EXUstd::ToString(it.currentStepSize) + "\n");
 						}
 						stepsSinceLastStepSizeReduction = 0;
 					}
@@ -736,7 +747,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 
 	if (simulationSettings.timeIntegration.simulateInRealtime)
 	{
-		Real cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
+		Real cpuTimeElapsed = simulationSettings.timeIntegration.realtimeFactor * (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
 		Real simTimeElapsed = t - it.startTime;
 		Index waitMicroSeconds = 1000; //wait time until next computation
 
@@ -767,13 +778,13 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		if (!IsStaticSolver()) { str += ", t = " + EXUstd::ToString(t) + " sec"; }
 		else { str += ", factor = " + EXUstd::ToString(ComputeLoadFactor(simulationSettings)); }
 
-		if (newton.stepInformation >= 1) {
+		if (output.stepInformation >= 1) {
 			str += ", timeToGo = " + EXUstd::ToString(timeToGo); 
 		}
-		if (newton.stepInformation >= 2 && it.currentStepIndex != 0) {
+		if (output.stepInformation >= 2 && it.currentStepIndex != 0) {
 			str += " sec, Nit/step = " + EXUstd::ToString(it.newtonStepsCount / (Real)(it.currentStepIndex));
 		}
-		if (newton.stepInformation >= 3 && it.currentStepIndex != 0) {
+		if (output.stepInformation >= 3 && it.currentStepIndex != 0) {
 			str += " Dit/step = " + EXUstd::ToString(it.discontinuousIterationsCount / (Real)(it.currentStepIndex)) +
 				" jac/step = " + EXUstd::ToString(it.newtonJacobiCount / (Real)(it.currentStepIndex));
 		}
@@ -842,10 +853,10 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 	//data.startOfStepStateAAlgorithmic = data.aAlgorithmic; //changed 2019-12-29; moved to SolveSteps(...)
 	CSystemState& current = computationalSystem.GetSystemData().GetCData().GetCurrent();
 
-	bool discIterFinishedSuccessful = false; //local variable
+	conv.discontinuousIterationSuccessful = false;
 	it.discontinuousIteration = 0;
 
-	while (it.discontinuousIteration < newton.maxDiscontinuousIterations && !discIterFinishedSuccessful)
+	while (it.discontinuousIteration < discontinuous.maxIterations && !conv.discontinuousIterationSuccessful)
 	{
 		if (IsVerbose(2)) { Verbose(2,STDstring("  START discontinuous iteration ")+EXUstd::ToString(it.discontinuousIteration) + ":\n"); }
 
@@ -858,8 +869,8 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 			{
 				STDstring str = STDstring("  discontinuous iteration error = ") + EXUstd::ToString(conv.discontinuousIterationError)
 					+ " (disc.it.=" + EXUstd::ToString(it.discontinuousIteration)
-					+ ", error goal = " + EXUstd::ToString(newton.discontinuousIterationTolerance);
-				if (conv.discontinuousIterationError <= newton.discontinuousIterationTolerance)
+					+ ", error goal = " + EXUstd::ToString(discontinuous.iterationTolerance);
+				if (conv.discontinuousIterationError <= discontinuous.iterationTolerance)
 				{
 					str += " ... REACHED";
 				}
@@ -883,38 +894,43 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			it.discontinuousIteration++; it.discontinuousIterationsCount++;
 
-			if (conv.discontinuousIterationError > newton.discontinuousIterationTolerance)
+			if (conv.discontinuousIterationError > discontinuous.iterationTolerance)
 			{
-				if (it.discontinuousIteration < newton.maxDiscontinuousIterations)
+				if (it.discontinuousIteration < discontinuous.maxIterations)
 				{
 					//start NEW DiscontinuousIteration
 					//reset states to start of discontinuous iteration, EXCEPT for data variables!:
 					current.ODE2Coords = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords;
 					current.ODE2Coords_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_t;
 					current.ODE2Coords_tt = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_tt;
+					current.ODE1Coords = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords;
+					current.ODE1Coords_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords_t;
 					current.AECoords = computationalSystem.GetSystemData().GetCData().startOfStepState.AECoords;
 					data.aAlgorithmic = data.startOfStepStateAAlgorithmic; //for generalized-alpha
 				}
 				else
 				{
 					//MAX iterations reached --> stop
-					if (!newton.ignoreMaxDiscontinuousIterations) { return false; }
+					if (!discontinuous.ignoreMaxIterations) { return false; }
 
 					//continue solver if discontinuous iterations do not converge
-					discIterFinishedSuccessful = true;
+					conv.discontinuousIterationSuccessful = true;
 				}
 			}
-			else { discIterFinishedSuccessful = true; }
+			else { conv.discontinuousIterationSuccessful = true; }
 
 		}
 		else
 		{
 			//NEWTON not successful --> terminate disc. iteration
-			conv.discontinuousIterationError = newton.discontinuousIterationTolerance * 2.;
+			conv.discontinuousIterationError = discontinuous.iterationTolerance * 2.;
+			conv.discontinuousIterationSuccessful = true; //in this case, it is the fault of Newton, not of discontinuous iteration
+
 			return false;
 		}
 	} //discontinuous (postNewton) iteration
-	return discIterFinishedSuccessful || (newton.maxDiscontinuousIterations == 0); //return success; in case that no discIter. are needed (==0), no error is returned
+	if (discontinuous.maxIterations == 0) { conv.discontinuousIterationSuccessful = true; } //true because no iterations wanted
+	return conv.discontinuousIterationSuccessful; //return success; in case that no discIter. are needed (==0), no error is returned
 }
 
 //Index TSfinalizeMatrix;
@@ -930,12 +946,15 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	//LinkedDataVector ode2Residual(data.systemResidual, 0, data.nODE2); //link ODE2 coordinates
 	//LinkedDataVector aeResidual(data.systemResidual, data.startAE, data.nAE); //link ae coordinates
 	LinkedDataVector newtonSolutionODE2(data.newtonSolution, 0, data.nODE2); //temporary subvector for ODE2 components
+	LinkedDataVector newtonSolutionODE1(data.newtonSolution, data.nODE2, data.nODE1); //temporary subvector for ODE2 components
 	LinkedDataVector newtonSolutionAE(data.newtonSolution, data.startAE, data.nAE); //temporary subvector for ODE2 components
 
 	//link current system vectors for ODE2
 	Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
 	Vector& solutionODE2_t = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t;
 	Vector& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
+	Vector& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
+	Vector& solutionODE1_t = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
 	Vector& solutionData = computationalSystem.GetSystemData().GetCData().currentState.dataCoords;
 	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 
@@ -950,34 +969,20 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	//Real absError = -1; //current error
 	Real initialResidual;
 
-	//copy ODE, ODE_T, ODE_tt and AE solution from last step or initial conditions; if modified Newton diverges ==> falls back to u_tt0, u0, ...
-	//data.u0.CopyFrom(solutionODE2);
-	//data.lambda0.CopyFrom(solutionAE);				//initialized but never used; not part of integration scheme...!
-	if (!IsStaticSolver())
-	{
-		//data.u_t0.CopyFrom(solutionODE2_t);
-		//data.u_tt0.CopyFrom(solutionODE2_tt);
-		//data.aAlgorithmic0.CopyFrom(data.aAlgorithmic); //for generalized-alpha
-		solutionODE2_tt.SetAll(0.); //use zero accelerations as start guess for Newton iterations
-	}
-
+	
 	solutionAE.SetAll(0.);		//use zero Lagrange multipliers as start guess for Newton iterations step ==> does not work for algebraic variables such as in sliding joint
 	STOPTIMER(timer.overhead);
 
 	//compute initial residual:
 	data.newtonSolution.SetAll(0.); //no update yet
-	ComputeNewtonUpdate(computationalSystem, simulationSettings); //better initial guess for Newton
+	//solutionODE2_tt must contain initial accelerations!
+	ComputeNewtonUpdate(computationalSystem, simulationSettings, true); //for initial computations; better initial guess for Newton for old solver
 
-	ComputeNewtonResidual(computationalSystem, simulationSettings);
+	initialResidual = ComputeNewtonResidual(computationalSystem, simulationSettings);
 
-
-	if (newton.newtonResidualMode == 0) {
-		initialResidual = data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor; //systemResidual is linked to ode2Residual and aeResidual
+	if (newton.newtonResidualMode == 1) { //coordinate update as residual
+		initialResidual = 2*newton.relativeTolerance; //use some initial tolerance; if the step returns a higher residual, the initialResidual is reduced hereafter
 	}
-	else if (newton.newtonResidualMode == 1) { //coordinate update as residual
-		initialResidual = 2*newton.relativeTolerance; //this mode should use absoluteTolerance
-	}
-	else { PyError("NewtonSettings.newtonResidualMode: unsupported mode"); }
 
 	if (initialResidual <= newton.absoluteTolerance)
 	{
@@ -996,7 +1001,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	bool modifiedNewtonRestarted = false;			//flag, which signals that modified Newton method has already been restarted
 	bool fullNewtonRequested = !newton.useModifiedNewton; //in every step, the modified Newton method can switch to full Newton's method
 	bool stopNewton = false;						//flag which tells that Newton shall be stopped (Jacobian singular, full Newton not converged, ?)
-	conv.errorCoordinateFactor = 1.;				
+	//conv.errorCoordinateFactor = 1.;				//2021-02-06: removed, because is treated in InitializeSolverData(...)
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Newton iterations
@@ -1061,14 +1066,17 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 
 			//++++++++++++++++++++++++++++++++++++++++++
 			//compute residual from static step increment or from integration formula:
-			ComputeNewtonResidual(computationalSystem, simulationSettings);
+			conv.residual = ComputeNewtonResidual(computationalSystem, simulationSettings); 
+			//2021-02-06: computation of residual norm moved computation of conv.residual to ComputeNewtonResidual(..); OLDE code:
+			//if (newton.newtonResidualMode == 0) 
+			//	{conv.residual = data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor;}
+			//else
+			//	{conv.residual = newtonSolutionODE2.GetL2Norm() / conv.errorCoordinateFactor; } //increment of newton ODE2 coordinates used to determine error
+			if (newton.newtonResidualMode == 1) //special case, not treated in ComputeNewtonResidual
+			{
+				conv.residual = (newtonSolutionODE2.GetL2Norm() + newtonSolutionODE1.GetL2Norm()) / conv.errorCoordinateFactor; //increment of newton ODE2/ODE1 coordinates used to determine error
+			} 
 			//++++++++++++++++++++++++++++++++++++++++++
-
-			if (newton.newtonResidualMode == 0) {
-				conv.residual = data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor;
-			} else {
-				conv.residual = newtonSolutionODE2.GetL2Norm() / conv.errorCoordinateFactor; //increment of newton ODE2 coordinates used to determine error
-			}
 
 			if (IsVerbose(2))
 			{
@@ -1086,6 +1094,14 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				{
 					str += "    Newton solV         = " + EXUstd::ToString(solutionODE2_t) + "\n";
 					str += "    Newton solA         = " + EXUstd::ToString(solutionODE2_tt) + "\n";
+				}
+				if (data.nODE1)
+				{
+					str += "    Newton solODE1      = " + EXUstd::ToString(solutionODE1) + "\n";
+					if (!IsStaticSolver())
+					{
+						str += "    Newton solODE1_t    = " + EXUstd::ToString(solutionODE1_t) + "\n";
+					}
 				}
 				str += "    Newton solData      = " + EXUstd::ToString(solutionData) + "\n";
 				str += "    Newton solLambda    = " + EXUstd::ToString(solutionAE) + "\n";
@@ -1193,15 +1209,24 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						if (!IsStaticSolver())
 						{
 							solutionODE2_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_t;
-							solutionODE2_tt.SetAll(0.); //use zero accelerations as guess for next step
+							//old solver: solutionODE2_tt.SetAll(0.) ==> now done in ComputeNewtonUpdate(..., initial=true) for 
+
+							//new solver: solutionODE2_tt must contain initial accelerations
+							solutionODE2_tt = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords_tt;
+
 							data.aAlgorithmic = data.startOfStepStateAAlgorithmic;
+						}
+						if (data.nODE1)
+						{
+							solutionODE1 = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords;
+							//done in ComputeNewtonUpdate(..., initial=true): solutionODE1_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords_t;
 						}
 						solutionAE.SetAll(0.); //use zero Lagrange multipliers as start guess for Newton iterations step ==> does not work for algebraic variables such as in sliding joint
 
 						//++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						//compute residual (for beginning of step, which means that delta_acc=0, lambda=0):
 						data.newtonSolution.SetAll(0.); //no update yet
-						ComputeNewtonUpdate(computationalSystem, simulationSettings); //better initial guess for Newton
+						ComputeNewtonUpdate(computationalSystem, simulationSettings, true); //better initial guess for Newton
 						ComputeNewtonResidual(computationalSystem, simulationSettings);
 
 						if (IsVerbose(2) && !conv.newtonSolutionDiverged) { Verbose(2, "    ... Newton restarted due to bad contractivity, divergence or iterations count\n"); }
@@ -1318,6 +1343,8 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 	const Vector& solutionU = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
 	const Vector& solutionV = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t;
 	const Vector& solutionA = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
+	const Vector& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
+	const Vector& solutionODE1_t = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
 	const Vector& solutionLambda = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 	const Vector& solutionData = computationalSystem.GetSystemData().GetCData().currentState.dataCoords;
 
@@ -1349,6 +1376,19 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 				solFile << "," << solutionA[k];
 			}
 		}
+		//++++++++++++++++++++++++++++++++++++
+		//newly added ODE1 coordinates:
+		for (Index k = 0; k < solutionODE1.NumberOfItems(); k++) {
+			solFile << "," << solutionODE1[k];
+		}
+		if (solutionSettings.exportODE1Velocities && !isStatic)
+		{
+			for (Index k = 0; k < solutionODE1_t.NumberOfItems(); k++) {
+				solFile << "," << solutionODE1_t[k];
+			}
+		}
+		//++++++++++++++++++++++++++++++++++++
+		//algebraic and data coordinates:
 		if (solutionSettings.exportAlgebraicCoordinates)
 		{
 			for (Index k = 0; k < solutionLambda.NumberOfItems(); k++) {

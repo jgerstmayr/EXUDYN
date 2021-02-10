@@ -57,7 +57,7 @@ bool SolverRK1::SolveSystemTemplate(CSystem& computationalSystem, const Simulati
 
 	computationalSystem.GetPostProcessData()->stopSimulation = false;
 	//computationalSystem.GetPostProcessData()->visualizationTime = 0;
-	computationalSystem.GetPostProcessData()->SetVisualizationMessage("Explicit solver started");
+	computationalSystem.GetPostProcessData()->SetSolverMessage("Explicit solver started");
 	computationalSystem.GetSolverData().Reset(); //e.g. set load factor to 1
 
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
@@ -209,7 +209,7 @@ bool SolverRK1::SolveSystemTemplate(CSystem& computationalSystem, const Simulati
 	}
 
 	computationalSystem.GetPostProcessData()->simulationFinished = true; //signal that last step should be rendered
-	computationalSystem.GetPostProcessData()->SetVisualizationMessage("Explicit solver finished");
+	computationalSystem.GetPostProcessData()->SetSolverMessage("Explicit solver finished");
 
 	return true;
 }
@@ -247,18 +247,19 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 	if (!computationalSystem.IsSystemConsistent()) { SysError("SolverGeneralizedAlpha: system is inconsistent and cannot be solved (call Assemble() and check error messages)"); return false; }
 
 	computationalSystem.GetPostProcessData()->stopSimulation = false;
-	computationalSystem.GetPostProcessData()->SetVisualizationMessage("Generalized-Alpha solver started");
+	computationalSystem.GetPostProcessData()->SetSolverMessage("Generalized-Alpha solver started");
 	computationalSystem.GetSolverData().Reset(); //e.g. set load factor to 1
 
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 	const SolutionSettings& solutionSettings = simulationSettings.solutionSettings;
 	const NewtonSettings& newton = timeint.newton;
+	const DiscontinuousSettings& discontinuous = timeint.discontinuous;
 	const NumericalDifferentiationSettings& numDiff = newton.numericalDifferentiation;
 	Index verbose = timeint.verboseMode;
 	Real newmarkBeta = timeint.generalizedAlpha.newmarkBeta; //0.25 ... trapezoidal rule
 	Real newmarkGamma = timeint.generalizedAlpha.newmarkGamma; //0.5  ... trapezoidal rule
-	Real alphaM;
-	Real alphaF;
+	Real alphaM=0; //initialize to avoid warnings
+	Real alphaF=0; //initialize to avoid warnings
 	Real spectralRadius;
 	Real factJacAlgorithmic = 1.; //factor for jacobian in case of generalized-alpha due to algorithmic accelerations
 
@@ -521,8 +522,8 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 		startOfDiscIterationAAlgorithmic = aAlgorithmic; //changed on 13.12.2019
 
 		Index discontinuousIteration = 0;
-		discontinuousIterationError = newton.discontinuousIterationTolerance*1.1;
-		while (discontinuousIteration < newton.maxDiscontinuousIterations && discontinuousIterationError > newton.discontinuousIterationTolerance)
+		discontinuousIterationError = discontinuous.iterationTolerance*1.1;
+		while (discontinuousIteration < discontinuous.maxIterations && discontinuousIterationError > discontinuous.iterationTolerance)
 		{
 			if (verbose >= 2) { pout << "  START discontinuous iteration " << discontinuousIteration << ":\n"; }
 
@@ -637,7 +638,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 
 					timer.jacobianAE -= EXUstd::GetTimeInSeconds();
 					//add jacobian algebraic equations part to system jacobian:
-					computationalSystem.JacobianAE(tempCompData, newton, systemJacobian, factorAE_ODE2, factorAE_ODE2_t, false, true);
+					computationalSystem.JacobianAE(tempCompData, newton, systemJacobian, factorAE_ODE2, factorAE_ODE2_t, false);// , true);
 
 					systemJacobian.AddSubmatrix(systemMassMatrix); //systemMassMatrix used from initial step or from previous step; not scaled, because this is linear in unknown accelerations
 					timer.jacobianAE += EXUstd::GetTimeInSeconds();
@@ -918,23 +919,23 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 			discontinuousIterationError = computationalSystem.PostNewtonStep(tempCompData);
 			discontinuousIteration++;
 
-			//14.12.2019: changed from: if (verbose >= 0 && discontinuousIterationError > newton.discontinuousIterationTolerance)
+			//14.12.2019: changed from: if (verbose >= 0 && discontinuousIterationError > discontinuous.iterationTolerance)
 			// ...
 
-			if (discontinuousIterationError > newton.discontinuousIterationTolerance)
+			if (discontinuousIterationError > discontinuous.iterationTolerance)
 			{
 				if (verbose >= 2)
 				{
 					pout << "  discontinuous iteration error = " << discontinuousIterationError 
 						<< " (disc.it.=" << discontinuousIteration 
-						<< ", error goal = " << newton.discontinuousIterationTolerance << ")";
-					if (discontinuousIterationError <= newton.discontinuousIterationTolerance) 
+						<< ", error goal = " << discontinuous.iterationTolerance << ")";
+					if (discontinuousIterationError <= discontinuous.iterationTolerance) 
 					{ pout << " ... REACHED"; }
 					pout << "\n";
 				}
 
 				//reset states to start of discontinuous iteration, EXCEPT for data variables!:
-				if (discontinuousIteration < newton.maxDiscontinuousIterations)
+				if (discontinuousIteration < discontinuous.maxIterations)
 				{
 					solutionODE2 = startOfDiscIteration.ODE2Coords;
 					solutionODE2_t = startOfDiscIteration.ODE2Coords_t;
@@ -980,8 +981,8 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 		if (modifiedNewtonFailCount) { pout << "full Newton steps:      " << modifiedNewtonFailCount << "\n"; }
 	}
 
-	if (!errorOccurred && !solutionDiverged && converged) { computationalSystem.GetPostProcessData()->SetVisualizationMessage("Generalized-Alpha solver finished successfully"); }
-	else { computationalSystem.GetPostProcessData()->SetVisualizationMessage("Generalized-Alpha solver finished with errors"); }
+	if (!errorOccurred && !solutionDiverged && converged) { computationalSystem.GetPostProcessData()->SetSolverMessage("Generalized-Alpha solver finished successfully"); }
+	else { computationalSystem.GetPostProcessData()->SetSolverMessage("Generalized-Alpha solver finished with errors"); }
 
 	return true;
 

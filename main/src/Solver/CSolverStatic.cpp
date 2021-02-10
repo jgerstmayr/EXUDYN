@@ -35,7 +35,8 @@ namespace py = pybind11;	//for py::object
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
-bool CSolverStatic::ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index severity)
+bool CSolverStatic::ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, 
+	Index severity, Real suggestedStepSize)
 {
 	//it.currentTime is the only important value to be updated in order to reset the step time:
 	it.currentTime = computationalSystem.GetSystemData().GetCData().currentState.time;
@@ -125,7 +126,7 @@ void CSolverStatic::PostInitializeSolverSpecific(CSystem& computationalSystem, c
 
 
 //! compute residual for Newton method (e.g. static or time step)
-void CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	const StaticSolverSettings& staticSettings = simulationSettings.staticSolver;
 
@@ -184,9 +185,10 @@ void CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 	computationalSystem.ComputeODE2ProjectedReactionForces(data.tempCompData, solutionAE, ode2Residual); //add the forces directly!
 	timer.reactionForces += EXUstd::GetTimeInSeconds();
 
+	return data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor;
 }
 
-void CSolverStatic::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+void CSolverStatic::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial)
 {
 	Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
 	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
@@ -213,7 +215,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), 1., 1., false, true);
+	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), 1., 1., false);// , true);
 	STOPTIMER(timer.jacobianAE);
 
 	//pout << "stabilizerODE2term=" << simulationSettings.staticSolver.stabilizerODE2term << "\n";

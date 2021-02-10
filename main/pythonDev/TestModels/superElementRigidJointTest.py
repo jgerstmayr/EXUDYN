@@ -255,7 +255,7 @@ result = abs(data).sum()
 exu.Print('solution of superElementRigidJointTest=',result)
 
 exudynTestGlobals.testError = result - (0.015213599619996621) #2021-01-04: 0.015213599619996604 (Python3.7)
-#exudynTestGlobals.testError *=0.1 
+exudynTestGlobals.testResult = result
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results

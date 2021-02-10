@@ -271,7 +271,7 @@ void GlfwRenderer::DrawStringWithTextures(const char* text, float fontSizeScaled
 	//glColor4f(color[0], color[1], color[2], color[3]);
 	//glRasterPos3f(p[0], p[1], p[2]);
 
-	GLsizei w = font.characterWidth;
+	//GLsizei w = font.characterWidth;
 	GLsizei h = font.characterHeight;
 	float vOff = 0; //offset for multiple lines
 

@@ -281,8 +281,8 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5#0.5
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.newton.ignoreMaxDiscontinuousIterations = False #reduce step size for contact switching
-simulationSettings.timeIntegration.newton.discontinuousIterationTolerance = 0.1
+simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations = False #reduce step size for contact switching
+simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.drawNodesAsPoint  = False
@@ -307,6 +307,7 @@ p0=mbs.GetObjectOutputBody(bCar, exu.OutputVariableType.Position, localPosition=
 exu.Print('solution of mecanumWheelRollingDiscTest=',p0[0]) #use x-coordinate
 
 exudynTestGlobals.testError = p0[0] - (0.2714267238324345) #2020-06-20: 0.2714267238324345
+exudynTestGlobals.testResult = p0[0]
 
 
 if exudynTestGlobals.useGraphics:

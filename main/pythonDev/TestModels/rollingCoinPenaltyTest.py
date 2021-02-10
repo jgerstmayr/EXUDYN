@@ -131,6 +131,7 @@ p0=mbs.GetObjectOutput(oRolling, exu.OutputVariableType.Position)
 exu.Print('solution of rollingCoinPenaltyTest=',p0[0]) #use x-coordinate
 
 exudynTestGlobals.testError = p0[0] - (0.03489603106769764) #2020-06-20: 0.03489603106769764
+exudynTestGlobals.testResult = p0[0]
 
 
 if exudynTestGlobals.useGraphics:

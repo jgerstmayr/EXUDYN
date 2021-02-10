@@ -118,6 +118,7 @@ u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 exu.Print('displacement=',u[0])
 
 exudynTestGlobals.testError = u[0] - (0.5062872273010898) #2019-12-18: 0.5062872273010898; #2019-12-15: 0.5062872272996835; 2019-12-13:0.5062872273014417; 2019-12-01: 0.5152217339585201
+exudynTestGlobals.testResult = u[0]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 

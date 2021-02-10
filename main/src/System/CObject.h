@@ -174,7 +174,7 @@ public:
     virtual void ComputeODE2LHS(Vector& ode2Lhs) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHS"); }
 
     //! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs', which has dimension GetODE1Size()
-    virtual void ComputeODE1RHS(Vector& ode1Rhs) {}
+    virtual void ComputeODE1RHS(Vector& ode1Rhs) const {}
     //??compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE1Size() x GetODE1Size(); this is the tangent (stiffness) matrix; q are the system coordinates
     //??virtual void ComputeODE1LHS_q(Matrix& ode2Lhs, const Vector& q) {}
 
@@ -187,8 +187,8 @@ public:
     //! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
     virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHSJacobian"); }
 
-    //! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates
-    virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
+    //! compute derivative of algebraic equations w.r.t. ODE2 in jacobian_ODE2 [and w.r.t. ODE2_t coordinates in jacobian_ODE2_t if flag ODE2_t_AE_function is set] [and w.r.t. ODE1 coordinates in jacobian_ODE1 if flag ODE1_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size(); q are the system coordinates
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ACCESS FUNCTIONS

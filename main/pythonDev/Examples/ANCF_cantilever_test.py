@@ -12,13 +12,14 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
+from exudyn.utilities import *
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 
 #background
-rect = [-2,-2,2,2] #xmin,ymin,xmax,ymax
+rect = [-0.5,-2,2.5,0.5] #xmin,ymin,xmax,ymax
 background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
 
@@ -39,82 +40,57 @@ print("load f="+str(f))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
 
-mode = 1
-if mode==0: #treat one element
-    nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
-    nc1 = mbs.AddNode(Point2DS1(referenceCoordinates=[L,0,1,0]))
-    o0 = mbs.AddObject(Cable2D(physicsLength=L, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[nc0,nc1]))
-    print(mbs.GetObject(o0))
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#generate ANCF beams with utilities function
+nElements = 32*2
+cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        physicsMassPerLength = rho*A,
+                        physicsBendingStiffness = E*I,
+                        physicsAxialStiffness = E*A,
+                        #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
+                        )
 
-    mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))
-    mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=1))
-    mANCF2b = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=3))
-
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF0]))
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF1]))
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF2b]))
-
-    mANCFnode = mbs.AddMarker(MarkerNodePosition(nodeNumber=nc1)) #force
-    mbs.AddLoad(Force(markerNumber = mANCFnode, loadVector = [0, 0, 0]))
-
-
-else: #treat n elements
-    nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
-    nElements = 32*2
-    lElem = L / nElements
-    for i in range(nElements):
-        nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
-        mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, 
-                              physicsAxialStiffness=E*A, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
-
-    mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))
-    mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=1))
-    mANCF2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=3))
-    
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF0]))
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF1]))
-    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF2]))
-
-    mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=nLast)) #force
-    mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f, 0])) #will be changed in load steps
+positionOfNode0 = [0, 0, 0] # starting point of line
+positionOfNode1 = [L, 0, 0] # end point of line
+numberOfElements = 32*2
+ancf=GenerateStraightLineANCFCable2D(mbs,
+                positionOfNode0, positionOfNode1,
+                numberOfElements,
+                cableTemplate, #this defines the beam element properties
+                massProportionalLoad = [0,-9.81*0,0], #optionally add gravity
+                fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                fixedConstraintsNode1 = [0,0,0,0])
+mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=ancf[0][-1])) #ancf[0][-1] = last node
+mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f, 0])) #will be changed in load steps
 
 
-
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
 print(mbs)
-
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-fact = 2000
-simulationSettings.timeIntegration.numberOfSteps = 1*fact
-simulationSettings.timeIntegration.endTime = 0.00005*fact
+tEnd = 0.1
+h = 1e-4
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
+simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
 simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*1000 #10000
-simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10*100
-
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
-simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
-simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 6.055454452393343e-06*0.1 #eps^(1/3)
-simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1000
+
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
 
-#SC.visualizationSettings.nodes.showNumbers = True
-SC.visualizationSettings.bodies.showNumbers = False
-#SC.visualizationSettings.connectors.showNumbers = True
+simulationSettings.displayStatistics = True
+#simulationSettings.displayComputationTime = True
+
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
 simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
 
-doDynamicSimulation = False #switch between static and dynamic simulation
+doDynamicSimulation = True #switch between static and dynamic simulation
 
 if doDynamicSimulation:
     exu.StartRenderer()
@@ -135,11 +111,6 @@ else:
         nLoad = 0
         loadValue = f**((loadSteps+1)/nLoadSteps) #geometric increment of loads
         print('load='+str(loadValue))
-    
-#        loadDict = mbs.GetLoad(nLoad)
-#        loadDict['loadVector'] = [0, -loadValue,0]
-#        mbs.ModifyLoad(nLoad, loadDict)
-#        mbs.systemIsConsistent = True # set this flag, because of ModifyLoad would require Assemble()
         
         mbs.SetLoadParameter(nLoad, 'loadVector', [0, -loadValue,0])
         print('load vector=' + str(mbs.GetLoadParameter(nLoad, 'loadVector')) )

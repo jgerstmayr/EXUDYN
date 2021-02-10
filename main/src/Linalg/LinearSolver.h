@@ -76,6 +76,9 @@ public:
 	//! set the matrix with a dense matrix
 	virtual void SetMatrix(const Matrix& otherMatrix) = 0;
 
+	//! add a diagonal (or unit) matrix located at a certain (rowOffset, columnOffset) position
+	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0) = 0;
+
 	//! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
@@ -90,7 +93,7 @@ public:
 	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0) = 0;
 
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vec) = 0;
+	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0) = 0;
 
 	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	//! In the dense matrix case, nothing needs to be done; in the sparse matrix case, the elements of the matrix are filled into the sparse matrix
@@ -176,6 +179,16 @@ public:
 		matrix.CopyFrom(otherMatrix);
 	}
 
+	//! add a diagonal (or unit) matrix located at a certain (rowOffset, columnOffset) position
+	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0)
+	{
+		SetMatrixIsFactorized(false);
+		for (Index i = 0; i < numberOfRowsColumns; i++)
+		{
+			matrix(rowOffset + i, columnOffset + i) += diagValue;
+		}
+	}
+
 	//! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
@@ -204,11 +217,21 @@ public:
 	}
 
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vec)
+	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0)
 	{
-		for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+		if (!rowOffset)
 		{
-			matrix(i, column) += vec[i];
+			for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+			{
+				matrix(i, column) += vec[i];
+			}
+		}
+		else
+		{
+			for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+			{
+				matrix(i + rowOffset, column) += vec[i];
+			}
 		}
 	}
 
@@ -336,6 +359,9 @@ public:
 	//! set the matrix with a dense matrix; do not use this function for computational tasks, as it will drop performance significantly
 	virtual void SetMatrix(const Matrix& otherMatrix);
 
+	//! add a diagonal (or unit) matrix located at a certain (rowOffset, columnOffset) position
+	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0);
+
 	//! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
@@ -352,7 +378,7 @@ public:
 	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0);
 
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vec);
+	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0);
 
 	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	virtual void FinalizeMatrix();

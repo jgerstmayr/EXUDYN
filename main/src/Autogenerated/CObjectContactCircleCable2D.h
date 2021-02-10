@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-10  16:56:16 (last modfied)
+* @date         2021-02-10  11:54:41 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -156,7 +156,13 @@ public: // AUTO:
     }
 
     //! AUTO:  return if connector is active-->speeds up computation
-    virtual bool IsActive() const override;
+    virtual bool IsActive() const override
+    {
+        return parameters.activeConnector;
+    }
+
+    //! AUTO:  return if contact is active-->avoids computation of ODE2LHS, speeds up computation
+    bool IsContactActive() const;
 
 };
 

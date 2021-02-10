@@ -209,8 +209,9 @@ if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-exudynTestGlobals.testError = resUy + resIt - (1.131033204186729+1.1246157002409096 + 1501+1217) #2020-01-16: (1.131033204186729+1.1246157002409096 + 1501+1217)
-exudynTestGlobals.testError *= 1e-2 #32bit version shows larger differences ...
+#factor 1e-2: 32bit version shows larger differences ...
+exudynTestGlobals.testError = 1e-2*(resUy + resIt - (1.131033204186729+1.1246157002409096 + 1501+1217)) #2020-01-16: (1.131033204186729+1.1246157002409096 + 1501+1217)
+exudynTestGlobals.testResult = 1e-2*(resUy + resIt)
 #+++++++++++++++++++++++++++++++++++
 #plot data:
 

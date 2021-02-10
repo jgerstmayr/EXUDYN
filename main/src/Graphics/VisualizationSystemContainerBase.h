@@ -30,10 +30,12 @@ public:
 	virtual void StopSimulation() = 0;			//!< renderer reports to simulation that simulation shall be interrupted
 	virtual void ContinueSimulation() = 0;		//!< renderer reports to simulation that simulation can be continued
 	virtual void UpdateGraphicsDataNow() = 0;	//! renderer signals to update the graphics data, e.g. if settings have changed
+	virtual void SetVisualizationIsRunning(bool flag = true) = 0;	//! renderer signals that visualizationIsRunning flag should be set to "flag"
 	virtual void SaveImageFinished() = 0;		//! renderer signals that frame has been grabed and saved
 	virtual bool SaveImageRequest() = 0;		//! signal renderer that a frame shall be recorded
 	virtual bool GetAndResetZoomAllRequest() = 0;//! get zoom all request and reset to false
-	virtual std::string GetComputationMessage() = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
+	virtual std::string GetComputationMessage(bool solverInformation = true, 
+		bool solutionInformation = true, bool solverTime = true) = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual ~VisualizationSystemContainerBase() {} //added for correct deletion of derived classes
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

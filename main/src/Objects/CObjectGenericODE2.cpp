@@ -76,13 +76,15 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
 	if (parameters.massMatrixUserFunction)
 	{
 		Index nODE2 = GetODE2Size();
-		Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
-		Vector coordinates_t(nODE2);
-		ComputeObjectCoordinates(coordinates, coordinates_t);
+		//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
+		//Vector coordinates_t(nODE2);
+		tempCoordinates.SetNumberOfItems(nODE2);
+		tempCoordinates_t.SetNumberOfItems(nODE2);
+		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, coordinates, coordinates_t);
+		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
 	}
 	else //standard constant matrix
 	{
@@ -107,20 +109,22 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs) const
 	ode2Lhs.SetNumberOfItems(nODE2);
 	ode2Lhs.SetAll(0.);
 
-	Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
-	Vector coordinates_t(nODE2);
-	ComputeObjectCoordinates(coordinates, coordinates_t);
+	//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
+	//Vector coordinates_t(nODE2);
+	tempCoordinates.SetNumberOfItems(nODE2);
+	tempCoordinates_t.SetNumberOfItems(nODE2);
+	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
 
 	//K*q and D*q_T put to LHS !!!
 
 	if (parameters.stiffnessMatrix.NumberOfRows() != 0)
 	{
-		EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, coordinates, ode2Lhs);
+		EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, tempCoordinates, ode2Lhs);
 	}
 
 	if (parameters.dampingMatrix.NumberOfRows() != 0)
 	{
-		EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, coordinates_t, ode2Lhs);
+		EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, tempCoordinates_t, ode2Lhs);
 	}
 
 	if (parameters.forceVector.NumberOfItems() != 0)
@@ -133,7 +137,7 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs) const
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 		Vector userForce;
 
-		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, coordinates, coordinates_t);
+		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
 
 		ode2Lhs -= userForce;
 	}
@@ -157,19 +161,22 @@ void CObjectGenericODE2::GetAccessFunctionBody(AccessFunctionType accessType, co
 void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	Index nODE2 = GetODE2Size();
-	Vector coordinates(nODE2);
-	Vector coordinates_t(nODE2);
-	ComputeObjectCoordinates(coordinates, coordinates_t, configuration);
+	//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
+	//Vector coordinates_t(nODE2);
+	tempCoordinates.SetNumberOfItems(nODE2);
+	tempCoordinates_t.SetNumberOfItems(nODE2);
+	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, configuration);
 
 	switch (variableType)
 	{
-	case OutputVariableType::Coordinates:	value.CopyFrom(coordinates);	break;
-	case OutputVariableType::Coordinates_t: value.CopyFrom(coordinates_t);	break;
+	case OutputVariableType::Coordinates:	value.CopyFrom(tempCoordinates);	break;
+	case OutputVariableType::Coordinates_t: value.CopyFrom(tempCoordinates_t);	break;
 	case OutputVariableType::Coordinates_tt: 
 	{
-		Vector coordinates_tt(nODE2);
-		ComputeObjectCoordinates_tt(coordinates_tt, configuration);
-		value.CopyFrom(coordinates_tt);
+		//Vector coordinates_tt(nODE2);
+		tempCoordinates_tt.SetNumberOfItems(nODE2);
+		ComputeObjectCoordinates_tt(tempCoordinates_tt, configuration);
+		value.CopyFrom(tempCoordinates_tt);
 		break;
 	}
 	case OutputVariableType::Force:			ComputeODE2LHS(value);	break;
@@ -228,7 +235,7 @@ void CObjectGenericODE2::InitializeCoordinateIndices()
 		parameters.coordinateIndexPerNode[i] = s;
 		if (!EXUstd::IndexIsInRange(parameters.nodeNumbers[i], 0, cSystemData->GetCNodes().NumberOfItems()))
 		{
-			PyError("ObjectGenericODE2: invalid node number detected; alle nodes used in ObjectGenericODE2 must already exist");
+			PyError("ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist");
 		}
 		else
 		{

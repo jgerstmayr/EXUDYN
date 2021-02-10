@@ -40,7 +40,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result at default integration time
-    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0] - 0.049999999999272404
+    exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorCoordinate:", e)

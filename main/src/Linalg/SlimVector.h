@@ -252,7 +252,30 @@ public:
         }
         return *this;
     }
-    //! scalar multiply vector *this with scalar (for each component)
+
+	//! add vector v to *this vector (for each component); both vectors must have same size
+	SlimVectorBase<T, dataSize>& operator+= (const VectorBase<T>& v)
+	{
+		CHECKandTHROW(v.NumberOfItems() == dataSize, "ERROR: SlimVectorBase operator+= with VectorBase size mismatch");
+		Index cnt = 0;
+		for (auto item : v) {
+			(*this)[cnt++] += item;
+		}
+		return *this;
+	}
+
+	//! substract vector v from *this vector (for each component); both vectors must have same size
+	SlimVectorBase<T, dataSize>& operator-= (const VectorBase<T>& v)
+	{
+		CHECKandTHROW(v.NumberOfItems() == dataSize, "ERROR: SlimVectorBase operator-= with VectorBase size mismatch");
+		Index cnt = 0;
+		for (auto item : v) {
+			(*this)[cnt++] -= item;
+		}
+		return *this;
+	}
+
+	//! scalar multiply vector *this with scalar (for each component)
 	SlimVectorBase<T, dataSize>& operator*= (T scalar)
     {
         for (auto &item : *this) {

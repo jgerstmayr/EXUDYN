@@ -58,18 +58,24 @@ The following people have contributed to the examples:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\newpage
 \mysubsection{Installation instructions}
 \mysubsubsection{How to install \codeName ?}
 
 In order to run \codeName , you need an appropriate Python installation.
-We recommend to use
+We currently (2021-02) recommend to use
 \bi
-  \item Anaconda, 32bit, Python 3.6.5 or Anaconda 64bit, Python 3.6.5)\footnote{Anaconda 32/64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe} or \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
-	\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer}
+  \item {\bf Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}}
+  \item In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5)\footnote{Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
+	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
+  \item Alternative option (Spyder runs more stable ...): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
+	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
+	\item {\bf Spyder 4.1.3} with Python 3.7.7, 64bit, which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are {\bf either} 32bit {\bf or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
+	There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}
 %Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
 If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
-However, you should know that Python versions and the version of the module must be identical (e.g., Python 3.6 32 bit {\bf both} in the \codeName\ module and in Spyder).
+Once again, remember that Python versions and the version of the \codeName\ module must be identical (e.g., Python 3.6 32 bit {\bf both} in the \codeName\ module and in Spyder).
 
 %The simplest way to start is, to copy the files (and possibly further files that are needed)
 %\bi
@@ -260,17 +266,27 @@ In order to make full usage of the C++ code and extending it, you can use:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsection{Further notes}
 \mysubsubsection{Goals of \codeName}
-After the first development phase (planned in Q4/2021), it will
+After the first development phase (2019-2020), it shall
 \bi
   \item be a small multibody library, which can be easily linked to other projects,
 	\item allow to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
-	%\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$ (planned: Q4 2020),
-	%\item use multi-threaded parallel computing techniques (planned: Q4 2020),
+	\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$,
 	\item safe and widely accessible module for Python,
 	\item allow to add user defined objects in C++,
-	%\item allow to add user defined objects in Python (planned: 2021),
-	\item allow to add user defined solvers in Python).
+	\item allow to add user defined solvers in Python.
 \ei
+Future goals are:
+\bi
+  \item extend tests,
+	\item add more multi-threaded parallel computing techniques (first trials implemented, improvements planned: Q3 2021),
+	\item add vectorization,
+  \item add specific and advanced connectors/constraints (3D revolute joint and prismatic joint instead of generic joint, extended wheels,
+	contact, control connector)
+	\item more interfaces for robotics,
+	\item add 3D beams,
+	\item extend floating frame of reference formulation with modal reduction
+\ei
+For specific open issues, see \texttt{trackerlog.html}.
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -661,7 +661,7 @@ if True:
         simulationSettings = exu.SimulationSettings()
         
         nodeDrawSize = 0.0005
-        SC.visualizationSettings.general.textSize = 40
+        SC.visualizationSettings.general.textSize = 30
         SC.visualizationSettings.general.useGradientBackground = True
         SC.visualizationSettings.openGL.lineWidth = 2
 
@@ -730,7 +730,7 @@ if True:
                [-0.7689120173454285, -0.2851012349128723, 0.572269082069397]],
               'mouseCoordinates': [713.0, 395.0],
               'openGLcoordinates': [-0.05689147603698075, -0.01672859233804047]}}
-        SC.SetRenderState(exu.sys.renderState) #load last model view
+        SC.SetRenderState(exu.sys['renderState']) #load last model view
     
         mbs.WaitForUserToContinue() #press space to continue
         mbs.WaitForUserToContinue() #press space to continue

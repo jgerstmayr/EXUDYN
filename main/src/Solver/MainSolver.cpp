@@ -51,31 +51,24 @@ namespace py = pybind11;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MainSolverImplicitSecondOrder specific functions
-//! constructor, in order to set valid state (settings not initialized at beginning); set userFunctions to zero
-MainSolverImplicitSecondOrder::MainSolverImplicitSecondOrder() 
-{
-	isInitialized = false;
-
-}
 
 //! get locally stored / last computed system residual
 py::array_t<Real> MainSolverImplicitSecondOrder::GetAAlgorithmic()
 {
-	return EPyUtils::Vector2NumPy(cSolver.data.aAlgorithmic);
+	return EPyUtils::Vector2NumPy(GetCSolver().data.aAlgorithmic);
 }
 
 //! get locally stored / last computed algorithmic accelerations at start of step
 py::array_t<Real> MainSolverImplicitSecondOrder::GetStartOfStepStateAAlgorithmic()
 {
-	return EPyUtils::Vector2NumPy(cSolver.data.startOfStepStateAAlgorithmic);
+	return EPyUtils::Vector2NumPy(GetCSolver().data.startOfStepStateAAlgorithmic);
 }
 
-//OLD:
-////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-////overriding with USERFUNCTIONs
-////! finish static step / time step; write output of results to file
-//void MainSolverImplicitSecondOrder::FinishStep(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
-//{
-//	if (userFunctionFinishStep == 0) { MainSolverBase::FinishStep(mainSystem, simulationSettings); }
-//	else { userFunctionFinishStep(*this, mainSystem, simulationSettings); }
-//}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//MainSolverExplicit specific functions
+//! constructor, in order to set valid state (settings not initialized at beginning); 
+MainSolverExplicit::MainSolverExplicit()
+{
+	isInitialized = false;
+}
+

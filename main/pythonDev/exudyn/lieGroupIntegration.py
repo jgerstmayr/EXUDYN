@@ -1,5 +1,5 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN example
+# This is an EXUDYN python utility library
 #
 # Details:  Lie group integration methods (experimental!)
 #               
@@ -235,7 +235,7 @@ def LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, Kprev, kprev, f
         k = kprev[i1:i2]
         u[i1:i2] = CompositionRuleForRotationVectors(vec0, factK*K) - vecRef
         #print("k=",k, ",factK=", factK, ",omega0=", omega0)
-        v[i1:i2] = omega0+factK*k
+        v[i1:i2] = omega0+factK*k #could be omitted
         cnt += 1
 
     mainSys.systemData.SetODE2Coordinates(u)

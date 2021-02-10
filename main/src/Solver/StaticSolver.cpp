@@ -52,7 +52,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 
 
 	computationalSystem.GetPostProcessData()->stopSimulation = false;
-	computationalSystem.GetPostProcessData()->SetVisualizationMessage("Static solver started");
+	computationalSystem.GetPostProcessData()->SetSolverMessage("Static solver started");
 	computationalSystem.GetSolverData().Reset(); //e.g. set load factor to 1
 
 	const StaticSolverSettings& staticSolver = simulationSettings.staticSolver;
@@ -212,8 +212,8 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 	Index loadStepNumber = 0; //counter; just for file headers to be written only at first step
 	
 	Index discontinuousIterations;															//current number of discontinuous iteration
-	Index maxDiscontinuousIterations = staticSolver.newton.maxDiscontinuousIterations;
-	Real discontinuousIterationTolerance = staticSolver.newton.discontinuousIterationTolerance;	//absolute error
+	Index maxDiscontinuousIterations = staticSolver.discontinuous.maxIterations;
+	Real discontinuousIterationTolerance = staticSolver.discontinuous.iterationTolerance;	//absolute error
 	Real discontinuousIterationError;
 	ResizableVector previousDataCoords; //to remember data coords state of previous iteration
 
@@ -281,7 +281,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 					timer.jacobianODE2 += EXUstd::GetTimeInSeconds();
 
 					timer.jacobianAE -= EXUstd::GetTimeInSeconds();
-					computationalSystem.JacobianAE(tempCompData, newton, systemJacobian, 1., 1., false, true); //inserted into right position
+					computationalSystem.JacobianAE(tempCompData, newton, systemJacobian, 1., 1., false);// , true); //inserted into right position
 					timer.jacobianAE += EXUstd::GetTimeInSeconds();
 					timer.totalJacobian += EXUstd::GetTimeInSeconds();
 
@@ -509,12 +509,12 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 		if (computationalSystem.GetPostProcessData()->stopSimulation)
 		{
 			pout << "Static solver stopped by user after " << timer.total << " seconds.\n";
-			computationalSystem.GetPostProcessData()->SetVisualizationMessage("Static solver stopped by user");
+			computationalSystem.GetPostProcessData()->SetSolverMessage("Static solver stopped by user");
 		}
 		else if (simulationSettings.displayComputationTime) 
 		{ 
 			pout << "Static solver finished with ERRORS after " << timer.total << " seconds. See output for further information.\n";
-			computationalSystem.GetPostProcessData()->SetVisualizationMessage("Static solver finished with errors");
+			computationalSystem.GetPostProcessData()->SetSolverMessage("Static solver finished with errors");
 		}
 		
 		if (writeToFile && loadStepNumber<=1) //if no header written yet ...
@@ -528,7 +528,7 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 		if (simulationSettings.displayComputationTime && (verbose >= 1)) { pout << "Static solver finished after " << timer.total << " seconds.\n"; }
 
 		computationalSystem.GetPostProcessData()->simulationFinished = true; //signal that last step should be rendered
-		computationalSystem.GetPostProcessData()->SetVisualizationMessage("Static solver finished successfully");
+		computationalSystem.GetPostProcessData()->SetSolverMessage("Static solver finished successfully");
 		computationalSystem.UpdatePostProcessData();
 	}
 	if (simulationSettings.displayStatistics) 

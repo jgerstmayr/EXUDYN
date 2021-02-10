@@ -39,7 +39,7 @@ try: #puts example in safe environment
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
 
     #check result at default integration time
-    testError = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1] - (-0.00099999999997058)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorCartesianSpringDamper:", e)

@@ -108,7 +108,6 @@ def DefaultValue2Python(s):
     s = s.replace('true','True') #correct python notation
     s = s.replace('false','False') #correct python notation
 
-    s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
     #old, would need exu in utilities: s = s.replace('OutputVariableType::_None','OutputVariableType._None')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('OutputVariableType::_None','0')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
@@ -150,6 +149,10 @@ def DefaultValue2Python(s):
         s = s.replace('f','')
         s = s.replace('{','')
         s = s.replace('}','')
+
+    #s = s.replace('EXUstd::InvalidIndex','-1') #as we do not know the value, set it to -1; user needs to overwrite!
+    #do this after replacing Index ...
+    s = s.replace('EXUstd::InvalidIndex','exudyn.InvalidIndex()') #requires to import exudyn, but is possible now in itemInterface.py
     
     s = s.replace('f','')
 
@@ -382,7 +385,7 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
 #the following functions are used to generate pybinds to classes and add according latex documentation
 
 #start a new table to describe class bindings in latex;
-def DefLatexStartClass(sectionName, description, subSection=False):
+def DefLatexStartClass(sectionName, description, subSection=False, labelName=''):
 
     sLatex =  "\n%++++++++++++++++++++\n"
     if subSection:
@@ -391,6 +394,8 @@ def DefLatexStartClass(sectionName, description, subSection=False):
         sLatex += "\\mysubsection"
 
     sLatex += "{" + sectionName + "}\n"
+    if labelName != '':
+        sLatex += '\\label{sec:' +labelName+ '}\n'
     sLatex += description + '\n\n'
     
     sLatex += '\\begin{center}\n'

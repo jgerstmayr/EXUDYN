@@ -41,8 +41,7 @@ try: #puts example in safe environment
     exu.SolveDynamic(mbs, exu.SimulationSettings())
     
     #check result at default integration time
-    testError = (mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
-                 - (-0.4612983535925061))
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorRigidBodySpringDamper:", e)

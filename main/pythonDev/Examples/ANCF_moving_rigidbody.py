@@ -260,8 +260,8 @@ else:
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
     simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
 
-    simulationSettings.staticSolver.newton.discontinuousIterationTolerance = 0.1
-    #simulationSettings.staticSolver.newton.maxDiscontinuousIterations = 5
+    simulationSettings.staticSolver.discontinuous.iterationTolerance = 0.1
+    #simulationSettings.staticSolver.discontinuous.maxIterations = 5
     simulationSettings.staticSolver.pauseAfterEachStep = False
     simulationSettings.staticSolver.stabilizerODE2term = 100*0.0
 

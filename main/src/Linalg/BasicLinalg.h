@@ -50,6 +50,17 @@ namespace EXUmath {
 	inline static const Vector3D unitVecY({ 0.,1.,0. });
 	inline static const Vector3D unitVecZ({ 0.,0.,1. });
 
+	//! compute sinc(x) = sin(x)/x including case x=0, where sinc(x) = 1
+	template <class T>
+	inline T Sinc(T x)
+	{
+		if (x == 0.) { return 1.; }
+		else { return sin(x) / x; }
+	}
+
+	//! compute cot(x) = 1./tan(x); fails for x=0
+	template <class T>
+	double Cot(T x) { return(1. / tan(x)); }
 
 	inline Vector3D GetUnitVector(Index i)
 	{

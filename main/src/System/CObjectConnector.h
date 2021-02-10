@@ -79,7 +79,7 @@ public:
 	virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
 
 	//! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
-	virtual void ComputeJacobianAE(ResizableMatrix& jacobian, ResizableMatrix& jacobian_t, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
+	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
 
 	//! get output variable 'variableType' in (vector) value; for connectors, marker information must be provided as in ComputeODE2LHS (e.g. to compute distance)
 	virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariableConnector(...)"); }

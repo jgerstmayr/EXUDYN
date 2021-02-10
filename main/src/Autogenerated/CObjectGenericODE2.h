@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  12:16:59 (last modfied)
+* @date         2021-01-22  19:12:49 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -81,14 +81,45 @@ class CObjectGenericODE2: public CObjectSuperElement // AUTO:
 {
 protected: // AUTO: 
     CObjectGenericODE2Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE2
+    mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
+    mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
+    mutable Vector tempCoordinates_tt;            //!< AUTO: temporary vector containing acceleration coordinates
 
 public: // AUTO: 
+    //! AUTO: default constructor with parameter initialization
+    CObjectGenericODE2()
+    {
+        tempCoordinates = Vector();
+        tempCoordinates_t = Vector();
+        tempCoordinates_tt = Vector();
+    };
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
     virtual CObjectGenericODE2Parameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CObjectGenericODE2Parameters& GetParameters() const { return parameters; }
+
+    //! AUTO:  Write (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    void SetTempCoordinates(const Vector& value) { tempCoordinates = value; }
+    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    const Vector& GetTempCoordinates() const { return tempCoordinates; }
+    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    Vector& GetTempCoordinates() { return tempCoordinates; }
+
+    //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    void SetTempCoordinates_t(const Vector& value) { tempCoordinates_t = value; }
+    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    const Vector& GetTempCoordinates_t() const { return tempCoordinates_t; }
+    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    Vector& GetTempCoordinates_t() { return tempCoordinates_t; }
+
+    //! AUTO:  Write (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing acceleration coordinates
+    void SetTempCoordinates_tt(const Vector& value) { tempCoordinates_tt = value; }
+    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing acceleration coordinates
+    const Vector& GetTempCoordinates_tt() const { return tempCoordinates_tt; }
+    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing acceleration coordinates
+    Vector& GetTempCoordinates_tt() { return tempCoordinates_tt; }
 
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
@@ -145,6 +176,12 @@ public: // AUTO:
     virtual CObjectType GetType() const override
     {
         return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);
+    }
+
+    //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
+    virtual bool HasConstantMassMatrix() const override
+    {
+        return (parameters.massMatrixUserFunction==0);
     }
 
     //! AUTO:  This flag is reset upon change of parameters; says that the vector of coordinate indices has changed

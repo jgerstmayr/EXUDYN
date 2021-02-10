@@ -205,8 +205,6 @@ mbs.systemData.SetDataCoordinates(data,configuration = exu.ConfigurationType.Ini
 ncables = len(suspensionCableNodeList)
 sol = mbs.systemData.GetODE2Coordinates(); 
 u = sol[int(ncables/4)*4+1]; #y-displacement of node at midpoint of rope
-exu.Print('deflection =',u)      #2020-03-05(corrected Cable2DshapeMarker): -0.06446474690480661    2019-12-17(new static solver): -0.06446474690512931;  2019-12-16: -0.06446474679809994
-u -= -0.06446474690480661
      
 
 #mbs.WaitForUserToContinue()
@@ -250,7 +248,8 @@ if exudynTestGlobals.useGraphics:
 ncables = len(suspensionCableNodeList)
 sol2 = mbs.systemData.GetODE2Coordinates(); 
 u2 = sol2[int(ncables/4)*4+1]; #y-displacement of node in first quater of rope
-exu.Print('deflection =',u2)       #2020-03-05(corrected Cable2DshapeMarker):0.06446627698400298; 2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
-u2 -= (-0.06446627698400298)
-exudynTestGlobals.testError = u + u2
+exu.Print('static deflection  =',u)      #2020-03-05(corrected Cable2DshapeMarker): -0.06446474690480661    2019-12-17(new static solver): -0.06446474690512931;  2019-12-16: -0.06446474679809994
+exu.Print('dynamic deflection =',u2)       #2020-03-05(corrected Cable2DshapeMarker):0.06446627698400298; 2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
+exudynTestGlobals.testError = u + u2 - (-0.06446474690480661-0.06446627698400298)
+exudynTestGlobals.testResult = u + u2
 

@@ -488,12 +488,15 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
             #and (parameter['type'].find('KeyPressUserFunction') == -1)): 
                 s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName'] + ')\n' #extend this to incorporate 'read only' and other flags
             else:
+                sReturnValueProperty = '' #for structures that should also have write access
+                if parameter['lineType'].find('L') != -1:
+                    sReturnValueProperty += ', py::return_value_policy::reference'
                 #access with setter/getter functions and conversions to std::vector
                 #functionName = parameter['cplusplusName']
                 functionName = parameter['pythonName'] #for linked variables, this is easier to work with linking e.g. to cSolver
                 functionName = functionName[0].upper()+functionName[1:]
                 s += spaces2 + '.def_property("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::PyGet' + functionName
-                s += ', &' + parseInfo['class'] + '::PySet' + functionName + ')\n'
+                s += ', &' + parseInfo['class'] + '::PySet' + functionName + sReturnValueProperty + ')\n'
                 #    .def_property("name", &Pet::getName, &Pet::setName)
                 
     #s += '\n'

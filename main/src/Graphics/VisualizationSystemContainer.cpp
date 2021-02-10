@@ -138,6 +138,16 @@ void VisualizationSystemContainer::ContinueSimulation()
 
 }
 
+//! renderer signals that visualizationIsRunning flag should be set to "flag"
+void VisualizationSystemContainer::SetVisualizationIsRunning(bool flag)
+{
+	//as we do not know, which simulation is executed, all system computations are interrupted
+	for (auto item : visualizationSystems)
+	{
+		item->postProcessData->visualizationIsRunning = flag;
+	}
+}
+
 //! this function waits for the stop flag in the render engine;
 bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
 {
@@ -154,10 +164,11 @@ bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
 		}
 	}
 #endif
-	for (auto item : visualizationSystems)
-	{
-		item->postProcessData->visualizationIsRunning = false; //signal, that visualization is stopped now
-	}
+	//now done in GlfwRenderer::StopRenderer
+	//for (auto item : visualizationSystems)
+	//{
+	//	item->postProcessData->visualizationIsRunning = false; //signal, that visualization is stopped now
+	//}
 
 	return true;
 }
@@ -197,7 +208,6 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 			//! @todo extend VisualizationSystemContainer::UpdateMaximumSceneCoordinates for objects, markers and loads; maybe better to first draw all and zoom to full region?
 			for (auto item : visSystem->systemData->GetCNodes())
 			{
-				//if ((item->GetType() == CNodeType::Point) || (item->GetType() == CNodeType::RigidBody))
 				if ((Index)item->GetNodeGroup() & (Index)CNodeGroup::ODE2variables)
 				{
 					//LinkedDataVector pref = item->GetReferenceCoordinateVector();
@@ -229,12 +239,12 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
-std::string VisualizationSystemContainer::GetComputationMessage()
+std::string VisualizationSystemContainer::GetComputationMessage(bool solverInformation, bool solutionInformation, bool solverTime)
 {
 	//workaround: take message of first system to be shown
 	if (visualizationSystems.NumberOfItems())
 	{
-		return visualizationSystems[0]->GetComputationMessage();
+		return visualizationSystems[0]->GetComputationMessage(solverInformation, solutionInformation, solverTime);
 	}
 	return std::string();
 }

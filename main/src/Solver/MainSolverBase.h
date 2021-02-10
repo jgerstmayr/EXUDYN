@@ -46,6 +46,8 @@
 #include "Main/MainSystemContainer.h"
 
 #include "Solver/CSolverImplicitSecondOrder.h"
+#include "Solver/CSolverImplicitSecondOrderNew.h"
+#include "Solver/CSolverExplicit.h"
 #include "Solver/CSolverStatic.h"
 
 
@@ -75,7 +77,8 @@ public: //
 	//! Set function (needed in pybind) for: timer which measures the CPU time of solver sub functions
 	virtual void PySetTimer(const CSolverTimer& timerInit) { GetCSolver().timer = timerInit; }
 	//! Read (Copy) access to: timer which measures the CPU time of solver sub functions
-	virtual CSolverTimer PyGetTimer() const { return (CSolverTimer)(GetCSolver().timer); }
+	//virtual const CSolverTimer& PyGetTimer() const { return (GetCSolver().timer); }
+	virtual CSolverTimer& PyGetTimer() { return (GetCSolver().timer); }
 
 	//! Set function (needed in pybind) for: all information about iterations (steps, discontinuous iteration, newton,...)
 	virtual void PySetIt(const SolverIterationData& itInit) { GetCSolver().it = itInit; }
@@ -244,16 +247,16 @@ public: //
 		CheckInitialized(mainSystem); return GetCSolver().Newton(*(mainSystem.cSystem), simulationSettings);
 	}
 
-	//! compute residual for Newton method (e.g. static or time step); store result in systemResidual
-	virtual void ComputeNewtonResidual(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
+	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual
+	virtual Real ComputeNewtonResidual(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
-		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonResidual(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); return GetCSolver().ComputeNewtonResidual(*(mainSystem.cSystem), simulationSettings);
 	}
 
 	//! compute update for currentState from newtonSolution (decrement from residual and jacobian)
-	virtual void ComputeNewtonUpdate(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
+	virtual void ComputeNewtonUpdate(MainSystem& mainSystem, const SimulationSettings& simulationSettings, bool initial = false)
 	{
-		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonUpdate(*(mainSystem.cSystem), simulationSettings);
+		CheckInitialized(mainSystem); GetCSolver().ComputeNewtonUpdate(*(mainSystem.cSystem), simulationSettings, initial);
 	}
 
 	//! compute jacobian for newton method of given solver method; store result in systemJacobian
@@ -334,6 +337,8 @@ public: //
 	virtual void ComputeJacobianAE(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 1., bool velocityLevel = false);
 	//! compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)
 	virtual void ComputeODE2RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/);
+	//! compute the RHS of ODE1 equations in systemResidual in range(nODE2,nODE2+nODE1)
+	virtual void ComputeODE1RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/);
 	//! compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)
 	virtual void ComputeAlgebraicEquations(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, bool velocityLevel = false);
 	//! print function used in ostream operator (print is virtual and can thus be overloaded)

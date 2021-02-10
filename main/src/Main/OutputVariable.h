@@ -278,15 +278,6 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 //    }
 //};
 
-//currently not used inside C++ code!
-enum class DynamicSolverType {
-	//_None = 0, //marks that no configuration is used
-	GeneralizedAlpha = 1,	//an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers
-	TrapezoidalIndex2 = 2,	//an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction
-	ExplicitEuler = 3,		//an explicit first order solver for systems without constraints
-	RK45 = 4				//an explicit Runge Kutta solver of 4th order for systems without constraints; includes adaptive step selection
-};
-
 //key codes as defined in GLFW, used for Python keyPressUserFunction
 enum class KeyCode {
 	_None = 0,			//marks that no configuration is used
@@ -421,6 +412,9 @@ inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type 
 //
 //};
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++                            SOLVER TYPES                                      ++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! enum to determine how to set up the system matrix 
 enum class LinearSolverType {
@@ -440,5 +434,39 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
 	default: 		return os << "LinearSolverType::invalid";
 	}
 }
+
+//only used in Python and for explicit solver:
+enum class DynamicSolverType {
+	//_None = 0, //marks that no configuration is used
+	GeneralizedAlpha = 1,	//an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers
+	TrapezoidalIndex2 = 2,	//an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction
+	ExplicitEuler = 3,		//an explicit first order method 
+	ExplicitMidpoint = 4,   //an explicit second order method 
+	RK33 = 5,				//an explicit third order method 
+	RK44 = 6,				//an explicit fourth order classical Runge-Kutta method 
+	RK67 = 7,				//an explicit sixth order Runge-Kutta method
+	ODE23 = 8,				//an explicit Runge Kutta method of 3rd order with 2nd order error estimation; includes adaptive step selection
+	DOPRI5 = 9,				//an explicit Runge Kutta method of 5th order with 4th order error estimation; includes adaptive step selection
+	DVERK6 = 10				//an explicit Runge Kutta method of 6th order with 5th order error estimation; includes adaptive step selection
+};
+
+//! ostream operator for printing of enum class
+inline std::ostream& operator<<(std::ostream& os, DynamicSolverType value)
+{
+	switch (value)
+	{
+	case DynamicSolverType::GeneralizedAlpha:	return os << "GeneralizedAlpha"; break;
+	case DynamicSolverType::TrapezoidalIndex2:	return os << "TrapezoidalIndex2"; break;
+	case DynamicSolverType::ExplicitEuler:		return os << "ExplicitEuler"; break;
+	case DynamicSolverType::ExplicitMidpoint:	return os << "ExplicitMidpoint"; break;
+	case DynamicSolverType::RK33:				return os << "RK33"; break;
+	case DynamicSolverType::RK44:				return os << "RK44"; break;
+	case DynamicSolverType::ODE23:				return os << "ODE23"; break;
+	case DynamicSolverType::DOPRI5:				return os << "DOPRI5"; break;
+	case DynamicSolverType::DVERK6:				return os << "DVERK6"; break;
+	default: 		return os << "DynamicSolverType::invalid";
+	}
+}
+
 
 #endif

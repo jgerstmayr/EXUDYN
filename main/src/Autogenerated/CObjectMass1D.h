@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-10  16:56:16 (last modfied)
+* @date         2021-01-22  17:05:59 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -153,6 +153,12 @@ public: // AUTO:
     virtual CObjectType GetType() const override
     {
         return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);
+    }
+
+    //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
+    virtual bool HasConstantMassMatrix() const override
+    {
+        return true;
     }
 
     virtual OutputVariableType GetOutputVariableTypes() const override
