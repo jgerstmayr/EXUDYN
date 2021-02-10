@@ -1,0 +1,1524 @@
+
++++++++++++++++++++++++++++++++++++++++++++ 
++++++        EXUDYN TEST SUITE        +++++ 
++++++++++++++++++++++++++++++++++++++++++++ 
+EXUDYN version      = 1.0.130 
+EXUDYN build date   = 2021-02-10 12:48:14 
+platform            = 32bit 
+Windows binary path =  C:\DATA\cpp\EXUDYN_git\main\bin\EXUDYN32bitsPython36 
+python version      = 3.6.5 
+test tolerance      =  3e-14 
+testsuite date (now)= 2021-02-10 16:27:28 
++++++++++++++++++++++++++++++++++++++++++++ 
+
+*********************** 
+  RUN MODEL UNIT TESTS  
+***********************
+ 
+
+
+****************
+ GraphicsDataTest:[TEST 1]
+****************
+ 
+error in GraphicsDataTest =  0 
+
+
+****************
+ ANCFCable2DBendingTest:[TEST 2]
+****************
+ 
+sol dynamic= -1.061130541577972 -1.4396907464584625 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 15
+solver finished after 0.000232 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 15
+total number of Newton Jacobians:  15
+sol static (standardTol)= -0.3622447299987188 -0.9941447593196007 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 16
+solver finished after 0.0002516 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 16
+total number of Newton Jacobians:  16
+sol static (tol=1e-14)= -0.3622447298904951 -0.9941447587249616 
+error in ANCFCable2DBendingTest =  -1.247890679678676e-13 
+
+
+****************
+ SpringDamperMesh:[TEST 3]
+****************
+ 
+dynamic tip displacement (y)= -0.63858074691873 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
+solver finished after 0.0034269 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 4
+total number of Newton Jacobians:  4
+static tip displacement (y)= -0.44056224799446486 
+error in SpringDamperMesh =  2.220446049250313e-16 
+
+
+****************
+ MathematicalPendulumTest:[TEST 4]
+****************
+ 
+solution mathematicalPendulum Constraint= -0.06808284314701593 
+solution mathematicalPendulum SpringDamper= -0.07148800507818655 
+error in MathematicalPendulumTest =  7.466249840604178e-15 
+
+
+****************
+ RigidPendulumTest:[TEST 5]
+****************
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP1000, t = 0.5 sec, timeToGo = 0 sec, Nit/step = 6.55
+solver finished after 0.0284442 seconds.
+solution rigid pendulum= -0.4979606729809278 
+error in RigidPendulumTest =  1.942890293094024e-15 
+
+
+****************
+ SliderCrank2DTest:[TEST 6]
+****************
+ 
+solution SliderCrankIndex3  = 1.3550008762954922 
+error errorSliderCrankIndex3= -1.2656542480726785e-14 
+solution SliderCrankIndex2  = 1.3550413308333165 
+error errorSliderCrankIndex2= 5.329070518200751e-15 
+error in SliderCrank2DTest =  1.7985612998927536e-14 
+
+
+****************
+ SlidingJoint2DTest:[TEST 7]
+****************
+ 
+load f=0.012937500000000003 
+EI=0.01725 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP200, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 2.455
+solver finished after 0.0496641 seconds.
+value SlidingJoint2DTest= -0.14920182499994944 
+error in SlidingJoint2DTest =  0.0 
+
+
+****************
+ CartesianSpringDamperTest:[TEST 8]
+****************
+ 
+solution cartesianSpringDamper= 0.011834933407056991 
+error in CartesianSpringDamperTest =  3.0742075551870585e-13 
+
+
+****************
+ CoordinateSpringDamperTest:[TEST 9]
+****************
+ 
+solution CoordinateSpringDamper= 0.011834933407420256 
+error in CoordinateSpringDamperTest =  5.140332604014475e-14 
+
+
+****************
+ SwitchingConstraintsTest: [TEST 10]
+****************
+ 
+u = [-3.48898574  1.69486729  8.         -1.52275876  3.69326129] 
+sum(u) = 8.376384072333597 
+error in SwitchingConstraintsTest =  0.0 
+
+
+******************************** 
+******************************** 
+  ALL 10 UNIT TESTS SUCCESSFUL 
+******************************** 
+********************************
+ 
+
+
+****************************************** 
+  START EXAMPLE 0 ("ANCFcontactCircleTest.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+EXUDYN V1.0.130
+Static solver
++++++++++++++
+
+=========================
+=========================
+LOAD STEP 0, load factor = 0.000125893:
+    STEP 0: residual = 5.37843e-05, rel error = 1
+    STEP 1: residual = 0.812919, rel error = 15114.4
+    STEP 2: residual = 0.00252007, rel error = 0.00310003
+    STEP 3: residual = 9.70809e-07, rel error = 1.19423e-06
+    STEP 4: residual = 5.89047e-10, rel error = 7.24608e-10
+  Newton: converged after 4 steps; relative error = 7.24608e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000125893, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 1, load factor = 0.000158489:
+    STEP 0: residual = 3.44341e-05, rel error = 1
+    STEP 1: residual = 0.589485, rel error = 17119.2
+    STEP 2: residual = 0.00223634, rel error = 0.00379371
+    STEP 3: residual = 7.11094e-06, rel error = 1.2063e-05
+    STEP 4: residual = 2.15909e-08, rel error = 3.66267e-08
+  Newton: converged after 4 steps; relative error = 3.66267e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000158489, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 2, load factor = 0.000199526:
+    STEP 0: residual = 3.3395e-05, rel error = 1
+    STEP 1: residual = 0.490842, rel error = 14698.1
+    STEP 2: residual = 0.000880265, rel error = 0.00179338
+    STEP 3: residual = 3.30533e-05, rel error = 6.73401e-05
+    STEP 4: residual = 1.2838e-07, rel error = 2.6155e-07
+    STEP 5: residual = 7.33705e-10, rel error = 1.49479e-09
+  Newton: converged after 5 steps; relative error = 1.49479e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000199526, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 3, load factor = 0.000251189:
+    STEP 0: residual = 3.68787e-05, rel error = 1
+    STEP 1: residual = 0.600575, rel error = 16285.1
+    STEP 2: residual = 0.0015435, rel error = 0.00257004
+    STEP 3: residual = 3.8639e-05, rel error = 6.43367e-05
+    STEP 4: residual = 1.26513e-07, rel error = 2.10653e-07
+    STEP 5: residual = 6.8733e-10, rel error = 1.14445e-09
+  Newton: converged after 5 steps; relative error = 1.14445e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000251189, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 4, load factor = 0.000316228:
+    STEP 0: residual = 4.36843e-05, rel error = 1
+    STEP 1: residual = 0.755554, rel error = 17295.8
+    STEP 2: residual = 0.00111158, rel error = 0.00147122
+    STEP 3: residual = 7.89312e-05, rel error = 0.000104468
+    STEP 4: residual = 2.66591e-07, rel error = 3.52841e-07
+    STEP 5: residual = 2.27269e-10, rel error = 3.00798e-10
+  Newton: converged after 5 steps; relative error = 3.00798e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000316228, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 5, load factor = 0.000398107:
+    STEP 0: residual = 5.35246e-05, rel error = 1
+    STEP 1: residual = 1.26869, rel error = 23702.9
+    STEP 2: residual = 0.00284751, rel error = 0.00224445
+    STEP 3: residual = 7.73825e-05, rel error = 6.09941e-05
+    STEP 4: residual = 1.68529e-07, rel error = 1.32838e-07
+    STEP 5: residual = 4.37998e-10, rel error = 3.45237e-10
+  Newton: converged after 5 steps; relative error = 3.45237e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000398107, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 6, load factor = 0.000501187:
+    STEP 0: residual = 6.65878e-05, rel error = 1
+    STEP 1: residual = 1.85849, rel error = 27910.4
+    STEP 2: residual = 0.00265291, rel error = 0.00142745
+    STEP 3: residual = 4.09223e-05, rel error = 2.20191e-05
+    STEP 4: residual = 1.30603e-06, rel error = 7.02734e-07
+    STEP 5: residual = 1.58e-09, rel error = 8.50149e-10
+  Newton: converged after 5 steps; relative error = 8.50149e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000501187, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 7, load factor = 0.000630957:
+    STEP 0: residual = 8.33905e-05, rel error = 1
+    STEP 1: residual = 2.83862, rel error = 34040
+    STEP 2: residual = 0.00255944, rel error = 0.000901651
+    STEP 3: residual = 0.000117027, rel error = 4.12267e-05
+    STEP 4: residual = 1.27118e-07, rel error = 4.47817e-08
+  Newton: converged after 4 steps; relative error = 4.47817e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000630957, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 8, load factor = 0.000794328:
+    STEP 0: residual = 0.000104727, rel error = 1
+    STEP 1: residual = 4.50865, rel error = 43051.3
+    STEP 2: residual = 0.00791315, rel error = 0.00175511
+    STEP 3: residual = 0.000125194, rel error = 2.77675e-05
+    STEP 4: residual = 6.53886e-07, rel error = 1.45029e-07
+    STEP 5: residual = 1.64082e-09, rel error = 3.63927e-10
+  Newton: converged after 5 steps; relative error = 3.63927e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.000794328, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 9, load factor = 0.001:
+    STEP 0: residual = 0.000131673, rel error = 1
+    STEP 1: residual = 7.22277, rel error = 54853.9
+    STEP 2: residual = 0.0215844, rel error = 0.00298838
+    STEP 3: residual = 3.41817e-05, rel error = 4.7325e-06
+    STEP 4: residual = 6.89552e-06, rel error = 9.54693e-07
+    STEP 5: residual = 3.53366e-09, rel error = 4.89239e-10
+  Newton: converged after 5 steps; relative error = 4.89239e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.001, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 10, load factor = 0.00125893:
+    STEP 0: residual = 0.000165618, rel error = 1
+    STEP 1: residual = 11.3416, rel error = 68480.7
+    STEP 2: residual = 0.0103961, rel error = 0.000916629
+    STEP 3: residual = 0.000284638, rel error = 2.50967e-05
+    STEP 4: residual = 6.45998e-06, rel error = 5.69581e-07
+    STEP 5: residual = 8.84962e-09, rel error = 7.80277e-10
+  Newton: converged after 5 steps; relative error = 7.80277e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00125893, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 11, load factor = 0.00158489:
+    STEP 0: residual = 0.000208333, rel error = 1
+    STEP 1: residual = 17.8098, rel error = 85487.3
+    STEP 2: residual = 0.0235313, rel error = 0.00132126
+    STEP 3: residual = 0.000783078, rel error = 4.3969e-05
+    STEP 4: residual = 4.86304e-05, rel error = 2.73054e-06
+    STEP 5: residual = 9.14852e-08, rel error = 5.13679e-09
+  Newton: converged after 5 steps; relative error = 5.13679e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00158489, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 12, load factor = 0.00199526:
+    STEP 0: residual = 0.000262054, rel error = 1
+    STEP 1: residual = 28.2282, rel error = 107719
+    STEP 2: residual = 0.0531614, rel error = 0.00188328
+    STEP 3: residual = 0.000380674, rel error = 1.34856e-05
+    STEP 4: residual = 1.98546e-05, rel error = 7.03361e-07
+    STEP 5: residual = 4.81271e-08, rel error = 1.70493e-09
+  Newton: converged after 5 steps; relative error = 1.70493e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00199526, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 13, load factor = 0.00251189:
+    STEP 0: residual = 0.000329598, rel error = 1
+    STEP 1: residual = 44.475, rel error = 134937
+    STEP 2: residual = 0.063993, rel error = 0.00143885
+    STEP 3: residual = 0.00101567, rel error = 2.28369e-05
+    STEP 4: residual = 2.92266e-05, rel error = 6.57147e-07
+    STEP 5: residual = 1.83677e-07, rel error = 4.12989e-09
+  Newton: converged after 5 steps; relative error = 4.12989e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00251189, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 14, load factor = 0.00316228:
+    STEP 0: residual = 0.000414477, rel error = 1
+    STEP 1: residual = 70.7381, rel error = 170668
+    STEP 2: residual = 0.116006, rel error = 0.00163993
+    STEP 3: residual = 0.00129373, rel error = 1.8289e-05
+    STEP 4: residual = 0.00105137, rel error = 1.48629e-05
+    STEP 5: residual = 2.2754e-06, rel error = 3.21665e-08
+  Newton: converged after 5 steps; relative error = 3.21665e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00316228, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 15, load factor = 0.00398107:
+    STEP 0: residual = 0.000521055, rel error = 1
+    STEP 1: residual = 110.568, rel error = 212201
+    STEP 2: residual = 0.102092, rel error = 0.000923335
+    STEP 3: residual = 0.00643559, rel error = 5.82047e-05
+    STEP 4: residual = 0.0018757, rel error = 1.69642e-05
+    STEP 5: residual = 0.000108894, rel error = 9.8486e-07
+    STEP 6: residual = 5.67681e-06, rel error = 5.13421e-08
+  Newton: converged after 6 steps; relative error = 5.13421e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00398107, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 16, load factor = 0.00501187:
+    STEP 0: residual = 0.000654431, rel error = 1
+    STEP 1: residual = 172.173, rel error = 263088
+    STEP 2: residual = 0.206061, rel error = 0.00119683
+    STEP 3: residual = 0.0139831, rel error = 8.12155e-05
+    STEP 4: residual = 0.000506211, rel error = 2.94014e-06
+    STEP 5: residual = 0.000553104, rel error = 3.21249e-06
+    STEP 6: residual = 2.36793e-06, rel error = 1.37532e-08
+  Newton: converged after 6 steps; relative error = 1.37532e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00501187, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 17, load factor = 0.00630957:
+    STEP 0: residual = 0.000821185, rel error = 1
+    STEP 1: residual = 267.656, rel error = 325939
+    STEP 2: residual = 0.11605, rel error = 0.000433579
+    STEP 3: residual = 0.0305947, rel error = 0.000114306
+    STEP 4: residual = 0.0017258, rel error = 6.44783e-06
+    STEP 5: residual = 0.000469547, rel error = 1.75429e-06
+    STEP 6: residual = 1.25516e-05, rel error = 4.68944e-08
+  Newton: converged after 6 steps; relative error = 4.68944e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00630957, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 18, load factor = 0.00794328:
+    STEP 0: residual = 0.00102884, rel error = 1
+    STEP 1: residual = 408.421, rel error = 396973
+    STEP 2: residual = 0.313732, rel error = 0.000768158
+    STEP 3: residual = 46.7993, rel error = 0.114586
+    STEP 4: residual = 0.0126449, rel error = 3.09605e-05
+    STEP 5: residual = 49.2642, rel error = 0.120621
+    STEP 6: residual = 0.00538814, rel error = 1.31926e-05
+    STEP 7: residual = 0.15508, rel error = 0.000379708
+    STEP 8: residual = 0.000108619, rel error = 2.65949e-07
+    STEP 9: residual = 0.0011253, rel error = 2.75526e-06
+    STEP 10: residual = 2.64309e-07, rel error = 6.47149e-10
+  Newton: converged after 10 steps; relative error = 6.47149e-10
+  Discontinuous iteration error = 350.513
+    STEP 0: residual = 109.008, rel error = 1
+    STEP 1: residual = 1070.11, rel error = 9.81685
+    STEP 2: residual = 35.6858, rel error = 0.0333477
+    STEP 3: residual = 16.1902, rel error = 0.0151294
+    STEP 4: residual = 23.9136, rel error = 0.0223468
+    STEP 5: residual = 4.03602, rel error = 0.00377158
+    STEP 6: residual = 272.724, rel error = 0.254855
+    STEP 7: residual = 0.115815, rel error = 0.000108227
+    STEP 8: residual = 126.78, rel error = 0.118474
+    STEP 9: residual = 0.0548276, rel error = 5.12353e-05
+    STEP 10: residual = 0.370689, rel error = 0.000346402
+    STEP 11: residual = 0.00192393, rel error = 1.79787e-06
+    STEP 12: residual = 0.000165719, rel error = 1.54861e-07
+    STEP 13: residual = 5.57956e-07, rel error = 5.21398e-10
+  Newton: converged after 13 steps; relative error = 5.21398e-10
+  Discontinuous iteration error = 33.5355
+    STEP 0: residual = 36.3021, rel error = 1
+    STEP 1: residual = 429.052, rel error = 11.8189
+    STEP 2: residual = 6.54169, rel error = 0.0152469
+    STEP 3: residual = 137.339, rel error = 0.320098
+    STEP 4: residual = 15.2482, rel error = 0.0355393
+    STEP 5: residual = 0.413643, rel error = 0.000964087
+    STEP 6: residual = 40.4891, rel error = 0.0943688
+    STEP 7: residual = 0.0175941, rel error = 4.1007e-05
+    STEP 8: residual = 11.196, rel error = 0.0260947
+    STEP 9: residual = 0.00170044, rel error = 3.96326e-06
+    STEP 10: residual = 0.0321343, rel error = 7.4896e-05
+    STEP 11: residual = 3.04585e-05, rel error = 7.09904e-08
+  Newton: converged after 11 steps; relative error = 7.09904e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.00794328, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 19, load factor = 0.01:
+    STEP 0: residual = 0.00116586, rel error = 1
+    STEP 1: residual = 2.23183, rel error = 1914.32
+    STEP 2: residual = 0.000373746, rel error = 0.000167462
+    STEP 3: residual = 0.000461553, rel error = 0.000206805
+    STEP 4: residual = 3.10805e-07, rel error = 1.3926e-07
+    STEP 5: residual = 1.2907e-09, rel error = 5.78314e-10
+  Newton: converged after 5 steps; relative error = 5.78314e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.01, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 20, load factor = 0.0125893:
+    STEP 0: residual = 0.00111626, rel error = 1
+    STEP 1: residual = 2.79355, rel error = 2502.59
+    STEP 2: residual = 0.00111919, rel error = 0.000400634
+    STEP 3: residual = 0.000244238, rel error = 8.74294e-05
+    STEP 4: residual = 1.36921e-06, rel error = 4.90134e-07
+    STEP 5: residual = 7.2948e-10, rel error = 2.6113e-10
+  Newton: converged after 5 steps; relative error = 2.6113e-10
+  Discontinuous iteration error = 0.461975
+  loadStepFactor = 0.0125893, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 21, load factor = 0.0158489:
+    STEP 0: residual = 0.431037, rel error = 1
+    STEP 1: residual = 0.502204, rel error = 1.16511
+    STEP 2: residual = 0.000362843, rel error = 0.000722501
+    STEP 3: residual = 0.000114107, rel error = 0.000227213
+    STEP 4: residual = 6.7902e-08, rel error = 1.35208e-07
+    STEP 5: residual = 5.23274e-10, rel error = 1.04195e-09
+  Newton: converged after 5 steps; relative error = 1.04195e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0158489, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 22, load factor = 0.0199526:
+    STEP 0: residual = 0.00175226, rel error = 1
+    STEP 1: residual = 0.466046, rel error = 265.968
+    STEP 2: residual = 0.000401536, rel error = 0.000861581
+    STEP 3: residual = 5.57551e-05, rel error = 0.000119634
+    STEP 4: residual = 2.78372e-08, rel error = 5.97306e-08
+  Newton: converged after 4 steps; relative error = 5.97306e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0199526, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 23, load factor = 0.0251189:
+    STEP 0: residual = 0.00220933, rel error = 1
+    STEP 1: residual = 0.749548, rel error = 339.265
+    STEP 2: residual = 0.000235158, rel error = 0.000313733
+    STEP 3: residual = 6.17642e-05, rel error = 8.2402e-05
+    STEP 4: residual = 1.12625e-07, rel error = 1.50258e-07
+    STEP 5: residual = 9.22226e-10, rel error = 1.23038e-09
+  Newton: converged after 5 steps; relative error = 1.23038e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0251189, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 24, load factor = 0.0316228:
+    STEP 0: residual = 0.00278138, rel error = 1
+    STEP 1: residual = 1.20118, rel error = 431.865
+    STEP 2: residual = 0.000525333, rel error = 0.000437348
+    STEP 3: residual = 4.54714e-05, rel error = 3.78557e-05
+    STEP 4: residual = 1.04967e-07, rel error = 8.73864e-08
+  Newton: converged after 4 steps; relative error = 8.73864e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0316228, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 25, load factor = 0.0398107:
+    STEP 0: residual = 0.00350152, rel error = 1
+    STEP 1: residual = 1.83329, rel error = 523.57
+    STEP 2: residual = 0.000437556, rel error = 0.000238672
+    STEP 3: residual = 0.000143161, rel error = 7.80898e-05
+    STEP 4: residual = 1.4418e-07, rel error = 7.86452e-08
+  Newton: converged after 4 steps; relative error = 7.86452e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0398107, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 26, load factor = 0.0501187:
+    STEP 0: residual = 0.00440812, rel error = 1
+    STEP 1: residual = 2.89916, rel error = 657.686
+    STEP 2: residual = 0.0011885, rel error = 0.000409948
+    STEP 3: residual = 0.000255534, rel error = 8.81406e-05
+    STEP 4: residual = 4.59303e-07, rel error = 1.58426e-07
+    STEP 5: residual = 4.05681e-10, rel error = 1.39931e-10
+  Newton: converged after 5 steps; relative error = 1.39931e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0501187, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 27, load factor = 0.0630957:
+    STEP 0: residual = 0.00554943, rel error = 1
+    STEP 1: residual = 4.42863, rel error = 798.033
+    STEP 2: residual = 0.00216966, rel error = 0.000489916
+    STEP 3: residual = 0.00128831, rel error = 0.000290905
+    STEP 4: residual = 7.75578e-07, rel error = 1.75128e-07
+    STEP 5: residual = 4.19305e-10, rel error = 9.46804e-11
+  Newton: converged after 5 steps; relative error = 9.46804e-11
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0630957, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 28, load factor = 0.0794328:
+    STEP 0: residual = 0.0069862, rel error = 1
+    STEP 1: residual = 6.86777, rel error = 983.048
+    STEP 2: residual = 0.00231198, rel error = 0.000336642
+    STEP 3: residual = 0.00188103, rel error = 0.000273892
+    STEP 4: residual = 2.82627e-06, rel error = 4.11527e-07
+    STEP 5: residual = 1.74504e-08, rel error = 2.5409e-09
+  Newton: converged after 5 steps; relative error = 2.5409e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.0794328, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 29, load factor = 0.1:
+    STEP 0: residual = 0.00879483, rel error = 1
+    STEP 1: residual = 10.5305, rel error = 1197.35
+    STEP 2: residual = 0.00260444, rel error = 0.000247324
+    STEP 3: residual = 0.00782354, rel error = 0.000742942
+    STEP 4: residual = 1.44811e-05, rel error = 1.37516e-06
+    STEP 5: residual = 1.28295e-07, rel error = 1.21832e-08
+  Newton: converged after 5 steps; relative error = 1.21832e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.1, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 30, load factor = 0.125893:
+    STEP 0: residual = 0.0110715, rel error = 1
+    STEP 1: residual = 15.5133, rel error = 1401.19
+    STEP 2: residual = 0.00321801, rel error = 0.000207435
+    STEP 3: residual = 0.0134263, rel error = 0.000865469
+    STEP 4: residual = 3.88023e-05, rel error = 2.50123e-06
+    STEP 5: residual = 7.49826e-07, rel error = 4.83344e-08
+  Newton: converged after 5 steps; relative error = 4.83344e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.125893, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 31, load factor = 0.158489:
+    STEP 0: residual = 0.0139376, rel error = 1
+    STEP 1: residual = 23.5577, rel error = 1690.23
+    STEP 2: residual = 0.00212809, rel error = 9.03354e-05
+    STEP 3: residual = 0.0125816, rel error = 0.000534076
+    STEP 4: residual = 6.27718e-06, rel error = 2.6646e-07
+    STEP 5: residual = 1.72646e-07, rel error = 7.32863e-09
+  Newton: converged after 5 steps; relative error = 7.32863e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.158489, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 32, load factor = 0.199526:
+    STEP 0: residual = 0.0175456, rel error = 1
+    STEP 1: residual = 35.8058, rel error = 2040.73
+    STEP 2: residual = 0.00291917, rel error = 8.15278e-05
+    STEP 3: residual = 0.0174167, rel error = 0.000486419
+    STEP 4: residual = 2.07437e-05, rel error = 5.7934e-07
+    STEP 5: residual = 2.50071e-07, rel error = 6.98408e-09
+  Newton: converged after 5 steps; relative error = 6.98408e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.199526, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 33, load factor = 0.251189:
+    STEP 0: residual = 0.0220878, rel error = 1
+    STEP 1: residual = 54.8767, rel error = 2484.47
+    STEP 2: residual = 0.00686698, rel error = 0.000125135
+    STEP 3: residual = 0.00864779, rel error = 0.000157586
+    STEP 4: residual = 4.67112e-06, rel error = 8.51204e-08
+  Newton: converged after 4 steps; relative error = 8.51204e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.251189, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 34, load factor = 0.316228:
+    STEP 0: residual = 0.0278057, rel error = 1
+    STEP 1: residual = 82.7802, rel error = 2977.09
+    STEP 2: residual = 0.0148862, rel error = 0.000179829
+    STEP 3: residual = 0.0269873, rel error = 0.000326012
+    STEP 4: residual = 2.43103e-05, rel error = 2.93673e-07
+    STEP 5: residual = 7.87713e-07, rel error = 9.51573e-09
+  Newton: converged after 5 steps; relative error = 9.51573e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.316228, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 35, load factor = 0.398107:
+    STEP 0: residual = 0.0350035, rel error = 1
+    STEP 1: residual = 126.208, rel error = 3605.59
+    STEP 2: residual = 0.0475326, rel error = 0.00037662
+    STEP 3: residual = 0.0665382, rel error = 0.000527209
+    STEP 4: residual = 0.000150894, rel error = 1.19559e-06
+    STEP 5: residual = 6.34637e-06, rel error = 5.02849e-08
+  Newton: converged after 5 steps; relative error = 5.02849e-08
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.398107, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 36, load factor = 0.501187:
+    STEP 0: residual = 0.0440633, rel error = 1
+    STEP 1: residual = 187.869, rel error = 4263.62
+    STEP 2: residual = 0.025344, rel error = 0.000134903
+    STEP 3: residual = 0.114399, rel error = 0.000608932
+    STEP 4: residual = 2.60802e-05, rel error = 1.38821e-07
+    STEP 5: residual = 1.21136e-06, rel error = 6.44792e-09
+  Newton: converged after 5 steps; relative error = 6.44792e-09
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.501187, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 37, load factor = 0.630957:
+    STEP 0: residual = 0.0554676, rel error = 1
+    STEP 1: residual = 270.637, rel error = 4879.18
+    STEP 2: residual = 0.0304406, rel error = 0.000112478
+    STEP 3: residual = 0.250884, rel error = 0.000927014
+    STEP 4: residual = 0.000287166, rel error = 1.06107e-06
+    STEP 5: residual = 0.000241338, rel error = 8.91742e-07
+    STEP 6: residual = 2.43709e-07, rel error = 9.005e-10
+  Newton: converged after 6 steps; relative error = 9.005e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.630957, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 38, load factor = 0.794328:
+    STEP 0: residual = 0.0698212, rel error = 1
+    STEP 1: residual = 377.909, rel error = 5412.52
+    STEP 2: residual = 0.0647127, rel error = 0.000171239
+    STEP 3: residual = 1.52378, rel error = 0.00403213
+    STEP 4: residual = 0.000251594, rel error = 6.65753e-07
+    STEP 5: residual = 0.00090175, rel error = 2.38616e-06
+    STEP 6: residual = 1.20386e-07, rel error = 3.18558e-10
+  Newton: converged after 6 steps; relative error = 3.18558e-10
+  Discontinuous iteration error = 0
+  loadStepFactor = 0.794328, loadStepGeometricFactor = 1.25893
+
+=========================
+=========================
+LOAD STEP 39, load factor = 1:
+    STEP 0: residual = 0.0878861, rel error = 1
+    STEP 1: residual = 502.162, rel error = 5713.78
+    STEP 2: residual = 0.0809087, rel error = 0.000161121
+    STEP 3: residual = 7.26841, rel error = 0.0144742
+    STEP 4: residual = 0.00124371, rel error = 2.47672e-06
+    STEP 5: residual = 0.0812986, rel error = 0.000161897
+    STEP 6: residual = 1.52225e-05, rel error = 3.03139e-08
+  Newton: converged after 6 steps; relative error = 3.03139e-08
+  Discontinuous iteration error = 0
+tip displacement: x=-0.10206974380788308, y=-0.4842656547442095 
+****************************************** 
+  EXAMPLE 0 ("ANCFcontactCircleTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 1 ("ANCFcontactFrictionTest.py"): 
+****************************************** 
+load f=129.37500000000003 
+EI=172.50000000000003 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP300, t = 0.15 sec, timeToGo = 0 sec, Nit/step = 3.19
+solver finished after 0.536682 seconds.
+Solver iteration statistics:
+total number of steps:        300
+total number of Newton iterations: 957
+total number of Newton Jacobians:  957
+tip displacement: y=-0.014188649931863358 
+test result= -0.014188649931863358 
+****************************************** 
+  EXAMPLE 1 ("ANCFcontactFrictionTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 2 ("ANCFmovingRigidBodyTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+STEP2, factor = 1, timeToGo = 0 sec, Nit/step = 14
+solver finished after 0.0205906 seconds.
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP200, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 1.16
+solver finished after 0.310374 seconds.
+static deflection  = -0.06446474690480661 
+dynamic deflection = -0.0644662223100047 
+****************************************** 
+  EXAMPLE 2 ("ANCFmovingRigidBodyTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 3 ("ACNFslidingAndALEjointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+
+Python WARNING [file 'C:\Program Files (x86)\Microsoft Visual Studio\Shared\Anaconda3_86\lib\site-packages\exudyn\solver.py', line 54]: 
+WARNING: SlidingJoint2D: sliding coordinate < 0; further warnings suppressed!
+
+
+WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
+STEP10, factor = 1, timeToGo = 0 sec, Nit/step = 4.7
+solver finished after 0.0516225 seconds.
+select cable coordinate 42 
+static solution of cable1 = -2.197321886974786 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP400, t = 0.8 sec, timeToGo = 0 sec, Nit/step = 4.99
+solver finished after 1.44156 seconds.
+Solver iteration statistics:
+total number of steps:        400
+total number of Newton iterations: 1996
+total number of Newton Jacobians:  1996
+dynamic solution of cable1 = -2.2290811574778164 
+****************************************** 
+  EXAMPLE 3 ("ACNFslidingAndALEjointTest.py") FAILED 
+  ERROR = -5.293543381412746e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 4 ("carRollingDiscTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP250, t = 0.5 sec, timeToGo = 0 sec, Nit/step = 2.336
+solver finished after 0.261764 seconds.
+carRollingDiscTest u= -0.23940048717113455 
+****************************************** 
+  EXAMPLE 4 ("carRollingDiscTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 5 ("compareAbaqusAnsysRotorEigenfrequencies.py"): 
+****************************************** 
+natural frequencies from Ansys model, sparse= False : 104.63701055079783 
+natural frequencies from Abaqus model, sparse= False : 104.6370132606291 
+natural frequencies from Ansys model, sparse= True : 104.63701055079093 
+natural frequencies from Abaqus model, sparse= True : 104.63701326057259 
+error of compareAbaqusAnsysRotorEigenfrequencies (due to sparse solver)= -5.208278253121534e-17 
+solution of compareAbaqusAnsysRotorEigenfrequencies (with treshold)= 0 
+****************************************** 
+  EXAMPLE 5 ("compareAbaqusAnsysRotorEigenfrequencies.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 6 ("compareFullModifiedNewton.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP100, t = 2 sec, timeToGo = 0 sec, Nit/step = 6.13
+solver finished after 0.0049079 seconds.
+Solver iteration statistics:
+total number of steps:        100
+total number of Newton iterations: 613
+total number of Newton Jacobians:  49
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP100, t = 2 sec, timeToGo = 0 sec, Nit/step = 2.78
+solver finished after 0.0055269 seconds.
+Solver iteration statistics:
+total number of steps:        100
+total number of Newton iterations: 278
+total number of Newton Jacobians:  278
+compareFullModifiedNewton u= 0.00020079676000188396 
+****************************************** 
+  EXAMPLE 6 ("compareFullModifiedNewton.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 7 ("computeODE2EigenvaluesTest.py"): 
+****************************************** 
+EI=172.50000000000003 
+rhoA=0.78 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+eigenvalues= [ 83.17966459 229.28844645 449.50021798] 
+omega analytical = [ 83.17963697 229.28787233 449.4959069 ] 
+omega difference= -2.761526685901572e-05 
+****************************************** 
+  EXAMPLE 7 ("computeODE2EigenvaluesTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 8 ("driveTrainTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP1000, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 6.414
+solver finished after 0.90371 seconds.
+phiCrank 0.8813172426357353 
+phiFlyWheel 0.8813173353288554 
+solution of driveTrainTest= -9.269312006843222e-08 
+****************************************** 
+  EXAMPLE 8 ("driveTrainTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 9 ("explicitLieGroupIntegratorPythonTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP400, t = 0.01 sec, timeToGo = 0 sec, Nit/step = 0
+solver finished after 0.257335 seconds.
+explicitLieGroupIntegratorPythonTest= 149.8473939540758 
+****************************************** 
+  EXAMPLE 9 ("explicitLieGroupIntegratorPythonTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 10 ("explicitLieGroupIntegratorTest.py"): 
+****************************************** 
+DynamicSolverType.ExplicitMidpoint,h= 0.001 :
+  omega = [  -9.25903319 -100.05787564 -111.56014921] 
+  coords= [  0.           0.         -19.62        -0.29022561   1.22720976
+  -2.81489467] 
+DynamicSolverType.RK44,h= 0.001 :
+  omega = [ -27.67663523 -106.16651966 -102.45471373] 
+  coords= [  0.           0.         -19.62        -1.43361238   1.02208338
+  -2.29792145] 
+DynamicSolverType.RK67,h= 0.001 :
+  omega = [ -27.65849136 -106.16380496 -102.46246956] 
+  coords= [  0.           0.         -19.62        -1.43257991   1.02227719
+  -2.29872218] 
+DynamicSolverType.DOPRI5,h= 0.001 :
+  omega = [ -27.65851484 -106.16380357 -102.46246458] 
+  coords= [  0.           0.         -19.62        -1.43258163   1.02227688
+  -2.29872073] 
+nSteps= 8517 
+explicitLieGrouIntegratorTest err= 0.16164013319819096 
+****************************************** 
+  EXAMPLE 10 ("explicitLieGroupIntegratorTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 11 ("fourBarMechanismTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP2000, t = 2 sec, timeToGo = 0 sec, Nit/step = 1.8385
+solver finished after 0.0912385 seconds.
+solution of fourbar mechanism = -2.376335780518213 
+****************************************** 
+  EXAMPLE 11 ("fourBarMechanismTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 12 ("genericJointUserFunctionTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP500, t = 2.5 sec, timeToGo = 4.13101e-15 sec, Nit/step = 7.578
+solver finished after 0.332268 seconds.
+pos= [0.23743829 0.6528568  0.30194331] 
+solution of GenericJointTest= 1.192238396756271 
+****************************************** 
+  EXAMPLE 12 ("genericJointUserFunctionTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 13 ("genericODE2test.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP2000, t = 1 sec, timeToGo = 1.04706e-14 sec, Nit/step = 1
+solver finished after 0.19128 seconds.
+solution of genericODE2test= 0.036045463499109365 
+****************************************** 
+  EXAMPLE 13 ("genericODE2test.py") FAILED 
+  ERROR = 1.6524281942764674e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 14 ("geneticOptimizationTest.py"): 
+****************************************** 
+[pOpt, vOpt]= [{'mass': 2.532848072009533, 'spring': 6921.681730138393, 'force': 217.16911303068966}, 0.0030262381360909407] 
+optimum= 0.0030262381360909407 
+****************************************** 
+  EXAMPLE 14 ("geneticOptimizationTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 15 ("heavyTop.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP2000, t = 0.2 sec, timeToGo = 5.92693e-15 sec, Nit/step = 2.8585
+solver finished after 0.207344 seconds.
+solution of heavy top = 33.42312575176021 
+****************************************** 
+  EXAMPLE 15 ("heavyTop.py") FAILED 
+  ERROR = 3.89874799111567e-11 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 16 ("manualExplicitIntegrator.py"): 
+****************************************** 
+
+
+++++++++++++++++++++++++++
+Start EXUDYN version 1.0.130
+ 
+load f=12.937500000000005 
+EI=17.250000000000007 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+ev= 2.280183538481952 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP5000, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 0
+solver finished after 0.232225 seconds.
+uy= -0.2204849087896498 
+testResult= 2.0596986296923023 
+****************************************** 
+  EXAMPLE 16 ("manualExplicitIntegrator.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 17 ("mecanumWheelRollingDiscTest.py"): 
+****************************************** 
+solution of mecanumWheelRollingDiscTest= 0.2714267238324341 
+****************************************** 
+  EXAMPLE 17 ("mecanumWheelRollingDiscTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 18 ("objectFFRFreducedOrderAccelerations.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP10, t = 0.001 sec, timeToGo = 0 sec, Nit/step = 7.4
+solver finished after 0.0654237 seconds.
+solution of ObjectFFRFreducedOrderAccelerations= 61579.777475457115 
+****************************************** 
+  EXAMPLE 18 ("objectFFRFreducedOrderAccelerations.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 19 ("objectFFRFreducedOrderTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP100, t = 0.01 sec, timeToGo = 2.85625e-16 sec, Nit/step = 7.99
+solver finished after 0.548423 seconds.
+solution of ObjectFFRFreducedOrder= 0.5355233268052288 
+****************************************** 
+  EXAMPLE 19 ("objectFFRFreducedOrderTest.py") FAILED 
+  ERROR = -3.735900477863652e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 20 ("objectFFRFTest.py"): 
+****************************************** 
+nodes size= (115, 3) 
+elements size= (48, 8) 
+nNodes= 115 , nODE2= 345 
+eigenvalues = [1.8782082214020298e-05, 3.1662356838132965e-05, 3.398617255555657e-05, 4.0978724463906576e-05, 4.110567085874076e-05, 7.354077768136202e-05, 104.38283651620375, 104.61719002455796, 187.80080789125347, 212.2835422640571, 224.1833503865067, 237.76424090025992, 284.03182834217057, 284.1686514704376, 394.14008453785516, 394.50416829971766, 405.4717329962671, 406.42193610635553] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP10, t = 0.001 sec, timeToGo = 0 sec, Nit/step = 5.4
+solver finished after 1.27114 seconds.
+solution of ObjectFFRF= 0.00646001081207057 
+****************************************** 
+  EXAMPLE 20 ("objectFFRFTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 21 ("objectFFRFTest2.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP19, t = 0.0019 sec, timeToGo = 0.633921 sec, Nit/step = 7.10526
+STEP25, t = 0.0025 sec, timeToGo = 4.25062e-16 sec, Nit/step = 7.32
+solver finished after 1.74292 seconds.
+solution of ObjectFFRFtest2= 0.035521880690327384 
+****************************************** 
+  EXAMPLE 21 ("objectFFRFTest2.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 22 ("objectGenericODE2Test.py"): 
+****************************************** 
+eigen freq.= [  0.      57.6318  57.6318 132.5577 132.5577 136.3306 187.8241 212.3297
+ 231.9987 231.9987 238.6879 261.7874 401.3941 401.3941] 
+eigen freq. first mode = 57.63178639764625 
+excitation node= 112 
+nMid= 110 
+nTopMid= 103 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP50, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 3.18
+solver finished after 0.503664 seconds.
+solution of ObjectGenericODE2= -2.3163788974854577e-05 
+****************************************** 
+  EXAMPLE 22 ("objectGenericODE2Test.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 23 ("PARTS_ATEs_moving.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP50, t = 0.05 sec, timeToGo = 0 sec, Nit/step = 2
+solver finished after 0.584601 seconds.
+Solver iteration statistics:
+total number of steps:        50
+total number of Newton iterations: 100
+total number of Newton Jacobians:  100
+uy= 0.4465676276026222 
+****************************************** 
+  EXAMPLE 23 ("PARTS_ATEs_moving.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 24 ("pendulumFriction.py"): 
+****************************************** 
+mass= 2.5 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP4000, t = 0.4 sec, timeToGo = 2.10803e-14 sec, Nit/step = 1.55975
+solver finished after 0.303805 seconds.
+p0= [ 0.11878348 -0.38195612  0.        ] 
+solution of pendulumFriction= 0.399999987769823 
+****************************************** 
+  EXAMPLE 24 ("pendulumFriction.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 25 ("rigidBodyCOMtest.py"): 
+****************************************** 
+AddRigidBody COM= [ 0.4   0.22 -0.35] 
+inertia6D= [14.2725, 14.0625, 11.21, 4.925, 5.5, -1.2000000000000002] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 7.8
+solver finished after 0.0554181 seconds.
+solution of rigidBodyCOMtest= 3.409431467726292 
+****************************************** 
+  EXAMPLE 25 ("rigidBodyCOMtest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 26 ("rollingCoinTest.py"): 
+****************************************** 
+solution of rollingCoinTest= 0.002004099927337848 
+****************************************** 
+  EXAMPLE 26 ("rollingCoinTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 27 ("rollingCoinPenaltyTest.py"): 
+****************************************** 
+solution of rollingCoinPenaltyTest= 0.03489603106696451 
+****************************************** 
+  EXAMPLE 27 ("rollingCoinPenaltyTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 28 ("scissorPrismaticRevolute2D.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP500, t = 10 sec, timeToGo = 0 sec, Nit/step = 3.002
+solver finished after 0.229591 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 1501
+total number of Newton Jacobians:  1501
+uy= 1.1310332041867288 
+solver.it.newtonStepsCount= 1501 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP500, t = 10 sec, timeToGo = 0 sec, Nit/step = 2.434
+solver finished after 0.252492 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 1217
+total number of Newton Jacobians:  1217
+uy= 1.124615700260622 
+solver.it.newtonStepsCount= 1217 
+****************************************** 
+  EXAMPLE 28 ("scissorPrismaticRevolute2D.py") FAILED 
+  ERROR = 7.460698725481052e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 29 ("serialRobotTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.00323739, time = 0.001
+STEP257, t = 0.1285 sec, timeToGo = 1.11466 sec, Nit/step = 11.6498
+STEP400, t = 0.2 sec, timeToGo = 0 sec, Nit/step = 11.92
+solver finished after 3.16235 seconds.
+torques at tEnd= 77.12176106962295 
+****************************************** 
+  EXAMPLE 29 ("serialRobotTest.py") FAILED 
+  ERROR = 6.954437026251981e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 30 ("sliderCrank3Dbenchmark.py"): 
+****************************************** 
+slider initial position = 0.19999999999999996 
+vCB len= 0.3 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP1000, t = 0.2 sec, timeToGo = 0 sec, Nit/step = 2
+solver finished after 0.234478 seconds.
+solution of 3D slidercrank iftomm benchmark= 3.3642761780921897 
+****************************************** 
+  EXAMPLE 30 ("sliderCrank3Dbenchmark.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 31 ("sliderCrankFloatingTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP5000, t = 0.3 sec, timeToGo = 0 sec, Nit/step = 6.055
+solver finished after 0.338653 seconds.
+sol = 0.2948599898874915 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP5000, t = 0.3 sec, timeToGo = 0 sec, Nit/step = 6.0214
+solver finished after 0.840432 seconds.
+sol = 0.2967891734913421 
+solutionSliderCrankIndex2= 0.5916491633788337 
+****************************************** 
+  EXAMPLE 31 ("sliderCrankFloatingTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 32 ("solverExplicitODE1ODE2test.py"): 
+****************************************** 
+EXUDYN version=1.0.130 
+solverExplicitODE1ODE2 err= 3.3767933275918964 
+****************************************** 
+  EXAMPLE 32 ("solverExplicitODE1ODE2test.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 33 ("sparseMatrixSpringDamperTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 660.519: relTol = 1280.09: contr. = 1280.09
+    update initial residual with current residual; initial residual = 660.519
+    NEWTON STEP 2: residual = 0.0266944: relTol = 4.04143e-05: contr. = 4.04143e-05
+    NEWTON STEP 3: residual = 0.000156096: relTol = 2.36323e-07: contr. = 0.00584751
+    NEWTON STEP 4: residual = 3.70381e-07: relTol = 5.60742e-10: contr. = 0.00237278
+  Newton: convergenced after 4 steps; relative error = 5.60742e-10
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 1 ... REACHED)
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.457776 seconds.
+static tip displacement (y)= -6.779862983765133 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: nonlinear static solver
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 660.519: relTol = 1280.09: contr. = 1280.09
+    update initial residual with current residual; initial residual = 660.519
+    NEWTON STEP 2: residual = 0.0271908: relTol = 4.11658e-05: contr. = 4.11658e-05
+    NEWTON STEP 3: residual = 0.000151242: relTol = 2.28975e-07: contr. = 0.00556226
+    NEWTON STEP 4: residual = 3.87366e-07: relTol = 5.86457e-10: contr. = 0.00256123
+  Newton: convergenced after 4 steps; relative error = 5.86457e-10
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 1 ... REACHED)
+STEP1, factor = 1, timeToGo = 0 sec, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.0178363 seconds.
+static tip displacement (y)= -6.779862983764702 
+****************************************** 
+  EXAMPLE 33 ("sparseMatrixSpringDamperTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 34 ("sphericalJointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP1000, t = 1 sec, timeToGo = 0 sec, Nit/step = 6.771
+solver finished after 0.205774 seconds.
+solution of sphericalJointTest= 4.409080446580333 
+****************************************** 
+  EXAMPLE 34 ("sphericalJointTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 35 ("springDamperUserFunctionTest.py"): 
+****************************************** 
+EXUDYN version=1.0.130 
+resonance frequency = 50.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP5000, t = 50 sec, timeToGo = 6.90344e-15 sec, Nit/step = 1.9798
+solver finished after 0.250398 seconds.
+Solver iteration statistics:
+total number of steps:        5000
+total number of Newton iterations: 9899
+total number of Newton Jacobians:  9899
+displacement= 0.5062872273010885 
+****************************************** 
+  EXAMPLE 35 ("springDamperUserFunctionTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 36 ("stiffFlyballGovernor.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP20, t = 0.001 sec, timeToGo = 0 sec, Nit/step = 0
+solver finished after 0.0421929 seconds.
+solution of stiffFlyballGovernor= 0.8962488779114737 
+****************************************** 
+  EXAMPLE 36 ("stiffFlyballGovernor.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 37 ("superElementRigidJointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP5, t = 0.005 sec, timeToGo = 0 sec, Nit/step = 9
+solver finished after 0.216302 seconds.
+solution of superElementRigidJointTest= 0.015214887106839988 
+****************************************** 
+  EXAMPLE 37 ("superElementRigidJointTest.py") FINISHED SUCCESSFUL 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 38 ("connectorRigidBodySpringDamperTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.130 solver: implicit second order time integration
+STEP100, t = 0.1 sec, timeToGo = 0 sec, Nit/step = 1
+solver finished after 0.0089056 seconds.
+Solver iteration statistics:
+total number of steps:        100
+total number of Newton iterations: 100
+total number of Newton Jacobians:  100
+solution of connectorRigidBodySpringDamperTest= 0.1827622474328367 
+****************************************** 
+  EXAMPLE 38 ("connectorRigidBodySpringDamperTest.py") FAILED 
+  ERROR = 1.6701640070948542e-12 
+****************************************** 
+
+
+****************************************** 
+  START MINI EXAMPLE 0 ("ObjectMassPoint.py"): 
+start mini example for class ObjectMassPoint 
+example for ObjectMassPoint completed, test error = 1 
+  MINI EXAMPLE 0 ("ObjectMassPoint.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 1 ("ObjectMassPoint2D.py"): 
+start mini example for class ObjectMassPoint2D 
+example for ObjectMassPoint2D completed, test error = 1 
+  MINI EXAMPLE 1 ("ObjectMassPoint2D.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 2 ("ObjectMass1D.py"): 
+start mini example for class ObjectMass1D 
+example for ObjectMass1D completed, test error = 1 
+  MINI EXAMPLE 2 ("ObjectMass1D.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 3 ("ObjectRotationalMass1D.py"): 
+start mini example for class ObjectRotationalMass1D 
+example for ObjectRotationalMass1D completed, test error = 1 
+  MINI EXAMPLE 3 ("ObjectRotationalMass1D.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 4 ("ObjectRigidBody2D.py"): 
+start mini example for class ObjectRigidBody2D 
+example for ObjectRigidBody2D completed, test error = 1 
+  MINI EXAMPLE 4 ("ObjectRigidBody2D.py") FINISHED SUCCESSFUL 
+  RESULT = 4.356194490192344 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 5 ("ObjectGenericODE2.py"): 
+start mini example for class ObjectGenericODE2 
+example for ObjectGenericODE2 completed, test error = 1 
+  MINI EXAMPLE 5 ("ObjectGenericODE2.py") FINISHED SUCCESSFUL 
+  RESULT = 1.0039999999354785 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 6 ("ObjectGenericODE1.py"): 
+start mini example for class ObjectGenericODE1 
+example for ObjectGenericODE1 completed, test error = 1 
+  MINI EXAMPLE 6 ("ObjectGenericODE1.py") FINISHED SUCCESSFUL 
+  RESULT = -0.8206847097689384 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 7 ("ObjectConnectorSpringDamper.py"): 
+start mini example for class ObjectConnectorSpringDamper 
+example for ObjectConnectorSpringDamper completed, test error = 1 
+  MINI EXAMPLE 7 ("ObjectConnectorSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = 0.9733828995835538 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 8 ("ObjectConnectorCartesianSpringDamper.py"): 
+start mini example for class ObjectConnectorCartesianSpringDamper 
+example for ObjectConnectorCartesianSpringDamper completed, test error = 1 
+  MINI EXAMPLE 8 ("ObjectConnectorCartesianSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = -0.0009999999999750209 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 9 ("ObjectConnectorRigidBodySpringDamper.py"): 
+start mini example for class ObjectConnectorRigidBodySpringDamper 
+example for ObjectConnectorRigidBodySpringDamper completed, test error = 1 
+  MINI EXAMPLE 9 ("ObjectConnectorRigidBodySpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = -0.5349299542344889 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 10 ("ObjectConnectorCoordinateSpringDamper.py"): 
+start mini example for class ObjectConnectorCoordinateSpringDamper 
+example for ObjectConnectorCoordinateSpringDamper completed, test error = 1 
+  MINI EXAMPLE 10 ("ObjectConnectorCoordinateSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = 0.0019995154213252597 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 11 ("ObjectConnectorDistance.py"): 
+start mini example for class ObjectConnectorDistance 
+example for ObjectConnectorDistance completed, test error = 1 
+  MINI EXAMPLE 11 ("ObjectConnectorDistance.py") FINISHED SUCCESSFUL 
+  RESULT = -0.9861806726069355 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 12 ("ObjectConnectorCoordinate.py"): 
+start mini example for class ObjectConnectorCoordinate 
+example for ObjectConnectorCoordinate completed, test error = 1 
+  MINI EXAMPLE 12 ("ObjectConnectorCoordinate.py") FINISHED SUCCESSFUL 
+  RESULT = 0.04999999999999982 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 13 ("MarkerSuperElementPosition.py"): 
+start mini example for class MarkerSuperElementPosition 
+example for MarkerSuperElementPosition completed, test error = 1 
+  MINI EXAMPLE 13 ("MarkerSuperElementPosition.py") FINISHED SUCCESSFUL 
+  RESULT = 1.0039999999354785 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 14 ("LoadMassProportional.py"): 
+start mini example for class LoadMassProportional 
+example for LoadMassProportional completed, test error = 1 
+  MINI EXAMPLE 14 ("LoadMassProportional.py") FINISHED SUCCESSFUL 
+  RESULT = -4.9049999999999985 
+  ERROR  = 0.0 
+
+ 
+****************************************** 
+TEST SUITE RESULTS SUMMARY: 
+****************************************** 
+time elapsed = 21.282 seconds 
+ALL UNIT TESTS SUCCESSFUL 
+7 EXAMPLE TEST(S) OUT OF 39 FAILED:  
+  EXAMPLE 3 (ACNFslidingAndALEjointTest.py) FAILED 
+  EXAMPLE 13 (genericODE2test.py) FAILED 
+  EXAMPLE 15 (heavyTop.py) FAILED 
+  EXAMPLE 19 (objectFFRFreducedOrderTest.py) FAILED 
+  EXAMPLE 28 (scissorPrismaticRevolute2D.py) FAILED 
+  EXAMPLE 29 (serialRobotTest.py) FAILED 
+  EXAMPLE 38 (connectorRigidBodySpringDamperTest.py) FAILED 
+ALL 15 MINI EXAMPLE TESTS SUCCESSFUL 
+******************************************
+ 
