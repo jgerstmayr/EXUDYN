@@ -570,9 +570,9 @@ bool MainObjectContactCircleCable2D::CheckPreAssembleConsistency(const MainSyste
 	CObjectContactCircleCable2D* cObject = (CObjectContactCircleCable2D*)GetCObject();
 	Index node = cObject->GetNodeNumber(0);
 
-	if (cObject->GetParameters().numberOfContactSegments > cObject->maxNumberOfSegments)
+	if (cObject->GetParameters().numberOfContactSegments > CObjectContactCircleCable2DmaxNumberOfSegments)
 	{
-		errorString = "ObjectContactCircleCable2D: numberOfContactSegments must be <= " + EXUstd::ToString(cObject->maxNumberOfSegments);
+		errorString = "ObjectContactCircleCable2D: numberOfContactSegments must be <= " + EXUstd::ToString(CObjectContactCircleCable2DmaxNumberOfSegments);
 		return false;
 	}
 
@@ -639,9 +639,9 @@ bool MainObjectContactFrictionCircleCable2D::CheckPreAssembleConsistency(const M
 	CObjectContactFrictionCircleCable2D* cObject = (CObjectContactFrictionCircleCable2D*)GetCObject();
 	Index node = cObject->GetNodeNumber(0);
 
-	if (cObject->GetParameters().numberOfContactSegments > cObject->maxNumberOfSegments)
+	if (cObject->GetParameters().numberOfContactSegments > CObjectContactFrictionCircleCable2DmaxNumberOfSegments)
 	{
-		errorString = "ObjectContactFrictionCircleCable2D: numberOfContactSegments must be <= " + EXUstd::ToString(cObject->maxNumberOfSegments);
+		errorString = "ObjectContactFrictionCircleCable2D: numberOfContactSegments must be <= " + EXUstd::ToString(CObjectContactFrictionCircleCable2DmaxNumberOfSegments);
 		return false;
 	}
 
@@ -670,9 +670,9 @@ bool MainObjectContactFrictionCircleCable2D::CheckPreAssembleConsistency(const M
 	}
 
 	Index object0Index = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
-	if (mainSystem.GetCSystem()->GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2D::maxObject0Coordinates)
+	if (mainSystem.GetCSystem()->GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DmaxObject0Coordinates)
 	{
-		errorString = STDstring("ObjectContactFrictionCircleCable2D: Marker 0 must refer to an object which has no more than ") + EXUstd::ToString(CObjectContactFrictionCircleCable2D::maxObject0Coordinates) + " coordinates";
+		errorString = STDstring("ObjectContactFrictionCircleCable2D: Marker 0 must refer to an object which has no more than ") + EXUstd::ToString(CObjectContactFrictionCircleCable2DmaxObject0Coordinates) + " coordinates";
 		return false;
 	}
 
@@ -852,7 +852,7 @@ bool MainObjectFFRFreducedOrder::CheckPreAssembleConsistency(const MainSystem& m
 
 	//GenericODE2 node may not have reference values! ==> is not considered in mode calculation
 	LinkedDataVector genericODE2ref(cObject->GetCNode(1)->GetCoordinateVector(ConfigurationType::Reference));
-	if (!genericODE2ref.GetL2Norm() == 0)
+	if (genericODE2ref.GetL2Norm() != 0 )
 	{
 		errorString = "ObjectFFRFreducedOrder: referenceCoordinates of GenericODE2 node must all be zero!";
 		return false;

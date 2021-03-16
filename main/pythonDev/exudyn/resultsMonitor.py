@@ -138,7 +138,7 @@ if runLoader:
 
     header = ParseOutputFileHeader(lines)
     #print('header=',header)
-    if header['type'] == 'geneticOptimization':
+    if header['type'] == 'geneticOptimization' or header['type'] == 'parameterVariation':
         lineStyle = '.'
         colValue = -1
         for i in range(len(header['columns'])):
@@ -146,9 +146,12 @@ if runLoader:
             if col != 'globalIndex' and col != 'computationIndex' and col != 'value':
                 xColumns += [i]
                 xLabels += [col]
-                yLabels += ['fitness']
+                if header['type'] == 'geneticOptimization':
+                    yLabels += ['fitness']
+                elif header['type'] == 'parameterVariation':
+                    yLabels += ['result']
             elif col == 'value':
-                colValue = i #fitness value is always second column in genetic optimization
+                colValue = i #fitness value is always second column in genetic optimization and parameter variation
         yColumns = [colValue]*len(xColumns)
     elif header['type'] == 'sensor' or header['type'] == 'solution':
         if len(xColumns) == 0: #automatically choose all columns
@@ -190,7 +193,7 @@ if runLoader:
         nCols = maxCols
     # print("nRows=",nRows,", nCols=", nCols)
     
-    fig = plt.figure()
+    fig = plt.figure('Results monitor')
     fig.dpi = 100 #in terminal, initially set to 200
     fig.tight_layout()
     fig.set_size_inches(nCols*sizeXinInches, nRows*sizeYinInches, forward=True)

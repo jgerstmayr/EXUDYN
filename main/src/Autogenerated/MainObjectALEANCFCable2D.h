@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-09  17:44:25 (last modfied)
+* @date         2021-02-17  17:49:07 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -98,7 +98,7 @@ public: // AUTO:
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
-        return "ANCFALECable2D";
+        return "ALEANCFCable2D";
     }
 
     //! AUTO:  node types are checked in CheckPreAssembleConsistency(...);provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()

@@ -41,7 +41,20 @@ public: //
   //! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
   //virtual CData* GetClone() const { return new CData(*this); }
 
-  //! Write (Reference) access to: current state coordinates (e.g. during Newton, static solution or time integration)
+	//use this function only for visualization or output in non-CPU critical regions ...
+	const CSystemState& Get(ConfigurationType configurationType) const
+	{
+		if (configurationType == ConfigurationType::Current) { return currentState; }
+		else if (configurationType == ConfigurationType::Reference) { return referenceState; }
+		else if (configurationType == ConfigurationType::Initial) { return initialState; }
+		else if (configurationType == ConfigurationType::StartOfStep) { return startOfStepState; }
+		else if (configurationType == ConfigurationType::Visualization) { return visualizationState; }
+
+		CHECKandTHROWstring("ERROR: CData:Get(...) no valid configurationType");
+		return currentState;
+	}
+
+	//! Write (Reference) access to: current state coordinates (e.g. during Newton, static solution or time integration)
 	CSystemState& GetCurrent() { return currentState; }
 	//! Read (Reference) access to: current state coordinates (e.g. during Newton, static solution or time integration)
 	const CSystemState& GetCurrent() const { return currentState; }

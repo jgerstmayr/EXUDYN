@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 580, 
-Number of resolved issues = 498 (130 in current version), 
-EXUDYN version = 1.0.130, 
-last change =  2021-02-10
+Number of issues = 597, 
+Number of resolved issues = 519 (151 in current version), 
+EXUDYN version = 1.0.151, 
+last change =  2021-03-16
 
 
 <table style = "width:100%">
@@ -38,6 +38,38 @@ last change =  2021-02-10
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0594</td>
+    <td>CMS rotations       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test and extend CMS / ObjectFFRFreducedOrder object for other rotation parameterizations (Tait-Bryan and rotation vector/Lie group) such that they work with explicit codes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-24</td>
+    <td>2021-04-25</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0591</td>
+    <td>ObjectFFRF          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Check forceVector and gravity forces in comparison to paper</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-02-21</td>
+    <td>2021-04-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0575</td>
     <td>new genAlpha solver </td>
@@ -166,7 +198,7 @@ last change =  2021-02-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0540</td>
     <td>github              </td>
     <td>JG</td>
@@ -182,7 +214,7 @@ last change =  2021-02-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0538</td>
     <td>monitorScaling      </td>
     <td>JG</td>
@@ -198,7 +230,7 @@ last change =  2021-02-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0517</td>
     <td>item number textures</td>
     <td>JG</td>
@@ -214,7 +246,7 @@ last change =  2021-02-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0514</td>
     <td>general wheel       </td>
     <td>JG</td>
@@ -230,7 +262,7 @@ last change =  2021-02-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0504</td>
     <td>serialrobot         </td>
     <td>JG</td>
@@ -246,7 +278,7 @@ last change =  2021-02-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0503</td>
     <td>serialrobot         </td>
     <td>JG</td>
@@ -327,44 +359,12 @@ last change =  2021-02-10
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0461</td>
-    <td>ObjectRigidBody     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check discription of output variables</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2020-11-12</td>
-    <td>2021-01-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0456</td>
     <td>ObjectFFRF bug with GenericJoint</td>
     <td>JG</td>
     <td>RAISED  </td>
     <td> raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity_qt not implemented; cannot compute jacobian for orientation</td>
     <td>BUG</td>
-    <td></td>
-    <td>2020-10-13</td>
-    <td>2020-12-12</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0455</td>
-    <td>FEM help            </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add comments to ObjectFFRF (Tisserand frame!) and reduced that there are convenient helper functions in FEM, etc. for creating objects</td>
-    <td>DOCU</td>
     <td></td>
     <td>2020-10-13</td>
     <td>2020-12-12</td>
@@ -587,7 +587,7 @@ last change =  2021-02-10
     <td>CMS C++             </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add CMS equations in C++</td>
+    <td> add ObjectFFRFreducedOrder (CMS) equations in C++ and clean up code</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-05-21</td>
@@ -608,54 +608,6 @@ last change =  2021-02-10
     <td></td>
     <td>2020-05-21</td>
     <td>2020-07-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0400</td>
-    <td>add SensorMarker    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add sensor for markers, restricting to position/velocity and rotation/angular velocity</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-20</td>
-    <td>2020-07-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0396</td>
-    <td>description         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add latex description for ObjectFFRF</td>
-    <td>DESCRIPTION</td>
-    <td></td>
-    <td>2020-05-16</td>
-    <td>2020-07-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0394</td>
-    <td>description         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add latex description for ObjectSuperElement</td>
-    <td>DESCRIPTION</td>
-    <td></td>
-    <td>2020-05-16</td>
-    <td>2020-07-15</td>
     <td></td>
     <td></td>
     <td></td>
@@ -928,22 +880,6 @@ last change =  2021-02-10
     <td></td>
     <td>2019-12-26</td>
     <td>2020-02-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0283</td>
-    <td>cylinder with hole  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add TriangleList for cylinder with hole</td>
-    <td>NEW FEATURE</td>
-    <td></td>
-    <td>2019-12-07</td>
-    <td>2020-02-05</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1351,6 +1287,246 @@ last change =  2021-02-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0596</td>
+    <td>GetRigidBodyNode    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function GetRigidBodyNode into rigidBodyUtilities, which returns a node item for an according node type, e.g., Euler parameters or rotation vector</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-14</td>
+    <td>2021-05-13</td>
+    <td>2021-03-14 14:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0595</td>
+    <td>ObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add general nodeType to AddObjectFFRFreducedOrderWithUserFunctions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-14</td>
+    <td>2021-05-13</td>
+    <td>2021-03-16 16:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0593</td>
+    <td>Add MacOS support   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> make minor adjustments for MacOS to run setup.py</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-02-22</td>
+    <td>2021-04-23</td>
+    <td>2021-02-22 13:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0592</td>
+    <td>StartRenderer       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> flag verbose=True not working</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-02-22</td>
+    <td>2021-04-23</td>
+    <td>2021-02-22 10:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0590</td>
+    <td>SensorMarker visualization</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add visualization for SensorMarker according to marker position</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-19</td>
+    <td>2021-04-20</td>
+    <td>2021-02-19 10:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0589</td>
+    <td>solver updateInitialValues</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> update also initial coordinates in order to avoid jumps in accelerations when continuing simulation</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-02-18</td>
+    <td>2021-04-19</td>
+    <td>2021-02-18 18:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0588</td>
+    <td>Solver file header  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> move writing of solution file and sensor files headers from InitializeSolverPreChecks(...) to InitializeSolverInitialConditions(...) to avoid sensor evaluation for initial configuration</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-02-18</td>
+    <td>2021-04-19</td>
+    <td>2021-02-18 16:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0587</td>
+    <td>ALEANCFCable2D      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change mass proportional load to include force in direction of ALE coordinate</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-17</td>
+    <td>2021-04-18</td>
+    <td>2021-02-17 18:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0586</td>
+    <td>GeneticOptimization </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add special warnings and adaptations in order to catch cases where elitistRatio*populationSize < 1 and if distanceFactor >= 1</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2021-02-17</td>
+    <td>2021-04-18</td>
+    <td>2021-02-17 18:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0585</td>
+    <td>UserSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add user sensor, which enables the user to add any kind of sensor, specifically to combine several sensor outputs into one single sensor</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-17</td>
+    <td>2021-04-18</td>
+    <td>2021-02-18 19:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0584</td>
+    <td>parameter variation </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add possibility to prescribe set of parameters using list, e.g.,  'mass':[1,2,4,8] instead of of tuple which describes the range: 'mass':(0,6,4)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-16</td>
+    <td>2021-04-17</td>
+    <td>2021-02-16 09:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0583</td>
+    <td>FFRF docu           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add documentation for FFRF and FFRFreducedOrder (CMS) to documentation</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-02-16</td>
+    <td>2021-04-17</td>
+    <td>2021-03-01 12:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0582</td>
+    <td>optimization         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add parameter variation and genetic optiization to documentation of solvers</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-02-16</td>
+    <td>2021-04-17</td>
+    <td>2021-02-16 08:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0581</td>
+    <td>SetODE2Coordinates_tt</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> SetODE2Coordinates_tt writes to velocities instead of accelerations</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-02-14</td>
+    <td>2021-04-15</td>
+    <td>2021-02-14 11:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0580</td>
+    <td>ParameterVariation  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> processing.ParameterVariation(...): write to resultsFile to show progress in resultsMonitor.py</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-11</td>
+    <td>2021-04-12</td>
+    <td>2021-02-11 17:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0579</td>
     <td>ClearWorkspace      </td>
     <td>JG</td>
@@ -1480,7 +1656,7 @@ last change =  2021-02-10
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0569</td>
-    <td>fix contour text    </td>
+    <td>contour text    </td>
     <td>JG</td>
     <td>RESOLVED</td>
     <td> add space to computation info text before contour plot text</td>
@@ -1496,7 +1672,7 @@ last change =  2021-02-10
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0568</td>
-    <td>fix Renderer axes   </td>
+    <td>Renderer axes   </td>
     <td>JG</td>
     <td>RESOLVED</td>
     <td> use X(0), Y(1) and Z(2) for axes description to be compliant with Python indexing starting with 0 as well as contour components</td>
@@ -2104,11 +2280,11 @@ last change =  2021-02-10
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0522</td>
-    <td>fix openGl issues   </td>
+    <td>openGl issues       </td>
     <td>JG</td>
     <td>RESOLVED</td>
     <td> fix positioning problems of coordinate system and contour colorbar</td>
-    <td>BUG</td>
+    <td>FIX</td>
     <td></td>
     <td>2020-12-27</td>
     <td>2021-02-25</td>
@@ -2951,6 +3127,22 @@ last change =  2021-02-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0461</td>
+    <td>ObjectRigidBody     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check discription of output variables</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2020-11-12</td>
+    <td>2021-01-11</td>
+    <td>2021-03-16 16:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0460</td>
     <td>test accelerations  </td>
     <td>JG</td>
@@ -3009,6 +3201,22 @@ last change =  2021-02-10
     <td>2020-11-07</td>
     <td>2021-01-06</td>
     <td>2020-11-29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0455</td>
+    <td>FEM help            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add comments to ObjectFFRF (Tisserand frame!) and reduced that there are convenient helper functions in FEM, etc. for creating objects</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2020-10-13</td>
+    <td>2020-12-12</td>
+    <td>2021-02-24 21:21</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3639,6 +3847,22 @@ last change =  2021-02-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0400</td>
+    <td>add SensorMarker    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add sensor for markers, restricting to position/velocity and rotation/angular velocity</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-20</td>
+    <td>2020-07-19</td>
+    <td>2021-02-18 19:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0399</td>
     <td>ObjectContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -3687,6 +3911,22 @@ last change =  2021-02-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0396</td>
+    <td>description         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add latex description for ObjectFFRF</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2021-03-16 16:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0395</td>
     <td>description         </td>
     <td>JG</td>
@@ -3697,6 +3937,22 @@ last change =  2021-02-10
     <td>2020-05-16</td>
     <td>2020-07-15</td>
     <td>2020-06-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0394</td>
+    <td>description         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add latex description for ObjectSuperElement</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2020-05-16</td>
+    <td>2020-07-15</td>
+    <td>2021-03-16 16:57</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -5189,6 +5445,22 @@ last change =  2021-02-10
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0283</td>
+    <td>cylinder with hole  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add TriangleList for cylinder with hole</td>
+    <td>NEW FEATURE</td>
+    <td></td>
+    <td>2019-12-07</td>
+    <td>2020-02-05</td>
+    <td>2021-03-16 16:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not implemented, because it can be easily created with GraphicsDataSolidOfRevolution</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0282</td>

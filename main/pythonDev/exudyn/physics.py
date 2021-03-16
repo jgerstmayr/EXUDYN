@@ -55,7 +55,7 @@ def RegularizedFrictionStep(x,x0,h0,x1,h1):
 #  velDynamic: velocity at which muDynamic is reached for first time
 #**output: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 #**notes:
-#  see references: Fores et al. \cite{Flores2008}, Qian et al. \cite{Qian2018}
+#  see references: Flores et al. \cite{Flores2008}, Qian et al. \cite{Qian2018}
 def RegularizedFriction(vel, muDynamic, muStaticOffset, velStatic, velDynamic, muViscous=0):
     vs = velStatic
     vd = velDynamic

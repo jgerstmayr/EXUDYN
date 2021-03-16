@@ -29,7 +29,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+    exu.SolveDynamic(mbs)
 
     #check result
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]

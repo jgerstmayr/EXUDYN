@@ -29,7 +29,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+    exu.SolveDynamic(mbs)
 
     #check result, get current mass position at local position [0,0,0]
     exudynTestGlobals.testResult = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]

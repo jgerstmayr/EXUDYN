@@ -43,12 +43,21 @@ typedef ConstSizeMatrixBase<float,4> Matrix2DF; //will be changed to SlimMatrix<
 
 namespace EXUmath {
 
+#ifndef __APPLE__
 	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
 	inline static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
 	inline static const Vector3D unitVecX({ 1.,0.,0. });
 	inline static const Vector3D unitVecY({ 0.,1.,0. });
 	inline static const Vector3D unitVecZ({ 0.,0.,1. });
+#else
+	static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
+	static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
+	static const Vector3D unitVecX({ 1.,0.,0. });
+	static const Vector3D unitVecY({ 0.,1.,0. });
+	static const Vector3D unitVecZ({ 0.,0.,1. });
+#endif
 
 	//! compute sinc(x) = sin(x)/x including case x=0, where sinc(x) = 1
 	template <class T>

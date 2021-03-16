@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-14  18:26:25 (last modfied)
+* @date         2021-02-21  10:44:39 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@
 class CObjectConnectorRollingDiscPenaltyParameters // AUTO: 
 {
 public: // AUTO: 
-    ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents the ground and \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
+    ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents the ground, which can undergo translations but not rotations, and \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates
     Real dryFrictionAngle;                        //!< AUTO: angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m]
@@ -37,7 +37,7 @@ public: // AUTO:
     Real rollingFrictionViscous;                  //!< AUTO: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     Real discRadius;                              //!< AUTO: defines the disc radius
-    Vector3D planeNormal;                         //!< AUTO: normal to the contact / rolling plane; cannot be changed at the moment
+    Vector3D planeNormal;                         //!< AUTO: normal to the contact / rolling plane (ground); Currently, this is not co-rotating with the ground body, but will do so in the future
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorRollingDiscPenaltyParameters()
     {

@@ -248,7 +248,7 @@ It is important that the \codeName\ module is basically a state machine, where y
 Whenever a system container is created with \texttt{SC = exu.SystemContainer()}, the structure \texttt{SC} lives in C++ and will be modified via the python interface.
 Usually, the system container will hold at least one system, usually called \texttt{mbs}.
 Commands such as \texttt{mbs.AddNode(...)} add objects to the system \texttt{mbs}. 
-The system will be prepared for simulation by \texttt{mbs.Assemble()} and can be solved (e.g., using \texttt{SC.TimeIntegrationSolve(...)}) and evaluated hereafter using the results files.
+The system will be prepared for simulation by \texttt{mbs.Assemble()} and can be solved (e.g., using \texttt{exu.SolveDynamic(...)}) and evaluated hereafter using the results files.
 Using \texttt{mbs.Reset()} will clear the system and allows to set up a new system. Items can be modified (\texttt{ModifyObject(...)}) after first initialization, even during simulation.
 %
 
@@ -589,202 +589,203 @@ Exceptions to the NO-ABBREVIATIONS-RULE:
 
 \mysubsection{Changes}
 \label{sec:changes}
-
-The following list covers changes in the python interface and functionality:
-\bi \small
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.2xx $\ra$ Version 0.1.2yy}
+For continuous tracking of changes, see \refSection{sec:issueTracker}.
+%
+%The following list covers changes in the python interface and functionality:
+%\bi \small
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%%\item {\bf Version 0.1.2xx $\ra$ Version 0.1.2yy}
+	%%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+	%%\bi
+	  %%\item {\bf xxxx}: 
+	%%\ei
+	%%\item[] Changes in the python interface:
+	%%\bi \ttfamily
+	  %%\item $\ra$ 
+	%%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.59$\ra$ Version 1.0.61}
+	%\bi
+	  %\item {\bf Major changes}: Changed interface of \texttt{processing.GeneticOptimization()}; 
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.56$\ra$ Version 1.0.57}
+	%\bi
+	  %\item {\bf Major changes}: added new submodule \texttt{exudyn.signal}; 
+		%\item {\bf Major changes}: \texttt{FilterSignal} renamed into \texttt{FilterSensorOutput} and moved from \texttt{exudyn.utilities} to \texttt{exudyn.signal}
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.49$\ra$ Version 1.0.51}
+	%\bi
+	%\item user functions can now be set to zero, e.g.:
+	%\item[] \phantom{XXXX} \texttt{mbs.AddObject(CoordinateSpringDamper(markerNumbers=[m0,m1],
+	%\item[] \phantom{XXXXXXXX} stiffness=k, damping=0.01*k, 
+	%\item[] \phantom{XXXXXXXX} springForceUserFunction=0)}
+	%\item Exception: for \texttt{visualizationSettings.window.keyPressUserFunction} use \\ \texttt{SC.visualizationSettings.window.ResetKeyPressUserFunction()} to set it to zero
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.42$\ra$ Version 1.0.49}
+	%\bi
+	%\item {\bf Major changes}: OpenGL default settings for lights and material have been changed; slightly different appearance might result from that! per default, light1 is active as well.
+	%\item {\bf Major changes}: Added key callback functionality \texttt{keyPressUserFunction} to \texttt{VisualizationSettings.window}
+	%\item added mouse coordinates (OpenGL and screen pixels) to renderState and added a \texttt{GetCurrentMouseCoordinates()} function to SystemContainer
+	%\item added mouse coordinates to renderer window (press 'F3')
+	%\item identified problems with OpenGL lights; light1 is now working
+	%\item solved problems with coordinateSystem
+	%\item added a world basis (coordinate system) at origin of model (0,0,0); \\see \texttt{VisualizationSettings.general.drawWorldBasis}
+	%\item added flag \texttt{simulateInRealtime} to \texttt{simulationSettings.timeIntegration}
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.38$\ra$ Version 1.0.42}
+	%\bi
+	%\item completed \texttt{Acceleration} output variables for all relevant objects and nodes; 
+	%\item added FilterSignal(...) (\refSection{sec:signal:FilterSignal}) functionality to utilities, which enables numerical differentiation and filtering, using savgol filter, applied to all output values of data loaded from sensors.
+	%\item for example, see \texttt{TestModels/objectFFRFreducedOrderAccelerations.py}.
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.37$\ra$ Version 1.0.38}
+	%\bi
+	%\item \texttt{SC.StopRenderer()} now stores the last renderState in \texttt{exu.sys['renderState']}, which can be used in subsequent simulations to always have the same view and zoom; 
+	%for an example, see \refSection{sec:storing:modelview}.
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.32$\ra$ Version 1.0.37}
+	%\bi
+	%\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
+	%\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.17 $\ra$ Version 1.0.18}
+	%\bi
+	%\item {\bf removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
+	%\item added acceleration sensor functionality to most objects and nodes
+	%\item added Lie group utilities (see \texttt{exudyn.lieGroup})
+	%\item added processing utilities for parameter variation and optimization (see \texttt{exudyn.processing})
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.12 $\ra$ Version 1.0.13}
+	%\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see \refSection{eq_equationLHSRHS}:
+	%\bi
+	  %\item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
+		%\item forces are written at the RHS
+		%\item system quantities are always written on RHS: $m \ddot q = f_{RHS}$
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.8 $\ra$ Version 1.0.9}
+	%\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):
+	%\bi %\ttfamily
+	%\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
+	%\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
+	%\item before: \texttt{mbs.AddMarker(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddMarker(...)} $\ra$ MarkerIndex
+	%\item before: \texttt{mbs.AddLoad(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddLoad(...)} $\ra$ LoadIndex
+	%\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
+	%\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
+		%\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
+		%to avoid mistakes due to wrong types of indices.
+	%\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
+	%%\item {\bf NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
+	%%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
+	%%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
+	%%\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
+	%%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
+	%\ei
+	%\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)
+	%\item[] removed functions mbs.GetNodeByName(...), GetObjectByName(...), etc. (issue: 445)
+	%%
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 1.0.6 $\ra$ Version 1.0.7}
+	%\item[] autocreate directories (issue: 431):
+	%\bi %\ttfamily
+	%\item directories (folders) will be created for given paths
+	%\item this applies, e.g., to sensor's \texttt{fileName} or simulation settings \texttt{coordinatesSolutionFileName}
+	%\item previously, a non-existing directory led to an exception
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.368 $\ra$ Version 1.0.0}
+	%\item[] {\bf Major changes} in the python interface, as the utilities moved into the exudyn package:
+	%\bi \ttfamily
+	  %\item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
+	  %\item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
+	  %\item \texttt{from exudynBasicUtilities import *} $\ra$ \texttt{from exudyn.basicUtilities import *}
+	  %\item \texttt{from exudynFEM import *} $\ra$ \texttt{from exudyn.FEM import *}
+	  %\item \texttt{from exudynGraphicsDataUtilities import *} $\ra$ \texttt{from exudyn.graphicsDataUtilities import *}
+	  %\item \texttt{from exudynGUI import *} $\ra$ \texttt{from exudyn.GUI import *}
+	  %\item \texttt{from exudynLieGroupIntegration import *} $\ra$ \texttt{from exudyn.lieGroupIntegration import *}
+	  %\item \texttt{from exudynRigidBodyUtilities import *} $\ra$ \texttt{from exudyn.rigidBodyUtilities import *}
+	  %\item \texttt{from exudynRobotics import *} $\ra$ \texttt{from exudyn.robotics import *}
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.360 $\ra$ Version 0.1.361}
+	%\item[] Changes in the python interface:
+	%\bi \ttfamily
+	  %\item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
+		%\texttt{simulationSettings.staticSolver.preStepPyExecute}
+		%are deprecated, DON'T USE any more
+	  %\item Use \texttt{mbs.SetPreStepUserFunction(...)} instead!
+	%\ei
+  %%\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.352 $\ra$ Version 0.1.353}
+	%\item[] Changes in the renderer screen:
+	%\bi \ttfamily
+	  %\item Keys '0' and 'KEYPAD 0' $\ra$ not available any more (set default rotation x/y)
+	  %\item Use keys CTRL+'1', SHIFT+CTRL+'1', CTRL+'2', ...  $\ra$ keys for new standard views!
+	%\ei
+  %%\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
+%
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.288 $\ra$ Version 0.1.289}
+	%\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
+	%\bi \ttfamily
+	  %\item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.287 $\ra$ Version 0.1.288}
+	%\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
+	%\bi \ttfamily
+	  %\item changed the name of {\bf initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.282 $\ra$ Version 0.1.284}
+	%\item[] Changes in the python interface:
+	%\bi \ttfamily
+	  %\item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.260 $\ra$ Version 0.1.263}
+	%\item[] Changes in the python interface:
+	%\bi \ttfamily
+	  %\item mbs.systemData.GetCurrentTime() $\ra$ mbs.systemData.GetTime()
+	  %\item mbs.systemData.GetVisualizationTime() $\ra$ mbs.systemData.GetTime(configurationType=exu.ConfigurationType.Visualization)
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.244 $\ra$ Version 0.1.245}
 	%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
 	%\bi
-	  %\item {\bf xxxx}: 
+	  %\item {\bf Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
+	%\ei
+	%\item[] Changes in the python interface (new functions / interface to call the old solvers):
+	%\bi \ttfamily
+	  %\item SC.SolveStaticOldSolver(...)
+	  %\item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 	%\item {\bf Version 0.1.243 $\ra$ Version 0.1.244}
+	%\item[] Changes in the python interface:
+	%\bi \ttfamily
+	  %\item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
+	%\ei
+	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	%\item {\bf Version 0.1.238 $\ra$ Version 0.1.240}
+	%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+	%\bi
+	  %\item {\bf generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
+		%\item {\bf time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
 	%\ei
 	%\item[] Changes in the python interface:
 	%\bi \ttfamily
-	  %\item $\ra$ 
+	  %\item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
+		%\item ADDED: simulationSettings.timeIntegration.verboseModeFile
+		%\item ADDED: simulationSettings.staticSolver.verboseModeFile
 	%\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.59$\ra$ Version 1.0.61}
-	\bi
-	  \item {\bf Major changes}: Changed interface of \texttt{processing.GeneticOptimization()}; 
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.56$\ra$ Version 1.0.57}
-	\bi
-	  \item {\bf Major changes}: added new submodule \texttt{exudyn.signal}; 
-		\item {\bf Major changes}: \texttt{FilterSignal} renamed into \texttt{FilterSensorOutput} and moved from \texttt{exudyn.utilities} to \texttt{exudyn.signal}
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.49$\ra$ Version 1.0.51}
-	\bi
-	\item user functions can now be set to zero, e.g.:
-	\item[] \phantom{XXXX} \texttt{mbs.AddObject(CoordinateSpringDamper(markerNumbers=[m0,m1],
-	\item[] \phantom{XXXXXXXX} stiffness=k, damping=0.01*k, 
-	\item[] \phantom{XXXXXXXX} springForceUserFunction=0)}
-	\item Exception: for \texttt{visualizationSettings.window.keyPressUserFunction} use \\ \texttt{SC.visualizationSettings.window.ResetKeyPressUserFunction()} to set it to zero
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.42$\ra$ Version 1.0.49}
-	\bi
-	\item {\bf Major changes}: OpenGL default settings for lights and material have been changed; slightly different appearance might result from that! per default, light1 is active as well.
-	\item {\bf Major changes}: Added key callback functionality \texttt{keyPressUserFunction} to \texttt{VisualizationSettings.window}
-	\item added mouse coordinates (OpenGL and screen pixels) to renderState and added a \texttt{GetCurrentMouseCoordinates()} function to SystemContainer
-	\item added mouse coordinates to renderer window (press 'F3')
-	\item identified problems with OpenGL lights; light1 is now working
-	\item solved problems with coordinateSystem
-	\item added a world basis (coordinate system) at origin of model (0,0,0); \\see \texttt{VisualizationSettings.general.drawWorldBasis}
-	\item added flag \texttt{simulateInRealtime} to \texttt{simulationSettings.timeIntegration}
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.38$\ra$ Version 1.0.42}
-	\bi
-	\item completed \texttt{Acceleration} output variables for all relevant objects and nodes; 
-	\item added FilterSignal(...) (\refSection{sec:signal:FilterSignal}) functionality to utilities, which enables numerical differentiation and filtering, using savgol filter, applied to all output values of data loaded from sensors.
-	\item for example, see \texttt{TestModels/objectFFRFreducedOrderAccelerations.py}.
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.37$\ra$ Version 1.0.38}
-	\bi
-	\item \texttt{SC.StopRenderer()} now stores the last renderState in \texttt{exu.sys['renderState']}, which can be used in subsequent simulations to always have the same view and zoom; 
-	for an example, see \refSection{sec:storing:modelview}.
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.32$\ra$ Version 1.0.37}
-	\bi
-	\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
-	\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.17 $\ra$ Version 1.0.18}
-	\bi
-	\item {\bf removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
-	\item added acceleration sensor functionality to most objects and nodes
-	\item added Lie group utilities (see \texttt{exudyn.lieGroup})
-	\item added processing utilities for parameter variation and optimization (see \texttt{exudyn.processing})
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.12 $\ra$ Version 1.0.13}
-	\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see \refSection{eq_equationLHSRHS}:
-	\bi
-	  \item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
-		\item forces are written at the RHS
-		\item system quantities are always written on RHS: $m \ddot q = f_{RHS}$
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.8 $\ra$ Version 1.0.9}
-	\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):
-	\bi %\ttfamily
-	\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
-	\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
-	\item before: \texttt{mbs.AddMarker(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddMarker(...)} $\ra$ MarkerIndex
-	\item before: \texttt{mbs.AddLoad(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddLoad(...)} $\ra$ LoadIndex
-	\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
-	\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
-		\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
-		to avoid mistakes due to wrong types of indices.
-	\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
-	%\item {\bf NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
-	%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
-	%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
-	%\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
-	%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
-	\ei
-	\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)
-	\item[] removed functions mbs.GetNodeByName(...), GetObjectByName(...), etc. (issue: 445)
-	%
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 1.0.6 $\ra$ Version 1.0.7}
-	\item[] autocreate directories (issue: 431):
-	\bi %\ttfamily
-	\item directories (folders) will be created for given paths
-	\item this applies, e.g., to sensor's \texttt{fileName} or simulation settings \texttt{coordinatesSolutionFileName}
-	\item previously, a non-existing directory led to an exception
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.368 $\ra$ Version 1.0.0}
-	\item[] {\bf Major changes} in the python interface, as the utilities moved into the exudyn package:
-	\bi \ttfamily
-	  \item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
-	  \item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
-	  \item \texttt{from exudynBasicUtilities import *} $\ra$ \texttt{from exudyn.basicUtilities import *}
-	  \item \texttt{from exudynFEM import *} $\ra$ \texttt{from exudyn.FEM import *}
-	  \item \texttt{from exudynGraphicsDataUtilities import *} $\ra$ \texttt{from exudyn.graphicsDataUtilities import *}
-	  \item \texttt{from exudynGUI import *} $\ra$ \texttt{from exudyn.GUI import *}
-	  \item \texttt{from exudynLieGroupIntegration import *} $\ra$ \texttt{from exudyn.lieGroupIntegration import *}
-	  \item \texttt{from exudynRigidBodyUtilities import *} $\ra$ \texttt{from exudyn.rigidBodyUtilities import *}
-	  \item \texttt{from exudynRobotics import *} $\ra$ \texttt{from exudyn.robotics import *}
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.360 $\ra$ Version 0.1.361}
-	\item[] Changes in the python interface:
-	\bi \ttfamily
-	  \item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
-		\texttt{simulationSettings.staticSolver.preStepPyExecute}
-		are deprecated, DON'T USE any more
-	  \item Use \texttt{mbs.SetPreStepUserFunction(...)} instead!
-	\ei
-  %\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.352 $\ra$ Version 0.1.353}
-	\item[] Changes in the renderer screen:
-	\bi \ttfamily
-	  \item Keys '0' and 'KEYPAD 0' $\ra$ not available any more (set default rotation x/y)
-	  \item Use keys CTRL+'1', SHIFT+CTRL+'1', CTRL+'2', ...  $\ra$ keys for new standard views!
-	\ei
-  %\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
-
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.288 $\ra$ Version 0.1.289}
-	\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
-	\bi \ttfamily
-	  \item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.287 $\ra$ Version 0.1.288}
-	\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
-	\bi \ttfamily
-	  \item changed the name of {\bf initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.282 $\ra$ Version 0.1.284}
-	\item[] Changes in the python interface:
-	\bi \ttfamily
-	  \item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.260 $\ra$ Version 0.1.263}
-	\item[] Changes in the python interface:
-	\bi \ttfamily
-	  \item mbs.systemData.GetCurrentTime() $\ra$ mbs.systemData.GetTime()
-	  \item mbs.systemData.GetVisualizationTime() $\ra$ mbs.systemData.GetTime(configurationType=exu.ConfigurationType.Visualization)
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.244 $\ra$ Version 0.1.245}
-	\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-	\bi
-	  \item {\bf Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
-	\ei
-	\item[] Changes in the python interface (new functions / interface to call the old solvers):
-	\bi \ttfamily
-	  \item SC.SolveStaticOldSolver(...)
-	  \item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 	\item {\bf Version 0.1.243 $\ra$ Version 0.1.244}
-	\item[] Changes in the python interface:
-	\bi \ttfamily
-	  \item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
-	\ei
-	%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	\item {\bf Version 0.1.238 $\ra$ Version 0.1.240}
-	\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-	\bi
-	  \item {\bf generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
-		\item {\bf time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
-	\ei
-	\item[] Changes in the python interface:
-	\bi \ttfamily
-	  \item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
-		\item ADDED: simulationSettings.timeIntegration.verboseModeFile
-		\item ADDED: simulationSettings.staticSolver.verboseModeFile
-	\ei
-\ei
+%\ei

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-02  13:19:15 (last modfied)
+* @date         2021-03-01  11:18:42 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -42,7 +42,7 @@ public: // AUTO:
     std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below
     bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector
     Matrix modeBasis;                             //!< AUTO: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector \f$[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp\f$
-    Matrix outputVariableModeBasis;               //!< AUTO: mode basis, which transforms reduced coordinates to output variables per mode; \f$s_{OV}\f$ is the size of the output variable, e.g., 6 for stress modes (\f$S_{xx},...,S_{xy}\f$)
+    Matrix outputVariableModeBasis;               //!< AUTO: mode basis, which transforms reduced coordinates to output variables per mode and per node; \f$s_{OV}\f$ is the size of the output variable, e.g., 6 for stress modes (\f$S_{xx},...,S_{xy}\f$)
     OutputVariableType outputVariableTypeModeBasis;//!< AUTO: this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress
     Vector referencePositions;                    //!< AUTO: vector containing the reference positions of all flexible nodes, needed for graphics
     //! AUTO: default constructor with parameter initialization
@@ -65,7 +65,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectFFRFreducedOrder
-* @brief        This object is used to represent modally reduced flexible bodies using the floating frame of reference formulation (FFRF) and the component mode synthesis. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates.
+* @brief        This object is used to represent modally reduced flexible bodies using the floating frame of reference formulation (FFRF) and the component mode synthesis (CMS). It can be used to model real-life mechanical systems imported from finite element codes or python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -89,7 +89,7 @@ class CObjectFFRFreducedOrder: public CObjectSuperElement // AUTO:
 protected: // AUTO: 
     CObjectFFRFreducedOrderParameters parameters; //! AUTO: contains all parameters for CObjectFFRFreducedOrder
     Real physicsMass;                             //!< AUTO: total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\Mm\f$
-    Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm\indff\f$
     Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
     Matrix PHItTM;                                //!< AUTO: projector matrix; may be removed in future
     mutable Vector tempUserFunctionForce;         //!< AUTO: temporary vector for UF force
@@ -135,11 +135,11 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\Mm\f$
     Real& GetPhysicsMass() { return physicsMass; }
 
-    //! AUTO:  Write (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    //! AUTO:  Write (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm\indff\f$
     void SetPhysicsInertia(const Matrix3D& value) { physicsInertia = value; }
-    //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    //! AUTO:  Read (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm\indff\f$
     const Matrix3D& GetPhysicsInertia() const { return physicsInertia; }
-    //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    //! AUTO:  Read (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm\indff\f$
     Matrix3D& GetPhysicsInertia() { return physicsInertia; }
 
     //! AUTO:  Write (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
@@ -149,67 +149,67 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
     Vector3D& GetPhysicsCenterOfMass() { return physicsCenterOfMass; }
 
-    //! AUTO:  Write (Reference) access to:\f$\Phi_t\tp \in \Rcal^{n_{c_f} \times 3}\f$projector matrix; may be removed in future
+    //! AUTO:  Write (Reference) access to:\f$\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\f$projector matrix; may be removed in future
     void SetPHItTM(const Matrix& value) { PHItTM = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Phi_t\tp \in \Rcal^{n_{c_f} \times 3}\f$projector matrix; may be removed in future
+    //! AUTO:  Read (Reference) access to:\f$\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\f$projector matrix; may be removed in future
     const Matrix& GetPHItTM() const { return PHItTM; }
-    //! AUTO:  Read (Reference) access to:\f$\Phi_t\tp \in \Rcal^{n_{c_f} \times 3}\f$projector matrix; may be removed in future
+    //! AUTO:  Read (Reference) access to:\f$\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\f$projector matrix; may be removed in future
     Matrix& GetPHItTM() { return PHItTM; }
 
-    //! AUTO:  Write (Reference) access to:\f$\vv_{temp} \in \Rcal^{n_c}\f$temporary vector for UF force
+    //! AUTO:  Write (Reference) access to:\f$\fv_{temp} \in \Rcal^{n_{ODE2}}\f$temporary vector for UF force
     void SetTempUserFunctionForce(const Vector& value) { tempUserFunctionForce = value; }
-    //! AUTO:  Read (Reference) access to:\f$\vv_{temp} \in \Rcal^{n_c}\f$temporary vector for UF force
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n_{ODE2}}\f$temporary vector for UF force
     const Vector& GetTempUserFunctionForce() const { return tempUserFunctionForce; }
-    //! AUTO:  Read (Reference) access to:\f$\vv_{temp} \in \Rcal^{n_c}\f$temporary vector for UF force
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n_{ODE2}}\f$temporary vector for UF force
     Vector& GetTempUserFunctionForce() { return tempUserFunctionForce; }
 
-    //! AUTO:  Write (Reference) access to:\f$\vv_{temp} \in \Rcal^{n_f}\f$temporary vector
+    //! AUTO:  Write (Reference) access to:\f$\vv_{temp} \in \Rcal^{n\indf}\f$temporary vector
     void SetTempVector(const ResizableVector& value) { tempVector = value; }
-    //! AUTO:  Read (Reference) access to:\f$\vv_{temp} \in \Rcal^{n_f}\f$temporary vector
+    //! AUTO:  Read (Reference) access to:\f$\vv_{temp} \in \Rcal^{n\indf}\f$temporary vector
     const ResizableVector& GetTempVector() const { return tempVector; }
-    //! AUTO:  Read (Reference) access to:\f$\vv_{temp} \in \Rcal^{n_f}\f$temporary vector
+    //! AUTO:  Read (Reference) access to:\f$\vv_{temp} \in \Rcal^{n\indf}\f$temporary vector
     ResizableVector& GetTempVector() { return tempVector; }
 
-    //! AUTO:  Write (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    //! AUTO:  Write (Reference) access to:\f$\pv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing coordinates
     void SetTempCoordinates(const ResizableVector& value) { tempCoordinates = value; }
-    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    //! AUTO:  Read (Reference) access to:\f$\pv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing coordinates
     const ResizableVector& GetTempCoordinates() const { return tempCoordinates; }
-    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    //! AUTO:  Read (Reference) access to:\f$\pv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing coordinates
     ResizableVector& GetTempCoordinates() { return tempCoordinates; }
 
-    //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    //! AUTO:  Write (Reference) access to:\f$\dot \pv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing velocity coordinates
     void SetTempCoordinates_t(const ResizableVector& value) { tempCoordinates_t = value; }
-    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    //! AUTO:  Read (Reference) access to:\f$\dot \pv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing velocity coordinates
     const ResizableVector& GetTempCoordinates_t() const { return tempCoordinates_t; }
-    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    //! AUTO:  Read (Reference) access to:\f$\dot \pv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing velocity coordinates
     ResizableVector& GetTempCoordinates_t() { return tempCoordinates_t; }
 
-    //! AUTO:  Write (Reference) access to:\f$\tilde\pv_{f} \in \Rcal^{n_{c_f} \times 3}\f$matrix with skew symmetric local (deformed) node positions
+    //! AUTO:  Write (Reference) access to:\f$\tilde\rv \in \Rcal^{n\indf \times 3}\f$matrix with skew symmetric local (deformed) node positions
     void SetTempRefPosSkew(const Matrix& value) { tempRefPosSkew = value; }
-    //! AUTO:  Read (Reference) access to:\f$\tilde\pv_{f} \in \Rcal^{n_{c_f} \times 3}\f$matrix with skew symmetric local (deformed) node positions
+    //! AUTO:  Read (Reference) access to:\f$\tilde\rv \in \Rcal^{n\indf \times 3}\f$matrix with skew symmetric local (deformed) node positions
     const Matrix& GetTempRefPosSkew() const { return tempRefPosSkew; }
-    //! AUTO:  Read (Reference) access to:\f$\tilde\pv_{f} \in \Rcal^{n_{c_f} \times 3}\f$matrix with skew symmetric local (deformed) node positions
+    //! AUTO:  Read (Reference) access to:\f$\tilde\rv \in \Rcal^{n\indf \times 3}\f$matrix with skew symmetric local (deformed) node positions
     Matrix& GetTempRefPosSkew() { return tempRefPosSkew; }
 
-    //! AUTO:  Write (Reference) access to:\f$\dot\tilde\cv_{f} \in \Rcal^{n_{c_f} \times 3}\f$matrix with skew symmetric local node velocities
+    //! AUTO:  Write (Reference) access to:\f$\dot{\tilde\qv}_{f} \in \Rcal^{n\indf \times 3}\f$matrix with skew symmetric local node velocities
     void SetTempVelSkew(const Matrix& value) { tempVelSkew = value; }
-    //! AUTO:  Read (Reference) access to:\f$\dot\tilde\cv_{f} \in \Rcal^{n_{c_f} \times 3}\f$matrix with skew symmetric local node velocities
+    //! AUTO:  Read (Reference) access to:\f$\dot{\tilde\qv}_{f} \in \Rcal^{n\indf \times 3}\f$matrix with skew symmetric local node velocities
     const Matrix& GetTempVelSkew() const { return tempVelSkew; }
-    //! AUTO:  Read (Reference) access to:\f$\dot\tilde\cv_{f} \in \Rcal^{n_{c_f} \times 3}\f$matrix with skew symmetric local node velocities
+    //! AUTO:  Read (Reference) access to:\f$\dot{\tilde\qv}_{f} \in \Rcal^{n\indf \times 3}\f$matrix with skew symmetric local node velocities
     Matrix& GetTempVelSkew() { return tempVelSkew; }
 
-    //! AUTO:  Write (Reference) access to:\f$\Xm_{temp} \in \Rcal^{n_{c_f} \times 3}\f$temporary matrix
+    //! AUTO:  Write (Reference) access to:\f$\Xm_{temp} \in \Rcal^{n\indf \times 3}\f$temporary matrix
     void SetTempMatrix(const ResizableMatrix& value) { tempMatrix = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp} \in \Rcal^{n_{c_f} \times 3}\f$temporary matrix
+    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp} \in \Rcal^{n\indf \times 3}\f$temporary matrix
     const ResizableMatrix& GetTempMatrix() const { return tempMatrix; }
-    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp} \in \Rcal^{n_{c_f} \times 3}\f$temporary matrix
+    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp} \in \Rcal^{n\indf \times 3}\f$temporary matrix
     ResizableMatrix& GetTempMatrix() { return tempMatrix; }
 
-    //! AUTO:  Write (Reference) access to:\f$\Xm_{temp2} \in \Rcal^{n_{c_f} \times 4}\f$other temporary matrix
+    //! AUTO:  Write (Reference) access to:\f$\Xm_{temp2} \in \Rcal^{n\indf \times 4}\f$other temporary matrix
     void SetTempMatrix2(const ResizableMatrix& value) { tempMatrix2 = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp2} \in \Rcal^{n_{c_f} \times 4}\f$other temporary matrix
+    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp2} \in \Rcal^{n\indf \times 4}\f$other temporary matrix
     const ResizableMatrix& GetTempMatrix2() const { return tempMatrix2; }
-    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp2} \in \Rcal^{n_{c_f} \times 4}\f$other temporary matrix
+    //! AUTO:  Read (Reference) access to:\f$\Xm_{temp2} \in \Rcal^{n\indf \times 4}\f$other temporary matrix
     ResizableMatrix& GetTempMatrix2() { return tempMatrix2; }
 
     //! AUTO:  Computational function: compute mass matrix

@@ -219,12 +219,16 @@ def RotationVector2RotationMatrix(rotationVector):
 def RotationMatrix2RotationVector(rotationMatrix):
     # compute a  rotation vector from given rotation matrix according to 
     # 2015 - Sonneville - A geometrical local frame approach for flexible multibody systems, p45
-    theta = np.arccos(0.5*(np.trace(rotationMatrix)-1))
-    if np.linalg.norm(theta) < np.pi:
-        logR = (theta/(2*np.sin(theta)))*(rotationMatrix - np.transpose(rotationMatrix))
-        rotationVector = Skew2Vec(logR)
-    else:
+    if np.linalg.norm(rotationMatrix - np.eye(3)) == 0.:
         rotationVector = np.zeros(3)
+    else:
+        theta = np.arccos(0.5*(np.trace(rotationMatrix)-1))
+        if abs(theta) < np.pi and abs(theta) > 0:
+            logR = (theta/(2*np.sin(theta)))*(rotationMatrix - np.transpose(rotationMatrix))
+            rotationVector = Skew2Vec(logR)
+        else:
+            rotationVector = np.zeros(3)
+
     return rotationVector
 
 
@@ -245,6 +249,20 @@ def ComputeRotationAxisFromRotationVector(rotationVector):
     # return rotation axis 
     return rotationAxis
 
+
+#**function: convert rotation vector (parameters) (v) to G-matrix (=$\partial \tomega  / \partial \vv_t$)
+#**input: vector of rotation vector (len=3) as list or np.array
+#**output: 3x3 matrix G as np.array
+def RotationVector2G(rotationVector):
+    v = eulerParameters
+    return RotationVector2RotationMatrix(rotationVector)
+
+#**function: convert rotation vector (parameters) (v) to local G-matrix (=$\partial \LU{b}{\tomega}   / \partial \vv_t$)
+#**input: vector of rotation vector (len=3) as list or np.array
+#**output: 3x3 matrix G as np.array
+def RotationVector2GLocal(eulerParameters):
+    ep = eulerParameters
+    return np.eye(3)
 
 
 
@@ -556,7 +574,64 @@ class InertiaCylinder(RigidBodyInertia):
         
         
     
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
+#**input:
+#   position: reference position as list or numpy array with 3 components
+#   velocity: initial translational velocity as list or numpy array with 3 components
+#   rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
+#   rotationParameters: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
+#   angularVelocity: initial angular velocity as list or numpy array with 3 components
+#**output: returns list containing node number and body number: [nodeNumber, bodyNumber]
+def GetRigidBodyNode(nodeType, 
+                 position=[0,0,0], 
+                 velocity=[0,0,0], 
+                 rotationMatrix= [],
+                 rotationParameters = [],
+                 angularVelocity=[0,0,0]):
 
+    if len(rotationMatrix) != 0 and len(rotationParameters) != 0:
+        raise ValueError('GetRigidBodyNode: either rotationMatrix or rotationParameters must empty!')
+    if len(rotationMatrix) == 0 and len(rotationParameters) == 0:
+        rotationMatrix=np.eye(3)
+
+    strNodeType = str(nodeType) #works both for nodeType and for strings (if exudyn not available)
+
+    nodeItem = []
+    if strNodeType == 'NodeType.RotationEulerParameters':
+        if len(rotationParameters) == 0:
+            ep0 = RotationMatrix2EulerParameters(rotationMatrix)
+        else:
+            ep0 = rotationParameters
+           
+        ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
+        nodeItem = NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0),
+                                   initialVelocities=list(velocity)+list(ep_t0))       
+    elif strNodeType == 'NodeType.RotationRxyz':
+        if len(rotationParameters) == 0:
+            rot0 = RotationMatrix2RotXYZ(rotationMatrix)
+        else:
+            rot0 = rotationParameters
+
+        rot_t0 = AngularVelocity2RotXYZ_t(angularVelocity, rot0)
+        nodeItem = NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0),
+                                     initialVelocities=list(velocity)+list(rot_t0))
+    elif strNodeType == 'NodeType.RotationRotationVector':
+        if len(rotationParameters) == 0:
+            #raise ValueError('NodeType.RotationRotationVector not implemented!')
+            rot0 = RotationMatrix2RotationVector(rotationMatrix)
+        else:
+            rot0 = rotationParameters
+        
+        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+        angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
+            
+        nodeItem = NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
+                                         initialVelocities=list(velocity)+list(angularVelocityLocal))
+    else:
+        raise ValueError("GetRigidBodyNode: invalid node type:"+strNodeType)
+
+    return nodeItem
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
@@ -580,44 +655,42 @@ def AddRigidBody(mainSys, inertia, nodeType,
     if len(rotationMatrix) != 0 and len(rotationParameters) != 0:
         raise ValueError('AddRigidBody: either rotationMatrix or rotationParameters must empty!')
     if len(rotationMatrix) == 0 and len(rotationParameters) == 0:
-        rotationMatrix=np.diag([1,1,1])
+        rotationMatrix=np.eye(3)
         
-    strNodeType = str(nodeType)
-    nodeNumber = -1
-    if strNodeType == 'NodeType.RotationEulerParameters':
-        if len(rotationParameters) == 0:
-            ep0 = RotationMatrix2EulerParameters(rotationMatrix)
-        else:
-            ep0 = rotationParameters
+    nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrix, rotationParameters, angularVelocity)
+    nodeNumber = mainSys.AddNode(nodeItem)
+    
+#     strNodeType = str(nodeType)
+#     if strNodeType == 'NodeType.RotationEulerParameters':
+#         if len(rotationParameters) == 0:
+#             ep0 = RotationMatrix2EulerParameters(rotationMatrix)
+#         else:
+#             ep0 = rotationParameters
            
-        ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
-        nodeNumber = mainSys.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0), 
-                                                     initialVelocities=list(velocity)+list(ep_t0)))
-    elif strNodeType == 'NodeType.RotationRxyz':
-        if len(rotationParameters) == 0:
-            rot0 = RotationMatrix2RotXYZ(rotationMatrix)
-        else:
-            rot0 = rotationParameters
+#         ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
+#         nodeNumber = mainSys.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0), 
+#                                                      initialVelocities=list(velocity)+list(ep_t0)))
+#     elif strNodeType == 'NodeType.RotationRxyz':
+#         if len(rotationParameters) == 0:
+#             rot0 = RotationMatrix2RotXYZ(rotationMatrix)
+#         else:
+#             rot0 = rotationParameters
 
-        rot_t0 = AngularVelocity2RotXYZ_t(angularVelocity, rot0)
-#        print('rot0=',rot0)
-#        print('rot_t0=',rot_t0)
-        nodeNumber = mainSys.AddNode(NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0), 
-                                                       initialVelocities=list(velocity)+list(rot_t0)))
-    elif strNodeType == 'NodeType.RotationRotationVector':
-        if len(rotationParameters) == 0:
-            #raise ValueError('NodeType.RotationRotationVector not implemented!')
-            rot0 = RotationMatrix2RotationVector(rotationMatrix)
-        else:
-            rot0 = rotationParameters
+#         rot_t0 = AngularVelocity2RotXYZ_t(angularVelocity, rot0)
+#         nodeNumber = mainSys.AddNode(NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0), 
+#                                                        initialVelocities=list(velocity)+list(rot_t0)))
+#     elif strNodeType == 'NodeType.RotationRotationVector':
+#         if len(rotationParameters) == 0:
+#             #raise ValueError('NodeType.RotationRotationVector not implemented!')
+#             rot0 = RotationMatrix2RotationVector(rotationMatrix)
+#         else:
+#             rot0 = rotationParameters
         
-        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
-        angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
+#         rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+#         angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
             
-        nodeNumber = mainSys.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
-                                                           initialVelocities=list(velocity)+list(angularVelocityLocal)))
-    #if NormL2(inertia.com) != 0:
-    #    print("AddRigidBody COM=", inertia.com)
+#         nodeNumber = mainSys.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
+#                                                            initialVelocities=list(velocity)+list(angularVelocityLocal)))
 
     bodyNumber = mainSys.AddObject(ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
                                                    physicsCenterOfMass=inertia.com,

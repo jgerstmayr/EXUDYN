@@ -22,9 +22,11 @@
 //! gapPerSegment returns the 'area' gap per segment, which is the distance/penetration * segment length (or real penetrating area)
 //! referenceCoordinatePerSegment returns the reference coordinate at the segment (range: [0,1]) in case of contact ==> used to apply forces (either this is the nearest point or a vertex of the segment)
 //! the x/yDirectionGap show the direction of the gap, in which the contact force should act
-void CObjectContactCircleCable2D::ComputeGap(const MarkerDataStructure& markerData, ConstSizeVector<maxNumberOfSegments>& gapPerSegment, 
-	ConstSizeVector<maxNumberOfSegments>& referenceCoordinatePerSegment, 
-	ConstSizeVector<maxNumberOfSegments>& xDirectionGap, ConstSizeVector<maxNumberOfSegments>& yDirectionGap) const
+void CObjectContactCircleCable2D::ComputeGap(const MarkerDataStructure& markerData, 
+	ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& gapPerSegment,
+	ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& referenceCoordinatePerSegment,
+	ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& xDirectionGap, 
+	ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& yDirectionGap) const
 {
 	//circular segment, which cuts a piece with height h off the circle with radius r:
 	//    alpha = 2*arccos(1-h/r);			//angle of the cut
@@ -89,12 +91,12 @@ void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDa
 		//gap>0: no contact, gap<0: contact
 	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
 
-		ConstSizeVector<maxNumberOfSegments> gapPerSegment;
-		ConstSizeVector<maxNumberOfSegments> referenceCoordinatePerSegment;
-		ConstSizeVector<maxNumberOfSegments> xDirectionGap;
-		ConstSizeVector<maxNumberOfSegments> yDirectionGap;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> gapPerSegment;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> xDirectionGap;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> yDirectionGap;
 		ComputeGap(markerData, gapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
-		const Index maxNumberOfPoints = maxNumberOfSegments + 1;
+		const Index maxNumberOfPoints = CObjectContactCircleCable2DmaxNumberOfSegments + 1;
 
 		//xDirectionGap.SetAll(0.);
 		//yDirectionGap.SetAll(1.);
@@ -172,10 +174,10 @@ Real CObjectContactCircleCable2D::PostNewtonStep(const MarkerDataStructure& mark
 	{
 		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
 
-		ConstSizeVector<maxNumberOfSegments> currentGapPerSegment;
-		ConstSizeVector<maxNumberOfSegments> referenceCoordinatePerSegment;
-		ConstSizeVector<maxNumberOfSegments> xDirectionGap;
-		ConstSizeVector<maxNumberOfSegments> yDirectionGap;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> currentGapPerSegment;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> xDirectionGap;
+		ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments> yDirectionGap;
 		ComputeGap(markerDataCurrent, currentGapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
 
 		for (Index i = 0; i < parameters.numberOfContactSegments; i++)

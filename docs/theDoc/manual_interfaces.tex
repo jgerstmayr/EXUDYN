@@ -10,7 +10,7 @@ These are the access functions to the \codeName\ module.
 {\bf function/structure name} & {\bf description}\\ \hline
   GetVersionString() & Get EXUDYN module version as string\\ \hline 
   RequireVersion(requiredVersionString) & Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")\\ \hline 
-  StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation\\ \hline 
+  StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
   SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 

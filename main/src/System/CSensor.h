@@ -52,6 +52,7 @@ public:
 		case SensorType::SuperElement:  return GetObjectNumber();
 		case SensorType::Marker: return GetMarkerNumber();
 		case SensorType::Load:  return GetLoadNumber();
+		case SensorType::UserFunction:  return 0; //would be several numbers ...
 		default: SysError("Sensor::GetTypeDependentIndex: invalid sensor type");  return 0;
 		}
 	}
@@ -78,6 +79,17 @@ public:
 	virtual Index GetMarkerNumber() const {
 		CHECKandTHROWstring("Invalid call to CSensor::GetMarkerNumber");
 		return EXUstd::InvalidIndex;
+	}
+
+	//! if user function Sensor: get sensor number (otherwise assertion)
+	virtual Index GetSensorNumber(Index localIndex) const {
+		CHECKandTHROWstring("Invalid call to CSensor::GetSensorNumber");
+		return EXUstd::InvalidIndex;
+	}
+
+	//! if user function Sensor: get number of related sensors
+	virtual Index GetNumberOfSensors() const {
+		return 0; //ususally no dependent sensors
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

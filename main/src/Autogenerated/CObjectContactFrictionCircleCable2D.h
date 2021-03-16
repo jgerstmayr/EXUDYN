@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-10  11:54:41 (last modfied)
+* @date         2021-02-22  18:00:12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,8 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+constexpr Index CObjectContactFrictionCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
+constexpr Index CObjectContactFrictionCircleCable2DmaxObject0Coordinates = 12; //this is a non-optimal solution; used for a constsizevector in the computation of the action on the body of marker0
 
 //! AUTO: Parameters for class CObjectContactFrictionCircleCable2DParameters
 class CObjectContactFrictionCircleCable2DParameters // AUTO: 
@@ -83,8 +85,6 @@ protected: // AUTO:
     CObjectContactFrictionCircleCable2DParameters parameters; //! AUTO: contains all parameters for CObjectContactFrictionCircleCable2D
 
 public: // AUTO: 
-    static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
-    static constexpr Index maxObject0Coordinates = 12; //this is a non-optimal solution; used for a constsizevector in the computation of the action on the body of marker0
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -118,7 +118,7 @@ public: // AUTO:
     }
 
     //! AUTO:  compute gap for given MarkerData; done for every contact point (numberOfSegments+1) --> in order to decide contact state for every segment; in case of positive gap, the area is distance*segment_length
-    void ComputeGap(const MarkerDataStructure& markerData, ConstSizeVector<maxNumberOfSegments>& gapPerSegment, ConstSizeVector<maxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<maxNumberOfSegments>& xDirectionGap, ConstSizeVector<maxNumberOfSegments>& yDirectionGap) const;
+    void ComputeGap(const MarkerDataStructure& markerData, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& gapPerSegment, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& xDirectionGap, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& yDirectionGap) const;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const override;

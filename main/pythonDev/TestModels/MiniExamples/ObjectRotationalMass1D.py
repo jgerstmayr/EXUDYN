@@ -29,7 +29,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+    exu.SolveDynamic(mbs)
 
     #check result, get current rotor z-rotation at local position [0,0,0]
     exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])

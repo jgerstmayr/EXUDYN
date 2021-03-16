@@ -62,7 +62,7 @@ GLFWwindow* GlfwRenderer::window = nullptr;
 RenderState* GlfwRenderer::state;
 RenderStateMachine GlfwRenderer::stateMachine;
 std::thread GlfwRenderer::rendererThread;
-//uint64_t GlfwRenderer::visualizationCounter = 0;
+bool GlfwRenderer::verboseRenderer = false;        
 Index GlfwRenderer::firstRun = 0; //zoom all in first run
 std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice); initialized with clear state
 
@@ -793,8 +793,11 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 
 bool GlfwRenderer::SetupRenderer(bool verbose)
 {
-	//glfwCreateThread();
+	verboseRenderer = verbose;
+
+	//glfwCreateThread(); //does not work properly ...
 	//auto th = new std::thread(GlfwRenderer::StartThread);
+
 	globalPyRuntimeErrorFlag = false; //if previous renderer crashed, this allows to relase this error even if the old renderer is still running
 
 	if (rendererActive)//check that renderer is not already running and that link to SystemContainer exists
@@ -808,7 +811,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 
 		rendererError = 0; 
 
-		if (verbose) { pout << "Setup OpenGL renderer ...\n"; }
+		if (verboseRenderer) { pout << "Setup OpenGL renderer ...\n"; }
 		if (rendererThread.joinable()) //thread is still running from previous call ...
 		{
 			rendererThread.join();
@@ -823,13 +826,15 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
-		if (verbose) { pout << "waited for " << i * 10 << " milliseconds \n"; }
+		if (verboseRenderer) { pout << "waited for " << i * 10 << " milliseconds \n"; }
 		if (rendererActive)
 		{
-			if (verbose) { pout << "OpenGL renderer started!\n"; return true; }
+			if (verboseRenderer) { pout << "OpenGL renderer started!\n"; }
 			basicVisualizationSystemContainer->SetVisualizationIsRunning(true); //render engine runs, graphicsupdate shall be done
+			return true;
 		}
-		else { 
+		else 
+		{ 
 			basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //render engine did not start
 			if (rendererError == 1)
 			{
@@ -890,10 +895,13 @@ void GlfwRenderer::StopRenderer()
 
 void GlfwRenderer::InitCreateWindow()
 {
-
+	//this is now running in separate thread, can only output to rendererOut.
+	if (verboseRenderer) { rendererOut << "InitCreateWindow\n"; }
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
 	{
+		if (verboseRenderer) { rendererOut << "glfwInit failed\n"; }
+
 		rendererError = 1;
 		exit(EXIT_FAILURE);
 	}
@@ -902,11 +910,13 @@ void GlfwRenderer::InitCreateWindow()
 	{
 		glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
 		glEnable(GL_MULTISAMPLE); //usually activated by default, but better to have it anyway
+		if (verboseRenderer) { rendererOut << "enable GL_MULTISAMPLE\n"; }
 	}
 
 	if (visSettings->window.alwaysOnTop)
 	{
 		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); //GLFW_FLOATING (default: GLFW_FALSE)  specifies whether the windowed mode window will be floating above other regular windows, also called topmost or always - on - top.This is intended primarily for debugging purposes and cannot be used to implement proper full screen windows.Possible values are GLFW_TRUE and GLFW_FALSE.
+		if (verboseRenderer) { rendererOut << "enable GLFW_FLOATING\n"; }
 	}
 	//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE); //(default: GLFW_TRUE) specifies whether the windowed mode window will be given input focus when created. Possible values are GLFW_TRUE and GLFW_FALSE.
 	//GLFW_FOCUS_ON_SHOW (default: GLFW_TRUE) specifies whether the window will be given input focus when glfwShowWindow is called. Possible values are GLFW_TRUE and GLFW_FALSE
@@ -936,22 +946,29 @@ void GlfwRenderer::InitCreateWindow()
 		SysError("GLFWRenderer::InitCreateWindow: Render window could not be created");
 		exit(EXIT_FAILURE);
 	}
+	else
+	{
+		if (verboseRenderer) { rendererOut << "glfwCreateWindow(...) successful\n"; }
+	}
+
 	//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
 	glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
+	if (verboseRenderer) { rendererOut << "glfwSetWindowSizeLimits(...) successful\n"; }
 
-	rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
-
-	firstRun = 0; //zoom all on startup of window
 	//+++++++++++++++++++++++++++++++++
 	//set keyback functions
 	glfwSetKeyCallback(window, key_callback);			//keyboard input
 	glfwSetScrollCallback(window, scroll_callback);		//mouse wheel input
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
-	glfwSetWindowCloseCallback(window, window_close_callback);
+	if (verboseRenderer) { rendererOut << "mouse and key callbacks successful\n"; }
 
+	glfwSetWindowCloseCallback(window, window_close_callback);
 	glfwSetWindowRefreshCallback(window, Render);
+	if (verboseRenderer) { rendererOut << "window callbacks successful\n"; }
+
 	glfwMakeContextCurrent(window);
+	if (verboseRenderer) { rendererOut << "glfwMakeContextCurrent(...) successful\n"; }
 
 	//+++++++++++++++++
 	//initialize opengl
@@ -971,6 +988,7 @@ void GlfwRenderer::InitCreateWindow()
 	guint fontSize = (guint)(visSettings->general.textSize*fontScale);
 
 	InitFontBitmap(fontSize);
+	if (verboseRenderer) { rendererOut << "InitFontBitmap(...) successful\n"; }
 
 	//+++++++++++++++++++++++++++++++++
 	//depending on flags, do some changes to window
@@ -986,6 +1004,14 @@ void GlfwRenderer::InitCreateWindow()
 	{
 		glfwMaximizeWindow(window);
 	}
+
+	//+++++++++++++++++++++++++++++++++
+	//do this just before RunLoop, all initialization finished ...
+	firstRun = 0; //zoom all on startup of window
+	rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
+	//+++++++++++++++++++++++++++++++++
+
+	if (verboseRenderer) { rendererOut << "InitCreateWindow finished: Starting renderer loop\n"; }
 	RunLoop();
 }
 

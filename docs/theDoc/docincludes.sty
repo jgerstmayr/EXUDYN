@@ -105,6 +105,24 @@
 
 \newcommand{\tp}{^\mathrm{T}} %transpose
 
+%++++++++++++++++++++++++++++++++++++
+%for FFRF:
+\newcommand{\indf}{_\mathrm{f}}
+\newcommand{\indt}{_\mathrm{t}}
+\newcommand{\indr}{_\mathrm{r}}
+\newcommand{\indtt}{_\mathrm{tt}}
+\newcommand{\indrr}{_\mathrm{rr}}
+\newcommand{\indff}{_\mathrm{ff}}
+\newcommand{\indtf}{_\mathrm{tf}}
+\newcommand{\indrf}{_\mathrm{rf}}
+\newcommand{\indtr}{_\mathrm{tr}}
+%++++++++++++++++++++++++++++++++++++
+%for FFRFreducedOrder:
+\newcommand{\indrigid}{_\mathrm{rigid}}
+\newcommand{\indred}{_\mathrm{red}}
+\newcommand{\induser}{_\mathrm{user}}
+\newcommand{\indu}{_\mathrm{u}} %undeformed
+%++++++++++++++++++++++++++++++++++++
 
 \newcommand{\Null}{\mathbf{0}}
 
@@ -112,16 +130,19 @@
 \newcommand{\talpha}{\mbox{\boldmath $\alpha$ \unboldmath}\!\!}
 \newcommand{\tbeta}{\mbox{\boldmath $\beta$ \unboldmath}\!\!}
 \newcommand{\tgamma}{\mbox{\boldmath $\gamma$ \unboldmath}\!\!}
+\newcommand{\tchi}{\mbox{\boldmath $\chi$ \unboldmath}\!\!}
 \newcommand{\tdelta}{\mbox{\boldmath $\delta$ \unboldmath}\!\!}
 \newcommand{\teps}{\mbox{\boldmath $\varepsilon$ \unboldmath}\!\!}
 \newcommand{\teta}{\mbox{\boldmath $\eta$ \unboldmath}\!\!}
 \newcommand{\tphi}{\mbox{\boldmath $\phi$ \unboldmath}\!\!}
 \newcommand{\tPhi}{\mbox{\boldmath $\Phi$ \unboldmath}\!\!}
 \newcommand{\ttheta}{\mbox{\boldmath $\theta$ \unboldmath}\!\!}
+\newcommand{\tTheta}{\mbox{\boldmath $\Theta$ \unboldmath}\!\!}
 \newcommand{\tlambda}{\mbox{\boldmath $\lambda$ \unboldmath}\!\!}
 \newcommand{\tnu}{\mbox{\boldmath $\nu$ \unboldmath}\!\!}
 \newcommand{\tmu}{\mbox{\boldmath $\mu$ \unboldmath}\!\!}
 \newcommand{\tpsi}{\mbox{\boldmath $\psi$ \unboldmath}\!\!}
+\newcommand{\tPsi}{\mbox{\boldmath $\Psi$ \unboldmath}\!\!}
 \newcommand{\ttau}{\mbox{\boldmath $\tau$ \unboldmath}\!\!}
 \newcommand{\tsigma}{\mbox{\boldmath $\sigma$ \unboldmath}\!\!}
 \newcommand{\txi}{\mbox{\boldmath $\xi$ \unboldmath}\!\!}
@@ -133,6 +154,7 @@
 %left index:
 %\newcommand{\LU}[2]{{^{#1}#2}\,}
 \newcommand{\LU}[2]{\prescript{#1}{}{#2}\,}
+\newcommand{\LUX}[3]{\prescript{#1}{}{#2}#3\,} %for \LUX{0}{\Am}{_k^\mathrm{T}}
 \newcommand{\LUR}[3]{\prescript{#1}{}{#2}_{#3}\,}
 \newcommand{\LURU}[4]{\prescript{#1}{}{#2}_{#3}^{#4}\,}
 \newcommand{\LLdot}[3]{\prescript{}{#1}{\dot{#2}}_{#3}\,}

@@ -167,6 +167,7 @@ testFileList = [
                 'stiffFlyballGovernor.py',
                 'superElementRigidJointTest.py',
                 'connectorRigidBodySpringDamperTest.py',
+                'sensorUserFunctionTest.py',
                 ]
 
 
@@ -224,10 +225,13 @@ if runTestExamples:
         if abs(exudynTestGlobals.testError) < testTolerance:
             exu.Print('******************************************')
             exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+            exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
+            exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
             exu.Print('******************************************')
         else:
             exu.Print('******************************************')
             exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FAILED')
+            exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
             exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
             exu.Print('******************************************')
             testsFailed = testsFailed + [testExamplesCnt]

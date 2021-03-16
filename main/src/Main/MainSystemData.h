@@ -232,7 +232,7 @@ public: //
 	void SetODE2Coords_tt(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
 		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetODE2Coords_tt().NumberOfItems(), "SystemData::SetODE2Coords_tt: incompatible size of vectors");
-		GetCSystemState(configurationType)->SetODE2Coords_t(v);
+		GetCSystemState(configurationType)->SetODE2Coords_tt(v);
 	}
 
 	//+++++++++++++++++++++++++++++++++++

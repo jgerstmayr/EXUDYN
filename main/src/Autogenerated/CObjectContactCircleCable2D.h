@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-10  11:54:41 (last modfied)
+* @date         2021-02-22  18:00:12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,7 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+constexpr Index CObjectContactCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
 
 //! AUTO: Parameters for class CObjectContactCircleCable2DParameters
 class CObjectContactCircleCable2DParameters // AUTO: 
@@ -77,7 +78,6 @@ protected: // AUTO:
     CObjectContactCircleCable2DParameters parameters; //! AUTO: contains all parameters for CObjectContactCircleCable2D
 
 public: // AUTO: 
-    static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -111,7 +111,7 @@ public: // AUTO:
     }
 
     //! AUTO:  compute gap for given MarkerData; done for every contact point (numberOfSegments+1) --> in order to decide contact state for every segment; in case of positive gap, the area is distance*segment_length
-    void ComputeGap(const MarkerDataStructure& markerData, ConstSizeVector<maxNumberOfSegments>& gapPerSegment, ConstSizeVector<maxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<maxNumberOfSegments>& xDirectionGap, ConstSizeVector<maxNumberOfSegments>& yDirectionGap) const;
+    void ComputeGap(const MarkerDataStructure& markerData, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& gapPerSegment, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& xDirectionGap, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& yDirectionGap) const;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const override;

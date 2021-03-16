@@ -21,7 +21,7 @@ def TestExamplesReferenceSolution():
             'ANCFcontactCircleTest.py':-0.4842656547442095,
             'ANCFcontactFrictionTest.py':-0.014188649931863358,
             'ANCFmovingRigidBodyTest.py':-0.12893096921481131,
-            'ACNFslidingAndALEjointTest.py':-4.426403044452073,
+            'ACNFslidingAndALEjointTest.py':-4.426403043826658, #2021-02-17 (added mass proportional load in sALE direction): -4.426403043826658 #2021-02-06: -4.426403044452073,
             'carRollingDiscTest.py':-0.23940048717113455,
             'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228511,
             'compareFullModifiedNewton.py':0.00020079676000188396,
@@ -104,6 +104,9 @@ def TestExamplesReferenceSolution():
     if exudynTestGlobals.useCorrectedAccGenAlpha and not exudynTestGlobals.useNewGenAlphaSolver:
         print("in if clause **************\n**************\n**************\n**************\n")
         refSol['serialRobotTest.py']=0.7712176102645458#-4.309882450925784e-10 diff between old corrected and new gen alpha solver
+
+    #add new reference values here (only uses new solver):
+    refSol['sensorUserFunctionTest.py'] = 45
 
     return refSol
 

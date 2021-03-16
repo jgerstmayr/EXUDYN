@@ -13,8 +13,8 @@
 
 #constants and fixed structures:
 from exudyn.itemInterface import *
-from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, FillInSubMatrix, PlotLineCode
-from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, Skew
+from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, FillInSubMatrix, PlotLineCode, GetRigidBodyNode
+from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, Skew
 import numpy as np #LoadSolutionFile
 
 #convert zero-based sparse matrix data to dense numpy matrix
@@ -590,7 +590,7 @@ class ObjectFFRFinterface:
         self.inertiaLocal = self.xRefTilde.T @ self.massMatrixCSR @ self.xRefTilde #LARGE MATRIX COMPUTATION
 
 
-    #**classFunction: add according nodes, objects and constraints for FFRF object to MainSystem mbs
+    #**classFunction: add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
     #**input:
     #  exu: the exudyn module
     #  mbs: a MainSystem object
@@ -770,8 +770,9 @@ class ObjectFFRFreducedOrderInterface:
     #**input: 
     #  femInterface: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness
     #  roundMassMatrix: use this value to set entries of reduced mass matrix to zero which are below the treshold
-    #  roundStiffNessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
-    def __init__(self, femInterface, roundMassMatrix = 1e-13, roundStiffNessMatrix = 1e-13):
+    #  roundStiffnessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
+    def __init__(self, femInterface, rigidBodyNodeType = 'NodeType.RotationEulerParameters',
+                 roundMassMatrix = 1e-13, roundStiffnessMatrix = 1e-13):
  
         self.modeBasis = femInterface.modeBasis['matrix']
         nodeArray = femInterface.GetNodePositionsAsArray()
@@ -792,7 +793,13 @@ class ObjectFFRFreducedOrderInterface:
         self.nModes = self.modeBasis.shape[1]                 #number of columns in self.modeBasis is the number of modes to consider
         self.nNodes = len(nodeArray)                #stored in nNodes x 3 np-array
         self.dim3D = len(nodeArray[0])              #dimension of position, assuming that one node exists ....
-        self.nODE2rot = 4                           #dimension of rotation parameters; fixed to 4 for now!
+        
+        self.rigidBodyNodeType = rigidBodyNodeType
+        if str(self.rigidBodyNodeType) == 'NodeType.RotationEulerParameters':
+            self.nODE2rot = 4                       #Euler parameters
+        else:
+            self.nODE2rot = 3
+        
         self.nODE2rigid = self.dim3D + self.nODE2rot
         self.nODE2FFRFreduced = self.nODE2rigid + self.nModes
 
@@ -831,37 +838,65 @@ class ObjectFFRFreducedOrderInterface:
         #FillInSubMatrix(self.massMatrixReduced, self.massMatrixFFRFreduced, self.nODE2rigid, self.nODE2rigid)
         self.massMatrixFFRFreduced[self.nODE2rigid:,self.nODE2rigid:] = self.massMatrixReduced
 
-    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs
+    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; test implementation also for rotation vector (Lie group formulation)
     #**input:
     #  exu: the exudyn module
     #  mbs: a MainSystem object
     #  positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  eulerParametersRef: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
     #  UFforce: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  UFmassMatrix: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
+    #  rigiBodyNodeType: use exudyn.NodeType to prescribe type of underlying rigid body node (currently only Euler parameters are implemented and tested); do not use string to initialize other than Euler parameters
     #  color: provided as list of 4 RGBA values
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
-                                                  positionRef=[0,0,0], eulerParametersRef=[1,0,0,0], 
-                                                  initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
+                                                  positionRef=[0,0,0], 
+                                                  initialVelocity=[0,0,0], 
+                                                  rotationMatrixRef=[], 
+                                                  initialAngularVelocity=[0,0,0],
                                                   gravity=[0,0,0],
                                                   UFforce=0, UFmassMatrix=0,
                                                   massProportionalDamping = 0, stiffnessProportionalDamping = 0,
-                                                  color=[0.1,0.9,0.1,1.]):
+                                                  color=[0.1,0.9,0.1,1.],
+                                                  eulerParametersRef=[]):
+
+        #check chosen rotation parameterization:
+        if len(rotationMatrixRef) == 0 and len(eulerParametersRef) == 0:
+            rotationMatrixRef=np.diag([1,1,1])
+        elif len(rotationMatrixRef) != 0 and len(eulerParametersRef) != 0:
+            raise ValueError('AddObjectFFRFreducedOrderWithUserFunctions: rotationMatrixRef or eulerParametersRef must be zero')
+        
+        if len(eulerParametersRef) != 0:
+            if str(self.rigidBodyNodeType) != 'NodeType.RotationEulerParameters':
+                raise ValueError('AddObjectFFRFreducedOrderWithUserFunctions: inconsistent reference rotation parameters and rigidBodyNodeType')
+            #compute initial euler parameter velocities from angular velocity vector
+            self.rotationParameters_t0 = AngularVelocity2EulerParameters_t(initialAngularVelocity, eulerParametersRef)
+            self.rotationParameters0 = eulerParametersRef
+    
+            #rigid body node for ObjectFFRFreducedOrder
+            self.nRigidBody = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
+                                                initialVelocities=list(initialVelocity)+list(self.rotationParameters_t0)))
+            self.rigidBodyNodeType = exu.NodeType.RotationEulerParameters
+        else:
+            #compute initial rotation parameter velocities from angular velocity vector
+            nodeItem = GetRigidBodyNode(nodeType=self.rigidBodyNodeType, position=positionRef, 
+                                        velocity=initialVelocity, rotationMatrix=rotationMatrixRef, 
+                                        angularVelocity=initialAngularVelocity)
+            self.nRigidBody = mbs.AddNode(nodeItem)
+                        
+            self.rotationParameters0 = nodeItem.referenceCoordinates[3:]
+            self.rotationParameters_t0 = nodeItem.initialVelocities[3:]
+
+        #print("self.rotationParameters0 =",self.rotationParameters0 )
+        #print("self.rotationParameters_t0 =",self.rotationParameters_t0 )
 
         self.gravity = gravity
-
-        #compute initial euler parameter velocities from angular velocity vector
-        self.eulerParameters_t0 = AngularVelocity2EulerParameters_t(initialAngularVelocity, eulerParametersRef)
-        self.eulerParameters0 = eulerParametersRef
-
-        #rigid body node for ObjectFFRFreducedOrder
-        self.nRigidBody = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
-                                            initialVelocities=list(initialVelocity)+list(self.eulerParameters_t0)))
+        
         #generic node for modal coordinates in ObjectFFRFreducedOrder
         self.nGenericODE2 = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=self.nModes,
                                           referenceCoordinates=[0]*self.nModes,
@@ -918,8 +953,15 @@ class ObjectFFRFreducedOrderInterface:
 
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
         A = Avec.reshape((3,3))
-        ep = np.array(qReduced[self.dim3D:self.nODE2rigid]) + np.array(self.eulerParameters0) #add reference values, q are only the change w.r.t. reference values!
-        G = EulerParameters2GLocal(ep)
+        #compute rotation parameters including reference values:
+        rp = np.array(qReduced[self.dim3D:self.nODE2rigid]) + np.array(self.rotationParameters0) #add reference values, q are only the change w.r.t. reference values!
+        if self.rigidBodyNodeType == exu.NodeType.RotationEulerParameters:
+            G = EulerParameters2GLocal(rp)
+        elif self.rigidBodyNodeType == exu.NodeType.RotationRotationVector:
+            G = RotationVector2GLocal(rp)
+        else:
+            raise ValueError('UFmassFFRFreducedOrder: rotation parameterization not implemented')
+        
 
         zetaI = VectorDiadicUnitMatrix3D(qReduced[self.nODE2rigid:])
         zeta_tI = VectorDiadicUnitMatrix3D(qReduced_t[self.nODE2rigid:])
@@ -954,10 +996,18 @@ class ObjectFFRFreducedOrderInterface:
 
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
         A = Avec.reshape((3,3))
-        ep = np.array(qReduced[self.dim3D:self.nODE2rigid]) + np.array(self.eulerParameters0) #add reference values, q are only the change w.r.t. reference values!
-        G = EulerParameters2GLocal(ep)
-        if len(ep) != 4: 
-            print("ERROR: equations only implemented for Euler parameters case (terms missing for other formulations)"); exit()
+
+        #compute rotation parameters including reference values:
+        rp = np.array(qReduced[self.dim3D:self.nODE2rigid]) + np.array(self.rotationParameters0) #add reference values, q are only the change w.r.t. reference values!
+        # if len(ep) != 4: 
+        #     print("ERROR: equations only implemented for Euler parameters case (terms missing for other formulations)"); exit()
+
+        if self.rigidBodyNodeType == exu.NodeType.RotationEulerParameters:
+            G = EulerParameters2GLocal(rp)
+        elif self.rigidBodyNodeType == exu.NodeType.RotationRotationVector:
+            G = RotationVector2GLocal(rp)
+        else:
+            raise ValueError('UFforceFFRFreducedOrder: rotation parameterization not implemented')
 
         zetaI = VectorDiadicUnitMatrix3D(qReduced[self.nODE2rigid:])
         zeta_tI = VectorDiadicUnitMatrix3D(qReduced_t[self.nODE2rigid:])

@@ -94,9 +94,3 @@ extern OutputBuffer outputBuffer;  //!< link outputBuffer to change options
 //! this function requires C++17 std libraries
 //! works with local path
 bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName);
-
-class RendererKey
-{
-	char key;
-
-};

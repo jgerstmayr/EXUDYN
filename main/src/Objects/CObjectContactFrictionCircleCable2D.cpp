@@ -22,9 +22,10 @@
 //! referenceCoordinatePerSegment returns the reference coordinate at the segment (range: [0,1]) in case of contact ==> used to apply forces (either this is the nearest point or a vertex of the segment)
 //! the x/yDirectionGap show the direction of the gap, in which the contact force should act
 void CObjectContactFrictionCircleCable2D::ComputeGap(const MarkerDataStructure& markerData, 
-	ConstSizeVector<maxNumberOfSegments>& gapPerSegment, 
-	ConstSizeVector<maxNumberOfSegments>& referenceCoordinatePerSegment, 
-	ConstSizeVector<maxNumberOfSegments>& xDirectionGap, ConstSizeVector<maxNumberOfSegments>& yDirectionGap) const
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& gapPerSegment,
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& referenceCoordinatePerSegment,
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& xDirectionGap, 
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& yDirectionGap) const
 {
 	//circular segment, which cuts a piece with height h off the circle with radius r:
 	//    alpha = 2*arccos(1-h/r);			//angle of the cut
@@ -98,17 +99,17 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 		//gap>0: no contact, gap<0: contact
 		//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
 
-		ConstSizeVector<maxNumberOfSegments> gapPerSegment;
-		ConstSizeVector<maxNumberOfSegments> referenceCoordinatePerSegment;
-		ConstSizeVector<maxNumberOfSegments> xDirectionGap;
-		ConstSizeVector<maxNumberOfSegments> yDirectionGap;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> gapPerSegment;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
 		ComputeGap(markerData, gapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
-		const Index maxNumberOfPoints = maxNumberOfSegments + 1;
+		const Index maxNumberOfPoints = CObjectContactFrictionCircleCable2DmaxNumberOfSegments + 1;
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//compute velocities:
-		//ConstSizeVector<maxNumberOfSegments> gapVelocityPerSegment;
-		//ConstSizeVector<maxNumberOfSegments> tangentialVelocityPerSegment;
+		//ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> gapVelocityPerSegment;
+		//ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> tangentialVelocityPerSegment;
 		//gapVelocityPerSegment.SetNumberOfItems(parameters.numberOfContactSegments);
 		//tangentialVelocityPerSegment.SetNumberOfItems(parameters.numberOfContactSegments);
 
@@ -188,7 +189,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 
 			forceSum *= -1; //negative force on marker0
 			torqueSum *= -1; //negative force on marker0
-			ConstSizeVector<maxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
+			ConstSizeVector<CObjectContactFrictionCircleCable2DmaxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, forceSum, ldv0);
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).rotationJacobian, torqueSum, temp);
 			ldv0 += temp;
@@ -228,10 +229,10 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 	{
 		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
 
-		ConstSizeVector<maxNumberOfSegments> currentGapPerSegment;
-		ConstSizeVector<maxNumberOfSegments> referenceCoordinatePerSegment;
-		ConstSizeVector<maxNumberOfSegments> xDirectionGap;
-		ConstSizeVector<maxNumberOfSegments> yDirectionGap;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> currentGapPerSegment;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
 		ComputeGap(markerDataCurrent, currentGapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
 
 		for (Index i = 0; i < parameters.numberOfContactSegments; i++)

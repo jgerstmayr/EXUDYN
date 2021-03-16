@@ -61,7 +61,7 @@ void CNodeRigidBodyRotVecLG::GetG(ConstSizeMatrix<maxRotationCoordinates * nDim3
 //! Compute local G matrix for given configuration
 void CNodeRigidBodyRotVecLG::GetGlocal(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration) const
 {
-	matrix.CopyFrom(EXUmath::unitMatrix3D);
+	matrix.CopyFrom(EXUmath::unitMatrix3D); //velocity coordinates are identical to local angular velocity vector
 }
 
 //! Compute G matrix (=diff(angularVelocity, velocityParameters)) for given configuration
@@ -74,10 +74,10 @@ void CNodeRigidBodyRotVecLG::GetG_t(ConstSizeMatrix<maxRotationCoordinates * nDi
 	matrix.CopyFrom(mat);
 }
 
-//! Compute local G matrix for given configuration
+//! Compute time derivative of local G matrix for given configuration
 void CNodeRigidBodyRotVecLG::GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration) const
 {
-	matrix.CopyFrom(Matrix3D(3, 3, 0.));
+	matrix.CopyFrom(Matrix3D(3, 3, 0.)); //zero matrix
 }
 
 

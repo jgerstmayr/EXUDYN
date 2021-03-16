@@ -40,6 +40,7 @@
 
 typedef ResizableArray<Real> ArrayReal;
 typedef ResizableArray<Index> ArrayIndex;
+typedef std::vector<Index> StdArrayIndex; //needed for user functions
 
 typedef std::array<std::array<float, 3>, 3> StdArray33F;
 

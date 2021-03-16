@@ -143,6 +143,8 @@ def SolveDynamic(mbs,
         currentState = mbs.systemData.GetSystemState() #get current values
         mbs.systemData.SetSystemState(systemStateList=currentState, 
                                       configuration = exudyn.ConfigurationType.Initial)
+        mbs.systemData.SetODE2Coordinates_tt(coordinates = mbs.systemData.GetODE2Coordinates_tt(), 
+                                             configuration = exudyn.ConfigurationType.Initial)
 
     if storeSolver:
         mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable

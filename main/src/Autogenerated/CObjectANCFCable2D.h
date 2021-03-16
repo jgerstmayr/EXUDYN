@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-22  17:05:59 (last modfied)
+* @date         2021-02-22  13:14:19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,14 +28,14 @@
 class CObjectANCFCable2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Real physicsLength;                           //!< AUTO: reference length \f$L\f$ [SI:m] of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$
-    Real physicsMassPerLength;                    //!< AUTO: mass \f$\rho A\f$ [SI:kg/m\f$^2\f$] of beam
-    Real physicsBendingStiffness;                 //!< AUTO: bending stiffness \f$EI\f$ [SI:Nm\f$^2\f$] of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
-    Real physicsAxialStiffness;                   //!< AUTO: axial stiffness \f$EA\f$ [SI:N] of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
-    Real physicsBendingDamping;                   //!< AUTO: bending damping \f$d_{EI}\f$ [SI:Nm\f$^2\f$/s] of beam; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
-    Real physicsAxialDamping;                     //!< AUTO: axial stiffness \f$d_{EA}\f$ [SI:N/s] of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
-    Real physicsReferenceAxialStrain;             //!< AUTO: reference axial strain of beam (pre-deformation) \f$\varepsilon_0\f$ [SI:1] of beam; without external loading the beam will statically keep the reference axial strain value
-    Real physicsReferenceCurvature;               //!< AUTO: reference curvature of beam (pre-deformation) \f$\kappa_0\f$ [SI:1/m] of beam; without external loading the beam will statically keep the reference curvature value
+    Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$
+    Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m\f$^2\f$] mass per length of beam
+    Real physicsBendingStiffness;                 //!< AUTO:  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
+    Real physicsAxialStiffness;                   //!< AUTO:  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
+    Real physicsBendingDamping;                   //!< AUTO:  [SI:Nm\f$^2\f$/s] bending damping of beam ; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
+    Real physicsAxialDamping;                     //!< AUTO:  [SI:N/s] axial stiffness of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
+    Real physicsReferenceAxialStrain;             //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
+    Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
     Index2 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element
     bool useReducedOrderIntegration;              //!< AUTO: false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
     //! AUTO: default constructor with parameter initialization

@@ -959,7 +959,10 @@ public: // AUTO:
     os << "  initialCenterPoint = " << initialCenterPoint << "\n";
     os << "  initialZoom = " << initialZoom << "\n";
     os << "  initialMaxSceneSize = " << initialMaxSceneSize << "\n";
-    os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
+
+#ifndef __APPLE__
+	os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n"; //clang 8.0: does not find conversion
+#endif
     os << "  multiSampling = " << multiSampling << "\n";
     os << "  lineWidth = " << lineWidth << "\n";
     os << "  lineSmooth = " << lineSmooth << "\n";

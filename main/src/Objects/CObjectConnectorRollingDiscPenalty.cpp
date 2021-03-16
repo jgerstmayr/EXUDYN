@@ -25,7 +25,7 @@ Vector2D CObjectConnectorRollingDiscPenalty::ComputeSlipForce(const CObjectConne
 	{
 		Vector2D slipDirection = (1. / slipVelocity) * localSlipVelocity;
 		Vector2D dataSlipDirection = (1. / dataSlipVelocity) * dataLocalSlipVelocity;
-		Real phi = 1.; //regularization, see docu
+		Real phi = 1.; //regularization, see docu; Geradin and Cardona, Flex. Mult. Systems, page 174
 		if (dataSlipVelocity <= parameters.dryFrictionProportionalZone && parameters.dryFrictionProportionalZone != 0.)
 		{
 			Real fact = slipVelocity / parameters.dryFrictionProportionalZone; //in proportional zone, we can use the current slip velocity

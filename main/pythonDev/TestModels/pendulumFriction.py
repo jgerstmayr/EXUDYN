@@ -50,10 +50,15 @@ exu.Print("mass=",inertia.mass)
 nR0 = mbs.AddNode(Rigid2D(referenceCoordinates=[L/2,0,0])) #body goes from [0,0,0] to [L,0,0]
 oR0 = mbs.AddObject(RigidBody2D(nodeNumber=nR0, physicsMass = inertia.mass, physicsInertia=inertia.inertiaTensor[2][2], 
                                   visualization = VObjectRigidBody2D(graphicsData = [graphicsLink,graphicsSphere])))
+
+#markers:
 mGround0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))
 mR0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oR0, localPosition=[-L/2,0,0]))
 mTip0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oR0, localPosition=[L/2,0,0]))
 mNodeR0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nR0))
+mR0COM = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oR0, localPosition=[0,0,0]))
+
+
 oRJ0 = mbs.AddObject(RevoluteJoint2D(markerNumbers=[mGround0,mR0]))
 #
 mbs.AddLoad(Force(markerNumber = mNodeR0, loadVector = [0, -mass*g, 0])) 
@@ -74,12 +79,16 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround0, mTip0],
                                     offset=[zeroZoneFriction, fFriction, 0], 
                                     springForceUserFunction=UserFunctionSpringDamper))
 
-#mbs.AddSensor(SensorNode(nodeNumber = nR0, fileName='solution/pendulumFrictionRotation0.txt',
-#                         outputVariableType=exu.OutputVariableType.Coordinates))
 if exudynTestGlobals.useGraphics:
-    mbs.AddSensor(SensorBody(bodyNumber = oR0, fileName='solution/pendulumFrictionRotation0.txt',
+    sRot1 = mbs.AddSensor(SensorBody(bodyNumber = oR0, fileName='solution/pendulumFrictionRotation0.txt',
                              outputVariableType=exu.OutputVariableType.Rotation))
 
+    sRot2 = mbs.AddSensor(SensorMarker(markerNumber = mR0COM, fileName='solution/pendulumFrictionRotation0marker.txt',
+                               writeToFile = exudynTestGlobals.useGraphics,
+                               outputVariableType=exu.OutputVariableType.Rotation))
+
+sPos = mbs.AddSensor(SensorMarker(markerNumber = mR0COM, writeToFile = False,
+                           outputVariableType=exu.OutputVariableType.Position))
 
 mbs.Assemble()
 
@@ -113,6 +122,9 @@ exu.SolveDynamic(mbs, simulationSettings)
 
 p0=mbs.GetObjectOutputBody(oR0, exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print("p0=", p0)
+
+p0 = mbs.GetSensorValues(sPos) #obtain values from marker
+exu.Print("p0=", p0, '(marker)')
 u=NormL2(p0)
 exu.Print('solution of pendulumFriction=',u)
 
@@ -128,7 +140,9 @@ if exudynTestGlobals.useGraphics:
     import matplotlib.ticker as ticker
     
     data = np.loadtxt('solution/pendulumFrictionRotation0.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], 'b-', label='rotation 0') #ccordinate 3 = rotation
+    plt.plot(data[:,0], data[:,1], 'b-', label='rotation 0') #ccordinate 1 = rotation, scalar for ObjectRigidBody2D
+    data = np.loadtxt('solution/pendulumFrictionRotation0marker.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,3], 'r-', label='rotation 0') #ccordinate 3 = rotation, Z-coordinate because marker always 3D
     
     ax=plt.gca() # get current axes
     ax.grid(True, 'major', 'both')

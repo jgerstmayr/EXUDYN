@@ -160,7 +160,7 @@ SC.visualizationSettings.connectors.showContact = 1
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
 
 simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-10 #can be quite small; WHY?
-simulationSettings.staticSolver.verboseMode = 2 #otherwise, load steps are shown ...
+simulationSettings.staticSolver.verboseMode = 0 #otherwise, load steps are shown ...
 simulationSettings.staticSolver.numberOfLoadSteps  = 40
 simulationSettings.staticSolver.loadStepGeometric = True;
 simulationSettings.staticSolver.loadStepGeometricRange = 1e4;

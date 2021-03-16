@@ -90,6 +90,7 @@ private:
 	static RenderStateMachine stateMachine; //!< all variables (mouse, keyboard, ...) used for state machine (zoom, zoom-view, move, ...)
 	static std::thread rendererThread;	//!< std::thread variable for rendererThread
 	static Index rendererError;			//!< 0 ... no error, 1 ... glfwInit() failed, 2 ... glfwCreateWindow failed, 3 ... other error
+	static bool verboseRenderer;        //!< initialized in SetupRenderer(bool verbose): output helpful information
 	static Index firstRun; //zoom all in first run
 	static std::atomic_flag renderFunctionRunning;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice)
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-02  13:19:15 (last modfied)
+* @date         2021-03-16  16:52:52 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,8 +29,8 @@ class CObjectRigidBodyParameters // AUTO:
 {
 public: // AUTO: 
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of rigid body
-    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ of rigid body w.r.t. to the reference point of the body, NOT w.r.t. to center of mass; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM); if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
+    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT w.r.t. to center of mass; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass
+    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM) relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for rigid body node
     //! AUTO: default constructor with parameter initialization
     CObjectRigidBodyParameters()
@@ -45,7 +45,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectRigidBody
-* @brief        A 3D rigid body which is attached to a 3D rigid body node. Equations of motion with the displacements \f$[u_x\;\; u_y\;\; u_z]^T\f$ of the center of mass and the rotation parameters (Euler parameters) \f$\mathbf{q}\f$, the mass \f$m\f$, inertia \f$\mathbf{J} = [J_{xx}, J_{xy}, J_{xz}; J_{yx}, J_{yy}, J_{yz}; J_{zx}, J_{zy}, J_{zz}]\f$ and the residual of all forces and moments \f$[R_x\;\; R_y\;\; R_z\;\; R_{q0}\;\; R_{q1}\;\; R_{q2}\;\; R_{q3}]^T\f$ are given as ...; REMARK: Use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass.
+* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{AddRigidBody(...)}, see \refSection{sec:rigidBodyUtilities:AddRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, COM and mass.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

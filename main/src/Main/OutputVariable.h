@@ -134,7 +134,8 @@ enum class SensorType {
 	Body = 1 << 2, //!< use OutputVariableType; additionally has localPosition
 	SuperElement = 1 << 3, //!< use OutputVariableType; additionally has localPosition
 	Marker = 1 << 4, //!< NOT implemented yet, needs OutputVariableType in markers!
-	Load   = 1 << 5, //!< measure prescribed loads, in order to track, e.g., user defined loads or controlled loads
+	Load = 1 << 5, //!< measure prescribed loads, in order to track, e.g., user defined loads or controlled loads
+	UserFunction = 1 << 6, //!< user defined sensor, especially for sensor fusion
 };
 
 //! convert SensorType to a string (used for output, type comparison, ...)
@@ -149,6 +150,7 @@ inline const char* GetSensorTypeString(SensorType var)
 	case SensorType::SuperElement: return "SuperElement";
 	case SensorType::Marker: return "Marker";
 	case SensorType::Load: return "Load";
+	case SensorType::UserFunction: return "UserFunction";
 	default: SysError("GetSensorTypeString: invalid variable type");  return "Invalid";
 	}
 }

@@ -9,961 +9,1108 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.130, 
-  \item last change =  2021-02-10
+  \item EXUDYN version = 1.0.151, 
+  \item last change =  2021-03-16
 
-  \item Number of issues = 580, 
-  \item Number of resolved issues = 498 (130 in current version), 
+  \item Number of issues = 597, 
+  \item Number of resolved issues = 519 (151 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
-\bi
-  \item {\bf Version 1.0.130}: \vspace{-6pt} 
-  Issue 0576: {\bf add ClearWorkspace}
+\bi \footnotesize 
+  \item {\bf Version 1.0.151}: \vspace{-6pt} 
+  resolved Issue 0283: {\bf cylinder with hole}
+(new feature)
+  \bi
+  \item {description: add TriangleList for cylinder with hole}
+  \item {\bf notes: not implemented, because it can be easily created with GraphicsDataSolidOfRevolution}
+  \item   date resolved: {\bf 2021-03-16 16:59},
+date raised: 2019-12-07   \ei
+  \item {\bf Version 1.0.150}: \vspace{-6pt} 
+  resolved Issue 0396: {\bf description}
+(description)
+  \bi
+  \item {description: add latex description for ObjectFFRF}
+  \item   date resolved: {\bf 2021-03-16 16:57},
+date raised: 2020-05-16   \ei
+  \item {\bf Version 1.0.149}: \vspace{-6pt} 
+  resolved Issue 0394: {\bf description}
+(description)
+  \bi
+  \item {description: add latex description for ObjectSuperElement}
+  \item   date resolved: {\bf 2021-03-16 16:57},
+date raised: 2020-05-16   \ei
+  \item {\bf Version 1.0.148}: \vspace{-6pt} 
+  resolved Issue 0595: {\bf ObjectFFRFreducedOrder}
 (extension)
   \bi
-  \item {\small description: add ClearWorkspace() to basicUtilities which allows simple and save cleanup of globals() in python environment; recommended to be called at beginning of complex models}
+  \item {description: add general nodeType to AddObjectFFRFreducedOrderWithUserFunctions}
+  \item   date resolved: {\bf 2021-03-16 16:56},
+date raised: 2021-03-14   \ei
+  \item {\bf Version 1.0.147}: \vspace{-6pt} 
+  resolved Issue 0461: {\bf ObjectRigidBody}
+(check)
+  \bi
+  \item {description: check discription of output variables}
+  \item   date resolved: {\bf 2021-03-16 16:55},
+date raised: 2020-11-12   \ei
+  \item {\bf Version 1.0.146}: \vspace{-6pt} 
+  resolved Issue 0596: {\bf GetRigidBodyNode}
+(extension)
+  \bi
+  \item {description: add function GetRigidBodyNode into rigidBodyUtilities, which returns a node item for an according node type, e.g., Euler parameters or rotation vector}
+  \item   date resolved: {\bf 2021-03-14 14:43},
+date raised: 2021-03-14   \ei
+  \item {\bf Version 1.0.145}: \vspace{-6pt} 
+  resolved Issue 0583: {\bf FFRF docu}
+(docu)
+  \bi
+  \item {description: add documentation for FFRF and FFRFreducedOrder (CMS) to documentation}
+  \item   date resolved: {\bf 2021-03-01 12:15},
+date raised: 2021-02-16   \ei
+  \item {\bf Version 1.0.144}: \vspace{-6pt} 
+  resolved Issue 0455: {\bf FEM help}
+(docu)
+  \bi
+  \item {description: add comments to ObjectFFRF (Tisserand frame!) and reduced that there are convenient helper functions in FEM, etc. for creating objects}
+  \item   date resolved: {\bf 2021-02-24 21:21},
+date raised: 2020-10-13   \ei
+  \item {\bf Version 1.0.143}: \vspace{-6pt} 
+  resolved Issue 0593: {\bf Add MacOS support}
+(change)
+  \bi
+  \item {description: make minor adjustments for MacOS to run setup.py}
+  \item   date resolved: {\bf 2021-02-22 13:10},
+date raised: 2021-02-22   \ei
+  \item {\bf Version 1.0.142}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0592}: {\bf StartRenderer}
+  \bi
+  \item {description: flag verbose=True not working}
+  \item   date resolved: {\bf 2021-02-22 10:08},
+date raised: 2021-02-22   \ei
+  \item {\bf Version 1.0.141}: \vspace{-6pt} 
+  resolved Issue 0590: {\bf SensorMarker visualization}
+(extension)
+  \bi
+  \item {description: add visualization for SensorMarker according to marker position}
+  \item   date resolved: {\bf 2021-02-19 10:21},
+date raised: 2021-02-19   \ei
+  \item {\bf Version 1.0.140}: \vspace{-6pt} 
+  resolved Issue 0400: {\bf add SensorMarker}
+(extension)
+  \bi
+  \item {description: add sensor for markers, restricting to position/velocity and rotation/angular velocity}
+  \item   date resolved: {\bf 2021-02-18 19:15},
+date raised: 2020-05-20   \ei
+  \item {\bf Version 1.0.139}: \vspace{-6pt} 
+  resolved Issue 0585: {\bf UserSensor}
+(extension)
+  \bi
+  \item {description: add user sensor, which enables the user to add any kind of sensor, specifically to combine several sensor outputs into one single sensor}
+  \item   date resolved: {\bf 2021-02-18 19:14},
+date raised: 2021-02-17   \ei
+  \item {\bf Version 1.0.138}: \vspace{-6pt} 
+  resolved Issue 0589: {\bf solver updateInitialValues}
+(change)
+  \bi
+  \item {description: update also initial coordinates in order to avoid jumps in accelerations when continuing simulation}
+  \item   date resolved: {\bf 2021-02-18 18:15},
+date raised: 2021-02-18   \ei
+  \item {\bf Version 1.0.137}: \vspace{-6pt} 
+  resolved Issue 0588: {\bf Solver file header}
+(change)
+  \bi
+  \item {description: move writing of solution file and sensor files headers from InitializeSolverPreChecks(...) to InitializeSolverInitialConditions(...) to avoid sensor evaluation for initial configuration}
+  \item   date resolved: {\bf 2021-02-18 16:23},
+date raised: 2021-02-18   \ei
+  \item {\bf Version 1.0.136}: \vspace{-6pt} 
+  resolved Issue 0587: {\bf ALEANCFCable2D}
+(fix)
+  \bi
+  \item {description: change mass proportional load to include force in direction of ALE coordinate}
+  \item   date resolved: {\bf 2021-02-17 18:19},
+date raised: 2021-02-17   \ei
+  \item {\bf Version 1.0.135}: \vspace{-6pt} 
+  resolved Issue 0586: {\bf GeneticOptimization}
+(fix)
+  \bi
+  \item {description: add special warnings and adaptations in order to catch cases where elitistRatio*populationSize < 1 and if distanceFactor >= 1}
+  \item   date resolved: {\bf 2021-02-17 18:17},
+date raised: 2021-02-17   \ei
+  \item {\bf Version 1.0.134}: \vspace{-6pt} 
+  resolved Issue 0584: {\bf parameter variation}
+(extension)
+  \bi
+  \item {description: add possibility to prescribe set of parameters using list, e.g.,  'mass':[1,2,4,8] instead of of tuple which describes the range: 'mass':(0,6,4)}
+  \item   date resolved: {\bf 2021-02-16 09:43},
+date raised: 2021-02-16   \ei
+  \item {\bf Version 1.0.133}: \vspace{-6pt} 
+  resolved Issue 0582: {\bf optimization}
+(docu)
+  \bi
+  \item {description: add parameter variation and genetic optiization to documentation of solvers}
+  \item   date resolved: {\bf 2021-02-16 08:21},
+date raised: 2021-02-16   \ei
+  \item {\bf Version 1.0.132}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0581}: {\bf SetODE2Coordinates\_tt}
+  \bi
+  \item {description: SetODE2Coordinates\_tt writes to velocities instead of accelerations}
+  \item   date resolved: {\bf 2021-02-14 11:12},
+date raised: 2021-02-14   \ei
+  \item {\bf Version 1.0.131}: \vspace{-6pt} 
+  resolved Issue 0580: {\bf ParameterVariation}
+(extension)
+  \bi
+  \item {description: processing.ParameterVariation(...): write to resultsFile to show progress in resultsMonitor.py}
+  \item   date resolved: {\bf 2021-02-11 17:49},
+date raised: 2021-02-11   \ei
+  \item {\bf Version 1.0.130}: \vspace{-6pt} 
+  resolved Issue 0576: {\bf add ClearWorkspace}
+(extension)
+  \bi
+  \item {description: add ClearWorkspace() to basicUtilities which allows simple and save cleanup of globals() in python environment; recommended to be called at beginning of complex models}
   \item   date resolved: {\bf 2021-02-10 12:35},
 date raised: 2021-02-08   \ei
   \item {\bf Version 1.0.129}: \vspace{-6pt} 
-  Issue 0569: {\bf fix contour text}
+  resolved Issue 0569: {\bf contour text}
 (fix)
   \bi
-  \item {\small description: add space to computation info text before contour plot text}
+  \item {description: add space to computation info text before contour plot text}
   \item   date resolved: {\bf 2021-02-10 12:35},
 date raised: 2021-02-05   \ei
   \item {\bf Version 1.0.128}: \vspace{-6pt} 
-  Issue 0568: {\bf fix Renderer axes}
+  resolved Issue 0568: {\bf Renderer axes}
 (fix)
   \bi
-  \item {\small description: use X(0), Y(1) and Z(2) for axes description to be compliant with Python indexing starting with 0 as well as contour components}
+  \item {description: use X(0), Y(1) and Z(2) for axes description to be compliant with Python indexing starting with 0 as well as contour components}
   \item   date resolved: {\bf 2021-02-10 12:35},
 date raised: 2021-02-05   \ei
   \item {\bf Version 1.0.127}: \vspace{-6pt} 
-  Issue 0579: {\bf ClearWorkspace}
+  resolved Issue 0579: {\bf ClearWorkspace}
 (extension)
   \bi
-  \item {\small description: add ClearWorkspacefunction to exudyn.basicUtilities, which allows to reset global variables in ipython; see example in function description}
+  \item {description: add ClearWorkspacefunction to exudyn.basicUtilities, which allows to reset global variables in ipython; see example in function description}
   \item   date resolved: {\bf 2021-02-10 12:13},
 date raised: 2021-02-10   \ei
   \item {\bf Version 1.0.126}: \vspace{-6pt} 
-  Issue 0578: {\bf SmoothStep}
+  resolved Issue 0578: {\bf SmoothStep}
 (extension)
   \bi
-  \item {\small description: add SmoothStep function to exudyn.utilities, which produces a smooth step function using cosine}
+  \item {description: add SmoothStep function to exudyn.utilities, which produces a smooth step function using cosine}
   \item   date resolved: {\bf 2021-02-10 12:13},
 date raised: 2021-02-10   \ei
   \item {\bf Version 1.0.125}: \vspace{-6pt} 
-  Issue 0572: {\bf void}
+  resolved Issue 0572: {\bf void}
 (fix)
   \bi
-  \item {\small description: redundant with issue 568}
+  \item {description: redundant with issue 568}
   \item   date resolved: {\bf 2021-02-10 12:05},
 date raised: 2021-02-05   \ei
   \item {\bf Version 1.0.124}: \vspace{-6pt} 
-  Issue 0571: {\bf void}
+  resolved Issue 0571: {\bf void}
 (fix)
   \bi
-  \item {\small description: redundant with issue 568}
+  \item {description: redundant with issue 568}
   \item   date resolved: {\bf 2021-02-10 12:05},
 date raised: 2021-02-05   \ei
   \item {\bf Version 1.0.123}: \vspace{-6pt} 
-  Issue 0570: {\bf void}
+  resolved Issue 0570: {\bf void}
 (fix)
   \bi
-  \item {\small description: redundant with issue 568}
+  \item {description: redundant with issue 568}
   \item   date resolved: {\bf 2021-02-10 12:05},
 date raised: 2021-02-05   \ei
   \item {\bf Version 1.0.122}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0577}: {\bf PostNewtonStep}
+{\bf \color{warningRed}  resolved BUG 0577}: {\bf PostNewtonStep}
   \bi
-  \item {\small description: perform PostNewtonStep and PostDiscontinuousIterationStep only for active objects}
+  \item {description: perform PostNewtonStep and PostDiscontinuousIterationStep only for active objects}
   \item   date resolved: {\bf 2021-02-09 14:00},
 date raised: 2021-02-09   \ei
   \item {\bf Version 1.0.121}: \vspace{-6pt} 
-  Issue 0355: {\bf generalized alpha}
+  resolved Issue 0355: {\bf generalized alpha}
 (extension)
   \bi
-  \item {\small description: implement version of Brüls and Arnold for generalized alpha solver}
-  \item {\small \bf notes:  WARNING: switched to new solver based on displacement increments (Arnold/Bruls,2007), which leads to DIFFERENT (but improved) RESULTS than previous dynamic implicit integrator; new implicit solver now works with ODE1 variables}
+  \item {description: implement version of Brüls and Arnold for generalized alpha solver}
+  \item {\bf notes:  WARNING: switched to new solver based on displacement increments (Arnold/Bruls,2007), which leads to DIFFERENT (but improved) RESULTS than previous dynamic implicit integrator; new implicit solver now works with ODE1 variables}
   \item   date resolved: {\bf 2021-02-08 01:56},
 date raised: 2020-03-08   \ei
   \item {\bf Version 1.0.120}: \vspace{-6pt} 
-  Issue 0573: {\bf merge solver documentation}
+  resolved Issue 0573: {\bf merge solver documentation}
 (docu)
   \bi
-  \item {\small description: merge docu on solver in EXUDYN overview and in solver section}
+  \item {description: merge docu on solver in EXUDYN overview and in solver section}
   \item   date resolved: {\bf 2021-02-07 17:33},
 date raised: 2021-02-07   \ei
   \item {\bf Version 1.0.119}: \vspace{-6pt} 
-  Issue 0567: {\bf solvers description}
+  resolved Issue 0567: {\bf solvers description}
 (docu)
   \bi
-  \item {\small description: extend description for equations of motion, explicit and implicit solvers}
+  \item {description: extend description for equations of motion, explicit and implicit solvers}
   \item   date resolved: {\bf 2021-02-04 01:14},
 date raised: 2021-02-03   \ei
   \item {\bf Version 1.0.118}: \vspace{-6pt} 
-  Issue 0560: {\bf Impl integrator ODE1}
+  resolved Issue 0560: {\bf Impl integrator ODE1}
 (extension)
   \bi
-  \item {\small description: add ODE1 coordinates to implicit integrator}
+  \item {description: add ODE1 coordinates to implicit integrator}
   \item   date resolved: {\bf 2021-02-02 15:16},
 date raised: 2021-01-26   \ei
   \item {\bf Version 1.0.117}: \vspace{-6pt} 
-  Issue 0508: {\bf implicit Lie group integrator}
+  resolved Issue 0508: {\bf implicit Lie group integrator}
 (extension)
   \bi
-  \item {\small description: implement implicit index2/index3 Lie group integrator as python function}
-  \item {\small \bf notes: cancelled, because will be directly done in C++}
+  \item {description: implement implicit index2/index3 Lie group integrator as python function}
+  \item {\bf notes: cancelled, because will be directly done in C++}
   \item   date resolved: {\bf 2021-02-02 15:15},
 date raised: 2020-12-17   \ei
   \item {\bf Version 1.0.116}: \vspace{-6pt} 
-  Issue 0566: {\bf memory alloc cnt}
+  resolved Issue 0566: {\bf memory alloc cnt}
 (check)
   \bi
-  \item {\small description: add control to check whether large amount of memory allocations happen during time integration+test suite}
+  \item {description: add control to check whether large amount of memory allocations happen during time integration+test suite}
   \item   date resolved: {\bf 2021-02-01 01:38},
 date raised: 2021-01-29   \ei
   \item {\bf Version 1.0.115}: \vspace{-6pt} 
-  Issue 0541: {\bf objectODE1/2, constraint lists}
+  resolved Issue 0541: {\bf objectODE1/2, constraint lists}
 (extension)
   \bi
-  \item {\small description: add lists of ODE1 and ODE2 objects, constraints, etc. in cSystemData in order to speed up processing}
+  \item {description: add lists of ODE1 and ODE2 objects, constraints, etc. in cSystemData in order to speed up processing}
   \item   date resolved: {\bf 2021-02-01 01:38},
 date raised: 2021-01-13   \ei
   \item {\bf Version 1.0.114}: \vspace{-6pt} 
-  Issue 0557: {\bf RK with constraints}
+  resolved Issue 0557: {\bf RK with constraints}
 (extension)
   \bi
-  \item {\small description: add CoordinateConstraints to explict Runge-Kutta solvers}
-  \item {\small \bf notes: only ground constraints included for now}
+  \item {description: add CoordinateConstraints to explict Runge-Kutta solvers}
+  \item {\bf notes: only ground constraints included for now}
   \item   date resolved: {\bf 2021-01-27 17:38},
 date raised: 2021-01-26   \ei
   \item {\bf Version 1.0.113}: \vspace{-6pt} 
-  Issue 0558: {\bf Lie group tests}
+  resolved Issue 0558: {\bf Lie group tests}
 (test)
   \bi
-  \item {\small description: add Lie group integrator simple tests}
+  \item {description: add Lie group integrator simple tests}
   \item   date resolved: {\bf 2021-01-27 12:00},
 date raised: 2021-01-26   \ei
   \item {\bf Version 1.0.112}: \vspace{-6pt} 
-  Issue 0550: {\bf GraphicsDataArrow}
+  resolved Issue 0550: {\bf GraphicsDataArrow}
 (extension)
   \bi
-  \item {\small description: add arrow to graphicsDataUtilities}
-  \item {\small \bf notes: also added GraphicsDataBasis(...) for drawing 3 orthogonal basis vectors, GraphicsDataCheckerBoard(...) for simple drawing of checker board background and MergeGraphicsDataTriangleList(...) for merging graphicsData triangle lists}
+  \item {description: add arrow to graphicsDataUtilities}
+  \item {\bf notes: also added GraphicsDataBasis(...) for drawing 3 orthogonal basis vectors, GraphicsDataCheckerBoard(...) for simple drawing of checker board background and MergeGraphicsDataTriangleList(...) for merging graphicsData triangle lists}
   \item   date resolved: {\bf 2021-01-27 00:10},
 date raised: 2021-01-17   \ei
   \item {\bf Version 1.0.111}: \vspace{-6pt} 
-  Issue 0495: {\bf add ODE1 coordinates}
+  resolved Issue 0495: {\bf add ODE1 coordinates}
 (extension)
   \bi
-  \item {\small description: extend system (Jacobian, etc.) for ODE1 coordinates}
+  \item {description: extend system (Jacobian, etc.) for ODE1 coordinates}
   \item   date resolved: {\bf 2021-01-26 13:21},
 date raised: 2020-12-09   \ei
   \item {\bf Version 1.0.110}: \vspace{-6pt} 
-  Issue 0556: {\bf explicit RK tests}
+  resolved Issue 0556: {\bf explicit RK tests}
 (test)
   \bi
-  \item {\small description: add tests for explicit Runge Kutta integrators to TestModels}
+  \item {description: add tests for explicit Runge Kutta integrators to TestModels}
   \item   date resolved: {\bf 2021-01-26 13:17},
 date raised: 2021-01-25   \ei
   \item {\bf Version 1.0.109}: \vspace{-6pt} 
-  Issue 0555: {\bf explicit Lie group integrator}
+  resolved Issue 0555: {\bf explicit Lie group integrator}
 (extension)
   \bi
-  \item {\small description: add existing Lie group integrator in C++}
+  \item {description: add existing Lie group integrator in C++}
   \item   date resolved: {\bf 2021-01-26 13:17},
 date raised: 2021-01-25   \ei
   \item {\bf Version 1.0.108}: \vspace{-6pt} 
-  Issue 0554: {\bf explicit integrator}
+  resolved Issue 0554: {\bf explicit integrator}
 (extension)
   \bi
-  \item {\small description: add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout \refSection{sec:ExplicitSolver} for description of explicit solvers and \refSection{sec:DynamicSolverType} for available solver types}
+  \item {description: add explicit integrator with automatic step size control (DOPRI5, ODE23); checkout \refSection{sec:ExplicitSolver} for description of explicit solvers and \refSection{sec:DynamicSolverType} for available solver types}
   \item   date resolved: {\bf 2021-01-25 00:54},
 date raised: 2021-01-24   \ei
   \item {\bf Version 1.0.107}: \vspace{-6pt} 
-  Issue 0513: {\bf add RK4 integrator}
+  resolved Issue 0513: {\bf add RK4 integrator}
 (extension)
   \bi
-  \item {\small description: put existing python RK4 integrator into CPP}
+  \item {description: put existing python RK4 integrator into CPP}
   \item   date resolved: {\bf 2021-01-25 00:54},
 date raised: 2020-12-19   \ei
   \item {\bf Version 1.0.106}: \vspace{-6pt} 
-  Issue 0533: {\bf ObjectGenericODE1}
+  resolved Issue 0533: {\bf ObjectGenericODE1}
 (extension)
   \bi
-  \item {\small description: add object ObjectGenericODE1 for generic first order ODEs}
+  \item {description: add object ObjectGenericODE1 for generic first order ODEs}
   \item   date resolved: {\bf 2021-01-21 17:27},
 date raised: 2021-01-04   \ei
   \item {\bf Version 1.0.105}: \vspace{-6pt} 
-  Issue 0553: {\bf create physics submodule}
+  resolved Issue 0553: {\bf create physics submodule}
 (extension)
   \bi
-  \item {\small description: create exudyn.physics and add friction functions}
+  \item {description: create exudyn.physics and add friction functions}
   \item   date resolved: {\bf 2021-01-20 10:25},
 date raised: 2021-01-20   \ei
   \item {\bf Version 1.0.104}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0552}: {\bf DrawSystemGraph}
+{\bf \color{warningRed}  resolved BUG 0552}: {\bf DrawSystemGraph}
   \bi
-  \item {\small description: does not work with RigidBodySpringDamper due to invalid GenericNodeData number}
+  \item {description: does not work with RigidBodySpringDamper due to invalid GenericNodeData number}
   \item   date resolved: {\bf 2021-01-19 14:43},
 date raised: 2021-01-19   \ei
   \item {\bf Version 1.0.103}: \vspace{-6pt} 
-  Issue 0551: {\bf InteractiveDialog}
+  resolved Issue 0551: {\bf InteractiveDialog}
 (extension)
   \bi
-  \item {\small description: add interactive tkinter dialog and new submodule exudyn.interactive to interact with models}
+  \item {description: add interactive tkinter dialog and new submodule exudyn.interactive to interact with models}
   \item   date resolved: {\bf 2021-01-19 00:26},
 date raised: 2021-01-19   \ei
   \item {\bf Version 1.0.102}: \vspace{-6pt} 
-  Issue 0549: {\bf show solver name and time}
+  resolved Issue 0549: {\bf show solver name and time}
 (extension)
   \bi
-  \item {\small description: add options to show/hide solver name and current time in render window}
+  \item {description: add options to show/hide solver name and current time in render window}
   \item   date resolved: {\bf 2021-01-17 17:42},
 date raised: 2021-01-17   \ei
   \item {\bf Version 1.0.101}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0545}: {\bf mbs.WaitForUserToContinue()}
+{\bf \color{warningRed}  resolved BUG 0545}: {\bf mbs.WaitForUserToContinue()}
   \bi
-  \item {\small description: call to WaitForUserToContinue() does not always wait for keypress. Check StartRender() function and flag settings}
+  \item {description: call to WaitForUserToContinue() does not always wait for keypress. Check StartRender() function and flag settings}
   \item   date resolved: {\bf 2021-01-17 16:55},
 date raised: 2021-01-15   \ei
   \item {\bf Version 1.0.100}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0548}: {\bf SolveDynamic/SolveStatic}
+{\bf \color{warningRed}  resolved BUG 0548}: {\bf SolveDynamic/SolveStatic}
   \bi
-  \item {\small description: option updateInitialValues not working}
-  \item {\small \bf notes: corrected SetSystemState call}
+  \item {description: option updateInitialValues not working}
+  \item {\bf notes: corrected SetSystemState call}
   \item   date resolved: {\bf 2021-01-17 00:08},
 date raised: 2021-01-17   \ei
   \item {\bf Version 1.0.99}: \vspace{-6pt} 
-  Issue 0542: {\bf GeneticOptimization}
+  resolved Issue 0542: {\bf GeneticOptimization}
 (extension)
   \bi
-  \item {\small description: store values continuously to file, add automatic loader and animate optimized values}
-  \item {\small \bf notes: added resultsMonitor.py to exudyn module}
+  \item {description: store values continuously to file, add automatic loader and animate optimized values}
+  \item {\bf notes: added resultsMonitor.py to exudyn module}
   \item   date resolved: {\bf 2021-01-15 15:18},
 date raised: 2021-01-13   \ei
   \item {\bf Version 1.0.98}: \vspace{-6pt} 
-  Issue 0547: {\bf realtimeSimulation}
+  resolved Issue 0547: {\bf realtimeSimulation}
 (extension)
   \bi
-  \item {\small description: add factor for timeIntegration.simulateInRealtime}
+  \item {description: add factor for timeIntegration.simulateInRealtime}
   \item   date resolved: {\bf 2021-01-15 15:16},
 date raised: 2021-01-15   \ei
   \item {\bf Version 1.0.97}: \vspace{-6pt} 
-  Issue 0546: {\bf add \_\_version\_\_ version to module}
+  resolved Issue 0546: {\bf add \_\_version\_\_ version to module}
 (extension)
   \bi
-  \item {\small description: enable exudyn.\_\_version\_\_ as commonly used in other modules}
+  \item {description: enable exudyn.\_\_version\_\_ as commonly used in other modules}
   \item   date resolved: {\bf 2021-01-15 15:05},
 date raised: 2021-01-15   \ei
   \item {\bf Version 1.0.96}: \vspace{-6pt} 
-  Issue 0544: {\bf geneticOptimization}
+  resolved Issue 0544: {\bf geneticOptimization}
 (extension)
   \bi
-  \item {\small description: add optional argument resultsFile to specify a file for output of results data}
+  \item {description: add optional argument resultsFile to specify a file for output of results data}
   \item   date resolved: {\bf 2021-01-14 23:17},
 date raised: 2021-01-14   \ei
   \item {\bf Version 1.0.95}: \vspace{-6pt} 
-  Issue 0543: {\bf add results monitor}
+  resolved Issue 0543: {\bf add results monitor}
 (extension)
   \bi
-  \item {\small description: add resultsMonitor.py to be called from command line for doing continuous visualization of sensors and geneticOptimization output}
+  \item {description: add resultsMonitor.py to be called from command line for doing continuous visualization of sensors and geneticOptimization output}
   \item   date resolved: {\bf 2021-01-14 23:08},
 date raised: 2021-01-14   \ei
   \item {\bf Version 1.0.94}: \vspace{-6pt} 
-  Issue 0532: {\bf NodeGenericODE1}
+  resolved Issue 0532: {\bf NodeGenericODE1}
 (extension)
   \bi
-  \item {\small description: add node NodeGenericODE1 for arbitrary number of ODE1 coordinates}
+  \item {description: add node NodeGenericODE1 for arbitrary number of ODE1 coordinates}
   \item   date resolved: {\bf 2021-01-13 20:12},
 date raised: 2021-01-04   \ei
   \item {\bf Version 1.0.93}: \vspace{-6pt} 
-  Issue 0531: {\bf solidExtrusion}
+  resolved Issue 0531: {\bf solidExtrusion}
 (extension)
   \bi
-  \item {\small description: add graphicsData for solid extrusion (prismatic) body; based on 2D point and segment list for flat boundaries}
+  \item {description: add graphicsData for solid extrusion (prismatic) body; based on 2D point and segment list for flat boundaries}
   \item   date resolved: {\bf 2021-01-10 20:43},
 date raised: 2021-01-04   \ei
   \item {\bf Version 1.0.92}: \vspace{-6pt} 
-  Issue 0539: {\bf RigidBodySpringDamper}
+  resolved Issue 0539: {\bf RigidBodySpringDamper}
 (extension)
   \bi
-  \item {\small description: add postNewtonStepUserFunction and dataCoordinates}
+  \item {description: add postNewtonStepUserFunction and dataCoordinates}
   \item   date resolved: {\bf 2021-01-08 14:34},
 date raised: 2021-01-08   \ei
   \item {\bf Version 1.0.91}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0537}: {\bf Render window}
+{\bf \color{warningRed}  resolved BUG 0537}: {\bf Render window}
   \bi
-  \item {\small description: double calling of Render(...) function could happen from RunLoop/Render and glfwSetWindowRefreshCallback (set in InitCreateWindow(...)); check if semaphore would remove visualization problems}
-  \item {\small \bf notes: added semaphore but FEM visualization anomalies are still there}
+  \item {description: double calling of Render(...) function could happen from RunLoop/Render and glfwSetWindowRefreshCallback (set in InitCreateWindow(...)); check if semaphore would remove visualization problems}
+  \item {\bf notes: added semaphore but FEM visualization anomalies are still there}
   \item   date resolved: {\bf 2021-01-07 11:23},
 date raised: 2021-01-06   \ei
   \item {\bf Version 1.0.90}: \vspace{-6pt} 
-  Issue 0385: {\bf add solver eigenvalues example}
+  resolved Issue 0385: {\bf add solver eigenvalues example}
 (extension)
   \bi
-  \item {\small description: add Examples/solverFunctionsTestEigenvalues  to test suite}
-  \item {\small \bf notes: added ComputeODE2EigenvaluesTest.py using new functionality exudyn.solver.ComputeODE2Eigenvalues(...)}
+  \item {description: add Examples/solverFunctionsTestEigenvalues  to test suite}
+  \item {\bf notes: added ComputeODE2EigenvaluesTest.py using new functionality exudyn.solver.ComputeODE2Eigenvalues(...)}
   \item   date resolved: {\bf 2021-01-07 11:08},
 date raised: 2020-05-06   \ei
   \item {\bf Version 1.0.89}: \vspace{-6pt} 
-  Issue 0494: {\bf add all tests}
+  resolved Issue 0494: {\bf add all tests}
 (extension)
   \bi
-  \item {\small description: add all TestModel/*.py to testsuite and also examples before making changes to solver}
+  \item {description: add all TestModel/*.py to testsuite and also examples before making changes to solver}
   \item   date resolved: {\bf 2021-01-07 11:04},
 date raised: 2020-12-09   \ei
   \item {\bf Version 1.0.88}: \vspace{-6pt} 
-  Issue 0515: {\bf user function connector}
+  resolved Issue 0515: {\bf user function connector}
 (extension)
   \bi
-  \item {\small description: add forceUserFunction for ObjectConnectorRigidBodySpringDamper to enable User connector}
+  \item {description: add forceUserFunction for ObjectConnectorRigidBodySpringDamper to enable User connector}
   \item   date resolved: {\bf 2021-01-07 11:03},
 date raised: 2020-12-19   \ei
   \item {\bf Version 1.0.87}: \vspace{-6pt} 
-  Issue 0506: {\bf utilities docu}
+  resolved Issue 0506: {\bf utilities docu}
 (extension)
   \bi
-  \item {\small description: complete documentation for all exudyn python utilities and add unique headers for documentation}
+  \item {description: complete documentation for all exudyn python utilities and add unique headers for documentation}
   \item   date resolved: {\bf 2021-01-06 22:57},
 date raised: 2020-12-16   \ei
   \item {\bf Version 1.0.86}: \vspace{-6pt} 
-  Issue 0530: {\bf solidOfRevolution}
+  resolved Issue 0530: {\bf solidOfRevolution}
 (extension)
   \bi
-  \item {\small description: add graphicsData for solid of revoluation}
+  \item {description: add graphicsData for solid of revoluation}
   \item   date resolved: {\bf 2021-01-06 00:31},
 date raised: 2021-01-04   \ei
   \item {\bf Version 1.0.85}: \vspace{-6pt} 
-  Issue 0536: {\bf GraphicsDataPlane}
+  resolved Issue 0536: {\bf GraphicsDataPlane}
 (extension)
   \bi
-  \item {\small description: add graphicsData for simple rectangular plane with option for checkerboard pattern}
+  \item {description: add graphicsData for simple rectangular plane with option for checkerboard pattern}
   \item   date resolved: {\bf 2021-01-05 22:57},
 date raised: 2021-01-05   \ei
   \item {\bf Version 1.0.84}: \vspace{-6pt} 
-  Issue 0535: {\bf alternating color for cylinder}
+  resolved Issue 0535: {\bf alternating color for cylinder}
 (extension)
   \bi
-  \item {\small description: add alternatingColor argument in GraphicsDataCylinder for visualization of rotation of cylindric bodies}
+  \item {description: add alternatingColor argument in GraphicsDataCylinder for visualization of rotation of cylindric bodies}
   \item   date resolved: {\bf 2021-01-05 21:46},
 date raised: 2021-01-05   \ei
   \item {\bf Version 1.0.83}: \vspace{-6pt} 
-{\bf \color{warningRed}  Issue 0529}: {\bf add MainSystem to userFunctions}
+{\bf \color{warningRed}  resolved Issue 0529}: {\bf add MainSystem to userFunctions}
 (change)
   \bi
-  \item {\small description: add MainSystem "mbs" to all user functions as first argument (WARNING: this changes ALL user functions!!!}
+  \item {description: add MainSystem "mbs" to all user functions as first argument (WARNING: this changes ALL user functions!!!}
   \item   date resolved: {\bf 2021-01-05 14:31},
 date raised: 2021-01-04   \ei
   \item {\bf Version 1.0.82}: \vspace{-6pt} 
-  Issue 0447: {\bf test examples}
+  resolved Issue 0447: {\bf test examples}
 (check)
   \bi
-  \item {\small description: test all examples with new index types}
+  \item {description: test all examples with new index types}
   \item   date resolved: {\bf 2021-01-05 14:31},
 date raised: 2020-09-09   \ei
   \item {\bf Version 1.0.81}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0534}: {\bf PlotSensor}
+{\bf \color{warningRed}  resolved BUG 0534}: {\bf PlotSensor}
   \bi
-  \item {\small description: PlotSensor crashes for Load sensors because no outputVariableType exists}
-  \item {\small \bf notes: added special treatment for load sensors}
+  \item {description: PlotSensor crashes for Load sensors because no outputVariableType exists}
+  \item {\bf notes: added special treatment for load sensors}
   \item   date resolved: {\bf 2021-01-04 20:11},
 date raised: 2021-01-04   \ei
   \item {\bf Version 1.0.80}: \vspace{-6pt} 
-  Issue 0527: {\bf faces transparent}
+  resolved Issue 0527: {\bf faces transparent}
 (extension)
   \bi
-  \item {\small description: add general transparency flag for faces in visualizationSettings.openGL, switchable with button "T"; allows to make node/marker/object numbers visible}
+  \item {description: add general transparency flag for faces in visualizationSettings.openGL, switchable with button "T"; allows to make node/marker/object numbers visible}
   \item   date resolved: {\bf 2021-01-03 21:53},
 date raised: 2021-01-03   \ei
   \item {\bf Version 1.0.79}: \vspace{-6pt} 
-  Issue 0509: {\bf ComputeODE2Eigenvalues}
+  resolved Issue 0509: {\bf ComputeODE2Eigenvalues}
 (test)
   \bi
-  \item {\small description: add example in TestModels}
+  \item {description: add example in TestModels}
   \item   date resolved: {\bf 2021-01-03 10:44},
 date raised: 2020-12-18   \ei
   \item {\bf Version 1.0.78}: \vspace{-6pt} 
-  Issue 0528: {\bf textured fonts}
+  resolved Issue 0528: {\bf textured fonts}
 (extension)
   \bi
-  \item {\small description: use TEXTURED based bitmap fonts based stored in glLists, allowing better interpolation, scalability (currently up to font size 64 without quality drop) and much higher performance}
+  \item {description: use TEXTURED based bitmap fonts based stored in glLists, allowing better interpolation, scalability (currently up to font size 64 without quality drop) and much higher performance}
   \item   date resolved: {\bf 2021-01-03 10:29},
 date raised: 2021-01-03   \ei
   \item {\bf Version 1.0.77}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0526}: {\bf solver.ComputeODE2Eigenvalues}
+{\bf \color{warningRed}  resolved BUG 0526}: {\bf solver.ComputeODE2Eigenvalues}
   \bi
-  \item {\small description: dense mode returned unsorted eigenvalues==>add sorting}
+  \item {description: dense mode returned unsorted eigenvalues==>add sorting}
   \item   date resolved: {\bf 2021-01-03 10:21},
 date raised: 2021-01-03   \ei
   \item {\bf Version 1.0.76}: \vspace{-6pt} 
-  Issue 0524: {\bf interpret UTF8}
+  resolved Issue 0524: {\bf interpret UTF8}
 (change)
   \bi
-  \item {\small description: add conversion from UTF8 to unicode to interpret most central European characters + some important characters correctly (see \refSection{sec:graphicsData})}
+  \item {description: add conversion from UTF8 to unicode to interpret most central European characters + some important characters correctly (see \refSection{sec:graphicsData})}
   \item   date resolved: {\bf 2021-01-02 20:13},
 date raised: 2020-12-29   \ei
   \item {\bf Version 1.0.75}: \vspace{-6pt} 
-  Issue 0525: {\bf opengl write UTF8}
+  resolved Issue 0525: {\bf opengl write UTF8}
 (extension)
   \bi
-  \item {\small description: use UTF8 encoding in opengl text output}
+  \item {description: use UTF8 encoding in opengl text output}
   \item   date resolved: {\bf 2020-12-29 21:00},
 date raised: 2020-12-29   \ei
   \item {\bf Version 1.0.74}: \vspace{-6pt} 
-  Issue 0523: {\bf show version}
+  resolved Issue 0523: {\bf show version}
 (extension)
   \bi
-  \item {\small description: show current version info in openGL window; can be switched off with showComputationInfo=False}
+  \item {description: show current version info in openGL window; can be switched off with showComputationInfo=False}
   \item   date resolved: {\bf 2020-12-27 01:33},
 date raised: 2020-12-27   \ei
   \item {\bf Version 1.0.73}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0522}: {\bf fix openGl issues}
+  resolved Issue 0522: {\bf openGl issues}
+(fix)
   \bi
-  \item {\small description: fix positioning problems of coordinate system and contour colorbar}
-  \item {\small \bf notes: now using pixel coordinates for info texts and different font sizes}
+  \item {description: fix positioning problems of coordinate system and contour colorbar}
+  \item {\bf notes: now using pixel coordinates for info texts and different font sizes}
   \item   date resolved: {\bf 2020-12-27 01:31},
 date raised: 2020-12-27   \ei
   \item {\bf Version 1.0.72}: \vspace{-6pt} 
-  Issue 0521: {\bf useWindowsMonitorScaleFactor}
+  resolved Issue 0521: {\bf useWindowsMonitorScaleFactor}
 (extension)
   \bi
-  \item {\small description: add new option useWindowsMonitorScaleFactor in visualizationSettings.general to include monitor scaling factor for font sizes}
+  \item {description: add new option useWindowsMonitorScaleFactor in visualizationSettings.general to include monitor scaling factor for font sizes}
   \item   date resolved: {\bf 2020-12-27 01:25},
 date raised: 2020-12-27   \ei
   \item {\bf Version 1.0.71}: \vspace{-6pt} 
-  Issue 0520: {\bf useBitmapText}
+  resolved Issue 0520: {\bf useBitmapText}
 (extension)
   \bi
-  \item {\small description: add new option useBitmapText in visualizationSettings.general to activate bitmap fonts (deprecated; now using textured fonts)}
+  \item {description: add new option useBitmapText in visualizationSettings.general to activate bitmap fonts (deprecated; now using textured fonts)}
   \item   date resolved: {\bf 2020-12-27 01:25},
 date raised: 2020-12-27   \ei
   \item {\bf Version 1.0.70}: \vspace{-6pt} 
-  Issue 0516: {\bf add bitmap font}
+  resolved Issue 0516: {\bf add bitmap font}
 (extension)
   \bi
-  \item {\small description: add font using OpenGL bitmaps to improve visibility of texts (deprecated, now using textured fonts)}
+  \item {description: add font using OpenGL bitmaps to improve visibility of texts (deprecated, now using textured fonts)}
   \item   date resolved: {\bf 2020-12-27 01:23},
 date raised: 2020-12-21   \ei
   \item {\bf Version 1.0.69}: \vspace{-6pt} 
-  Issue 0519: {\bf correct coordinateSystemSize}
+  resolved Issue 0519: {\bf correct coordinateSystemSize}
 (change)
   \bi
-  \item {\small description: set visualizationSettings.general.coordinateSystemSize relative to fontSize which scales better with larger screens}
+  \item {description: set visualizationSettings.general.coordinateSystemSize relative to fontSize which scales better with larger screens}
   \item   date resolved: {\bf 2020-12-24 01:25},
 date raised: 2020-12-24   \ei
   \item {\bf Version 1.0.68}: \vspace{-6pt} 
-  Issue 0518: {\bf windows monitor scaling}
+  resolved Issue 0518: {\bf windows monitor scaling}
 (extension)
   \bi
-  \item {\small description: include windows monitor (screen) scaling into drawing of texts to increase visibility on high dpi screens}
-  \item {\small \bf notes: added flag in visualizationSettings: general.useWindowsMonitorScaleFactor}
+  \item {description: include windows monitor (screen) scaling into drawing of texts to increase visibility on high dpi screens}
+  \item {\bf notes: added flag in visualizationSettings: general.useWindowsMonitorScaleFactor}
   \item   date resolved: {\bf 2020-12-24 00:22},
 date raised: 2020-12-24   \ei
   \item {\bf Version 1.0.67}: \vspace{-6pt} 
-  Issue 0511: {\bf GeneticOptimization}
+  resolved Issue 0511: {\bf GeneticOptimization}
 (test)
   \bi
-  \item {\small description: add example in TestModels}
+  \item {description: add example in TestModels}
   \item   date resolved: {\bf 2020-12-19 23:31},
 date raised: 2020-12-19   \ei
   \item {\bf Version 1.0.66}: \vspace{-6pt} 
-  Issue 0510: {\bf ParameterVariation}
+  resolved Issue 0510: {\bf ParameterVariation}
 (test)
   \bi
-  \item {\small description: add example in TestModels}
+  \item {description: add example in TestModels}
   \item   date resolved: {\bf 2020-12-19 23:31},
 date raised: 2020-12-19   \ei
   \item {\bf Version 1.0.65}: \vspace{-6pt} 
-  Issue 0502: {\bf rigidbodyinertia}
+  resolved Issue 0502: {\bf rigidbodyinertia}
 (docu)
   \bi
-  \item {\small description: add description for rigidBodyUtilities class RigidBodyInertia}
+  \item {description: add description for rigidBodyUtilities class RigidBodyInertia}
   \item   date resolved: {\bf 2020-12-19 23:28},
 date raised: 2020-12-14   \ei
   \item {\bf Version 1.0.64}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0512}: {\bf testsuite}
+{\bf \color{warningRed}  resolved BUG 0512}: {\bf testsuite}
   \bi
-  \item {\small description: EXUDYN build date referred shows wrong path}
-  \item {\small \bf notes: refer now to installed module}
+  \item {description: EXUDYN build date referred shows wrong path}
+  \item {\bf notes: refer now to installed module}
   \item   date resolved: {\bf 2020-12-19 00:44},
 date raised: 2020-12-19   \ei
   \item {\bf Version 1.0.63}: \vspace{-6pt} 
-  Issue 0507: {\bf changes}
+  resolved Issue 0507: {\bf changes}
 (extension)
   \bi
-  \item {\small description: incorporate resolved issues and bugs into theDoc.pdf}
+  \item {description: incorporate resolved issues and bugs into theDoc.pdf}
   \item   date resolved: {\bf 2020-12-17},
 date raised: 2020-12-16   \ei
   \item {\bf Version 1.0.62}: \vspace{-6pt} 
-  Issue 0505: {\bf rigidBodyUtilities}
+  resolved Issue 0505: {\bf rigidBodyUtilities}
 (extension)
   \bi
-  \item {\small description: add description for RigidBodyInertia class}
+  \item {description: add description for RigidBodyInertia class}
   \item   date resolved: {\bf 2020-12-17},
 date raised: 2020-12-16   \ei
   \item {\bf Version 1.0.61}: \vspace{-6pt} 
-  Issue 0501: {\bf geneticOptimization add crossover}
+  resolved Issue 0501: {\bf geneticOptimization add crossover}
 (extension)
   \bi
-  \item {\small description: added crossover and improved parameters for GeneticOptimization}
+  \item {description: added crossover and improved parameters for GeneticOptimization}
   \item   date resolved: {\bf 2020-12-14},
 date raised: 2020-12-14   \ei
   \item {\bf Version 1.0.60}: \vspace{-6pt} 
-  Issue 0497: {\bf genetic algorithm}
+  resolved Issue 0497: {\bf genetic algorithm}
 (check)
   \bi
-  \item {\small description: check if stochsearch or genetic algorithm has simpler interface}
+  \item {description: check if stochsearch or genetic algorithm has simpler interface}
   \item   date resolved: {\bf 2020-12-14},
 date raised: 2020-12-10   \ei
   \item {\bf Version 1.0.59}: \vspace{-6pt} 
-  Issue 0500: {\bf FilterSignal}
+  resolved Issue 0500: {\bf FilterSignal}
 (extension)
   \bi
-  \item {\small description: put in signal module, make it working for 1D signals as well}
+  \item {description: put in signal module, make it working for 1D signals as well}
   \item   date resolved: {\bf 2020-12-11},
 date raised: 2020-12-10   \ei
   \item {\bf Version 1.0.58}: \vspace{-6pt} 
-  Issue 0492: {\bf FEMinterface GetNodesInOrthoCube}
+  resolved Issue 0492: {\bf FEMinterface GetNodesInOrthoCube}
 (extension)
   \bi
-  \item {\small description: add function which returns all nodes lying in cube aligned with global coordinate system, using [pMin, pMax], with tolerance}
+  \item {description: add function which returns all nodes lying in cube aligned with global coordinate system, using [pMin, pMax], with tolerance}
   \item   date resolved: {\bf 2020-12-11},
 date raised: 2020-12-08   \ei
   \item {\bf Version 1.0.57}: \vspace{-6pt} 
-  Issue 0491: {\bf FEMinterface GetNodesOnCylinder}
+  resolved Issue 0491: {\bf FEMinterface GetNodesOnCylinder}
 (extension)
   \bi
-  \item {\small description: add function which returns all nodes lying on specific cylinder, with tolerance}
+  \item {description: add function which returns all nodes lying on specific cylinder, with tolerance}
   \item   date resolved: {\bf 2020-12-11},
 date raised: 2020-12-08   \ei
   \item {\bf Version 1.0.56}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0499}: {\bf key V gives error}
+{\bf \color{warningRed}  resolved BUG 0499}: {\bf key V gives error}
   \bi
-  \item {\small description: keypress v for visualization dialog gives error}
+  \item {description: keypress v for visualization dialog gives error}
   \item   date resolved: {\bf 2020-12-10},
 date raised: 2020-12-10   \ei
   \item {\bf Version 1.0.55}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0498}: {\bf SensorObject position}
+{\bf \color{warningRed}  resolved BUG 0498}: {\bf SensorObject position}
   \bi
-  \item {\small description: wrong position shown in sensor}
+  \item {description: wrong position shown in sensor}
   \item   date resolved: {\bf 2020-12-10},
 date raised: 2020-12-10   \ei
   \item {\bf Version 1.0.54}: \vspace{-6pt} 
-  Issue 0484: {\bf test DEAP}
+  resolved Issue 0484: {\bf test DEAP}
 (test)
   \bi
-  \item {\small description: test genetic optimization with DEAP}
-  \item {\small \bf notes: too many parameters and too involved to simply include}
+  \item {description: test genetic optimization with DEAP}
+  \item {\bf notes: too many parameters and too involved to simply include}
   \item   date resolved: {\bf 2020-12-10},
 date raised: 2020-12-04   \ei
   \item {\bf Version 1.0.53}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0493}: {\bf CheckForValidFunction}
+{\bf \color{warningRed}  resolved BUG 0493}: {\bf CheckForValidFunction}
   \bi
-  \item {\small description: modify / add this check to setParameters; additional if for setting this to 0}
+  \item {description: modify / add this check to setParameters; additional if for setting this to 0}
   \item   date resolved: {\bf 2020-12-09},
 date raised: 2020-12-09   \ei
   \item {\bf Version 1.0.52}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0490}: {\bf keypress crash}
+{\bf \color{warningRed}  resolved BUG 0490}: {\bf keypress crash}
   \bi
-  \item {\small description: find out causes for crash in keyPress user function; find way to deactivate the user function (set it to 0)}
+  \item {description: find out causes for crash in keyPress user function; find way to deactivate the user function (set it to 0)}
   \item   date resolved: {\bf 2020-12-09},
 date raised: 2020-12-07   \ei
   \item {\bf Version 1.0.51}: \vspace{-6pt} 
-  Issue 0389: {\bf MainSystem includes}
+  resolved Issue 0389: {\bf MainSystem includes}
 (cleanup)
   \bi
-  \item {\small description: put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file}
+  \item {description: put SystemIntegrity item checks into separate file, to reduce includig MainSystem into every .cpp item file}
   \item   date resolved: {\bf 2020-12-09},
 date raised: 2020-05-13   \ei
   \item {\bf Version 1.0.50}: \vspace{-6pt} 
-  Issue 0357: {\bf solver flag prolong solution}
+  resolved Issue 0357: {\bf solver flag prolong solution}
 (extension)
   \bi
-  \item {\small description: add flag for solvers that current state at end of computation is set as initial state for next solving}
-  \item {\small \bf notes: added into new python interface of solver}
+  \item {description: add flag for solvers that current state at end of computation is set as initial state for next solving}
+  \item {\bf notes: added into new python interface of solver}
   \item   date resolved: {\bf 2020-12-09},
 date raised: 2020-03-11   \ei
   \item {\bf Version 1.0.49}: \vspace{-6pt} 
-  Issue 0489: {\bf add gradient background}
+  resolved Issue 0489: {\bf add gradient background}
 (extension)
   \bi
-  \item {\small description: add according visualization.general option}
+  \item {description: add according visualization.general option}
   \item   date resolved: {\bf 2020-12-06},
 date raised: 2020-12-06   \ei
   \item {\bf Version 1.0.48}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0488}: {\bf problem with coordinate sys}
+{\bf \color{warningRed}  resolved BUG 0488}: {\bf problem with coordinate sys}
   \bi
-  \item {\small description: fix problems with drawing of coordinate system: text moves strangely and axes dissappear after rotation}
+  \item {description: fix problems with drawing of coordinate system: text moves strangely and axes dissappear after rotation}
   \item   date resolved: {\bf 2020-12-06},
 date raised: 2020-12-06   \ei
   \item {\bf Version 1.0.47}: \vspace{-6pt} 
-  Issue 0487: {\bf draw world basis}
+  resolved Issue 0487: {\bf draw world basis}
 (extension)
   \bi
-  \item {\small description: add option to draw coordinate system at origin (world basis)}
+  \item {description: add option to draw coordinate system at origin (world basis)}
   \item   date resolved: {\bf 2020-12-06},
 date raised: 2020-12-06   \ei
   \item {\bf Version 1.0.46}: \vspace{-6pt} 
-  Issue 0486: {\bf realtime}
+  resolved Issue 0486: {\bf realtime}
 (extension)
   \bi
-  \item {\small description: add flag to time integration to simulate in realtime}
+  \item {description: add flag to time integration to simulate in realtime}
   \item   date resolved: {\bf 2020-12-05},
 date raised: 2020-12-05   \ei
   \item {\bf Version 1.0.45}: \vspace{-6pt} 
-  Issue 0485: {\bf mouse coordinates}
+  resolved Issue 0485: {\bf mouse coordinates}
 (extension)
   \bi
-  \item {\small description: store mouse coordinates in renderState}
+  \item {description: store mouse coordinates in renderState}
   \item   date resolved: {\bf 2020-12-05},
 date raised: 2020-12-05   \ei
   \item {\bf Version 1.0.44}: \vspace{-6pt} 
-  Issue 0467: {\bf mouse coordinates}
+  resolved Issue 0467: {\bf mouse coordinates}
 (extension)
   \bi
-  \item {\small description: show mouse coordinates in render window (without transformation)}
+  \item {description: show mouse coordinates in render window (without transformation)}
   \item   date resolved: {\bf 2020-12-05},
 date raised: 2020-11-19   \ei
   \item {\bf Version 1.0.43}: \vspace{-6pt} 
-  Issue 0325: {\bf key callback}
+  resolved Issue 0325: {\bf key callback}
 (extension)
   \bi
-  \item {\small description: add key callback function into graphics module to enable interactive settings, etc.; transfer latin letters, SHIFT, CTRL, ALT, 0-9,A-Z,.,SPACE as ASCII code}
+  \item {description: add key callback function into graphics module to enable interactive settings, etc.; transfer latin letters, SHIFT, CTRL, ALT, 0-9,A-Z,.,SPACE as ASCII code}
   \item   date resolved: {\bf 2020-12-05},
 date raised: 2020-01-26   \ei
   \item {\bf Version 1.0.42}: \vspace{-6pt} 
-  Issue 0460: {\bf test accelerations}
+  resolved Issue 0460: {\bf test accelerations}
 (test)
   \bi
-  \item {\small description: test GetODE2Coordinates\_tt, nodal accelerations and rigidbody2D/3D accelerations}
+  \item {description: test GetODE2Coordinates\_tt, nodal accelerations and rigidbody2D/3D accelerations}
   \item   date resolved: {\bf 2020-12-04},
 date raised: 2020-11-12   \ei
   \item {\bf Version 1.0.41}: \vspace{-6pt} 
-  Issue 0482: {\bf store model view}
+  resolved Issue 0482: {\bf store model view}
 (extension)
   \bi
-  \item {\small description: store renderState in exudyn.sys dictionary after exu.StopRenderer() for subsequent simulations}
+  \item {description: store renderState in exudyn.sys dictionary after exu.StopRenderer() for subsequent simulations}
   \item   date resolved: {\bf 2020-12-03},
 date raised: 2020-12-03   \ei
   \item {\bf Version 1.0.40}: \vspace{-6pt} 
-  Issue 0478: {\bf link examples}
+  resolved Issue 0478: {\bf link examples}
 (docu)
   \bi
-  \item {\small description: automatically add links to examples in thedoc}
+  \item {description: automatically add links to examples in thedoc}
   \item   date resolved: {\bf 2020-12-03},
 date raised: 2020-12-02   \ei
   \item {\bf Version 1.0.39}: \vspace{-6pt} 
-  Issue 0477: {\bf links in theDoc}
+  resolved Issue 0477: {\bf links in theDoc}
 (extension)
   \bi
-  \item {\small description: add links between user functions, add labels to item sections}
+  \item {description: add links between user functions, add labels to item sections}
   \item   date resolved: {\bf 2020-12-03},
 date raised: 2020-12-02   \ei
   \item {\bf Version 1.0.38}: \vspace{-6pt} 
-  Issue 0463: {\bf accelerations}
+  resolved Issue 0463: {\bf accelerations}
 (extension)
   \bi
-  \item {\small description: add accelerations Outputvariable to Super elements}
+  \item {description: add accelerations Outputvariable to Super elements}
   \item   date resolved: {\bf 2020-12-03},
 date raised: 2020-11-18   \ei
   \item {\bf Version 1.0.37}: \vspace{-6pt} 
-  Issue 0481: {\bf eigenvalue solver}
+  resolved Issue 0481: {\bf eigenvalue solver}
 (extension)
   \bi
-  \item {\small description: add eigenvalue computation interface for mbs in python}
+  \item {description: add eigenvalue computation interface for mbs in python}
   \item   date resolved: {\bf 2020-12-02},
 date raised: 2020-12-02   \ei
   \item {\bf Version 1.0.36}: \vspace{-6pt} 
-  Issue 0480: {\bf python solver}
+  resolved Issue 0480: {\bf python solver}
 (extension)
   \bi
-  \item {\small description: add solver interfaces in python for MainSolverStatic and MainSolverImplicitSecondOrder, helping to retrieve solver data and to make solvers accessible for users}
+  \item {description: add solver interfaces in python for MainSolverStatic and MainSolverImplicitSecondOrder, helping to retrieve solver data and to make solvers accessible for users}
   \item   date resolved: {\bf 2020-12-02},
 date raised: 2020-12-02   \ei
   \item {\bf Version 1.0.35}: \vspace{-6pt} 
-  Issue 0479: {\bf solver return}
+  resolved Issue 0479: {\bf solver return}
 (extension)
   \bi
-  \item {\small description: add return value to solvers and copy solver structures to mbs.sys variables after finishing}
-  \item {\small \bf notes: added python interfaces and kept old cpp solvers}
+  \item {description: add return value to solvers and copy solver structures to mbs.sys variables after finishing}
+  \item {\bf notes: added python interfaces and kept old cpp solvers}
   \item   date resolved: {\bf 2020-12-02},
 date raised: 2020-12-02   \ei
   \item {\bf Version 1.0.34}: \vspace{-6pt} 
-  Issue 0469: {\bf userfunctions}
+  resolved Issue 0469: {\bf userfunctions}
 (extension)
   \bi
-  \item {\small description: put user function generation in objectdefinition, with seperate U userfunction flag - this will automatically document the user function parameters (AND return values); this improves documentation and adds a unique interface in C++ using exception handling as well as GIL handling}
+  \item {description: put user function generation in objectdefinition, with seperate U userfunction flag - this will automatically document the user function parameters (AND return values); this improves documentation and adds a unique interface in C++ using exception handling as well as GIL handling}
   \item   date resolved: {\bf 2020-12-02},
 date raised: 2020-11-20   \ei
   \item {\bf Version 1.0.33}: \vspace{-6pt} 
-  Issue 0458: {\bf graphicsDataUserFunction}
+  resolved Issue 0458: {\bf graphicsDataUserFunction}
 (docu)
   \bi
-  \item {\small description: add example to docu in ObjectGround and GenericODE2 and add more accurate docu to ALL python user functions}
+  \item {description: add example to docu in ObjectGround and GenericODE2 and add more accurate docu to ALL python user functions}
   \item   date resolved: {\bf 2020-12-02},
 date raised: 2020-11-10   \ei
   \item {\bf Version 1.0.32}: \vspace{-6pt} 
-  Issue 0428: {\bf queue user functions}
+  resolved Issue 0428: {\bf queue user functions}
 (extension)
   \bi
-  \item {\small description: implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules}
+  \item {description: implement drawing user functions as global function similar to PyProcessQueue, in order to avoid messing up the CSystem and visualization modules}
   \item   date resolved: {\bf 2020-12-02},
 date raised: 2020-06-26   \ei
   \item {\bf Version 1.0.31}: \vspace{-6pt} 
-  Issue 0476: {\bf add RequireVersion}
+  resolved Issue 0476: {\bf add RequireVersion}
 (extension)
   \bi
-  \item {\small description: functionality to allow to add a simple check to see if the installed version meets the requirements}
+  \item {description: functionality to allow to add a simple check to see if the installed version meets the requirements}
   \item   date resolved: {\bf 2020-11-30},
 date raised: 2020-11-30   \ei
   \item {\bf Version 1.0.30}: \vspace{-6pt} 
-  Issue 0475: {\bf rolling disc ext}
+  resolved Issue 0475: {\bf rolling disc ext}
 (extension)
   \bi
-  \item {\small description: add force on ground and moving ground for ObjectJointRollingDisc}
-  \item {\small \bf notes: needs to be tested further}
+  \item {description: add force on ground and moving ground for ObjectJointRollingDisc}
+  \item {\bf notes: needs to be tested further}
   \item   date resolved: {\bf 2020-11-29},
 date raised: 2020-11-26   \ei
   \item {\bf Version 1.0.29}: \vspace{-6pt} 
-  Issue 0474: {\bf auto compilation}
+  resolved Issue 0474: {\bf auto compilation}
 (check)
   \bi
-  \item {\small description: check automatic compilation; check version in wheels; check linux wheels}
-  \item {\small \bf notes: linux wheels can not be built with admin rights}
+  \item {description: check automatic compilation; check version in wheels; check linux wheels}
+  \item {\bf notes: linux wheels can not be built with admin rights}
   \item   date resolved: {\bf 2020-11-29},
 date raised: 2020-11-25   \ei
   \item {\bf Version 1.0.28}: \vspace{-6pt} 
-  Issue 0473: {\bf no glfw option}
+  resolved Issue 0473: {\bf no glfw option}
 (extension)
   \bi
-  \item {\small description: add simple option in setup.py to deactivate glfw both in setup.py as well as in C++ part}
+  \item {description: add simple option in setup.py to deactivate glfw both in setup.py as well as in C++ part}
   \item   date resolved: {\bf 2020-11-29},
 date raised: 2020-11-25   \ei
   \item {\bf Version 1.0.27}: \vspace{-6pt} 
-  Issue 0457: {\bf GetVersionString}
+  resolved Issue 0457: {\bf GetVersionString}
 (extension)
   \bi
-  \item {\small description: put into docu with pybindings}
+  \item {description: put into docu with pybindings}
   \item   date resolved: {\bf 2020-11-29},
 date raised: 2020-11-07   \ei
   \item {\bf Version 1.0.26}: \vspace{-6pt} 
-  Issue 0472: {\bf examples in utilities}
+  resolved Issue 0472: {\bf examples in utilities}
 (extension)
   \bi
-  \item {\small description: activate lstlisting for examples}
+  \item {description: activate lstlisting for examples}
   \item   date resolved: {\bf 2020-11-25},
 date raised: 2020-11-25   \ei
   \item {\bf Version 1.0.25}: \vspace{-6pt} 
-  Issue 0468: {\bf test WSL2}
+  resolved Issue 0468: {\bf test WSL2}
 (test)
   \bi
-  \item {\small description: test compilation on WSL2 - Windows subsystem for Linux}
-  \item {\small \bf notes: WSL2 now used to automatically create linux wheels}
+  \item {description: test compilation on WSL2 - Windows subsystem for Linux}
+  \item {\bf notes: WSL2 now used to automatically create linux wheels}
   \item   date resolved: {\bf 2020-11-21},
 date raised: 2020-11-19   \ei
   \item {\bf Version 1.0.24}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0465}: {\bf SC.GetSystem(..)}
+{\bf \color{warningRed}  resolved BUG 0465}: {\bf SC.GetSystem(..)}
   \bi
-  \item {\small description: raises RuntimeError: should return reference instead of copy}
+  \item {description: raises RuntimeError: should return reference instead of copy}
   \item   date resolved: {\bf 2020-11-21},
 date raised: 2020-11-18   \ei
   \item {\bf Version 1.0.23}: \vspace{-6pt} 
-  Issue 0446: {\bf NodeIndex in arrays}
+  resolved Issue 0446: {\bf NodeIndex in arrays}
 (check)
   \bi
-  \item {\small description: use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers}
-  \item {\small \bf notes: not needed for now}
+  \item {description: use additional functionality to enable index type checks also in arrays, e.g., ArrayIndex of node numbers}
+  \item {\bf notes: not needed for now}
   \item   date resolved: {\bf 2020-11-21},
 date raised: 2020-09-09   \ei
   \item {\bf Version 1.0.22}: \vspace{-6pt} 
-  Issue 0383: {\bf pybind11 submodule}
+  resolved Issue 0383: {\bf pybind11 submodule}
 (extension)
   \bi
-  \item {\small description: used for advanced functions, not necessarily included in exudyn or make other module}
-  \item {\small \bf notes: not needed for now}
+  \item {description: used for advanced functions, not necessarily included in exudyn or make other module}
+  \item {\bf notes: not needed for now}
   \item   date resolved: {\bf 2020-11-21},
 date raised: 2020-05-06   \ei
   \item {\bf Version 1.0.21}: \vspace{-6pt} 
-  Issue 0191: {\bf Newton lambda}
+  resolved Issue 0191: {\bf Newton lambda}
 (check)
   \bi
-  \item {\small description: Check whether Newton can be implemented as lambda-function}
-  \item {\small \bf notes: not needed for now}
+  \item {description: Check whether Newton can be implemented as lambda-function}
+  \item {\bf notes: not needed for now}
   \item   date resolved: {\bf 2020-11-21},
 date raised: 2019-06-17   \ei
   \item {\bf Version 1.0.20}: \vspace{-6pt} 
-  Issue 0466: {\bf main/bin}
+  resolved Issue 0466: {\bf main/bin}
 (change)
   \bi
-  \item {\small description: remove main/bin from github and from Tools folder}
+  \item {description: remove main/bin from github and from Tools folder}
   \item   date resolved: {\bf 2020-11-19},
 date raised: 2020-11-19   \ei
   \item {\bf Version 1.0.19}: \vspace{-6pt} 
-  Issue 0464: {\bf processing module}
+  resolved Issue 0464: {\bf processing module}
 (extension)
   \bi
-  \item {\small description: create processing module for parameter variation and optimization using multiprocessing library}
+  \item {description: create processing module for parameter variation and optimization using multiprocessing library}
   \item   date resolved: {\bf 2020-11-18},
 date raised: 2020-11-18   \ei
   \item {\bf Version 1.0.18}: \vspace{-6pt} 
-  Issue 0462: {\bf AVX Celeron problems}
+  resolved Issue 0462: {\bf AVX Celeron problems}
 (docu)
   \bi
-  \item {\small description: add info to documentation - FAQ AND common problems and installation instructions that CPUs without AVX support only work with 32bit version}
+  \item {description: add info to documentation - FAQ AND common problems and installation instructions that CPUs without AVX support only work with 32bit version}
   \item   date resolved: {\bf 2020-11-18},
 date raised: 2020-11-16   \ei
   \item {\bf Version 1.0.17}: \vspace{-6pt} 
-  Issue 0459: {\bf lie group utilities}
+  resolved Issue 0459: {\bf lie group utilities}
 (extension)
   \bi
-  \item {\small description: add documented lie group utilities to exudyn (python) lib}
+  \item {description: add documented lie group utilities to exudyn (python) lib}
   \item   date resolved: {\bf 2020-11-11},
 date raised: 2020-11-11 (resolved by: Stefan Holzinger)
   \ei
   \item {\bf Version 1.0.16}: \vspace{-6pt} 
-  Issue 0454: {\bf add item graph}
+  resolved Issue 0454: {\bf add item graph}
 (extension)
   \bi
-  \item {\small description: add graph containing nodes, objects, etc.}
+  \item {description: add graph containing nodes, objects, etc.}
   \item   date resolved: {\bf 2020-10-08},
 date raised: 2020-10-08   \ei
   \item {\bf Version 1.0.15}: \vspace{-6pt} 
-  Issue 0453: {\bf systemdata.NumberOfSensors}
+  resolved Issue 0453: {\bf systemdata.NumberOfSensors}
 (extension)
   \bi
-  \item {\small description: add access function for systemdata.NumberOfSensors()}
+  \item {description: add access function for systemdata.NumberOfSensors()}
   \item   date resolved: {\bf 2020-10-08},
 date raised: 2020-10-08   \ei
   \item {\bf Version 1.0.14}: \vspace{-6pt} 
-  Issue 0449: {\bf MT ngsolve}
+  resolved Issue 0449: {\bf MT ngsolve}
 (extension)
   \bi
-  \item {\small description: add NGsolve multithreading library (task manager)}
-  \item {\small \bf notes: first tests made}
+  \item {description: add NGsolve multithreading library (task manager)}
+  \item {\bf notes: first tests made}
   \item   date resolved: {\bf 2020-09-16},
 date raised: 2020-09-15   \ei
   \item {\bf Version 1.0.13}: \vspace{-6pt} 
-  Issue 0330: {\bf correct ODE2RHS}
+  resolved Issue 0330: {\bf correct ODE2RHS}
 (change)
   \bi
-  \item {\small description: correct ODE2RHS to ODE2Terms in objects because it is left-hand-side}
-  \item {\small \bf notes: changed object computation function from RHS to LHS, as it always computed the LHS (the system.cpp function ComputeODE2RHS then puts it to RHS)}
+  \item {description: correct ODE2RHS to ODE2Terms in objects because it is left-hand-side}
+  \item {\bf notes: changed object computation function from RHS to LHS, as it always computed the LHS (the system.cpp function ComputeODE2RHS then puts it to RHS)}
   \item   date resolved: {\bf 2020-09-10},
 date raised: 2020-02-03   \ei
   \item {\bf Version 1.0.12}: \vspace{-6pt} 
-  Issue 0435: {\bf check runtimeError}
+  resolved Issue 0435: {\bf check runtimeError}
 (check)
   \bi
-  \item {\small description: check if exception runtimeerror works for all catch cases (test in windows?)}
+  \item {description: check if exception runtimeerror works for all catch cases (test in windows?)}
   \item   date resolved: {\bf 2020-09-09},
 date raised: 2020-07-21   \ei
   \item {\bf Version 1.0.11}: \vspace{-6pt} 
-  Issue 0445: {\bf remove GetItemByName()}
+  resolved Issue 0445: {\bf remove GetItemByName()}
 (change)
   \bi
-  \item {\small description: remove GetNodeByName, GetObjectByName, etc. from C++ interface; already disabled in python interface before}
+  \item {description: remove GetNodeByName, GetObjectByName, etc. from C++ interface; already disabled in python interface before}
   \item   date resolved: {\bf 2020-09-08},
 date raised: 2020-09-08   \ei
   \item {\bf Version 1.0.10}: \vspace{-6pt} 
-  Issue 0288: {\bf Item::CallFunction}
+  resolved Issue 0288: {\bf Item::CallFunction}
 (change)
   \bi
-  \item {\small description: Disable Item::CallFunction functionality from EXUDYN; either outputvariables can be used, or some functions are automatically created including the documentation}
-  \item {\small \bf notes: already removed from python interface earlier}
+  \item {description: Disable Item::CallFunction functionality from EXUDYN; either outputvariables can be used, or some functions are automatically created including the documentation}
+  \item {\bf notes: already removed from python interface earlier}
   \item   date resolved: {\bf 2020-09-08},
 date raised: 2019-12-10   \ei
   \item {\bf Version 1.0.9}: \vspace{-6pt} 
-  Issue 0443: {\bf SensorObject}
+  resolved Issue 0443: {\bf SensorObject}
 (warning)
   \bi
-  \item {\small description: add error message, if sensorobject is used for a body (and check if SensorBody excepts object other than body}
-  \item {\small \bf notes: added test for SensorObject if attached to body}
+  \item {description: add error message, if sensorobject is used for a body (and check if SensorBody excepts object other than body}
+  \item {\bf notes: added test for SensorObject if attached to body}
   \item   date resolved: {\bf 2020-09-04},
 date raised: 2020-09-03   \ei
   \item {\bf Version 1.0.8}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0442}: {\bf difference MSC and setuptools}
+{\bf \color{warningRed}  resolved BUG 0442}: {\bf difference MSC and setuptools}
   \bi
-  \item {\small description: compilation with MSC and setuptools gives different results}
-  \item {\small \bf notes: problem with VS2019 compilation of Eigen; resolved by removing VS2019 installation}
+  \item {description: compilation with MSC and setuptools gives different results}
+  \item {\bf notes: problem with VS2019 compilation of Eigen; resolved by removing VS2019 installation}
   \item   date resolved: {\bf 2020-08-25},
 date raised: 2020-08-24   \ei
   \item {\bf Version 1.0.7}: \vspace{-6pt} 
-  Issue 0431: {\bf auto create dirs}
+  resolved Issue 0431: {\bf auto create dirs}
 (extension)
   \bi
-  \item {\small description: automatically create dictionaries if they do not exist}
+  \item {description: automatically create dictionaries if they do not exist}
   \item   date resolved: {\bf 2020-08-25},
 date raised: 2020-07-01   \ei
   \item {\bf Version 1.0.6}: \vspace{-6pt} 
-  Issue 0439: {\bf setuptools}
+  resolved Issue 0439: {\bf setuptools}
 (extension)
   \bi
-  \item {\small description: use setuptools for installation}
+  \item {description: use setuptools for installation}
   \item   date resolved: {\bf 2020-08-17},
 date raised: 2020-08-13   \ei
   \item {\bf Version 1.0.5}: \vspace{-6pt} 
-  Issue 0381: {\bf test pybind11\_2020}
+  resolved Issue 0381: {\bf test pybind11\_2020}
 (test)
   \bi
-  \item {\small description: downloaded in Download folder}
+  \item {description: downloaded in Download folder}
   \item   date resolved: {\bf 2020-08-17},
 date raised: 2020-05-06   \ei
   \item {\bf Version 1.0.4}: \vspace{-6pt} 
-  Issue 0378: {\bf setup tools}
+  resolved Issue 0378: {\bf setup tools}
 (extension)
   \bi
-  \item {\small description: use setup tools to install EXUDYN on local user accounts; use installed python version to decide which version to install}
+  \item {description: use setup tools to install EXUDYN on local user accounts; use installed python version to decide which version to install}
   \item   date resolved: {\bf 2020-08-17},
 date raised: 2020-05-04   \ei
   \item {\bf Version 1.0.3}: \vspace{-6pt} 
-  Issue 0441: {\bf remove WorkingRelease path}
+  resolved Issue 0441: {\bf remove WorkingRelease path}
 (change)
   \bi
-  \item {\small description: do not include WorkingRelease to sys.path any more, but require installation of modules}
+  \item {description: do not include WorkingRelease to sys.path any more, but require installation of modules}
   \item   date resolved: {\bf 2020-08-14},
 date raised: 2020-08-14   \ei
   \item {\bf Version 1.0.2}: \vspace{-6pt} 
-  Issue 0440: {\bf exudyn package}
+  resolved Issue 0440: {\bf exudyn package}
 (extension)
   \bi
-  \item {\small description: make a package with sub .py files in exudyn package - requires renaming of C++ module}
+  \item {description: make a package with sub .py files in exudyn package - requires renaming of C++ module}
   \item   date resolved: {\bf 2020-08-14},
 date raised: 2020-08-13   \ei
   \item {\bf Version 1.0.1}: \vspace{-6pt} 
-  Issue 0438: {\bf UBUNTU}
+  resolved Issue 0438: {\bf UBUNTU}
 (extension)
   \bi
-  \item {\small description: adapt setup.py and implementation for gcc and UBUNTU}
+  \item {description: adapt setup.py and implementation for gcc and UBUNTU}
   \item   date resolved: {\bf 2020-08-13},
 date raised: 2020-08-13   \ei
   \item {\bf Version 1.0.0}: \vspace{-6pt} 
-{\bf \color{warningRed}  BUG 0434}: {\bf CheckSystemIntegrity}
+{\bf \color{warningRed}  resolved BUG 0434}: {\bf CheckSystemIntegrity}
   \bi
-  \item {\small description: gives wrong node, marker, etc. numbers for some checks}
+  \item {description: gives wrong node, marker, etc. numbers for some checks}
   \item   date resolved: {\bf 2020-07-20},
 date raised: 2020-07-20   \ei
 \ei
 \mysubsection{Known open bugs}
-\bi
+\bi \footnotesize 
   \item open {\bf BUG 0575}:  {\bf new genAlpha solver}
   \bi
-  \item {\small description: new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top}
+  \item {description: new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top}
   \item date raised: 2021-02-08   \ei
   \item open {\bf BUG 0456}:  {\bf ObjectFFRF bug with GenericJoint}
   \bi
-  \item {\small description: raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity\_qt not implemented; cannot compute jacobian for orientation}
+  \item {description: raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity\_qt not implemented; cannot compute jacobian for orientation}
   \item date raised: 2020-10-13   \ei
   \item open {\bf BUG 0448}:  {\bf ObjectGenericODE2 bug}
   \bi
-  \item {\small description: ObjectGenericODE2 crashes without message when initialized with invalid node numbers}
+  \item {description: ObjectGenericODE2 crashes without message when initialized with invalid node numbers}
   \item date raised: 2020-09-09   \ei
   \item open {\bf BUG 0423}:  {\bf fix MarkerSuperElementRigidBody}
   \bi
-  \item {\small description: fix velocity level for MarkerSuperElementRigidBody (check constraint equations)}
+  \item {description: fix velocity level for MarkerSuperElementRigidBody (check constraint equations)}
   \item date raised: 2020-06-09   \ei
 \ei
 %end of file

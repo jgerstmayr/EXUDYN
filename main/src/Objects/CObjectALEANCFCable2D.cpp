@@ -211,6 +211,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs) const
 //	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
 //}
 
+#define CObjectALEANCFCable2D_USE_ALE_MASSTERM 1 //0 or 1
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
@@ -267,7 +268,7 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 		//const Index dim = 2;  //2D finite element
 		//const Index ns = 4;   //number of shape functions
 
-		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+		value.SetNumberOfRowsAndColumns(3, 8 + CObjectALEANCFCable2D_USE_ALE_MASSTERM); //3D velocity, 8 coordinates qt
 		value.SetAll(0.);
 
 		Real L = GetParameters().physicsLength;
@@ -277,8 +278,8 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 		Real a = 0; //integration interval [a,b]
 		Real b = L;
 
-		Vector4D SV({0.,0.,0.,0.});
-
+		Vector4D SV({ 0.,0.,0.,0. });
+		
 		for (auto item : EXUmath::gaussRuleOrder3Points)
 		{
 			Real x = 0.5*(b - a)*item + 0.5*(b + a);
@@ -295,6 +296,24 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 		value(1, 5) = SV[2];
 		value(0, 6) = SV[3];
 		value(1, 7) = SV[3];
+
+		//additional term that drives the ALE coordinate if subjected to gravity in axial direction
+		if (CObjectALEANCFCable2D_USE_ALE_MASSTERM)
+		{
+			Vector2D SVale(0);
+			Index cnt = 0;
+			//perform numerical integration over rhoA * r'
+			for (auto item : EXUmath::gaussRuleOrder3Points)
+			{
+				Real x = 0.5*(b - a)*item + 0.5*(b + a);
+				Vector2D slope = ComputeSlopeVector(x, ConfigurationType::Current);
+				slope *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+				SVale += slope;
+			}
+			value(0, 8) = SVale[0];
+			value(1, 8) = SVale[1];
+		}
+
 		break;
 	}
 	default:

@@ -428,7 +428,7 @@ Traceback (most recent call last):
   \item How to add graphics?
 	\bi
 	\item[$\ra$] Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object.
-	Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time.
+	Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
 	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -438,13 +438,15 @@ Traceback (most recent call last):
 	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item I get an error in \texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)} but no further information -- how can I solve it?
+  \item I get an error in \texttt{exu.SolveDynamic(mbs, ...)} OR in \texttt{exu.SolveStatic(mbs, ...)}
+	%\texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)} 
+	but no further information -- how can I solve it?
 	\bi
 	\item[$\ra$] Typical time integration errors may look like:\\
 	{\footnotesize
   \texttt{File "C:/DATA/cpp/EXUDYN\_git/main/pythonDev/...<file name>", line XXX, in <module>}\\  
-	\texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)}\\
-  \texttt{SystemError: <built-in method TimeIntegrationSolve of PyCapsule object at 0x0CC63590> returned a result with an error set}}
+	\texttt{solver.SolveSystem(...)}\\
+  \texttt{SystemError: <built-in method SolveSystem of PyCapsule object at 0x0CC63590> returned a result with an error set}}
 	\item[$\ra$] The prechecks, which are performed to enable a crash-free simulation are insufficient for your model.
 	\item[$\ra$] As a first try, restart the IPython console in order to get all error messages, which may be blocked due to a previous run of \codeName.
 	\item[$\ra$] Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(mbs,~t,~load), which tries to access load[4] will fail internally.

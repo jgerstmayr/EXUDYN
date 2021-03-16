@@ -370,6 +370,34 @@ VPointGround = VNodePointGround
 
 #+++++++++++++++++++++++++++++++
 #OBJECT
+class VObjectGround:
+    def __init__(self, show = True, graphicsDataUserFunction = 0, color = [-1.,-1.,-1.,-1.], graphicsData = []):
+        self.show = show
+        self.graphicsDataUserFunction = graphicsDataUserFunction
+        self.color = color
+        self.graphicsData = graphicsData
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
+        yield 'color', self.color
+        yield 'graphicsData', self.graphicsData
+
+class ObjectGround:
+    def __init__(self, name = '', referencePosition = [0.,0.,0.], visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
+        self.name = name
+        self.referencePosition = referencePosition
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'Ground'
+        yield 'name', self.name
+        yield 'referencePosition', self.referencePosition
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+        yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+
 class VObjectMassPoint:
     def __init__(self, show = True, graphicsData = []):
         self.show = show
@@ -819,34 +847,6 @@ class ObjectALEANCFCable2D:
 #add typedef for short usage:
 ALECable2D = ObjectALEANCFCable2D
 VALECable2D = VObjectALEANCFCable2D
-
-class VObjectGround:
-    def __init__(self, show = True, graphicsDataUserFunction = 0, color = [-1.,-1.,-1.,-1.], graphicsData = []):
-        self.show = show
-        self.graphicsDataUserFunction = graphicsDataUserFunction
-        self.color = color
-        self.graphicsData = graphicsData
-
-    def __iter__(self):
-        yield 'show', self.show
-        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
-        yield 'color', self.color
-        yield 'graphicsData', self.graphicsData
-
-class ObjectGround:
-    def __init__(self, name = '', referencePosition = [0.,0.,0.], visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
-        self.name = name
-        self.referencePosition = referencePosition
-        self.visualization = visualization
-
-    def __iter__(self):
-        yield 'objectType', 'Ground'
-        yield 'name', self.name
-        yield 'referencePosition', self.referencePosition
-        yield 'Vshow', dict(self.visualization)["show"]
-        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
-        yield 'Vcolor', dict(self.visualization)["color"]
-        yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
 class VObjectConnectorSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -2034,6 +2034,31 @@ class SensorSuperElement:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+class VSensorMarker:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorMarker:
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+        self.name = name
+        self.markerNumber = markerNumber
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.outputVariableType = outputVariableType
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'Marker'
+        yield 'name', self.name
+        yield 'markerNumber', self.markerNumber
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'outputVariableType', self.outputVariableType
+        yield 'Vshow', dict(self.visualization)["show"]
+
 class VSensorLoad:
     def __init__(self, show = True):
         self.show = show
@@ -2055,5 +2080,32 @@ class SensorLoad:
         yield 'loadNumber', self.loadNumber
         yield 'writeToFile', self.writeToFile
         yield 'fileName', self.fileName
+        yield 'Vshow', dict(self.visualization)["show"]
+
+class VSensorUserFunction:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class SensorUserFunction:
+    def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction = 0, visualization = {'show': True}):
+        self.name = name
+        self.sensorNumbers = sensorNumbers
+        self.factors = factors
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.sensorUserFunction = sensorUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'UserFunction'
+        yield 'name', self.name
+        yield 'sensorNumbers', self.sensorNumbers
+        yield 'factors', self.factors
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'sensorUserFunction', self.sensorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 

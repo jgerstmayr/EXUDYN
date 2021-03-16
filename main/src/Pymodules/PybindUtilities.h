@@ -185,19 +185,6 @@ namespace EPyUtils {
 	//! Expect Index or ArrayNodeIndex; otherwise throws error
 	inline ArrayIndex GetArrayNodeIndexSafely(const py::object& pyObject)
 	{
-		//crashes, if pyObject list mixes different types as they cannot be cast to std::vector ...!
-		//if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
-		//{
-		//	//std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-		//	std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(pyObject); //! # read out list and cast to C++ type
-		//	Index rows = stdlist.size();
-		//	ArrayIndex indexList(rows); //initialize empty list
-		//	for (Index i = 0; i < rows; i++)
-		//	{
-		//		indexList[i] = GetNodeIndexSafely(stdlist[i]);
-		//	}
-		//	return indexList;
-		//}
 
 		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
 		{
@@ -255,17 +242,6 @@ namespace EPyUtils {
 	//! Expect Index or ArrayMarkerIndex; otherwise throws error
 	inline ArrayIndex GetArrayMarkerIndexSafely(const py::object& pyObject)
 	{
-		//if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
-		//{
-		//	std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(pyObject); //! # read out list and cast to C++ type
-		//	Index rows = stdlist.size();
-		//	ArrayIndex indexList(rows); //initialize empty list
-		//	for (Index i = 0; i < rows; i++)
-		//	{
-		//		indexList[i] = GetMarkerIndexSafely(stdlist[i]);
-		//	}
-		//	return indexList;
-		//}
 		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
 		{
 			py::list pylist = py::cast<py::list>(pyObject); //hopefully also works for numpy arrays .. TEST!
@@ -291,6 +267,37 @@ namespace EPyUtils {
 			vectorMarkerIndex.push_back(MarkerIndex(item));
 		}
 		return vectorMarkerIndex;
+	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! Expect Index or ArraySensorIndex; otherwise throws error
+	inline ArrayIndex GetArraySensorIndexSafely(const py::object& pyObject)
+	{
+		if (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject))
+		{
+			py::list pylist = py::cast<py::list>(pyObject); //hopefully also works for numpy arrays .. TEST!
+			ArrayIndex indexList; //initialize empty list
+			for (auto item : pylist)
+			{
+				indexList.Append(GetSensorIndexSafely(py::cast<py::object>(item))); //will crash, if e.g. function in list ...
+			}
+			return indexList;
+		}
+
+		//otherwise:
+		PyError(STDstring("Expected list of SensorIndex, but received '" + EXUstd::ToString(pyObject) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, SensorIndex, ...) or inconsistent arrays for nodeNumbers, markerNumbers, ...!"));
+		return ArrayIndex();
+	}
+
+	//! get pybind-convertible vector of SensorIndex from ArrayIndex
+	inline std::vector<SensorIndex> GetArraySensorIndex(const ArrayIndex& arrayIndex)
+	{
+		std::vector<SensorIndex> vectorSensorIndex;
+		for (auto item : arrayIndex)
+		{
+			vectorSensorIndex.push_back(SensorIndex(item));
+		}
+		return vectorSensorIndex;
 	}
 
 

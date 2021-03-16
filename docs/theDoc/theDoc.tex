@@ -1,12 +1,10 @@
-\documentclass[11pt,a4paper]{book} %print
-%\documentclass[12pt,a5paper,landscape]{book} %slides
+\documentclass[11pt,a4paper]{book} 
 
-\renewcommand\bibname{References}
+\renewcommand\bibname{References} %change name to references
 \renewcommand{\contentsname}{Table of Contents}
-%\renewcommand{\refname}{References}
 
 
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
 \usepackage{pxfonts} 
 %\usepackage{xcolor} %for colors
 %\usepackage{floatrow} %?
@@ -121,6 +119,7 @@ keywordstyle=\ttb\color{deepblue},
 emph={AddNode, AddObject, AddMarker, AddLoad, AddSensor, SystemContainer, 
 AddSystem, Assemble, SimulationSettings,
 StartRenderer, StopRenderer, GetNodeOutput,
+DynamicSolverType, SolveDynamic, SolveStatic, 
 TimeIntegrationSolve,__init__},          % Custom highlighting
 emphstyle=\ttb\color{deepred},    % Custom highlighting style
 stringstyle=\color{deepgreen},
@@ -210,7 +209,7 @@ numberstyle=\ttm    						% line number style
 \end{center}
 \vspace{0.2cm}
 {\small \input{version}}\\
-{\small CHECK section \refSection{sec:changes} and \refSection{sec:issueTracker} for changes from previous versions!!!\\}
+{\small CHECK section \refSection{sec:issueTracker} for changes from previous versions!!!\\}
 \vspace{1.5cm}
 University of Innsbruck, Department of Mechatronics, \today,\vspace{0.25cm}\\
 Johannes Gerstmayr\vspace{2cm}
@@ -364,10 +363,12 @@ There are certain types, which are heavily used in the description of items:
   \item \texttt{float} $\ldots$ a single-precision floating point number (note: in Python, '\texttt{float}' is used also for double precision numbers; in EXUDYN, internally floats are single precision numbers especially for graphics objects and OpenGL)
   \item \texttt{Real} $\ldots$ a double-precision floating point number (note: in Python this is also of type '\texttt{float}')
   \item \texttt{UReal} $\ldots$ same as \texttt{Real}, but may not be negative
-  \item \texttt{Index} $\ldots$ an integer number ('\texttt{int}' in Python)
-  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special number object to represent integer indices of nodes, markers, ...
+  \item \texttt{Index} $\ldots$ an integer number, which converts to '\texttt{int}' in Python
+  \item \texttt{UIndex} $\ldots$ an unsigned integer number, which converts to '\texttt{int}' in Python
+  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special (non-negative) integer type to represent indices of nodes, markers, ...; specifically, an unintentional conversion from one index type to the other is not possible (e.g., to convert \texttt{NodeIndex} to \texttt{MarkerIndex})
   \item \texttt{String} $\ldots$ a string
   \item \texttt{ArrayIndex} $\ldots$ a list of integer numbers (either list or in some cases \texttt{numpy} arrays may be allowed)
+  \item \texttt{ArrayNodeIndex} $\ldots$ a list of node indices
   \item \texttt{Bool} $\ldots$ a boolean parameter: either \texttt{True} or \texttt{False} ('\texttt{bool}' in Python)
   \item \texttt{VObjectMassPoint}, \texttt{VObjectRigidBody}, \texttt{VObjectGround}, etc.  $\ldots$ represents the visualization object of the underlying object; 'V' is put in front of object name
   \item \texttt{BodyGraphicsData} $\ldots$ see \refSection{sec:graphicsData}
@@ -382,6 +383,7 @@ There are certain types, which are heavily used in the description of items:
 
 	\item \texttt{Matrix3D} $\ldots$ a list of lists or \texttt{numpy} array with $3 \times 3$ real numbers
 	\item \texttt{NumpyMatrix} $\ldots$ a 2D \texttt{numpy} array (matrix) with real numbers (size given by according object)
+	\item \texttt{NumpyMatrixI} $\ldots$ a 2D \texttt{numpy} array (matrix) with integer numbers (size given by according object)
 \ei
 %
 \mysubsubsection{States and coordinate attributes}
@@ -404,7 +406,11 @@ As written in the introduction, the coordinates are attributed to certain types 
 Time is usually defined as 'time' or $t$.
 The cross product or vector product '$\times$' is often replaced by the skew symmetric matrix using the tilde '$\tilde{\;\;}$' symbol,
 \be
-  \av \times \bv = \tilde \av \, \bv = -\tilde \bv \, \av
+  \av \times \bv = \tilde \av \, \bv = -\tilde \bv \, \av \eqDot
+\ee
+For the length of a vector we often use the abbreviation 
+\be \label{eq:definition:length}
+  \Vert \av \Vert = \sqrt{\av^T \av} \eqDot
 \ee
 %
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -686,7 +692,21 @@ Note, that unicode character codes are shown only for completeness, but they {\b
 
 \clearpage
 
+
+%++++++++++++++++++++++++
+%temporary things:
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 %\mysection{References}  %done in \bibliography command
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+%\section{References}
 \bibliographystyle{abbrv}
 \bibliography{bibliographyDoc}
 

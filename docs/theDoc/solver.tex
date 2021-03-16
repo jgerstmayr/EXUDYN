@@ -38,10 +38,46 @@ In the case of the object equation
   m \cdot \ddot q + d \cdot \dot q + k \cdot q = f \, ,
 \ee 
 the RHS term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is computed by the C++ function \texttt{ComputeSystemODE2RHS}.
-
+%
 This means, that during computation, terms which appear at the LHS of the object are transferred to the RHS of the system equation.
 This enables a simpler setup of equations for the solver.
 
+\mysubsection{System assembly}
+Assembling equations of motion is done within the C++ class \texttt{CSystem}, see the file \texttt{CSystem.cpp}.
+The general idea is to assemble, i.e.\ to sum up, (parts of) residuals attributed by different objects. The summation process is based on coordinate indices to which the single equations belong to.
+Let's assume that we have two simple \texttt{ObjectMass1D} objects, with object indices $o0$ and $o1$ and having mass $m_0$ and $m_1$. They are connected to nodes of type \texttt{Node1D} $n0$ and $n1$, with global coordinate indices $c0$ and $c1$.
+The partial object residuals, which are fully independent equations, read
+\bea
+  m_0 \cdot \ddot q_{c0} &=& RHS_{c0} \eqComma \\
+  m_1 \cdot \ddot q_{c1} &=& RHS_{c1} \eqComma
+\eea
+where $RHS_{c0}$ and $RHS_{c1}$ the right-hand-side of the respective equations/coordinates. They represent forces, e.g., from \texttt{LoadCoordinate} items (which directly are applied to coordinates of nodes), say $f_{c0}$ and $f_{c1}$, that are in case also summed up on the right hand side.
+Let us for now assume that 
+\be
+  RHS_{c0} = f_{c0} \quad \mathrm{and} \quad RHS_{c1} = f_{c1} \eqDot
+\ee
+
+Now we add another \texttt{ObjectMass1D} object with object index $o2$, having mass $m_2$, but letting the object {\it again} use node $n0$ with coordinate $c0$.
+In this case, the total object residuals read
+\bea
+  (m_0+m_2) \cdot \ddot q_{c0} &=& RHS_{c0} \eqComma \\
+  m_1 \cdot \ddot q_{c1} &=& RHS_{c1} \eqDot
+\eea 
+It is clear, that now the mass in the first equation is increased due to the fact that two objects contribute to the same coordinate. The same would happen, if several loads are applied to the same coordinate.
+
+Finally, if we add a \texttt{CoordinateSpringDamper}, assuming a spring $k$ between coordinates $c0$ and $c1$, the RHS of equations related to $c0$ and $c1$ is now augmented to
+\bea
+  RHS_{c0} &=& f_{c0} + k \cdot (q_{c1} - q_{c0}) \eqComma \\
+  RHS_{c1} &=& f_{c1} + k \cdot (q_{c0} - q_{c1}) \eqDot
+\eea
+The system of equation would therefore read
+\bea
+  (m_0+m_2) \cdot \ddot q_{c0} &=& f_{c0} + k \cdot (q_{c1} - q_{c0}) \eqComma \\
+  m_1 \cdot \ddot q_{c1}  &=& f_{c1} + k \cdot (q_{c0} - q_{c1}) \eqDot
+\eea
+It should be noted, that all (components of) residuals ('equations') are summed up for the according coordinates, and also all contributions to the mass matrix. 
+Only constraint equations, which are related to Lagrange parameters always get their 'own' Lagrange multipliers, which are automatically assigned by the system and therefore independent for every constraint.
+Therefore, it is not possible right now to attach two \texttt{ObjectRigidBody}  to the same node, as it would create two constraint equations. This will be resolved within issue \#0564.
 
 \mysubsection{Nomenclature for system equations of motion and solvers}
 \label{sec:nomenclatureEOM}
@@ -641,10 +677,10 @@ The unknowns for the Newton method then are
   \txi^\GA_{k+1} = \vr{\avu_T}{\yv_T}{\tlambda_T}
 \ee
 and at the beginning of the step, we have
-\be \label{eq_Newton_unknowns1}
+\be \label{eq_Newton_unknowns2}
   \txi^\GA_{k} = \vr{\avu_0}{\yv_0}{\tlambda_0}
 \ee
-For the Newton method, we need to compute an update for the unknowns \eq{eq_Newton_unknowns1}, using the previous residual $\rv_{k}$ and the inverse of the Jacobian $\Jm_{k}$ of Newton iteration $k$,
+For the Newton method, we need to compute an update for the unknowns of \eq{eq_Newton_unknowns1}, using the previous residual $\rv_{k}$ and the inverse of the Jacobian $\Jm_{k}$ of Newton iteration $k$,
 \be
   \txi^\GA_{k+1} = \txi^\GA_{k} - \Jm^{-1} \left( \txi^\GA_{k} \right) \cdot \rv^\GA \left( \txi^\GA_{k} \right)
 \ee
@@ -857,5 +893,100 @@ which is the default value.
 %\ei
 %The system jacobian functions compute the local jacobians either by means of a provided function or numerically, using the 'NumericalDifferentiation' settings of 'Newton'.
 %
+
+
+
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\newpage
+\mysubsection{Optimization and parameter variation}
+%
+The real benefit of powerful multi-body simulation emerges only if combined with modern but also simple analysis and evaluation methods.
+Therefore, \codeName\ has been integrated into the Python language, which offers a virtually unlimited number of methods of post-processing, evaluation and optimization.
+In this section, two methods that are directly integrated into \codeName\ are revisited.
+%
+\label{sec:parameterVariation}
+\mysubsubsection{Parameter Variation}
+Parameter variation is one of the simplest tools to evaluate the dependency of the solution of a problem on certain parameters. This usually requires the computation of an objective (goal, result) value for a single computation (e.g, some error norm, maximum vibration amplitude, maximum stress, maximum deflection, etc.) for every computation. Furthermore, it needs to be run for a set of parameters, e.g., using a \texttt{for} loop.
+While this could be done manually in \codeName , it is recommended to use built-in functions, which simplify evaluation and postprocessing and directly enable parallelization.
+The according function \texttt{ParameterVariation(...)}, see \refSection{sec:processing:ParameterVariation}, performs a set of multi-dimensional parameter variations using a dictionary that describes the variation of parameters. See also \texttt{parameterVariationExample.py} in the \texttt{Examples} folder for a simple example showing a 2D parameter variation. The function \texttt{ParameterVariation(...)} requires the \texttt{multiprocessing} Python module which enables simple multi-threaded parallelism and has been tested for up to 80 cores on the LEO4 supercomputer at the University of Innsbruck, achieving a speedup of 50 as compared to a serial computation.
+
+\mysubsubsection{Genetic Optimization}
+\label{sec:optimization}
+%
+In engineering, we often need to find a set of unknown, independent parameters $\xv \in \Rcal^n$, $\xv$ being denoted as design variables and $\Rcal^n$ as design space. Sometimes, the design space is further subjected to constraints $\gv(\xv)=0$ as well as inequalities $\hv(x) \le 0$, which are not considered here. For simple solutions for constrained optimization problems using penalty methods, see the introductory literature \cite{Kiusalaas2013}.
+
+Optimization problems are written in general in the form
+\be
+  \min\limits_{\xv} f(\xv), \quad \xv \in \Rcal^n \eqComma
+\ee
+where $f(\xv)$ denotes the {\it objective function} (={\it fitness function}). If we would like to maximize a function $\bar f(\xv)$, simply set $f(\xv)=-\bar f(\xv)$.
+
+In engineering, the optimization problem could seek model parameters, e.g., the geometric dimensions and inertia parameters of a slider crank mechanism, in order to achieve smallest possible forces at the supports.
+Another example is the identification of unknown physical parameters, such as stiffness, damping of friction. This can be achieved by comparing measurement and simulation data (e.g., accelerations measured at relevant parts of a machine). Lets assume that $\epsilon(t)$ is an error computed in every time step of a computation, then we can set the objective (=fitness) function, e.g., as 
+\be
+  f(x) = \frac 1 T \sqrt{\int_{t=0}^T \epsilon(t)^2 dt}
+\ee
+as the integral over the error $\epsilon$ between measurement and simulation data.
+In general, a parameter variation would be sufficient to compute sufficient computations for all combinations within the design space, however, a 3D design space with 100 variations into every direction (e.g., varying the unknown damping coefficient between 1 and 100, etc.) would already require 1000.000 computations, which in an ideal case of 1 second/computation leads to almost 2 weeks of computation time.
+
+As an alternative stochastic methods can be use to compute only the objective function for a smaller set of randomly generated design variables, which usually show regions with better parameters (lower $f$) in scatter plots.
+
+{\bf Genetic algorithms}\cite{Goldberg1989, Whitley1994} can significantly reduce the necessary amount of objective function evaluations in order to perform the optimization. Genetic identification algorithms have been already successfully applied to multibody system dynamics\cite{Eder2014}. 
+
+The general structure of a (canonical) genetic algorithm is depicted in \fig{fig_geneticOptimization}.
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}[hb]
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [cloud] (geneticOptimization) {\texttt{GeneticOptimization(...)}};
+%			\node [wideblock, below of=init_solver_specific] (initializeSolver) {InitializeSolver()};
+			\node [wideblock, below of=geneticOptimization, node distance=2cm] (initial) {1.\ create initial population $S_i$ with $n_{pi}$ individuals};
+			\node [wideblock, below of=initial, node distance=2.5cm] (fitness) {2.\ evaluate fitness for population};
+			\node [wideblock, below of=fitness] (surviving) {3.\ select (surviving) individuals $S_s$};
+			\node [wideblock, below of=surviving] (crossover) {4.\ create crossover population $S_c$};
+			\node [wideblock, below of=crossover] (mutation) {5.\ create mutated population $S_m$};
+			\node [decision, below of=mutation, node distance=3cm] (decision) {6.\ fitness goal or number of generations $n_g$ not reached?};
+			\node [wideblock, below of=decision, node distance=3.5cm] (end) {END};
+			%
+			\path [arrow] (geneticOptimization) -- (initial);
+			\path [arrow] (initial) -- (fitness);
+			\path [arrow] (fitness) -- (surviving);
+			\path [arrow] (surviving) -- (crossover);
+			\path [arrow] (crossover) -- (mutation);
+			\path [arrow] (mutation) -- (decision);
+			\path [arrow] (decision) -- node [near start] {False} +(6cm,0) |- (fitness);
+			%(D.west) -- +(-1,0) |- node[pos=0.25] {No} (C);
+			\path [arrow] (decision) -- node [near start] {True}(end);
+	\end{tikzpicture}
+  \caption{Basic solver flow chart genetic algorithm / optimization.}
+	\label{fig_geneticOptimization}
+\end{figure}
+%
+%\bn\setlength{\itemindent}{0.5cm}
+  %\item START
+  %\item create initial population $n_{pi}$
+	%\item evaluate fitness for population\footnote{This is usually the time consuming part, which requires a single simulation run for every fitness evaluation}
+	%\item select (surviving) individuals $S_s$
+	%\item crossover $S_c$
+	%\item mutation $S_m$
+	%\item if fitness goal or number of generations $n_g$ not reached, continue with step
+	%\item END
+%\en
+For details, see the cited literature. Here, we focus on the implementation of the function 
+\texttt{GeneticOptimization(...)}, see \refSection{sec:processing:GeneticOptimization}.
+The initial population (step 1) is created with \texttt{initialPopulationSize} individuals with uniformly distributed random design variables $[\xv_0, \ldots, \xv_{n_{pi}-1}]$\footnote{$\xv_i=[x_{i0}, x_{i1}, \ldots]$ being a set of genes, with single genes $x_{i0}$, $x_{i1}$, ... } in the search space, which is given in the dictionary \texttt{parameters}. Herafter (steps 2-6), we iteratively process a population for a certain \text{numberOfGenerations} generations.
+
+In step 3, the surviving individuals $S_s$ with best fitness (smallest value from evaluation of \texttt{objectiveFunction}) are selected and considered further in the optimization. If the \texttt{distanceFactor} is used, the surviving individuals must be located within a certain distance (measured relative to the range of the search space) to all other surviving individuals. This option guarantees the search within several local minima, while a conventional search often converges to one single minimum.
+Crossover (step 4)  is performed using a crossover of all available parameters of two randomly selected parents when generating children from the surviving individuals. The crossover of genes is performed only for a part of the new population, defined by \texttt{crossoverAmount}.
+
+Finally, in step 5, we apply mutation to all genes, which extends the search to the surrounding design space of the individuals created by crossover. The mutation could be performed by means of certain distribution functions in order to focus on the currently best search regions. However, in the current implementation of \texttt{GeneticOptimization(...)} we simply use a uniform random variable to distribute the genes over a certain percentage of the design space, which is reduced in every generation defined by the \texttt{rangeReductionFactor} $r_r$. This allows us to restrict further search to a smaller subregion of the design space and in general allows a reduction of search space by means of $r_r^{n_g}$. In the ideal case, using sufficiently large population sizes and being lucky with the found random values, a range reduction factor $r_r=0.7$ reduces the search space by a factor of $100$ after every 13 generations, allowing to obtain 4 digits of accuracy for design variables after 26 generations for suitable optimization problems.
+
+It should be noted that still this optimization method is based on random values and thus may fail occasionally for any problem case. In order to get reproducible results, set \texttt{randomizerInitialization} to any integer value (simply: 0) in order to get identical results for repeated runs. Setting the latter variable guarantees that the Python (numpy) randomizer creates the same series of random values for initial population, mutation, etc.
+
+
 
 

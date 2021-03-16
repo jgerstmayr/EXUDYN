@@ -37,7 +37,7 @@ try: #puts example in safe environment
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', exu.SimulationSettings())
+    exu.SolveDynamic(mbs)
 
     #check result at default integration time
     exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]

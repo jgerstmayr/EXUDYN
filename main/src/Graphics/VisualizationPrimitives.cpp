@@ -427,12 +427,12 @@ namespace EXUvis {
 
 		std::array<Vector3D, 3> points;
 		std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
-		std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
+		std::array<Float4, 3> colors = { color,color,color }; //all triangles have same color
 
 		Vector3D nF0 = vAxis;
 		nF0.Normalize();
 
-		std::array<Vector3D, 3> normalsFace0({ nF0,nF0,nF0 });
+		std::array<Vector3D, 3> normalsFace0 = { nF0,nF0,nF0 };
 
 		for (Index i = 0; i < nTiles; i++)
 		{

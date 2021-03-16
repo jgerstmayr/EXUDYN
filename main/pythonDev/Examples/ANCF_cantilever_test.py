@@ -53,6 +53,7 @@ cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraight
 positionOfNode0 = [0, 0, 0] # starting point of line
 positionOfNode1 = [L, 0, 0] # end point of line
 numberOfElements = 32*2
+#alternative to mbs.AddObject(Cable2D(...)) with nodes:
 ancf=GenerateStraightLineANCFCable2D(mbs,
                 positionOfNode0, positionOfNode1,
                 numberOfElements,

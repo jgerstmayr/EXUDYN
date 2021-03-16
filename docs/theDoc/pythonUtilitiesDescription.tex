@@ -1899,7 +1899,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
     \item[] {\it   velStatic}: small regularization velocity at which exactly the staticFriction is reached; for smaller velocities, the friction is smooth and zero-crossing (unphysical!) (e.g., to get Newton converged)
     \item[] {\it   velDynamic}: velocity at which muDynamic is reached for first time
   \end{itemize}
-  \item[--]  {\bf output}: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)  \item[--]  {\bf notes}: see references: Fores et al. \cite{Flores2008}, Qian et al. \cite{Qian2018}\vspace{12pt}\end{itemize}
+  \item[--]  {\bf output}: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)  \item[--]  {\bf notes}: see references: Flores et al. \cite{Flores2008}, Qian et al. \cite{Qian2018}\vspace{12pt}\end{itemize}
 %
 \mysubsection{Module: plot}
 \label{sec:module:plot}
@@ -1916,11 +1916,11 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format  \item[--]  {\bf output}: return dictionary with 'type'=['sensor','solution','geneticOptimization'], 'variableType',\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format  \item[--]  {\bf output}: return dictionary with 'type'=['sensor','solution','geneticOptimization','parameterVariation'], 'variableType',\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L97}{PlotSensor}{}}}\label{sec:plot:PlotSensor}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L105}{PlotSensor}{}}}\label{sec:plot:PlotSensor}
 ({\it mbs}, {\it sensorNumbers}, {\it components}= 0, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1944,7 +1944,7 @@ s0=mbs.AddSensor(SensorNode(nodeNumber=0))
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L214}{PlotFFT}{}}}\label{sec:plot:PlotFFT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L222}{PlotFFT}{}}}\label{sec:plot:PlotFFT}
 ({\it frequency}, {\it data}, {\it xLabel}= 'frequency', {\it yLabel}= 'magnitude', {\it label}= '', {\it freqStart}= 0, {\it freqEnd}= -1, {\it logScaleX}= True, {\it logScaleY}= True, {\it majorGrid}= True, {\it minorGrid}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1977,7 +1977,7 @@ s0=mbs.AddSensor(SensorNode(nodeNumber=0))
 \item[]Notes:     Parallel processing, which requires multiprocessing library, can lead to considerable speedup (measured speedup factor > 50 on 80 core machine). The progess bar during multiprocessing requires the library tqdm.
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L28}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L72}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
 ({\it parameterFunction}, {\it parameterList}, {\it addComputationIndex}, {\it useMultiProcessing}, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1990,12 +1990,13 @@ s0=mbs.AddSensor(SensorNode(nodeNumber=0))
     \item[] {\it     addComputationIndex}: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
     \item[] {\it     useMultiProcessing}: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
+    \item[] {\it     resultsFile}: if provided, output is immediately written to resultsFile during processing
   \end{itemize}
   \item[--]  {\bf output}: returns values containing the results according to parameterList  \item[--]  {\bf notes}: options are passed from Parametervariation\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L93}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L166}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
 ({\it parameterFunction}, {\it parameters}, {\it useLogSpace}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2010,12 +2011,13 @@ s0=mbs.AddSensor(SensorNode(nodeNumber=0))
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
     \item[] {\it parameterFunction}: function, which takes the form parameterFunction(parameterDict) and which returns any values that can be stored in a list (e.g., a floating point number)
-    \item[] {\it     parameters}: given as a dictionary, consist of name and triple of (begin, end and steps) same as in np.linspace(...), e.g. 'mass':(10,50,10) for a mass varied from 10 to 50, using 10 steps
+    \item[] {\it     parameters}: given as a dictionary, consist of name and tuple of (begin, end, numberOfValues) same as in np.linspace(...), e.g. 'mass':(10,50,10), for a mass varied from 10 to 50, using 10 steps OR a list of values [v0, v1, v2, ...], e.g. 'mass':[10,15,25,50]
     \item[] {\it     useLogSpace}: (optional) if True, the parameters are varied at a logarithmic scale, e.g., [1, 10, 100] instead linear [1, 50.5, 100]
     \item[] {\it     debugMode}: if True, additional print out is done
     \item[] {\it     addComputationIndex}: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.
     \item[] {\it     useMultiProcessing}: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
     \item[] {\it     showProgress}: if True, shows for every iteration the progress bar (requires tqdm library)
+    \item[] {\it     resultsFile}: if provided, output is immediately written to resultsFile during processing
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
   \end{itemize}
   \item[--]  {\bf output}: \vspace{-6pt}
@@ -2029,7 +2031,7 @@ ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, p
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L223}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L311}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
 ({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2041,7 +2043,8 @@ ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, p
     \item[] {\it     parameters}: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. 'mass':(10,50)
     \item[] {\it     populationSize}: individuals in every generation
     \item[] {\it     initialPopulationSize}: number of random initial individuals; default: population size
-    \item[] {\it     numberOfGenerations}: number of generations
+    \item[] {\it     numberOfGenerations}: number of generations; NOTE: it is required that elitistRatio*populationSize >= 1
+    \item[] {\it     elitistRatio}: the number of surviving individuals in every generation is equal to the previous population times the elitistRatio
     \item[] {\it     crossoverProbability}: if > 0: children are generated from two (randomly selected) parents by gene-crossover; if 0, no crossover is used
     \item[] {\it     crossoverAmount}: if crossoverProbability > 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50% of genes cross
     \item[] {\it     rangeReductionFactor}: reduction of mutation range (boundary) relative to range of last generation; helps algorithm to converge to more accurate values
@@ -2067,7 +2070,7 @@ GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffn
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L546}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L610}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
 ({\it parameterList}, {\it valueList}, {\it xLogScale}= False, {\it yLogScale}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2860,7 +2863,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L166}{ComputeODE2Eigenvalues}{}}}\label{sec:solver:ComputeODE2Eigenvalues}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L168}{ComputeODE2Eigenvalues}{}}}\label{sec:solver:ComputeODE2Eigenvalues}
 ({\it mbs}, {\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it setInitialValues}= True, {\it convert2Frequencies}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2883,7 +2886,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L224}{CheckSolverInfoStatistics}{}}}\label{sec:solver:CheckSolverInfoStatistics}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L226}{CheckSolverInfoStatistics}{}}}\label{sec:solver:CheckSolverInfoStatistics}
 ({\it solverName}, {\it infoStat}, {\it numberOfEvaluations})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

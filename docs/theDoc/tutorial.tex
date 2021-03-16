@@ -150,14 +150,14 @@ We are using a generalized alpha solver, where numerical damping is needed for i
 In order to visualize the results online, a renderer can be started. As our computation will be very fast, it is a good idea to wait for the user to press SPACE, before starting the simulation (uncomment second line):
 \begin{lstlisting}[language=Python, firstnumber=46]
   exu.StartRenderer()              #start graphics visualization
-  #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+  #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue
 \end{lstlisting}
 As the simulation is still very fast, we will not see the motion of our node. Using e.g.\ \texttt{steps=10000000} in the lines above allows you online visualize the resulting oscillations.
 
 %
 Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:
 \begin{lstlisting}[language=Python, firstnumber=48]
-  SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)
+  exu.SolveDynamic(mbs, simulationSettings)
 \end{lstlisting}
 %
 
@@ -208,7 +208,6 @@ sensor and the output quantity (scalar, vector, ...):
   data = np.loadtxt('groundForce.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)')
 \end{lstlisting}
-
 %
 In order to get a nice plot within Spyder, the following options can be used\footnote{note, in some environments you need finally the command \texttt{plt.show()}}:
 \begin{lstlisting}[language=Python, firstnumber=77]
@@ -221,7 +220,6 @@ In order to get a nice plot within Spyder, the following options can be used\foo
   plt.show() 
 \end{lstlisting}
 %
-
 The matplotlib output should look like this:
 \begin{center}
   \includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}

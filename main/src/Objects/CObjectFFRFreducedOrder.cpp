@@ -33,7 +33,7 @@
 ////#include <pybind11/cast.h> //for arguments
 //#include <pybind11/functional.h> //for function handling ... otherwise gives a python error (no compilation error in C++ !)
 
-//#define computeFFRFfullTerms
+//#define computeFFRFfullTerms//this mode does not work any more and according code parts can be erased / copied again from ObjectFFRF to create modally reduced equations
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -103,7 +103,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix) const
 	}
 	if (parameters.computeFFRFterms)
 	{
-#ifdef computeFFRFfullTerms
+#ifdef computeFFRFfullTerms //this mode does not work any more and can be erased / copied again from ObjectFFRF to create modally reduced equations
 
 		tempCoordinates.SetNumberOfItems(nODE2); 
 		tempCoordinates_t.SetNumberOfItems(nODE2); 

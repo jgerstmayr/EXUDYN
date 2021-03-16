@@ -151,6 +151,7 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
                             'PyFunctionVectorMbsScalarVector': 'std::function<StdVector(const MainSystem&,Real,StdVector)>', #ObjectGenericODE1
                             'PyFunctionVector6Dmbs4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper
                             'PyFunctionVectorMbs4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
+                            'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration': 'std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>', #SensorUserFunction
 #StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             }
 
@@ -185,7 +186,8 @@ def IsItemIndex(parameterType):
         (parameterType == 'NodeIndex2') or
         (parameterType == 'NodeIndex3') or
         (parameterType == 'ArrayNodeIndex') or
-        (parameterType == 'ArrayMarkerIndex')
+        (parameterType == 'ArrayMarkerIndex') or
+        (parameterType == 'ArraySensorIndex')
         ):
         return True
     else:
@@ -861,6 +863,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         parRead = 'EPyUtils::GetArrayNodeIndex(' + destStr + ')'
                     elif (typeCastStr == 'ArrayMarkerIndex'):
                         parRead = 'EPyUtils::GetArrayMarkerIndex(' + destStr + ')'
+                    elif (typeCastStr == 'ArraySensorIndex'):
+                        parRead = 'EPyUtils::GetArraySensorIndex(' + destStr + ')'
                     elif (typeCastStr == 'NodeIndex2') or (typeCastStr == 'NodeIndex3'):
                         parRead = 'EPyUtils::GetArrayNodeIndex(ArrayIndex(' + destStr + '))'
                         #parRead = 'EPyUtils::GetArrayNodeIndexFromSlimArray(' + destStr + ')'
@@ -1176,7 +1180,7 @@ try: #still close file if crashes
     #types such as UReal shall be used lateron to perform e.g. range checks prior to setting parameters
     typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
                       'NodeIndex':'Index', 'ObjectIndex':'Index', 'MarkerIndex':'Index', 'LoadIndex':'Index', 'SensorIndex':'Index', #in C++, all indices are the same!!!
-                      'NodeIndex2':'Index2', 'NodeIndex3':'Index3', 'ArrayNodeIndex':'ArrayIndex', 'ArrayMarkerIndex':'ArrayIndex', #in C++, all index lists are the same!!!
+                      'NodeIndex2':'Index2', 'NodeIndex3':'Index3', 'ArrayNodeIndex':'ArrayIndex', 'ArrayMarkerIndex':'ArrayIndex', 'ArraySensorIndex':'ArrayIndex', #in C++, all index lists are the same!!!
                       'Vector':'Vector', 'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyVector':'Vector', 
                       'NumpyMatrix':'Matrix', 

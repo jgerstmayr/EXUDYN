@@ -177,7 +177,7 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
                                 defaultArgs=['false'],
                                 argList=['verbose'],
-                                description="Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation"); s+=s1; sL+=sL1
+                                description="Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder"); s+=s1; sL+=sL1
 
 #old, without [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'PyStopOpenGLRenderer', "Stop OpenGL rendering engine"); s+=s1; sL+=sL1
 

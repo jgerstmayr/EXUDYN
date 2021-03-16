@@ -45,7 +45,7 @@ namespace EXUvis {
 	//! get color from index; used e.g. for axes numeration
 	inline const Float4& GetColor(Index i);
 
-	inline float modifyColorFactor = 0.25f; //!< standard value to modify color with ModifyColor
+	const float modifyColorFactor = 0.25f; //!< standard value to modify color with ModifyColor
 	//! modify a color by a factor: 1=original color, 0=grey; this can be used to visualize axes, joints, ... using one color definition represented in two colors
 	inline Float4 ModifyColor(const Float4& color, float colorFactor = 1.f)
 	{

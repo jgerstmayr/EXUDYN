@@ -21,7 +21,7 @@ from exudyn.utilities import PlotLineCode
 #from exudyn.utilities import PlotLineCode
 
 #**function: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
-#**output: return dictionary with 'type'=['sensor','solution','geneticOptimization'], 'variableType', 
+#**output: return dictionary with 'type'=['sensor','solution','geneticOptimization','parameterVariation'], 'variableType', 
 def ParseOutputFileHeader(lines):
     output = {}
     output['type'] = 'unknown'
@@ -31,6 +31,14 @@ def ParseOutputFileHeader(lines):
     variableTypes = []
     if lines[0].find('EXUDYN genetic optimization results file') != -1:
         output['type'] = 'geneticOptimization'
+        for i in range(10): #header is max. 10 lines
+            if i+1 < len(lines) and lines[i][0:9] == '#columns:':
+                cols = lines[i+1].strip('#').split(',')
+                for j in range(len(cols)):
+                    variableTypes += [cols[j].strip()]
+                break
+    if lines[0].find('EXUDYN parameter variation results file') != -1:
+        output['type'] = 'parameterVariation'
         for i in range(10): #header is max. 10 lines
             if i+1 < len(lines) and lines[i][0:9] == '#columns:':
                 cols = lines[i+1].strip('#').split(',')

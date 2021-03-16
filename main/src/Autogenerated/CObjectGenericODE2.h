@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-22  19:12:49 (last modfied)
+* @date         2021-03-01  11:07:51 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -100,25 +100,25 @@ public: // AUTO:
     //! AUTO: Read access to parameters
     virtual const CObjectGenericODE2Parameters& GetParameters() const { return parameters; }
 
-    //! AUTO:  Write (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    //! AUTO:  Write (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
     void SetTempCoordinates(const Vector& value) { tempCoordinates = value; }
-    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
     const Vector& GetTempCoordinates() const { return tempCoordinates; }
-    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing coordinates
+    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
     Vector& GetTempCoordinates() { return tempCoordinates; }
 
-    //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
     void SetTempCoordinates_t(const Vector& value) { tempCoordinates_t = value; }
-    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
     const Vector& GetTempCoordinates_t() const { return tempCoordinates_t; }
-    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing velocity coordinates
+    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
     Vector& GetTempCoordinates_t() { return tempCoordinates_t; }
 
-    //! AUTO:  Write (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing acceleration coordinates
+    //! AUTO:  Write (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
     void SetTempCoordinates_tt(const Vector& value) { tempCoordinates_tt = value; }
-    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing acceleration coordinates
+    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
     const Vector& GetTempCoordinates_tt() const { return tempCoordinates_tt; }
-    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n_f}\f$temporary vector containing acceleration coordinates
+    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
     Vector& GetTempCoordinates_tt() { return tempCoordinates_tt; }
 
     //! AUTO:  Computational function: compute mass matrix

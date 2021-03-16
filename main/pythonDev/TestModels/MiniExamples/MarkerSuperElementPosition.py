@@ -52,9 +52,7 @@ try: #puts example in safe environment
     #assemble and solve system for default parameters
     mbs.Assemble()
     
-    sims=exu.SimulationSettings()
-    sims.timeIntegration.generalizedAlpha.spectralRadius=1
-    SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', sims)
+    exu.SolveDynamic(mbs, solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
 
     #check result at default integration time
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]

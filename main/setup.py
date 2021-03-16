@@ -23,8 +23,8 @@ if '--noglfw' in sys.argv:
     sys.argv.remove('--noglfw')
 
 glfwIncludeDirs=[]
-msvcGLFWlibs =[]
-unixGLFWlibs = []
+msvcGLFWlibs =[] #add only if flag set
+unixGLFWlibs = [] #add only if flag set
 msvcCppGLFWflag = ['/D', '__NOGLFW'] #indicates, that no GLFW shall be used
 unixCppGLFWflag = ['-D__NOGLFW'] #indicates, that no GLFW shall be used
 if USEGLFW:
@@ -42,6 +42,7 @@ if USEGLFW:
 #check system and platform
 isWindows = False
 isLinux = False
+isMacOS = False
 
 #detect the platform used during running the setup tool:
 if platform.system() == 'Windows':
@@ -50,6 +51,10 @@ if platform.system() == 'Windows':
 if platform.system() == 'Linux':
     isLinux = True
     print("platform == Linux")
+
+if sys.platform == 'darwin':
+    isMacOS = True
+    print("platform == MacOS")
 
 is64bits = False
 is32bits = False
@@ -67,6 +72,9 @@ if isWindows:
     else:
         addLibrary_dirs=['libs/libs64' ]
         print("architecture==64bits")
+
+if isMacOS:
+    addLibrary_dirs=['libs/libs-macos' ] #should contain glfw-libraries
 
 print("python version =",platform.python_version())
 
@@ -266,16 +274,14 @@ class BuildExt(build_ext):
 				'/Zc:twoPhase-',
             ]+msvcCppGLFWflag,
         'unix': [
-         #'-std=c++17', #==>chosen automatic
-         '-Wno-non-template-friend', #deactivate warning for several vector/array templates
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
+ 		 '-Wall',
+         #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
          #'-fopenmp',
-    		 '-Wall',
-    		 '-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
-    		 #'-O3', #takes long ...
-    		 #'-shared',
-    		 #'-fPIC',
+ 		 #'-O3', #takes long ...
+ 		 #'-shared',
+ 		 #'-fPIC',
 
 #		#working:
 #		'-Wno-non-template-friend', #deactivate warning for several vector/array templates
@@ -296,16 +302,23 @@ class BuildExt(build_ext):
         #additional libs that may be needed in future:
         #"winspool.lib" "comdlg32.lib" "advapi32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib"        
         ]+msvcGLFWlibs,
-        'unix': [
-			'-lgomp', #for openmp ==> needed for omp_get_num_threads()
-            '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
-			]+unixGLFWlibs,
+        'unix': unixGLFWlibs,
     }
 
     if sys.platform == 'darwin':
-        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']
-        c_opts['unix'] += darwin_opts
+        #darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']
+        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support
+        c_opts['unix'] += darwin_opts + ['-Wno-inconsistent-missing-override', '-Wno-overloaded-virtual'] #avoid too many warnings
         l_opts['unix'] += darwin_opts
+    else:
+        l_opts['unix'] += [
+            '-lgomp', #for openmp ==> needed for omp_get_num_threads()
+            '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
+            ]        
+        #warnings not available in clang:
+        c_opts['unix'] += ['-Wno-non-template-friend', #deactivate warning for several vector/array templates
+                 		 '-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
+                          ]
 
     def build_extensions(self):
         ct = self.compiler.compiler_type
@@ -348,6 +361,7 @@ For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
         "License :: OSI Approved :: BSD License",
         "Operating System :: Microsoft :: Windows :: Windows 10",
         "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS",
         "Topic :: Scientific/Engineering",
     ],
     python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation

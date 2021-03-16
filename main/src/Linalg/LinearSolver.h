@@ -27,7 +27,10 @@
 	//#include "Eigen/SuperLUSupport"
 	#include "../Eigen/SparseLU"
 	//#include <Eigen/Core>
-	#include <omp.h> //for eigen omp support
+#ifdef EIGEN_HAS_OPENMP
+    #include <omp.h> //for eigen omp support
+#endif // EIGEN_HAS_OPENMP
+
 	typedef Eigen::Triplet<Real> EigenTriplet;				//! this is a simple (row,col,value) structure for sparse matrix non zero entries
 	typedef std::vector<EigenTriplet> EigenTripletVector;	//! this vector stores (dynamically!) the triplets
 	typedef Eigen::SparseMatrix<Real> EigenSparseMatrix;	//! declares a column-major sparse matrix type of double

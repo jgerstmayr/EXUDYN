@@ -223,9 +223,6 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	computationalSystem.GetPostProcessData()->simulationFinished = false;
 	computationalSystem.GetPostProcessData()->postProcessDataReady = false;
 
-	//do this not earlier than here, because checks need to be done prior to writing the header
-	WriteSolutionFileHeader(computationalSystem, simulationSettings);
-	WriteSensorsFileHeader(computationalSystem, simulationSettings);
 	return true;
 }
 
@@ -367,6 +364,10 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 
 	//+++++++++++++++++++++++++++++++++++++++++
 
+	//do this not earlier than here, because checks need to be done prior to writing the header
+	//2021-02-18: moved from end of function InitializeSolverPreChecks(...) to here in order to have current values available:
+	WriteSolutionFileHeader(computationalSystem, simulationSettings); 
+	WriteSensorsFileHeader(computationalSystem, simulationSettings);
 
 }
 
@@ -1420,13 +1421,20 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 			(*sFile) << "sensor output file\n";
 			STDstring typeStr = GetSensorTypeString(item->GetType());
 
-			(*sFile) << "#measure " << typeStr << " number = " << item->GetTypeDependentIndex() << "\n";
+			if (item->GetType() != SensorType::UserFunction)
+			{
+				(*sFile) << "#measure " << typeStr << " number = " << item->GetTypeDependentIndex() << "\n";
+			}
+			else
+			{
+				(*sFile) << "#measure " << typeStr << "\n"; //no number!
+			}
 			(*sFile) << "#OutputVariableType = " << GetOutputVariableTypeString(item->GetOutputVariableType()) << "\n";
 
 			(*sFile) << "#simulation started = " << EXUstd::GetDateTimeString() << "\n";
 			(*sFile) << "#columns contain: time, comma separated sensor values (e.g, x,y,z position coordinates)\n";
 
-			item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Initial);
+			item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used
 
 			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
 			(*sFile) << "#\n";
