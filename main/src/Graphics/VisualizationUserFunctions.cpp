@@ -13,6 +13,7 @@
 
 #include "Utilities/ExceptionsTemplates.h"
 #include "Graphics/VisualizationSystemContainer.h"  //includes everything needed
+#include "Graphics/VisualizationPrimitives.h"		//EXUvis::AddBodyGraphicsData
 
 #include "Main/MainSystemData.h"	//for backlink to main system
 #include "Main/MainSystem.h"		//for backlink to main system
@@ -49,7 +50,7 @@ void VisualizationObjectGround::CallUserFunction(const VisualizationSettings& vi
 
 	BodyGraphicsData bodyGraphicsData;
 	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
-	AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF);
+	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
 
 }
 
@@ -71,7 +72,7 @@ void VisualizationObjectRigidBody::CallUserFunction(const VisualizationSettings&
 
 	BodyGraphicsData bodyGraphicsData;
 	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
-	AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A);
+	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
 
 }
 
@@ -93,7 +94,7 @@ void VisualizationObjectRigidBody2D::CallUserFunction(const VisualizationSetting
 
 	BodyGraphicsData bodyGraphicsData;
 	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
-	AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A);
+	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
 
 }
 
@@ -112,7 +113,7 @@ void VisualizationObjectGenericODE2::CallUserFunction(const VisualizationSetting
 
 	BodyGraphicsData bodyGraphicsData;
 	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
-	AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF);
+	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
 
 }
 

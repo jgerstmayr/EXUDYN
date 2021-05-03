@@ -109,8 +109,8 @@ void case_template_purevector_test(lest::env & lest_env)
 {
     SETUP("extended functions test")
     {
-        T v1({ 3, 4 });
-        T v2({ 4, 5, 7 });
+        T v1({ 3., 4. });
+        T v2({ 4., 5., 7. });
         SECTION("GetL2NormSquared")
         {
             EXPECT(v1.GetL2NormSquared() == 25);

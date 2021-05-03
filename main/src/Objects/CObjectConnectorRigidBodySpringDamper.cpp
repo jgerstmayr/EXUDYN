@@ -169,7 +169,7 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 
 
 //! function called after Newton method; returns a residual error (force); 
-Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags)
+Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
@@ -204,7 +204,7 @@ Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStruc
 			dataCoordinates, uLoc6D, vLoc6D);
 
 		discontinuousError = returnValue[0];
-		//Real stepSizeSuggestion = returnValue[1]; //currently unused 
+		recommendedStepSize = returnValue[1];
 
 		for (Index i = 0; i < dataCoordinates.NumberOfItems(); i++)
 		{

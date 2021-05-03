@@ -27,16 +27,6 @@ msvcGLFWlibs =[] #add only if flag set
 unixGLFWlibs = [] #add only if flag set
 msvcCppGLFWflag = ['/D', '__NOGLFW'] #indicates, that no GLFW shall be used
 unixCppGLFWflag = ['-D__NOGLFW'] #indicates, that no GLFW shall be used
-if USEGLFW:
-    msvcCppGLFWflag = [] #GLFW will be used
-    unixCppGLFWflag = [] #GLFW will be used
-
-    glfwIncludeDirs=["include/glfw/deps", "include/glfw",]
-    msvcGLFWlibs = ['opengl32.lib', 'glfw3.lib'] #opengl32.lib: not needed since VS2015?
-                    
-    #unix: for graphics; libs (*.so) need to be installed on your linux system -> see setupToolsHowTo.txt:
-    unixGLFWlibs = ['-lglfw', #GLFW
-                    '-lGL'] #OpenGL
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check system and platform
@@ -74,12 +64,35 @@ if isWindows:
         print("architecture==64bits")
 
 if isMacOS:
-    addLibrary_dirs=['libs/libs-macos' ] #should contain glfw-libraries
+    addLibrary_dirs=['libs/libsmacos' ] #should contain glfw-libraries
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 print("python version =",platform.python_version())
 
 #detect python version:
 pyVersionString = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#set some platform-specific linker and include options
+if USEGLFW:
+    msvcCppGLFWflag = [] #GLFW will be used
+    unixCppGLFWflag = [] #GLFW will be used
+
+    glfwIncludeDirs=["include/glfw/deps", "include/glfw",]
+    msvcGLFWlibs = ['opengl32.lib', 'glfw3.lib'] #opengl32.lib: not needed since VS2015?
+                    
+    if isMacOS:
+        unixGLFWlibs = ['-lglfw3', #GLFW static library
+                        '-framework Cocoa',
+                        '-framework OpenGL', #do not include openGL lib, but the framework; see https://www.glfw.org/docs/3.3.1/build_guide.html
+                        '-framework IOKit'
+                        ] #OpenGL
+    else:
+        #unix: for graphics; libs (*.so) need to be installed on your linux system -> see setupToolsHowTo.txt:
+        unixGLFWlibs = ['-lglfw', #GLFW
+                        '-lGL'] #OpenGL
+
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check EXUDYN version
@@ -118,6 +131,7 @@ ext_modules = [
                  'src/Objects/CMarkerBodyPosition.cpp',
                  'src/Objects/CMarkerBodyRigid.cpp',
                  'src/Objects/CMarkerNodeCoordinate.cpp',
+                 'src/Objects/CMarkerNodeODE1Coordinate.cpp',
                  'src/Objects/CMarkerNodePosition.cpp',
                  'src/Objects/CMarkerNodeRigid.cpp',
                  'src/Objects/CMarkerNodeRotationCoordinate.cpp',
@@ -138,6 +152,7 @@ ext_modules = [
                  'src/Objects/CNodeRigidBodyRxyz.cpp',
                  'src/Objects/CObjectALEANCFCable2D.cpp',
                  'src/Objects/CObjectANCFCable2D.cpp',
+                 'src/Objects/CObjectBeamGeometricallyExact2D.cpp',
                  'src/Objects/CObjectConnectorCartesianSpringDamper.cpp',
                  'src/Objects/CObjectConnectorCoordinate.cpp',
                  'src/Objects/CObjectConnectorCoordinateSpringDamper.cpp',
@@ -171,11 +186,11 @@ ext_modules = [
                  'src/Objects/VisuNodePoint.cpp',
                  'src/Pymodules/PybindModule.cpp',
                  'src/Pymodules/PyMatrixContainer.cpp',
+                 'src/Pymodules/pythonTests.cpp',
                  'src/Solver/CSolver.cpp',
                  'src/Solver/CSolverBase.cpp',
                  'src/Solver/CSolverExplicit.cpp',
                  'src/Solver/CSolverImplicitSecondOrder.cpp',
-                 'src/Solver/CSolverImplicitSecondOrderNew.cpp',
                  'src/Solver/CSolverStatic.cpp',
                  'src/Solver/MainSolver.cpp',
                  'src/Solver/MainSolverBase.cpp',
@@ -292,7 +307,12 @@ class BuildExt(build_ext):
     }
     if not is32bits: #for 32bits, we assume that processors may not support avx
         c_opts['msvc'] += ['/arch:AVX2']
-    
+
+    #perform C++ unit tests: for 64bits, Python 3.6
+    if not is32bits and sys.version_info.major == 3 and sys.version_info.minor == 6: 
+        print('***************************\nadd flag PERFORM_UNIT_TESTS\n***************************\n')
+        c_opts['msvc'] += ['/D', 'PERFORM_UNIT_TESTS']
+	
     l_opts = {
         'msvc': [
         'kernel32.lib',

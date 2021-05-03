@@ -14,7 +14,7 @@
 #pythonName: name which is used in python
 #cplusplusName: name which is used in C++ side of EXUDYN (leave empty if it is the same)
 #size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
-#type = Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix
+#type = Bool, Int, Real, UInt, UReal (unsigned Real), PInt (Int > 0), PReal (Real > 0), Vector, Matrix, SymmetricMatrix
 #defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;
 #cFlags = A...add access functions (e.g. const Real&/Real&), S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
 #parameterDescription = description for parameter used in C++ code
@@ -31,7 +31,7 @@
 # writeFile=test.h
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = SolutionSettings
 #appendToFile=True #not done in first class
 writePybindIncludes = True
@@ -57,7 +57,7 @@ V,  sensorsWritePeriod,			   ,  	, UReal, 						0.01,  		,      P     , "time sp
 #
 V,  solverInformationFileName,  , 	  , FileName,                "solverInformation.txt",   ,P		, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only"
 V,  solutionInformation,	    ,     , String,                "",       ,      P	  , "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)"
-V,  outputPrecision,            , 	  , Index,                 10,       ,       P		, "precision for floating point numbers written to solution and sensor files"
+V,  outputPrecision,            , 	  , UInt,                 10,       ,       P		, "precision for floating point numbers written to solution and sensor files"
 V,  recordImagesInterval,       , 	  , Real,                  -1.,      ,       P    ,  "record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages"
 #
 writeFile=SimulationSettings.h
@@ -70,8 +70,8 @@ classDescription = "Settings for numerical differentiation of a function (needed
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
 V,  relativeEpsilon,      ,  		     ,      UReal, 			   1e-7,        ,      P	 , "relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate"
 V,  minimumCoordinateSize,,  		     ,      UReal, 			   1e-2,        ,      P	 , "minimum size of coordinates in relative differentiation parameter"
-V,  doSystemWideDifferentiation,,    ,      bool, 			   false,          ,      P    , "true: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); false: only local (object) differentiation"
-V,  addReferenceCoordinatesToEpsilon,, ,    bool, 			   false,          ,      P    , "true: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to ODE2 coordinates --> see; false: only the current coordinate is used for size estimation of the differentiation parameter"
+V,  doSystemWideDifferentiation,,    ,      bool, 			   false,          ,      P    , "True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation"
+V,  addReferenceCoordinatesToEpsilon,, ,    bool, 			   false,          ,      P    , "True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter"
 #
 writeFile=SimulationSettings.h
 
@@ -81,14 +81,14 @@ appendToFile=True
 writePybindIncludes = True
 classDescription = "Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,  maxIterations,	                 ,  	 , Index, 					5,               , P     , "maximum number of discontinuous (post Newton) iterations"
+V,  maxIterations,	                 ,  	 , UInt, 					5,               , P     , "maximum number of discontinuous (post Newton) iterations"
 V,  ignoreMaxIterations,	         ,       , bool, 					true,            , P     , "continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)"
 V,  iterationTolerance,              ,       , UReal, 					1,               , P     , "absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high"
 #
 writeFile=SimulationSettings.h
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NewtonSettings
 appendToFile=True
 writePybindIncludes = True
@@ -96,28 +96,24 @@ classDescription = "Settings for Newton method used in static or dynamic simulat
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
 V,  numericalDifferentiation,, , NumericalDifferentiationSettings,      ,,        PS		, "numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)"
 V,  useNumericalDifferentiation, ,  	,      bool, 					   false,  , P		, "flag (true/false); false = perform direct computation of jacobian, true = use numerical differentiation for jacobian"
-V,  useNewtonSolver,	       ,  		    ,     bool, 					true,   , P		, "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution"
-V,  relativeTolerance,      ,  		   ,      UReal, 					1e-8,   , P		, "relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)"
-V,  absoluteTolerance,      ,  		   ,      UReal, 					1e-10,  , P		, "absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance"
+V,  useNewtonSolver,	        ,  		    ,     bool, 					true,   , P		, "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution"
+V,  relativeTolerance,          ,  		   ,      UReal, 					1e-8,   , P		, "relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)"
+V,  absoluteTolerance,          ,  		   ,      UReal, 					1e-10,  , P		, "absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance"
 V,  weightTolerancePerCoordinate,	,   ,     bool, 					false,  , P		, "flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size"
-V,  newtonResidualMode,	    ,  		    ,     Index, 					0,      , P		, "0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag"
-V,  adaptInitialResidual,	,         ,       bool, 					true,   ,P		, "flag (true/false); false = standard; true: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration"
+V,  newtonResidualMode,	        ,  		    ,     UInt, 					0,      , P		, "0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag"
+V,  adaptInitialResidual,	    ,         ,       bool, 					true,   ,P		, "flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration"
 #
-V,  modifiedNewtonContractivity, ,  	 ,     UReal, 				    0.5,   ,P		, "maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed"
-V,  useModifiedNewton,	     ,  		 ,     bool, 					false,   ,P		, "true: compute Jacobian only at first step; no Jacobian updates per step; false: Jacobian computed in every step"
-V,  modifiedNewtonJacUpdatePerStep, ,  ,    bool, 					false,   ,P		, "true: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==> switch to full Newton)"
-V,  maxIterations,	           ,  		 ,     Index, 					25,    ,  P		, "maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error"
-V,  maxModifiedNewtonIterations,,     ,     Index, 					8,     , P		, "maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated"
-V,  maxModifiedNewtonRestartIterations, , , Index, 					7,     , P		, "maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step"
+V,  modifiedNewtonContractivity, ,  	 ,     PReal, 				    0.5,   ,P		, "maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed"
+V,  useModifiedNewton,	     ,  		 ,     bool, 					false,   ,P		, "True: compute Jacobian only at first step; no Jacobian updates per step; False: Jacobian computed in every step"
+V,  modifiedNewtonJacUpdatePerStep, ,  ,    bool, 					false,   ,P		, "True: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==> switch to full Newton)"
+V,  maxIterations,	           ,  		 ,     UInt, 					25,    ,  P		, "maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error"
+V,  maxModifiedNewtonIterations,,     ,     UInt, 					8,     , P		, "maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated"
+V,  maxModifiedNewtonRestartIterations, , , UInt, 					7,     , P		, "maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step"
 V,  maximumSolutionNorm,	  ,  		 ,       UReal, 					1e38,  ,  P		, "this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=$u_1^2$+$u_2^2$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)"
-# moved to separate folder: 
-# V,  maxDiscontinuousIterations,	,  	 ,     Index, 					5,     , P		, "maximum number of discontinuous (post Newton) iterations"
-# V,  ignoreMaxDiscontinuousIterations,	,,     bool, 					true,     , P		, "continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)"
-# V,  discontinuousIterationTolerance,  , ,    UReal, 					1,     ,  P		, "absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high"
 #
 writeFile=SimulationSettings.h
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = GeneralizedAlphaSettings
 appendToFile=True
 writePybindIncludes = True
@@ -128,11 +124,11 @@ V,  newmarkGamma,	         ,  		      ,     UReal, 				0.5,    , P		, "value gam
 V,  useIndex2Constraints,	 ,  		      ,     bool, 				  false,   , P		, "set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation"
 V,  useNewmark,	            ,  		      ,     bool, 				  false,   , P		, "if true, use Newmark method with beta and gamma instead of generalized-Alpha"
 V,  spectralRadius,	       ,  		      ,     UReal, 				0.9,    , P		, "spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1"
-V,  computeInitialAccelerations,	,     ,     bool, 				  true,    , P		, "true: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! false: use zero accelerations"
+V,  computeInitialAccelerations,	,     ,     bool, 				  true,    , P		, "True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations"
 #
 writeFile=SimulationSettings.h
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ExplicitIntegrationSettings
 appendToFile=True
 writePybindIncludes = True
@@ -144,7 +140,7 @@ V,  dynamicSolverType,               ,       ,DynamicSolverType,"DynamicSolverTy
 #
 writeFile=SimulationSettings.h
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = TimeIntegrationSettings
 appendToFile=True
 classDescription = "General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha."
@@ -154,11 +150,14 @@ V,  newton,              ,      , NewtonSettings,               ,   ,  PS, "para
 V,  discontinuous,       ,      , DiscontinuousSettings,        ,   ,  PS, "parameters for treatment of discontinuities"
 V,  startTime,			 , 	 	, UReal, 			        0	, 	,  P,  "$t_{start}$: start time of time integration (usually set to zero)"
 V,  endTime,		     , 	 	, UReal, 			        1	, 	,  P,  "$t_{end}$: end time of time integration"
-V,  numberOfSteps,		 , 	 	, UInt, 			        100	, 	,  P,  "$n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$"
+V,  numberOfSteps,		 , 	 	, PInt, 			        100	, 	,  P,  "$n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$"
 V,  adaptiveStep,		 , 	 	, bool, 			        true,   ,  P,  "True: the step size may be reduced if step fails; no automatic stepsize control"
+V,  adaptiveStepRecoverySteps, ,, UInt, 			        10,     ,  P,  "Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors"
+V,  adaptiveStepIncrease,,      , UReal, 			        2,      ,  P,  "Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors"
+V,  adaptiveStepDecrease,,      , UReal, 			        0.5,    ,  P,  "Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors"
 #parameters for automatic step size control
-V,  automaticStepSize,   , 	 	, bool, 			        true,   ,  P,  "True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; false: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads $h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}$"
-V,  minimumStepSize,	 ,      , UReal, 		            1e-8,   ,  P,  "$h_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)"
+V,  automaticStepSize,   , 	 	, bool, 			        true,   ,  P,  "True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads $h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}$"
+V,  minimumStepSize,	 ,      , PReal, 		            1e-8,   ,  P,  "$h_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)"
 V,  initialStepSize,	 ,      , UReal, 		               0,   ,  P,  "$h_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster."
 V,  absoluteTolerance,	 ,      , UReal, 		            1e-8,   ,  P,  "$a_{tol}$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill $a_{tol} > 0$; see \refSection{sec:ExplicitSolver}"
 V,  relativeTolerance,	 ,      , UReal, 		            1e-8,   ,  P,  "$r_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r_{tol} \ge 0$; see \refSection{sec:ExplicitSolver}"
@@ -167,11 +166,11 @@ V,  stepSizeMaxIncrease, ,      , UReal, 		               2,   ,  P,  "$f_{maxIn
 # special:
 V,  preStepPyExecute,    , 	 	, String, 			        ""	,   ,  P,  "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing"
 V,  simulateInRealtime,	 , 	    , bool,                    false,   ,  P,  "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues"
-V,  realtimeFactor,		 , 	    , UReal,                   1    ,   ,  P,  "if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)"
+V,  realtimeFactor,		 , 	    , PReal,                   1    ,   ,  P,  "if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)"
 # information and output:
-V,  verboseMode,	     ,  	, Index, 			        0   ,   ,  P,  "0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
-V,  verboseModeFile,	 ,  	, Index, 			        0   ,   ,  P,  "same behaviour as verboseMode, but outputs all solver information to file"
-V,  stepInformation,	 ,  	, Index, 			        2   ,   ,  P,  "0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step"
+V,  verboseMode,	     ,  	, UInt, 			        0   ,   ,  P,  "0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
+V,  verboseModeFile,	 ,  	, UInt, 			        0   ,   ,  P,  "same behaviour as verboseMode, but outputs all solver information to file"
+V,  stepInformation,	 ,  	, UInt, 			        2   ,   ,  P,  "0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step"
 # solver specific
 V,  generalizedAlpha,    ,      , GeneralizedAlphaSettings,     ,   ,  PS, "parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)"
 # name explicit cannot be used in C++ !
@@ -179,34 +178,49 @@ V,  explicitIntegration, ,      , ExplicitIntegrationSettings,  ,   ,  PS, "spec
 #
 writeFile=SimulationSettings.h
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = StaticSolverSettings
 appendToFile=True
 writePybindIncludes = True
 classDescription = "Settings for static solver linear or nonlinear (Newton)."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,    newton,               ,           ,   NewtonSettings,         ,       ,PS   , "parameters for Newton method (e.g. in static solver or time integration)"
-V,    discontinuous,        ,           ,   DiscontinuousSettings,  ,       ,PS   , "parameters for treatment of discontinuities"
+V,  newton,                         ,               , NewtonSettings,       ,  , PS     , "parameters for Newton method (e.g. in static solver or time integration)"
+V,  discontinuous,                  ,               , DiscontinuousSettings,,  , PS     , "parameters for treatment of discontinuities"
 #
-#not needed: V,  useLoadSteps,	         ,  		     ,      bool, 					false,   P		, "flag (true/false); false = 1 load step, true = use predefined (or adaptive) load steps"
-V,  numberOfLoadSteps,      ,  		   ,      Index, 					1,       ,P		, "number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once"
-V,  loadStepDuration,       ,  		   ,      UReal, 					1,       ,P		, "quasi-time for all load steps (added to current time in load steps)"
-V,  loadStepStart,	        ,  		      ,      UReal, 					0,       ,P		, "a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user"
-V,  loadStepGeometric,	     ,  		      ,      bool, 					  false,    ,P		, "if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$"
-V,  loadStepGeometricRange, ,  		   ,      UReal, 				1000,       ,P		, "if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric"
-V,  useLoadFactor,          ,  		   ,      bool, 					  true,     ,P		, "true: compute a load factor $\in [0,1]$ from static step time; all loads are scaled by the load factor; false: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction"
-V,  stabilizerODE2term,     ,  		   ,      UReal, 				   0,       ,P		, "add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$"
-V,  adaptiveStep,			   , 	 	      ,      bool, 			       true, 		 ,P, "true: use step reduction if step fails; false: fixed step size"
-V,  minimumStepSize,	      ,  		   ,      UReal, 					1e-8,    ,P		, "lower limit of step size, before nonlinear solver stops"
+V,  numberOfLoadSteps,              ,               , PInt,                 1,  ,P		, "number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once"
+V,  loadStepDuration,               ,               , PReal,                1,  ,P		, "quasi-time for all load steps (added to current time in load steps)"
+V,  loadStepStart,                  ,               , UReal,                0,  ,P		, "a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user"
+V,  loadStepGeometric,              ,               , bool,                 false,,P    , "if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$"
+V,  loadStepGeometricRange,         ,               , PReal,                1000,,P     , "if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric"
+V,  useLoadFactor,                  ,               , bool,                 true,,P     , "True: compute a load factor $\in [0,1]$ from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction"
+V,  stabilizerODE2term,             ,               , UReal,                0,  ,P      , "add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$"
+V,  adaptiveStep,                   ,               , bool,                 true,,P     , "True: use step reduction if step fails; False: fixed step size"
+V,  adaptiveStepRecoverySteps,      ,               , UInt, 			    4,      ,  P,  "Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors"
+V,  adaptiveStepIncrease,           ,               , UReal, 			    2,      ,  P,  "Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors"
+V,  adaptiveStepDecrease,           ,               , UReal, 			    0.25,   ,  P,  "Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors"
+V,  minimumStepSize,                ,               , PReal,                1e-8,,P		, "lower limit of step size, before nonlinear solver stops"
 #
-V,  verboseMode,	           ,  		   ,      Index, 					1,       ,P		, "0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse"
-V,  verboseModeFile,	     ,  	        ,       Index, 			     0,       ,P, "same behaviour as verboseMode, but outputs all solver information to file"
-V,  stepInformation,	    ,  	     ,        Index, 			        2   ,   ,  P,  "0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step"
-V,  preStepPyExecute,		   , 	 	     ,       String, 			     ""	, 		 ,P, "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every load step and after last step, e.g. for postprocessing"
+V,  verboseMode,                    ,               , UInt,                 1,  ,P      , "0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse"
+V,  verboseModeFile,                ,               , UInt,                 0,  ,P      , "same behaviour as verboseMode, but outputs all solver information to file"
+V,  stepInformation,                ,               , UInt,                 2,  ,P      , "0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step"
+V,  preStepPyExecute,               ,               , String,               "", ,P      , "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every load step and after last step, e.g. for postprocessing"
 #
 writeFile=SimulationSettings.h
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = LinearSolverSettings
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Settings for linear solver, both dense and sparse (Eigen)."
+#V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
+V,  pivotTreshold,                  ,               , PReal,                0,    ,P    , "treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity"
+V,  ignoreRedundantConstraints,     ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour"
+V,  ignoreSingularJacobian,         ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"
+V,  showCausingItems,               ,               , bool,                 true,, P    , "False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"
+#
+writeFile=SimulationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = SimulationSettings
 appendToFile=True
 addDictionaryAccess = True
@@ -216,13 +230,14 @@ classDescription = "General Settings for simulation; according settings for solu
 V,  timeIntegration,                ,  		        , TimeIntegrationSettings, 	  , , PS		, "time integration parameters"
 V,  solutionSettings,               , 	 	        , SolutionSettings,  	        , , PS   , "settings for solution files"
 V,  staticSolver,				    , 	 	        , StaticSolverSettings,  		  , , PS	   , "static solver parameters"
+V,  linearSolverSettings,	        , 	 	        , LinearSolverSettings,  		  , , PS	   , "linear solver parameters (used for dense and sparse solvers)"
 V,  linearSolverType,				, 	 	        , LinearSolverType,    "LinearSolverType::EXUdense", , P	   , "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)"
-V,  cleanUpMemory,                  , 	            , bool,                false   , , P		, "true: solvers will free memory at exit (recommended for large systems); false: keep allocated memory for repeated computations to increase performance"
+V,  cleanUpMemory,                  , 	            , bool,                false   , , P		, "True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance"
 V,  displayStatistics,              , 	            , bool,                false   , , P		, "display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."
 V,  displayComputationTime,         , 	            , bool,                false   , , P		, "display computation time statistics at end of solving"
 V,  pauseAfterEachStep,             ,  		        , bool, 	             false   , , P		, "pause after every time step or static load step(user press SPACE)"
-V,  outputPrecision,                , 	            , Index,               6       , , P		, "precision for floating point numbers written to console; e.g. values written by solver"
-V,  numberOfThreads,                , 	            , Index,               1       , , P		, "number of threads used for parallel computation (1 == scalar processing); not yet implemented (status: Nov 2019)"
+V,  outputPrecision,                , 	            , UInt,                6       , , P		, "precision for floating point numbers written to console; e.g. values written by solver"
+V,  numberOfThreads,                , 	            , PInt,                1       , , P		, "number of threads used for parallel computation (1 == scalar processing); not yet implemented (status: Nov 2019)"
 #
 writeFile=SimulationSettings.h
 
@@ -230,7 +245,7 @@ writeFile=SimulationSettings.h
 
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = SolverContainer
@@ -261,12 +276,11 @@ writeFile=SystemContainer.h
 
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #VISUALIZATION
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 class = VSettingsGeneral
 appendToFile=False
 latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Visualization settings}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options.\n"
@@ -291,20 +305,23 @@ V,      showComputationInfo,            , 	             ,     bool,         true
 V,      showSolutionInformation,        , 	             ,     bool,         true,                   , P,      "true = show solution information (from simulationSettings.solution)"
 V,      showSolverInformation,          , 	             ,     bool,         true,                   , P,      "true = solver name and further information shown in render window"
 V,      showSolverTime,                 , 	             ,     bool,         true,                   , P,      "true = solver current time shown in render window"
+V,      renderWindowString,	            ,                ,     String,       "",                     , P,      "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)"
 V,      pointSize,                      , 	             ,     float,        "0.01f",                , P,      "global point size (absolute)"
-V,      circleTiling,                   , 	             ,     Index,        "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
-V,      cylinderTiling,                 , 	             ,     Index,        "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
-V,      sphereTiling,                   , 	             ,     Index,        "6",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
-V,      axesTiling,                     , 	             ,     Index,        "12",                   , P,      "global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)"
+V,      circleTiling,                   , 	             ,     PInt,         "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
+V,      cylinderTiling,                 , 	             ,     PInt,         "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
+V,      sphereTiling,                   , 	             ,     PInt,         "6",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
+V,      axesTiling,                     , 	             ,     PInt,         "12",                   , P,      "global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)"
+V,      threadSafeGraphicsUpdate,       , 	             ,     bool,         true,                   , P,      "true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations"
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsContour
 appendToFile=True
 writePybindIncludes = True
 classDescription = "Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
-V,      outputVariableComponent,        , 	             1,    Index,        "0",                    , P,      "select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; if this component is not available by certain objects or nodes, no value is drawn"
+V,      outputVariableComponent,        , 	             1,    Int,          "0",                    , P,      "select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)"
 V,      outputVariable,                 , 	             ,     OutputVariableType,  "OutputVariableType::_None",  , P, "selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting."
 V,      minValue,                       , 	             1,    float,        "0",                    , P,      "minimum value for contour plot; set manually, if automaticRange == False"
 V,      maxValue,                       , 	             1,    float,        "1",                    , P,      "maximum value for contour plot; set manually, if automaticRange == False"
@@ -313,10 +330,11 @@ V,      maxValue,                       , 	             1,    float,        "1",
 V,      automaticRange,                 , 	             ,     bool,         true,                   , P,      "if true, the contour plot value range is chosen automatically to the maximum range"
 V,      reduceRange,                    , 	             ,     bool,         true,                   , P,      "if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)"
 V,      showColorBar,                   , 	             ,     bool,         true,                   , P,      "show the colour bar with minimum and maximum values for the contour plot"
-V,      colorBarTiling,                 , 	             1,    Index,        "12",                   , P,      "number of tiles (segements) shown in the colorbar for the contour plot"
+V,      colorBarTiling,                 , 	             1,    PInt,         "12",                   , P,      "number of tiles (segements) shown in the colorbar for the contour plot"
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsNodes
 appendToFile=True
 writePybindIncludes = True
@@ -327,23 +345,25 @@ V,      showNumbers,                , 	             ,     bool,         false,  
 V,      drawNodesAsPoint,           , 	             ,     bool,         true,                     , P,      "simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines"
 V,      showBasis,                  , 	             ,     bool,         false,                    , P,      "show basis (three axes) of coordinate system in 3D nodes"
 V,      basisSize,                  , 	             ,     float,        "0.2f",                   , P,      "size of basis for nodes"
-V,      tiling,                     , 	             ,     Index,        "4",                      , P,      "tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4"
+V,      tiling,                     , 	             ,     PInt,         "4",                      , P,      "tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                   , P,      "global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for nodes; 4th value is alpha-transparency"
-V,      showNodalSlopes,            , 	             ,     Index,        false,                    , P,       "draw nodal slope vectors, e.g. in ANCF beam finite elements"
+V,      showNodalSlopes,            , 	             ,     UInt,         false,                    , P,       "draw nodal slope vectors, e.g. in ANCF beam finite elements"
 #
 writeFile=VisualizationSettings.h
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsBeams
 appendToFile=True
 writePybindIncludes = True
 classDescription = "Visualization settings for beam finite elements."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
-V,      axialTiling,                , 	             ,     Index,         "8",                      , P,       "number of segments to discretise the beams axis"
+V,      axialTiling,                , 	             ,     PInt,          "8",                      , P,       "number of segments to discretise the beams axis"
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsBodies
 appendToFile=True
 writePybindIncludes = True
@@ -359,6 +379,7 @@ V,      beams,                      , 	             ,     VSettingsBeams,   ,   
 writeFile=VisualizationSettings.h
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsConnectors
 appendToFile=True
 writePybindIncludes = True
@@ -372,13 +393,13 @@ V,      showJointAxes,              , 	             ,     bool,         false,  
 V,      jointAxesLength,            , 	             ,     float,        "0.2f",                     , P,    "global joint axes length"
 V,      jointAxesRadius,            , 	             ,     float,        "0.02f",                    , P,    "global joint axes radius"
 V,      showContact,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether contact points, lines, etc. are shown"
-V,      springNumberOfWindings,     , 	             ,     Index,        8,                          , P,    "number of windings for springs drawn as helical spring"
+V,      springNumberOfWindings,     , 	             ,     PInt,         8,                          , P,    "number of windings for springs drawn as helical spring"
 V,      contactPointsDefaultSize,   , 	             ,     float,        "0.02f",                      , P,    "global contact points size; if -1.f, connector size is relative to maxSceneSize"
 V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for connectors; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
-
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsMarkers
 appendToFile=True
 writePybindIncludes = True
@@ -392,7 +413,7 @@ V,      defaultColor,               , 	             4,    Float4,       "Float4(
 #
 writeFile=VisualizationSettings.h
 
-
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsLoads
 appendToFile=True
 writePybindIncludes = True
@@ -409,6 +430,7 @@ V,      defaultColor,               , 	             4,    Float4,       "Float4(
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsSensors
 appendToFile=True
 writePybindIncludes = True
@@ -422,28 +444,26 @@ V,      defaultColor,               , 	             4,    Float4,       "Float4(
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsWindow
 appendToFile=True
 writePybindIncludes = True
 classDescription = "Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
 V,      renderWindowSize,               , 	             2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
-V,      startupTimeout,                 , 	             ,     Index,        "2500",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
-V,      alwaysOnTop,                    , 	             ,     bool,         false,                  , P,      "true: OpenGL render window will be always on top of all other windows"
-V,      maximize,                       , 	             ,     bool,         false,                  , P,      "true: OpenGL render window will be maximized at startup"
-V,      showWindow,                     , 	             ,     bool,         true,                   , P,      "true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
-V,      keypressRotationStep,           , 	             ,     float,        "5.f",                  , P,      "rotation increment per keypress in degree (full rotation = 360 degree)"
-V,      mouseMoveRotationFactor,        , 	             ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
-V,      keypressTranslationStep,        , 	             ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
-V,      zoomStepFactor,                 , 	             ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
+V,      startupTimeout,                 , 	             ,     PInt,         "2500",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
+V,      alwaysOnTop,                    , 	             ,     bool,         false,                  , P,      "True: OpenGL render window will be always on top of all other windows"
+V,      maximize,                       , 	             ,     bool,         false,                  , P,      "True: OpenGL render window will be maximized at startup"
+V,      showWindow,                     , 	             ,     bool,         true,                   , P,      "True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
 #special settings:
-V,      keyPressUserFunction,           , 	             ,     KeyPressUserFunction,  0,  , P,   "add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: def f(key, action, mods): print('key=',key)\\; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
-V,      showMouseCoordinates,           , 	             ,     bool,         "false",                , P,      "true: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
-V,      ignoreKeys,                     , 	             ,     bool,         "false",                , P,      "true: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
+V,      keyPressUserFunction,           , 	             ,     KeyPressUserFunction,  0,  , P,   "add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
+V,      showMouseCoordinates,           , 	             ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
+V,      ignoreKeys,                     , 	             ,     bool,         "false",                , P,      "True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
 F,      ResetKeyPressUserFunction,      ,                ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsOpenGL
 appendToFile=True
 writePybindIncludes = True
@@ -455,16 +475,16 @@ V,      initialMaxSceneSize,            , 	             ,     float,        "1.f
 V,      initialModelRotation,           , 	             3x3,    StdArray33F,    "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
 #V,      initialModelRotation,           , 	             9,    Matrix3DF,    "Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f})",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
 # 
-V,      multiSampling,                  , 	             1,    Index,        "1",                    , P,      "multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
+V,      multiSampling,                  , 	             1,    PInt,         "1",                    , P,      "multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
 V,      lineWidth,                      , 	             1,    float,        "1.f",                  , P,      "width of lines used for representation of lines, circles, points, etc."
 V,      lineSmooth,                     , 	             1,    bool,         true,                   , P,      "draw lines smooth"
 V,      textLineWidth,                  , 	             1,    float,        "1.f",                  , P,      "width of lines used for representation of text"
 V,      textLineSmooth,                 , 	             1,    bool,         false,                  , P,      "draw lines for representation of text smooth"
 V,      showFaces,                      , 	             1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
-V,      facesTransparent,               , 	             1,    bool,         false,                  , P,      "true: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
+V,      facesTransparent,               , 	             1,    bool,         false,                  , P,      "True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
 V,      showFaceEdges,                  , 	             1,    bool,         false,                  , P,      "show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
 #
-V,      shadeModelSmooth,               , 	             1,    bool,         true,                   , P,      "true: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
+V,      shadeModelSmooth,               , 	             1,    bool,         true,                   , P,      "True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
 V,      materialAmbientAndDiffuse,      , 	             4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,"4f ambient color of material"
 V,      materialShininess,              , 	             1,    float,        "32.f",                 , P,      "shininess of material"
 V,      materialSpecular,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,  "4f specular color of material"
@@ -499,19 +519,41 @@ V,      drawNormalsLength,              , 	             1,    float,        "0.1
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsExportImages
 appendToFile=True
 writePybindIncludes = True
 classDescription = "Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
 #V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
-V,      saveImageTimeOut,               , 	             ,     Index,        "5000",                 , P,      "timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
+V,      saveImageTimeOut,               , 	             ,     PInt,         "5000",                 , P,      "timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
 V,      saveImageFileName,              , 	             ,     FileName,     "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); ; directory will be created if it does not exist"
-V,      saveImageFileCounter,           , 	             ,     Index,        0,                      , P,      "current value of the counter which is used to consecutively save frames (images) with consecutive numbers"
-V,      saveImageSingleFile,            , 	             ,     bool,         false,                  , P,      "true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName"
+V,      saveImageFileCounter,           , 	             ,     UInt,         0,                      , P,      "current value of the counter which is used to consecutively save frames (images) with consecutive numbers"
+V,      saveImageSingleFile,            , 	             ,     bool,         false,                  , P,      "True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName"
+#
+writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#settings that are used for interaction with renderer: 
+class = VSettingsInteractive
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Functionality to interact with render window; will include left and right mouse press actions and others in future."
+#V|F,   pythonName, 		          cplusplusName,      size, type,	     defaultValue,args,           cFlags, parameterDescription
+#have been in VSettingsWindows earlier:
+V,      keypressRotationStep,           , 	             ,     float,        "5.f",                  , P,      "rotation increment per keypress in degree (full rotation = 360 degree)"
+V,      mouseMoveRotationFactor,        , 	             ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
+V,      keypressTranslationStep,        , 	             ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
+V,      zoomStepFactor,                 , 	             ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
+#
+V,      highlightItemIndex,             , 	             ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted"
+V,      highlightItemType,              , 	             ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)"
+V,      highlightColor,                 , 	             4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "cRGB color for highlighted item; 4th value is alpha-transparency"
+V,      highlightOtherColor,            , 	             4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "cRGB color for other items (which are not highlighted); 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Visualization:General,Window(mouse move, zoom),OpenGL,System(Objects,Nodes,...),Text
 class = VisualizationSettings
 appendToFile=True
@@ -531,6 +573,7 @@ V,      sensors,                    , 	             ,     VSettingsSensors,  ,  
 #
 V,      window,                     , 	             ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
 V,      openGL,                     , 	             ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
+V,      interactive,                , 	             ,     VSettingsInteractive, ,              , PS,      "Settings for interaction with renderer"
 V,      exportImages,               , 	             ,     VSettingsExportImages,,              , PS,      "settings for exporting (saving) images to files in order to create animations"
 #
 #done in WriteToPybind function FL,      GetDictionaryWithTypeInformation,  ,        ,     py::dict,          ,                 , DP,      "access function to dictionary of settings hierarchical structure including type information"
@@ -540,7 +583,7 @@ writeFile=VisualizationSettings.h
 
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #CSolver Structures
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -643,11 +686,13 @@ V,      minStepSize,                , 	             ,     Real,         0.,     
 V,      initialStepSize,            , 	             ,     Real,         1e-6,                   ,   P,    "initial stepSize for dynamic solver; only used, if automaticStepSize is activated"
 V,      lastStepSize,               , 	             ,     Real,         0.,                     ,   P,    "stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated"
 V,      currentStepSize,            , 	             ,     Real,         0.,                     ,   P,    "stepSize of current step"
+V,      recommendedStepSize,        , 	             ,     Real,         -1.,                    ,   P,    "recommended step size $h_{recom}$ after PostNewton(...): $h_{recom} < 0$: no recommendation, $h_{recom}==0$: use minimum step size, $h_{recom}>0$: use specific step size, if no smaller size requested by other reason"
+#
 V,      numberOfSteps,              , 	             ,     Index,        0,                      ,   P,    "number of time steps (if fixed size); $n$"
 V,      currentStepIndex,           , 	             ,     Index,        0,                      ,   P,    "current step index; $i$"
 #
 V,      adaptiveStep,               , 	             ,     bool,         true,                   ,   P,    "True: the step size may be reduced if step fails; no automatic stepsize control"
-V,      automaticStepSize,          , 	 	         ,     bool,         true,                   ,   P,    "True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); false: constant step size used (step may be reduced if adaptiveStep=True)"
+V,      automaticStepSize,          , 	 	         ,     bool,         true,                   ,   P,    "True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); False: constant step size used (step may be reduced if adaptiveStep=True)"
 #
 V,      currentTime,                , 	             ,     Real,         0.,                     ,   P,    "holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration"
 V,      startTime,                  , 	             ,     Real,         0.,                     ,   P,    "time at beginning of time integration"
@@ -676,6 +721,7 @@ classDescription = "Solver internal structure for convergence information: resid
 V,      stepReductionFailed,        , 	             ,     bool,         false,                       ,   P,    "true, if iterations over time/static steps failed (finally, cannot be recovered)"
 V,      discontinuousIterationSuccessful,,           ,     bool,         true,                        ,   P,    "true, if last discontinuous iteration had success (failure may be recovered by adaptive step)"
 V,      linearSolverFailed,         , 	             ,     bool,         false,                       ,   P,    "true, if linear solver failed to factorize"
+V,      linearSolverCausingRow,     , 	             ,     Index,        -1,                          ,   P,    "-1 if successful, 0 ... n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed"
 V,      newtonConverged,            , 	             ,     bool,         false,                       ,   P,    "true, if Newton has (finally) converged"
 V,      newtonSolutionDiverged,     , 	             ,     bool,         false,                       ,   P,    "true, if Newton diverged (may be recovered)"
 V,      jacobianUpdateRequested,    , 	             ,     bool,         true,                        ,   P,    "true, if a jacobian update is requested in modified Newton (determined in previous step)"
@@ -825,6 +871,7 @@ FvL,    ComputeAlgebraicEquations,   ,                ,    void,        ,       
 writeFile=MainSolver.h
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MainSolverImplicitSecondOrder
 parentClass="MainSolverBase"
 appendToFile=True
@@ -842,10 +889,10 @@ VL,     newton,                   cSolver.newton, 	       ,     NewtonSettings, 
 #++++++++++++++++++++++++++++++++++++++++++++++
 #specialized variables for CSolverStatic:
 # currently, both solvers are available, but cSolverOld is the standard
-V,      cSolverOld,                  , 	             ,     CSolverImplicitSecondOrderTimeIntUserFunction,     ,                  ,    ,    "link to C++ CSolver, not accessible from Python"
-V,      cSolverNew,                  , 	             ,     CSolverImplicitSecondOrderTimeIntNew,              ,                  ,    ,    "link to C++ CSolver, not accessible from Python; new solver, only for experimental work"
+V,      cSolver,                     , 	             ,     CSolverImplicitSecondOrderTimeIntUserFunction,     ,                  ,    ,    "link to C++ CSolver, not accessible from Python"
+#DELETE: V,      cSolverNew,                  , 	             ,     CSolverImplicitSecondOrderTimeIntNew,              ,                  ,    ,    "link to C++ CSolver, not accessible from Python; new solver, only for experimental work"
 #for tests; V,      experimentalUseSolverNew,    , 	             ,     bool,              "false",           ,   P,   "this is an experimental flag, which will be removed in the future"
-V,      useOldAccBasedSolver,        , 	                   ,     bool,              "false",           ,   P,    "set this flag True, to use old (until 2021-02-05) accelerations based generalized alpha solver; this is outdated, but kept in order to ensure compatibility for some time (will be ERASED in FUTURE!)"
+#DELETE: V,      useOldAccBasedSolver,        , 	                   ,     bool,              "false",           ,   P,    "set this flag True, to use old (until 2021-02-05) accelerations based generalized alpha solver; this is outdated, but kept in order to ensure compatibility for some time (will be ERASED in FUTURE!)"
 #without user function: V,      cSolver,                     , 	             ,     CSolverImplicitSecondOrderTimeInt,     ,                  ,    ,    "link to C++ CSolver, not accessible from Python"
 #copy of parameters from integration scheme (cannot be changed during integration!)
 V,      newmarkBeta,                 GetCSolverImplicitSecondOrder().newmarkBeta,                     ,     Real,              ,                  ,   P,    "copy of parameter in timeIntegration.generalizedAlpha"
@@ -862,8 +909,8 @@ V,      initializedSystemSizes,      , 	             ,     Index4,            , 
 #now auotmatically created: F,      MainSolverImplicitSecondOrder,,               ,    ,            ,,D,  "constructor, in order to set valid state (settings not initialized at beginning)"
 Fv,     GetCSolver,                  ,                ,    const CSolverBase& ,            "return GetCSolverImplicitSecondOrder();",,C,  "const access to cSolver"
 Fv,     GetCSolver,                  ,                ,    CSolverBase& ,                  "return GetCSolverImplicitSecondOrder();",,,  "reference access to cSolver"
-F,      GetCSolverImplicitSecondOrder,,               ,    const CSolverImplicitSecondOrderTimeIntUserFunction& ,            "return useOldAccBasedSolver? cSolverOld : cSolverNew;",,C,  "const access to cSolver"
-F,      GetCSolverImplicitSecondOrder,,               ,    CSolverImplicitSecondOrderTimeIntUserFunction& ,                  "return useOldAccBasedSolver? cSolverOld : cSolverNew;",,,  "reference access to cSolver"
+F,      GetCSolverImplicitSecondOrder,,               ,    const CSolverImplicitSecondOrderTimeIntUserFunction& ,            "return cSolver;",,C,  "const access to cSolver"
+F,      GetCSolverImplicitSecondOrder,,               ,    CSolverImplicitSecondOrderTimeIntUserFunction& ,                  "return cSolver;",,,  "reference access to cSolver"
 #
 FvL,    CheckInitialized,            ,                ,    bool,        ,                  "const MainSystem& mainSystem",   DGPV,  "check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError"
 F,      ComputeLoadFactor,           ,                ,    Real,        "return GetCSolverImplicitSecondOrder().ComputeLoadFactor(simulationSettings);",                       "const SimulationSettings& simulationSettings",   GPV,    "for static solver, this is a factor in interval [0,1]; MUST be overwritten"
@@ -893,6 +940,7 @@ F,       SetUserFunctionNewton,           ,            ,    void,            "Ge
 F,       SetUserFunctionComputeNewtonUpdate,,          ,    void,            "GetCSolverImplicitSecondOrder().SetUserFunctionComputeNewtonUpdate(this, &mainSystem, userFunction);","MainSystem& mainSystem, const MainSolverImplicitSecondOrderUserFunctionBool& userFunction", P,  "set user function"
 F,       SetUserFunctionComputeNewtonResidual,,        ,    void,            "GetCSolverImplicitSecondOrder().SetUserFunctionComputeNewtonResidual(this, &mainSystem, userFunction);","MainSystem& mainSystem, const MainSolverImplicitSecondOrderUserFunctionReal& userFunction", P,  "set user function"
 F,       SetUserFunctionComputeNewtonJacobian,,        ,    void,            "GetCSolverImplicitSecondOrder().SetUserFunctionComputeNewtonJacobian(this, &mainSystem, userFunction);","MainSystem& mainSystem, const MainSolverImplicitSecondOrderUserFunction& userFunction", P,  "set user function"
+F,       SetUserFunctionPostNewton,,                   ,    void,            "GetCSolverImplicitSecondOrder().SetUserFunctionPostNewton(this, &mainSystem, userFunction);","MainSystem& mainSystem, const MainSolverImplicitSecondOrderUserFunctionReal& userFunction", P,  "set user function"
 #
 #++++++++++++++++++++++++++++++++++++++++++++++
 #this should be exactly the same as MainSolverStatic
@@ -921,6 +969,7 @@ FvL,    InitializeStep,              ,                ,    void,        ,       
 FvL,    FinishStep,                  ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",  DGPV,    "finish static step / time step; write output of results to file"
 FvL,    DiscontinuousIteration,      ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual"
 FvL,    Newton,                      ,                ,    bool,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "perform Newton method for given solver method"
+FvL,    PostNewton,                  ,                ,    Real,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "call PostNewton for all relevant objects (contact, friction, ... iterations); returns error for discontinuous iteration"
 FvL,    ComputeNewtonResidual,       ,                ,    Real,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)"
 FvL,    ComputeNewtonUpdate,         ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, initial=true",   GPV,    "compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0"
 FvL,    ComputeNewtonJacobian,       ,                ,    void,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "compute jacobian for newton method of given solver method; store result in systemJacobian"
@@ -958,6 +1007,7 @@ FvL,    ComputeAlgebraicEquations,   ,                ,    void,        ,       
 writeFile=MainSolver.h
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MainSolverExplicit
 parentClass="MainSolverBase"
 appendToFile=True
@@ -1015,6 +1065,7 @@ FvL,    InitializeStep,              ,                ,    void,        ,       
 FvL,    FinishStep,                  ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",  DGPV,    "finish static step / time step; write output of results to file"
 FvL,    DiscontinuousIteration,      ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual"
 FvL,    Newton,                      ,                ,    bool,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "perform Newton method for given solver method"
+#FvL,    PostNewton,                  ,                ,    Real,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "call PostNewton for all relevant objects (contact, friction, ... iterations); returns error for discontinuous iteration"
 FvL,    ComputeNewtonResidual,       ,                ,    Real,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)"
 FvL,    ComputeNewtonUpdate,         ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, initial=true",   GPV,    "compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0"
 FvL,    ComputeNewtonJacobian,       ,                ,    void,        , "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "compute jacobian for newton method of given solver method; store result in systemJacobian"

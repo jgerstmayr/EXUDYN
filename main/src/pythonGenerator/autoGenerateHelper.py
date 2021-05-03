@@ -50,6 +50,8 @@ def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into
 
         if (s.find('EXUmath::unitMatrix3D') != -1): #manually done - could be automatized in future ...
             s = s.replace('EXUmath::unitMatrix3D','[[1,0,0], [0,1,0], [0,0,1]]')  
+        if (s.find('EXUmath::zeroMatrix3D') != -1): #manually done - could be automatized in future ...
+            s = s.replace('EXUmath::zeroMatrix3D','[[0,0,0], [0,0,0], [0,0,0]]')  
 
         if (s.find('Matrix6D(6,6,0.)') != -1): #manually done - could be automatized in future ...
             s = 'np.zeros([6,6])'
@@ -111,6 +113,7 @@ def DefaultValue2Python(s):
     #old, would need exu in utilities: s = s.replace('OutputVariableType::_None','OutputVariableType._None')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('OutputVariableType::_None','0')  #this helps to avoid unreadable error messages, if type is not set; none always corresponds to 0
     s = s.replace('EXUmath::unitMatrix3D','IIDiagMatrix(rowsColumns=3,value=1)')  #replace with itemInterface diagonal matrix
+    s = s.replace('EXUmath::zeroMatrix3D','IIDiagMatrix(rowsColumns=3,value=0)')  #replace with itemInterface diagonal matrix
     s = s.replace('Matrix()','[]')  #replace empty matrix with emtpy list
     s = s.replace('MatrixI()','[]') #replace empty matrix with emtpy list
     s = s.replace('PyMatrixContainer()','[]')  #initialization in iteminterface with empty array

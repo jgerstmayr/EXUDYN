@@ -81,7 +81,7 @@ void VisualizationSystemContainer::UpdateGraphicsData()
 		if (cnt == 0 && settings.general.drawWorldBasis)
 		{
 			EXUvis::DrawOrthonormalBasis(Vector3D({ 0,0,0 }), EXUmath::unitMatrix3D, settings.general.worldBasisSize,
-				0.005*settings.general.worldBasisSize, item->GetGraphicsData());
+				0.005*settings.general.worldBasisSize, item->GetGraphicsData(), -1, ItemType::_None); //world basis has no special index
 		}
 		cnt++;
 	}
@@ -182,6 +182,8 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 	renderState.zoom = settings.openGL.initialZoom;
 	renderState.maxSceneSize = settings.openGL.initialMaxSceneSize;
 	renderState.currentWindowSize = settings.window.renderWindowSize;
+	if (renderState.currentWindowSize[0] < 1) { renderState.currentWindowSize[0] = 1; } //avoid division by zero
+	if (renderState.currentWindowSize[1] < 1) { renderState.currentWindowSize[1] = 1; } //avoid division by zero
 
 	//set modelRotation to identity matrix (4x4); Use rotation part only from Float9 initialModelRotation
 	renderState.modelRotation.SetAll(0.f);
@@ -250,84 +252,6 @@ std::string VisualizationSystemContainer::GetComputationMessage(bool solverInfor
 }
 
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! copy bodyGraphicsData (of body) into global graphicsData (of system)
-void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position, const Matrix3DF& rotation)
-{
-	bool applyRotation = true;
-	if (rotation(0, 0) == 1.f && rotation(1, 1) == 1.f && rotation(2, 2) == 1.f) { applyRotation = false; }
-
-	for (GLLine item : bodyGraphicsData.glLines) //copy objects
-	{
-		if (applyRotation)
-		{
-			EXUmath::RigidBodyTransformation(rotation, position, item.point1, item.point1);
-			EXUmath::RigidBodyTransformation(rotation, position, item.point2, item.point2);
-		}
-		else
-		{
-			item.point1 += position;
-			item.point2 += position;
-		}
-		graphicsData.glLines.Append(item);
-	}
-
-	for (GLCircleXY item : bodyGraphicsData.glCirclesXY) //copy objects
-	{
-		if (applyRotation)
-		{
-			EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
-		}
-		else
-		{
-			item.point += position;
-		}
-		graphicsData.glCirclesXY.Append(item);
-	}
-
-	for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!
-	{
-		if (applyRotation)
-		{
-			EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
-		}
-		else
-		{
-			item.point += position;
-		}
-
-		Index len = strlen(item.text); 
-		//int i = (int)strlen("x");
-		char* temp = new char[len+1]; //needs to be copied, because string is destroyed everytime it is updated! ==> SLOW for large number of texts (node numbers ...)
-		//strcpy_s(temp, len + 1, item.text); //not working with gcc
-		strcpy(temp, item.text); //item.text will be destroyed upon deletion of BodyGraphicsData!
-		item.text = temp;
-		graphicsData.glTexts.Append(item);
-	}
-
-	for (GLTriangle item : bodyGraphicsData.glTriangles) //copy objects
-	{
-		if (applyRotation)
-		{
-			for (Index i = 0; i < 3; i++)
-			{
-				EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
-				EXUmath::RigidBodyTransformation(rotation, position, item.normals[i], item.normals[i]);
-			}
-		}
-		else
-		{
-			for (Index i = 0; i < 3; i++)
-			{
-				item.points[i] += position;
-			}
-		}
-		graphicsData.glTriangles.Append(item);
-	}
-
-}
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -370,7 +294,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 						if (pyTypeStr == "Line")
 						{
 
-							GLLine line;
+							GLLine line; line.itemID = -1;
 							line.color1 = line.color2 = EXUvis::defaultColorFloat4;
 							if (gDict.contains("color"))
 							{
@@ -396,7 +320,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 									py::list dataList = (py::list)(gData);
 									std::vector<float> gd = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
 
-									Index n = gd.size() / 3;
+									Index n = (Index)gd.size() / 3;
 									if (n * 3 != gd.size() || n < 2)
 									{
 										PyError("GraphicsData Line: data must be a float vector with exactly 3*n components and n > 1"); return false;
@@ -416,7 +340,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 						} //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						else if (pyTypeStr == "Circle")
 						{
-							GLCircleXY circle;
+							GLCircleXY circle; circle.itemID = -1;
 							circle.color = EXUvis::defaultColorFloat4;
 							circle.numberOfSegments = 0; //use default
 
@@ -559,7 +483,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 
 									if ((stdGList.size() % 3) == 0)
 									{
-										Index n = stdGList.size() / 3;
+										Index n = (Index)stdGList.size() / 3;
 										points.SetNumberOfItems(n);
 										for (Index i = 0; i < n; i++)
 										{
@@ -586,7 +510,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 
 									if ((stdGList.size() % 4) == 0 && stdGList.size() / 4 == points.NumberOfItems())
 									{
-										Index n = stdGList.size() / 4;
+										Index n = (Index)stdGList.size() / 4;
 										colors.SetNumberOfItems(n);
 										for (Index i = 0; i < n; i++)
 										{
@@ -614,7 +538,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 
 									if ((stdGList.size() % 3) == 0 && stdGList.size() / 3 == points.NumberOfItems())
 									{
-										Index n = stdGList.size() / 3;
+										Index n = (Index)stdGList.size() / 3;
 										normals.SetNumberOfItems(n);
 										for (Index i = 0; i < n; i++)
 										{
@@ -642,7 +566,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 
 									if ((stdGList.size() % 3) == 0)
 									{
-										Index n = stdGList.size() / 3;
+										Index n = (Index)stdGList.size() / 3;
 										Index np = points.NumberOfItems();
 										GLTriangle trig;
 										for (Index i = 0; i < n; i++)

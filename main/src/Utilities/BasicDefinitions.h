@@ -27,7 +27,7 @@
   #define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
 #endif
 
-//#define PERFORM_UNIT_TESTS	//!< remove definition in order to disable unit tests
+//#define PERFORM_UNIT_TESTS	//!< defined in preprocessor flags, in setup.py (only for certain versions)
 #define DoublePrecision
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -46,16 +46,32 @@
 typedef std::string STDstring;	//!< decouple std::string for future extensions, performance, etc.; all Exudyn strings must be STDstring; do not use std::string directly!
 
 
-//not that Index will become 'int' in future (but python interface Index will represent only positive indices ...)!
-#if defined(__APPLE__)
-    typedef unsigned long Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
-    typedef long SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid!
-#elif defined(__x86_64__) || defined(__ppc64__) || defined(_WIN64)
-    typedef uint64_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
-    typedef int64_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
+#define USE_INDEX_AS_INT
+#ifdef USE_INDEX_AS_INT
+	typedef int Index;
+	typedef int SignedIndex;
+	#if defined(__APPLE__)
+		typedef unsigned long UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+	#elif defined(__x86_64__) || defined(__ppc64__) || defined(_WIN64)
+		typedef uint64_t UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+	#else
+		typedef uint32_t UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+	#endif
 #else
-typedef uint32_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
-typedef int32_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
+	//not that Index will become 'int' in future (but python interface Index will represent only positive indices ...)!
+	#if defined(__APPLE__)
+		typedef unsigned long Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+		typedef unsigned long UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+		typedef long SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid!
+	#elif defined(__x86_64__) || defined(__ppc64__) || defined(_WIN64)
+		typedef uint64_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+		typedef uint64_t UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+		typedef int64_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
+	#else
+		typedef uint32_t Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+		typedef uint32_t UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
+		typedef int32_t SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid! 
+	#endif
 #endif
 
 constexpr Index MAX_NUMBER_OF_THREADS = 16;   //!< maximum number of threads, e.g., for predefined structures with fixed size

@@ -9,16 +9,373 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.151, 
-  \item last change =  2021-03-16
+  \item EXUDYN version = 1.0.201, 
+  \item last change =  2021-05-03
 
-  \item Number of issues = 597, 
-  \item Number of resolved issues = 519 (151 in current version), 
+  \item Number of issues = 662, 
+  \item Number of resolved issues = 569 (201 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.201}: \vspace{-6pt} 
+  resolved Issue 0659: {\bf Troubleshooting}
+(docu)
+  \bi
+  \item {description: Add Trouble shooting section, treating common Python and solver errors to theDoc.pdf}
+  \item   date resolved: {\bf 2021-05-03 10:18},
+date raised: 2021-05-03   \ei
+  \item {\bf Version 1.0.200}: \vspace{-6pt} 
+  resolved Issue 0650: {\bf Highlight item\#}
+(extension)
+  \bi
+  \item {description: Highlight item\# for object/node/etc.; add to visualization options (itemType, item\#, colorHighlightItem, colorOtherItems), draw all other items in gray}
+  \item   date resolved: {\bf 2021-05-03 01:18},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.199}: \vspace{-6pt} 
+  resolved Issue 0649: {\bf add ItemType}
+(extension)
+  \bi
+  \item {description: Add enum ItemType: Node, Object, ...}
+  \item   date resolved: {\bf 2021-05-03 01:18},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.198}: \vspace{-6pt} 
+  resolved Issue 0651: {\bf add itemID to graphics objects}
+(extension)
+  \bi
+  \item {description: Add itemID (nodes, objects, markers, loads, sensors, in that order) to graphics objects (for right-mouse-press)}
+  \item   date resolved: {\bf 2021-05-02 21:26},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.197}: \vspace{-6pt} 
+  resolved Issue 0658: {\bf add VisualizationSettings() interactive}
+(change)
+  \bi
+  \item {description: move visualization settings window functions keypressRotationStep, mouseMoveRotationFactor, keypressTranslationStep, zoomStepFactor to new substructure "interactive"}
+  \item {\bf notes: {\bf adapt your models if you used these options!}}
+  \item   date resolved: {\bf 2021-05-01 23:36},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.196}: \vspace{-6pt} 
+  resolved Issue 0654: {\bf coordinates sizes}
+(extension)
+  \bi
+  \item {description: add function ODE2Size(...), ODE1Size(...), SystemSize(...) to mbs.systemData to retrieve number of ODE2,ODE1,AE and Data coordinates for certain configurationType; only works after mbs.Assemble()}
+  \item   date resolved: {\bf 2021-05-01 23:23},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.195}: \vspace{-6pt} 
+  resolved Issue 0656: {\bf mbs.systemData}
+(change)
+  \bi
+  \item {description: removed GetCurrentTime() and SetVisualizationTime(...) which have been marked as deprecated already}
+  \item {\bf notes: Use GetTime(...) and SetTime(...) in mbs.systemData instead}
+  \item   date resolved: {\bf 2021-05-01 23:08},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.194}: \vspace{-6pt} 
+  resolved Issue 0644: {\bf solver messages}
+(extension)
+  \bi
+  \item {description: add solver message if not converged with helpful hints (especially if invert fails or newton fails)}
+  \item   date resolved: {\bf 2021-05-01 02:31},
+date raised: 2021-04-30   \ei
+  \item {\bf Version 1.0.193}: \vspace{-6pt} 
+  resolved Issue 0349: {\bf add causing row}
+(extension)
+  \bi
+  \item {description: output causing row/column (=coordinate) which leads to singular matrix; do this for Matrix.Invert as well as for SparseLU .info code; matrix class creates string with error message!}
+  \item   date resolved: {\bf 2021-05-01 02:30},
+date raised: 2020-03-02   \ei
+  \item {\bf Version 1.0.192}: \vspace{-6pt} 
+  resolved Issue 0646: {\bf jacobian singular}
+(extension)
+  \bi
+  \item {description: resolve singularities in general jacobian: resolves coordinates which are still free for static problems, but is marked as unsafe}
+  \item   date resolved: {\bf 2021-05-01 02:29},
+date raised: 2021-04-30   \ei
+  \item {\bf Version 1.0.191}: \vspace{-6pt} 
+  resolved Issue 0645: {\bf redundant constraints}
+(extension)
+  \bi
+  \item {description: resolve redundant constraints: add flag to ignore singular constraint jacobians}
+  \item   date resolved: {\bf 2021-05-01 02:29},
+date raised: 2021-04-30   \ei
+  \item {\bf Version 1.0.190}: \vspace{-6pt} 
+  resolved Issue 0333: {\bf node numbers with type}
+(extension)
+  \bi
+  \item {description: extend node/object/... numbers as python class with type information to check if item numbers are mixed illegally}
+  \item {\bf notes: done already earlier, but still marked as unresolved}
+  \item   date resolved: {\bf 2021-04-30 17:04},
+date raised: 2020-02-06   \ei
+  \item {\bf Version 1.0.189}: \vspace{-6pt} 
+  resolved Issue 0641: {\bf ObjectContactFrictionCircleCable2D}
+(docu)
+  \bi
+  \item {description: add description and figure for theory and computation}
+  \item   date resolved: {\bf 2021-04-29 08:40},
+date raised: 2021-04-29   \ei
+  \item {\bf Version 1.0.188}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0423}: {\bf fix MarkerSuperElementRigidBody}
+  \bi
+  \item {description: fix velocity level for MarkerSuperElementRigidBody (check constraint equations)}
+  \item {\bf notes: fixed several errors and test examples work now on velocity level, but further checks are necessary}
+  \item   date resolved: {\bf 2021-04-27 18:24},
+date raised: 2020-06-09   \ei
+  \item {\bf Version 1.0.187}: \vspace{-6pt} 
+  resolved Issue 0635: {\bf AnimateModes}
+(check)
+  \bi
+  \item {description: check, why animate modes has threading-conflicts; use std::cout to find issues}
+  \item {\bf notes: resolved threading conflicts, but visualization state set inbetween graphics update, which needs to resolve \#634}
+  \item   date resolved: {\bf 2021-04-27 18:20},
+date raised: 2021-04-25   \ei
+  \item {\bf Version 1.0.186}: \vspace{-6pt} 
+  resolved Issue 0640: {\bf MarkerSuperElementRigid}
+(extension)
+  \bi
+  \item {description: remove referencePosition and add offset instead (to correct errors of midpoint due to small mesh-unsymmetries)}
+  \item {\bf notes: {\bf CHANGED interface}: MarkerSuperElementRigid does not have a referencePosition anymore, but adds a parameter offset}
+  \item   date resolved: {\bf 2021-04-27 18:18},
+date raised: 2021-04-26   \ei
+  \item {\bf Version 1.0.185}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0639}: {\bf ObjectFFRFreducedOrder}
+  \bi
+  \item {description: incorrect AccessFunction AccessFunctionType::AngularVelocity\_qt, missing correct reference point = midpoint for computation of rotation}
+  \item   date resolved: {\bf 2021-04-26 21:47},
+date raised: 2021-04-26   \ei
+  \item {\bf Version 1.0.184}: \vspace{-6pt} 
+  resolved Issue 0638: {\bf MarkerSuperElementRigid}
+(extension)
+  \bi
+  \item {description: use consistent reference point = midpoint for computation of rotation and use exponential Map for rotation matrix}
+  \item   date resolved: {\bf 2021-04-26 21:47},
+date raised: 2021-04-26   \ei
+  \item {\bf Version 1.0.183}: \vspace{-6pt} 
+  resolved Issue 0636: {\bf Python3.8}
+(extension)
+  \bi
+  \item {description: add python 3.8 compilation tests; resolve issues with \_\_index\_\_ method needed fore NodeIndex, MarkerIndex, etc.}
+  \item   date resolved: {\bf 2021-04-26 16:25},
+date raised: 2021-04-26   \ei
+  \item {\bf Version 1.0.182}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0629}: {\bf mesh visualization}
+  \bi
+  \item {description: visualization artifacts in larger FE meshes due to multithreading}
+  \item {\bf notes: added flag threadSafeGraphicsUpdate to avoid thread conflicts between graphics and computation, which is by default set True and MAY SLOW DOWN your computation speed if True}
+  \item   date resolved: {\bf 2021-04-25 22:28},
+date raised: 2021-04-22   \ei
+  \item {\bf Version 1.0.181}: \vspace{-6pt} 
+  resolved Issue 0632: {\bf CMS theory}
+(docu)
+  \bi
+  \item {description: add theory section for Hurty-Craig-Bampton modes and eigenmode computation}
+  \item   date resolved: {\bf 2021-04-23 19:03},
+date raised: 2021-04-23   \ei
+  \item {\bf Version 1.0.180}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0628}: {\bf FEMinterface.GetNodesOnCylinder}
+  \bi
+  \item {description: returns erroneous indices}
+  \item {\bf notes: corrected indexing and add warnings for illegal node types}
+  \item   date resolved: {\bf 2021-04-22 22:59},
+date raised: 2021-04-22   \ei
+  \item {\bf Version 1.0.179}: \vspace{-6pt} 
+  resolved Issue 0616: {\bf Craig-Bampton}
+(extension)
+  \bi
+  \item {description: add static modes (Hurty-Craig-Bampton) to computation of modes in CMSinterface}
+  \item {\bf notes: implemented in FEMinterface.ComputeHurtyCraigBamptonModes(...)}
+  \item   date resolved: {\bf 2021-04-21 11:09},
+date raised: 2021-03-21   \ei
+  \item {\bf Version 1.0.178}: \vspace{-6pt} 
+  resolved Issue 0624: {\bf norm in contour plots}
+(extension)
+  \bi
+  \item {description: show norm (of vectors or stresses) in contour plot, using special outputVariable component=-1}
+  \item   date resolved: {\bf 2021-04-09 18:18},
+date raised: 2021-04-09   \ei
+  \item {\bf Version 1.0.177}: \vspace{-6pt} 
+  resolved Issue 0623: {\bf postProcessingModes}
+(extension)
+  \bi
+  \item {description: add function to compute stress or strain modes for postprocessing, working for linear tetraherons (Tet4); see Examples/NGsolvePostProcessingStresses.py}
+  \item   date resolved: {\bf 2021-04-09 15:46},
+date raised: 2021-04-09   \ei
+  \item {\bf Version 1.0.176}: \vspace{-6pt} 
+  resolved Issue 0424: {\bf show modes}
+(extension)
+  \bi
+  \item {description: add feature to visualize eigenmodes, e.g. using ObjectFFRFreducedOrder and set one initialCoordinate nonzero}
+  \item   date resolved: {\bf 2021-04-07 13:48},
+date raised: 2020-06-12   \ei
+  \item {\bf Version 1.0.175}: \vspace{-6pt} 
+  resolved Issue 0619: {\bf Eigenmode visualizer}
+(extension)
+  \bi
+  \item {description: visualize eigenmodes with interactive tools with new function AnimateModes(...) to show eigenmodes of system or ObjectFFRFreducedOrder (see \refSection{sec:interactive:AnimateModes})}
+  \item   date resolved: {\bf 2021-04-07 13:47},
+date raised: 2021-03-30   \ei
+  \item {\bf Version 1.0.174}: \vspace{-6pt} 
+  resolved Issue 0622: {\bf InteractiveDialog}
+(extension)
+  \bi
+  \item {description: improved functionality of InteractiveDialog in interactive.py, specially for animating modes}
+  \item   date resolved: {\bf 2021-04-07 12:20},
+date raised: 2021-04-07   \ei
+  \item {\bf Version 1.0.173}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0621}: {\bf mbs.GetNodeODE2Index}
+  \bi
+  \item {description: Fails for NodeRigidBodyEP, because mix of AE and ODE2 variables}
+  \item {\bf notes: added correct type check in MainSystem::PyGetNodeODE2Index}
+  \item   date resolved: {\bf 2021-04-07 09:12},
+date raised: 2021-04-07   \ei
+  \item {\bf Version 1.0.172}: \vspace{-6pt} 
+  resolved Issue 0403: {\bf CMS C++}
+(extension)
+  \bi
+  \item {description: add ObjectFFRFreducedOrder (CMS) equations in C++ and clean up code}
+  \item   date resolved: {\bf 2021-03-30 16:57},
+date raised: 2020-05-21   \ei
+  \item {\bf Version 1.0.171}: \vspace{-6pt} 
+  resolved Issue 0470: {\bf geometrically exact beam2D}
+(extension)
+  \bi
+  \item {description: add to CPP}
+  \item   date resolved: {\bf 2021-03-25 18:07},
+date raised: 2020-11-21   \ei
+  \item {\bf Version 1.0.170}: \vspace{-6pt} 
+  resolved Issue 0563: {\bf ODE1Coordinate}
+(extension)
+  \bi
+  \item {description: add MarkerODE1Coordinate and extend LoadCoordinate for ODE1}
+  \item   date resolved: {\bf 2021-03-25 07:43},
+date raised: 2021-01-27   \ei
+  \item {\bf Version 1.0.169}: \vspace{-6pt} 
+  resolved Issue 0615: {\bf MarkerNodeCoordinate}
+(extension)
+  \bi
+  \item {description: add check in CSystem for valid coordinate numbers in MarkerNodeCoordinate}
+  \item   date resolved: {\bf 2021-03-22 14:18},
+date raised: 2021-03-21   \ei
+  \item {\bf Version 1.0.168}: \vspace{-6pt} 
+  resolved Issue 0611: {\bf adaptiveStep}
+(extension)
+  \bi
+  \item {description: add adaptiveStepIncrease, Decrease and RecoverySteps options to control behavior in case of discontinuous problems}
+  \item   date resolved: {\bf 2021-03-21 00:21},
+date raised: 2021-03-21   \ei
+  \item {\bf Version 1.0.167}: \vspace{-6pt} 
+  resolved Issue 0603: {\bf loadFactor}
+(change)
+  \bi
+  \item {description: exclude load factor for loads with user functions in static computations}
+  \item   date resolved: {\bf 2021-03-20 23:24},
+date raised: 2021-03-18   \ei
+  \item {\bf Version 1.0.166}: \vspace{-6pt} 
+  resolved Issue 0610: {\bf startOfStep}
+(extension)
+  \bi
+  \item {description: add access function for nodal coordinates at startOfStep configuration, used in mbs.GetNodeOutput(configuration = exu.ConfigurationType.startOfStep)}
+  \item   date resolved: {\bf 2021-03-20 23:23},
+date raised: 2021-03-20   \ei
+  \item {\bf Version 1.0.165}: \vspace{-6pt} 
+  resolved Issue 0609: {\bf SolveDynamic, SolveStatic}
+(change)
+  \bi
+  \item {description: store dynamicSolver and staticSolver in mbs.sys dictionary immediately after creation, which allows to use these structures in user functions during static or dynamic solution}
+  \item   date resolved: {\bf 2021-03-20 23:23},
+date raised: 2021-03-20   \ei
+  \item {\bf Version 1.0.164}: \vspace{-6pt} 
+  resolved Issue 0607: {\bf test recommendedStepSize}
+(test)
+  \bi
+  \item {description: test recommendedStepSize and PostNewtonUserFunction with simple elastic contact example}
+  \item   date resolved: {\bf 2021-03-20 23:23},
+date raised: 2021-03-20   \ei
+  \item {\bf Version 1.0.163}: \vspace{-6pt} 
+  resolved Issue 0605: {\bf UIndex, UReal}
+(extension)
+  \bi
+  \item {description: change all relevant unsigned quantities to UIndex and UReal, as well as Vectors of UReal and Arrays of UIndex}
+  \item   date resolved: {\bf 2021-03-20 23:23},
+date raised: 2021-03-19   \ei
+  \item {\bf Version 1.0.162}: \vspace{-6pt} 
+  resolved Issue 0604: {\bf UIndex check}
+(extension)
+  \bi
+  \item {description: add automatic check in item interface to check for correctness of UIndex and UReal quantities}
+  \item   date resolved: {\bf 2021-03-20 23:23},
+date raised: 2021-03-19   \ei
+  \item {\bf Version 1.0.161}: \vspace{-6pt} 
+  resolved Issue 0337: {\bf local quantities beam}
+(change)
+  \bi
+  \item {description: change beam output of Force, Torque, Curvature, Stress and Strain to ForceLocal, TorqueLocal, CurvatureLocal, StressLocal, and StrainLocal}
+  \item {\bf notes: {\bf WARNING}: you need to adapt force, torque and stress, strain and curvature output variables accordingly as they may have changed specifically for ANCF beams; adapt all your model files regarding Force, Torque, etc.}
+  \item   date resolved: {\bf 2021-03-20 23:22},
+date raised: 2020-02-18   \ei
+  \item {\bf Version 1.0.160}: \vspace{-6pt} 
+  resolved Issue 0139: {\bf Index}
+(change)
+  \bi
+  \item {description: change Index to (signed) int and use UIndex in python interface for unsigned parameters}
+  \item {\bf notes: {\bf ATTENTION}: this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.}
+  \item   date resolved: {\bf 2021-03-20 23:21},
+date raised: 2019-05-20   \ei
+  \item {\bf Version 1.0.159}: \vspace{-6pt} 
+  resolved Issue 0606: {\bf resolve errors 32bit testsuite}
+(test)
+  \bi
+  \item {description: add extra tolerances for 32bit}
+  \item   date resolved: {\bf 2021-03-20 23:19},
+date raised: 2021-03-20   \ei
+  \item {\bf Version 1.0.158}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0575}: {\bf new genAlpha solver}
+  \bi
+  \item {description: new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top}
+  \item {\bf notes: solved by removing old solver structure; new solver fully supports user functions now}
+  \item   date resolved: {\bf 2021-03-18 21:34},
+date raised: 2021-02-08   \ei
+  \item {\bf Version 1.0.157}: \vspace{-6pt} 
+  resolved Issue 0602: {\bf PostNewton step size recommendation}
+(extension)
+  \bi
+  \item {description: add step recommendation as outcome of PostNewton function to improve contact and friction accuracy}
+  \item   date resolved: {\bf 2021-03-18 21:33},
+date raised: 2021-03-18   \ei
+  \item {\bf Version 1.0.156}: \vspace{-6pt} 
+  resolved Issue 0601: {\bf mbs.postNewtonUserFunction}
+(extension)
+  \bi
+  \item {description: add function PostNewton(...) to be called after step update (Newton or explicit step)}
+  \item   date resolved: {\bf 2021-03-18 21:33},
+date raised: 2021-03-18   \ei
+  \item {\bf Version 1.0.155}: \vspace{-6pt} 
+  resolved Issue 0600: {\bf ImplicitSecondOrderSolver}
+(cleanup)
+  \bi
+  \item {description: remove old solver}
+  \item   date resolved: {\bf 2021-03-18 21:33},
+date raised: 2021-03-18   \ei
+  \item {\bf Version 1.0.154}: \vspace{-6pt} 
+  resolved Issue 0598: {\bf rigidBodyUtilities}
+(extension)
+  \bi
+  \item {description: add G matrices for Rxyz (Tait-Bryan angles) and also time derivatives of G}
+  \item   date resolved: {\bf 2021-03-18 17:05},
+date raised: 2021-03-18   \ei
+  \item {\bf Version 1.0.153}: \vspace{-6pt} 
+  resolved Issue 0594: {\bf CMS rotations}
+(extension)
+  \bi
+  \item {description: test and extend CMS / ObjectFFRFreducedOrder object for other rotation parameterizations (Tait-Bryan and rotation vector/Lie group) such that they work with explicit codes}
+  \item   date resolved: {\bf 2021-03-18 17:04},
+date raised: 2021-02-24   \ei
+  \item {\bf Version 1.0.152}: \vspace{-6pt} 
+  resolved Issue 0597: {\bf ObjectRigidBody}
+(description)
+  \bi
+  \item {description: fix description of equations of motion (missing m) and add steps in derivation}
+  \item   date resolved: {\bf 2021-03-18 08:22},
+date raised: 2021-03-18   \ei
   \item {\bf Version 1.0.151}: \vspace{-6pt} 
   resolved Issue 0283: {\bf cylinder with hole}
 (new feature)
@@ -1096,10 +1453,10 @@ date raised: 2020-07-20   \ei
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 0575}:  {\bf new genAlpha solver}
+  \item open {\bf BUG 0631}:  {\bf ObjectFFRFreducedOrder}
   \bi
-  \item {description: new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top}
-  \item date raised: 2021-02-08   \ei
+  \item {description: freefree eigenmodes and Hurty-Craig-Bampton modes do not converge to same results}
+  \item date raised: 2021-04-23   \ei
   \item open {\bf BUG 0456}:  {\bf ObjectFFRF bug with GenericJoint}
   \bi
   \item {description: raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity\_qt not implemented; cannot compute jacobian for orientation}
@@ -1108,9 +1465,5 @@ date raised: 2020-07-20   \ei
   \bi
   \item {description: ObjectGenericODE2 crashes without message when initialized with invalid node numbers}
   \item date raised: 2020-09-09   \ei
-  \item open {\bf BUG 0423}:  {\bf fix MarkerSuperElementRigidBody}
-  \bi
-  \item {description: fix velocity level for MarkerSuperElementRigidBody (check constraint equations)}
-  \item date raised: 2020-06-09   \ei
 \ei
 %end of file

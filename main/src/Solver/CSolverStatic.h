@@ -44,7 +44,10 @@ public:
 	//! get solver name - needed for output file header and visualization window
 	virtual const STDstring GetSolverName() const override { return "nonlinear static solver"; }
 
-	virtual Real ComputeLoadFactor(const SimulationSettings& simulationSettings) const override { return (it.currentTime - it.startTime) / simulationSettings.staticSolver.loadStepDuration; }
+	virtual Real ComputeLoadFactor(const SimulationSettings& simulationSettings) const override 
+	{ 
+		return (it.currentTime - it.startTime) / simulationSettings.staticSolver.loadStepDuration; 
+	}
 
 	//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
 	virtual bool ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings, 
@@ -54,7 +57,7 @@ public:
 	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
 		Real suggestedStepSize = -1.) override
 	{
-		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, 2.*it.currentStepSize);
+		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, simulationSettings.staticSolver.adaptiveStepIncrease*it.currentStepSize);
 	}
 
 	//! update currentTime (and load factor); MUST be overwritten in special solver class

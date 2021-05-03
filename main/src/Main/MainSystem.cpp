@@ -62,6 +62,13 @@ void MainSystem::PySetPreStepUserFunction(const py::object& value)
 	cSystem->GetPythonUserFunctions().mainSystem = this;
 }
 
+//! set user function to be called immediately after Newton (after an update of the solution has been computed, but before discontinuous iteration)
+void MainSystem::PySetPostNewtonUserFunction(const py::object& value)
+{
+	cSystem->GetPythonUserFunctions().postNewtonFunction = py::cast<std::function <StdVector2D(const MainSystem& mainSystem, Real t)>>(value);
+	cSystem->GetPythonUserFunctions().mainSystem = this;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  VISUALIZATION FUNCTIONS
@@ -266,7 +273,7 @@ Index MainSystem::PyGetNodeODE2Index(const py::object& itemIndex) const
 	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
-		if (mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup() == CNodeGroup::ODE2variables)
+		if (EXUstd::IsOfType(mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup(), CNodeGroup::ODE2variables)) //CNodeRigidBodyEP also has AEvariables
 		{
 			return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetGlobalODE2CoordinateIndex();
 		}

@@ -314,7 +314,7 @@ const lest::test objectContainer_specific_test[] =
     CASE("ObjectContainer<Real>: Initializer list, copy constructor, operator[], operator=, operator==")
     {
         ObjectContainer<Real> areal({ 1, 2, 3.3 });
-        ObjectContainer<Vector> avector({ {1, 2}, {3, 4, 5.5} });
+        ObjectContainer<Vector> avector({ {1., 2.}, {3., 4., 5.5} });
 
         EXPECT(areal.NumberOfItems() == 3);
         EXPECT(ToString(areal) == "1\n2\n3.3\n");
@@ -387,9 +387,9 @@ const lest::test objectContainer_specific_test[] =
     {
         ObjectContainer<Vector> avector;
 
-        Vector v1({ 1,2,3 });
-        Vector v2({ 2.5,3,4 });
-        Vector v3({ 4,6,8 });
+        Vector v1({ 1.,2.,3. });
+        Vector v2({ 2.5,3.,4. });
+        Vector v3({ 4.,6.,8. });
 
         avector.Append(v1);
         avector.Append(v2);
@@ -410,7 +410,7 @@ const lest::test objectContainer_specific_test[] =
         avector.SetMaxNumberOfItems(49);
         for (int i=0; i < 49; i++)
         {
-            avector.Append(Vector({ 1,2,3,4 }));
+            avector.Append(Vector({ 1.,2.,3.,4. }));
         }
         EXPECT(avector.NumberOfItems() == 49);
         EXPECT(avector.MaxNumberOfItems() == 49);
@@ -425,8 +425,8 @@ const lest::test objectContainer_specific_test[] =
     CASE("ObjectContainer<Vector>: initializer list, insert, remove")
     {
         ObjectContainer<Vector> avector({ { 1., 2. },{ 3.3 }, {4., 5.} });
-        Vector v1({ 1 });
-        Vector v2({ 2.2, 3 });
+        Vector v1({ 1. }); //'1.' needed, with {1} it would call Vector(1) !
+        Vector v2({ 2.2, 3. });
 
         avector.Insert(0, v1);
         avector.Insert(2, v2);
@@ -440,10 +440,10 @@ const lest::test objectContainer_specific_test[] =
     },
     CASE("ObjectContainer<Vector>: initializer list, GetIndexOfItemPointer")
     {
-        ObjectContainer<Vector> avector({ { 1, 2 },{ 3, 2.2 },{ 4, 5 } });
-        Vector v1({ 3, 2.2 });
-        Vector v2({ 4, 5 });
-        Vector v3({ 1, 2 });
+        ObjectContainer<Vector> avector({ { 1., 2. },{ 3., 2.2 },{ 4., 5. } });
+        Vector v1({ 3., 2.2 });
+        Vector v2({ 4., 5. });
+        Vector v3({ 1., 2. });
 
         EXPECT(avector.GetIndexOfItem(v1) == 1); //operator== must have equal numberOfItems in Vector; otherwise: assertion
         EXPECT(avector.GetIndexOfItem(v2) == 2);

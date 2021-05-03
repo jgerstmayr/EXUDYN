@@ -50,14 +50,22 @@ const lest::test matrix_specific_test[] =
         EXPECT(x.NumberOfColumns() == 2);
         EXPECT(x.GetDataPointer() != nullptr);
     },
-    CASE("Matrix: constructor with rows/columns/value")
-    {
-        Matrix x(2,2, 3.3);
-        EXPECT(x.NumberOfRows() == 2);
-        EXPECT(x.NumberOfColumns() == 2);
-        EXPECT(ToString(x) == "[3.3 3.3; 3.3 3.3]");
-    },
-    CASE("Matrix: constructor with initializer list")
+	CASE("Matrix: constructor with rows/columns and SetAll")
+	{
+		Matrix x(2,2);
+		x.SetAll(3.3);
+		EXPECT(x.NumberOfRows() == 2);
+		EXPECT(x.NumberOfColumns() == 2);
+		EXPECT(ToString(x) == "[3.3 3.3; 3.3 3.3]");
+	},
+	CASE("Matrix: constructor with rows/columns/0")
+	{
+		Matrix x(2,2, 0);
+		EXPECT(x.NumberOfRows() == 2);
+		EXPECT(x.NumberOfColumns() == 2);
+		EXPECT(ToString(x) == "[0 0; 0 0]");
+	},
+	CASE("Matrix: constructor with initializer list")
     {
         Matrix x(2,2,{1.1,2.2,3.3,4.4});
         EXPECT(x.NumberOfRows() == 2);
@@ -311,7 +319,7 @@ const lest::test matrix_specific_test[] =
     CASE("Matrix: operator*(Matrix, Vector); MultMatrixVector")
     {
         Matrix m(2, 3, { 1.1,2.2,3.3,4.4,5.5,6.6 });
-        Vector v({3,2,2});
+        Vector v({3.,2.,2.});
         Vector y;
         Vector z(5); //z has a size different from result of m * v
         Vector w(2);

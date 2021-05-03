@@ -7,12 +7,39 @@
 
 import exudyn #for exudyn.InvalidIndex() needed in RigidBodySpringDamper
 
+#helper function diagonal matrices, not needing numpy
 def IIDiagMatrix(rowsColumns, value):
     m = []
     for i in range(rowsColumns):
         m += [rowsColumns*[0]]
         m[i][i] = value
     return m
+
+#helper function to check valid range
+def CheckForValidUInt(value, parameterName, objectName):
+    if value < 0:
+        raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " may not be negative, but received "+str(value))
+        return 0
+    return value
+#helper function to check valid range
+def CheckForValidPInt(value, parameterName, objectName):
+    if value <= 0:
+        raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " must be positive (> 0), but received "+str(value))
+        return 1 #this position is usually not reached
+    return value
+#helper function to check valid range
+def CheckForValidUReal(value, parameterName, objectName):
+    if value < 0:
+        raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " may not be negative, but received "+str(value))
+        return 0.
+    return value
+#helper function to check valid range
+def CheckForValidPReal(value, parameterName, objectName):
+    if value <= 0:
+        raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " must be positive (> 0), but received "+str(value))
+        return 1. #this position is usually not reached
+    return value
+
 
 #+++++++++++++++++++++++++++++++
 #NODE
@@ -283,7 +310,7 @@ class NodeGenericODE2:
         self.referenceCoordinates = referenceCoordinates
         self.initialCoordinates = initialCoordinates
         self.initialCoordinates_t = initialCoordinates_t
-        self.numberOfODE2Coordinates = numberOfODE2Coordinates
+        self.numberOfODE2Coordinates = CheckForValidPInt(numberOfODE2Coordinates,"numberOfODE2Coordinates","NodeGenericODE2")
         self.visualization = visualization
 
     def __iter__(self):
@@ -307,7 +334,7 @@ class NodeGenericODE1:
         self.name = name
         self.referenceCoordinates = referenceCoordinates
         self.initialCoordinates = initialCoordinates
-        self.numberOfODE1Coordinates = numberOfODE1Coordinates
+        self.numberOfODE1Coordinates = CheckForValidPInt(numberOfODE1Coordinates,"numberOfODE1Coordinates","NodeGenericODE1")
         self.visualization = visualization
 
     def __iter__(self):
@@ -329,7 +356,7 @@ class NodeGenericData:
     def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = {'show': False}):
         self.name = name
         self.initialCoordinates = initialCoordinates
-        self.numberOfDataCoordinates = numberOfDataCoordinates
+        self.numberOfDataCoordinates = CheckForValidUInt(numberOfDataCoordinates,"numberOfDataCoordinates","NodeGenericData")
         self.visualization = visualization
 
     def __iter__(self):
@@ -410,7 +437,7 @@ class VObjectMassPoint:
 class ObjectMassPoint:
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectMassPoint")
         self.nodeNumber = nodeNumber
         self.visualization = visualization
 
@@ -438,7 +465,7 @@ class VObjectMassPoint2D:
 class ObjectMassPoint2D:
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectMassPoint2D")
         self.nodeNumber = nodeNumber
         self.visualization = visualization
 
@@ -466,7 +493,7 @@ class VObjectMass1D:
 class ObjectMass1D:
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectMass1D")
         self.nodeNumber = nodeNumber
         self.referencePosition = referencePosition
         self.referenceRotation = referenceRotation
@@ -498,7 +525,7 @@ class VObjectRotationalMass1D:
 class ObjectRotationalMass1D:
     def __init__(self, name = '', physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsInertia = physicsInertia
+        self.physicsInertia = CheckForValidUReal(physicsInertia,"physicsInertia","ObjectRotationalMass1D")
         self.nodeNumber = nodeNumber
         self.referencePosition = referencePosition
         self.referenceRotation = referenceRotation
@@ -532,7 +559,7 @@ class VObjectRigidBody:
 class ObjectRigidBody:
     def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectRigidBody")
         self.physicsInertia = physicsInertia
         self.physicsCenterOfMass = physicsCenterOfMass
         self.nodeNumber = nodeNumber
@@ -567,8 +594,8 @@ class VObjectRigidBody2D:
 class ObjectRigidBody2D:
     def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
-        self.physicsInertia = physicsInertia
+        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectRigidBody2D")
+        self.physicsInertia = CheckForValidUReal(physicsInertia,"physicsInertia","ObjectRigidBody2D")
         self.nodeNumber = nodeNumber
         self.visualization = visualization
 
@@ -712,7 +739,7 @@ class VObjectFFRFreducedOrder:
         yield 'showNodes', self.showNodes
 
 class ObjectFFRFreducedOrder:
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], physicsCenterOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrixReduced = massMatrixReduced
@@ -725,6 +752,17 @@ class ObjectFFRFreducedOrder:
         self.outputVariableModeBasis = outputVariableModeBasis
         self.outputVariableTypeModeBasis = outputVariableTypeModeBasis
         self.referencePositions = referencePositions
+        self.objectIsInitialized = objectIsInitialized
+        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectFFRFreducedOrder")
+        self.physicsInertia = physicsInertia
+        self.physicsCenterOfMass = physicsCenterOfMass
+        self.mPsiTildePsi = mPsiTildePsi
+        self.mPsiTildePsiTilde = mPsiTildePsiTilde
+        self.mPhitTPsi = mPhitTPsi
+        self.mPhitTPsiTilde = mPhitTPsiTilde
+        self.mXRefTildePsi = mXRefTildePsi
+        self.mXRefTildePsiTilde = mXRefTildePsiTilde
+        self.physicsCenterOfMassTilde = physicsCenterOfMassTilde
         self.visualization = visualization
 
     def __iter__(self):
@@ -741,6 +779,17 @@ class ObjectFFRFreducedOrder:
         yield 'outputVariableModeBasis', self.outputVariableModeBasis
         yield 'outputVariableTypeModeBasis', self.outputVariableTypeModeBasis
         yield 'referencePositions', self.referencePositions
+        yield 'objectIsInitialized', self.objectIsInitialized
+        yield 'physicsMass', self.physicsMass
+        yield 'physicsInertia', self.physicsInertia
+        yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        yield 'mPsiTildePsi', self.mPsiTildePsi
+        yield 'mPsiTildePsiTilde', self.mPsiTildePsiTilde
+        yield 'mPhitTPsi', self.mPhitTPsi
+        yield 'mPhitTPsiTilde', self.mPhitTPsiTilde
+        yield 'mXRefTildePsi', self.mXRefTildePsi
+        yield 'mXRefTildePsiTilde', self.mXRefTildePsiTilde
+        yield 'physicsCenterOfMassTilde', self.physicsCenterOfMassTilde
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
@@ -764,12 +813,12 @@ class VObjectANCFCable2D:
 class ObjectANCFCable2D:
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
-        self.physicsLength = physicsLength
-        self.physicsMassPerLength = physicsMassPerLength
-        self.physicsBendingStiffness = physicsBendingStiffness
-        self.physicsAxialStiffness = physicsAxialStiffness
-        self.physicsBendingDamping = physicsBendingDamping
-        self.physicsAxialDamping = physicsAxialDamping
+        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectANCFCable2D")
+        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectANCFCable2D")
+        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectANCFCable2D")
+        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectANCFCable2D")
+        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectANCFCable2D")
+        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectANCFCable2D")
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.nodeNumbers = nodeNumbers
@@ -811,13 +860,13 @@ class VObjectALEANCFCable2D:
 class ObjectALEANCFCable2D:
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
-        self.physicsLength = physicsLength
-        self.physicsMassPerLength = physicsMassPerLength
-        self.physicsMovingMassFactor = physicsMovingMassFactor
-        self.physicsBendingStiffness = physicsBendingStiffness
-        self.physicsAxialStiffness = physicsAxialStiffness
-        self.physicsBendingDamping = physicsBendingDamping
-        self.physicsAxialDamping = physicsAxialDamping
+        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectALEANCFCable2D")
+        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectALEANCFCable2D")
+        self.physicsMovingMassFactor = CheckForValidUReal(physicsMovingMassFactor,"physicsMovingMassFactor","ObjectALEANCFCable2D")
+        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectALEANCFCable2D")
+        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectALEANCFCable2D")
+        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectALEANCFCable2D")
+        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectALEANCFCable2D")
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.physicsUseCouplingTerms = physicsUseCouplingTerms
@@ -848,6 +897,47 @@ class ObjectALEANCFCable2D:
 ALECable2D = ObjectALEANCFCable2D
 VALECable2D = VObjectALEANCFCable2D
 
+class VObjectBeamGeometricallyExact2D:
+    def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawHeight = drawHeight
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawHeight', self.drawHeight
+        yield 'color', self.color
+
+class ObjectBeamGeometricallyExact2D:
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., physicsMassPerLength = 0., physicsCrossSectionInertia = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsShearStiffness = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact2D")
+        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectBeamGeometricallyExact2D")
+        self.physicsCrossSectionInertia = CheckForValidUReal(physicsCrossSectionInertia,"physicsCrossSectionInertia","ObjectBeamGeometricallyExact2D")
+        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectBeamGeometricallyExact2D")
+        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectBeamGeometricallyExact2D")
+        self.physicsShearStiffness = CheckForValidUReal(physicsShearStiffness,"physicsShearStiffness","ObjectBeamGeometricallyExact2D")
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'BeamGeometricallyExact2D'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'physicsLength', self.physicsLength
+        yield 'physicsMassPerLength', self.physicsMassPerLength
+        yield 'physicsCrossSectionInertia', self.physicsCrossSectionInertia
+        yield 'physicsBendingStiffness', self.physicsBendingStiffness
+        yield 'physicsAxialStiffness', self.physicsAxialStiffness
+        yield 'physicsShearStiffness', self.physicsShearStiffness
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+Beam2D = ObjectBeamGeometricallyExact2D
+VBeam2D = VObjectBeamGeometricallyExact2D
+
 class VObjectConnectorSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -863,9 +953,9 @@ class ObjectConnectorSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
-        self.referenceLength = referenceLength
-        self.stiffness = stiffness
-        self.damping = damping
+        self.referenceLength = CheckForValidPReal(referenceLength,"referenceLength","ObjectConnectorSpringDamper")
+        self.stiffness = CheckForValidUReal(stiffness,"stiffness","ObjectConnectorSpringDamper")
+        self.damping = CheckForValidUReal(damping,"damping","ObjectConnectorSpringDamper")
         self.force = force
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
@@ -1033,7 +1123,7 @@ class ObjectConnectorDistance:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
-        self.distance = distance
+        self.distance = CheckForValidUReal(distance,"distance","ObjectConnectorDistance")
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -1193,8 +1283,8 @@ class ObjectContactCoordinate:
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
-        self.contactStiffness = contactStiffness
-        self.contactDamping = contactDamping
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactCoordinate")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactCoordinate")
         self.offset = offset
         self.activeConnector = activeConnector
         self.visualization = visualization
@@ -1229,9 +1319,9 @@ class ObjectContactCircleCable2D:
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
         self.numberOfContactSegments = numberOfContactSegments
-        self.contactStiffness = contactStiffness
-        self.contactDamping = contactDamping
-        self.circleRadius = circleRadius
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactCircleCable2D")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactCircleCable2D")
+        self.circleRadius = CheckForValidUReal(circleRadius,"circleRadius","ObjectContactCircleCable2D")
         self.offset = offset
         self.activeConnector = activeConnector
         self.visualization = visualization
@@ -1267,13 +1357,13 @@ class ObjectContactFrictionCircleCable2D:
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
-        self.numberOfContactSegments = numberOfContactSegments
-        self.contactStiffness = contactStiffness
-        self.contactDamping = contactDamping
-        self.frictionVelocityPenalty = frictionVelocityPenalty
-        self.frictionStiffness = frictionStiffness
-        self.frictionCoefficient = frictionCoefficient
-        self.circleRadius = circleRadius
+        self.numberOfContactSegments = CheckForValidPInt(numberOfContactSegments,"numberOfContactSegments","ObjectContactFrictionCircleCable2D")
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactFrictionCircleCable2D")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactFrictionCircleCable2D")
+        self.frictionVelocityPenalty = CheckForValidUReal(frictionVelocityPenalty,"frictionVelocityPenalty","ObjectContactFrictionCircleCable2D")
+        self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactFrictionCircleCable2D")
+        self.frictionCoefficient = CheckForValidUReal(frictionCoefficient,"frictionCoefficient","ObjectContactFrictionCircleCable2D")
+        self.circleRadius = CheckForValidUReal(circleRadius,"circleRadius","ObjectContactFrictionCircleCable2D")
         self.offset = offset
         self.activeConnector = activeConnector
         self.visualization = visualization
@@ -1392,7 +1482,7 @@ class ObjectJointRollingDisc:
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
         self.activeConnector = activeConnector
-        self.discRadius = discRadius
+        self.discRadius = CheckForValidPReal(discRadius,"discRadius","ObjectJointRollingDisc")
         self.planeNormal = planeNormal
         self.visualization = visualization
 
@@ -1674,11 +1764,53 @@ class MarkerNodeCoordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.coordinate = coordinate
+        self.coordinate = CheckForValidUInt(coordinate,"coordinate","MarkerNodeCoordinate")
         self.visualization = visualization
 
     def __iter__(self):
         yield 'markerType', 'NodeCoordinate'
+        yield 'name', self.name
+        yield 'nodeNumber', self.nodeNumber
+        yield 'coordinate', self.coordinate
+        yield 'Vshow', dict(self.visualization)["show"]
+
+class VMarkerNodeCoordinate:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class MarkerNodeCoordinate:
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
+        self.name = name
+        self.nodeNumber = nodeNumber
+        self.coordinate = CheckForValidUInt(coordinate,"coordinate","MarkerNodeCoordinate")
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'NodeCoordinate'
+        yield 'name', self.name
+        yield 'nodeNumber', self.nodeNumber
+        yield 'coordinate', self.coordinate
+        yield 'Vshow', dict(self.visualization)["show"]
+
+class VMarkerNodeODE1Coordinate:
+    def __init__(self, show = False):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+class MarkerNodeODE1Coordinate:
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': False}):
+        self.name = name
+        self.nodeNumber = nodeNumber
+        self.coordinate = CheckForValidUInt(coordinate,"coordinate","MarkerNodeODE1Coordinate")
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'NodeODE1Coordinate'
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
         yield 'coordinate', self.coordinate
@@ -1695,7 +1827,7 @@ class MarkerNodeRotationCoordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.rotationCoordinate = rotationCoordinate
+        self.rotationCoordinate = CheckForValidUInt(rotationCoordinate,"rotationCoordinate","MarkerNodeRotationCoordinate")
         self.visualization = visualization
 
     def __iter__(self):
@@ -1741,21 +1873,23 @@ class VMarkerSuperElementRigid:
         yield 'showMarkerNodes', self.showMarkerNodes
 
 class MarkerSuperElementRigid:
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.referencePosition = referencePosition
+        self.offset = offset
         self.meshNodeNumbers = meshNodeNumbers
         self.weightingFactors = weightingFactors
+        self.useAlternativeApproach = useAlternativeApproach
         self.visualization = visualization
 
     def __iter__(self):
         yield 'markerType', 'SuperElementRigid'
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
-        yield 'referencePosition', self.referencePosition
+        yield 'offset', self.offset
         yield 'meshNodeNumbers', self.meshNodeNumbers
         yield 'weightingFactors', self.weightingFactors
+        yield 'useAlternativeApproach', self.useAlternativeApproach
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 
@@ -1789,7 +1923,7 @@ class MarkerBodyCable2DShape:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), numberOfSegments = 3, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.numberOfSegments = numberOfSegments
+        self.numberOfSegments = CheckForValidPInt(numberOfSegments,"numberOfSegments","MarkerBodyCable2DShape")
         self.visualization = visualization
 
     def __iter__(self):
@@ -2015,10 +2149,10 @@ class VSensorSuperElement:
         yield 'show', self.show
 
 class SensorSuperElement:
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = -1, writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.meshNodeNumber = meshNodeNumber
+        self.meshNodeNumber = CheckForValidUInt(meshNodeNumber,"meshNodeNumber","SensorSuperElement")
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.outputVariableType = outputVariableType

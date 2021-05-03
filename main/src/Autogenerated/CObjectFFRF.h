@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-03-01  11:14:23 (last modfied)
+* @date         2021-03-30  13:31:15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -83,10 +83,10 @@ class CObjectFFRF: public CObjectSuperElement // AUTO:
 protected: // AUTO: 
     CObjectFFRFParameters parameters; //! AUTO: contains all parameters for CObjectFFRF
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
-    bool objectIsInitialized;                     //!< AUTO: flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed
-    Real physicsMass;                             //!< AUTO: total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\Mm\f$
-    Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
+    bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble()
+    Real physicsMass;                             //!< AUTO: total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
+    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Matrix PHItTM;                                //!< AUTO: projector matrix; may be removed in future
     Vector referencePositions;                    //!< AUTO: vector containing the reference positions of all flexible nodes
     mutable Vector tempVector;                    //!< AUTO: temporary vector
@@ -132,32 +132,32 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     ArrayIndex& GetCoordinateIndexPerNode() { return coordinateIndexPerNode; }
 
-    //! AUTO:  Write (Reference) access to:flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed
+    //! AUTO:  Write (Reference) access to:ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble()
     void SetObjectIsInitialized(const bool& value) { objectIsInitialized = value; }
-    //! AUTO:  Read (Reference) access to:flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed
+    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble()
     const bool& GetObjectIsInitialized() const { return objectIsInitialized; }
-    //! AUTO:  Read (Reference) access to:flag used to correctly initialize all FFRF matrices; as soon as this flag is set false, FFRF matrices and terms are recomputed
+    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble()
     bool& GetObjectIsInitialized() { return objectIsInitialized; }
 
-    //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\Mm\f$
+    //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     void SetPhysicsMass(const Real& value) { physicsMass = value; }
-    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\Mm\f$
+    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     const Real& GetPhysicsMass() const { return physicsMass; }
-    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\Mm\f$
+    //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Real& GetPhysicsMass() { return physicsMass; }
 
-    //! AUTO:  Write (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    //! AUTO:  Write (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
     void SetPhysicsInertia(const Matrix3D& value) { physicsInertia = value; }
-    //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
     const Matrix3D& GetPhysicsInertia() const { return physicsInertia; }
-    //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\Mm_{ff}\f$
+    //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
     Matrix3D& GetPhysicsInertia() { return physicsInertia; }
 
-    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
+    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     void SetPhysicsCenterOfMass(const Vector3D& value) { physicsCenterOfMass = value; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     const Vector3D& GetPhysicsCenterOfMass() const { return physicsCenterOfMass; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\Mm\f$
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Vector3D& GetPhysicsCenterOfMass() { return physicsCenterOfMass; }
 
     //! AUTO:  Write (Reference) access to:\f$\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\f$projector matrix; may be removed in future

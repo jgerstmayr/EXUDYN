@@ -135,6 +135,43 @@ public: //
 	}
 
 	//+++++++++++++++++++++++++++++++++++
+	//! pybind read access to ODE2Size
+	Index PyODE2Size(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		return GetCSystemState(configurationType)->GetODE2Coords().NumberOfItems();
+	}
+
+	//+++++++++++++++++++++++++++++++++++
+	//! pybind read access to ODE1Size
+	Index PyODE1Size(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		return GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems();
+	}
+
+	//+++++++++++++++++++++++++++++++++++
+	//! pybind read access to AESize
+	Index PyAEsize(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		return GetCSystemState(configurationType)->GetAECoords().NumberOfItems();
+	}
+
+	//+++++++++++++++++++++++++++++++++++
+	//! pybind read access to DataSize
+	Index PyDataSize(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		return GetCSystemState(configurationType)->GetDataCoords().NumberOfItems();
+	}
+
+	//+++++++++++++++++++++++++++++++++++
+	//! pybind read access to SystemSize (ODE2+ODE1+AE)
+	Index PySystemSize(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		return GetCSystemState(configurationType)->GetODE2Coords().NumberOfItems() +
+			GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems() +
+			GetCSystemState(configurationType)->GetAECoords().NumberOfItems();
+	}
+
+	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient!
 	//! format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]
 	py::list PyGetSystemState(ConfigurationType configurationType = ConfigurationType::Current) const
@@ -201,7 +238,7 @@ public: //
 	//! pybind write access to ODE2 coords
 	void SetODE2Coords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetODE2Coords().NumberOfItems(),"SystemData::SetODE2Coords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords().NumberOfItems(),"SystemData::SetODE2Coords: incompatible size of vectors");
 		GetCSystemState(configurationType)->SetODE2Coords(v);
 	}
 
@@ -216,7 +253,7 @@ public: //
 	//! pybind write access to ODE2_t coords
 	void SetODE2Coords_t(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetODE2Coords_t().NumberOfItems(), "SystemData::SetODE2Coords_t: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords_t().NumberOfItems(), "SystemData::SetODE2Coords_t: incompatible size of vectors");
 		GetCSystemState(configurationType)->SetODE2Coords_t(v);
 	}
 
@@ -231,7 +268,7 @@ public: //
 	//! pybind write access to ODE2_t coords
 	void SetODE2Coords_tt(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetODE2Coords_tt().NumberOfItems(), "SystemData::SetODE2Coords_tt: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE2Coords_tt().NumberOfItems(), "SystemData::SetODE2Coords_tt: incompatible size of vectors");
 		GetCSystemState(configurationType)->SetODE2Coords_tt(v);
 	}
 
@@ -246,7 +283,7 @@ public: //
 	//! pybind write access to ODE1 coords
 	void SetODE1Coords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords: incompatible size of vectors");
 		GetCSystemState(configurationType)->SetODE1Coords(v);
 	}
 
@@ -261,7 +298,7 @@ public: //
 	//! pybind write access to AE coords
 	void SetAECoords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetAECoords().NumberOfItems(), "SystemData::SetAECoords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetAECoords().NumberOfItems(), "SystemData::SetAECoords: incompatible size of vectors");
 		GetCSystemState(configurationType)->SetAECoords(v);
 	}
 	//+++++++++++++++++++++++++++++++++++
@@ -275,7 +312,7 @@ public: //
 	//! pybind write access to AE coords
 	void SetDataCoords(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
 	{
-		CHECKandTHROW(v.size() == GetCSystemState(configurationType)->GetDataCoords().NumberOfItems(), "SystemData::SetDataCoords: incompatible size of vectors");
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetDataCoords().NumberOfItems(), "SystemData::SetDataCoords: incompatible size of vectors");
 		GetCSystemState(configurationType)->SetDataCoords(v);
 	}
 

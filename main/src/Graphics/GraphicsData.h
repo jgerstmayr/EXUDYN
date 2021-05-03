@@ -25,6 +25,7 @@
 #include "Linalg/ResizableVector.h"		//includes Vector.h
 #include "Linalg/SlimVector.h"			//includes Vector.h
 #include "Utilities/ResizableArray.h"	//includes SlimArray.h and BasicFunctions.h
+#include "Main/OutputVariable.h"		//for ItemType conversion, used in GlfwClient and others
 
 #include <array>						//std::array
 
@@ -34,6 +35,7 @@ typedef SlimArray<float, 16> hMatrix4f; //introduce this typedef to enable switc
 class GLLine
 {
 public:
+	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	Float3 point1;			//!< 3D point coordinates
 	Float3 point2;			//!< 3D point coordinates
 
@@ -45,6 +47,7 @@ public:
 class GLPoint
 {
 public:
+	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	Float3 point;			//!< 3D point coordinates
 	Float4 color;			//!< RGBA color in range 0.f - 1.f; A ... alpha
 };
@@ -53,6 +56,7 @@ public:
 class GLCircleXY
 {
 public:
+	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	Float3 point;			//!< 3D point coordinates
 	Float4 color;			//!< RGBA color in range 0.f - 1.f; A ... alpha
 	float radius;			//!< circle radius
@@ -63,6 +67,7 @@ public:
 class GLText
 {
 public:
+	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	Float3 point;			//!< 3D point coordinates
 	Float4 color;			//!< RGBA color in range 0.f - 1.f; A ... alpha
 	float size;				//!< size of text; if size==0 --> use default text size
@@ -83,11 +88,11 @@ public:
 class GLTriangle
 {
 public:
+	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	std::array< Float3, 3> points;	//!< 3D point coordinates
 	std::array< Float3, 3> normals;	//!< 3D normal coordinates, pointing outwards; [0,0,0] if unused
 	std::array< Float4, 3> colors;	//!< RGBA color in range 0.f - 1.f; A ... alpha
 };
-
 
 //!interface for system graphics data
 // data is read by glfwClient (other thread) and Visualization
@@ -120,12 +125,15 @@ public:
 	//! Aquire lock for data, such that computation / visualization thread does not access data at the same time
 	void LockData() 
 	{ 
-		while (lock.test_and_set(std::memory_order_acquire)) { ; }
+		EXUstd::WaitAndLockSemaphore(lock);
 		//now data is locked until it is cleared!!!
 		//hereafter, lock must be cleared, otherwise, a new lock is not possible
 	}
 	//! Release the lock of a previous LockData()
-	void ClearLock() { lock.clear(std::memory_order_release); }
+	void ClearLock() 
+	{ 
+		EXUstd::ReleaseSemaphore(lock);
+	}
 
 	virtual ~GraphicsData()
 	{
@@ -161,9 +169,11 @@ public:
 		ClearLock();
 	}
 
-	Index AddLine(const Vector3D& point1, const Vector3D& point2, const Float4& color1, const Float4& color2)
+	Index AddLine(const Vector3D& point1, const Vector3D& point2, const Float4& color1, const Float4& color2, 
+		Index index, ItemType itemType)
 	{
 		GLLine line;
+		line.itemID = Index2ItemID(index, itemType);
 		line.point1 = Float3({ (float)point1[0],(float)point1[1],(float)point1[2] });
 		line.point2 = Float3({ (float)point2[0],(float)point2[1],(float)point2[2] });
 		line.color1 = color1;
@@ -171,9 +181,10 @@ public:
 		return glLines.Append(line);
 	}
 
-	Index AddPoint(const Vector3D& point, const Float4& color)
+	Index AddPoint(const Vector3D& point, const Float4& color, Index index, ItemType itemType)
 	{
 		GLPoint glPoint;
+		glPoint.itemID = Index2ItemID(index, itemType);
 		glPoint.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
 		glPoint.color = color;
 
@@ -181,9 +192,12 @@ public:
 	}
 
 	//! create circle i XY-plane with centerPoint, radius, color and numberOfSegments (0 ... use default value)
-	Index AddCircleXY(const Vector3D& centerPoint, float radius, const Float4& color, Index numberOfSegments = 0)
+	//Index AddCircleXY(const Vector3D& centerPoint, float radius, const Float4& color, Index numberOfSegments = 0, Index index, ItemType itemType)
+	Index AddCircleXY(const Vector3D& centerPoint, float radius, const Float4& color, Index numberOfSegments, 
+		Index index, ItemType itemType)
 	{
 		GLCircleXY circle;
+		circle.itemID = Index2ItemID(index, itemType);
 		circle.point = Float3({ (float)centerPoint[0],(float)centerPoint[1],(float)centerPoint[2] });
 		circle.radius = radius;
 		circle.color = color;
@@ -192,11 +206,13 @@ public:
 	}
 
 	//! create a triangle with local colors; normals not considered in this call!
-	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Float4, 3>& colors)
+	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Float4, 3>& colors, 
+		Index index, ItemType itemType)
 	{
 		GLTriangle trig;
+		trig.itemID = Index2ItemID(index, itemType);
 
-		for (Index i = 0; i < points.size(); i++)
+		for (Index i = 0; i < (Index)points.size(); i++)
 		{
 			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
 			trig.normals[i] = Float3({ 0.,0.,0. });
@@ -206,11 +222,13 @@ public:
 	}
 
 	//! create a triangle with local colors; normals not considered in this call!
-	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Vector3D, 3>& normals, const std::array<Float4, 3>& colors)
+	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Vector3D, 3>& normals, const std::array<Float4, 3>& colors, 
+		Index index, ItemType itemType)
 	{
 		GLTriangle trig;
+		trig.itemID = Index2ItemID(index, itemType);
 
-		for (Index i = 0; i < points.size(); i++)
+		for (Index i = 0; i < (Index)points.size(); i++)
 		{
 			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
 			trig.normals[i] = Float3({ (float)(normals[i][0]), (float)(normals[i][1]), (float)(normals[i][2]) });;
@@ -220,9 +238,13 @@ public:
 	}
 
 	//! create text from string with 3D-point, color and size (0 ... use default text size)
-	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f)
+	//Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f, Index index, ItemType itemType)
+	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
+		Index index, ItemType itemType)
 	{
 		GLText glText;
+		glText.itemID = Index2ItemID(index, itemType);
+
 		glText.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
 		glText.color = color;
 		glText.size = size;

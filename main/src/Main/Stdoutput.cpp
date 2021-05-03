@@ -124,7 +124,7 @@ std::atomic_flag outputBufferAtomicFlag;   //!< flag, which is used to lock acce
 //! used to print to python; string is temporary stored and written as soon as '\n' is detected
 int OutputBuffer::overflow(int c)
 {
-	outputBufferAtomicFlag.test_and_set(std::memory_order_acquire); //lock outputBuffer
+	EXUstd::WaitAndLockSemaphoreIgnore(outputBufferAtomicFlag); //lock outputBuffer
 	if ((char)c != '\n') {
 		buf.push_back((char)c);
 	}
@@ -151,7 +151,7 @@ int OutputBuffer::overflow(int c)
 		}
 	}
 	//py::print((char)c); //this would be much slower as each character needs to be processed with py::print
-	outputBufferAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+	EXUstd::ReleaseSemaphore(outputBufferAtomicFlag); //clear outputBuffer
 	return c;
 }
 
@@ -291,28 +291,29 @@ std::function<void(int, int, int)> keyPressUserFunction = 0; //!< must be set by
 //! put executable string into queue, which is called from main thread
 void PyQueueExecutableString(STDstring str) //call python function and execute string as python code
 {
-	queuedPythonExecutableCodeAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr
+	EXUstd::WaitAndLockSemaphore(queuedPythonExecutableCodeAtomicFlag); //lock queuedPythonExecutableCodeStr
 	queuedPythonExecutableCodeStr += '\n' + str; //for safety add a "\n", as the last command may include spaces, tabs, ... at the end
-	queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+	EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
 }
 
 //! put executable key codes into queue, which is called from main thread
 void PyQueueKeyPressed(int key, int action, int mods, std::function<void(int, int, int)> keyPressUserFunctionInit) //call python user function
 {
-	queuedRendererKeyListAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedRendererKeyListAtomicFlag
+	EXUstd::WaitAndLockSemaphore(queuedRendererKeyListAtomicFlag); //lock queuedRendererKeyListAtomicFlag
 	queuedRendererKeyList.Append(SlimArray<int,3>({key, action, mods}));
 	keyPressUserFunction = keyPressUserFunctionInit;
-	queuedRendererKeyListAtomicFlag.clear(std::memory_order_release); //clear queuedRendererKeyListAtomicFlag
+	EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedRendererKeyListAtomicFlag
 }
 
 void PyProcessExecuteQueue() //call python function and execute string as python code
 {
-	queuedPythonExecutableCodeAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr
+	EXUstd::WaitAndLockSemaphore(queuedPythonExecutableCodeAtomicFlag); //lock queuedPythonExecutableCodeStr
 	if (queuedPythonExecutableCodeStr.size())
 	{
 		STDstring execStr = queuedPythonExecutableCodeStr;
 		queuedPythonExecutableCodeStr.clear();
-		queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+		
+		EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
 		deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
 
 		try //catch exceptions; user may want to continue after a illegal python command 
@@ -343,19 +344,20 @@ void PyProcessExecuteQueue() //call python function and execute string as python
 	}
 	else
 	{
-		queuedPythonExecutableCodeAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+		EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//process pressed keys:
-	queuedRendererKeyListAtomicFlag.test_and_set(std::memory_order_acquire); //lock queuedPythonExecutableCodeStr
+	EXUstd::WaitAndLockSemaphore(queuedRendererKeyListAtomicFlag); //lock queuedPythonExecutableCodeStr
 	if (queuedRendererKeyList.NumberOfItems() != 0)
 	{
 		ResizableArray<SlimArray<int, 3>> keyList = queuedRendererKeyList; //immediately copy list for small interaction with graphics part
 		//std::cout << "keylist=" << keyList << "\n";
 		std::function<void(int, int, int)> localKeyPressUserFunction = keyPressUserFunction;
 		queuedRendererKeyList.SetNumberOfItems(0); //clear list
-		queuedRendererKeyListAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+		
+		EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
 		
 		deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
 
@@ -393,7 +395,7 @@ void PyProcessExecuteQueue() //call python function and execute string as python
 	}
 	else
 	{
-		queuedRendererKeyListAtomicFlag.clear(std::memory_order_release); //clear queuedPythonExecutableCodeStr
+		EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
 	}
 }
 

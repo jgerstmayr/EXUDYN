@@ -73,6 +73,7 @@ private:
 
 public:
 	std::atomic_flag accessState;		//!< flag, which is locked / released to access data
+	std::atomic_flag accessMessage;		//!< flag, which is locked / released to access messages
 	bool postProcessDataReady;			//!< signals, that data can be plotted (CSystem must be consistent, state is a current state of the CSystem, ...); usually same as CSystem::systemIsConsistent
 	uint64_t updateCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
 	uint64_t recordImageCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
@@ -105,33 +106,34 @@ public:
 	//! set a visualization message into openGL window
 	void SetSolverMessage(const std::string& solverMessageInit)
 	{
-		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+		//add separate semaphore for PostProcessData.accessMessages
+		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
 		solverMessage = solverMessageInit;
-		accessState.clear(std::memory_order_release); //clear PostProcessData
+		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
 	}
 
 	void SetSolutionMessage(const std::string& solutionMessageInit)
 	{
-		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
 		solutionMessage = solutionMessageInit;
-		accessState.clear(std::memory_order_release); //clear PostProcessData
+		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
 	}
 
 	//! get the current solver message string
 	std::string GetSolverMessage()
 	{
-		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
 		std::string message = solverMessage; 		//copy message
-		accessState.clear(std::memory_order_release); //clear PostProcessData
+		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
 		return message; //now safely return message
 	}
 
 	//! get the current solution message string
 	std::string GetSolutionMessage()
 	{
-		accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
 		std::string message = solutionMessage; 		//copy message
-		accessState.clear(std::memory_order_release); //clear PostProcessData
+		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
 		return message; //now safely return message
 	}
 
@@ -166,6 +168,7 @@ class PythonUserFunctions
 public:
 	MainSystem* mainSystem; //!< stored for call to preStepFunction
 	std::function<bool(const MainSystem& mainSystem, Real t)> preStepFunction;//!< function called prior to the computation of a single step
+	std::function<StdVector2D(const MainSystem& mainSystem, Real t)> postNewtonFunction;//!< function called after Newton method
 
 	PythonUserFunctions()
 	{
@@ -175,6 +178,7 @@ public:
 	{
 		mainSystem = 0;
 		preStepFunction = 0;
+		postNewtonFunction = 0;
 	}
 };
 
@@ -301,7 +305,10 @@ public:
 	void ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
-	void ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+	void ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+
+	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
+	void ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
 	//! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
@@ -316,7 +323,8 @@ public:
 	void ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result);
 
 	//! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity; returns an error (residual)
-	Real PostNewtonStep(TemporaryComputationData& temp);
+	//! recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason
+	Real PostNewtonStep(TemporaryComputationData& temp, Real& recommendedStepSize);
 
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
 	void PostDiscontinuousIterationStep();

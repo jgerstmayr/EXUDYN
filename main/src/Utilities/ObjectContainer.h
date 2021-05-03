@@ -72,7 +72,7 @@ public:
         CHECKandTHROWstring("ObjectContainer: generic constructor with initializer_list is forbidden");
         //! @todo erase assert in constructor ObjectContainer(std::initializer_list<T> listOfItems) 
 
-        data.EnlargeMaxNumberOfItemsTo(listOfItems.size());
+        data.EnlargeMaxNumberOfItemsTo((Index)listOfItems.size());
 
         Index cnt = 0;
         for (const T& item : listOfItems) {
@@ -380,7 +380,7 @@ inline Index ObjectContainer<Real>::Append(const Real& item)
 template<>
 inline ObjectContainer<Real>::ObjectContainer(std::initializer_list<Real> listOfItems) //pass by value as a standard in C++11
 {
-    data.EnlargeMaxNumberOfItemsTo(listOfItems.size());
+    data.EnlargeMaxNumberOfItemsTo((Index)listOfItems.size());
 
     Index cnt = 0;
     for (const Real& item : listOfItems) {
@@ -391,7 +391,7 @@ inline ObjectContainer<Real>::ObjectContainer(std::initializer_list<Real> listOf
 template<>
 inline ObjectContainer<Vector>::ObjectContainer(std::initializer_list<Vector> listOfItems) //pass by value as a standard in C++11
 {
-    data.EnlargeMaxNumberOfItemsTo(listOfItems.size());
+    data.EnlargeMaxNumberOfItemsTo((Index)listOfItems.size());
 
     Index cnt = 0;
     for (const Vector& item : listOfItems) {

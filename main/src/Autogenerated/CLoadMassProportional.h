@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  01:13:06 (last modfied)
+* @date         2021-03-20  12:03:09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -104,6 +104,12 @@ public: // AUTO:
     virtual bool IsVector() const override
     {
         return true;
+    }
+
+    //! AUTO:  tells system if loadFactor is used in static computation or if load is time dependent (assumed for any load user function)
+    virtual bool HasUserFunction() const override
+    {
+        return parameters.loadVectorUserFunction != 0;
     }
 
     //! AUTO:  read access for force vector

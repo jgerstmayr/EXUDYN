@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-22  13:14:19 (last modfied)
+* @date         2021-03-25  16:05:11 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1.
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The beam with length \f$L\f$=physicsLength uses a localPosition\f$\in [0, L]\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

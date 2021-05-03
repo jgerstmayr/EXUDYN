@@ -18,6 +18,7 @@ import time        #AnimateSolution
 import copy as copy #to be able to copy e.g. lists
 from math import sin, cos, pi
 
+import exudyn
 from exudyn.basicUtilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
@@ -225,8 +226,98 @@ def CheckInputIndexArray(indexArray, length=-1):
                              "' at position " + str(cnt)+", indexArray='"+str(indexArray)+"'")
         cnt+=1   
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#INSPECTION:
+        
+#**function: simple function to find object index i within the local or global scope of variables
+#**input: i, the integer object number and  globalVariables=globals()
+#**example:
+# FindObjectIndex(2, locals() )  #usually sufficient
+# FindObjectIndex(2, globals() ) #wider search
+def FindObjectIndex(i, globalVariables):
+    #run through all variables and check if an object index exists
+    found = False
+    for varname in globalVariables:
+        if type(globalVariables[varname]) == exudyn.ObjectIndex:
+            if int(globalVariables[varname]) == int(i):
+                print("variable '"+varname+"' links to object "+str(i) )
+                found = True
+    if not found:
+        print("no according variable found")
+
+#**function: simple function to find node index i within the local or global scope of variables
+#**input: i, the integer node number and  globalVariables=globals()
+#**example:
+# FindObjectIndex(2, locals() )  #usually sufficient
+# FindObjectIndex(2, globals() ) #wider search
+def FindNodeIndex(i, globalVariables):
+    #run through all variables and check if an object index exists
+    found = False
+    for varname in globalVariables:
+        if type(globalVariables[varname]) == exudyn.NodeIndex:
+            if int(globalVariables[varname]) == int(i):
+                print("variable '"+varname+"' links to node "+str(i) )
+                found = True
+    if not found:
+        print("no according variable found")
 
 
+#**function: function to hide all objects in mbs except for those listed in objectNumbers
+#**input: 
+#  mbs: mbs containing object
+#  objectNumbers: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
+#  showOthers: if True, then all other objects are shown again
+#**output: changes all colors in mbs, which is NOT reversible
+def ShowOnlyObjects(mbs, objectNumbers=[]):
+    if not isinstance(objectNumbers,list):
+        listObjects = [objectNumbers]
+    else:
+        listObjects = objectNumbers
+    isEmpty = len(listObjects) == 0
+    
+    for objectIndex in range(mbs.systemData.NumberOfObjects()):
+        oDict = mbs.GetObject(objectIndex)
+        flag = showOthers
+        if objectIndex in listObjects or isEmpty: #if no objects to show,  
+            flag = True
+        if 'Vshow' in oDict:
+            mbs.SetObjectParameter(objectIndex,'Vshow', flag)
+    mbs.SendRedrawSignal()
+
+#**function to highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
+def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumbers=True):
+    SC.visualizationSettings.interactive.highlightItemIndex = itemNumber
+    SC.visualizationSettings.interactive.highlightItemType = itemType
+    if showNumbers and itemType == exudyn.ItemType.Node:
+        SC.visualizationSettings.nodes.showNumbers = True
+        SC.visualizationSettings.nodes.show = True
+    else:
+        SC.visualizationSettings.nodes.showNumbers = False
+    if showNumbers and itemType == exudyn.ItemType.Object:
+        SC.visualizationSettings.bodies.showNumbers = True
+        SC.visualizationSettings.connectors.showNumbers = True
+        SC.visualizationSettings.bodies.show = True
+        SC.visualizationSettings.connectors.show = True
+    else:
+        SC.visualizationSettings.bodies.showNumbers = False
+        SC.visualizationSettings.connectors.showNumbers = False
+    if showNumbers and itemType == exudyn.ItemType.Marker:
+        SC.visualizationSettings.markers.showNumbers = True
+        SC.visualizationSettings.markers.show = True
+    else:
+        SC.visualizationSettings.markers.showNumbers = False
+    if showNumbers and itemType == exudyn.ItemType.Load:
+        SC.visualizationSettings.loads.showNumbers = True
+        SC.visualizationSettings.loads.show = True
+    else:
+        SC.visualizationSettings.loads.showNumbers = False
+    if showNumbers and itemType == exudyn.ItemType.Sensor:
+        SC.visualizationSettings.sensors.showNumbers = True
+        SC.visualizationSettings.sensors.show = True
+    else:
+        SC.visualizationSettings.sensors.showNumbers = False
+
+    mbs.SendRedrawSignal()
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

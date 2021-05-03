@@ -81,7 +81,7 @@ public:
 	ResizableMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfReals)
 	{
 		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&
-			numberOfRowsInit*numberOfColumnsInit == listOfReals.size()),
+			numberOfRowsInit*numberOfColumnsInit == (Index)listOfReals.size()),
 			"ResizableMatrix::ResizableMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 
 		Init();

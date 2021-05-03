@@ -308,10 +308,10 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 
 					timer.factorization -= EXUstd::GetTimeInSeconds();
 					systemJacobian.FinalizeMatrix();
-					Index jacobianInvertRV = systemJacobian.Factorize(); // .Invert(); //rv of factorize = 0 if success
+					Index jacobianInvertRV = systemJacobian.FactorizeNew(); // .Invert(); //rv of factorize = 0 if success
 					timer.factorization += EXUstd::GetTimeInSeconds();
 
-					if (jacobianInvertRV != 0)
+					if (jacobianInvertRV != -1)
 					{
 						SysError("SolverStatic::SolveSystem: Jacobian not invertible!");
 						errorOccurred = true;
@@ -463,7 +463,8 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 			}
 			
 			timer.postNewton -= EXUstd::GetTimeInSeconds();
-			discontinuousIterationError = computationalSystem.PostNewtonStep(tempCompData);
+			Real recommendedStepSize=-1; //not used here!
+			discontinuousIterationError = computationalSystem.PostNewtonStep(tempCompData, recommendedStepSize);
 			timer.postNewton += EXUstd::GetTimeInSeconds();
 
 			if (verbose >= 1) { pout << "  Discontinuous iteration error = " << discontinuousIterationError << "\n"; }

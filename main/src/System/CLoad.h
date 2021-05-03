@@ -55,8 +55,9 @@ public: //
   //! per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system
   virtual bool IsBodyFixed() const { return false; }
 
-  //! Write (Reference) access to: general load vector (e.g. force or torque); used if LoadType::IsVector = 1
-  //DELETE: should not be needed: virtual Vector3D& GetLoadVector() { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector"); Vector3D* v = new Vector3D(0.); return *v; }
+  //! determine if load has user function, used for Static computations, avoiding to conflict between load user function and loadFactor
+  virtual bool HasUserFunction() const { CHECKandTHROWstring("ERROR: illegal call to CLoad::IsVector"); return false; }
+
   //! Read (Reference) access to: general load vector (e.g. force or torque) as a function of time; used if LoadType::IsVector = 1
   virtual Vector3D GetLoadVector(const MainSystemBase& mbs, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CLoad::GetLoadVector(Real t) const"); Vector3D* v = new Vector3D(0.); return *v;
   }

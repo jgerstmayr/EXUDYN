@@ -76,11 +76,11 @@ namespace HGeometry {
 		if (relativePosition >= 1.) //projected point outside line segment ==> chose point1
 		{
 			relativePosition = 1.;
-			linePointPoint = point - linePoint1;
+			linePointPoint = point - linePoint1; //****check this!
 			return linePointPoint.GetL2Norm();
 		}
 
-		linePointPoint = point - (linePoint0 + relativePosition * lineVector);
+		linePointPoint = point - (linePoint0 + relativePosition * lineVector); //****check this!
 
 		return sqrt(vLinePoint0Point*vLinePoint0Point - num * num / den);
 	}

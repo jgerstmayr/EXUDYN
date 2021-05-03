@@ -193,6 +193,7 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.staticSolver.numberOfLoadSteps=10
 #simulationSettings.staticSolver.loadStepGeometricRange = 100
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-7 #with this error tolerance, the adaptive step selection needs 4 steps
+
 #simulationSettings.staticSolver.verboseMode=1
 #simulationSettings.staticSolver.verboseModeFile=2
 simulationSettings.staticSolver.stabilizerODE2term = 2

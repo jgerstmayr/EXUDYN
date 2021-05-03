@@ -103,7 +103,10 @@ public:
 	virtual void FinalizeMatrix() = 0;
 
 	//! factorize matrix (invert, SparseLU, etc.)
-	virtual Index Factorize() = 0; 
+	//! bool ignoreRedundantEquations, Index redundantEquationsStart, Real pivotTreshold
+	//! return -1 if success, causing index otherwise
+	virtual Index FactorizeNew(bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0) = 0;
+
 	//! after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
 	virtual void Solve(const Vector& rhs, Vector& solution) = 0;
 
@@ -244,8 +247,9 @@ public:
 		SetMatrixIsFactorized(false);
 	}
 
-	//! factorize matrix (invert, SparseLU, etc.); 0=success
-	virtual Index Factorize();
+	//! factorize matrix (invert, SparseLU, etc.);
+	//! return -1 if success, causing index otherwise
+	virtual Index FactorizeNew(bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
 	//! multiply matrix with vector: solution = A*x
 	virtual void MultMatrixVector(const Vector& x, Vector& solution)
@@ -386,8 +390,9 @@ public:
 	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	virtual void FinalizeMatrix();
 
-	//! factorize matrix (invert, SparseLU, etc.); 0=success
-	virtual Index Factorize();
+	//! factorize matrix (invert, SparseLU, etc.);
+	//! return -1 if success, causing index otherwise
+	virtual Index FactorizeNew(bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
 	//! multiply matrix with vector: solution = A*x
 	//! this leads to memory allocation in case that the matrix is built from triplets

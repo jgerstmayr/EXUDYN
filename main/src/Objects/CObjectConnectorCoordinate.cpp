@@ -37,7 +37,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 		else
 		{
 			CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-				"CObjectConnectorCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+				"CObjectConnectorCoordinate::ComputeAlgebraicEquations: marker does not provide velocityLevel information");
 
 			algebraicEquations.SetNumberOfItems(1);
 			algebraicEquations[0] = markerData.GetMarkerData(1).vectorValue_t[0] * parameters.factorValue1 - markerData.GetMarkerData(0).vectorValue_t[0]; //this is the index-reduced equation: does not have offset!!!

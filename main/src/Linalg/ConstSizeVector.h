@@ -82,17 +82,20 @@ public:
     //! constructor with initializer list; condition: listOfReals.size() <= dataSize
     ConstSizeVectorBase(std::initializer_list<T> listOfReals) //pass by value as a standard in C++11
     {
-        CHECKandTHROW(listOfReals.size() <= dataSize, "ERROR: ConstSizeVectorBase::constructor, dataSize mismatch with initializer_list");
+        CHECKandTHROW((Index)listOfReals.size() <= dataSize, "ERROR: ConstSizeVectorBase::constructor, dataSize mismatch with initializer_list");
         //static_assert supported by C++14 (supports listOfReals.size() as constexpr) ==> needs /std:c++17 flag
 
 		this->data = &constData[0];
-		this->numberOfItems = listOfReals.size();
+		this->numberOfItems = (Index)listOfReals.size();
 
         Index cnt = 0;
         for (auto val : listOfReals) {
             constData[cnt++] = val;
         }
     }
+private:
+	ConstSizeVectorBase(std::initializer_list<Index>) = delete; //constructor forbidden, as it would convert wrongly for ConstSizeVector({2}) into ConstSizeVector(2)
+public:
 
     //! copy constructor; compile-time error, if dataSize mismatch!; copies only in range [0,vector.numberOfItems items]
     ConstSizeVectorBase(const ConstSizeVectorBase<T,dataSize>& vector)
@@ -260,6 +263,7 @@ typedef ConstSizeVector<1> CSVector1D;
 typedef ConstSizeVector<2> CSVector2D;
 typedef ConstSizeVector<3> CSVector3D;
 typedef ConstSizeVector<4> CSVector4D;
+typedef ConstSizeVector<6> CSVector6D; //geometrically exact beam2D
 
 template<Index dataSize>
 using ConstSizeVectorF = ConstSizeVectorBase<float, dataSize>;

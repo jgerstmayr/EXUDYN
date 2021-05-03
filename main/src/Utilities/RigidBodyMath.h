@@ -449,9 +449,37 @@ namespace RigidBodyMath {
 			skewMatrix.SetSubmatrix(RigidBodyMath::Vector2SkewMatrix(Vector3D({ vector[j], vector[j + 1], vector[j + 2] })), j, 0);
 		}
 	}
+
+	//! compute kronecker product of vector (in R^n) and 3D unit matrix, giving (3*n x 3) components
+	inline void VectorKroneckerUnitMatrix3D(const Vector& vector, Matrix& result)
+	{
+		//def VectorDiadicUnitMatrix3D(v) :
+		//	return np.kron(np.array(v), np.eye(3)).T
+		Index n = vector.NumberOfItems();
+		result.SetNumberOfRowsAndColumns(3 * n, 3);
+		for (Index i = 0; i < n; i++)
+		{
+			Real v = vector[i];
+			result(3 * i    , 0) = v; result(3 * i    , 1) = 0; result(3 * i    , 2) = 0;
+			result(3 * i + 1, 0) = 0; result(3 * i + 1, 1) = v; result(3 * i + 1, 2) = 0;
+			result(3 * i + 2, 0) = 0; result(3 * i + 2, 1) = 0; result(3 * i + 2, 2) = v;
+		}
+	}
+
+
 } //namespace RigidBodyMath
 
 namespace EXUlie {
+
+	//! compute matrix exponential of 3D rotation vector rot; (rot is often denoted as Omega in literature ...)
+	inline Matrix3D ExpSO3(const Vector3D& rot)
+	{
+		Real phi = rot.GetL2Norm();
+		Matrix3D R(EXUmath::unitMatrix3D);
+		Matrix3D rotSkew(RigidBodyMath::Vector2SkewMatrix(rot));
+		R += EXUmath::Sinc(phi)*rotSkew + (0.5*EXUstd::Square(EXUmath::Sinc(0.5*phi)))*rotSkew * rotSkew;
+		return R;
+	}
 
 	//! compute rotation axis from given rotation vector
 	template <class T>

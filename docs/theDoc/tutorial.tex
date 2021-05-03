@@ -103,7 +103,7 @@ which is in fact of type \texttt{MarkerIndex}.
 
 Now we add a spring-damper to the markers with numbers \texttt{groundMarker} and the \texttt{nodeMarker}, providing stiffness and damping parameters:
 \begin{lstlisting}[language=Python, firstnumber=29]
-  mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
+  nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
                                        stiffness = spring, 
                                        damping = damper)) 
 \end{lstlisting}
@@ -114,7 +114,7 @@ A load is added to marker \texttt{nodeMarker}, with a scalar load with value \te
                                      load = f))
 \end{lstlisting}
 %
-Finally, a sensor is added to the coordinate constraint object \texttt{nC}, requesting the outputvariable \texttt{Force}:
+Finally, a sensor is added to the coordinate constraint object with number \texttt{nC}, requesting the \texttt{outputVariableType} \texttt{Force}:
 \begin{lstlisting}[language=Python, firstnumber=34]
   mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
                              outputVariableType=exu.OutputVariableType.Force))

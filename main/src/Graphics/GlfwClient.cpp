@@ -365,15 +365,15 @@ tk.mainloop()
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//process keys for move, rotate, zoom
-		float rotStep = visSettings->window.keypressRotationStep; //degrees
-		float transStep = visSettings->window.keypressTranslationStep * state->zoom; //degrees
+		float rotStep = visSettings->interactive.keypressRotationStep; //degrees
+		float transStep = visSettings->interactive.keypressTranslationStep * state->zoom; //degrees
 		if (mods == GLFW_MOD_CONTROL) //only for rotStep and transStep
 		{
 			rotStep *= 0.1f;
 			transStep *= 0.1f;
 		}
 
-		float zoomStep = visSettings->window.zoomStepFactor;
+		float zoomStep = visSettings->interactive.zoomStepFactor;
 		Float3 incRot({ 0.f,0.f,0.f });
 		if (key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = rotStep; }
 		if (key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = -rotStep; }
@@ -642,7 +642,7 @@ void GlfwRenderer::ZoomAll()
 void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	//rendererOut << "scroll: x=" << xoffset << ", y=" << yoffset << "\n";
-	float zoomStep = visSettings->window.zoomStepFactor;
+	float zoomStep = visSettings->interactive.zoomStepFactor;
 
 	if (yoffset > 0) { state->zoom /= zoomStep * (float)yoffset; }
 	if (yoffset < 0) { state->zoom *= zoomStep * (float)(-yoffset); }
@@ -764,7 +764,7 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 			//rotation shall be proportional to pixels
 			float deltaX = (float)(xpos - stateMachine.lastMousePressedX);
 			float deltaY = (float)(ypos - stateMachine.lastMousePressedY);
-			float rotationFactor = visSettings->window.mouseMoveRotationFactor;
+			float rotationFactor = visSettings->interactive.mouseMoveRotationFactor;
 
 			//use OpenGL transformation to compute incremental rotation
 
@@ -1045,9 +1045,9 @@ void GlfwRenderer::RunLoop()
 
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
-	renderFunctionRunning.test_and_set(std::memory_order_acquire); //lock Render(...) function, no second call possible
+	EXUstd::WaitAndLockSemaphore(renderFunctionRunning); //lock Render(...) function, no second call possible
+	//std::cout << "start renderer\n";
 
-	//rendererOut << "Render\n";
 	float ratio;
 	int width, height;
 
@@ -1165,6 +1165,10 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			
 			std::string message = basicVisualizationSystemContainer->GetComputationMessage(visSettings->general.showSolverInformation,
 				visSettings->general.showSolutionInformation, visSettings->general.showSolverTime);
+			if (visSettings->general.renderWindowString.size() != 0)
+			{
+				message = visSettings->general.renderWindowString + '\n' + message;
+			}
 			for (char c : message)
 			{
 				if (c == '\n') { computationMessageNumberOfLines++; }
@@ -1410,6 +1414,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	if ((firstRun *  visSettings->general.graphicsUpdateInterval) < 1. && visSettings->general.autoFitScene) { ZoomAll(); }
 
+	//std::cout << "  finish renderer\n";
+
 	//++++++++++++++++++++++++++++++++++++++++++
 	renderFunctionRunning.clear(std::memory_order_release); //clear PostProcessData
 }
@@ -1476,6 +1482,28 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 {
 	if (graphicsDataList)
 	{
+		//check if item shall be highlighted:
+		bool highlight = false;
+		Float4 highlightColor = visSettings->interactive.highlightColor;
+		Float4 otherColor = visSettings->interactive.highlightOtherColor;
+		Float4 highlightColor2 = visSettings->interactive.highlightColor; //for text and lines
+		Float4 otherColor2 = visSettings->interactive.highlightOtherColor; //for text and lines
+
+
+		Index highlightIndex = visSettings->interactive.highlightItemIndex;
+		ItemType highlightType = visSettings->interactive.highlightItemType;
+		Index highlightID = Index2ItemID(highlightIndex, highlightType);
+		if (highlightIndex >= 0 && highlightType != ItemType::_None) 
+		{ 
+			highlight = true; 
+			highlightColor2 = Float4({ EXUstd::Minimum(1.f,highlightColor[0] * 1.2f),
+				EXUstd::Minimum(1.f,highlightColor[1] * 1.2f),
+				EXUstd::Minimum(1.f,highlightColor[2] * 1.2f),
+				highlightColor[3] });
+			otherColor2 = Float4({ otherColor[0] * 0.5f, otherColor[1] * 0.5f, otherColor[2] * 0.5f,
+				EXUstd::Minimum(0.8f,otherColor[3] * 1.5f) });
+		}
+
 		for (auto data : *graphicsDataList)
 		{
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1488,8 +1516,15 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			for (const GLPoint& item : data->glPoints)
 			{
 				glBegin(GL_LINES);
-				glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
-
+				if (!highlight)
+				{
+					glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+				}
+				else
+				{
+					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+					else { glColor4fv(highlightColor2.GetDataPointer()); }
+				}
 				//plot point as 3D cross
 				glVertex3f(item.point[0] + d, item.point[1], item.point[2]);
 				glVertex3f(item.point[0] - d, item.point[1], item.point[2]);
@@ -1507,7 +1542,15 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			for (const GLCircleXY& item : data->glCirclesXY)
 			{
 				glBegin(GL_LINE_STRIP); //list of single points to define lines
-				glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+				if (!highlight)
+				{
+					glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+				}
+				else
+				{
+					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+					else { glColor4fv(highlightColor2.GetDataPointer()); }
+				}
 
 				const Float3& p = item.point;
 				GLfloat r = item.radius;
@@ -1524,14 +1567,32 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW LINES
-			for (const GLLine& item : data->glLines)
+			if (!highlight)
 			{
-				glBegin(GL_LINES);
-				glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
-				glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
-				glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
-				glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
-				glEnd();
+				for (const GLLine& item : data->glLines)
+				{
+					glBegin(GL_LINES);
+					glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
+					glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+					glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
+					glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+					glEnd();
+				}
+			}
+			else
+			{
+				for (const GLLine& item : data->glLines)
+				{
+					glBegin(GL_LINES);
+					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+					else { glColor4fv(highlightColor2.GetDataPointer()); }
+					glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+
+					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+					else { glColor4fv(highlightColor2.GetDataPointer()); }
+					glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+					glEnd();
+				}
 			}
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1540,7 +1601,15 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			{
 				for (const GLTriangle& trig : data->glTriangles)
 				{ //draw lines
-					glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+					if (!highlight)
+					{
+						glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+					}
+					else
+					{
+						if (trig.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+					}
 					for (Index i = 0; i < 3; i++)
 					{
 						Index j = i + 1;
@@ -1585,8 +1654,20 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 				glPushMatrix(); //store current matrix -> before rotation
 				glTranslated(t.point[0], t.point[1], t.point[2]);
 				glMultMatrixf(matTp.GetDataPointer());
-				DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), t.color);
-				//delete: DrawString(t.text, fontScale*scale, Float3({ offx,offy,0.f }), t.color);
+				
+				if (!highlight)
+				{
+					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), t.color);
+				}
+				else
+				{
+					Float4 color = otherColor2;
+					if (t.itemID == highlightID) { color = highlightColor2; }
+
+					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), color);
+				}
+
+
 				glPopMatrix(); //restore matrix
 			}
 			//glPopMatrix(); //restore matrix
@@ -1597,7 +1678,22 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			{
 				if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
 				glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-				if (!visSettings->openGL.facesTransparent)
+				if (highlight)
+				{
+					for (const GLTriangle& trig : data->glTriangles)
+					{ //draw faces
+						glBegin(GL_TRIANGLES);
+						for (Index i = 0; i < 3; i++)
+						{
+							if (trig.itemID != highlightID) { glColor4fv(otherColor.GetDataPointer()); }
+							else { glColor4fv(highlightColor.GetDataPointer()); }
+							glNormal3fv(trig.normals[i].GetDataPointer());
+							glVertex3fv(trig.points[i].GetDataPointer());
+						}
+						glEnd();
+					}
+				}
+				else if (!visSettings->openGL.facesTransparent)
 				{
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces

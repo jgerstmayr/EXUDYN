@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 597, 
-Number of resolved issues = 519 (151 in current version), 
-EXUDYN version = 1.0.151, 
-last change =  2021-03-16
+Number of issues = 662, 
+Number of resolved issues = 569 (201 in current version), 
+EXUDYN version = 1.0.201, 
+last change =  2021-05-03
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2021-03-16
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0594</td>
-    <td>CMS rotations       </td>
+    <td>0661</td>
+    <td>add C++ unit tests  </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> test and extend CMS / ObjectFFRFreducedOrder object for other rotation parameterizations (Tait-Bryan and rotation vector/Lie group) such that they work with explicit codes</td>
+    <td> add C++ unit tests to Python3.6 64bits version and to testSuite. Changed initialization of all vector types to avoid errors of Vector({5}), now allowing only Vector({4.}) in constructors</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2021-02-24</td>
-    <td>2021-04-25</td>
+    <td>2021-05-03</td>
+    <td>2021-07-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -55,6 +55,406 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
+    <td>0660</td>
+    <td>initializerList     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check if Vector is used with initializer list with one item - Vector({10}), converting to std::vector or Vector(10)</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-05-03</td>
+    <td>2021-07-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0657</td>
+    <td>Delete item         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add functionality to delete items, adding specific features to re-index nodes in objects/markers, etc. if a node, object or marker is deleted</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0655</td>
+    <td>add KinematicTree   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> ObjectKinematicTree (MinimumCoordinates)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0653</td>
+    <td>add right mouse edit dialog</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> open Edit dialog for item on right-mouse-press</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0652</td>
+    <td>identify itemID under mouse coursor</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> identify object/node/... under mouse using unique color for itemID (left mouse button press)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0648</td>
+    <td>solver tutorial     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> create video with frequent solver errors and FAQ</td>
+    <td>TUTORIAL</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0647</td>
+    <td>Single Thread Renderer</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Implement single thread renderer version for MAC OS compatibility test</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0643</td>
+    <td>ObjectFFRFreducedOrder / CMS</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> create tutorial with two bodies (crank, connecting rod, rigid piston)</td>
+    <td>TUTORIAL</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0642</td>
+    <td>ComputeHurtyCraigBamptonModes</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add possibility to add position only interfaces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0637</td>
+    <td>Python3.8 windows wheels</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> create Python3.8 windows wheels automatically</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-26</td>
+    <td>2021-06-25</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0634</td>
+    <td>Set visualization state</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add thread-safe variant for updating the visualization state</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-25</td>
+    <td>2021-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0633</td>
+    <td>WaitAndLockSemaphoreIgnore</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check which atomic_flags are needed in C++ to make code threadsafe</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-04-25</td>
+    <td>2021-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0631</td>
+    <td>ObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> freefree eigenmodes and Hurty-Craig-Bampton modes do not converge to same results</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-04-23</td>
+    <td>2021-06-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0630</td>
+    <td>HurtyCraigBampton   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend computation to work with 0 eigenmodes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-23</td>
+    <td>2021-06-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0627</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add description, connector equations and figure</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-04-21</td>
+    <td>2021-06-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0626</td>
+    <td>GenericJoint        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add more description on constraint configurations, coordinate transformations and figures for GenericJoint</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-04-21</td>
+    <td>2021-06-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0625</td>
+    <td>ObjectRigidBody     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> revise equations of motion and add figure for COM and local coordinates</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-04-15</td>
+    <td>2021-06-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0620</td>
+    <td>TorsionalSpringDamper</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add torsional spring damper similar to SpringDamper, fixed on a single local axis of marker0, allowing to realize controllers and torques</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-06</td>
+    <td>2021-06-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0618</td>
+    <td>robotics submodule  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Create robotics.special and robotics.mecanum or robotics.ros submodules with subdirectories</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-23</td>
+    <td>2021-05-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0617</td>
+    <td>python userFunctions</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> consider adding an additional userFunctionVariable [List? or Dict?], which contains indices or further parameters needed in the userFunction</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-23</td>
+    <td>2021-05-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0614</td>
+    <td>sensor dependencies </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add functionality to compute sensor-dependencies (for LTG computation), used in controller connectors? alternatively add dependentNodes to existing connectors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0613</td>
+    <td>MarkerObjectODE2Coordinates</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add simple test into TestModels</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0612</td>
+    <td>sparse object matrices</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add sparse matrix computation mode for ComputeMassMatrix and for ObjectJacobianODE2; consider Lie algebra derivatives</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0608</td>
+    <td>recommendedStepSize </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add recommendedStepSize to ContactCoordinate element</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-20</td>
+    <td>2021-05-19</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0599</td>
+    <td>ObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> compare Tait-Bryan and RotationVector cases with Euler parameters</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
     <td>0591</td>
     <td>ObjectFFRF          </td>
     <td>JG</td>
@@ -70,23 +470,7 @@ last change =  2021-03-16
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0575</td>
-    <td>new genAlpha solver </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top</td>
-    <td>BUG</td>
-    <td></td>
-    <td>2021-02-08</td>
-    <td>2021-04-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0574</td>
     <td>initialAccelerations</td>
     <td>JG</td>
@@ -102,7 +486,7 @@ last change =  2021-03-16
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0565</td>
     <td>Drift inspector     </td>
     <td>JG</td>
@@ -118,7 +502,7 @@ last change =  2021-03-16
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0564</td>
     <td>NodeRigidBodyEP     </td>
     <td>JG</td>
@@ -134,23 +518,7 @@ last change =  2021-03-16
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0563</td>
-    <td>ODE1Coordinate      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add MarkerODE1Coordinate and extend LoadCoordinate for ODE1</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-01-27</td>
-    <td>2021-03-28</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0562</td>
     <td>Gen alpha Lie       </td>
     <td>JG</td>
@@ -166,7 +534,7 @@ last change =  2021-03-16
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0561</td>
     <td>Gen alpha2          </td>
     <td>JG</td>
@@ -182,7 +550,7 @@ last change =  2021-03-16
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0559</td>
     <td>Lie group tests2    </td>
     <td>JG</td>
@@ -343,22 +711,6 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0470</td>
-    <td>geometrically exact beam2D</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add to CPP</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-11-21</td>
-    <td>2021-01-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0456</td>
     <td>ObjectFFRF bug with GenericJoint</td>
     <td>JG</td>
@@ -503,38 +855,6 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0424</td>
-    <td>show modes          </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add feature to visualize eigenmodes, e.g. using ObjectFFRFreducedOrder and set one initialCoordinate nonzero</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-06-12</td>
-    <td>2020-08-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0423</td>
-    <td>fix MarkerSuperElementRigidBody</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> fix velocity level for MarkerSuperElementRigidBody (check constraint equations)</td>
-    <td>BUG</td>
-    <td></td>
-    <td>2020-06-09</td>
-    <td>2020-08-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0413</td>
     <td>ConnectorCoordinateVectorUF</td>
     <td>JG</td>
@@ -576,22 +896,6 @@ last change =  2021-03-16
     <td></td>
     <td>2020-05-22</td>
     <td>2020-07-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0403</td>
-    <td>CMS C++             </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add ObjectFFRFreducedOrder (CMS) equations in C++ and clean up code</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-21</td>
-    <td>2020-07-20</td>
     <td></td>
     <td></td>
     <td></td>
@@ -711,22 +1015,6 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0349</td>
-    <td>add causing row     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> output causing row/column (=coordinate) which leads to singular matrix; do this for Matrix.Invert as well as for SparseLU .info code; matrix class creates string with error message!</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-03-02</td>
-    <td>2020-05-01</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0347</td>
     <td>initialCoordinates_t</td>
     <td>JG</td>
@@ -736,38 +1024,6 @@ last change =  2021-03-16
     <td></td>
     <td>2020-02-24</td>
     <td>2020-04-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0337</td>
-    <td>local force beam    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> change beam output to local forces and torques!</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2020-02-18</td>
-    <td>2020-04-18</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0333</td>
-    <td>node numbers with type</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> extend node/object/... numbers as python class with type information to check if item numbers are mixed illegally</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-02-06</td>
-    <td>2020-04-06</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1095,22 +1351,6 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0139</td>
-    <td>Index               </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> change Index to (signed) int and use UIndex in python interface for unsigned parameters</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2019-05-20</td>
-    <td>2019-07-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0126</td>
     <td>Linalg tests        </td>
     <td>JG</td>
@@ -1287,6 +1527,630 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0659</td>
+    <td>Troubleshooting     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add Trouble shooting section, treating common Python and solver errors to theDoc.pdf</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-05-03</td>
+    <td>2021-07-02</td>
+    <td>2021-05-03 10:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0658</td>
+    <td>add VisualizationSettings() interactive</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> move visualization settings window functions keypressRotationStep, mouseMoveRotationFactor, keypressTranslationStep, zoomStepFactor to new substructure "interactive"</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-01 23:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>{\bf adapt your models if you used these options!}</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0656</td>
+    <td>mbs.systemData      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> removed GetCurrentTime() and SetVisualizationTime(...) which have been marked as deprecated already</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-01 23:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>Use GetTime(...) and SetTime(...) in mbs.systemData instead</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0654</td>
+    <td>coordinates sizes   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function ODE2Size(...), ODE1Size(...), SystemSize(...) to mbs.systemData to retrieve number of ODE2,ODE1,AE and Data coordinates for certain configurationType; only works after mbs.Assemble()</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-01 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0651</td>
+    <td>add itemID to graphics objects</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add itemID (nodes, objects, markers, loads, sensors, in that order) to graphics objects (for right-mouse-press)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-02 21:26</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0650</td>
+    <td>Highlight item#     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Highlight item# for object/node/etc.; add to visualization options (itemType, item#, colorHighlightItem, colorOtherItems), draw all other items in gray</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-03 01:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0649</td>
+    <td>add ItemType        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add enum ItemType: Node, Object, ...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-03 01:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0646</td>
+    <td>jacobian singular   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> resolve singularities in general jacobian: resolves coordinates which are still free for static problems, but is marked as unsafe</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td>2021-05-01 02:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0645</td>
+    <td>redundant constraints</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> resolve redundant constraints: add flag to ignore singular constraint jacobians</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td>2021-05-01 02:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0644</td>
+    <td>solver messages     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add solver message if not converged with helpful hints (especially if invert fails or newton fails)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td>2021-05-01 02:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0641</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add description and figure for theory and computation</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-04-29</td>
+    <td>2021-06-28</td>
+    <td>2021-04-29 08:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0640</td>
+    <td>MarkerSuperElementRigid</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove referencePosition and add offset instead (to correct errors of midpoint due to small mesh-unsymmetries)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-26</td>
+    <td>2021-06-25</td>
+    <td>2021-04-27 18:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>{\bf CHANGED interface}: MarkerSuperElementRigid does not have a referencePosition anymore, but adds a parameter offset</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0639</td>
+    <td>ObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> incorrect AccessFunction AccessFunctionType::AngularVelocity_qt, missing correct reference point = midpoint for computation of rotation</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-04-26</td>
+    <td>2021-06-25</td>
+    <td>2021-04-26 21:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0638</td>
+    <td>MarkerSuperElementRigid</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use consistent reference point = midpoint for computation of rotation and use exponential Map for rotation matrix</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-26</td>
+    <td>2021-06-25</td>
+    <td>2021-04-26 21:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0636</td>
+    <td>Python3.8           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add python 3.8 compilation tests; resolve issues with __index__ method needed fore NodeIndex, MarkerIndex, etc.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-26</td>
+    <td>2021-06-25</td>
+    <td>2021-04-26 16:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0635</td>
+    <td>AnimateModes        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check, why animate modes has threading-conflicts; use std::cout to find issues</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-04-25</td>
+    <td>2021-06-24</td>
+    <td>2021-04-27 18:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>resolved threading conflicts, but visualization state set inbetween graphics update, which needs to resolve #634</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0632</td>
+    <td>CMS theory          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add theory section for Hurty-Craig-Bampton modes and eigenmode computation</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-04-23</td>
+    <td>2021-06-22</td>
+    <td>2021-04-23 19:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0629</td>
+    <td>mesh visualization  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> visualization artifacts in larger FE meshes due to multithreading</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-04-22</td>
+    <td>2021-06-21</td>
+    <td>2021-04-25 22:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added flag threadSafeGraphicsUpdate to avoid thread conflicts between graphics and computation, which is by default set True and MAY SLOW DOWN your computation speed if True</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0628</td>
+    <td>FEMinterface.GetNodesOnCylinder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> returns erroneous indices</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-04-22</td>
+    <td>2021-06-21</td>
+    <td>2021-04-22 22:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>corrected indexing and add warnings for illegal node types</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0624</td>
+    <td>norm in contour plots</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> show norm (of vectors or stresses) in contour plot, using special outputVariable component=-1</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-09</td>
+    <td>2021-06-08</td>
+    <td>2021-04-09 18:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0623</td>
+    <td>postProcessingModes </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function to compute stress or strain modes for postprocessing, working for linear tetraherons (Tet4); see Examples/NGsolvePostProcessingStresses.py</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-09</td>
+    <td>2021-06-08</td>
+    <td>2021-04-09 15:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0622</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> improved functionality of InteractiveDialog in interactive.py, specially for animating modes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-07</td>
+    <td>2021-06-06</td>
+    <td>2021-04-07 12:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0621</td>
+    <td>mbs.GetNodeODE2Index</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Fails for NodeRigidBodyEP, because mix of AE and ODE2 variables</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-04-07</td>
+    <td>2021-06-06</td>
+    <td>2021-04-07 09:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added correct type check in MainSystem::PyGetNodeODE2Index</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0619</td>
+    <td>Eigenmode visualizer</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> visualize eigenmodes with interactive tools with new function AnimateModes(...) to show eigenmodes of system or ObjectFFRFreducedOrder (see \refSection{sec:interactive:AnimateModes})</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-30</td>
+    <td>2021-05-29</td>
+    <td>2021-04-07 13:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0616</td>
+    <td>Craig-Bampton       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add static modes (Hurty-Craig-Bampton) to computation of modes in CMSinterface</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td>2021-04-21 11:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>implemented in FEMinterface.ComputeHurtyCraigBamptonModes(...)</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0615</td>
+    <td>MarkerNodeCoordinate</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add check in CSystem for valid coordinate numbers in MarkerNodeCoordinate</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td>2021-03-22 14:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0611</td>
+    <td>adaptiveStep        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add adaptiveStepIncrease, Decrease and RecoverySteps options to control behavior in case of discontinuous problems</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td>2021-03-21 00:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0610</td>
+    <td>startOfStep         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add access function for nodal coordinates at startOfStep configuration, used in mbs.GetNodeOutput(configuration = exu.ConfigurationType.startOfStep)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-20</td>
+    <td>2021-05-19</td>
+    <td>2021-03-20 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0609</td>
+    <td>SolveDynamic, SolveStatic</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> store dynamicSolver and staticSolver in mbs.sys dictionary immediately after creation, which allows to use these structures in user functions during static or dynamic solution</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-03-20</td>
+    <td>2021-05-19</td>
+    <td>2021-03-20 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0607</td>
+    <td>test recommendedStepSize</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test recommendedStepSize and PostNewtonUserFunction with simple elastic contact example</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-03-20</td>
+    <td>2021-05-19</td>
+    <td>2021-03-20 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0606</td>
+    <td>resolve errors 32bit testsuite</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add extra tolerances for 32bit</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-03-20</td>
+    <td>2021-05-19</td>
+    <td>2021-03-20 23:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0605</td>
+    <td>UIndex, UReal      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change all relevant unsigned quantities to UIndex and UReal, as well as Vectors of UReal and Arrays of UIndex</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-19</td>
+    <td>2021-05-18</td>
+    <td>2021-03-20 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0604</td>
+    <td>UIndex check        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add automatic check in item interface to check for correctness of UIndex and UReal quantities</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-19</td>
+    <td>2021-05-18</td>
+    <td>2021-03-20 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0603</td>
+    <td>loadFactor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> exclude load factor for loads with user functions in static computations</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td>2021-03-20 23:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0602</td>
+    <td>PostNewton step size recommendation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add step recommendation as outcome of PostNewton function to improve contact and friction accuracy</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td>2021-03-18 21:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0601</td>
+    <td>mbs.postNewtonUserFunction</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function PostNewton(...) to be called after step update (Newton or explicit step)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td>2021-03-18 21:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0600</td>
+    <td>ImplicitSecondOrderSolver</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove old solver</td>
+    <td>CLEANUP</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td>2021-03-18 21:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0598</td>
+    <td>rigidBodyUtilities  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add G matrices for Rxyz (Tait-Bryan angles) and also time derivatives of G</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td>2021-03-18 17:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0597</td>
+    <td>ObjectRigidBody     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix description of equations of motion (missing m) and add steps in derivation</td>
+    <td>DESCRIPTION</td>
+    <td></td>
+    <td>2021-03-18</td>
+    <td>2021-05-17</td>
+    <td>2021-03-18 08:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0596</td>
     <td>GetRigidBodyNode    </td>
     <td>JG</td>
@@ -1313,6 +2177,22 @@ last change =  2021-03-16
     <td>2021-03-14</td>
     <td>2021-05-13</td>
     <td>2021-03-16 16:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0594</td>
+    <td>CMS rotations       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test and extend CMS / ObjectFFRFreducedOrder object for other rotation parameterizations (Tait-Bryan and rotation vector/Lie group) such that they work with explicit codes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-02-24</td>
+    <td>2021-04-25</td>
+    <td>2021-03-18 17:04</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1591,6 +2471,22 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0575</td>
+    <td>new genAlpha solver </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> new generalized alpha/implicit trapezoidal solver does not call solver user functions; Solution: derive CSolverImplicitSecondOrderTimeIntNew from CSolverBase and add user functions on top</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-02-08</td>
+    <td>2021-04-09</td>
+    <td>2021-03-18 21:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>solved by removing old solver structure; new solver fully supports user functions now</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0573</td>
     <td>merge solver documentation</td>
     <td>JG</td>
@@ -1713,6 +2609,22 @@ last change =  2021-03-16
     <td>2021-01-29</td>
     <td>2021-03-30</td>
     <td>2021-02-01 01:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0563</td>
+    <td>ODE1Coordinate      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add MarkerODE1Coordinate and extend LoadCoordinate for ODE1</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-27</td>
+    <td>2021-03-28</td>
+    <td>2021-03-25 07:43</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -2999,6 +3911,22 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0470</td>
+    <td>geometrically exact beam2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add to CPP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-21</td>
+    <td>2021-01-20</td>
+    <td>2021-03-25 18:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0469</td>
     <td>userfunctions       </td>
     <td>JG</td>
@@ -3575,6 +4503,38 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0424</td>
+    <td>show modes          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add feature to visualize eigenmodes, e.g. using ObjectFFRFreducedOrder and set one initialCoordinate nonzero</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-06-12</td>
+    <td>2020-08-11</td>
+    <td>2021-04-07 13:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0423</td>
+    <td>fix MarkerSuperElementRigidBody</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix velocity level for MarkerSuperElementRigidBody (check constraint equations)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2020-06-09</td>
+    <td>2020-08-08</td>
+    <td>2021-04-27 18:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>fixed several errors and test examples work now on velocity level, but further checks are necessary</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0422</td>
     <td>contour maxValue    </td>
     <td>JG</td>
@@ -3825,6 +4785,22 @@ last change =  2021-03-16
     <td>2020-05-21</td>
     <td>2020-07-20</td>
     <td>2020-06-01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0403</td>
+    <td>CMS C++             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ObjectFFRFreducedOrder (CMS) equations in C++ and clean up code</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-21</td>
+    <td>2020-07-20</td>
+    <td>2021-03-30 16:57</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -4567,6 +5543,22 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0349</td>
+    <td>add causing row     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> output causing row/column (=coordinate) which leads to singular matrix; do this for Matrix.Invert as well as for SparseLU .info code; matrix class creates string with error message!</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-03-02</td>
+    <td>2020-05-01</td>
+    <td>2021-05-01 02:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0348</td>
     <td>GetObjectOutputBody </td>
     <td>JG</td>
@@ -4727,6 +5719,22 @@ last change =  2021-03-16
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0337</td>
+    <td>local quantities beam</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change beam output of Force, Torque, Curvature, Stress and Strain to ForceLocal, TorqueLocal, CurvatureLocal, StressLocal, and StrainLocal</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-02-18</td>
+    <td>2020-04-18</td>
+    <td>2021-03-20 23:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>{\bf WARNING}: you need to adapt force, torque and stress, strain and curvature output variables accordingly as they may have changed specifically for ANCF beams; adapt all your model files regarding Force, Torque, etc.</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0336</td>
     <td>euler parameters    </td>
     <td>JG</td>
@@ -4773,6 +5781,22 @@ last change =  2021-03-16
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0333</td>
+    <td>node numbers with type</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend node/object/... numbers as python class with type information to check if item numbers are mixed illegally</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-02-06</td>
+    <td>2020-04-06</td>
+    <td>2021-04-30 17:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>done already earlier, but still marked as unresolved</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0331</td>
@@ -7541,6 +8565,22 @@ last change =  2021-03-16
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0139</td>
+    <td>Index               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change Index to (signed) int and use UIndex in python interface for unsigned parameters</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2019-05-20</td>
+    <td>2019-07-19</td>
+    <td>2021-03-20 23:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>{\bf ATTENTION}: this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0138</td>

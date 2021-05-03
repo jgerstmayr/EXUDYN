@@ -97,7 +97,7 @@ public:
 		this->data = &constData[0];
 		
 		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&
-                        numberOfRowsInit*numberOfColumnsInit == listOfReals.size()),
+                        numberOfRowsInit*numberOfColumnsInit == (Index)listOfReals.size()),
                        "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, initializer_list): inconsistent size of initializer_list");
 
         ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);

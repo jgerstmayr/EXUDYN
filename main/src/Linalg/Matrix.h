@@ -50,6 +50,8 @@ extern Index matrix_new_counts; //global counter of item allocations; is increas
 extern Index matrix_delete_counts; //global counter of item deallocations; is increased every time a delete is called
 #endif
 
+template <typename T> class ResizableMatrixBase;
+
 //! templated base matrix, which is used as Matrix (Real) or MatrixF (float) - for graphics
 template<typename T>
 class MatrixBase
@@ -103,7 +105,7 @@ public:
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfReals)
 	{
 		//CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&  //unsigned int always >= 0
-		CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit == listOfReals.size()),
+		CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit == (Index)listOfReals.size()),
 			"Matrix::Matrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 
 		Init();
@@ -270,7 +272,7 @@ public:
 	void SetMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfTs)
 	{
 		CHECKandTHROW((/*numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&*/
-			numberOfRowsInit*numberOfColumnsInit == listOfTs.size()),
+			numberOfRowsInit*numberOfColumnsInit == (Index)listOfTs.size()),
 			"Matrix::SetMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
 
@@ -623,8 +625,20 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! Compute matrix inverse (internal function, needs memory allocation and may be slower than external functions - Eigen, etc.)
-	//  NOT Threadsafe!
+	//  NOT Threadsafe! return true if successful inverse computed
 	bool Invert();
+
+	//! Compute matrix inverse, ignore redundant equations; NEARLY IDENTICAL to Invert()
+	// m: tempory matrix for computation of inverse, to make algorithm threadsafe; 
+	// rowSwaps: temporary vector of row indices which are swaped
+	// ignoreRedundantEquations: if redundant row i encountered (that factorizes down to zeros), set this row in the inverse to 0, 
+	//        which sets the according row i in A^-1 to zero: x = A^-1 * f ==> x[i] = 0 for arbitrary f
+	// redundantEquationsStart: this is the first index from which redundant equations may be ignored
+	// pivotTreshold: treshold used to produce error/ignore equation because of singularity / redundancy
+	// return -1 if successful inverse computed, other wise return errorIndex: contains (first) problematic row that caused error
+	//template<typename T>
+	Index InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool ignoreRedundantEquations = true,
+		Index redundantEquationsStart = 0, Real pivotTreshold = 0);
 
 	//! Solve System of Equations with right hand side 'fv' and solution 'q'; needs memory allocation and may be slower than external functions, e.g. Eigen
 	//  NOT Threadsafe!
@@ -970,6 +984,28 @@ namespace EXUmath {
 		}
 	}
 
+	//! generic matrix*matrix multiplication + addition template: result += m1*m2
+	template<class TMatrix1, class TMatrix2, class TMatrixResult>
+	inline void MultMatrixMatrixAddTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
+	{
+		CHECKandTHROW((m1.NumberOfColumns() == m2.NumberOfRows()) && 
+			(result.NumberOfRows() == m1.NumberOfRows()) && (result.NumberOfColumns() == m2.NumberOfColumns()),
+			"MultMatrixMatrixAddTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
+
+		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		{
+			for (Index j = 0; j < m1.NumberOfRows(); j++)
+			{
+				Real value = 0.; 
+				for (Index k = 0; k < m1.NumberOfColumns(); k++)
+				{
+					value += m1(j, k)*m2(k, i);
+				}
+				result(j, i) += value;
+			}
+		}
+	}
+
 	//! generic transposed(matrix)*matrix multiplication template
 	template<class TMatrix1, class TMatrix2, class TMatrixResult>
 	inline void MultMatrixTransposedMatrixTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
@@ -994,7 +1030,136 @@ namespace EXUmath {
 		}
 	}
 
+	//! generic transposed(matrix)*matrix multiplication and add template: result = m1.T*m2
+	template<class TMatrix1, class TMatrix2, class TMatrixResult>
+	inline void MultMatrixTransposedMatrixAddTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
+	{
+		CHECKandTHROW((m1.NumberOfRows() == m2.NumberOfRows()) &&
+			(result.NumberOfRows() == m1.NumberOfColumns()) && (result.NumberOfColumns() == m2.NumberOfColumns()),
+			"MultMatrixTransposedMatrixAddTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
+
+		//result.SetNumberOfRowsAndColumns(m1.NumberOfColumns(), m2.NumberOfColumns());
+
+		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		{
+			for (Index j = 0; j < m1.NumberOfColumns(); j++)
+			{
+				Real value = 0.;
+				for (Index k = 0; k < m1.NumberOfRows(); k++)
+				{
+					value += m1(k, j)*m2(k, i);
+				}
+				result(j, i) += value;
+			}
+		}
+	}
+
 	void MatrixTests();
 } //namespace EXUmath
+
+
+//for some reason, other than invert, this method must be placed in .h file:
+//! Compute matrix inverse, ignore redundant equations; NEARLY IDENTICAL to Invert()
+// temp: tempory matrix for computation of inverse, to make algorithm threadsafe; 
+// rowSwaps: temporary vector of row indices which are swaped
+// ignoreRedundantEquations: if redundant row i encountered (that factorizes down to zeros), set this row in the inverse to 0, 
+//        which sets the according row i in A^-1 to zero: x = A^-1 * f ==> x[i] = 0 for arbitrary f
+// redundantEquationsStart: this is the first index from which redundant equations may be ignored
+// return -1 if successful inverse computed, eles return errorIndex: contains (first) problematic row that caused error
+template<typename T>
+Index MatrixBase<T>::InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool ignoreRedundantEquations,
+	Index redundantEquationsStart, Real pivotTreshold)
+{
+	//Index errorIndex = -1;
+	rowSwaps.SetNumberOfItems(numberOfColumns);
+	for (Index i = 0; i < rowSwaps.NumberOfItems(); i++) { rowSwaps[i] = i; }
+
+	if (numberOfRows*numberOfColumns == 0) return -1; //no need to invert; but this is no error!
+
+	CHECKandTHROW(numberOfColumns == numberOfRows && data != NULL, "MatrixBase::Invert(): only valid for quadratic matrices");
+
+	//Insert identity-matrix on left-hand-side
+	m.SetScalarMatrix(numberOfRows, 1.); //set unit matrix
+
+	//fill in [0,1,2,3,...]: original indices, which will be changed after row swapping; needed to track error index
+
+	T mij;
+	Index i, j, k;
+	Index maxj = 0;
+
+	// Solve lower triangular Matrix
+	for (j = 0; j < numberOfRows; j++)
+	{
+		//pout << "j=" << j << ":\n";
+		T pivot = GetItem(j, j);
+		Index pivotpos = j;
+		for (k = j + 1; k < numberOfRows; k++)
+		{
+			if (fabs(GetItem(k, j)) > fabs(pivot))
+			{
+				pivotpos = k;
+				pivot = GetItem(k, j);
+			}
+		}
+		maxj = EXUstd::Maximum(pivotpos, maxj);
+
+		m.SwapRows(pivotpos, j);
+		SwapRows(pivotpos, j);
+		EXUstd::Swap(rowSwaps[pivotpos], rowSwaps[j]); //track row indices for errorIndex
+
+		if (fabs(pivot) <= pivotTreshold)
+		{
+			Index errorIndex = rowSwaps[j]; //also tracked in case ignoreRedundantEquations
+
+			if (!ignoreRedundantEquations || j < redundantEquationsStart) //here we take j, because before that index, no zeros may occur.
+			{
+				//SysError(STDstring("Matrix::Invert: problems with column ") + EXUstd::ToString(j) + "\n");
+				return errorIndex;
+			}
+			else
+			{
+				m.MultiplyRow(j, 0); //the causing row will be ignored from now on ...
+				MultiplyRow(j, 0);
+			}
+		}
+		else
+		{
+			m.MultiplyRow(j, 1. / GetItem(j, j)); // GetItem(j, j) == pivot ...
+			MultiplyRow(j, 1. / GetItem(j, j));
+		}
+
+		for (i = j + 1; i < numberOfColumns; i++)
+		{
+			mij = GetItem(i, j);
+			if (mij != 0.)
+			{
+				AddRowToRowWithFactor(j, i, -mij, j, numberOfColumns - 1); //j..numberOfRows
+				m.AddRowToRowWithFactor(j, i, -mij, 0, maxj); //1..j
+			}
+		}
+		//pout << "  minv=" << m << "\n";
+		//pout << "  m=   " << *this << "\n";
+
+	}
+
+	//backsubstitution ==> for inverse, this takes most of the time
+	for (j = numberOfRows - 1; j > 0; j--)
+	{
+		for (i = 0; i <= j - 1; i++)
+		{
+			mij = GetItem(i, j);
+			if (mij != 0)
+			{
+				m.AddRowToRowWithFactor(j, i, -mij); //1..numberOfRows
+			}
+		}
+	}
+
+	CopyFrom(m); //now write temporary matrix into *this
+
+	return -1;
+}
+
+
 
 #endif

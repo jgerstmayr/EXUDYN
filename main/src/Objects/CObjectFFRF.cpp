@@ -123,9 +123,21 @@ void CObjectFFRF::InitializeObject()
 	//Mnew[0:3, 0 : 3] = Mtt
 	physicsMass = Mtt(0, 0); //must be diagonal matrix with mass in diagonal
 
+	referencePositions = Vector(nODE2FF);
+
+	//compute center of mass //2021-03-25
+	physicsCenterOfMass.CopyFrom(PHItTM * referencePositions);
+	if (physicsMass != 0.)
+	{
+		physicsCenterOfMass *= 1 / physicsMass; //needed for application of force
+	}
+	else
+	{
+		PyWarning("CObjectFFRF::InitializeObject(): total mass is zero");
+	}
+
 	//xRefNodes = nodes.flatten() #node reference values in single vector(can be added then to q[7:])
 	//xRefTilde = ComputeSkewMatrix(xRefNodes) #rfTilde without q
-	referencePositions = Vector(nODE2FF);
 	Matrix xRefTilde(nODE2FF, ffrfNodeDim);
 	for (Index i = 0; i < nM; i++)
 	{

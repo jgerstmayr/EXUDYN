@@ -15,6 +15,7 @@ import exudyn as exu
 #%%+++++++++++++++++++++++++++++++++++++++
 #return reference solutions for test examples in dictionary
 def TestExamplesReferenceSolution():
+
     if exudynTestGlobals.useCorrectedAccGenAlpha or exudynTestGlobals.useNewGenAlphaSolver: #corrected version + new implicit solver!
         refSol = {
             #obtained on 2021-02-06(Python3.7, 64bits): with new implicit trapezoidal solver (Arnold/Bruls)
@@ -33,6 +34,7 @@ def TestExamplesReferenceSolution():
             'genericJointUserFunctionTest.py':1.1922383967562729,
             'genericODE2test.py':0.03604546349894412,
             'geneticOptimizationTest.py':0.10117518367000587,
+            'geometricallyExactBeam2Dtest.py':-2.2115028353806547, #new 2021-03-25
             'heavyTop.py':33.42312575172122,
             'manualExplicitIntegrator.py':2.0596986296922988,
             'mecanumWheelRollingDiscTest.py':0.2714267238324343,
@@ -43,10 +45,11 @@ def TestExamplesReferenceSolution():
             'objectGenericODE2Test.py':-2.316378897598925e-05,
             'PARTS_ATEs_moving.py':0.44656762760262225,
             'pendulumFriction.py':0.3999999877698232,
+            'postNewtonStepContactTest.py':0.057286638346409235, #new 2021-03-20
             'rigidBodyCOMtest.py':3.409431467726292,
             'rollingCoinTest.py':0.002004099927337848,
             'rollingCoinPenaltyTest.py':0.03489603106696451,
-            'scissorPrismaticRevolute2D.py':27.202556489044397,
+            'scissorPrismaticRevolute2D.py':27.202556489044575, #until 2021-03-20: 27.202556489044397,
             'serialRobotTest.py':0.7712176106955341,#-4.309882450925784e-10 diff between old corrected and new gen alpha solver
             'sliderCrank3Dbenchmark.py':3.3642761780921897,
             'sliderCrankFloatingTest.py':0.5916491633788336,
@@ -55,7 +58,7 @@ def TestExamplesReferenceSolution():
             'sphericalJointTest.py':4.409080446580333,
             'springDamperUserFunctionTest.py':0.506287227301091,
             'stiffFlyballGovernor.py':0.8962488779114738,
-            'superElementRigidJointTest.py':0.015214887106830069,
+            'superElementRigidJointTest.py':0.015217208913982934,  #until 2021-04-27 (improved MarkerSuperElementRigid): 0.015214887106830069,
             'connectorRigidBodySpringDamperTest.py':0.18276224743116654,            
             }
     else: #old solver version, with inconsistent algorithmic accelerations; checked with previous stored results (2021-02-04), agrees upt to 2e-16 
@@ -102,8 +105,20 @@ def TestExamplesReferenceSolution():
             'connectorRigidBodySpringDamperTest.py':0.18276224743714353,
             }
     if exudynTestGlobals.useCorrectedAccGenAlpha and not exudynTestGlobals.useNewGenAlphaSolver:
-        print("in if clause **************\n**************\n**************\n**************\n")
         refSol['serialRobotTest.py']=0.7712176102645458#-4.309882450925784e-10 diff between old corrected and new gen alpha solver
+
+    #++++++++++++++++++++
+    #special solutions for 32bit:
+    import platform
+    if platform.architecture()[0] != '64bit':
+        refSol['ACNFslidingAndALEjointTest.py']=-4.426403043824947
+        refSol['genericODE2test.py']=0.036045463499109365
+        refSol['heavyTop.py']=33.42312575176021 
+        #refSol['objectFFRFreducedOrderTest.py']=0.026776166340291847 #changes due to eigenvalue solver
+        #refSol['scissorPrismaticRevolute2D.py']=27.202556489044472 #not needed with updated 64bit solution
+        refSol['serialRobotTest.py']=0.7712176106962295
+        refSol['connectorRigidBodySpringDamperTest.py']=0.1827622474328367
+
 
     #add new reference values here (only uses new solver):
     refSol['sensorUserFunctionTest.py'] = 45
@@ -165,7 +180,7 @@ def MiniExamplesReferenceSolution():
             'ObjectRigidBody2D.py':4.356194490192344,
             'ObjectGenericODE2.py':1.0039999999354785,
             'ObjectGenericODE1.py':-0.8206847097689384,
-            'ObjectConnectorSpringDamper.py':0.9733828995835538,
+            'ObjectConnectorSpringDamper.py':0.9733828995736554, #until 2021-03-20: 0.9733828995835538,
             'ObjectConnectorCartesianSpringDamper.py':-0.0009999999999750209,
             'ObjectConnectorRigidBodySpringDamper.py':-0.5349299542344889, #before final switching to new genAlpha: -0.5349299506130816,
             'ObjectConnectorCoordinateSpringDamper.py':0.0019995154213252597,
@@ -194,6 +209,12 @@ def MiniExamplesReferenceSolution():
             }
     if 'experimentalNewSolver' in exu.sys: #needs some corrected results
         refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.5349299542344889 #diff to other solvers: 3.6e-9
+
+
+    #special solutions for 32bit:
+    # import platform
+    # if platform.architecture()[0] != '64bit':
+    #     refSol[''] = xy
     
     return refSol
 

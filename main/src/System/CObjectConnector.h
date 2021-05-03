@@ -101,8 +101,8 @@ public:
 	//! function to initialize discontinuous iterations prior to simulation (e.g. reset contact conditions, etc.)
 	//virtual void InitializeDiscontinuousIteration() {  } ==> use initial conditions of data coordinates?
 
-	//! function called after Newton method; returns a residual error (force); gets marker data for current configuration to achieve the correct behavior
-	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags) { return 0; };
+	//! function called after Newton method; returns a residual error (force); gets marker data for current configuration to achieve the correct behavior; recommendedStepSize = [< 0 for no recommendation, 0 for min step size, > 0 for reduction of step size to given value]
+	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) { return 0; };
 	//virtual Real PostNewtonStep(const MarkerDataStructure& markerDataStartOfStep, const MarkerDataStructure& markerDataCurrent) { return 0; };
 
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)

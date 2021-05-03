@@ -73,7 +73,7 @@ public:
 	//SlimVector(const T(&listOfItems)[dataSize]) //immediate check of initializer_list size, but would allow to cast to std::vector<> ==> dangerous!!! //pass by value as a standard in C++11
 	{
 		//not needed in C++14 and above; 
-		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimVector::constructor, initializer_list.size() must match template dataSize");
+		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimVector::constructor, initializer_list.size() must match template dataSize");
 		//static_assert supported by C++14 (supports listOfReals.size() as constexpr)
 		
         Index cnt = 0;
@@ -143,7 +143,7 @@ public:
 	//! set vector to data given by initializer list
 	void SetVector(std::initializer_list<T> listOfItems)
 	{
-		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimVector::SetVector, initializer_list.size() must match template dataSize");
+		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimVector::SetVector, initializer_list.size() must match template dataSize");
 
 		Index cnt = 0;
 		for (auto val : listOfItems) {

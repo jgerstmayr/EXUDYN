@@ -132,7 +132,7 @@ public:
 	//++++++++              HELPER FUNCTIONS FOR EXPLICIT INTEGRATOR                 +++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! helper function that computes q_tt = M^-1*ODE2RHS for given q_t and q; return true, if successful
-	bool ComputeODE2Acceleration(CSystem& computationalSystem, Vector& ode2Rhs,
+	bool ComputeODE2Acceleration(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Vector& ode2Rhs,
 		Vector& ode2Acceleration, GeneralMatrix* massMatrix);
 
 	//! helper function to compute Butcher tableau in rkData for given integrator and return number of stages; 

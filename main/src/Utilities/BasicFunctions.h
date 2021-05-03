@@ -20,6 +20,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <atomic> //std::atomic
 
 #include <cmath> //(math.h is not available in CLANG)
 #include <sstream>
@@ -123,43 +124,44 @@ namespace EXUstd {
 	}
 
 
-    // @brief Sorts an array x(1..x.Length()) into ascending numerical order by Shell’s method (diminishing increment sort).
-    // 'array' is replaced on output by its sorted rearrangement. 
-    // needed member functions of array: operator[], Index NumberOfItems()
-    // needed capability of items: operator>, copy constructor (operator=)
-	//template <class ArrayClass>
-	//void QuickSort(ArrayClass& array)
-	//{
-	//	Index len = array.NumberOfItems();
-	//	Index i, j, inc;
-	//	if (!len) { return; } //exit if array has zero length (next line would fail otherwise!)
+     //@brief Sorts an array x(1..x.Length()) into ascending numerical order by Shell’s method (diminishing increment sort).
+     //! 'array' is replaced on output by its sorted rearrangement. 
+     //! needed member functions of array: operator[], Index NumberOfItems()
+     //! needed capability of items: operator>, copy constructor (operator=)
+	//! tested with Real in UnitTests
+	template <class ArrayClass>
+	void QuickSort(ArrayClass& array)
+	{
+		Index len = array.NumberOfItems();
+		Index i, j, inc;
+		if (!len) { return; } //exit if array has zero length (next line would fail otherwise!)
 
-	//	auto item = array[0];
+		auto item = array[0];
 
-	//	inc = 1; //Determine the starting increment.
-	//	do
-	//	{
-	//		inc *= 3;
-	//		inc++;
-	//	} while (inc <= len); //<len ?
+		inc = 1; //Determine the starting increment.
+		do
+		{
+			inc *= 3;
+			inc++;
+		} while (inc <= len); //<len ?
 
-	//	do
-	//	{ //Loop over the partial sorts.
-	//		inc /= 3;
-	//		for (i = inc; i < len; i++)
-	//		{ //Outer loop of straight insertion.
-	//			item = array[i];
-	//			j = i;
-	//			while (array[j - inc] > item)
-	//			{ //Inner loop of straight insertion.
-	//				array[j] = array[j - inc];
-	//				j -= inc;
-	//				if (j < inc) break;
-	//			}
-	//			array[j] = item;
-	//		}
-	//	} while (inc > 1);
-	//}
+		do
+		{ //Loop over the partial sorts.
+			inc /= 3;
+			for (i = inc; i < len; i++)
+			{ //Outer loop of straight insertion.
+				item = array[i];
+				j = i;
+				while (array[j - inc] > item)
+				{ //Inner loop of straight insertion.
+					array[j] = array[j - inc];
+					j -= inc;
+					if (j < inc) break;
+				}
+				array[j] = item;
+			}
+		} while (inc > 1);
+	}
 
 	//! template function to allow string conversion for objects having stream operator
 	template<class T>
@@ -219,11 +221,77 @@ namespace EXUstd {
 		return (((Index)typeAvailable & (Index)typeRequested) == (Index)typeRequested) && (Index)typeRequested != 0;
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//checker functions for simulationSettings and visualizationSettings
+	inline Index GetSafelyUInt(Index value, const char* parameterName)
+	{
+		if (!(value >= 0))
+		{
+			PyError(STDstring("integer parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
+			return 0;
+		}
+		return value;
+	}
+
+	inline Index GetSafelyPInt(Index value, const char* parameterName)
+	{
+		if (!(value > 0))
+		{
+			PyError(STDstring("integer parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
+			return 1; //any positive value, should work in most cases as a backup
+		}
+		return value;
+	}
+
+	inline Real GetSafelyUReal(Real value, const char* parameterName)
+	{
+		if (value < 0)
+		{
+			PyError(STDstring("Real parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
+			return 0;
+		}
+		return value;
+	}
+
+	inline Real GetSafelyPReal(Real value, const char* parameterName)
+	{
+		if (value <= 0)
+		{
+			PyError(STDstring("Real parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
+			return 1; //any positive value, should work in most cases as a backup
+		}
+		return value;
+	}
+
+	//a function to wait until flag is available, then reserve flag
+	inline void WaitAndLockSemaphore(std::atomic_flag& flag)
+	{
+		while (flag.test_and_set(std::memory_order_acquire)) {}; //wait for atomic flag to be available
+	}
+
+	//a function to release locked flag
+	inline void ReleaseSemaphore(std::atomic_flag& flag)
+	{
+		flag.clear(std::memory_order_release);
+	}
+
+	
+	inline void WaitAndLockSemaphoreIgnore(std::atomic_flag& flag)
+	{
+		; //do nothing, to check if semaphore is needed or causing deadlock
+	}
+
+
 	//get current time since program start in seconds; resolution in nanoseconds; due to offset, this function can produce negative values!
 	double GetTimeInSeconds();
 
 	//this calculates an average offset for the function GetTimeInSeconds() and sets it into a global variable 
 	double SetTimerOffset();
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//checker functions for simulationSettings and visualizationSettings
+
 
 } //namespace EXUstd
 

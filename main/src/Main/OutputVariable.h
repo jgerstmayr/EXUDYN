@@ -34,6 +34,7 @@ namespace Marker { //==>put into pybindings file in future!
 	//  e.g. the MarkerBodyRigid (+ the according body function) defines how to transform a torque to the body 
 	//  coordinates, or how to measure the orientation of the body;
 	//  use unscoped enum to directly translate to Index
+	//  all marker functions address ODE2 coordinates, flag ODE1 is not set
 	enum Type {
 		_None = 0, //marks that no type is used
 		//bits to determine the item which is acted on (not relevant for connector, load, OutputVariable):
@@ -60,7 +61,9 @@ namespace Marker { //==>put into pybindings file in future!
 
 		//Rotv1v2v3 = 1 << 1xx,				//!< for special joints that need a attached triad; in fact, a marker of orientation type must also provide Rotv1v2v3
 
-		EndOfEnumList = 1 << 14				//KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+		ODE1 = 1 << 14,						//!< marker addresses ODE1 coordinates (otherwise, standard is ODE2)
+		//NOTE that SuperElementAlternativeRotationMode = (1 << 31) ==> do not use this value here!
+		EndOfEnumList = 1 << 15				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 		//available Types are, e.g.
 		//Node: 2+4+16, 2+4+8, 2+16
 		//Body: 1+4+16, 1+4+8, 1+16, 1+4+128, ...
@@ -85,6 +88,7 @@ namespace Marker { //==>put into pybindings file in future!
 		
 		if (var & MultiNodal) { t += "MultiNodal"; }
 		if (var & ReducedCoordinates) { t += "ReducedCoordinates"; }
+		if (var & ODE1) { t += "ODE1"; } //'Body' already added via (var & Body)
 		if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
 
 		return t;
@@ -94,9 +98,6 @@ namespace Marker { //==>put into pybindings file in future!
 
 enum class AccessFunctionType { //determines which connectors/forces can be applied to object; underscores mark the derivative w.r.t. q
 	_None = 0, //marks that no type is used
-	//TranslationalVelocity_qt = (1 << 0), //for application of forces, position constraints
-	//AngularVelocity_qt = (1 << 1), //for application of torques, rotational constraints
-	//DisplacementVolumeIntegral_q = (1 << 2), //for distributed (body) loads
 
 	//keep this list SYNCHRONIZED with MarkerType:
 	TranslationalVelocity_qt = (Index)Marker::Position,			//for application of forces, position constraints
@@ -109,7 +110,8 @@ enum class AccessFunctionType { //determines which connectors/forces can be appl
 	DisplacementSurfaceNormalIntegral_q = (Index)Marker::BodySurfaceNormal, //for surface loads: CAUTION: pressure acts normal to surface!!!
 	SuperElement = (Index)Marker::SuperElement,					//for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
 	//Rotv1v2v3_q = (Index)Marker::Rotv1v2v3,						//for joints, e.g., prismatic or rigid body; in fact, a marker of type orientation must also provide Rotv1v2v3
-	//NOT VALID: EndOfEnumList = (1 << 3) //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+	SuperElementAlternativeRotationMode= (1 << 31)							//for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
+
 };
 
 enum class LoadType {
@@ -157,42 +159,54 @@ inline const char* GetSensorTypeString(SensorType var)
 
 
 //! OutputVariable used for output data in objects, nodes, loads, ...
+//enum class OutputVariableType : unsigned __int64 { //should work for larger enums...
 enum class OutputVariableType {
 	//all cases are independent of 2D/3D, which is known by the object itself; TYPES CAN BE COMBINED (==> used for available types in element)
 	_None = 0, //marks that no type is used
 	Distance = 1 << 0,				//!< distance, e.g. of joint or spring-damper
 	Position = 1 << 1,				//!< position vector, e.g. of node or body center of mass
 	Displacement = 1 << 2,			//!< displacement vector, e.g. of node or body center of mass
-	Velocity = 1 << 3,				//!< velocity vector, e.g. of node or body center of mass
-	Acceleration = 1 << 4,			//!< acceleration vector, e.g. of node or body center of mass
-	RotationMatrix = 1 << 5,		//!< rotation matrix, e.g. rigid body
-	AngularVelocity = 1 << 6,		//!< angular velocity vector, e.g. rigid body; scalar quantity in 2D-elements
-	AngularVelocityLocal = 1 << 7,	//!< angular velocity vector in local (body-fixed) coordinates
-	AngularAcceleration = 1 << 8,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
-	Rotation = 1 << 9,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
-	Coordinates = 1 << 10,			//!< single object or node coordinate(s) as output
-	Coordinates_t = 1 << 11,		//!< single object or node velocity coordinate(s) as output
-	Coordinates_tt = 1 << 12,		//!< single object or node velocity coordinate(s) as output
-	SlidingCoordinate = 1 << 13,	//!< scalar coordinate in sliding joint
-	Director1 = 1 << 14,			//!< direction or (axial) slope vector 1 (in 2D-elements)
-	Director2 = 1 << 15,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
-	Director3 = 1 << 16,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
-	Force = 1 << 17,				//!< force e.g. in connector/constraint or section force in beam
-	Torque = 1 << 18,				//!< torque e.g. in connector/constraint or section moment/torque in beam
-	Strain = 1 << 19,				//!< strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
-	Stress = 1 << 20,				//!< stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
-	Curvature = 1 << 21,			//!< curvature (components) in beam or shell
-	DisplacementLocal = 1 << 22,	//!< local displacement vector (used e.g. in joints)
-	VelocityLocal = 1 << 23,		//!< local velocity vector (used e.g. in joints)
-	ForceLocal = 1 << 24,			//!< local force e.g. in connector/constraint or section force in beam
-	TorqueLocal = 1 << 25,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
-	ConstraintEquation = 1 << 26,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
+	DisplacementLocal = 1 << 3,		//!< local displacement vector (used e.g. in joints)
+	Velocity = 1 << 4,				//!< velocity vector, e.g. of node or body center of mass
+	VelocityLocal = 1 << 5,			//!< local velocity vector (used e.g. in joints)
+	Acceleration = 1 << 6,			//!< acceleration vector, e.g. of node or body center of mass
+	RotationMatrix = 1 << 7,		//!< rotation matrix, e.g. rigid body
+	AngularVelocity = 1 << 8,		//!< angular velocity vector, e.g. rigid body; scalar quantity in 2D-elements
+	AngularVelocityLocal = 1 << 9,	//!< angular velocity vector in local (body-fixed) coordinates
+	AngularAcceleration = 1 << 10,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
+	//AngularAccelerationLocal = 1 << 11,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
+	Rotation = 1 << 12,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
+	Coordinates = 1 << 13,			//!< single object or node coordinate(s) as output
+	Coordinates_t = 1 << 14,		//!< single object or node velocity coordinate(s) as output
+	Coordinates_tt = 1 << 15,		//!< single object or node velocity coordinate(s) as output
+	SlidingCoordinate = 1 << 16,	//!< scalar coordinate in sliding joint
+	Director1 = 1 << 17,			//!< direction or (axial) slope vector 1 (in 2D-elements)
+	Director2 = 1 << 18,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
+	Director3 = 1 << 19,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
+//
+	Force = 1 << 20,				//!< force e.g. in connector/constraint or section force in beam in global coordinates
+	ForceLocal = 1 << 21,			//!< local force e.g. in connector/constraint or section force in beam
+	Torque = 1 << 22,				//!< torque e.g. in connector/constraint or section moment/torque in beam in global coordinates
+	TorqueLocal = 1 << 23,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
+
+//  unused for now, maybe later on in finite elements, fluid, etc.:
+	//Strain = 1 << 24,				//!< strain components (global/ Almansi)
+	//Stress = 1 << 25,				//!< stress components (global / Cauchy)
+	//Curvature,					//!< global curvature not expected to be needed in future
+
+// use this for beam-quantities as they are local:
+	StrainLocal = 1 << 26,			//!< local strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
+	StressLocal = 1 << 27,			//!< local stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
+	CurvatureLocal = 1 << 28,		//!< local curvature (components) in beam or shell
+//
+	ConstraintEquation = 1 << 29,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
+
+	//Curvature = 1 << 21,			//!< global curvature (components) in beam or shell
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!
 
     //SecondPiolaKirchoffStress = (1 << 7), GreenStrain = (1 << 8),
     //BeamStrain = (1 << 9), BeamCurvature = (1 << 10), //are both 3D-vectors containing axial and transverse components
     //FramePosition = (1 << 11), FrameOrientation = (1 << 12), //position and orientation of the reference point
-    EndOfEnumList = 1 << 27 //KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 };
 
 //! OutputVariable string conversion
@@ -204,19 +218,17 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 	case OutputVariableType::Distance: return "Distance";
 	case OutputVariableType::Position: return "Position";
 	case OutputVariableType::Displacement: return "Displacement";
+	case OutputVariableType::DisplacementLocal: return "DisplacementLocal";
 	case OutputVariableType::Velocity: return "Velocity";
+	case OutputVariableType::VelocityLocal: return "VelocityLocal";
 	case OutputVariableType::Acceleration: return "Acceleration";
+	//case OutputVariableType::AccelerationLocal: return "AccelerationLocal";
 	case OutputVariableType::RotationMatrix: return "RotationMatrix";
 	case OutputVariableType::AngularVelocity: return "AngularVelocity";
 	case OutputVariableType::AngularVelocityLocal: return "AngularVelocityLocal";
 	case OutputVariableType::AngularAcceleration: return "AngularAcceleration";
-	//case OutputVariableType::ScalarPosition: return "ScalarPosition"; //use position instead!
-	//case OutputVariableType::ScalarDisplacement: return "ScalarDisplacement";
-	//case OutputVariableType::ScalarVelocity: return "ScalarVelocity";
-	//case OutputVariableType::ScalarAcceleration: return "ScalarAcceleration";
 	case OutputVariableType::Rotation: return "Rotation";
-	//case OutputVariableType::ScalarAngularVelocity: return "ScalarAngularVelocity";
-	//case OutputVariableType::ScalarAngularAcceleration: return "ScalarAngularAcceleration";
+//
 	case OutputVariableType::Coordinates: return "Coordinates";
 	case OutputVariableType::Coordinates_t: return "Coordinates_t";
 	case OutputVariableType::Coordinates_tt: return "Coordinates_tt";
@@ -224,17 +236,22 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
 	case OutputVariableType::Director1: return "Director1";
 	case OutputVariableType::Director2: return "Director2";
 	case OutputVariableType::Director3: return "Director3";
+//
 	case OutputVariableType::Force: return "Force";
-	case OutputVariableType::Torque: return "Torque";
-	case OutputVariableType::Strain: return "Strain";
-	case OutputVariableType::Stress: return "Stress";
-	case OutputVariableType::Curvature: return "Curvature";
-	case OutputVariableType::DisplacementLocal: return "DisplacementLocal";
-	case OutputVariableType::VelocityLocal: return "VelocityLocal";
 	case OutputVariableType::ForceLocal: return "ForceLocal";
+	case OutputVariableType::Torque: return "Torque";
 	case OutputVariableType::TorqueLocal: return "TorqueLocal";
+//
+	//case OutputVariableType::Strain: return "Strain";
+	//case OutputVariableType::Stress: return "Stress";
+	//case OutputVariableType::Curvature: return "Curvature";
+
+	case OutputVariableType::StrainLocal: return "StrainLocal";
+	case OutputVariableType::StressLocal: return "StressLocal";
+	case OutputVariableType::CurvatureLocal: return "CurvatureLocal";
+//
 	case OutputVariableType::ConstraintEquation: return "ConstraintEquation";
-	case OutputVariableType::EndOfEnumList: return "EndOfEnumList";
+
 	default: SysError("GetOutputVariableTypeString: invalid variable type");  return "Invalid";
 	}
 }
@@ -338,35 +355,83 @@ inline bool IsConfigurationInitialCurrentVisualization(ConfigurationType configu
 	else { return false; }
 }
 
+//! enum for item types, used e.g. for visualization
+//keep this list synchronized with ofstream operator
+enum class ItemType {
+	_None  = 0, //marks that no itemType is available
+	Node   = 1 << 0,
+	Object = 1 << 1,
+	Marker = 1 << 2,
+	Load   = 1 << 3,
+	Sensor = 1 << 4, //adapt also Index2ItemIDindexShift if changed!
+};
 
+//! ofstream operator for ItemType
+inline std::ostream& operator<<(std::ostream& os, const ItemType& object)
+{
+	switch (object)
+	{
+	case ItemType::_None : os << "_None"; break;
+	case ItemType::Node: os << "Node"; break;
+	case ItemType::Object: os << "Object"; break;
+	case ItemType::Marker: os << "Marker"; break;
+	case ItemType::Load: os << "Load"; break;
+	case ItemType::Sensor: os << "Sensor"; break;
+	default: break;
+	}
+	return os;
+}
+
+const int Index2ItemIDindexShift = 5;
+inline Index Index2ItemID(Index index, ItemType type)
+{
+	return (index << Index2ItemIDindexShift) + (Index)type;
+}
+
+inline void ItemID2IndexType(Index itemID, Index& index, ItemType& type)
+{
+	if (itemID != -1)
+	{
+		type = (ItemType)(itemID & ((1 << Index2ItemIDindexShift) - 1));
+		index = itemID >> Index2ItemIDindexShift;
+	}
+	else
+	{
+		type = ItemType::_None;
+		index = -1;
+	}
+}
+
+
+//UNUSED:
 //! helper function to transform loadType and markerType to (necessary) AccessFunctionType
 //! @todo move GetAccessFunctionType to CMarker / derived Marker classes !
 //  now this can be translated mostly automatically
-inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type markerType)
-{
-	switch (markerType)
-    {
-	case Marker::Position: 
-        if (loadType == LoadType::Force) {
-            return AccessFunctionType::TranslationalVelocity_qt;
-        } else if (loadType == LoadType::Torque) {
-            return AccessFunctionType::AngularVelocity_qt;
-        }
-        else {
-            CHECKandTHROWstring("GetAccessFunctionType:  Marker::BodyPosition"); return AccessFunctionType::_None;
-        }
-    case Marker::BodyMass:
-        if (loadType == LoadType::ForcePerVolume) {
-            return AccessFunctionType::DisplacementVolumeIntegral_q;
-        }
-        else {
-            CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerVolume"); return AccessFunctionType::_None;
-        }
-
-    default: CHECKandTHROWstring("GetAccessFunctionType"); return AccessFunctionType::_None;
-    }
-
-};
+//inline AccessFunctionType GetAccessFunctionType(LoadType loadType, Marker::Type markerType)
+//{
+//	switch (markerType)
+//    {
+//	case Marker::Position: 
+//        if (loadType == LoadType::Force) {
+//            return AccessFunctionType::TranslationalVelocity_qt;
+//        } else if (loadType == LoadType::Torque) {
+//            return AccessFunctionType::AngularVelocity_qt;
+//        }
+//        else {
+//            CHECKandTHROWstring("GetAccessFunctionType:  Marker::BodyPosition"); return AccessFunctionType::_None;
+//        }
+//    case Marker::BodyMass:
+//        if (loadType == LoadType::ForcePerVolume) {
+//            return AccessFunctionType::DisplacementVolumeIntegral_q;
+//        }
+//        else {
+//            CHECKandTHROWstring("GetAccessFunctionType:  Marker::ForcePerVolume"); return AccessFunctionType::_None;
+//        }
+//
+//    default: CHECKandTHROWstring("GetAccessFunctionType"); return AccessFunctionType::_None;
+//    }
+//
+//};
 
 //! helper function to transform loadType and markerType to (necessary) AccessFunctionType
 //! @todo move GetAccessFunctionType to CMarker / derived Marker classes !

@@ -70,7 +70,7 @@ const lest::test vector_specific_test[] =
 
 	CASE("Vector: copy constructor x(y)")
 	{
-		Vector x({3,5,9,1});
+		Vector x({3.,5.,9.,1.});
 		Vector y(x);
 		EXPECT(y.NumberOfItems() == 4);
 		EXPECT(ToString(y) == "[3 5 9 1]");
@@ -109,17 +109,17 @@ const lest::test vector_specific_test[] =
     CASE("Vector, SetVector")
     {
         Vector y;
-        y.SetVector({ 3,5,9,1 });
+        y.SetVector({ 3.,5.,9.,1. });
         EXPECT(y.NumberOfItems() == 4);
         EXPECT(ToString(y) == "[3 5 9 1]");
 
         Vector x(3);
-        x.SetVector({ 3,5,9,1 });
+        x.SetVector({ 3.,5.,9.,1. });
         EXPECT(x.NumberOfItems() == 4);
         EXPECT(ToString(x) == "[3 5 9 1]");
 
         Vector z;
-        z.SetVector({ 3,5,9,1 });
+        z.SetVector({ 3.,5.,9.,1. });
         EXPECT(z.NumberOfItems() == 4);
         EXPECT(ToString(z) == "[3 5 9 1]");
 
@@ -133,13 +133,13 @@ const lest::test vector_specific_test[] =
     },
     CASE("Vector::Append")
     {
-        Vector v1({ 3, 4 });
-        Vector v2({ 4, 5, 7 });
-        Vector v3({ 8,9 });
+        Vector v1({ 3., 4. });
+        Vector v2({ 4., 5., 7. });
+        Vector v3({ 8.,9. });
         v1 = v1.Append(v3);
         EXPECT(ToString(v1) == "[3 4 8 9]");
 
-        Vector v4({ 10 });
+        Vector v4({ 10. });
         v1 = v4.Append(v2);
         EXPECT(ToString(v1) == "[10 4 5 7]");
 
@@ -161,6 +161,13 @@ const lest::test constSizeVector_specific_test[] =
         EXPECT(x.NumberOfItems() == 1);
         EXPECT(x.GetDataPointer() == &x[0]);
     },
+	CASE("ConstSizeVector: initializer list with one element")
+	{
+		ConstSizeVector<2> v1({ 13.});
+
+		EXPECT(v1.NumberOfItems() == 1);
+		EXPECT(ToString(v1) == "[13]");
+	},
 
     CASE("ConstSizeVector constructors, SetNumberOfItems, (Max)NumberOfItems")
     {
@@ -172,7 +179,7 @@ const lest::test constSizeVector_specific_test[] =
         EXPECT(y.NumberOfItems() == 3);
         EXPECT(y.MaxNumberOfItems() == 4);
 
-        y = ConstSizeVector<4>({ 1.1, 2, 3, 4 });
+        y = ConstSizeVector<4>({ 1.1, 2., 3., 4. });
         x[3] = 10;
         x.SetNumberOfItems(3);
         y.SetNumberOfItems(3);
@@ -185,7 +192,7 @@ const lest::test constSizeVector_specific_test[] =
 
     CASE("ConstSizeVector(const Vector&, Index)")
     {
-        Vector x({3, 1, 4, 5.5});
+        Vector x({3., 1., 4., 5.5});
         ConstSizeVector<2> y(x, 0);
         ConstSizeVector<2> z(x, 2);
         EXPECT(ToString(y) == "[3 1]");
@@ -195,7 +202,7 @@ const lest::test constSizeVector_specific_test[] =
     CASE("ConstSizeVector(Index, Real), numberOfItems during operator= and copy constructor")
     {
         ConstSizeVector<4> x(4, 13.); //numberOfItems=4
-        ConstSizeVector<4> y({1, 2, 5}); //numberOfItems=3
+        ConstSizeVector<4> y({1., 2., 5.}); //numberOfItems=3
         EXPECT(y.NumberOfItems() == 3);
 
         x = y; //x:numberOfItems becomes 3
@@ -239,8 +246,8 @@ const lest::test constSizeVector_specific_test[] =
 
     CASE("ConstSizeVector operators for numberOfItems < dataSize")
     {
-        ConstSizeVector<4> x({ 3, 1, 5.5, 6 });
-        ConstSizeVector<4> y({ 1, 2, 3, 4 });
+        ConstSizeVector<4> x({ 3., 1., 5.5, 6. });
+        ConstSizeVector<4> y({ 1., 2., 3., 4. });
 
         ConstSizeVector<4> z(4, 4.4);
         x.SetNumberOfItems(3);
@@ -343,7 +350,7 @@ const lest::test SlimVector_specific_test[] =
     CASE("SlimVector<2>(const Vector&):")
     {
         Vector v({ 1.1, 2.2, 3.3 });
-        SlimVector<2> sv(v);
+        SlimVector<2> sv(v,0); //added ,0 as the default argument has been removed
 
         EXPECT(sv.NumberOfItems() == 2);
         EXPECT(sv[0] == 1.1);
@@ -367,7 +374,7 @@ const lest::test linkedDataVector_specific_test[] =
 
     CASE("LinkedDataVector: default constructor")
     {
-        Vector v({ 3, 4, 5.5 });
+        Vector v({ 3., 4., 5.5 });
         LinkedDataVector lv;
         LinkedDataVector lv2;
 
@@ -387,7 +394,7 @@ const lest::test linkedDataVector_specific_test[] =
 
     CASE("LinkedDataVector: link data constructor")
     {
-        Vector v({ 3, 4, 5.5 });
+        Vector v({ 3., 4., 5.5 });
         LinkedDataVector lv(v);
 
         EXPECT(lv.NumberOfItems() == 3);
@@ -400,7 +407,7 @@ const lest::test linkedDataVector_specific_test[] =
 
     CASE("LinkedDataVector: link data constructor(SlimVector<3>)")
     {
-        SlimVector<3> v({ 3, 4, 5.5 });
+        SlimVector<3> v({ 3., 4., 5.5 });
         LinkedDataVector lv(v);
         LinkedDataVector lv2(v);
 
@@ -414,9 +421,9 @@ const lest::test linkedDataVector_specific_test[] =
 
     CASE("LinkedDataVector: LinkDataTo(Vector)), operator=, operator==")
     {
-        Vector v1({ 3, 4, 5.5 });
-        Vector v2({ 4, 3, 1.5 });
-        Vector v3({ 1, 2.2, 3 });
+        Vector v1({ 3., 4., 5.5 });
+        Vector v2({ 4., 3., 1.5 });
+        Vector v3({ 1., 2.2, 3. });
         LinkedDataVector lv1, lv2;
 
         lv1.LinkDataTo(v1); lv2.LinkDataTo(v2);
@@ -442,8 +449,8 @@ const lest::test linkedDataVector_specific_test[] =
 
     CASE("LinkedDataVector: LinkDataTo(Vector,Index,Index)), operator[]")
     {
-        Vector v1({ 3, 4, 5.5 });
-        Vector v2({ 4, 3, 1.5 });
+        Vector v1({ 3., 4., 5.5 });
+        Vector v2({ 4., 3., 1.5 });
         LinkedDataVector lv1, lv2;
 
         lv1.LinkDataTo(v1,0,2); lv2.LinkDataTo(v2,1,2);
@@ -465,8 +472,8 @@ const lest::test linkedDataVector_specific_test[] =
 
     CASE("LinkedDataVector: LinkDataTo(Vector,Index,Index)), operator +=, -=, *=, /=")
     {
-        Vector v1({ 3, 4, 5.5 });
-        Vector v2({ 4, 3, 1.5 });
+        Vector v1({ 3., 4., 5.5 });
+        Vector v2({ 4., 3., 1.5 });
         LinkedDataVector lv1, lv2;
 
         lv1.LinkDataTo(v1,0,2); lv2.LinkDataTo(v2,1,2);
@@ -490,8 +497,8 @@ const lest::test linkedDataVector_specific_test[] =
     {
         SETUP("extended math")
         {
-            Vector x1({ 3, 4 });
-            Vector x2({ 4, 5});
+            Vector x1({ 3., 4. });
+            Vector x2({ 4., 5.});
             LinkedDataVector v1(x1);
             LinkedDataVector v2(x2);
             SECTION("GetL2NormSquared")
@@ -525,33 +532,40 @@ const lest::test linkedDataVector_specific_test[] =
 const lest::test resizableVector_specific_test[] =
 {
 
-    CASE("ResizableVector: constructor and SetNumberOfItems")
-    {
-        ResizableVector v1({ 3, 4, 5.5 });
-        ResizableVector v2;
-        ResizableVector v3(4);
-        ResizableVector v4(2, 3.3);
+	CASE("ResizableVector: constructor and SetNumberOfItems")
+	{
+		ResizableVector v1({ 3., 4., 5.5 });
+		ResizableVector v2;
+		ResizableVector v3(4);
+		ResizableVector v4(2, 3.3);
 
-        EXPECT(v1.NumberOfItems() == 3);
-        EXPECT(v2.NumberOfItems() == 0);
-        EXPECT(v3.NumberOfItems() == 4);
-        EXPECT(v4[0] == 3.3);
-        EXPECT(v4[1] == 3.3);
+		EXPECT(v1.NumberOfItems() == 3);
+		EXPECT(v2.NumberOfItems() == 0);
+		EXPECT(v3.NumberOfItems() == 4);
+		EXPECT(v4[0] == 3.3);
+		EXPECT(v4[1] == 3.3);
 
-        v1.SetNumberOfItems(2);
-        v2.SetNumberOfItems(2);
-        EXPECT(v1.NumberOfItems() == 2);
-        EXPECT(v2.NumberOfItems() == 2);
-        EXPECT(ToString(v1) == "[3 4]");
+		v1.SetNumberOfItems(2);
+		v2.SetNumberOfItems(2);
+		EXPECT(v1.NumberOfItems() == 2);
+		EXPECT(v2.NumberOfItems() == 2);
+		EXPECT(ToString(v1) == "[3 4]");
 
-        v2 = v4;
-        v2.SetNumberOfItems(1);
-        EXPECT(v2.NumberOfItems() == 1);
-        EXPECT(v2[0] == 3.3);
+		v2 = v4;
+		v2.SetNumberOfItems(1);
+		EXPECT(v2.NumberOfItems() == 1);
+		EXPECT(v2[0] == 3.3);
 
-        v2.SetNumberOfItems(100);
-        EXPECT(v2.NumberOfItems() == 100);
-    },
+		v2.SetNumberOfItems(100);
+		EXPECT(v2.NumberOfItems() == 100);
+	},
+	CASE("ResizableVector: initializer list with one element")
+	{
+		ResizableVector v1({ 13.});
+
+		EXPECT(v1.NumberOfItems() == 1);
+		EXPECT(ToString(v1) == "[13]");
+	},
 };
 
 #endif

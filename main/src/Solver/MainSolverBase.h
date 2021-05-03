@@ -46,7 +46,6 @@
 #include "Main/MainSystemContainer.h"
 
 #include "Solver/CSolverImplicitSecondOrder.h"
-#include "Solver/CSolverImplicitSecondOrderNew.h"
 #include "Solver/CSolverExplicit.h"
 #include "Solver/CSolverStatic.h"
 
@@ -242,9 +241,15 @@ public: //
 	}
 
 	//! perform Newton method for given solver method
-	virtual bool Newton(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
+	virtual bool Newton(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
 		CheckInitialized(mainSystem); return GetCSolver().Newton(*(mainSystem.cSystem), simulationSettings);
+	}
+
+	//! perform PostNewton method for given solver method
+	virtual Real PostNewton(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
+	{
+		CheckInitialized(mainSystem); return GetCSolver().PostNewton(*(mainSystem.cSystem), simulationSettings);
 	}
 
 	//! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual

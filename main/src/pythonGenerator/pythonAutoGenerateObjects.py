@@ -175,6 +175,12 @@ def IsASetSafelyParameter(parameterType):
     else:
         return False
 
+#return True for types, which get a range check and does a .def_property access in pybind and a set/get function
+def IsTypeWithRangeCheck(origType):
+    if origType.find('PInt') != -1 or origType.find('UInt') != -1 or origType.find('PReal') != -1 or origType.find('UReal') != -1:
+        return True
+    return False
+
 #check if type is a item index (NodeIndex, ...)
 def IsItemIndex(parameterType):
     if (
@@ -274,7 +280,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #print('file="'+parseInfo['writeFile']+'"')
     
     #these are the typecasts for the dictionary in the according pybind functions in MainItem
-    typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
+    typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 'PInt':'Index', 'PReal':'Real', 
                  'Vector':'std::vector<Real>', 'Vector7D':'std::vector<Real>', 'Vector6D':'std::vector<Real>', 
                  'Vector4D':'std::vector<Real>', 'Vector3D':'std::vector<Real>', 'Vector2D':'std::vector<Real>', 
                  'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 'Matrix6D':'std::array<std::array<Real,6>,6>', 
@@ -600,7 +606,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 else:
                     tempVPythonDict += "None"
                     
-                tempPythonClassInit = sIndent+sIndent+'self.' + parameter['pythonName'] + ' = ' + parameter['pythonName'] + '\n'
+                #range check:
+                parameterWithCheck = parameter['pythonName']
+                if IsTypeWithRangeCheck(parameter['type']):
+                    parameterWithCheck = 'CheckForValid' + parameter['type'] + '(' + parameter['pythonName'] + ','
+                    parameterWithCheck += '"' + parameter['pythonName'] +'","' + parseInfo['class'] + '")'
+                #future: also add size check ...
+                
+                tempPythonClassInit = sIndent+sIndent+'self.' + parameter['pythonName'] + ' = ' + parameterWithCheck + '\n'
                 tempPythonIter = sIndent+sIndent+'yield ' + "'" + parameter['pythonName'] + "'" + ', self.' + parameter['pythonName'] + '\n'
                 
                 if parameter['destination'].find('V') != -1: #visualization
@@ -1178,7 +1191,7 @@ try: #still close file if crashes
 
     #direct type conversion used for in C++ (type casts are in WriteFile(...) function); 
     #types such as UReal shall be used lateron to perform e.g. range checks prior to setting parameters
-    typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 
+    typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 'PInt':'Index', 'PReal':'Real', 
                       'NodeIndex':'Index', 'ObjectIndex':'Index', 'MarkerIndex':'Index', 'LoadIndex':'Index', 'SensorIndex':'Index', #in C++, all indices are the same!!!
                       'NodeIndex2':'Index2', 'NodeIndex3':'Index3', 'ArrayNodeIndex':'ArrayIndex', 'ArrayMarkerIndex':'ArrayIndex', 'ArraySensorIndex':'ArrayIndex', #in C++, all index lists are the same!!!
                       'Vector':'Vector', 'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
@@ -1458,12 +1471,41 @@ try: #still close file if crashes
     s += '#item interface diagonal matrix creator\n'
     s += '\n'
     s += 'import exudyn #for exudyn.InvalidIndex() needed in RigidBodySpringDamper\n\n'
+    s += '#helper function diagonal matrices, not needing numpy\n'
     s += 'def IIDiagMatrix(rowsColumns, value):\n'
     s += space4+'m = []\n'
     s += space4+'for i in range(rowsColumns):\n'
     s += space8+'m += [rowsColumns*[0]]\n'
     s += space8+'m[i][i] = value\n'
     s += space4+'return m\n\n'
+    
+    s += '#helper function to check valid range\n'
+    s += 'def CheckForValidUInt(value, parameterName, objectName):\n'
+    s += space4+'if value < 0:\n'
+    s += space8+'raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " may not be negative, but received "+str(value))\n'
+    s += space8+'return 0\n'
+    s += space4+'return value\n'
+    s += '#helper function to check valid range\n'
+    s += 'def CheckForValidPInt(value, parameterName, objectName):\n'
+    s += space4+'if value <= 0:\n'
+    s += space8+'raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " must be positive (> 0), but received "+str(value))\n'
+    s += space8+'return 1 #this position is usually not reached\n'
+    s += space4+'return value\n'
+    
+    s += '#helper function to check valid range\n'
+    s += 'def CheckForValidUReal(value, parameterName, objectName):\n'
+    s += space4+'if value < 0:\n'
+    s += space8+'raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " may not be negative, but received "+str(value))\n'
+    s += space8+'return 0.\n'
+    s += space4+'return value\n'
+    s += '#helper function to check valid range\n'
+    s += 'def CheckForValidPReal(value, parameterName, objectName):\n'
+    s += space4+'if value <= 0:\n'
+    s += space8+'raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " must be positive (> 0), but received "+str(value))\n'
+    s += space8+'return 1. #this position is usually not reached\n'
+    s += space4+'return value\n'
+
+    s += '\n\n'
     filePython.write(s)
     
     

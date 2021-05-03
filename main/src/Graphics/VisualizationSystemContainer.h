@@ -66,8 +66,8 @@ public:
 	}
 };
 
-//! copy bodyGraphicsData (of body) into global graphicsData (of system); add position offset and transform with rotation matrix
-void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position, const Matrix3DF& rotation);
+//moved to EXUvis, VisualizationPrimitives.h //! copy bodyGraphicsData (of body) into global graphicsData (of system); add position offset and transform with rotation matrix
+//void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position, const Matrix3DF& rotation);
 
 //! python function to read BodyGraphicsData from dictionary, e.g. for body or ground graphics
 bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsData& data);

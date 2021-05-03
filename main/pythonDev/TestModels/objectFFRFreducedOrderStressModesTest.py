@@ -128,7 +128,7 @@ mbs.SetObjectParameter(objectNumber=objFFRF['oFFRFreducedOrder'],
 
 mbs.SetObjectParameter(objectNumber=objFFRF['oFFRFreducedOrder'],
                        parameterName='outputVariableTypeModeBasis',
-                       value=exu.OutputVariableType.Stress) #only take part of stress modes
+                       value=exu.OutputVariableType.StressLocal) #only take part of stress modes
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add markers and joints
@@ -226,7 +226,7 @@ SC.visualizationSettings.loads.drawSimplified = False
 
 #SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
 #SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component
-SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Stress
+SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.StressLocal
 SC.visualizationSettings.contour.outputVariableComponent = 2 #zz-stress component
 
 simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"

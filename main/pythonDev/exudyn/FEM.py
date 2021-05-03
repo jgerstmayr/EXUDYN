@@ -3,19 +3,20 @@
 #
 # Details:  Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
 #
-# Author:   Johannes Gerstmayr, Stefan Holzinger
+# Author:   Johannes Gerstmayr, Stefan Holzinger (Abaqus and Ansys import utilities)
 # Date:     2020-03-10 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes: 	CSR matrices contain 3 numbers per row: [row, column, value]
+# Notes: 	internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
 from exudyn.itemInterface import *
 from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, FillInSubMatrix, PlotLineCode, GetRigidBodyNode
-from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, Skew
+from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, Skew
 import numpy as np #LoadSolutionFile
+from enum import Enum #for class HCBstaticModeSelection
 
 #convert zero-based sparse matrix data to dense numpy matrix
 #DEPRECTAED!!!!!!!!!!!!!!!!
@@ -540,6 +541,125 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
 
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**class: material base class, e.g., for FiniteElement
+class MaterialBaseClass:
+    def __init__(self, youngsModulus, poissonsRatio, density):
+        self.youngsModulus = youngsModulus
+        self.poissonsRatio = poissonsRatio
+        self.density = density
+
+#**class: class for representation of Kirchhoff (linear elastic, 3D and 2D) material
+# use planeStress=False for plane strain
+class KirchhoffMaterial(MaterialBaseClass):
+    def __init__(self, youngsModulus, poissonsRatio, density = 0, planeStress = True):
+        super().__init__(youngsModulus, poissonsRatio, density)
+        self.planeStress = planeStress
+
+        Em = self.youngsModulus
+        nu = self.poissonsRatio
+
+        lam = nu*Em / ((1 + nu) * (1 - 2*nu))
+        mu = Em / (2*(1 + nu))
+        self.elasticityTensor = np.array([[lam + 2*mu, lam, lam, 0, 0, 0],
+                              [lam, lam + 2*mu, lam, 0, 0, 0],
+                              [lam, lam, lam + 2*mu, 0, 0, 0],
+                              [0, 0, 0, mu, 0, 0],
+                              [0, 0, 0, 0, mu, 0],
+                              [0, 0, 0, 0, 0, mu]])
+
+        if self.planeStress:
+            self.elasticityTensor2D = Em/(1-nu**2)*np.array([[1, nu, 0],
+                                                            [nu, 1, 0],
+                                                            [0, 0, (1-nu)/2]])
+        else:
+            self.elasticityTensor2D = np.array([[lam + 2*mu, lam, 0],
+                                                [lam, lam + 2*mu, 0],
+                                                [0, 0, mu]])
+
+
+    #convert strain tensor into stress tensor using elasticity tensor
+    def Strain2Stress(self, strain):
+        E = strain
+        strainVector = np.array([  E[0,0],   E[1,1],   E[2,2],
+                                 2*E[1,2], 2*E[0,2], 2*E[0,1]])
+        SV = self.StrainVector2StressVector(strainVector)
+        S = np.array([[SV[0], SV[5], SV[4]],
+                      [SV[5], SV[1], SV[3]],
+                      [SV[4], SV[3], SV[2]]])
+        return S
+
+    #convert strain vector into stress vector
+    def StrainVector2StressVector(self, strainVector):
+        return self.elasticityTensor @ strainVector
+
+    def StrainVector2StressVector2D(self, strainVector2D):
+        #E=strain
+        #strainVector2D = np.array([E[0,0], E[1,1], 2*E[0,1]])
+        SV = self.elasticityTensor2D @ strainVector2D
+        #S = np.array([[SV[0], SV[2]], [SV[2], SV[1]]])
+        return SV
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**class: finite element base class for lateron implementations of other finite elements
+class FiniteElement:
+    def __init__(self, material):
+        self.material = material
+    
+
+#**class: simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points
+class Tet4(FiniteElement):
+    def __init__(self, material):
+        super().__init__(material)
+    
+    #return (per node) linearized strain, linearized stress, reference B-matrix and deformation gradient
+    def ComputeMatrices(self, nodalReferenceCoordinates, nodalDisplacements):
+        #following routines implemented according to implementation in AMFE (TU-Munich):
+        X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4 = nodalReferenceCoordinates
+        Umat = nodalDisplacements.reshape(-1, 3)
+        Xmat = nodalReferenceCoordinates.reshape(-1, 3)
+
+        det = (-X1*Y2*Z3 + X1*Y2*Z4 + X1*Y3*Z2 - X1*Y3*Z4 - X1*Y4*Z2 + X1*Y4*Z3 
+              + X2*Y1*Z3 - X2*Y1*Z4 - X2*Y3*Z1 + X2*Y3*Z4 + X2*Y4*Z1 - X2*Y4*Z3 
+              - X3*Y1*Z2 + X3*Y1*Z4 + X3*Y2*Z1 - X3*Y2*Z4 - X3*Y4*Z1 + X3*Y4*Z2 
+              + X4*Y1*Z2 - X4*Y1*Z3 - X4*Y2*Z1 + X4*Y2*Z3 + X4*Y3*Z1 - X4*Y3*Z2)
+
+        #compute B matrix for reference coordinates
+        B0 = 1/det*np.array([
+            [-Y2*Z3 + Y2*Z4 + Y3*Z2 - Y3*Z4 - Y4*Z2 + Y4*Z3,
+              X2*Z3 - X2*Z4 - X3*Z2 + X3*Z4 + X4*Z2 - X4*Z3,
+              -X2*Y3 + X2*Y4 + X3*Y2 - X3*Y4 - X4*Y2 + X4*Y3],
+            [ Y1*Z3 - Y1*Z4 - Y3*Z1 + Y3*Z4 + Y4*Z1 - Y4*Z3,
+              -X1*Z3 + X1*Z4 + X3*Z1 - X3*Z4 - X4*Z1 + X4*Z3,
+              X1*Y3 - X1*Y4 - X3*Y1 + X3*Y4 + X4*Y1 - X4*Y3],
+            [-Y1*Z2 + Y1*Z4 + Y2*Z1 - Y2*Z4 - Y4*Z1 + Y4*Z2,
+              X1*Z2 - X1*Z4 - X2*Z1 + X2*Z4 + X4*Z1 - X4*Z2,
+              -X1*Y2 + X1*Y4 + X2*Y1 - X2*Y4 - X4*Y1 + X4*Y2],
+            [ Y1*Z2 - Y1*Z3 - Y2*Z1 + Y2*Z3 + Y3*Z1 - Y3*Z2,
+              -X1*Z2 + X1*Z3 + X2*Z1 - X2*Z3 - X3*Z1 + X3*Z2,
+              X1*Y2 - X1*Y3 - X2*Y1 + X2*Y3 + X3*Y1 - X3*Y2]])
+
+        #displacement gradient:
+        grad = Umat.T @ B0
+        #deformation gradient:
+        #F = grad + np.eye(3)
+
+        #linearized strain:
+        linE = 0.5*(grad + grad.T)
+        strainVector = np.array([  linE[0,0],   linE[1,1],   linE[2,2],
+                                 2*linE[1,2], 2*linE[0,2], 2*linE[0,1]])
+        
+        stressVector = self.material.StrainVector2StressVector(strainVector)
+        
+        # strainVector4 = np.ones((4,1)) @ np.array([[linE[0,0],   linE[1,1],   linE[2,2],
+        #                                             2*linE[1,2], 2*linE[0,2], 2*linE[0,1]]])
+        strainVector4 = np.ones((4,1)) @ np.array([strainVector])
+
+        stressVector4 = np.ones((4,1)) @ np.array([stressVector])
+
+        #strainvector per node:
+        return [strainVector4, stressVector4, B0, grad]
 
 
 
@@ -757,7 +877,7 @@ class ObjectFFRFinterface:
 
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++          ObjectFFRFreducedOrderTerms              ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: compute terms necessary for ObjectFFRFreducedOrder
@@ -774,6 +894,7 @@ class ObjectFFRFreducedOrderInterface:
     def __init__(self, femInterface, rigidBodyNodeType = 'NodeType.RotationEulerParameters',
                  roundMassMatrix = 1e-13, roundStiffnessMatrix = 1e-13):
  
+        self.femInterface = femInterface
         self.modeBasis = femInterface.modeBasis['matrix']
         nodeArray = femInterface.GetNodePositionsAsArray()
         self.trigList = femInterface.GetSurfaceTriangles()
@@ -838,7 +959,10 @@ class ObjectFFRFreducedOrderInterface:
         #FillInSubMatrix(self.massMatrixReduced, self.massMatrixFFRFreduced, self.nODE2rigid, self.nODE2rigid)
         self.massMatrixFFRFreduced[self.nODE2rigid:,self.nODE2rigid:] = self.massMatrixReduced
 
-    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; test implementation also for rotation vector (Lie group formulation)
+    #unused, because done separately in FEMinterface:  computeOutputVariableModeBasis: provide exudyn.OutputVariableType for postprocessing (set to 0 if unused); currently this is only available for linear tetrahedral elements and for exudyn.OutputVariableType = StrainLocal or StressLocal
+
+
+    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function with userfunctions=0 in order to use internal C++ functionality, which is approx. 10x faster; implementation of userfunctions also available for rotation vector (Lie group formulation), which needs further testing
     #**input:
     #  exu: the exudyn module
     #  mbs: a MainSystem object
@@ -847,12 +971,11 @@ class ObjectFFRFreducedOrderInterface:
     #  rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  UFforce: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
-    #  UFmassMatrix: provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  gravity: ONLY available if user functions are applied; otherwise use LoadMassProportional and add to ObjectFFRFreducedOrder; set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+    #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
-    #  rigiBodyNodeType: use exudyn.NodeType to prescribe type of underlying rigid body node (currently only Euler parameters are implemented and tested); do not use string to initialize other than Euler parameters
     #  color: provided as list of 4 RGBA values
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
                                                   positionRef=[0,0,0], 
@@ -896,7 +1019,24 @@ class ObjectFFRFreducedOrderInterface:
         #print("self.rotationParameters_t0 =",self.rotationParameters_t0 )
 
         self.gravity = gravity
-        
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #check if postProcessingModes exist
+        outputVariableModeBasis = []
+        outputVariableTypeModeBasis = 0
+        #FEM: self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
+
+        if 'matrix' in self.femInterface.postProcessingModes:
+            #check FEMinterface if modes exist:
+            if str(self.femInterface.postProcessingModes['outputVariableType']) == 'OutputVariableType.StressLocal':
+                outputVariableTypeModeBasis = exu.OutputVariableType.StressLocal
+            elif str(self.femInterface.postProcessingModes['outputVariableType']) == 'OutputVariableType.StrainLocal':
+                outputVariableTypeModeBasis = exu.OutputVariableType.StrainLocal
+            else:
+                raise ValueError('AddObjectFFRFreducedOrderWithUserFunctions(...): invalid outputVariableType in postProcessingModes')
+
+            outputVariableModeBasis  = self.femInterface.postProcessingModes['matrix']
+            
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #generic node for modal coordinates in ObjectFFRFreducedOrder
         self.nGenericODE2 = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=self.nModes,
                                           referenceCoordinates=[0]*self.nModes,
@@ -906,31 +1046,69 @@ class ObjectFFRFreducedOrderInterface:
         stiffnessMatrixMC = exu.MatrixContainer()
         stiffnessMatrixMC.SetWithDenseMatrix(self.stiffnessMatrixReduced,useDenseMatrix=False)
 
+        self.dampingMatrixReduced = massProportionalDamping*self.massMatrixReduced+stiffnessProportionalDamping*self.stiffnessMatrixReduced
         if (massProportionalDamping != 0 or stiffnessProportionalDamping != 0):
             dampingMatrixMC = exu.MatrixContainer()
-            dampingMatrixMC.SetWithDenseMatrix(massProportionalDamping*self.massMatrixReduced+stiffnessProportionalDamping*self.stiffnessMatrixReduced,useDenseMatrix=False)
+            dampingMatrixMC.SetWithDenseMatrix(self.dampingMatrixReduced, useDenseMatrix=False)
         else:
             dampingMatrixMC=[]
 
         massMatrixMC = exu.MatrixContainer()
-        factMass = 1.
-        if UFmassMatrix != 0:
-            factMass = 0.
-        massMatrixMC.SetWithDenseMatrix(factMass*self.massMatrixReduced,useDenseMatrix=False)
+        
+        #not needed, as not included in C++ computation until full CMS functionality
+        #factMass = 1.
+        #if UFmassMatrix != 0:
+        #    factMass = 0.
+        #massMatrixMC.SetWithDenseMatrix(factMass*self.massMatrixReduced,useDenseMatrix=False)
+        
+        massMatrixMC.SetWithDenseMatrix(self.massMatrixReduced,useDenseMatrix=False)
         emptyMC = exu.MatrixContainer()
 
         #add generic body for FFRF-Object:
-        self.oFFRFreducedOrder = mbs.AddObject(ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
-                                                            stiffnessMatrixReduced=stiffnessMatrixMC, 
-                                                            massMatrixReduced=massMatrixMC,
-                                                            dampingMatrixReduced=dampingMatrixMC,
-                                                            modeBasis=self.modeBasis,
-                                                            referencePositions = self.xRef,
-                                                            forceUserFunction=UFforce,
-                                                            massMatrixUserFunction=UFmassMatrix,
-                                                            visualization=VObjectFFRF(triangleMesh = self.trigList, 
-                                                                                        color=color,
-                                                                                        showNodes = True)))
+        if UFmassMatrix == 0 or UFforce == 0:
+            
+            if np.array(gravity) @ np.array(gravity) != 0.:
+                raise ValueError("AddObjectFFRFreducedOrderWithUserFunctions: C++ version only implemented for gravity=[0,0,0]; set both user functions or use LoadMassProportional")
+
+            self.oFFRFreducedOrder = mbs.AddObject(ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
+                                                                stiffnessMatrixReduced=stiffnessMatrixMC, 
+                                                                massMatrixReduced=massMatrixMC,
+                                                                dampingMatrixReduced=dampingMatrixMC,
+                                                                modeBasis=self.modeBasis,
+                                                                referencePositions = self.xRef,
+                                                                physicsMass=self.totalMass,
+                                                                physicsInertia=self.inertiaLocal,
+                                                                physicsCenterOfMass=self.chiU,
+                                                                mPsiTildePsi = self.mPsiTildePsi,
+                                                                mPsiTildePsiTilde = self.mPsiTildePsiTilde,
+                                                                mPhitTPsi = self.mPhitTPsi,
+                                                                mPhitTPsiTilde = self.mPhitTPsiTilde,
+                                                                mXRefTildePsi = self.mXRefTildePsi,
+                                                                mXRefTildePsiTilde = self.mXRefTildePsiTilde,
+                                                                outputVariableModeBasis = outputVariableModeBasis,
+                                                                outputVariableTypeModeBasis = outputVariableTypeModeBasis,
+                                                                #
+                                                                forceUserFunction=UFforce,
+                                                                massMatrixUserFunction=UFmassMatrix,
+                                                                computeFFRFterms=True, #only compute user function, no internal components ...
+                                                                visualization=VObjectFFRF(triangleMesh = self.trigList, 
+                                                                                            color=color,
+                                                                                            showNodes = True)))
+
+        else:
+            self.oFFRFreducedOrder = mbs.AddObject(ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
+                                                                stiffnessMatrixReduced=stiffnessMatrixMC, 
+                                                                massMatrixReduced=massMatrixMC,
+                                                                dampingMatrixReduced=dampingMatrixMC,
+                                                                modeBasis=self.modeBasis,
+                                                                referencePositions = self.xRef,
+                                                                forceUserFunction=UFforce,
+                                                                massMatrixUserFunction=UFmassMatrix,
+                                                                computeFFRFterms=False, #only compaute user function, no internal components ...
+                                                                visualization=VObjectFFRF(triangleMesh = self.trigList, 
+                                                                                            color=color,
+                                                                                            showNodes = True)))
+
         dictReturn = {'nRigidBody':self.nRigidBody,
                       'nGenericODE2':self.nGenericODE2,
                       'oFFRFreducedOrder':self.oFFRFreducedOrder}
@@ -959,13 +1137,17 @@ class ObjectFFRFreducedOrderInterface:
             G = EulerParameters2GLocal(rp)
         elif self.rigidBodyNodeType == exu.NodeType.RotationRotationVector:
             G = RotationVector2GLocal(rp)
+        elif self.rigidBodyNodeType ==exu.NodeType.RotationRxyz:
+            G = RotXYZ2GLocal(rp)
         else:
             raise ValueError('UFmassFFRFreducedOrder: rotation parameterization not implemented')
         
 
         zetaI = VectorDiadicUnitMatrix3D(qReduced[self.nODE2rigid:])
-        zeta_tI = VectorDiadicUnitMatrix3D(qReduced_t[self.nODE2rigid:])
+        #zeta_tI = VectorDiadicUnitMatrix3D(qReduced_t[self.nODE2rigid:]) #not needed
 
+        #print("Mtt=",self.massMatrixFFRFreduced[0:3,0:3])
+        #print("Mff=",self.massMatrixFFRFreduced[self.nODE2rigid:,self.nODE2rigid:])
         #Mtt and Mff already filled into massMatrixFFRFreduced
         #Mtr:
         Mtr = -A @ (self.totalMass*self.chiUtilde + self.mPhitTPsiTilde @ zetaI) @ G
@@ -987,6 +1169,11 @@ class ObjectFFRFreducedOrderInterface:
                                                                             zetaI.T @ self.mXRefTildePsiTilde.T + 
                                                                             zetaI.T @ self.mPsiTildePsiTilde @ zetaI)@G
 
+        #print("Mtr=",Mtr)
+        #print("Mtf=",Mtf)
+        #print("Mrf=",Mrf)
+        #print("Mrr=",self.massMatrixFFRFreduced[self.dim3D:self.nODE2rigid, self.dim3D:self.nODE2rigid])
+
         return self.massMatrixFFRFreduced
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1006,6 +1193,12 @@ class ObjectFFRFreducedOrderInterface:
             G = EulerParameters2GLocal(rp)
         elif self.rigidBodyNodeType == exu.NodeType.RotationRotationVector:
             G = RotationVector2GLocal(rp)
+        elif self.rigidBodyNodeType ==exu.NodeType.RotationRxyz:
+            G = RotXYZ2GLocal(rp)
+            #time derivatives:
+            rp_t = np.array(qReduced_t[self.dim3D:self.nODE2rigid])
+            G_t = RotXYZ2GLocal_t(rp, rp_t)
+            G_tRp_t = G_t @ rp_t
         else:
             raise ValueError('UFforceFFRFreducedOrder: rotation parameterization not implemented')
 
@@ -1029,8 +1222,23 @@ class ObjectFFRFreducedOrderInterface:
                                    2*G.T @ (self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI ) @ omega3D)  #identical to FFRF up to 1e-16
         
         force[self.nODE2rigid:] = (IZetadiadicOmega.T @ (self.mXRefTildePsiTilde.T + self.mPsiTildePsiTilde @ zetaI) @ omega3D + 
-                                   2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D) #identical to FFRF up to 1e-16
+                                   2 * self.mPsiTildePsi.T @ zeta_tI @ omega3D #identical to FFRF up to 1e-16
+                                   - self.stiffnessMatrixReduced @ qReducedFF  #stiffness term added to user function, for better distinguishing with internal FFRF
+                                   - self.dampingMatrixReduced @ qReduced_tFF) #damping term added to user function, for better distinguishing with internal FFRF
 
+        #print("fQV=", force)
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #additional terms for Euler angles:
+        if self.rigidBodyNodeType == exu.NodeType.RotationRxyz:
+            force[0:self.dim3D] += A @ (self.totalMass*self.chiUtilde + self.mPhitTPsiTilde @ zetaI) @ G_tRp_t
+            
+            force[self.dim3D:self.nODE2rigid] += -G.T @ (self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + 
+                                                         zetaI.T @ self.mXRefTildePsiTilde.T + 
+                                                         zetaI.T @ self.mPsiTildePsiTilde @ zetaI ) @ G_tRp_t
+            
+            force[self.nODE2rigid:] += (self.mXRefTildePsi.T + self.mPsiTildePsi.T @ zetaI) @ G_tRp_t
+
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #add gravity (needs to be tested):
         if True:
             force[0:self.dim3D] += self.totalMass*np.array(self.gravity)
@@ -1041,10 +1249,45 @@ class ObjectFFRFreducedOrderInterface:
 
         return force
 
+    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function in order to use internal C++ functionality, which is approx. 10x faster than AddObjectFFRFreducedOrderWithUserFunctions(...)
+    #**input:
+    #  exu: the exudyn module
+    #  mbs: a MainSystem object
+    #  positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
+    #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+    #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
+    #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
+    #  color: provided as list of 4 RGBA values
+    def AddObjectFFRFreducedOrder(self, mbs, 
+                                  positionRef=[0,0,0], initialVelocity=[0,0,0], 
+                                  rotationMatrixRef=[], initialAngularVelocity=[0,0,0],
+                                  massProportionalDamping = 0, stiffnessProportionalDamping = 0,
+                                  color=[0.1,0.9,0.1,1.]):
+        import exudyn as exu
+        return self.AddObjectFFRFreducedOrderWithUserFunctions(exu=exu, mbs=mbs, 
+                                                  positionRef=positionRef, initialVelocity=initialVelocity, rotationMatrixRef=rotationMatrixRef, 
+                                                  initialAngularVelocity=initialAngularVelocity,
+                                                  massProportionalDamping = massProportionalDamping, stiffnessProportionalDamping = stiffnessProportionalDamping,
+                                                  color=color)
+    
         
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**class: helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
+# - allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
+# - RBE2:                 static modes only for rigid body motion at boundary nodes\\
+# - RBE3:                 [yet NOT AVAILABLE] averaged rigid body interfaces; for future implementations\\
+# - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
+class HCBstaticModeSelection(Enum):
+    allBoundaryNodes = 1    #compute a single static mode for every boundary coordinate; if this is used, 6 constraints need to be added to the ObjectFFRFreducedOrder, otherwise there is additional rigid body motion!
+    RBE2 = 2                #(recommended) static modes computation only for rigid body motion at boundary nodes
+    noStaticModes = 3       #do not compute static modes, only eigen modes (not really recommended; usually only for tests)
+    
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   FEMinterface - finite element interface class   ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: general interface to different FEM / mesh imports and export to EXUDYN functions
@@ -1054,10 +1297,22 @@ class ObjectFFRFreducedOrderInterface:
 #         export to EXUDYN objects
 class FEMinterface:
     #**classFunction: initalize all data of the FEMinterface by, e.g., \texttt{fem = FEMinterface()}
+    #**example:
+    # #**** this is not an example, just a description for internal variables ****
+    # #default values for member variables stored internally in FEMinterface fem and typical structure:
+    # fem.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
+    # fem.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
+    # fem.massMatrix = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
+    # fem.stiffnessMatrix=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
+    # fem.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
+    # fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':[n_0,...,n_ns], 'NodeWeights':[w_0,...,w_ns]},...]     #for boundary conditions, etc.
+    # fem.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':[n_0,...,n_ns]},...]                                #for different volumes, etc.
+    # fem.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'} #'NormalModes' are eigenmodes, 'HCBmodes' are Craig-Bampton modes including static modes
+    # fem.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
+    # fem.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
     def __init__(self):
         self.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
         self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
-        #self.massMatrix = {}           # {'Shape':[rows,columns], 'SparseCSR':[[r0,c0,value0],[r1,c1,value1], ... ],  }             #currently only in SparseCSR format allowed!
         self.massMatrix = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         self.stiffnessMatrix=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         self.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
@@ -1066,8 +1321,8 @@ class FEMinterface:
 
         self.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'}
         self.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
-        self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':'Stress'}
-        #self.ffrfReducedOrderTerms = () # 
+        self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
+        #self.massMatrix = {}           # {'Shape':[rows,columns], 'SparseCSR':[[r0,c0,value0],[r1,c1,value1], ... ],  }             #currently only in SparseCSR format allowed!
 
         #some additional information, needed for checks and easier operation
         self.coordinatesPerNodeType = {'Position':3, 'Position2D':2, 'RigidBodyRxyz':6, 'RigidBodyEP':7} #number of coordinates for a certain node type
@@ -1113,125 +1368,6 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #ABAQUS import functions
-
-#    #import Abaqus input file 
-#    #node numbers in elements are converted from 1-based indices to python's 0-based indices
-#    #return node numbers
-#    def ImportFromAbaqusInputFileOLD(self, fileName, typeName='Part', name='Part-1'):
-#        fileLines = []
-#        print("read file name=", fileName)
-#        file=open(fileName,'r') 
-#        fileLines = file.readlines()
-#        file.close()
-#        
-#        print("read ", len(fileLines), "lines")
-#    
-#        startPart = False
-#        startReadNodes = False
-#        finishedReadNodes = False
-#        startReadElements = False
-#        finishedReadElements = False
-#        nodes = [] #store list of node values
-#        elements = [] #store list of elements with node numbers
-#        elementTypes = [] #string list of element types
-#
-#        errorOccured = False
-#        lineCnt = 0
-#        for line in fileLines:
-#            #print("line", lineCnt, "=", line)
-#            lineCnt+=1
-#            if errorOccured:
-#                break
-#        
-#            if startReadNodes and not finishedReadNodes:
-#                if line[0] != '*': #check if nodes section has finished
-#                    lineData = line.split(',') #split into values
-#                    if len(lineData) != 4:
-#                        print("ERROR: Expected node number and 3 coordinates, line ", lineCnt)
-#                        errorOccured = True
-#                    else:
-#                        v = []
-#                        for i in range(3):
-#                            v+=[float(lineData[i+1])]
-#                        nodes += [v] #add node data
-#                else:
-#                    startReadNodes = False
-#                    finishedReadNodes = True
-#    
-#            if startReadElements and not finishedReadElements:
-#                if line[0] != '*': #check if nodes section has finished
-#                    lineData = line.split(',') #split into values
-#                    if len(lineData) != 9:
-#                        print("ERROR: Expected element number and 8 indices for C3D8R, line=", lineCnt)
-#                        errorOccured = True
-#                    else:
-#                        v = []
-#                        for i in range(8):
-#                            v+=[float(lineData[i+1])]
-#                        elements += [v] #add node data
-#                        elementTypes += ['Hex8'] #8-noded hexahedral
-#                else:
-#                    startReadElements = False
-#                    finishedReadElements = True
-#    
-#            if startPart and not startReadNodes and not finishedReadNodes:
-#                if line[0:5] == '*Node':
-#                    startReadNodes = True
-#                    startPart = False
-#                else:
-#                    print("ERROR: Expected *Node after *Part, line=", lineCnt)
-#                    errorOccured = True
-#
-#            if finishedReadNodes and not startReadElements:
-#                if line[0:8] == '*Element':
-#                    startReadElements = True
-#                    #check "type=C3D8R" in future
-#
-#            
-#            if line[0:len(typeName)+1] == '*'+typeName:
-#                if not startPart:
-#                    #print("ERROR: only one *Part section allowed, line=", lineCnt)
-#                    #errorOccured = True
-#                
-#                    lineInfo = line.split(',')
-#                    #print(lineInfo)
-#                    if len(lineInfo) != 3:
-#                        print("ERROR: invalid information for part/instance name, line=", lineCnt)
-#                        errorOccured = True
-#                    else:
-#                        nameInfo = lineInfo[1].strip().split('=')
-#                        if nameInfo[0] != 'name':
-#                            print("ERROR: expected 'name=' in line=", lineCnt)
-#                            errorOccured = True
-#                        else:
-#                            if nameInfo[1] != name:
-#                                print("ERROR: expected name='" + name + "' in line=", lineCnt)
-#                                errorOccured = True
-#                            else:
-#                                startPart = True
-#
-#        self.nodes['Position'] = np.array(nodes)
-#        elements = np.array(elements)-1 #convert node indices from 1 to 0-based
-#
-#        elementsDict = {'Name':name, 'Tet4':[], 'Hex8':[]}
-#        for i in range(len(elements)):
-#            if elementTypes[i] in elementsDict:
-#                elementsDict[elementTypes[i]] += [elements[i]]
-#            else:
-#                print("FEMinterface.ImportFromAbaqusInputFile: unknown elementType "+elementTypes[i]+", ignored")
-#
-#        self.elements += [elementsDict]
-#
-#        #convert elements to triangles for drawing:
-#        trigList = []
-#        for element in elements:
-#            trigList += ConvertHexToTrigs(element) #node numbers are already 0-based
-#        trigList = trigList
-#        self.surface += [{'Name':'meshSurface', 'Trigs':trigList}]    # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
-#
-#        return np.array(nodes)
-
-
 
     #**classFunction: import nodes and elements from Abaqus input file and create surface elements
     #node numbers in elements are converted from 1-based indices to python's 0-based indices
@@ -1563,6 +1699,8 @@ class FEMinterface:
     #if not found, it returns an invalid index
     def GetNodeAtPoint(self, point, tolerance = 1e-5, raiseException = True):
         cnt = 0
+        if len(self.nodes) != 1 or 'Position' not in self.nodes:
+            raise ValueError('FEMinterface.GetNodeAtPoint: only Position type nodes allowed')
         for nodeTypeName in self.nodes:
             for nodePoint in self.nodes[nodeTypeName]:
                 if abs(nodePoint - point).max() <= tolerance:
@@ -1578,6 +1716,8 @@ class FEMinterface:
     def GetNodesInPlane(self, point, normal,  tolerance = 1e-5):
         cnt = 0
         nodeList=[]
+        if len(self.nodes) != 1 or 'Position' not in self.nodes:
+            raise ValueError('FEMinterface.GetNodesInPlane: only Position type nodes allowed')
         for nodeTypeName in self.nodes:
             for nodePoint in self.nodes[nodeTypeName]:
                 if abs(np.dot(nodePoint - point, normal)) <= tolerance:
@@ -1590,6 +1730,8 @@ class FEMinterface:
     def GetNodesInCube(self, pMin, pMax):
         cnt = 0
         nodeList=[]
+        if len(self.nodes) != 1 or 'Position' not in self.nodes:
+            raise ValueError('FEMinterface.GetNodesInCube: only Position type nodes allowed')
         for nodeTypeName in self.nodes:
             for nodePoint in self.nodes[nodeTypeName]:
                 if (nodePoint[0] >= pMin[0] and nodePoint[0] <= pMax[0] and
@@ -1614,6 +1756,9 @@ class FEMinterface:
             v0 = v0/lAxis
             
         nodeList=[]
+        if len(self.nodes) != 1 or 'Position' not in self.nodes:
+            raise ValueError('FEMinterface.GetNodesOnCylinder: only Position type nodes allowed')
+
         for nodeTypeName in self.nodes:
             for nodePoint in self.nodes[nodeTypeName]:
                 p = np.array(nodePoint)
@@ -1625,7 +1770,7 @@ class FEMinterface:
                     r = np.linalg.norm(p-pp) #shortest distance to axis
                     if abs(r-radius) <= tolerance:
                         nodeList += [cnt]
-                        cnt+=1
+                cnt+=1
         return nodeList
 
     #**classFunction: get node numbers lying on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
@@ -1634,6 +1779,8 @@ class FEMinterface:
     def GetNodesOnCircle(self, point, normal, r, tolerance = 1e-5):
         cnt = 0
         nodeList=[]
+        if len(self.nodes) != 1 or 'Position' not in self.nodes:
+            raise ValueError('FEMinterface.GetNodesOnCylinder: only Position type nodes allowed')
         for nodeTypeName in self.nodes:
             for nodePoint in self.nodes[nodeTypeName]:
                 if abs(np.dot(nodePoint - point, normal)) <= tolerance:
@@ -1849,9 +1996,13 @@ class FEMinterface:
             self.massMatrix = AddEntryToCompressedRowSparseArray(self.massMatrix, nCoordinate+i,nCoordinate+i,addedMass)
         #np.vstack((self.massMatrix, np.array(supports))) #append supports to sparse matrix
 
-    #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix
-    #store mode vector in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis
-    #if excludeRigidBodyModes > 0, then the computed modes is nModes + excludeRigidBodyModes, from which excludeRigidBodyModes smallest eigenvalues are excluded
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
+    #**input: 
+    #  nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
+    #  excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+    #  useSparseSolver: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+    #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
     def ComputeEigenmodes(self, nModes, excludeRigidBodyModes = 0, useSparseSolver = True):
         if not useSparseSolver:
             #unsorted, dense eigen vectors
@@ -1886,13 +2037,363 @@ class FEMinterface:
             #[eigVals, eigVecs] = eigsh(A=K, k=nModes+excludeRigidBodyModes, M=M, which='SM') #this gives omega^2 ... squared eigen frequencies (rad/s)
 
             self.modeBasis = {'matrix':eigVecs[:,excludeRigidBodyModes:excludeRigidBodyModes + nModes], 
-                              'type':'NormalNodes'}
+                              'type':'NormalModes'}
             self.eigenValues = abs(eigVals[excludeRigidBodyModes:excludeRigidBodyModes + nModes])
+
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute eigenmodes, using a set of boundary nodes that are all fixed; very similar to ComputeEigenmodes, but with additional definition of (fixed) boundary nodes.
+    #**input: 
+    #  boundaryNodes: a list of boundary node indices, refering to 'Position' type nodes in FEMinterface; all coordinates of these nodes are fixed for the computation of the modes
+    #  nEigenModes: prescribe the number of modes to be computed; only nEigenModes with smallest abs(eigenvalues) are considered and stored
+    #  useSparseSolver: [yet NOT IMPLEMENTED] for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+    #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
+    def ComputeEigenModesWithBoundaryNodes(self, 
+                                      boundaryNodes,
+                                      nEigenModes, 
+                                      useSparseSolver = True):
+        if not useSparseSolver:
+            #unsorted, dense eigen vectors
+            from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+    
+            K = self.GetStiffnessMatrix(sparse=False)
+            M = self.GetMassMatrix(sparse=False)
+            
+            if len(boundaryNodes) != 0:
+                #sizes of internal and boundary nodes:
+                n = len(M)
+                nb = len(boundaryNodes)*3
+                ni = n-nb
+        
+                #compute indices for internal and boundary DOF/coordinates:
+                DOFb = []
+                for node in boundaryNodes:
+                    DOFb += [node*3,node*3+1,node*3+2]
+                
+                DOFb = np.array(DOFb)
+                DOFb.sort()
+                DOFi = np.arange(n)
+                DOFi = np.delete(DOFi, DOFb)
+                DOFstatic = np.arange(nb) #for final mapping of boundary coordinates
+                DOFeig = np.arange(nb,nb+nEigenModes) #for final mapping of eigenmode coordinates
+                
+                print("n=", n, ", nb=",nb, ", ni=", ni)
+                #print("DOFb=", DOFb)
+                #print("DOFi=", DOFi)
+                
+                #create mass and stiffness matrices with new indices:
+                Mii = M[np.ix_(DOFi,DOFi)]
+                Kii = K[np.ix_(DOFi,DOFi)]
+                Kib = K[np.ix_(DOFi,DOFb)]
+    
+                print("solve eigenvalues...")
+                [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
+    
+                print("solve static modes...")
+                KiiInvKib = -np.linalg.inv(Kii) @ Kib
+    
+                print("assemble matrices ...")
+                if False:
+                    modeBasis = np.zeros((n, nb+nEigenModes))
+                    modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                    modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
+                    modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
+                else:
+                    modeBasis = np.zeros((n, nEigenModes))
+                    DOFeig = np.arange(nEigenModes) #for final mapping of eigenmode coordinates
+                    modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                
+                #print(modeBasis.shape)
+                #print(modeBasis.round(2))
+               
+                self.modeBasis = {'matrix':modeBasis, 'type':'NormalModes'}
+                self.eigenValues = abs(eigVals)
+    
+            else:
+                [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+                self.modeBasis = {'matrix':eigVecs[:,excludeRigidBodyModes:excludeRigidBodyModes + nEigenModes], 'type':'NormalNodes'}
+                self.eigenValues = abs(eigVals)
+        else:
+            raise ValueError("ComputeEigenModesWithBoundaryNodes: only implemented for dense mode")
+    
+    
+    
+    
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bamtpon, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
+    #**input:
+    #  boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
+    #  nEigenModes: number of eigen modes in addition to static modes; eigen modes are computed for the case where all rigid body motions at boundaries are fixed (on average); only smallest nEigenModes absolute eigenvalues are considered
+    #  useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver
+    #  computationMode: see class HCBstaticModeSelection for available modes; select RBE2 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary
+    #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
+    def ComputeHurtyCraigBamptonModes(self, 
+                                      boundaryNodesList,
+                                      nEigenModes, 
+                                      useSparseSolver = True,
+                                      computationMode = HCBstaticModeSelection.RBE2):
+    
+        #unsorted, dense eigen vectors
+        from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+        from scipy.linalg import block_diag
+        import time #for some timers
+
+        timerTreshold = 20000 #for more DOF than this number, show CPU times
+    
+        if useSparseSolver: 
+            from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
+            from scipy.sparse.linalg import factorized
+    
+            K = CSRtoScipySparseCSR(self.GetStiffnessMatrix(sparse=True))
+            M = CSRtoScipySparseCSR(self.GetMassMatrix(sparse=True))
+    
+        else: #not recommended for more than 2000 nodes (6000 DOF)!
+            K = self.GetStiffnessMatrix(sparse=False)
+            M = self.GetMassMatrix(sparse=False)
+            
+        #implementation with RBE2 boundary mode
+        if len(boundaryNodesList) != 0:
+            
+            n = M.shape[0] #size of mass and stiffness matrix; assume square matrix!
+            nb = 0
+            DOFb = []
+            nNodeLists = len(boundaryNodesList)
+            if 'Position' not in self.nodes or len(self.nodes) != 1:
+                raise ValueError('ComputeHurtyCraigBamptonModes: nodes in FEMinterface must be of position type!')
+            nodesPos = self.nodes['Position']
+            boundaryNodesMidPoints = []
+            
+            #determine sizes and some parameters:
+            for boundaryNodes in boundaryNodesList:
+            #sizes of internal and boundary nodes:
+                nb += len(boundaryNodes)*3
+                #compute indices for internal and boundary DOF/coordinates:
+                for node in boundaryNodes:
+                    DOFb += [node*3,node*3+1,node*3+2]
+    
+                #compute midpoints of boundary nodes:
+                p = np.zeros(3)
+                for node in boundaryNodes:
+                    p += nodesPos[node]
+                
+                boundaryNodesMidPoints += [p*(1./len(boundaryNodes))]
+    
+            #print("midpoints=",boundaryNodesMidPoints)
+    
+            ni = n-nb
+    
+            #compute boundary and internal DOF numbers:
+            DOFb = np.array(DOFb)
+            #DOFb.sort() #do not sort to keep consistency between sorting of nodes and DOFb
+            DOFi = np.arange(n)
+            DOFi = np.delete(DOFi, DOFb) #sorting not needed for DOFb
+            
+            #print("n=", n, ", nb=",nb, ", ni=", ni)
+            #print("DOFb=", DOFb)
+            #print("DOFi=", DOFi)
+            
+            #create mass and stiffness matrices with new indices:
+            if useSparseSolver: 
+                #A = B.tocsr()[np.array(list1),:].tocsc()[:,np.array(list2)] faster?
+                #takes 0,042 seconds for 16000 nodes ...
+                Mii = M[DOFi,:][:,DOFi] #these matrices are np.array (dense) or sparse ...
+                Kii = K[DOFi,:][:,DOFi]
+                Kib = K[DOFi,:][:,DOFb]
+                
+            else:
+                #works also for sparse matrices, but computes dense matrices in between ...
+                Mii = M[np.ix_(DOFi,DOFi)] 
+                Kii = K[np.ix_(DOFi,DOFi)]
+                Kib = K[np.ix_(DOFi,DOFb)]
+            #Mii, Kii, Kib are now np.array (dense) or sparse ...
+    
+            #print("solve eigenvalues...")
+            if n>timerTreshold: print("compute eigenvalues and eigenvectors... "); start_time = time.time()
+    
+            if useSparseSolver: 
+                #for details on solver settings, see FEMinterface.ComputeEigenmodes(...)
+                [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
+                                           which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
+            else:
+                [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+    
+            #print("assemble matrices ...")
+            
+            if computationMode == HCBstaticModeSelection.allBoundaryNodes: #quite inefficient, because it 
+                modeBasis = np.zeros((n, nb+nEigenModes))
+                DOFstatic = np.arange(nb) #for final mapping of boundary coordinates
+                DOFeig = np.arange(nb,nb+nEigenModes) #for final mapping of eigenmode coordinates
+                modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
+                if n>timerTreshold: print("factorize Kii... "); start_time = time.time()
+                if useSparseSolver: 
+                    invKii = factorized(Kii.tocsc()) #factorized expects csc format, otherwise warning
+                    KiiInvKib = invKii(-Kib.toarray())
+                else:
+                    KiiInvKib = -np.linalg.inv(Kii) @ Kib
+                if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
+    
+            elif computationMode == HCBstaticModeSelection.RBE2:
+                addRotationModes = 1
+                rbSize = 3 + 3*addRotationModes #size of rigid body coordinates (3 for translation, 6 for translation+rotation)
+                nbRBE2 = (nNodeLists-1)*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
+                DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
+    
+                modeBasis = np.zeros((n, nbRBE2+nEigenModes))
+                modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                
+                #create list of mappings between average rigid body motion and boundary DOF matrix
+                rigidBodyMappings = [[]]*nNodeLists #list of mappings
+                cntBoundary = 0 #counter for boundaryNodeLists / number of interfaces
+                for boundaryNodes in boundaryNodesList:
+                    nn = len(boundaryNodes)
+                    #compute mapping from average displacement to displacement at boundary nodes:
+                    T = np.kron(np.ones(nn),np.eye(3)).T #maps rigid body motion of interface to all boundary nodes
+                    
+                    #compute mapping from (averaged) rotation at boundary to displacement of boundary nodes:
+                    if addRotationModes:
+                        Trot = np.zeros((nn*3,3))
+                        p0 = boundaryNodesMidPoints[cntBoundary]
+                        for i in range(3): #iterate about 3 rotation axes
+                            rot = np.zeros(3) #rotation vector, unit rotation
+                            rot[i] = 1
+                            rotTilde = Skew(rot)
+                            for j in range(len(boundaryNodes)):
+                                p = nodesPos[boundaryNodes[j]]-p0
+                                qRot = rotTilde@p
+                                Trot[j*3:j*3+3,i] = qRot
+                        T = np.hstack((T,Trot))
+                                
+    
+                    rigidBodyMappings[cntBoundary] = T
+                    cntBoundary += 1
+    
+                
+                Tall = block_diag(*rigidBodyMappings)  # '*' does unpacking of lists;
+                Tall = Tall[:,rbSize:] #exclude first rigid body boundary in order to suppress rigid body motion of static modes
+    
+                DOFstatic = np.arange(nbRBE2) #for final mapping of boundary coordinates; 
+                modeBasis[np.ix_(DOFb,DOFstatic)] = Tall
+                if n>timerTreshold: print("factorize Kii... "); start_time = time.time()
+                if useSparseSolver: 
+                    invKii = factorized(Kii.tocsc()) #factorized expects csc format, otherwise warning
+                    KiiInvKibTall = invKii(-(Kib @ Tall)) #(Kib @ Tall) gives already dense matrix; may be huge ...!
+                else:
+                    KiiInvKibTall = -np.linalg.inv(Kii) @ (Kib @ Tall)
+                if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+    
+                modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKibTall #KiiInvKib @ Tall
+    
+                # modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
+                # modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
+                
+            elif computationMode == HCBstaticModeSelection.onlyEigenModes: #only eigen modes, e.g., for testing
+                modeBasis = np.zeros((n, nEigenModes))
+                DOFeig = np.arange(nEigenModes) #for final mapping of eigenmode coordinates
+                modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+            
+            #print(modeBasis.shape)
+            #print(modeBasis.round(2))
+           
+            self.modeBasis = {'matrix':modeBasis, 'type':'HCBmodes'}
+            self.eigenValues = abs(eigVals)
+    
+        else:
+            [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            self.modeBasis = {'matrix':eigVecs[:,0:nEigenModes], 'type':'NormalModes'}
+            self.eigenValues = abs(eigVals)
+
+
 
     #**classFunction: return list of eigenvalues in Hz of previously computed eigenmodes
     def GetEigenFrequenciesHz(self):
         return np.sqrt(self.eigenValues)/(2.*np.pi)
 
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder
+    #**input: 
+    #  material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
+    #  outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+    #**output: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
+    def ComputePostProcessingModes(self, material=0, outputVariableType='OutputVariableType.StressLocal'):
+        #import exudyn as exu #needed for outputVariableType
+
+        if str(outputVariableType) == 'OutputVariableType.StressLocal':
+            computeStrains = False
+        elif str(outputVariableType) == 'OutputVariableType.StrainLocal':
+            computeStrains = True
+        else:
+            raise ValueError('ComputePostProcessingModes invoked with invalid outputVariableType')
+            
+        nodes = self.nodes['Position']
+        nNodes = len(nodes)
+        if len(self.elements) != 1:
+            raise ValueError('ComputePostProcessingModes(...): only implemented for FEMinterface with one list of elements')
+        if 'Tet4' not in self.elements[0]:
+            raise ValueError('ComputePostProcessingModes(...): only implemented for Tet4 elements')
+        if 'matrix' not in self.modeBasis:
+            raise ValueError('ComputePostProcessingModes(...): modeBasis needs to be computed in FEMinterface prior to calling ComputePostProcessingModes; use e.g. ComputeEigenmodes(...)')
+            
+        elemList = self.elements[0]['Tet4']
+        modes = self.modeBasis['matrix']
+        nModes = modes.shape[1]
+        stressModes = np.zeros((nNodes, 6*nModes)) #add up nodal stresses
+        stressModesCnt = np.zeros(nNodes) #store how many elements contribute to nodal stress (for averaging)
+
+        if material == 0:
+            material=KirchhoffMaterial(1, 0, 1)
+
+        showProgress = False
+        if nModes*nNodes > 10000:
+            showProgress = True
+            #print("")
+
+        nodesPerTet = 4
+        elemRefCoords = np.zeros(nodesPerTet*3)
+        displacements = np.zeros(nodesPerTet*3)
+        for iMode in range(nModes):
+            if showProgress:
+                print("\rComputePostProcessingModes: " + str(iMode/nModes*100) + str("%"),end='', flush=True)
+            for elem in elemList:
+                for cnt in range(len(elem)):
+                    ind = elem[cnt]
+                    # elemRefCoords+=list(nodes[ind,:])
+                    # displacements+=list(modes[ind*3:ind*3+3,iMode])
+                    elemRefCoords[cnt*3:cnt*3+3] = nodes[ind,:]
+                    displacements[cnt*3:cnt*3+3] = modes[ind*3:ind*3+3,iMode]
+                    
+    
+                # print("  displacements=",displacements)                
+                # print("elem=",elem)
+                # print("  ref coords   =",elemRefCoords)
+                tet=Tet4(material) #all material is the same ...
+                [Ev4, Sv4, B0, grad]=tet.ComputeMatrices(elemRefCoords, displacements)
+    
+                #now write stresses into stress modes
+                for cnt in range(4): #number of nodes
+                    ind = elem[cnt]  #node index
+                    if iMode == 0: #count how often nodes need to be averaged (count only for first mode)
+                        stressModesCnt[ind] += 1
+                    for j in range(6): #6 components
+                        if computeStrains:
+                            stressModes[ind,6*iMode+j] += Ev4[cnt, j]
+                        else:
+                            stressModes[ind,6*iMode+j] += Sv4[cnt, j]
+
+        if showProgress:
+            print("") #line break
+            
+        for ind in range(nNodes):
+            if stressModesCnt[ind] == 0:
+                raise ValueError('Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements')
+            stressModes[ind,:] *= 1/stressModesCnt[ind]
+
+        self.postProcessingModes = {'matrix': stressModes, 
+                                    'outputVariableType': outputVariableType}
+        
+        #self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: compute Campbell diagram for given mechanical system

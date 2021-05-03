@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This is an EXUDYN tool
+# This is an EXUDYN example
 #
-# Details:  Tool to create interactive simulations
+# Details:  Nonlinear oscillations interactive simulation
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-01-16
@@ -159,7 +159,7 @@ SC.visualizationSettings.general.showSolverInformation = False
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#this is an exemplariy simulation function, which adjusts some values for simulation
+#this is an exemplary simulation function, which adjusts some values for simulation
 def SimulationUF(mbs, dialog):
     #next two commands to zoom all ...:
     if mbs.variables['mode'] == 1:

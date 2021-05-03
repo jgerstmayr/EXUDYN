@@ -302,7 +302,7 @@ namespace EPyUtils {
 
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 	inline bool CheckForValidFunction(const py::object pyObject)
 	{
@@ -353,7 +353,7 @@ namespace EPyUtils {
 			if (py::isinstance<py::list>(other) || py::isinstance<py::array>(other))
 			{
 				std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
-				if (stdlist.size() == size)
+				if ((Index)stdlist.size() == size)
 				{
 					destination = stdlist;
 					return true;
@@ -392,14 +392,14 @@ namespace EPyUtils {
 		if (py::isinstance<py::list>(value))
 		{
 			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # read out dictionary and cast to C++ type
-			if (stdlist.size() == rows)
+			if ((Index)stdlist.size() == rows)
 			{
 				for (Index i = 0; i < rows; i++)
 				{
 					if (py::isinstance<py::list>(stdlist[i]))
 					{
 						std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
-						if (rowVector.size() == columns)
+						if ((Index)rowVector.size() == columns)
 						{
 							for (Index j = 0; j < columns; j++)
 							{
@@ -423,12 +423,12 @@ namespace EPyUtils {
 		else if (py::isinstance<py::array>(value))
 		{
 			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # read out dictionary and cast to C++ type
-			if (stdlist.size() == rows)
+			if ((Index)stdlist.size() == rows)
 			{
 				for (Index i = 0; i < rows; i++)
 				{
 					std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
-					if (rowVector.size() == columns)
+					if ((Index)rowVector.size() == columns)
 					{
 						for (Index j = 0; j < columns; j++)
 						{
@@ -508,7 +508,7 @@ namespace EPyUtils {
 		if (py::isinstance<py::list>(value))
 		{
 			std::vector<T> stdlist = py::cast<std::vector<T>>(value); //! # read out dictionary and cast to C++ type
-			if (stdlist.size() == size)
+			if ((Index)stdlist.size() == size)
 			{
 				destination = stdlist;
 				return true;
@@ -583,15 +583,15 @@ namespace EPyUtils {
 		else if (pyArray.ndim() == 2)
 		{
 			auto mat = pyArray.template unchecked<2>(); //template keyword needed for gcc, see: https://github.com/pybind/pybind11/issues/1412
-			Index nrows = mat.shape(0);
-			Index ncols = mat.shape(1);
+			UnsignedIndex nrows = mat.shape(0);
+			UnsignedIndex ncols = mat.shape(1);
 
-			m.SetNumberOfRowsAndColumns(nrows, ncols);
-			for (Index i = 0; i < nrows; i++)
+			m.SetNumberOfRowsAndColumns((Index)nrows, (Index)ncols);
+			for (UnsignedIndex i = 0; i < nrows; i++)
 			{
-				for (Index j = 0; j < ncols; j++)
+				for (UnsignedIndex j = 0; j < ncols; j++)
 				{
-					m(i, j) = mat(i, j);
+					m((Index)i, (Index)j) = mat(i, j);
 				}
 			}
 		}
@@ -608,7 +608,7 @@ namespace EPyUtils {
 		if (pyArray.ndim() == 1)
 		{
 			auto pyVec = pyArray.template unchecked<1>();//template keyword needed for gcc, see: https://github.com/pybind/pybind11/issues/1412
-			v.SetNumberOfItems(pyVec.shape(0));
+			v.SetNumberOfItems((Index)pyVec.shape(0));
 
 			for (Index i = 0; i < v.NumberOfItems(); i++)
 			{

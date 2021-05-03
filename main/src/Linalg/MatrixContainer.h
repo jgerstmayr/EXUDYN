@@ -145,7 +145,26 @@ namespace EXUmath {
 				}
 			}
 		}
-		
+
+		//! add triplets to given dense matrix, using row and column offset and factor
+		void AddToDenseMatrix(Matrix& denseMatrix, Index rowOffset = 0, Index colOffset = 0, Real factor = 1.) const
+		{
+			if (rowOffset == 0 and colOffset == 0 and factor == 1.)
+			{
+				for (auto& item : sparseTriplets)
+				{
+					denseMatrix(item.row(), item.col()) += item.value();
+				}
+			}
+			else
+			{
+				for (auto& item : sparseTriplets)
+				{
+					denseMatrix(item.row()+rowOffset, item.col()+colOffset) += factor*item.value();
+				}
+			}
+		}
+
 		//! slow function which returns triplets as matrix
 		Matrix GetTripletsAsMatrix() const
 		{
@@ -275,6 +294,13 @@ namespace EXUmath {
 		{
 			CHECKandTHROW(useDenseMatrix, "MatrixContainer::GetInternalDenseMatrix failed"); 
 			return denseMatrix; 
+		}
+
+		//! this function fails in dense matrix mode! implementation is slow!
+		virtual const SparseTripletMatrix& GetInternalSparseTripletMatrix() const
+		{
+			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletMatrix failed"); return SparseTripletMatrix(); }
+			else { return sparseTripletMatrix; }
 		}
 
 		//! this function fails in dense matrix mode! implementation is slow!

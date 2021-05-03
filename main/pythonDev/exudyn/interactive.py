@@ -12,7 +12,8 @@
 # Utility functions and structures for Exudyn
 
 import numpy as np #LoadSolutionFile
-import time        #AnimateSolution
+from math import sin, pi #for animation
+import time        
 import tkinter
 import tkinter.font as tkFont
 import matplotlib.pyplot as plt
@@ -76,7 +77,7 @@ class InteractiveDialog:
     #**classFunction: initialize an InteractiveDialog
     #**input: 
     #  mbs: a multibody system to be simulated
-    #  simulationSettings: exu.SimulationSettings() according to user settings
+    #  simulationSettings: exudyn.SimulationSettings() according to user settings
     #  simulationFunction: a function which is called before a simulation for the short period is started (e.g, assign special values, etc.)
     #  dialogItems: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes}
     #  plots: list of dictionaries to specify a sensor to be plotted live, see example
@@ -86,11 +87,13 @@ class InteractiveDialog:
     #  title: title text for interactive dialog
     #  showTime: shows current time in dialog
     #  fontSize: adjust font size for all dialog items
+    #  doTimeIntegration: performs internal time integration with given parameters
     #**notes: detailed description of dialogItems and plots list/dictionary is given in commented the example below
     def __init__(self, mbs, simulationSettings, simulationFunction, 
                  dialogItems, plots = [], period = 0.04, 
                  realtimeFactor = 1, userStartSimulation=False,
-                 title='',  showTime=False, fontSize = 12):
+                 title='',  showTime=False, fontSize = 12,
+                 doTimeIntegration = True):
         #store init arguments
         self.mbs = mbs
         self.simulationFunction = simulationFunction
@@ -100,6 +103,7 @@ class InteractiveDialog:
         self.period = period
         self.realtimeFactor = realtimeFactor
         self.stepSize = simulationSettings.timeIntegration.endTime/simulationSettings.timeIntegration.numberOfSteps
+        self.doTimeIntegration = doTimeIntegration
 
         self.plots = plots
         self.userStartSimulation = userStartSimulation
@@ -174,8 +178,11 @@ class InteractiveDialog:
                 if initialValue < minValue or initialValue > maxValue:
                     initialValue = 0.5*(minValue+maxValue)
 
+                nDigits = 4
+                if maxValue-minValue == steps-1:
+                    nDigits = 0
                 widget = tkinter.Scale(root, from_=minValue, to=maxValue,
-                                       length = steps, digits=4, resolution=(maxValue-minValue)/steps,
+                                       length = steps, digits=nDigits, resolution=(maxValue-minValue)/(steps-1),
                                        orient=tkinter.HORIZONTAL,
                                        font=defaultFont)
                 widget.set(initialValue)
@@ -315,101 +322,105 @@ class InteractiveDialog:
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: initialize figure and subplots for plots structure
     def InitializePlots(self):
-        plt.rcParams.update({'font.size': self.plots['fontSize']})
-    
-        fig = plt.figure()
-        fig.dpi = 100 #in terminal, initially set to 200
-        fig.tight_layout()
-        if 'sizeInches' in self.plots: #otherwise use default figure size
-            fig.set_size_inches(self.plots['sizeInches'][0], self.plots['sizeInches'][1], forward=True)
-        nPoints = self.plots['nPoints']
-        self.plots['fig'] = fig
-        self.plots['currentIndex'] = 0
-        nSensors = len(self.plots['sensors'])
-        self.plots['data'] = [np.zeros((nPoints,2))]*nSensors
-        self.plots['line'] = [0]*nSensors
-        self.plots['marker'] = [0]*nSensors
-        self.plots['ax'] = [0]*nSensors
-    
-        for j in range(nSensors):
-            self.plots['ax'][j] = fig.add_subplot(self.plots['subplots'][0],self.plots['subplots'][1],j+1)
-            self.plots['ax'][j].grid(True, 'major', 'both')
-            self.plots['ax'][j].set_xlabel(self.plots['sensors'][j][2])
-            self.plots['ax'][j].set_ylabel(self.plots['sensors'][j][3])
-            
-            data = np.zeros((nPoints,2))
-            if self.plots['sensors'][j][0][1] == 0: #time of sensor
-                data[:,0] = np.linspace(self.period,nPoints*self.period,num=nPoints)
-            #data[:,1] = 0 #not needed
-            self.plots['data'][j] = copy.deepcopy(data)
-            
-            self.plots['line'][j], = self.plots['ax'][j].plot(data[:,0],data[:,1], 'b-')
-            self.plots['marker'][j], = self.plots['ax'][j].plot(0,0, 'ro') #red circle
-            self.plots['ax'][j].set_xlim(min(data[:,0]), max(data[:,0]))
+        if len(self.plots) != 0:
+            plt.rcParams.update({'font.size': self.plots['fontSize']})
+        
+            fig = plt.figure()
+            fig.dpi = 100 #in terminal, initially set to 200
+            fig.tight_layout()
+            if 'sizeInches' in self.plots: #otherwise use default figure size
+                fig.set_size_inches(self.plots['sizeInches'][0], self.plots['sizeInches'][1], forward=True)
+            nPoints = self.plots['nPoints']
+            self.plots['fig'] = fig
+            self.plots['currentIndex'] = 0
+            nSensors = len(self.plots['sensors'])
+            self.plots['data'] = [np.zeros((nPoints,2))]*nSensors
+            self.plots['line'] = [0]*nSensors
+            self.plots['marker'] = [0]*nSensors
+            self.plots['ax'] = [0]*nSensors
+        
+            for j in range(nSensors):
+                self.plots['ax'][j] = fig.add_subplot(self.plots['subplots'][0],self.plots['subplots'][1],j+1)
+                self.plots['ax'][j].grid(True, 'major', 'both')
+                self.plots['ax'][j].set_xlabel(self.plots['sensors'][j][2])
+                self.plots['ax'][j].set_ylabel(self.plots['sensors'][j][3])
+                
+                data = np.zeros((nPoints,2))
+                if self.plots['sensors'][j][0][1] == 0: #time of sensor
+                    data[:,0] = np.linspace(self.period,nPoints*self.period,num=nPoints)
+                #data[:,1] = 0 #not needed
+                self.plots['data'][j] = copy.deepcopy(data)
+                
+                self.plots['line'][j], = self.plots['ax'][j].plot(data[:,0],data[:,1], 'b-')
+                self.plots['marker'][j], = self.plots['ax'][j].plot(0,0, 'ro') #red circle
+                self.plots['ax'][j].set_xlim(min(data[:,0]), max(data[:,0]))
 
     #**classFunction: update all subplots with current sensor values
     def UpdatePlots(self):
-        n = self.plots['nPoints']
-        i = self.plots['currentIndex']
-        t = self.simulationSettings.timeIntegration.startTime #current time
-
-        for j in range(len(self.plots['sensors'])):
-            data = self.plots['data'][j]
-            
-            sensorNum = [0,0]
-            sensorCoord = [0,0]
-            for k in range(2):
-                sensorNum = self.plots['sensors'][j][k][0]
-                sensorCoord = self.plots['sensors'][j][k][1]
-                if sensorCoord == 0:
-                    data[i,k] = t
-                else:
-                    value = self.mbs.GetSensorValues(sensorNum)
-                    if type(value)==np.ndarray:
-                        data[i,k] = value[sensorCoord-1]
-                    elif sensorCoord == 1:
-                        data[i,k] = value
+        if len(self.plots) != 0:
+            n = self.plots['nPoints']
+            i = self.plots['currentIndex']
+            t = self.simulationSettings.timeIntegration.startTime #current time
+    
+            for j in range(len(self.plots['sensors'])):
+                data = self.plots['data'][j]
+                
+                sensorNum = [0,0]
+                sensorCoord = [0,0]
+                for k in range(2):
+                    sensorNum = self.plots['sensors'][j][k][0]
+                    sensorCoord = self.plots['sensors'][j][k][1]
+                    if sensorCoord == 0:
+                        data[i,k] = t
                     else:
-                        raise ValueError('ERROR: InteractiveDialog: plots.sensor '+str(j)+': access to invalid coordinate')
-                        
-            self.plots['line'][j].set_data(data[:,0], data[:,1]) 
-            self.plots['marker'][j].set_data(data[i,0], data[i,1]) 
-
-            self.plots['ax'][j].set_xlim(min(data[:,0]), max(data[:,0]))
+                        value = self.mbs.GetSensorValues(sensorNum)
+                        if type(value)==np.ndarray:
+                            data[i,k] = value[sensorCoord-1]
+                        elif sensorCoord == 1:
+                            data[i,k] = value
+                        else:
+                            raise ValueError('ERROR: InteractiveDialog: plots.sensor '+str(j)+': access to invalid coordinate')
+                            
+                self.plots['line'][j].set_data(data[:,0], data[:,1]) 
+                self.plots['marker'][j].set_data(data[i,0], data[i,1]) 
+    
+                self.plots['ax'][j].set_xlim(min(data[:,0]), max(data[:,0]))
+                
+                if 'limitsX' in self.plots:
+                    if len(self.plots['limitsX'][j]):
+                        self.plots['ax'][j].set_xlim(self.plots['limitsX'][j][0],self.plots['limitsX'][j][1])
+                if 'limitsY' in self.plots:
+                    if len(self.plots['limitsY'][j]):
+                        self.plots['ax'][j].set_ylim(self.plots['limitsY'][j][0],self.plots['limitsY'][j][1])
+                #autoscale, if no limits given
+                self.plots['ax'][j].relim(visible_only=True)
+                self.plots['ax'][j].autoscale_view(tight=True)
             
-            if 'limitsX' in self.plots:
-                if len(self.plots['limitsX'][j]):
-                    self.plots['ax'][j].set_xlim(self.plots['limitsX'][j][0],self.plots['limitsX'][j][1])
-            if 'limitsY' in self.plots:
-                if len(self.plots['limitsY'][j]):
-                    self.plots['ax'][j].set_ylim(self.plots['limitsY'][j][0],self.plots['limitsY'][j][1])
-            #autoscale, if no limits given
-            self.plots['ax'][j].relim(visible_only=True)
-            self.plots['ax'][j].autoscale_view(tight=True)
-        
-        #update figure:
-        self.plots['fig'].canvas.draw()
-        self.plots['fig'].canvas.flush_events()
-
-        if i < n-1:
-            self.plots['currentIndex'] += 1
-
-        for j in range(len(self.plots['sensors'])):
-            data = self.plots['data'][j]
-            if i == n-1:
-                data = np.roll(data, -1, axis=0)
-            self.plots['data'][j] = data #data references mbs variable
+            #update figure:
+            self.plots['fig'].canvas.draw()
+            self.plots['fig'].canvas.flush_events()
+    
+            if i < n-1:
+                self.plots['currentIndex'] += 1
+    
+            for j in range(len(self.plots['sensors'])):
+                data = self.plots['data'][j]
+                if i == n-1:
+                    data = np.roll(data, -1, axis=0)
+                self.plots['data'][j] = data #data references mbs variable
 
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: function to initialize solver for repeated calls
     def InitializeSolver(self):
-        self.mbs.sys['solver'] = exudyn.MainSolverImplicitSecondOrder()
-        self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
+        if self.doTimeIntegration:
+            self.mbs.sys['solver'] = exudyn.MainSolverImplicitSecondOrder()
+            self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
 
     #**classFunction: stop solver (finalize correctly)
     def FinalizeSolver(self):
-        self.mbs.sys['solver'].FinalizeSolver(self.mbs, self.simulationSettings) #shut down solver correctly (finalize files, ...)
+        if self.doTimeIntegration:
+            self.mbs.sys['solver'].FinalizeSolver(self.mbs, self.simulationSettings) #shut down solver correctly (finalize files, ...)
 
 
     #**classFunction: function which performs short simulation for given period        
@@ -420,11 +431,11 @@ class InteractiveDialog:
         mbs = self.mbs
 
         #+++++++++++++++++++++++++++++++++++++++++
-        #thus is the USER PART
+        #this is the USER PART
         self.simulationFunction(self.mbs, self)
         #+++++++++++++++++++++++++++++++++++++++++
     
-        if False: #slow way, always start/stop simulation:
+        if self.doTimeIntegration and False: #slow way, always start/stop simulation:
             self.simulationSettings.timeIntegration.numberOfSteps = int(deltaT/h)
             self.simulationSettings.timeIntegration.endTime = self.simulationSettings.timeIntegration.startTime+deltaT
             exudyn.SolveDynamic(mbs, self.simulationSettings, updateInitialValues=True)
@@ -436,7 +447,7 @@ class InteractiveDialog:
     
         #+++++++++++++++++++++++++++++++++++++++++
         #TIME STEPPING PART
-        if True:
+        if self.doTimeIntegration and True:
         
             self.simulationSettings.timeIntegration.numberOfSteps = int(deltaT/h)
             self.simulationSettings.timeIntegration.endTime = self.simulationSettings.timeIntegration.startTime+deltaT
@@ -453,5 +464,143 @@ class InteractiveDialog:
     
         return self.simulationSettings.timeIntegration.endTime #return current time for dialog
 
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'
+#**input:
+#    systemContainer: system container (usually SC) of your model, containing visualization settings
+#    mainSystem: system (usually mbs) containing your model
+#    nodeNumber: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...)
+#    period: delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second
+#    stepsPerPeriod: number of steps into which the animation of one cycle of the mode is split into
+#    showTime: show a virtual time running from 0 to 2*pi during one mode cycle
+#    renderWindowText: additional text written into renderwindow before 'Mode X' (use $\backslash$n to add line breaks)
+#**output: opens interactive dialog with further settings
+#**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. 
+#    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{secGeneratingAnimations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
+def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = ''):
+
+    SC = systemContainer
+    mbs = mainSystem
+    SC.visualizationSettings.general.graphicsUpdateInterval = 0.25*min(period, 2e-3) #set according update interval!
+    SC.visualizationSettings.general.showSolverTime = showTime
+    #SC.visualizationSettings.general.showComputationInfo = False
+    SC.visualizationSettings.general.showSolverInformation = False
+    SC.visualizationSettings.general.renderWindowString = renderWindowText+'mode 0'
+    
+    coordIndex = mbs.GetNodeODE2Index(nodeNumber)
+    nodeCoords = mbs.GetNodeOutput(nodeNumber,exudyn.OutputVariableType.Coordinates,exudyn.ConfigurationType.Reference)
+    numberOfModes = len(nodeCoords)
+    #numberOfModes = mbs.GetNode(nODE2)['numberOfODE2Coordinates']
+    
+    #use interactive dialog:
+    dialogItems = [
+                   {'type':'label', 'text':'Mode shape:', 'grid':(1,0)},
+                   {'type':'slider', 'range':(0, numberOfModes-1), 'value':0, 'steps':numberOfModes, 'variable':'modeShapeModeNumber', 'grid':(1,1)},
+                   {'type':'label', 'text':'Contour plot:', 'grid':(2,0)},
+                   {'type':'radio', 'textValueList':[('None',int(exudyn.OutputVariableType._None)),
+                                                     ('DisplacementLocal',int(exudyn.OutputVariableType.DisplacementLocal)),
+                                                      ('Displacement',int(exudyn.OutputVariableType.Displacement)),
+                                                      ('StressLocal',int(exudyn.OutputVariableType.StressLocal)),
+                                                      ('StrainLocal',int(exudyn.OutputVariableType.StrainLocal))], 
+                    'value':int(exudyn.OutputVariableType.DisplacementLocal), 'variable':'modeShapeOutputVariable', 'grid': [(3,0),(3,1),(3,2),(3,3),(3,4)]},
+                   {'type':'label', 'text':'Contour Component (use -1 for norm):', 'grid':(4,0)},
+                   {'type':'slider', 'range':(-1, 5), 'value':0, 'steps':7, 'variable':'modeShapeComponent', 'grid':(4,1)},
+                   {'type':'label', 'text':'Amplitude:', 'grid':(5,0)},
+                   {'type':'slider', 'range':(0, 0.5), 'value':0.05, 'steps':501, 'variable':'modeShapeAmplitude', 'grid':(5,1)},
+                   {'type':'label', 'text':'update period:', 'grid':(6,0)},
+                   {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1)},
+                   {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':0, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2)]},
+                   {'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
+                   {'type':'radio', 'textValueList':[('Record animation',0), ('Off',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
+                   ]
+
+    mbs.variables['modeShapePeriod'] = period
+    mbs.variables['modeShapeStepsPerPeriod'] = stepsPerPeriod
+    mbs.variables['modeShapeTimeIndex'] = 0
+    mbs.variables['modeShapeLastSetting'] = [-1,0,0,0]
+    mbs.variables['modeShapeNodeCoordIndex'] = coordIndex
+
+    def UFshowModes(mbs, dialog):
+        i = mbs.variables['modeShapeTimeIndex']
+        mbs.variables['modeShapeTimeIndex'] += 1
+        stepsPerPeriod = mbs.variables['modeShapeStepsPerPeriod']
+        amplitude = mbs.variables['modeShapeAmplitude']
+        if amplitude == 0:
+            SC.visualizationSettings.bodies.deformationScaleFactor = 0
+            amplitude = 1
+        else:
+            SC.visualizationSettings.bodies.deformationScaleFactor = 1
+
+        if mbs.variables['modeShapeRunModus'] == 2: #no sin(t) in static case
+            stepsPerPeriod = 1
+            t = 0
+        else:
+            t = i/stepsPerPeriod * 2 * pi
+            amplitude *= sin(t)
+        mbs.systemData.SetTime(t, exudyn.ConfigurationType.Visualization)
+
+        ode2Coords = mbs.systemData.GetODE2Coordinates()
+        selectedMode = int(mbs.variables['modeShapeModeNumber'])
+        outputVariable = exudyn.OutputVariableType(int(mbs.variables['modeShapeOutputVariable']))
+       
+        ode2Coords[mbs.variables['modeShapeNodeCoordIndex']+selectedMode] = amplitude
+        
+        mbs.systemData.SetODE2Coordinates(ode2Coords, exudyn.ConfigurationType.Visualization)
+
+        SC.visualizationSettings.contour.reduceRange = False
+        #check, if automatic range of contour colors shall be recomputed:
+        if (mbs.variables['modeShapeLastSetting'][0] != int(mbs.variables['modeShapeModeNumber']) or 
+           mbs.variables['modeShapeLastSetting'][1] != int(mbs.variables['modeShapeOutputVariable']) or
+           mbs.variables['modeShapeLastSetting'][2] != mbs.variables['modeShapeAmplitude'] or
+           mbs.variables['modeShapeLastSetting'][3] != int(mbs.variables['modeShapeComponent'])):
+            #print("set=",mbs.variables['modeShapeLastSetting'])
+            SC.visualizationSettings.contour.reduceRange = True
+            SC.visualizationSettings.general.renderWindowString = renderWindowText+'mode '+str(int(mbs.variables['modeShapeModeNumber']))
+        
+        mbs.variables['modeShapeLastSetting'] = [int(mbs.variables['modeShapeModeNumber']),
+                                                 int(mbs.variables['modeShapeOutputVariable']),
+                                                 mbs.variables['modeShapeAmplitude'],
+                                                 int(mbs.variables['modeShapeComponent'])]
+
+
+        SC.visualizationSettings.contour.outputVariable = outputVariable
+        SC.visualizationSettings.contour.outputVariableComponent = int(mbs.variables['modeShapeComponent']) #component
+        SC.visualizationSettings.openGL.showFaces = (mbs.variables['modeShapeMesh'] & 1) == 1
+        SC.visualizationSettings.openGL.showFaceEdges = (mbs.variables['modeShapeMesh'] & 2) == 2
+        
+
+        mbs.SendRedrawSignal()
+        if mbs.variables['modeShapeSaveImages'] == 0:
+            SC.RedrawAndSaveImage() #create images for animation
+        else:
+            SC.visualizationSettings.exportImages.saveImageFileCounter = 0 #for next mode ...
+
+        dialog.period = mbs.variables['modeShapePeriod']
+
+        if mbs.variables['modeShapeTimeIndex']>=stepsPerPeriod:
+           mbs.variables['modeShapeTimeIndex'] = 0
+           if mbs.variables['modeShapeRunModus'] > 0: #one cylce or static
+               dialog.StartSimulation()
+        
+
+    exudyn.StartRenderer()
+    if 'renderState' in exudyn.sys: SC.SetRenderState(exudyn.sys['renderState']) #load last model view
+
+    simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
+     #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
+    simulationSettings.solutionSettings.solutionInformation = 'Mode X'
+
+    dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
+                      simulationFunction=UFshowModes, 
+                      dialogItems=dialogItems,
+                      title='Animate mode shapes',
+                      doTimeIntegration=False, period=period,
+                      showTime=False,#done in UFshowModes
+                      )
+
+    
+    #SC.WaitForRenderEngineStopFlag() #not needed, Render window closes when dialog is quit
+    exudyn.StopRenderer() #safely close rendering window!
 
 

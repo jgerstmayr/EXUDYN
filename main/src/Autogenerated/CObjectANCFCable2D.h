@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-22  13:14:19 (last modfied)
+* @date         2021-03-25  16:05:11 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,8 +28,8 @@
 class CObjectANCFCable2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$
-    Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m\f$^2\f$] mass per length of beam
+    Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] mass per length of beam
     Real physicsBendingStiffness;                 //!< AUTO:  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
     Real physicsAxialStiffness;                   //!< AUTO:  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
     Real physicsBendingDamping;                   //!< AUTO:  [SI:Nm\f$^2\f$/s] bending damping of beam ; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
@@ -57,7 +57,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1.
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The beam with length \f$L\f$=physicsLength uses a localPosition\f$\in [0, L]\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -157,10 +157,10 @@ public: // AUTO:
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::Director1 +
-            (Index)OutputVariableType::Strain +
-            (Index)OutputVariableType::Curvature +
-            (Index)OutputVariableType::Force +
-            (Index)OutputVariableType::Torque );
+            (Index)OutputVariableType::StrainLocal +
+            (Index)OutputVariableType::CurvatureLocal +
+            (Index)OutputVariableType::ForceLocal +
+            (Index)OutputVariableType::TorqueLocal );
     }
 
 };

@@ -38,9 +38,9 @@ void VisualizationSystem::Reset()
 	graphicsData.FlushData();
 	graphicsData.GetUpdateGraphicsDataNow() = false;
 
-	postProcessData->requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+	EXUstd::WaitAndLockSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 	postProcessData->requestUserFunctionDrawing = false;
-	postProcessData->requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+	EXUstd::ReleaseSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 
 	GetVisualizationSystemData().Reset();
 }
@@ -71,8 +71,19 @@ bool visualizationSystemUpdateGraphicsDataTimeoutWarned = false;
 //! OpenGL renderer calls UpdateGraphicsData (different thread) to update graphics data
 void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visualizationSystemContainer)
 {
-	postProcessData->accessState.test_and_set(std::memory_order_acquire); //computation thread must be interrupted before further update
+	if (visualizationSystemContainer.GetVisualizationSettings().general.threadSafeGraphicsUpdate) //if not set, graphics will be sometimes distorted due to update of visualization state during rendering
+	{
+		//use semaphores, because the postProcessData.state is also accessed from the visualization thread
+		EXUstd::WaitAndLockSemaphore(postProcessData->accessState); //computation thread must be interrupted before further update
+	}
 	//now done in separate function: postProcessData->visualizationIsRunning = true; //signal, that visualization is running
+	//std::cout << "  update graphics begin\n";
+	
+	//FUTURE:
+	//first only copy visualizationState to postProcessData.tempVisualizationState; set flag that tempState is available
+	//then copy postprocess state to visualizationState, in order not to slow down computation thread
+	//but: if visualizationState is reset (after model update), then this temporary state must be cleared!
+	//systemData->GetCData().visualizationState;
 
 	if (postProcessData->updateCounter == postProcessData->recordImageCounter) //this is the signal that a frame shall be recorded
 	{
@@ -90,10 +101,9 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		graphicsData.FlushData(); //currently data is always recomputed; FUTURE: differ between structure update and vertex/rigid body update, etc.
 
 		//put this after FlushData():
-		graphicsData.LockData(); //avoid that data is cleared by computation/Python thread
+		graphicsData.LockData(); //avoid that data is cleared by computation/Python thread (should never happen, because updateGraphicsData is called usually from Render thread ...)
 
 		Index cnt;
-		postProcessData->visualizationTime = systemData->GetCData().GetVisualization().GetTime(); //update time, synchronized with the state shown 
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
 		//call object user functions
@@ -108,9 +118,11 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		}
 		if (systemHasUserFunction)
 		{
-			postProcessData->requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+			EXUstd::ReleaseSemaphore(postProcessData->accessState); //needs to be released, because otherwise deadlock between vis and compu thread
+
+			EXUstd::WaitAndLockSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 			postProcessData->requestUserFunctionDrawing = true;
-			postProcessData->requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+			EXUstd::ReleaseSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 
 			visualizationSettingsUF = &visualizationSystemContainer.settings;
 			Index timeout = 100; //avoid complete hang up, if computation stucks ==> graphics data will be inconsistent ...
@@ -120,9 +132,9 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				std::this_thread::sleep_for(std::chrono::milliseconds(2)); //wait for computation thread to complete computation of user function's graphicsData
 			}
 			//this will wait in case to complete the current drawing in python (and could possibly hang up ...)
-			postProcessData->requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+			EXUstd::WaitAndLockSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 			postProcessData->requestUserFunctionDrawing = false;
-			postProcessData->requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+			EXUstd::ReleaseSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 
 			if (cnt >= timeout && !visualizationSystemUpdateGraphicsDataTimeoutWarned)
 			{
@@ -130,9 +142,16 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				//std::cout << "timeout for user function drawing, reduce complexity of user function drawing. Further warnings suppressed!\n";
 				PyQueueExecutableString("print('timeout for user function drawing, reduce complexity of user function drawing. Further warnings suppressed!')");
 			}
-			//(requestUserFunctionDrawing = false; set in other thread ....)
+
+			//now lock postProcessData again
+			if (visualizationSystemContainer.GetVisualizationSettings().general.threadSafeGraphicsUpdate) //if not set, graphics will be sometimes distorted due to update of visualization state during rendering
+			{
+				EXUstd::WaitAndLockSemaphore(postProcessData->accessState); //computation thread must be interrupted before further update
+			}
 
 		}
+
+		postProcessData->visualizationTime = systemData->GetCData().GetVisualization().GetTime(); //update time, synchronized with the state shown 
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
 		//visualize nodes:
@@ -324,19 +343,19 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 		graphicsData.ClearLock();
 	}
-	postProcessData->accessState.clear(std::memory_order_release); //computation thread must be interrupted before further update
+	//std::cout << "  update graphics end\n";
+	EXUstd::ReleaseSemaphore(postProcessData->accessState);
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 std::string VisualizationSystem::GetComputationMessage(bool solverInformation, bool solutionInformation, bool solverTime)
 {
-	postProcessData->accessState.test_and_set(std::memory_order_acquire); //computation thread must be interrupted before further update
-	
+	//semaphore is in Set/GetSolver/SolutionMessage(...) !
+
 	std::string str;
 	if (solverInformation) { str += postProcessData->GetSolverMessage() + '\n'; }
 	if (solutionInformation && !postProcessData->GetSolutionMessage().empty()) { str += postProcessData->GetSolutionMessage() + '\n'; }
-	if (solverTime) { str += "time = " + EXUstd::ToString(postProcessData->visualizationTime); }
-	postProcessData->accessState.clear(std::memory_order_release); //computation thread must be interrupted before further update
+	if (solverTime) { str += "time = " + EXUstd::ToString(postProcessData->visualizationTime); } //not thread safe, but ok
 
 	return str;
 }

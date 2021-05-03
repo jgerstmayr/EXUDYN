@@ -52,7 +52,7 @@ public:
 	//create a new timer; name must be a static name (must exist until end of timer) or dynamically allocated string, may not be deleted
 	Index AddTimer(const char* name)
 	{
-		Index n = counters.size();
+		Index n = (Index)counters.size();
 		counters.push_back(0.);
 		counterNames.push_back(name);
 		return n;
@@ -65,7 +65,7 @@ public:
 	const char* GetTimerName(Index counterIndex) const { return counterNames[counterIndex]; }
 
 	//!get current value of a timer
-	Index NumberOfTimers() const { return counters.size(); }
+	Index NumberOfTimers() const { return (Index)counters.size(); }
 
 	//!reset timers( e.g. before starting simulation):
 	void Reset()
@@ -92,7 +92,7 @@ public:
 
 		std::ostringstream ostr;
 		ostr.precision(5); //reduced precision for nicer output...
-		for (Index i = 0; i < counters.size(); i++)
+		for (Index i = 0; i < (Index)counters.size(); i++)
 		{
 			ostr << "  " << counterNames[i] << " = " << counters[i] * 1000 << "ms\n"; //print timings in milliseconds
 		}

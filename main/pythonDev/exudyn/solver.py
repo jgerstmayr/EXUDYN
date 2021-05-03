@@ -18,6 +18,99 @@ import exudyn
 solverCheckMemoryAllocations = True
 solverCheckMemoryAllocationsThreshold = 100000 #treshold for warning on too many news during solving
 
+#**function: helper function for unique error and helper messages
+def SolverErrorMessage(solver, mbs, isStatic=False, 
+                       showCausingObjects=True, showCausingNodes=True, showHints=True):
+    s = ''
+    s += '\n******************************\n'
+    if isStatic:
+        s += 'STATIC SOLVER FAILED:\n'
+    else:        
+        s += 'DYNAMIC SOLVER FAILED:\n'
+    #print(solver.conv)
+    massMatrixNotInvertible = solver.conv.massMatrixNotInvertible
+    linearSolverFailed = solver.conv.linearSolverFailed
+    causingRow = solver.conv.linearSolverCausingRow
+    newtonFailed = solver.conv.stepReductionFailed or solver.conv.newtonSolutionDiverged
+
+    if showHints:
+        s += '  POSSIBLE REASONS for solver abort:\n'
+        if linearSolverFailed:
+            s += '  * unused node or no equations supplied for node\n'
+            s += '  * redundant definition of constraints\n'
+        s += '  * inconsistent or inappropriate initial conditions\n'
+        s += '  * system is nearly singular due to high (penalty) stiffness or singularities in your system\n'
+        if (isStatic) :
+            s += '  * static problem has unconstrained coordinates (that can move freely)\n'
+            if newtonFailed:
+                s += '  * the system is very nonlinear and thus requires smaller (load) steps\n'
+        else:
+            if newtonFailed:
+                s += '  * too large step size, which prevents Newton to converge\n'
+            if linearSolverFailed:
+                s += '  * singular mass matrix (no mass/inertia assigned?)\n'
+
+        s += '  -------------------\n'
+        s += '  POSSIBLE SOLUTIONS:\n'
+        s += '  * check your Python model!\n'
+        s += '  * check the causing nodes, objects, connectors, etc.\n'
+        s += '  * check your nodes, objects, connectors, and markers\n'
+        s += '  * change solver and solver settings (e.g. change index 3/index 2 solver)\n'
+        s += '  * try linearSolverSettings.ignoreSingularJacobian\n'
+        s += '  * step-by-step remove constraints, until you find the causing item\n'
+        s += '  * step-by-step remove objects and nodes, until you find the causing item\n'
+        s += '  * check joint axes (using visualization), which may be incompatible\n'
+        s += '  * use lower (penalty) stiffness factors\n'
+        if newtonFailed:
+            s += '  * use smaller step size or load steps\n'
+            s += '  * use adaptiveStep to reduce step size in static or dynamic simulation\n'
+            s += '  * adjust the way you initialize your model and how to apply loads, etc.\n'
+        s += '  * report error, clearly describing (a minimal description) of your problem, at reply.exudyn@gmail.com\n'
+    else:
+        s += "  use showHints=True to show helpful information\n"
+    s += '******************************\n'
+    
+    nODE2 = solver.GetODE2size()
+    nODE1 = solver.GetODE1size()
+    nAE = solver.GetAEsize()
+    nSys = nODE2+nODE1+nAE
+
+    causingObjects = []
+    if linearSolverFailed and causingRow >=0 and causingRow < nSys:
+        s+="The causing system equation "+str(causingRow)+" belongs to a "
+        if causingRow < nODE2:
+            s+="ODE2 coordinate"
+        elif causingRow < nODE2+nODE1:
+            s+="ODE1 coordinate"
+        else:
+            s+="algebraic variable (Lagrange multiplier)"
+        s+='\n'
+
+        import numpy as np
+        if showCausingObjects:
+            for objectIndex in range(mbs.systemData.NumberOfObjects()):
+                ltg = mbs.systemData.GetObjectLTGODE2(objectIndex)
+                addObject = False
+                if causingRow in ltg:
+                    addObject = True
+                ltg = mbs.systemData.GetObjectLTGODE1(objectIndex)
+                if causingRow - (nODE2) in ltg:
+                    addObject = True
+                ltg = mbs.systemData.GetObjectLTGAE(objectIndex)
+                if causingRow - (nODE2+nODE1) in ltg:
+                    addObject = True
+
+                if addObject and (objectIndex not in causingObjects):
+                    causingObjects += [objectIndex]
+            s+="Potential object number(s) causing linear solver to fail: "+str(causingObjects)+"\n"
+            for i in causingObjects:
+                oDict = mbs.GetObject(i)
+                s += "    object "+str(i)+", name='"+oDict['name']+"', type="+ str(oDict['objectType']) +"\n"
+
+
+    return s
+
+
 #**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
@@ -48,17 +141,32 @@ solverCheckMemoryAllocationsThreshold = 100000 #treshold for warning on too many
 #       variableType=exu.OutputVariableType.Position))
 def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), 
                 updateInitialValues = False,
-                storeSolver = True):
+                storeSolver = True,
+                showHints = False,
+                showCausingItems = True,
+                ):
     staticSolver = exudyn.MainSolverStatic()
+    if storeSolver:
+        mbs.sys['staticSolver'] = staticSolver #copy solver structure to sys variable
     
-    success = staticSolver.SolveSystem(mbs, simulationSettings)
-    
-    if updateInitialValues:
+    try:
+        success = staticSolver.SolveSystem(mbs, simulationSettings)
+    except:
+        pass
+        # print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+        #                          showCausingNodes=showCausingItems, showHints=showHints))
+        # import sys
+        # sys.exit() #produce no further error messages
+
+    if not success:
+        exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+                                 showCausingNodes=showCausingItems, showHints=showHints))
+        raise ValueError("SolveDynamic terminated")
+
+    elif updateInitialValues:
         currentState = mbs.systemData.GetSystemState() #get current values
         mbs.systemData.SetSystemState(systemStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
 
-    if storeSolver:
-        mbs.sys['staticSolver'] = staticSolver #copy solver structure to sys variable
 
     return success
 
@@ -69,7 +177,8 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 #   solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
 #   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'] 
-#   experimentalNewSolver: this allows to use the new solver; flag only used during development - will be removed in future!
+#   showHints: show additional hints, if solver fails
+#   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 #**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf section \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**example:
 # import exudyn as exu
@@ -97,11 +206,15 @@ def SolveDynamic(mbs,
                 solverType = exudyn.DynamicSolverType.GeneralizedAlpha,
                 updateInitialValues = False,
                 storeSolver = True,
+                showHints = False,
+                showCausingItems = True,
                 ):
-
+    success = False
     if (solverType == exudyn.DynamicSolverType.TrapezoidalIndex2 or solverType == exudyn.DynamicSolverType.GeneralizedAlpha):
     
         dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
+        if storeSolver:
+            mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
         #if (experimentalNewSolver or #solver flag
         #    ('experimentalNewSolver' in exudyn.sys)): #flag set in test suite
         #    dynamicSolver.experimentalUseSolverNew = True #must be set at the very beginning when MainSolverImplicitSecondOrder() is initialized
@@ -116,22 +229,39 @@ def SolveDynamic(mbs,
             simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     
         stat = exudyn.InfoStat(False)
-        success = dynamicSolver.SolveSystem(mbs, simulationSettings)
+        try:
+            success = dynamicSolver.SolveSystem(mbs, simulationSettings)
+        except:
+            pass
+            # print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
+            #                          showCausingNodes=showCausingItems, showHints=showHints))
+            #print(dynamicSolver.conv)
+            # import sys
+            # sys.exit() #produce no further error messages
+            #raise ValueError("SolveDynamic terminated due to errors, see messages above")
+
+        if not success:
+            exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
+                                     showCausingNodes=showCausingItems, showHints=showHints))
+            raise ValueError("SolveDynamic terminated")
+            
         CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.newtonStepsCount) #now check if these statistics are ok
 
         #restore old settings:
         simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
         simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
     elif (solverType == exudyn.DynamicSolverType.ExplicitEuler or 
-          solverType == exudyn.DynamicSolverType.ExplicitMidpoint or
-          solverType == exudyn.DynamicSolverType.RK33 or
-          solverType == exudyn.DynamicSolverType.RK44 or
-          solverType == exudyn.DynamicSolverType.RK67 or
-          solverType == exudyn.DynamicSolverType.ODE23 or
-          solverType == exudyn.DynamicSolverType.DOPRI5
-          ):
+            solverType == exudyn.DynamicSolverType.ExplicitMidpoint or
+            solverType == exudyn.DynamicSolverType.RK33 or
+            solverType == exudyn.DynamicSolverType.RK44 or
+            solverType == exudyn.DynamicSolverType.RK67 or
+            solverType == exudyn.DynamicSolverType.ODE23 or
+            solverType == exudyn.DynamicSolverType.DOPRI5
+            ):
         simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType = solverType
         dynamicSolver = exudyn.MainSolverExplicit()
+        if storeSolver:
+            mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
 
         stat = exudyn.InfoStat(False)
         success = dynamicSolver.SolveSystem(mbs, simulationSettings)
@@ -142,12 +272,9 @@ def SolveDynamic(mbs,
     if updateInitialValues:
         currentState = mbs.systemData.GetSystemState() #get current values
         mbs.systemData.SetSystemState(systemStateList=currentState, 
-                                      configuration = exudyn.ConfigurationType.Initial)
+                                        configuration = exudyn.ConfigurationType.Initial)
         mbs.systemData.SetODE2Coordinates_tt(coordinates = mbs.systemData.GetODE2Coordinates_tt(), 
-                                             configuration = exudyn.ConfigurationType.Initial)
-
-    if storeSolver:
-        mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
+                                                configuration = exudyn.ConfigurationType.Initial)
 
     return success
 

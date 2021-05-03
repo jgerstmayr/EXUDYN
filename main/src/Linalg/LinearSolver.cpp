@@ -16,13 +16,33 @@
 #include "Utilities/TimerStructure.h" //for local CPU time measurement
 
 
-	//! factorize matrix (invert, SparseLU, etc.); 0=success
-Index GeneralMatrixEXUdense::Factorize()
+//! factorize matrix (invert, SparseLU, etc.); -1=success
+Index GeneralMatrixEXUdense::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
-	Index rv = !matrix.Invert();
-	if (!rv) { SetMatrixIsFactorized(true); }
-	else { SetMatrixIsFactorized(false); }
+	static ResizableMatrix m;
+	static ArrayIndex rows;
+	Real pivotTreshold = 0;
+	Index  rv = matrix.InvertSpecial(m, rows, ignoreRedundantEquation, redundantEquationsStart, pivotTreshold);
+	if (rv == -1) 
+	{ 
+		SetMatrixIsFactorized(true); 
+	}
+	else 
+	{ 
+		SetMatrixIsFactorized(false); 
+	}
 	return rv;
+	//bool rv = !matrix.Invert();
+	//if (!rv)
+	//{
+	//	SetMatrixIsFactorized(true);
+	//	return -1;
+	//}
+	//else
+	//{
+	//	SetMatrixIsFactorized(false);
+	//	return 0;
+	//}
 }
 
 
@@ -50,7 +70,7 @@ void GeneralMatrixEigenSparse::Reset()
 	SetNumberOfRowsAndColumns(1, 1);
 	triplets.push_back(EigenTriplet(0, 0, 1.));
 	FinalizeMatrix();
-	Factorize(); //now solver should be reset to much smaller size ==> test!
+	FactorizeNew(); //now solver should be reset to much smaller size ==> test!
 
 	SetAllZero();
 	triplets.shrink_to_fit(); //this erases the data if it has zero entries
@@ -271,8 +291,8 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 //Index TSeigenAnalyzePattern;
 //TimerStructureRegistrator TSReigenAnalyzePattern("eigenAnalyzePattern", TSeigenAnalyzePattern, globalTimers);
 
-//! factorize matrix (invert, SparseLU, etc.); 0=success
-Index GeneralMatrixEigenSparse::Factorize()
+//! factorize matrix (invert, SparseLU, etc.); -1=success
+Index GeneralMatrixEigenSparse::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
 
@@ -290,9 +310,9 @@ Index GeneralMatrixEigenSparse::Factorize()
 	//<= A->ncol : U(i, i) is exactly zero.The factorization has been completed, but the factor U is exactly singular, and division by zero will occur if it is used to solve a system of equations.
 	//> A->ncol: number of bytes allocated when memory allocation failure occurred, plus A->ncol.If lwork = -1, it is the estimated amount of space needed, plus A->ncol.
 	Index rv = solver.info();
-	if (!rv) { SetMatrixIsFactorized(true); }
-
-	return rv;
+	if (!rv) { SetMatrixIsFactorized(true); return -1; }
+	else if (rv <= NumberOfRows()) { return rv - 1;  } //causing row
+	else { return NumberOfRows(); } //undefined error
 }
 
 //! multiply matrix with vector: solution = A*x

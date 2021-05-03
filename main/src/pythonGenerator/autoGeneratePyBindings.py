@@ -26,7 +26,7 @@ s += '\n//        pybinding to enum classes:\n'
 pyClass = 'OutputVariableType'
 
 descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.\n\n'
-descriptionStr += 'Available output variables and the interpreation of the output variable can be found at the object definitions. \n The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType.\n'
+descriptionStr += 'Available output variables and the interpreation of the output variable can be found at the object definitions. \n The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \{0,1,2\}, representing \{x,y,z\} components (e.g., of displacements, velocities, ...), or \{0,1,2,3,4,5\} representing \{xx,yy,zz,yz,xz,xy\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)\n'
 
 s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 sLenum += DefLatexStartClass(sectionName = pyClass, 
@@ -37,32 +37,41 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'Distance', 'e.g., measure distance in spring damper connector'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Position', 'measure 3D position, e.g., of node or body'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Displacement', 'measure displacement; usually difference between current position and reference position'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'DisplacementLocal', 'measure local displacement, e.g. in local joint coordinates'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Velocity', 'measure (translational) velocity of node or object'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, e.g. in local body or joint coordinates'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Acceleration', 'measure (translational) acceleration of node or object'); s+=s1; sLenum+=sL1
+#[s1,sL1] = AddEnumValue(pyClass, 'AccelerationLocal', 'measure (translational) acceleration of node or object in local coordinates'); s+=s1; sLenum+=sL1
+
 [s1,sL1] = AddEnumValue(pyClass, 'RotationMatrix', 'measure rotation matrix of rigid body node or object'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Rotation', 'measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'AngularVelocity', 'measure angular velocity of node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'AngularVelocityLocal', 'measure local (body-fixed) angular velocity of node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'AngularAcceleration', 'measure angular acceleration of node or object'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Rotation', 'measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint'); s+=s1; sLenum+=sL1
+
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates', 'measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates_t', 'measure the time derivative of coordinates (= velocity coordinates) of a node or object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Coordinates_tt', 'measure the second time derivative of coordinates (= acceleration coordinates) of a node or object'); s+=s1; sLenum+=sL1
+
 [s1,sL1] = AddEnumValue(pyClass, 'SlidingCoordinate', 'measure sliding coordinate in sliding joint'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Director1', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 1 or x-direction'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Director2', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 2 or y-direction'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Director3', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 3 or z-direction'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Force', 'measure force, e.g., in joint or beam (resultant force)'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Torque', 'measure torque, e.g., in joint or beam (resultant couple/moment)'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Strain', 'measure strain, e.g., axial strain in beam'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Stress', 'measure stress, e.g., axial stress in beam'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'Curvature', 'measure curvature; may be scalar or vectorial: twist and curvature'); s+=s1; sLenum+=sL1
 
-[s1,sL1] = AddEnumValue(pyClass, 'DisplacementLocal', 'measure local displacement, e.g. in local joint coordinates'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, , e.g. in local joint coordinates'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Force', 'measure global force, e.g., in joint or beam (resultant force), or generalized forces; see description of according object'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ForceLocal', 'measure local force, e.g., in joint or beam (resultant force)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Torque', 'measure torque, e.g., in joint or beam (resultant couple/moment)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'TorqueLocal', 'measure local torque, e.g., in joint or beam (resultant couple/moment)'); s+=s1; sLenum+=sL1
+# unused for now, maybe later on in finite elements, fluid, etc.
+# [s1,sL1] = AddEnumValue(pyClass, 'Strain', 'measure strain, e.g., axial strain in beam'); s+=s1; sLenum+=sL1
+# [s1,sL1] = AddEnumValue(pyClass, 'Stress', 'measure stress, e.g., axial stress in beam'); s+=s1; sLenum+=sL1
+# [s1,sL1] = AddEnumValue(pyClass, 'Curvature', 'measure curvature; may be scalar or vectorial: twist and curvature'); s+=s1; sLenum+=sL1
+
+[s1,sL1] = AddEnumValue(pyClass, 'StrainLocal', 'measure local strain, e.g., axial strain in cross section frame of beam or Green-Lagrange strain'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'StressLocal', 'measure local stress, e.g., axial stress in cross section frame of beam or Second Piola-Kirchoff stress; choosing component==-1 will result in the computation of the Mises stress'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'CurvatureLocal', 'measure local curvature; may be scalar or vectorial: twist and curvature of beam in cross section frame'); s+=s1; sLenum+=sL1
+
 [s1,sL1] = AddEnumValue(pyClass, 'ConstraintEquation', 'evaluates constraint equation (=current deviation or drift of constraint equation)'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'EndOfEnumList', 'this marks the end of the list, usually not important to the user'); s+=s1; sLenum+=sL1
 
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
@@ -84,6 +93,26 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'StartOfStep', 'during computation, this refers to the solution at the start of the step = end of last step, to which the solver falls back if convergence fails'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'Visualization', 'this is a state completely de-coupled from computation, used for visualization'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EndOfEnumList', 'this marks the end of the list, usually not important to the user'); s+=s1; sLenum+=sL1
+
+s +=	'		.export_values();\n\n'
+sLenum += DefLatexFinishClass()
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+pyClass = 'ItemType'
+
+descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.\n\n'
+
+s +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
+sLenum += DefLatexStartClass(sectionName = pyClass, 
+                            description=descriptionStr, 
+                            subSection=True, labelName=pyClass)
+#keep this list synchronized with the accoring enum structure in C++!!!
+[s1,sL1] = AddEnumValue(pyClass, '_None', 'item has no type'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Node', 'item or index is of type Node'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Object', 'item or index is of type Object'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Marker', 'item or index is of type Marker'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Load', 'item or index is of type Load'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'Sensor', 'item or index is of type Sensor'); s+=s1; sLenum+=sL1
 
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
@@ -238,7 +267,7 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 [s1,sL1] = DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs'); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex', 
-                            "This function provides the invalid index, which depends on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; in future, the invalid index may be changed to -1, therefore you should use this variable"); s+=s1; sL+=sL1
+                            "This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function"); s+=s1; sL+=sL1
 
 #s += '        m.def_readwrite("variables", &exudynVariables, py::return_value_policy::reference)\n' 
 #variables in the module itself are exported with "m.attr(...)" !
@@ -378,6 +407,10 @@ s+=s1; sL+=sL1
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
                                 description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step",
                                 example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB \\TAB return False \\\\ \\TAB return True \\\\ mbs.SetPreStepUserFunction(PreStepUserFunction)'); s+=s1; sL+=sL1
+                                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
+                                description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables",
+                                example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\ mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)'); s+=s1; sL+=sL1
                                                       
 
 #++++++++++++++++
@@ -782,6 +815,41 @@ s += "\n//        General functions:\n"
                                 isLambdaFunction = True,
                                 example = 'print(mbs.systemData.NumberOfSensors())'); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ODE2Size', cName='PyODE2Size', 
+                                description="get size of ODE2 coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
+                                argList=['configurationType'],
+                                defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
+                                example = "print('ODE2 size=',mbs.systemData.ODE2Size())"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ODE1Size', cName='PyODE1Size', 
+                                description="get size of ODE1 coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
+                                argList=['configurationType'],
+                                defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
+                                example = "print('ODE1 size=',mbs.systemData.ODE1Size())"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AEsize', cName='PyAEsize', 
+                                description="get size of AE coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
+                                argList=['configurationType'],
+                                defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
+                                example = "print('AE size=',mbs.systemData.AEsize())"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='DataSize', cName='PyDataSize', 
+                                description="get size of Data coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
+                                argList=['configurationType'],
+                                defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
+                                example = "print('Data size=',mbs.systemData.DataSize())"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SystemSize', cName='PySystemSize', 
+                                description="get size of System coordinate vector for given configuration (only works correctly after mbs.Assemble() )",
+                                argList=['configurationType'],
+                                defaultArgs=['exu.ConfigurationType::Current'], #exu will be removed for binding
+                                example = "print('System size=',mbs.systemData.SystemSize())"
+                                ); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetTime', cName='PyGetStateTime', 
                                 description="get configuration dependent time.",
                                 argList=['configurationType'],
@@ -797,21 +865,17 @@ s += "\n//        General functions:\n"
                                 ); s+=s1; sL+=sL1
 
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentTime', cName='PyGetCurrentTime', 
-                                description="DEPRICATED; get current (simulation) time; time is updated in time integration solvers and in static solver; use this function e.g. during simulation to define time-dependent loads",
-                                example = "mbs.systemData.GetCurrentTime()"
-                                ); s+=s1; sL+=sL1
+#removed2021-05-01
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentTime', cName='PyGetCurrentTime', 
+#                                 description="DEPRECATED; get current (simulation) time; time is updated in time integration solvers and in static solver; use this function e.g. during simulation to define time-dependent loads",
+#                                 example = "mbs.systemData.GetCurrentTime()"
+#                                 ); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetVisualizationTime', cName='PySetVisualizationTime', 
-                                description="DEPRICATED; set time for render window (visualization)",
-                                example = "mbs.systemData.SetVisualizationTime(1.3)"
-                                ); s+=s1; sL+=sL1
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetVisualizationTime', cName='PySetVisualizationTime', 
+#                                 description="DEPRECATED; set time for render window (visualization)",
+#                                 example = "mbs.systemData.SetVisualizationTime(1.3)"
+#                                 ); s+=s1; sL+=sL1
 
-#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='InfoSummary', cName='[](const MainSystemData& msd) {pout << msd.PyInfoSummary(); }', 
-#                                description="Print short system information; same as print(mbs)",
-#                                isLambdaFunction = True,
-#                                example = 'mbs.systemData.InfoSummary()'); s+=s1; sL+=sL1
-#
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Info', cName='[](const MainSystemData& msd) {pout << msd.PyInfoDetailed(); }', 
                                 description="print detailed system information for every item; for short information use print(mbs)",

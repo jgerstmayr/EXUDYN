@@ -99,6 +99,7 @@ public:
 private:
 	VectorBase(LinkedDataVectorBase<T>&& other) = delete; //this move constructor is forbidden, as it will lead to crash as memory will be deleted wrongly
 	VectorBase(const LinkedDataVectorBase<T>& other) = delete; //this copy constructor is forbidden, as it will unintendedly copy memory
+	VectorBase(std::initializer_list<Index>) = delete; //constructor forbidden, as it would convert wrongly for Vector({2}) into Vector(2)
 public:
 
 	//! constructor with std::vector
@@ -142,13 +143,13 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-    virtual VectorBase* GetClone() const { return new VectorBase(*this); }
+    virtual VectorBase* GetClone() const { return new VectorBase<T>(*this); }
 
 	virtual VectorType GetType() const { return VectorType::Vector; }
 
 protected:
     //! allocate memory if numberOfRealsInit!=0; set data to allocated array of Reals or to nullptr
-    virtual void AllocateMemory(Index numberOfRealsInit)
+	virtual void AllocateMemory(Index numberOfRealsInit)
     {
         numberOfItems = numberOfRealsInit;
         if (numberOfItems == 0) { data = nullptr; }//for case that list is zero length? ==> TEST CASE
@@ -215,7 +216,7 @@ public:
     //! set vector to data given by initializer list; possibly memory allocation!
     void SetVector(std::initializer_list<T> listOfReals)
     {
-        SetNumberOfItems(listOfReals.size());
+        SetNumberOfItems((Index)listOfReals.size());
 
         Index cnt = 0;
         for (auto value : listOfReals) {
@@ -594,7 +595,7 @@ VectorBase<T>::VectorBase(const VectorBase<T>& vector)
 template<typename T>
 VectorBase<T>::VectorBase(const std::vector<T> vector)
 {
-	AllocateMemory(vector.size());
+	AllocateMemory((Index)vector.size());
 
 	std::copy(vector.begin(), vector.end(), this->begin());
 }
@@ -604,7 +605,7 @@ VectorBase<T>::VectorBase(const std::vector<T> vector)
 template<typename T>
 VectorBase<T>::VectorBase(std::initializer_list<T> listOfReals)
 {
-	AllocateMemory(listOfReals.size());
+	AllocateMemory((Index)listOfReals.size());
 
 	Index cnt = 0;
 	for (auto value : listOfReals) {

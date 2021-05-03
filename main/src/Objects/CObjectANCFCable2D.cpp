@@ -462,8 +462,6 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 
 		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
-
-
 }
 
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
@@ -671,9 +669,9 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 		Vector2D rx = ComputeSlopeVector(localPosition[0], configuration);
 		value.SetVector({rx[0], rx[1], 0.});
 		break; }
-	case OutputVariableType::Strain:	value.SetVector({ ComputeAxialStrain(localPosition[0], configuration) }); break;
-	case OutputVariableType::Curvature:	value.SetVector({ ComputeCurvature(localPosition[0], configuration) }); break;
-	case OutputVariableType::Force: {
+	case OutputVariableType::StrainLocal:	value.SetVector({ ComputeAxialStrain(localPosition[0], configuration) }); break;
+	case OutputVariableType::CurvatureLocal:	value.SetVector({ ComputeCurvature(localPosition[0], configuration) }); break;
+	case OutputVariableType::ForceLocal: {
 		Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature;
 		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
 		
@@ -682,7 +680,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 
 		value.SetVector({ force }); break;
 	}
-	case OutputVariableType::Torque: {
+	case OutputVariableType::TorqueLocal: {
 		Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping;
 		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
 		

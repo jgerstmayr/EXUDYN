@@ -51,57 +51,57 @@ namespace OpenGLText
 		if (c >= 'a' && c <= 'z') { c -= (char)32; }
 		switch (c)
 		{
-		case '0': lines = Vec({ 0,0, 2,0, 2,4, 0,4, 0,0 }); break;
-		case '1': lines = Vec({ 1.5,0, 1.5,4, 0.5,3 }); break;
-		case '2': lines = Vec({ 0,4, 2,4, 2,2, 0,2, 0,0, 2,0 }); break;
-		case '3': lines = Vec({ 0,4, 2,4, 2,2, 0,2, 2,2, 2,0, 0,0 }); break;
-		case '4': lines = Vec({ 0,4, 0,2, 2,2, 2,4, 2,0 }); break;
-		case '5': lines = Vec({ 2,4, 0,4, 0,2, 2,2, 2,1, 1,0, 0,0 }); break;
-		case '6': lines = Vec({ 2,4, 0,4, 0,0, 2,0, 2,2, 0,2 }); break;
-		case '7': lines = Vec({ 0,4, 2,4, 1,0 }); break;
-		case '8': lines = Vec({ 0,2, 0,0, 2,0, 2,2, 0,2, 0,4, 2,4, 2,2 }); break;
-		case '9': lines = Vec({ 2,2, 0,2, 0,4, 2,4, 2,0, 0,0 }); break;
-		case 'A': lines = Vec({ 0,0, 1,4, 2,0, 1.5,2, 0.5,2 }); break;
-		case 'B': lines = Vec({ 0,0, 0,4, 1.5,4, 2,3, 1.5,2, 0,2, 1.5,2, 2,1, 1.5,0, 0,0 }); break;
-		case 'C': lines = Vec({ 2,4, 0.5,4, 0,3.5, 0,0.5, 0.5,0, 2,0 }); break;
-		case 'D': lines = Vec({ 0,0, 0,4, 1.5,4, 2,3.5, 2,0.5, 1.5,0, 0,0 }); break;
-		case 'E': lines = Vec({ 2,4, 0,4, 0,2, 2,2, 0,2, 0,0, 2,0 }); break;
-		case 'F': lines = Vec({ 2,4, 0,4, 0,2, 1.5,2, 0,2, 0,0 }); break;
-		case 'G': lines = Vec({ 2,4, 0.5,4, 0,3.5, 0,0.5, 0.5,0, 1.5,0, 2,0.5, 2,2, 1,2 }); break;
-		case 'H': lines = Vec({ 0,0, 0,4, 0,2, 2,2, 2,4, 2,0 }); break;
-		case 'I': lines = Vec({ 2,4, 0,4, 1,4, 1,0, 0,0, 2,0 }); break;
-		case 'J': lines = Vec({ 0,4, 1,4, 1,0, 0.5,0, 0,0.5 }); break;
-		case 'K': lines = Vec({ 0,0, 0,4, 0,2, 2,4, 0,2, 2,0 }); break;
-		case 'L': lines = Vec({ 0,4, 0,0, 2,0 }); break;
-		case 'M': lines = Vec({ 0,0, 0,4, 1,2, 2,4, 2,0 }); break;
-		case 'N': lines = Vec({ 0,0, 0,4, 2,0, 2,4 }); break;
-		case 'O': lines = Vec({ 0,3.5, 0,0.5, 0.5,0, 1.5,0, 2,0.5, 2,3.5, 1.5,4, 0.5,4, 0,3.5 }); break;
-		case 'P': lines = Vec({ 0,0, 0,4, 1.5,4, 2,3.5, 2,2.5, 1.5,2, 0,2 }); break;
-		case 'Q': lines = Vec({ 0,3.5, 0,0.5, 1.5,0, 1.75,0.25, 1.5,0.5, 2,0, 1.75,0.25, 2,0.5, 2,3.5, 1.5,4, 0.5,4, 0,3.5 }); break;
-		case 'R': lines = Vec({ 0,0, 0,4, 1.5,4, 2,3.5, 2,2.5, 1.5,2, 0,2, 2,0 }); break;
-		case 'S': lines = Vec({ 2,4, 1,4, 0,3, 2,1, 1,0, 0,0 }); break;
-		case 'T': lines = Vec({ 0,4, 2,4, 1,4, 1,0 }); break;
-		case 'U': lines = Vec({ 0,4, 0,0.5, 0.5,0, 1.5,0, 2,0.5, 2,4 }); break;
-		case 'V': lines = Vec({ 0,4, 1,0, 2,4 }); break;
-		case 'W': lines = Vec({ 0,4, 0,0, 1,2, 2,0, 2,4 }); break;
-		case 'X': lines = Vec({ 0,4, 2,0, 1,2, 2,4, 0,0 }); break;
-		case 'Y': lines = Vec({ 0,4, 1,2, 2,4, 1,2, 1,0 }); break;
-		case 'Z': lines = Vec({ 0,4, 2,4, 0,0, 2,0 }); break;
-		case '\'':lines = Vec({ 1,4, 1,3 }); break;
-		case '/': lines = Vec({ 0.5,0, 1.5,4 }); break;
-		case '*': lines = Vec({ 0.,1., 2,3, 1,2, 0.,3, 2,1, 1,2, 1,3, 1,1 }); break;
-		case '+': lines = Vec({ 1,1., 1,3, 1,2, 0.,2, 2,2 }); break;
-		case '-': lines = Vec({ 0,2, 2,2 }); break;
-		case ',': lines = Vec({ 1,1, 1,0.5, 0.5,0 }); break;
-		case '.': lines = Vec({ 0.9,0, 1.1,0, 1.1,0.2, 0.9,0.2, 0.9,0 }); break;
-		case '(': lines = Vec({ 1.5,4, 1,3.5, 1,0.5, 1.5,0 }); break;
-		case ')': lines = Vec({ 1,4, 1.5,3.5, 1.5,0.5, 1,0 }); break;
+		case '0': lines = Vec({ 0.,0., 2.,0., 2.,4., 0.,4., 0.,0. }); break;
+		case '1': lines = Vec({ 1.5,0., 1.5,4., 0.5,3. }); break;
+		case '2': lines = Vec({ 0.,4., 2.,4., 2.,2., 0.,2., 0.,0., 2.,0. }); break;
+		case '3': lines = Vec({ 0.,4., 2.,4., 2.,2., 0.,2., 2.,2., 2.,0., 0.,0. }); break;
+		case '4': lines = Vec({ 0.,4., 0.,2., 2.,2., 2.,4., 2.,0. }); break;
+		case '5': lines = Vec({ 2.,4., 0.,4., 0.,2., 2.,2., 2.,1., 1.,0., 0.,0. }); break;
+		case '6': lines = Vec({ 2.,4., 0.,4., 0.,0., 2.,0., 2.,2., 0.,2. }); break;
+		case '7': lines = Vec({ 0.,4., 2.,4., 1.,0. }); break;
+		case '8': lines = Vec({ 0.,2., 0.,0., 2.,0., 2.,2., 0.,2., 0.,4., 2.,4., 2.,2. }); break;
+		case '9': lines = Vec({ 2.,2., 0.,2., 0.,4., 2.,4., 2.,0., 0.,0. }); break;
+		case 'A': lines = Vec({ 0.,0., 1.,4., 2.,0., 1.5,2., 0.5,2. }); break;
+		case 'B': lines = Vec({ 0.,0., 0.,4., 1.5,4., 2.,3., 1.5,2., 0.,2., 1.5,2., 2.,1., 1.5,0., 0.,0. }); break;
+		case 'C': lines = Vec({ 2.,4., 0.5,4., 0.,3.5, 0.,0.5, 0.5,0., 2.,0. }); break;
+		case 'D': lines = Vec({ 0.,0., 0.,4., 1.5,4., 2.,3.5, 2.,0.5, 1.5,0., 0.,0. }); break;
+		case 'E': lines = Vec({ 2.,4., 0.,4., 0.,2., 2.,2., 0.,2., 0.,0., 2.,0. }); break;
+		case 'F': lines = Vec({ 2.,4., 0.,4., 0.,2., 1.5,2., 0.,2., 0.,0. }); break;
+		case 'G': lines = Vec({ 2.,4., 0.5,4., 0.,3.5, 0.,0.5, 0.5,0., 1.5,0., 2.,0.5, 2.,2., 1.,2. }); break;
+		case 'H': lines = Vec({ 0.,0., 0.,4., 0.,2., 2.,2., 2.,4., 2.,0. }); break;
+		case 'I': lines = Vec({ 2.,4., 0.,4., 1.,4., 1.,0., 0.,0., 2.,0. }); break;
+		case 'J': lines = Vec({ 0.,4., 1.,4., 1.,0., 0.5,0., 0.,0.5 }); break;
+		case 'K': lines = Vec({ 0.,0., 0.,4., 0.,2., 2.,4., 0.,2., 2.,0. }); break;
+		case 'L': lines = Vec({ 0.,4., 0.,0., 2.,0. }); break;
+		case 'M': lines = Vec({ 0.,0., 0.,4., 1.,2., 2.,4., 2.,0. }); break;
+		case 'N': lines = Vec({ 0.,0., 0.,4., 2.,0., 2.,4. }); break;
+		case 'O': lines = Vec({ 0.,3.5, 0.,0.5, 0.5,0., 1.5,0., 2.,0.5, 2.,3.5, 1.5,4., 0.5,4., 0.,3.5 }); break;
+		case 'P': lines = Vec({ 0.,0., 0.,4., 1.5,4., 2.,3.5, 2.,2.5, 1.5,2., 0.,2. }); break;
+		case 'Q': lines = Vec({ 0.,3.5, 0.,0.5, 1.5,0., 1.75,0.25, 1.5,0.5, 2.,0., 1.75,0.25, 2.,0.5, 2.,3.5, 1.5,4., 0.5,4., 0.,3.5 }); break;
+		case 'R': lines = Vec({ 0.,0., 0.,4., 1.5,4., 2.,3.5, 2.,2.5, 1.5,2., 0.,2., 2.,0. }); break;
+		case 'S': lines = Vec({ 2.,4., 1.,4., 0.,3., 2.,1., 1.,0., 0.,0. }); break;
+		case 'T': lines = Vec({ 0.,4., 2.,4., 1.,4., 1.,0. }); break;
+		case 'U': lines = Vec({ 0.,4., 0.,0.5, 0.5,0., 1.5,0., 2.,0.5, 2.,4. }); break;
+		case 'V': lines = Vec({ 0.,4., 1.,0., 2.,4. }); break;
+		case 'W': lines = Vec({ 0.,4., 0.,0., 1.,2., 2.,0., 2.,4. }); break;
+		case 'X': lines = Vec({ 0.,4., 2.,0., 1.,2., 2.,4., 0.,0. }); break;
+		case 'Y': lines = Vec({ 0.,4., 1.,2., 2.,4., 1.,2., 1.,0. }); break;
+		case 'Z': lines = Vec({ 0.,4., 2.,4., 0.,0., 2.,0. }); break;
+		case '\'':lines = Vec({ 1.,4., 1.,3. }); break;
+		case '/': lines = Vec({ 0.5,0., 1.5,4. }); break;
+		case '*': lines = Vec({ 0.,1., 2.,3., 1.,2., 0.,3., 2.,1., 1.,2., 1.,3., 1.,1. }); break;
+		case '+': lines = Vec({ 1.,1., 1.,3., 1.,2., 0.,2., 2.,2. }); break;
+		case '-': lines = Vec({ 0.,2., 2.,2. }); break;
+		case ',': lines = Vec({ 1.,1., 1.,0.5, 0.5,0. }); break;
+		case '.': lines = Vec({ 0.9,0., 1.1,0., 1.1,0.2, 0.9,0.2, 0.9,0. }); break;
+		case '(': lines = Vec({ 1.5,4., 1.,3.5, 1.,0.5, 1.5,0. }); break;
+		case ')': lines = Vec({ 1.,4., 1.5,3.5, 1.5,0.5, 1.,0. }); break;
 		case ' ': lines = Vec(0); break;
-		case '=': lines = Vec({ 0,2.5, 2,2.5,  0,1.5, 2,1.5, }); broken = true;  break;
-		case ':': lines = Vec({ 0.8,0, 1.2,0,  0.8,3, 1.2,3 }); broken = true; break;
-		case '!': lines = Vec({ 1,0, 1,0.4,  1,0.8, 1,4 }); broken = true; break;
+		case '=': lines = Vec({ 0.,2.5, 2.,2.5,  0.,1.5, 2.,1.5, }); broken = true;  break;
+		case ':': lines = Vec({ 0.8,0., 1.2,0.,  0.8,3., 1.2,3. }); broken = true; break;
+		case '!': lines = Vec({ 1.,0., 1.,0.4,  1.,0.8, 1.,4. }); broken = true; break;
 		default:
-			lines = Vec({ 0,0, 2,0, 2,4, 0,4, 0,0, 2,4, 0,4, 2,0 }); //default crossed 'XO' character
+			lines = Vec({ 0.,0., 2.,0., 2.,4., 0.,4., 0.,0., 2.,4., 0.,4., 2.,0. }); //default crossed 'XO' character
 		}
 	}
 

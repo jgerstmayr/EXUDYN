@@ -77,6 +77,7 @@ objFFRF2 = cms2.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef
 
 #draw one mode:
 #mbs.SetNodeParameter(nodeNumber = objFFRF['nGenericODE2'], parameterName='initialCoordinates', value=[0.1]+[0]*(nModes-1))
+# mbs.SetNodeParameter(nodeNumber = objFFRF2['nRigidBody'], parameterName='initialCoordinates', value=[0,0,0.5]+[0]*4)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add markers and joints
@@ -116,7 +117,7 @@ weightsRight = np.array((1./lenRight)*np.ones(lenRight))
 
 addSupports = True
 if addSupports:
-    k = 2e8*100     #joint stiffness
+    k = 2e8*10*0.01     #joint stiffness
     d = k*0.01  #joint damping
 
     useGenericJoint = True
@@ -132,15 +133,18 @@ if addSupports:
                                                     weightingFactors=weightsLeft))
     
     mLeftRigid = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF['oFFRFreducedOrder'], 
-                                                  referencePosition=pLeft,
+                                                  #referencePosition=pLeft, #deprecated
+                                                  useAlternativeApproach=True,
                                                   meshNodeNumbers=np.array(nodeListLeft), #these are the meshNodeNumbers
                                                   weightingFactors=weightsLeft))
     mRightRigid = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF['oFFRFreducedOrder'], 
-                                                  referencePosition=pRight,
+                                                  #referencePosition=pRight, #deprecated
+                                                  useAlternativeApproach=True,
                                                   meshNodeNumbers=np.array(nodeListRight), #these are the meshNodeNumbers
                                                   weightingFactors=weightsRight))
     mLeftRigid2 = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF2['oFFRFreducedOrder'], 
-                                                  referencePosition=pLeft,
+                                                  #referencePosition=pLeft, #deprecated
+                                                  useAlternativeApproach=True,
                                                   meshNodeNumbers=np.array(nodeListLeft), #these are the meshNodeNumbers
                                                   weightingFactors=weightsLeft))
     if useGenericJoint:
@@ -150,13 +154,15 @@ if addSupports:
 #                                            stiffness=[k,k,0], damping=[d,d,d]))
 #        oSJleft = mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mLeftRigid, mGroundPosLeft],
 #                                            stiffness=0.1*k*np.eye(6), damping=0.01*d*np.eye(6)))
-        oSJleft = mbs.AddObject(GenericJoint(markerNumbers=[mLeftRigid, mGroundPosLeft], constrainedAxes=[1,1,1,1,1,1]))
-        oSJleft2 = mbs.AddObject(GenericJoint(markerNumbers=[mRightRigid, mLeftRigid2], constrainedAxes=[1,1,1,1,1,1]))
+        oSJleft = mbs.AddObject(GenericJoint(markerNumbers=[mLeftRigid, mGroundPosLeft], constrainedAxes=[1,1,1,1,1,1],
+                                             visualization=VGenericJoint(axesRadius=0.02)))
+        oSJleft2 = mbs.AddObject(GenericJoint(markerNumbers=[mRightRigid, mLeftRigid2], constrainedAxes=[1,1,1*1,1,1,1],
+                                              visualization=VGenericJoint(axesRadius=0.02)))
 
-#        oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRightRigid, mLeftRigid2],
-#                                            stiffness=[k,k,0], damping=[d,d,d]))
-#        oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRight, mLeft2],
-#                                            stiffness=[k,k,0], damping=[d,d,d]))
+        # oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRightRigid, mLeftRigid2],
+        #                                     stiffness=[k,k,k], damping=[d,d,d]))
+        # oSJright = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mRight, mLeft2],
+        #                                     stiffness=[k,k,k], damping=[d,d,d]))
         
     else:
         oSJleft = mbs.AddObject(SphericalJoint(markerNumbers=[mGroundPosLeft,mLeft], visualization=VObjectJointSpherical(jointRadius=nodeDrawSize)))
@@ -207,10 +213,12 @@ SC.visualizationSettings.contour.reduceRange = False
 simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
 
 h=1e-3
-tEnd = 0.005 #for test suite
+tEnd = 0.005 #standard:0.005
 if not exudynTestGlobals.useGraphics:
+    #test suite:
     simulationSettings.solutionSettings.writeSolutionToFile = False
     tEnd = 0.005
+    h=1e-3
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd

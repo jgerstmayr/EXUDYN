@@ -7,7 +7,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -93,7 +93,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,9 +111,7 @@ public: // AUTO:
 class MainSolverImplicitSecondOrder: public MainSolverBase // AUTO: 
 {
 public: // AUTO: 
-  bool useOldAccBasedSolver;                      //!< AUTO: set this flag True, to use old (until 2021-02-05) accelerations based generalized alpha solver; this is outdated, but kept in order to ensure compatibility for some time (will be ERASED in FUTURE!)
-  CSolverImplicitSecondOrderTimeIntUserFunction cSolverOld;//!< AUTO: link to C++ CSolver, not accessible from Python
-  CSolverImplicitSecondOrderTimeIntNew cSolverNew;//!< AUTO: link to C++ CSolver, not accessible from Python; new solver, only for experimental work
+  CSolverImplicitSecondOrderTimeIntUserFunction cSolver;//!< AUTO: link to C++ CSolver, not accessible from Python
   bool isInitialized;                             //!< AUTO: variable is used to see, if system is initialized ==> avoid crashes; DO not change these variables: can easily lead to crash! 
   Index4 initializedSystemSizes;                  //!< AUTO: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
 
@@ -122,7 +120,6 @@ public: // AUTO:
   //! AUTO: default constructor with parameter initialization
   MainSolverImplicitSecondOrder()
   {
-    useOldAccBasedSolver = false;
     isInitialized = false;
   };
 
@@ -174,12 +171,12 @@ public: // AUTO:
 
   //! AUTO: const access to cSolver
   const CSolverImplicitSecondOrderTimeIntUserFunction& GetCSolverImplicitSecondOrder() const {
-    return useOldAccBasedSolver? cSolverOld : cSolverNew;
+    return cSolver;
   }
 
   //! AUTO: reference access to cSolver
   CSolverImplicitSecondOrderTimeIntUserFunction& GetCSolverImplicitSecondOrder() {
-    return useOldAccBasedSolver? cSolverOld : cSolverNew;
+    return cSolver;
   }
 
   //! AUTO: for static solver, this is a factor in interval [0,1]; MUST be overwritten
@@ -231,14 +228,17 @@ public: // AUTO:
     GetCSolverImplicitSecondOrder().SetUserFunctionComputeNewtonJacobian(this, &mainSystem, userFunction);
   }
 
+  //! AUTO: set user function
+  void SetUserFunctionPostNewton(MainSystem& mainSystem, const MainSolverImplicitSecondOrderUserFunctionReal& userFunction) {
+    GetCSolverImplicitSecondOrder().SetUserFunctionPostNewton(this, &mainSystem, userFunction);
+  }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "MainSolverImplicitSecondOrder" << ":\n";
     os << ":"; 
     MainSolverBase::Print(os);
-    os << "  cSolverNew = " << cSolverNew << "\n";
-    os << "  useOldAccBasedSolver = " << useOldAccBasedSolver << "\n";
     os << "  GetCSolverImplicitSecondOrder().newmarkBeta = " << GetCSolverImplicitSecondOrder().newmarkBeta << "\n";
     os << "  GetCSolverImplicitSecondOrder().newmarkGamma = " << GetCSolverImplicitSecondOrder().newmarkGamma << "\n";
     os << "  GetCSolverImplicitSecondOrder().alphaM = " << GetCSolverImplicitSecondOrder().alphaM << "\n";
@@ -263,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

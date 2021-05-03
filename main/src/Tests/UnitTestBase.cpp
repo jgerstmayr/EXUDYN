@@ -16,22 +16,50 @@
 #ifdef PERFORM_UNIT_TESTS
 using namespace std;
 
+
+//enable memory leak checks by leak number {xxx}
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+//put this at beginning of your code:
+//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+// *** OR: *** 
+//int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+//flag |= _CRTDBG_LEAK_CHECK_DF; // This turns on the leak-checking bit
+//_CrtSetDbgFlag(flag);
+
+//_CrtSetBreakAlloc(366); //this will lead to a break-point where the memory leak happens
+#endif
+
+
 #include "lest/lest.hpp"
 
-#include "Utilities/BasicFunctions.h"
-#include "Tests/UnitTestBase.h" 
-using namespace EXUstd;
-
-#include "Linalg/ConstSizeVector.h" 
-#include "Utilities/ResizableArray.h" 
+#include "Linalg/BasicLinalg.h"	//includes all necessary math libraries to test
 #include "Utilities/ObjectContainer.h" 
 
-#include "Linalg/SlimVector.h"
-#include "Linalg/LinkedDataVector.h"
-#include "Linalg/ResizableVector.h"
-
-#include "Linalg/Matrix.h"
+using namespace EXUstd;
 using namespace EXUmath;
+
+#include "Tests/UnitTestBase.h" 
+
+
+//#include "Utilities/BasicFunctions.h"
+//#include "Tests/UnitTestBase.h" 
+//using namespace EXUstd;
+//
+//#include "Linalg/ConstSizeVector.h" 
+//#include "Utilities/ResizableArray.h" 
+//#include "Utilities/ObjectContainer.h" 
+//
+//#include "Linalg/SlimVector.h"
+//#include "Linalg/LinkedDataVector.h"
+//#include "Linalg/ResizableVector.h"
+//
+//#include "Linalg/Matrix.h"
+//using namespace EXUmath;
 
 #define PerformUnitTests
 #ifdef PerformUnitTests
@@ -41,30 +69,38 @@ using namespace EXUmath;
     #include "TemplatedVectorArrayUnitTests.h" 
 #endif
 
-//enable memory leak checks by leak number {xxx}
-#ifdef _DEBUG
-int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-flag |= _CRTDBG_LEAK_CHECK_DF; // This turns on the leak-checking bit
-_CrtSetDbgFlag(flag);
-//_CrtSetBreakAlloc(366); //this will lead to a break-point where the memory leak happens
-#endif
+extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
 
 //run all unit tests; return 0 on success, otherwise the number of fails
-Index RunUnitTests()
+Index RunUnitTests(bool reportOnPass=false, bool printOutput=true)
 {
-	//int returnValue = lest::run(specification, { "-p", "-v" }, std::cout);
+#ifdef _DEBUG
+	//enable memory leak checks by leak number {xxx}
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(366); //this will lead to a break-point where the memory leak happens
+#endif
+
+	bool oldPrintFormat = linalgPrintUsePythonFormat;
+	linalgPrintUsePythonFormat = false; //tests have been defined in the old format
+	//int returnValue = lest::run(specification, { "-p", "-v" }, pout);
 	//int returnValue = lest::run(specification, {"-p", "-v"}, file); //option "-p" to also report on passing tests!; option "-v" also to report on sections
 
+
 	UnitTestBase tests;
-	Index returnValue = (Index)tests.PerformVectorAndArrayTests(1 * UnitTestFlags::reportOnPass + UnitTestFlags::reportSections + 0 * UnitTestFlags::writeToCout);
+	Index returnValue = (Index)tests.PerformVectorAndArrayTests(reportOnPass * UnitTestFlags::reportOnPass + UnitTestFlags::reportSections
+		+ printOutput * UnitTestFlags::writeToPout + 0 * UnitTestFlags::writeToFile);
+
+	linalgPrintUsePythonFormat = oldPrintFormat; //set back to original user-defined format
+
+	if (returnValue && printOutput) 
+	{ 
+		pout << "unit tests FAILED\n"; 
+		pout << "Number of failed tests=" << returnValue << "\n***********************\n\n";
+	}
+	if (!returnValue && printOutput) { pout << "unit tests SUCCESSFUL\n"; }
 
 
-	if (returnValue) { std::cout << "unit tests FAILED\n"; }
-	if (!returnValue) { std::cout << "unit tests SUCCESSFUL\n"; }
-
-	std::cout << "Exudyn unit tests failcount=" << returnValue << "\n";
-
-	if (1) //write output to file
+	if (0) //write output to file 
 	{
 		ofstream testfile("UnitTestsOutput.txt");
 
@@ -73,8 +109,9 @@ Index RunUnitTests()
 		testfile << tests.GetOutputString().c_str() << "\n";
 	}
 
+#ifdef _DEBUG
 	_CrtDumpMemoryLeaks(); //dump memory leaks to Visual Studio after exit
-
+#endif
 	return returnValue;
 }
 
@@ -190,31 +227,31 @@ void CheckMemoryLeaksObjectPointerArray()
         areal.Append(r[0]);
         areal.Append(r[1]);
         areal.Append(r[2]);
-        cout << areal << "\n";
+        pout << areal << "\n";
 
         areal.Flush();
-        cout << areal << "\n";
+        pout << areal << "\n";
     }
     if(1)
     {
         ObjectContainer<Vector> avector;
 
-        Vector v1({ 1,2,3 });
-        Vector v2({ 2.5,3,4 });
-        Vector v3({ 4,6,8 });
+        Vector v1({ 1.,2.,3. });
+        Vector v2({ 2.5,3.,4. });
+        Vector v3({ 4.,6.,8. });
 
         avector.Append(v1);
         avector.Append(v2);
         avector.Append(v3);
 
         avector.Remove(1);
-        cout << avector << "\n";
+        pout << avector << "\n";
     }
     if (1)
     {
-        ObjectContainer<Vector> avector({ { 1, 2 },{ 3.3 },{ 4, 5 } });
-        Vector v1({ 1 });
-        Vector v2({ 2.2, 3 });
+        ObjectContainer<Vector> avector({ { 1., 2. },{ 3.3 },{ 4., 5. } });
+        Vector v1({ 1. });
+        Vector v2({ 2.2, 3. });
 
         avector.Insert(0, v1);
         avector.Insert(2, v2);
@@ -222,7 +259,7 @@ void CheckMemoryLeaksObjectPointerArray()
         avector.Remove(1);
         avector.Remove(2);
         avector.Remove(2);
-        cout << avector << "\n";
+        pout << avector << "\n";
 
         avector.Flush();
 
@@ -230,7 +267,7 @@ void CheckMemoryLeaksObjectPointerArray()
         avector.SetMaxNumberOfItems(n);
         for (int i=0; i < n; i++)
         {
-            avector.Append(Vector({ 1,2,3,4 }));
+            avector.Append(Vector({ 1.,2.,3.,4. }));
         }
         avector.SetMaxNumberOfItems(50);
 
@@ -242,27 +279,27 @@ void CheckMemoryLeaksObjectPointerArray()
         ObjectContainer<Real> areal({ 1, 2, 3.3 });
         ObjectContainer<Real> areal2 = areal;
 
-        ObjectContainer<Vector> avector({ { 1, 2 },{ 3, 4, 5.5 } });
+        ObjectContainer<Vector> avector({ { 1., 2. },{ 3., 4., 5.5 } });
         ObjectContainer<Vector> avector2;
         ObjectContainer<Vector> avector3;
         avector2 = avector;
         avector3 = avector;
         avector3[1][2] = 7.7;
-        cout << ToString(avector3) << "\n";
+        pout << ToString(avector3) << "\n";
 
-        cout << "areal == areal2" << (areal == areal2) << "\n";
-        cout << "avector == avector2" << (avector == avector2) << "\n";
+        pout << "areal == areal2" << (areal == areal2) << "\n";
+        pout << "avector == avector2" << (avector == avector2) << "\n";
     };
 }
 
 
 int UnitTestBase::PerformVectorAndArrayTests(int flags)
 {
-    //CheckMemoryLeaksObjectPointerArray(); //do this if no lest tests are run!
+    //CheckMemoryLeaksObjectPointerArray(); //additional memory leak check
 
     int failCounter = 0; //lest returns 0 if all passed, 1 if at least one failed
 
-    std::ostringstream stringStream; //instead of cout
+    std::ostringstream stringStream; //instead of pout
 
     stringStream << "******************\nExudyn unit tests\n******************\n";
 
@@ -309,7 +346,7 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 
     testOutput += stringStream.str();
 
-    if (flags & UnitTestFlags::writeToCout) { std::cout << testOutput; }
+    if (flags & UnitTestFlags::writeToPout) { pout << testOutput; }
 
     return failCounter;
 }

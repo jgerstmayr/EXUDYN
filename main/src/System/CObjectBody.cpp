@@ -70,8 +70,10 @@ Real CObjectConstraint::GetCurrentAEcoordinate(Index localIndex) const
 	return cSystemData->GetCData().GetCurrent().AECoords[globalAECoordinateIndex + localIndex]; 
 }
 
-void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const
+void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
+	const ArrayIndex& meshNodeNumbers, Matrix& value) const
 { 
+	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode)) { accessType = (AccessFunctionType)((Index)accessType - (Index)AccessFunctionType::SuperElementAlternativeRotationMode); }
 	//CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetAccessFunctionSuperElement"); 
 	switch ((Index)accessType)
 	{

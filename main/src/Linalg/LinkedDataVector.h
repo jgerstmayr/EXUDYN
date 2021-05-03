@@ -103,7 +103,7 @@ public:
 	//! set vector to values given by initializer list; used to modify data which the LinkedDataVectorBase is linked to
 	void SetVector(std::initializer_list<T> listOfReals)
 	{
-		CHECKandTHROW(this->numberOfItems == listOfReals.size(), "ERROR: LinkedDataVectorBase::SetVector(...), initializer_list must have same size as LinkedDataVectorBase");
+		CHECKandTHROW(this->numberOfItems == (Index)listOfReals.size(), "ERROR: LinkedDataVectorBase::SetVector(...), initializer_list must have same size as LinkedDataVectorBase");
 
 		Index cnt = 0;
 		for (auto value : listOfReals) {

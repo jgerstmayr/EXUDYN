@@ -66,12 +66,17 @@ In order to run \codeName , you need an appropriate Python installation.
 We currently (2021-02) recommend to use
 \bi
   \item {\bf Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}}
+	\item {\bf Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are {\bf either} 32bit {\bf or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
+	There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}
+\ei
+Many alternative options exist:
+\bi
   \item In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5)\footnote{Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
 	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
-  \item Alternative option (Spyder runs more stable ...): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
+	\item Users report successful use of \codeName\ with {\bf Visual Studio Code} and {\bf Jupyter} has been tested with some examples; both environments should work with default settings
+	\item Anaconda 2020-11 with {\bf Python 3.8} and Spyder 4.1.5: not much experience for now (2021-04), but TestSuite runs without errors for \codeName\ version 1.0.182.
+  \item Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
 	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
-	\item {\bf Spyder 4.1.3} with Python 3.7.7, 64bit, which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are {\bf either} 32bit {\bf or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
-	There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}
 %Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
 If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
@@ -290,7 +295,7 @@ For specific open issues, see \texttt{trackerlog.html}.
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Run a simple example in Spyder}
+\mysubsection{Run a simple example in Spyder}
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if \codeName\ runs on your computer.
 
 In order to start, run the python interpreter Spyder.
@@ -352,36 +357,211 @@ Within this file, the first column shows the simulation time and the following c
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\newpage
 \mysubsection{Trouble shooting and FAQ}
 
-{\bf Known issues}:
-\bn
+\mysubsubsection{Trouble shooting}
+\noindent {\bf Python import errors}:
+\bi
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Sometimes the \texttt{exudyn} module cannot be loaded into Python. There are several reasons and workarounds:
-	\bi
-	  \item You mixed up 32 and 64 bits (see below) version
-		\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
-		\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
-		A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX; however, low-cost Celeron and Pentium processors {\bf will not support AVX}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
-		$\ra$ {\bf workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
-	  \item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
-	\ei
-  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item When importing \codeName\ in python (windows) I get the error (or similar):\\
+  \item Sometimes the \codeName\ module cannot be loaded into Python. Typical {\bf error messages if Python versions are not compatible} are: \vspace{1pt}\\
+\plainlststyle
 {\ttfamily \footnotesize
 \begin{lstlisting}[breaklines=true]
 Traceback (most recent call last):
-  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\pytest.py", line 18, in <module>
-    import exudyn as exu
-  ImportError: DLL load failed: %1 is no valid Win32 application.
-\end{lstlisting}}
-	$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be {\bf BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have {\bf BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
+
+  File "<ipython-input-14-df2a108166a6>", line 1, in <module>
+    import exudynCPP
+
+ImportError: Module use of python36.dll conflicts with this version of Python.
+\end{lstlisting}
+}%\vspace{12pt}\\
+Typical {\bf error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
+{\ttfamily \footnotesize
+\begin{lstlisting}[breaklines=true]
+Traceback (most recent call last):
+
+  File "<ipython-input-2-df2a108166a6>", line 1, in <module>
+    import exudynCPP
+
+ImportError: DLL load failed: \%1 is not a valid Win32 application.
+\end{lstlisting}
+}
+%
+	\item[] {\bf There are several reasons and workarounds}:
+	  \item You mixed up 32 and 64 bits (see below) version
+		\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
+		\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
+		A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors {\bf do not support AVX2}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
+		$\ra$ {\bf workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+	  \item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
+\ei
+\newpage
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\noindent {\bf Typical Python errors}:
+\bi
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item Python {\bf syntax errors} with missing braces
+%\plainlststyle
+\pythonstyle
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[language=Python, breaklines=true]
+File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py", line 42
+    nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
+           ^
+SyntaxError: invalid syntax
+	\end{lstlisting}
+	}
+	\item[] $\ra$ such an error points to the line of your code (line 42), but in fact the error may have
+	been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[language=Python, breaklines=true, firstnumber=38, numbers=left]
+n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
+                     initialCoordinates = [u0,0,0], 
+                     initialVelocities= [v0,0,0])	
+#ground node
+nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
+  \end{lstlisting}
+	}
+\ei
+
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\noindent {\bf Typical solver errors}:
+\bi
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item Typical {\bf solver error due to redundant constraints or missing inertia terms}, could read as follows:
+\plainlststyle
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[language=Python, breaklines=true]
+=========================================
+SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 207]: 
+CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
+  time/load step #1, time = 0.0002
+  causing system equation number (coordinate number) = 42
+
+=========================================
+	\end{lstlisting}
+	}
+	\item[] $\ra$ this solver error shows that equation 42 is not solvable. The according coordinate is 
+	shown later in such an error message:
+\plainlststyle
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[breaklines=true]
+...
+The causing system equation 42 belongs to a algebraic variable (Lagrange multiplier)
+Potential object number(s) causing linear solver to fail: [7]
+    object 7, name='object7', type=JointGeneric
+	\end{lstlisting}
+	}
+	\item[] $\ra$ object 7 seems to be the reason, possibly there are too much (joint) constraints applied
+	to your system, check this object.
+	\item[] $\ra$ show typical REASONS and SOLUTIONS, by using \texttt{showHints=True} in \texttt{exu.SolveDynamic(...)} or 
+	\texttt{exu.SolveStatic(...)}
+	\item[] $\ra$ You can also {\bf highlight} object 7 by using the following code in the iPython console:
+\pythonstyle
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[breaklines=true]
+exu.StartRenderer()
+HighlightItem(SC,mbs,7)
+	\end{lstlisting}
+	}
+\plainlststyle
+	\item[] which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the 
+	command's description for further options, e.g., to highlight nodes.
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\vspace{12pt}\\
+  \item Typical {\bf solver error if Newton does not converge}:
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[breaklines=true]
++++++++++++++++++++++++++++++++
+EXUDYN V1.0.200 solver: implicit second order time integration
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.079958, time = 2
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0707764, time = 1
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0185745, time = 0.5
+  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.332953, time = 0.5
+  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0783815, time = 0.375
+  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0879718, time = 0.3125
+  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 2.84704e-06, time = 0.28125
+  Newton (time/load step #3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125
+STEP348, t = 20 sec, timeToGo = 0 sec, Nit/step = 7.00575
+solver finished after 0.258349 seconds.
+	\end{lstlisting}
+	}
+	\item[] $\ra$ this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
+	\item[] $\ra$ The static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
+	\item[] $\ra$ possible reasons are: too large time steps (reduce step size by using more steps/second), 
+	inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if the are the reason),
+	usually within a singular configuration.
+	Sometimes a system may be just unsolvable in the way you set it up.
+\vspace{12pt}\\
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item Typical solver error if (e.g., syntax) {\bf error in user function} (output may be very long, {\bf read always message on top!}):
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[breaklines=true]
+=========================================
+SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 214]: 
+Error in python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
+NameError: name 'sin' is not defined
+
+At:
+  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(48): Sweep
+  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(54): userLoad
+  C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py(214): SolveDynamic
+  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(106): <module>
+  C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(377): exec_code
+  C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(476): runfile
+  <ipython-input-14-323569bebfb4>(1): <module>
+  C:\ProgramData\Anaconda3_64b37\lib\site-packages\IPython\core\interactiveshell.py(3331): run_code
+...
+...
+; check your python code!
+=========================================
+
+Solver stopped! use showHints=True to show helpful information
+	\end{lstlisting}
+	}
+	\item[] $\ra$ this indicates an error in the user function \texttt{LoadCoordinate::loadVectorUserFunction}, because
+	\texttt{sin} function has not been defined (must be imported, e.g., from \texttt{math}).
+	It indicates that the error occurred in line 48 in \texttt{springDamperUserFunctionTest.py} within function \texttt{Sweep},
+	which has been called from function \texttt{userLoad}, etc.
+\ei
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{FAQ}
+{\bf Some frequently asked questions}:
+\bn
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item Sometimes the \texttt{exudyn} module cannot be loaded into Python. There are several reasons and workarounds:
+	%\bi
+	  %\item You mixed up 32 and 64 bits (see below) version
+		%\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
+		%\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
+		%A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX; however, low-cost Celeron and Pentium processors {\bf will not support AVX}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
+		%$\ra$ {\bf workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+	  %\item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
+	%\ei
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \item When importing \codeName\ in python (windows) I get an error $\ra$ see trouble shooting instructions above!
+%{\ttfamily \footnotesize
+%\begin{lstlisting}[breaklines=true]
+%Traceback (most recent call last):
+  %File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\pytest.py", line 18, in <module>
+    %import exudyn as exu
+  %ImportError: DLL load failed: %1 is no valid Win32 application.
+%\end{lstlisting}}
+	%$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be {\bf BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have {\bf BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item I do not understand the python errors -- how can I find the reason of the error or crash?
 	\bi
+	\item[$\ra$] Read trouble shooting section above!	
 	\item[$\ra$] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
 	\item[$\ra$] If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
 	\item[$\ra$] If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \texttt{ reply.exudyn@gmail.com}
@@ -399,9 +579,8 @@ Traceback (most recent call last):
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   \item Where do I find the '.exe' file?
 	\bi
-	\item[$\ra$] \codeName\ is only available via the python interface as exudyn.pyd library, which is located in folder: \texttt{main/bin/WorkingRelease}. This means that you need to run python (best: Spyder) and import the \codeName\ module.
+	\item[$\ra$] \codeName\ is only available via the python interface as a module '\texttt{exudyn}', the C++ code being inside of \texttt{exudynCPP.pyd}, which is located in the exudyn folder where you installed the package. This means that you need to {\bf run python} (best: Spyder) and import the \codeName\ module.
 	\ei
-
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

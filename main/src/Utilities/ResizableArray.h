@@ -78,10 +78,10 @@ public:
 	//! initializer list (CHECK PERFORMANCE?)
 	ResizableArray(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11
 	{
-		//EnlargeMaxNumberOfItemsTo(listOfItems.size());
+		//EnlargeMaxNumberOfItemsTo((Index)listOfItems.size());
 		data = nullptr;
-		numberOfItems = listOfItems.size();
-		maxNumberOfItems = listOfItems.size();
+		numberOfItems = (Index)listOfItems.size();
+		maxNumberOfItems = (Index)listOfItems.size();
 		if (maxNumberOfItems > 0) 
 		{ 
 			data = new T[maxNumberOfItems]; 
@@ -100,8 +100,8 @@ public:
 	ResizableArray(const std::vector<T> vector)
 	{
 		data = nullptr;
-		numberOfItems = vector.size();
-		maxNumberOfItems = vector.size();
+		numberOfItems = (Index)vector.size();
+		maxNumberOfItems = (Index)vector.size();
 		if (maxNumberOfItems > 0)
 		{
 			data = new T[maxNumberOfItems];
@@ -384,8 +384,8 @@ public:
         numberOfItems--;
     }
 
-	//! Sort items in ascending order, using external Quicksort(...) function; not available, because EXUstd::QuickSort not tested
-	//void Sort() { EXUstd::QuickSort(*this); }
+	//! Sort items in ascending order, using external Quicksort(...) function; 
+	void Sort() { EXUstd::QuickSort(*this); }
 };
 
 //! output stream operator for array; for template class only one definition

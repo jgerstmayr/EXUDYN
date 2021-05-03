@@ -608,7 +608,7 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 				{
 					computationalSystem.GetSystemData().GetCData().currentState = computationalSystem.GetSystemData().GetCData().startOfStepState; //completely reset state including data variables and time
 
-					if (!ReduceStepSize(computationalSystem, simulationSettings, 1)) //only for adaptiveStep; automaticStepSize already done in Newton()
+					if (!ReduceStepSize(computationalSystem, simulationSettings, 1, it.recommendedStepSize)) //only for adaptiveStep; automaticStepSize already done in Newton()
 					{
 						conv.stepReductionFailed = true;
 						if (IsVerboseCheck(1))
@@ -637,8 +637,12 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 
 				//in case of good Newton convergence, increase step size
 				stepsSinceLastStepSizeReduction++;
-				if ((stepsSinceLastStepSizeReduction >= 10 || (IsStaticSolver() && stepsSinceLastStepSizeReduction > 3)) &&
-					it.newtonSteps + it.discontinuousIteration < 6) //small iteration numbers needed to increase step ...
+				Index recoverySteps = simulationSettings.timeIntegration.adaptiveStepRecoverySteps;
+				if (IsStaticSolver()) { recoverySteps = simulationSettings.staticSolver.adaptiveStepRecoverySteps; }
+
+				//OLD: if ((stepsSinceLastStepSizeReduction >= 10 || (IsStaticSolver() && stepsSinceLastStepSizeReduction > 3)) &&
+				if ((stepsSinceLastStepSizeReduction >= recoverySteps) &&
+						it.newtonSteps + it.discontinuousIteration < 6) //small iteration numbers needed to increase step ...
 				{
 					IncreaseStepSize(computationalSystem, simulationSettings);
 					stepsSinceLastStepSizeReduction = 0;
@@ -863,8 +867,10 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 
 		if (Newton(computationalSystem, simulationSettings))
 		{
+			FinalizeNewton(computationalSystem, simulationSettings);
+			//conv.discontinuousIterationError = computationalSystem.PostNewtonStep(data.tempCompData);
+			conv.discontinuousIterationError = PostNewton(computationalSystem, simulationSettings);
 
-			conv.discontinuousIterationError = computationalSystem.PostNewtonStep(data.tempCompData);
 
 			if (IsVerbose(2))
 			{
@@ -908,6 +914,14 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 					current.ODE1Coords_t = computationalSystem.GetSystemData().GetCData().startOfStepState.ODE1Coords_t;
 					current.AECoords = computationalSystem.GetSystemData().GetCData().startOfStepState.AECoords;
 					data.aAlgorithmic = data.startOfStepStateAAlgorithmic; //for generalized-alpha
+
+					//check if some hints to reduce step size
+					if (it.recommendedStepSize != -1 &&
+						it.recommendedStepSize < (1+1e-8)*it.currentStepSize) //allow some tolerance to avoid many switches for linear problems
+					{
+						conv.discontinuousIterationSuccessful = false;
+						return false;
+					}
 				}
 				else
 				{
@@ -960,9 +974,20 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 
 	conv.linearSolverFailed = false;		//(errorOccurred) signals that linear solver failed ==> abort integration method or reduce step size
+	conv.linearSolverCausingRow = -1;
 	conv.newtonConverged = false;			//convergence of Newton reached by tolerance criteria
 	conv.newtonSolutionDiverged = false;	//shows that solution diverged (e.g. in first step)
 
+	bool ignoreRedundantEquations = false;
+	Index redundantEqStart = 0;
+	if (simulationSettings.linearSolverSettings.ignoreSingularJacobian || simulationSettings.linearSolverSettings.ignoreRedundantConstraints)
+	{
+		ignoreRedundantEquations = true;
+		if (simulationSettings.linearSolverSettings.ignoreRedundantConstraints && !simulationSettings.linearSolverSettings.ignoreSingularJacobian)
+		{
+			redundantEqStart = data.startAE;
+		}
+	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//NEWTON method for one time step
@@ -1034,10 +1059,31 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 			data.systemJacobian->FinalizeMatrix();
 			//STOPGLOBALTIMER(TSfinalizeMatrix);
 			//STARTGLOBALTIMER(TSfactorize);
-			if (data.systemJacobian->Factorize() != 0)
+
+			Index factorizeOutput = data.systemJacobian->FactorizeNew(ignoreRedundantEquations, redundantEqStart);
+			if (factorizeOutput != -1)
 			{
-				SysError("CSolverBase::Newton: System Jacobian not invertible!"); //this error might not be recoverable
+				//if (IsVerboseCheck(1)) 
+				//{
+				//	STDstring str = "  Solver (time/load step #" + EXUstd::ToString(it.currentStepIndex) +
+				//		"): factorization of system Jacobian failed";
+				//	if (IsStaticSolver()) { str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
+				//	str += ", time = " + EXUstd::ToString(it.currentTime);
+				//	str += "\n";
+				//	VerboseWrite(1, str);
+				//}
+				std::string s = "CSolverBase::Newton: System Jacobian seems to be singular / not invertible!\n";
+				s += "  time/load step #" + EXUstd::ToString(it.currentStepIndex);
+				if (IsStaticSolver()) { s += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
+				s += ", time = " + EXUstd::ToString(it.currentTime) +"\n";
+
+				if (factorizeOutput < data.systemJacobian->NumberOfRows())
+				{
+					s += "  causing system equation number (coordinate number) = " + EXUstd::ToString(factorizeOutput) + "\n";
+				}
 				conv.linearSolverFailed = true;
+				conv.linearSolverCausingRow = factorizeOutput;
+				SysError(s); //this error might not be recoverable
 				stopNewton = true;
 			}
 			//STOPGLOBALTIMER(TSfactorize);
@@ -1260,9 +1306,31 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 }
 
 
+Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	Real discontinuousError = 0;	
+	it.recommendedStepSize = -1;
+	STARTTIMER(timer.python);
+	if (computationalSystem.GetPythonUserFunctions().postNewtonFunction)
+	{
+		StdVector2D rv = {0,0};
+		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+		{
+			rv = computationalSystem.GetPythonUserFunctions().postNewtonFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
+				it.currentTime);
+		}, "CSolverBase::InitializeStep: Python PostNewtonUserFunction failed (check code; check return value)");
+		discontinuousError = fabs(rv[0]); //only use absolute error, in order to avoid problems, if user returns negative values ...
+		if (rv[1] >= 0) //recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason
+		{
+			it.recommendedStepSize = rv[1];
+		}
+	}
+	STOPTIMER(timer.python);
 
+	discontinuousError += computationalSystem.PostNewtonStep(data.tempCompData, it.recommendedStepSize);
 
-
+	return discontinuousError;
+}
 
 
 
@@ -1413,7 +1481,7 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 	Index cnt = 0;
 	for (auto item : computationalSystem.GetSystemData().GetCSensors())
 	{
-		if (file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
+		if ((Index)file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
 		{
 			std::ofstream* sFile = file.sensorFileList[cnt];
 			(*sFile) << "#Exudyn " << GetSolverName() << " ";
@@ -1461,7 +1529,7 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 		Index cnt = 0;
 		for (auto item : computationalSystem.GetSystemData().GetCSensors())
 		{
-			if (file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
+			if ((Index)file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
 			{
 				std::ofstream* sFile = file.sensorFileList[cnt];
 

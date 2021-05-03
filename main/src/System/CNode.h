@@ -156,6 +156,9 @@ public:
 	//!read (internally stored) reference coordinate vector (implemented in specialized class)
 	virtual LinkedDataVector GetReferenceCoordinateVector() const { CHECKandTHROWstring("CNode::GetReferenceCoordinateVector: call illegal");  return LinkedDataVector(); }
 
+	//!read (internally stored) reference coordinate vector (implemented in specialized class)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector() const { CHECKandTHROWstring("CNode::GetStartOfStepCoordinateVector: call illegal");  return LinkedDataVector(); }
+
 	//! read visualization coordinates
 	virtual LinkedDataVector GetVisualizationCoordinateVector() const { CHECKandTHROWstring("CNode::GetReferenceCoordinateVector: call illegal");  return LinkedDataVector(); }
 
@@ -239,6 +242,15 @@ public:
 	//! read globally stored initial coordinates (accelerations)
 	virtual LinkedDataVector GetInitialCoordinateVector_tt() const;
 
+	//! read globally stored start of step coordinates (displacements)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector() const override;
+
+	//! read globally stored start of step coordinates (velocities)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector_t() const;
+
+	//! read globally stored start of step coordinates (accelerations)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector_tt() const;
+
 	//! read visualization coordinates (displacements)
 	virtual LinkedDataVector GetVisualizationCoordinateVector() const override;
 
@@ -255,7 +267,8 @@ public:
             case ConfigurationType::Current: return GetCurrentCoordinateVector();
             case ConfigurationType::Initial: return GetInitialCoordinateVector();
 			case ConfigurationType::Reference: return GetReferenceCoordinateVector();
-			case ConfigurationType::Visualization: 
+			case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector();
+			case ConfigurationType::Visualization:
 			{
 				return GetVisualizationCoordinateVector();
 			}
@@ -270,7 +283,8 @@ public:
 		case ConfigurationType::Current: return GetCurrentCoordinateVector_t();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector_t();
 		//case ConfigurationType::Reference: return GetReferenceCoordinateVector_t();
-		case ConfigurationType::Visualization: 
+		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector_t();
+		case ConfigurationType::Visualization:
 		{
 			//if (!computationalData->IsSystemConsistent())
 			//{
@@ -288,6 +302,7 @@ public:
 		{
 		case ConfigurationType::Current: return GetCurrentCoordinateVector_tt();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector_tt();
+		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector_tt();
 		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_tt();
 
 		default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector_tt: invalid ConfigurationType"); return LinkedDataVector();
@@ -376,6 +391,12 @@ public:
 	//! read globally stored initial coordinates (velocities)
 	virtual LinkedDataVector GetInitialCoordinateVector_t() const;
 
+	//! read globally stored start of step coordinates (displacements)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector() const override;
+
+	//! read globally stored start of step coordinates (velocities)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector_t() const;
+
 	//! read visualization coordinates (displacements)
 	virtual LinkedDataVector GetVisualizationCoordinateVector() const override;
 
@@ -389,6 +410,7 @@ public:
 		case ConfigurationType::Current: return GetCurrentCoordinateVector();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector();
 		case ConfigurationType::Reference: return GetReferenceCoordinateVector();
+		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector();
 		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
 		default: CHECKandTHROWstring("CNodeODE1::GetCoordinateVector: invalid ConfigurationType"); return LinkedDataVector();
 		}
@@ -400,6 +422,7 @@ public:
 		{
 		case ConfigurationType::Current: return GetCurrentCoordinateVector_t();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector_t();
+		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector_t();
 		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_t();
 		default: CHECKandTHROWstring("CNodeODE1::GetCoordinateVector_t: invalid ConfigurationType"); return LinkedDataVector();
 		}

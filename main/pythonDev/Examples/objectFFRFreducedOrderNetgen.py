@@ -41,7 +41,7 @@ useGraphics = True
 fileName = 'testData/netgenBrick' #for load/save of FEM data
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #netgen/meshing part:
-fem = FEMinterface()
+femInterface = FEMinterface()
 a = 0.025 #height/width of beam
 L = 1     #Length of beam
 
@@ -62,7 +62,7 @@ if False: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https
     
     #Draw (geo)
     
-    mesh = Mesh( geo.GenerateMesh(maxh=a*0.5))
+    mesh = Mesh( geo.GenerateMesh(maxh=a))
     mesh.Curve(1)
 
     if False: #set this to true, if you want to visualize the mesh inside netgen/ngsolve
@@ -72,17 +72,17 @@ if False: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #Use FEMinterface to import FEM model and create FFRFreducedOrder object
-    fem.ImportMeshFromNGsolve(mesh, density=1000, youngsModulus=5e6, poissonsRatio=0.3)
-    fem.SaveToFile(fileName)
+    femInterface.ImportMeshFromNGsolve(mesh, density=1000, youngsModulus=5e6, poissonsRatio=0.3)
+    femInterface.SaveToFile(fileName)
 
 if True: #now import mesh as mechanical model to EXUDYN
-    fem.LoadFromFile(fileName)
+    femInterface.LoadFromFile(fileName)
     
     nModes = 12
-    fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
-    #print("eigen freq.=", fem.GetEigenFrequenciesHz())
+    femInterface.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
+    #print("eigen freq.=", femInterface.GetEigenFrequenciesHz())
     
-    cms = ObjectFFRFreducedOrderInterface(fem)
+    cms = ObjectFFRFreducedOrderInterface(femInterface)
     
     #user functions should be defined outside of class:
     def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
@@ -103,7 +103,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     pLeft = [0,-a,-a]
     pRight = [0,-a,a]
-    nTip = fem.GetNodeAtPoint([L,-a,-a]) #tip node
+    nTip = femInterface.GetNodeAtPoint([L,-a,-a]) #tip node
     #print("nMid=",nMid)
     
     mRB = mbs.AddMarker(MarkerNodeRigid(nodeNumber=objFFRF['nRigidBody']))
@@ -114,10 +114,10 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     #++++++++++++++++++++++++++++++++++++++++++
     #find nodes at left and right surface:
-    #nodeListLeft = fem.GetNodesInPlane(pLeft, [0,0,1])
-    #nodeListRight = fem.GetNodesInPlane(pRight, [0,0,1])
-    nodeListLeft = [fem.GetNodeAtPoint(pLeft)]
-    nodeListRight = [fem.GetNodeAtPoint(pRight)]
+    #nodeListLeft = femInterface.GetNodesInPlane(pLeft, [0,0,1])
+    #nodeListRight = femInterface.GetNodesInPlane(pRight, [0,0,1])
+    nodeListLeft = [femInterface.GetNodeAtPoint(pLeft)]
+    nodeListRight = [femInterface.GetNodeAtPoint(pRight)]
     
     
     lenLeft = len(nodeListLeft)
@@ -206,22 +206,23 @@ if True: #now import mesh as mechanical model to EXUDYN
     #create animation:
     #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
     #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-    
-    if useGraphics:
-        exu.StartRenderer()
-        if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
-    
-        mbs.WaitForUserToContinue() #press space to continue
-    
-    exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
-                     simulationSettings=simulationSettings)
+
+    if True:
+        if useGraphics:
+            exu.StartRenderer()
+            if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
         
-    
+            mbs.WaitForUserToContinue() #press space to continue
         
-    if useGraphics:
-        SC.WaitForRenderEngineStopFlag()
-        exu.StopRenderer() #safely close rendering window!
-        lastRenderState = SC.GetRenderState() #store model view for next simulation
+        exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
+                         simulationSettings=simulationSettings)
+            
+        
+            
+        if useGraphics:
+            SC.WaitForRenderEngineStopFlag()
+            exu.StopRenderer() #safely close rendering window!
+            lastRenderState = SC.GetRenderState() #store model view for next simulation
     
 
 

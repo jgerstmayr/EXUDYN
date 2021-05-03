@@ -53,18 +53,9 @@ fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
 
 cms = ObjectFFRFreducedOrderInterface(fem)
 
-#user functions should be defined outside of class:
-def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
-    return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-
-def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
-    return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-
-objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
-                                              initialVelocity=[0,0,0], initialAngularVelocity=[0,0,50*2*pi],
-                                              gravity = [0,-0*9.81,0],
-                                              UFforce=UFforceFFRFreducedOrder, UFmassMatrix=UFmassFFRFreducedOrder,
-                                              color=[0.1,0.9,0.1,1.])
+objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
+                                        initialVelocity=[0,0,0], initialAngularVelocity=[0,0,50*2*pi],
+                                        color=[0.1,0.9,0.1,1.])
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add markers and joints

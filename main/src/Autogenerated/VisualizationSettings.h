@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,11 +44,13 @@ public: // AUTO:
   bool showSolutionInformation;                   //!< AUTO: true = show solution information (from simulationSettings.solution)
   bool showSolverInformation;                     //!< AUTO: true = solver name and further information shown in render window
   bool showSolverTime;                            //!< AUTO: true = solver current time shown in render window
+  std::string renderWindowString;                 //!< AUTO: string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)
   float pointSize;                                //!< AUTO: global point size (absolute)
   Index circleTiling;                             //!< AUTO: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
   Index cylinderTiling;                           //!< AUTO: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
   Index sphereTiling;                             //!< AUTO: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
   Index axesTiling;                               //!< AUTO: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  bool threadSafeGraphicsUpdate;                  //!< AUTO: true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations
 
 
 public: // AUTO: 
@@ -78,6 +80,7 @@ public: // AUTO:
     cylinderTiling = 16;
     sphereTiling = 6;
     axesTiling = 12;
+    threadSafeGraphicsUpdate = true;
   };
 
   // AUTO: access functions
@@ -95,6 +98,26 @@ public: // AUTO:
   void PySetBackgroundColorBottom(const std::array<float,4>& backgroundColorBottomInit) { backgroundColorBottom = backgroundColorBottomInit; }
   //! AUTO: Read (Copy) access to: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   std::array<float,4> PyGetBackgroundColorBottom() const { return (std::array<float,4>)(backgroundColorBottom); }
+
+  //! AUTO: Set function (needed in pybind) for: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
+  void PySetCircleTiling(const Index& circleTilingInit) { circleTiling = EXUstd::GetSafelyPInt(circleTilingInit,"circleTiling"); }
+  //! AUTO: Read (Copy) access to: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
+  Index PyGetCircleTiling() const { return (Index)(circleTiling); }
+
+  //! AUTO: Set function (needed in pybind) for: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
+  void PySetCylinderTiling(const Index& cylinderTilingInit) { cylinderTiling = EXUstd::GetSafelyPInt(cylinderTilingInit,"cylinderTiling"); }
+  //! AUTO: Read (Copy) access to: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
+  Index PyGetCylinderTiling() const { return (Index)(cylinderTiling); }
+
+  //! AUTO: Set function (needed in pybind) for: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
+  void PySetSphereTiling(const Index& sphereTilingInit) { sphereTiling = EXUstd::GetSafelyPInt(sphereTilingInit,"sphereTiling"); }
+  //! AUTO: Read (Copy) access to: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
+  Index PyGetSphereTiling() const { return (Index)(sphereTiling); }
+
+  //! AUTO: Set function (needed in pybind) for: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  void PySetAxesTiling(const Index& axesTilingInit) { axesTiling = EXUstd::GetSafelyPInt(axesTilingInit,"axesTiling"); }
+  //! AUTO: Read (Copy) access to: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  Index PyGetAxesTiling() const { return (Index)(axesTiling); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -118,11 +141,13 @@ public: // AUTO:
     os << "  showSolutionInformation = " << showSolutionInformation << "\n";
     os << "  showSolverInformation = " << showSolverInformation << "\n";
     os << "  showSolverTime = " << showSolverTime << "\n";
+    os << "  renderWindowString = " << renderWindowString << "\n";
     os << "  pointSize = " << pointSize << "\n";
     os << "  circleTiling = " << circleTiling << "\n";
     os << "  cylinderTiling = " << cylinderTiling << "\n";
     os << "  sphereTiling = " << sphereTiling << "\n";
     os << "  axesTiling = " << axesTiling << "\n";
+    os << "  threadSafeGraphicsUpdate = " << threadSafeGraphicsUpdate << "\n";
     os << "\n";
   }
 
@@ -141,7 +166,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -159,7 +184,7 @@ public: // AUTO:
 class VSettingsContour // AUTO: 
 {
 public: // AUTO: 
-  Index outputVariableComponent;                  //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; if this component is not available by certain objects or nodes, no value is drawn
+  int outputVariableComponent;                    //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)
   OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.
   float minValue;                                 //!< AUTO: minimum value for contour plot; set manually, if automaticRange == False
   float maxValue;                                 //!< AUTO: maximum value for contour plot; set manually, if automaticRange == False
@@ -184,6 +209,11 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: number of tiles (segements) shown in the colorbar for the contour plot
+  void PySetColorBarTiling(const Index& colorBarTilingInit) { colorBarTiling = EXUstd::GetSafelyPInt(colorBarTilingInit,"colorBarTiling"); }
+  //! AUTO: Read (Copy) access to: number of tiles (segements) shown in the colorbar for the contour plot
+  Index PyGetColorBarTiling() const { return (Index)(colorBarTiling); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -214,7 +244,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -259,10 +289,20 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
+  void PySetTiling(const Index& tilingInit) { tiling = EXUstd::GetSafelyPInt(tilingInit,"tiling"); }
+  //! AUTO: Read (Copy) access to: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
+  Index PyGetTiling() const { return (Index)(tiling); }
+
   //! AUTO: Set function (needed in pybind) for: default cRGB olor for nodes; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB olor for nodes; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+
+  //! AUTO: Set function (needed in pybind) for: draw nodal slope vectors, e.g. in ANCF beam finite elements
+  void PySetShowNodalSlopes(const Index& showNodalSlopesInit) { showNodalSlopes = EXUstd::GetSafelyUInt(showNodalSlopesInit,"showNodalSlopes"); }
+  //! AUTO: Read (Copy) access to: draw nodal slope vectors, e.g. in ANCF beam finite elements
+  Index PyGetShowNodalSlopes() const { return (Index)(showNodalSlopes); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -295,7 +335,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -324,6 +364,11 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: number of segments to discretise the beams axis
+  void PySetAxialTiling(const Index& axialTilingInit) { axialTiling = EXUstd::GetSafelyPInt(axialTilingInit,"axialTiling"); }
+  //! AUTO: Read (Copy) access to: number of segments to discretise the beams axis
+  Index PyGetAxialTiling() const { return (Index)(axialTiling); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -347,7 +392,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -423,7 +468,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -470,6 +515,11 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: number of windings for springs drawn as helical spring
+  void PySetSpringNumberOfWindings(const Index& springNumberOfWindingsInit) { springNumberOfWindings = EXUstd::GetSafelyPInt(springNumberOfWindingsInit,"springNumberOfWindings"); }
+  //! AUTO: Read (Copy) access to: number of windings for springs drawn as helical spring
+  Index PyGetSpringNumberOfWindings() const { return (Index)(springNumberOfWindings); }
+
   //! AUTO: Set function (needed in pybind) for: default cRGB olor for connectors; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB olor for connectors; 4th value is alpha-transparency
@@ -507,7 +557,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -576,7 +626,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -654,7 +704,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -723,7 +773,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -743,16 +793,12 @@ class VSettingsWindow // AUTO:
 public: // AUTO: 
   Index2 renderWindowSize;                        //!< AUTO: initial size of OpenGL render window in pixel
   Index startupTimeout;                           //!< AUTO: OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
-  bool alwaysOnTop;                               //!< AUTO: true: OpenGL render window will be always on top of all other windows
-  bool maximize;                                  //!< AUTO: true: OpenGL render window will be maximized at startup
-  bool showWindow;                                //!< AUTO: true: OpenGL render window is shown on startup; false: window will be iconified at startup (e.g. if you are starting multiple computations automatically)
-  float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
-  float mouseMoveRotationFactor;                  //!< AUTO: rotation increment per 1 pixel mouse movement in degree
-  float keypressTranslationStep;                  //!< AUTO: translation increment per keypress relative to window size
-  float zoomStepFactor;                           //!< AUTO: change of zoom per keypress (keypad +/-) or mouse wheel increment
-  std::function<void(int, int, int)> keyPressUserFunction;//!< AUTO: add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: def f(key, action, mods): print('key=',key)\\; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
-  bool showMouseCoordinates;                      //!< AUTO: true: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'
-  bool ignoreKeys;                                //!< AUTO: true: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'
+  bool alwaysOnTop;                               //!< AUTO: True: OpenGL render window will be always on top of all other windows
+  bool maximize;                                  //!< AUTO: True: OpenGL render window will be maximized at startup
+  bool showWindow;                                //!< AUTO: True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)
+  std::function<void(int, int, int)> keyPressUserFunction;//!< AUTO: add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
+  bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'
+  bool ignoreKeys;                                //!< AUTO: True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'
 
 
 public: // AUTO: 
@@ -764,10 +810,6 @@ public: // AUTO:
     alwaysOnTop = false;
     maximize = false;
     showWindow = true;
-    keypressRotationStep = 5.f;
-    mouseMoveRotationFactor = 1.f;
-    keypressTranslationStep = 0.1f;
-    zoomStepFactor = 1.15f;
     keyPressUserFunction = 0;
     showMouseCoordinates = false;
     ignoreKeys = false;
@@ -778,6 +820,11 @@ public: // AUTO:
   void PySetRenderWindowSize(const std::array<Index,2>& renderWindowSizeInit) { renderWindowSize = renderWindowSizeInit; }
   //! AUTO: Read (Copy) access to: initial size of OpenGL render window in pixel
   std::array<Index,2> PyGetRenderWindowSize() const { return (std::array<Index,2>)(renderWindowSize); }
+
+  //! AUTO: Set function (needed in pybind) for: OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
+  void PySetStartupTimeout(const Index& startupTimeoutInit) { startupTimeout = EXUstd::GetSafelyPInt(startupTimeoutInit,"startupTimeout"); }
+  //! AUTO: Read (Copy) access to: OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
+  Index PyGetStartupTimeout() const { return (Index)(startupTimeout); }
 
   //! AUTO: set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself
   void ResetKeyPressUserFunction() {
@@ -793,10 +840,6 @@ public: // AUTO:
     os << "  alwaysOnTop = " << alwaysOnTop << "\n";
     os << "  maximize = " << maximize << "\n";
     os << "  showWindow = " << showWindow << "\n";
-    os << "  keypressRotationStep = " << keypressRotationStep << "\n";
-    os << "  mouseMoveRotationFactor = " << mouseMoveRotationFactor << "\n";
-    os << "  keypressTranslationStep = " << keypressTranslationStep << "\n";
-    os << "  zoomStepFactor = " << zoomStepFactor << "\n";
     os << "  showMouseCoordinates = " << showMouseCoordinates << "\n";
     os << "  ignoreKeys = " << ignoreKeys << "\n";
     os << "\n";
@@ -817,7 +860,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -845,9 +888,9 @@ public: // AUTO:
   float textLineWidth;                            //!< AUTO: width of lines used for representation of text
   bool textLineSmooth;                            //!< AUTO: draw lines for representation of text smooth
   bool showFaces;                                 //!< AUTO: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
-  bool facesTransparent;                          //!< AUTO: true: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
+  bool facesTransparent;                          //!< AUTO: True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
   bool showFaceEdges;                             //!< AUTO: show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
-  bool shadeModelSmooth;                          //!< AUTO: true: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
+  bool shadeModelSmooth;                          //!< AUTO: True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
   Float4 materialAmbientAndDiffuse;               //!< AUTO: 4f ambient color of material
   float materialShininess;                        //!< AUTO: shininess of material
   Float4 materialSpecular;                        //!< AUTO: 4f specular color of material
@@ -927,6 +970,11 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   std::array<float,3> PyGetInitialCenterPoint() const { return (std::array<float,3>)(initialCenterPoint); }
 
+  //! AUTO: Set function (needed in pybind) for: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  void PySetMultiSampling(const Index& multiSamplingInit) { multiSampling = EXUstd::GetSafelyPInt(multiSamplingInit,"multiSampling"); }
+  //! AUTO: Read (Copy) access to: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  Index PyGetMultiSampling() const { return (Index)(multiSampling); }
+
   //! AUTO: Set function (needed in pybind) for: 4f ambient color of material
   void PySetMaterialAmbientAndDiffuse(const std::array<float,4>& materialAmbientAndDiffuseInit) { materialAmbientAndDiffuse = materialAmbientAndDiffuseInit; }
   //! AUTO: Read (Copy) access to: 4f ambient color of material
@@ -959,10 +1007,7 @@ public: // AUTO:
     os << "  initialCenterPoint = " << initialCenterPoint << "\n";
     os << "  initialZoom = " << initialZoom << "\n";
     os << "  initialMaxSceneSize = " << initialMaxSceneSize << "\n";
-
-#ifndef __APPLE__
-	os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n"; //clang 8.0: does not find conversion
-#endif
+    os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
     os << "  multiSampling = " << multiSampling << "\n";
     os << "  lineWidth = " << lineWidth << "\n";
     os << "  lineSmooth = " << lineSmooth << "\n";
@@ -1016,7 +1061,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1034,10 +1079,10 @@ public: // AUTO:
 class VSettingsExportImages // AUTO: 
 {
 public: // AUTO: 
-  Index saveImageTimeOut;                         //!< AUTO: timeout for safing a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
+  Index saveImageTimeOut;                         //!< AUTO: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
   std::string saveImageFileName;                  //!< AUTO: filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); ; directory will be created if it does not exist
   Index saveImageFileCounter;                     //!< AUTO: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
-  bool saveImageSingleFile;                       //!< AUTO: true: only save single files with given filename, not adding numbering; false: add numbering to files, see saveImageFileName
+  bool saveImageSingleFile;                       //!< AUTO: True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName
 
 
 public: // AUTO: 
@@ -1051,6 +1096,16 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
+  void PySetSaveImageTimeOut(const Index& saveImageTimeOutInit) { saveImageTimeOut = EXUstd::GetSafelyPInt(saveImageTimeOutInit,"saveImageTimeOut"); }
+  //! AUTO: Read (Copy) access to: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
+  Index PyGetSaveImageTimeOut() const { return (Index)(saveImageTimeOut); }
+
+  //! AUTO: Set function (needed in pybind) for: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
+  void PySetSaveImageFileCounter(const Index& saveImageFileCounterInit) { saveImageFileCounter = EXUstd::GetSafelyUInt(saveImageFileCounterInit,"saveImageFileCounter"); }
+  //! AUTO: Read (Copy) access to: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
+  Index PyGetSaveImageFileCounter() const { return (Index)(saveImageFileCounter); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1072,12 +1127,95 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsInteractive
+* @brief        Functionality to interact with render window; will include left and right mouse press actions and others in future.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2021-05-03 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsInteractive // AUTO: 
+{
+public: // AUTO: 
+  float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
+  float mouseMoveRotationFactor;                  //!< AUTO: rotation increment per 1 pixel mouse movement in degree
+  float keypressTranslationStep;                  //!< AUTO: translation increment per keypress relative to window size
+  float zoomStepFactor;                           //!< AUTO: change of zoom per keypress (keypad +/-) or mouse wheel increment
+  int highlightItemIndex;                         //!< AUTO: index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
+  ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
+  Float4 highlightColor;                          //!< AUTO: cRGB color for highlighted item; 4th value is alpha-transparency
+  Float4 highlightOtherColor;                     //!< AUTO: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsInteractive()
+  {
+    keypressRotationStep = 5.f;
+    mouseMoveRotationFactor = 1.f;
+    keypressTranslationStep = 0.1f;
+    zoomStepFactor = 1.15f;
+    highlightItemIndex = -1;
+    highlightItemType = ItemType::_None;
+    highlightColor = Float4({0.8f,0.05f,0.05f,0.75f});
+    highlightOtherColor = Float4({0.5f,0.5f,0.5f,0.4f});
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: cRGB color for highlighted item; 4th value is alpha-transparency
+  void PySetHighlightColor(const std::array<float,4>& highlightColorInit) { highlightColor = highlightColorInit; }
+  //! AUTO: Read (Copy) access to: cRGB color for highlighted item; 4th value is alpha-transparency
+  std::array<float,4> PyGetHighlightColor() const { return (std::array<float,4>)(highlightColor); }
+
+  //! AUTO: Set function (needed in pybind) for: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  void PySetHighlightOtherColor(const std::array<float,4>& highlightOtherColorInit) { highlightOtherColor = highlightOtherColorInit; }
+  //! AUTO: Read (Copy) access to: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  std::array<float,4> PyGetHighlightOtherColor() const { return (std::array<float,4>)(highlightOtherColor); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsInteractive" << ":\n";
+    os << "  keypressRotationStep = " << keypressRotationStep << "\n";
+    os << "  mouseMoveRotationFactor = " << mouseMoveRotationFactor << "\n";
+    os << "  keypressTranslationStep = " << keypressTranslationStep << "\n";
+    os << "  zoomStepFactor = " << zoomStepFactor << "\n";
+    os << "  highlightItemIndex = " << highlightItemIndex << "\n";
+    os << "  highlightItemType = " << highlightItemType << "\n";
+    os << "  highlightColor = " << highlightColor << "\n";
+    os << "  highlightOtherColor = " << highlightOtherColor << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsInteractive& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VisualizationSettings
 * @brief        Settings for visualization
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1105,6 +1243,7 @@ public: // AUTO:
   VSettingsSensors sensors;                       //!< AUTO: sensor visualization settings
   VSettingsWindow window;                         //!< AUTO: visualization window and interaction settings
   VSettingsOpenGL openGL;                         //!< AUTO: OpenGL rendering settings
+  VSettingsInteractive interactive;               //!< AUTO: Settings for interaction with renderer
   VSettingsExportImages exportImages;             //!< AUTO: settings for exporting (saving) images to files in order to create animations
 
 
@@ -1125,6 +1264,7 @@ public: // AUTO:
     os << "  sensors = " << sensors << "\n";
     os << "  window = " << window << "\n";
     os << "  openGL = " << openGL << "\n";
+    os << "  interactive = " << interactive << "\n";
     os << "  exportImages = " << exportImages << "\n";
     os << "\n";
   }

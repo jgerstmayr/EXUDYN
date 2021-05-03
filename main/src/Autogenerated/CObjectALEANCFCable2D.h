@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-02-19  19:33:17 (last modfied)
+* @date         2021-03-25  16:05:11 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,8 +28,8 @@
 class CObjectALEANCFCable2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$
-    Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m\f$^2\f$] total mass per length of beam (including axially moving parts / fluid)
+    Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] total mass per length of beam (including axially moving parts / fluid)
     Real physicsMovingMassFactor;                 //!< AUTO: this factor denotes the amount of \f$\rho A\f$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which \f$\rho A\f$ is the mass of the pipe+fluid, while \f$physicsMovingMassFactor \cdot \rho A\f$ is the mass per unit length of the fluid
     Real physicsBendingStiffness;                 //!< AUTO:  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
     Real physicsAxialStiffness;                   //!< AUTO:  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
@@ -61,7 +61,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectALEANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2.
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2. The beam with length \f$L\f$=physicsLength uses a localPosition\f$\in [0, L]\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -175,10 +175,10 @@ public: // AUTO:
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::Director1 +
-            (Index)OutputVariableType::Strain +
-            (Index)OutputVariableType::Curvature +
-            (Index)OutputVariableType::Force +
-            (Index)OutputVariableType::Torque );
+            (Index)OutputVariableType::StrainLocal +
+            (Index)OutputVariableType::CurvatureLocal +
+            (Index)OutputVariableType::ForceLocal +
+            (Index)OutputVariableType::TorqueLocal );
     }
 
 };

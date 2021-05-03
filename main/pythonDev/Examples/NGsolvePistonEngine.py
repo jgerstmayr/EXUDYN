@@ -22,8 +22,8 @@ from netgen.geom2d import unit_square
 import netgen.libngpy as libng
 
 netgenDrawing = False #set true, to show geometry and mesh in NETGEN
-#if netgenDrawing:
-import netgen.gui
+#if netgenDrawing, uncomment the following line and execute in external terminal, not in spyder (see preferences "Run"):
+#import netgen.gui
 
 from netgen.csg import *
 
@@ -72,7 +72,8 @@ def Normalize(v):
 #++++++++++++++++++++++++++++++++++++
 startTotal = timeit.default_timer()
 #parameters
-meshSize = 0.0015 #standard: 0.005; 0.0015 does not always work
+meshSize = 0.0025 #standard: 0.005; 0.0015 does not always work
+showStresses = True #may take very long for large number of modes/nodes
 
 #crank:
 b1 = 0.012 #width of journal bearing
@@ -377,7 +378,7 @@ if True:
     fRotorStart = 20 #initial revolutions per second, only crankshaft
 
     totalFEcoordinates = 0 #accumulated FE-mesh coordinates
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #import crankshaft mesh into EXUDYN FEMinterface
     femCrank = FEMinterface()
     femCrank.ImportMeshFromNGsolve(meshCrank, density, youngsModulus, poissonsRatio, verbose = True)
@@ -394,6 +395,20 @@ if True:
     print("\ncrank eigen analysis time=", stopCrank-startCrank)
 
     print("eigen freq. crank=", femCrank.GetEigenFrequenciesHz()[0:nModes])
+
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #compute stress modes:
+    SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+    if showStresses and False:
+        mat = KirchhoffMaterial(youngsModulus, poissonsRatio, density)
+        varType = exu.OutputVariableType.StressLocal
+        SC.visualizationSettings.contour.outputVariable = varType
+        #varType = exu.OutputVariableType.StrainLocal
+        print("ComputePostProcessingModes ... (may take a while)")
+        start_time = time.time()
+        femCrank.ComputePostProcessingModes(material=mat, 
+                                       outputVariableType=varType)
+        print("--- %s seconds ---" % (time.time() - start_time))
     
     #print("Create CMS object and matrices ....")
     cmsCrank = ObjectFFRFreducedOrderInterface(femCrank)
@@ -410,13 +425,33 @@ if True:
                                                 eulerParametersRef=eulerParameters0, 
                                                 initialVelocity=[0,0,0], initialAngularVelocity=[0,0,1*fRotorStart*2*pi],
                                                 gravity = [0,-0*9.81,0],
-                                                UFforce=UFforceFFRFreducedOrderCrank, 
-                                                UFmassMatrix=UFmassFFRFreducedOrderCrank,
+                                                #UFforce=UFforceFFRFreducedOrderCrank, 
+                                                #UFmassMatrix=UFmassFFRFreducedOrderCrank,
                                                 color=[0.1,0.9,0.1,1.])
     mbs.SetObjectParameter(objFFRFcrank['oFFRFreducedOrder'],'VshowNodes',False)
 
 
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    if False:#animate eigenmodes of crankshaft
+        from exudyn.interactive import AnimateModes
+        mbs.Assemble()
+
+        SC.visualizationSettings.general.textSize = 16 #30 for cover figure
+        SC.visualizationSettings.general.useGradientBackground = True
+        SC.visualizationSettings.openGL.lineWidth = 2
+        SC.visualizationSettings.openGL.showFaceEdges = True
+        SC.visualizationSettings.openGL.showFaces = True
+        SC.visualizationSettings.openGL.multiSampling = 4
+        SC.visualizationSettings.nodes.show = False
+        SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+
+        SC.visualizationSettings.contour.outputVariableComponent = 0
+
+        SC.visualizationSettings.general.autoFitScene=False
+
+        AnimateModes(SC, mbs, 1, period=0.2)
+        exit()
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #import conrod and piston mesh into EXUDYN FEMinterface and compute eigenmodes
     femConrod = FEMinterface()
     femConrod.ImportMeshFromNGsolve(meshConrod, density, youngsModulus, poissonsRatio, verbose = False)
@@ -431,7 +466,18 @@ if True:
     totalFEcoordinates+=femConrod.NumberOfCoordinates()
     if verbose: print("eigen freq. conrod=", femConrod.GetEigenFrequenciesHz()[0:nModes])
 
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    if showStresses:
+        mat = KirchhoffMaterial(youngsModulus, poissonsRatio, density)
+        varType = exu.OutputVariableType.StressLocal
+        SC.visualizationSettings.contour.outputVariable = varType
+        #varType = exu.OutputVariableType.StrainLocal
+        print("ComputePostProcessingModes Piston ... (may take a while)")
+        start_time = time.time()
+        femConrod.ComputePostProcessingModes(material=mat, 
+                                       outputVariableType=varType)
+        print("--- %s seconds ---" % (time.time() - start_time))
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #import piston mesh into EXUDYN FEMinterface
     femPiston = FEMinterface()
     femPiston.ImportMeshFromNGsolve(meshPiston, density, youngsModulus, poissonsRatio, verbose = False)
@@ -553,8 +599,8 @@ if True:
                                                     initialVelocity=[0,0,0], 
                                                     initialAngularVelocity=[0,0,0*fRotorStart*2*pi],
                                                     gravity = [0,-0*9.81,0],
-                                                    UFforce=UFforceFFRFreducedOrderConrodList[iCrank], 
-                                                    UFmassMatrix=UFmassFFRFreducedOrderConrodList[iCrank],
+                                                    #UFforce=UFforceFFRFreducedOrderConrodList[iCrank], 
+                                                    #UFmassMatrix=UFmassFFRFreducedOrderConrodList[iCrank],
                                                     color=[0.1,0.9,0.1,1.])
         mbs.SetObjectParameter(objFFRFconrod['oFFRFreducedOrder'],'VshowNodes',False)
         objFFRFconrodList.append(objFFRFconrod)
@@ -569,8 +615,8 @@ if True:
                                                     eulerParametersRef=eulerParameters0, 
                                                     initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0*fRotorStart*2*pi],
                                                     gravity = [0,-0*9.81,0],
-                                                    UFforce=UFforceFFRFreducedOrderPistonList[iCrank], 
-                                                    UFmassMatrix=UFmassFFRFreducedOrderPistonList[iCrank],
+                                                    #UFforce=UFforceFFRFreducedOrderPistonList[iCrank], 
+                                                    #UFmassMatrix=UFmassFFRFreducedOrderPistonList[iCrank],
                                                     color=[0.1,0.9,0.1,1.])
         mbs.SetObjectParameter(objFFRFpiston['oFFRFreducedOrder'],'VshowNodes',False)
         objFFRFpistonList.append(objFFRFpiston)
@@ -661,7 +707,7 @@ if True:
         simulationSettings = exu.SimulationSettings()
         
         nodeDrawSize = 0.0005
-        SC.visualizationSettings.general.textSize = 30
+        SC.visualizationSettings.general.textSize = 14 #30 for cover figure
         SC.visualizationSettings.general.useGradientBackground = True
         SC.visualizationSettings.openGL.lineWidth = 2
 
@@ -688,7 +734,7 @@ if True:
         
         SC.visualizationSettings.loads.drawSimplified = False
         
-        SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+        #SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
         SC.visualizationSettings.contour.outputVariableComponent = 0
         SC.visualizationSettings.contour.reduceRange = False
         # SC.visualizationSettings.contour.minValue = -0.0003
@@ -711,7 +757,7 @@ if True:
         
         simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
         simulationSettings.displayStatistics = True
-        simulationSettings.displayComputationTime = True
+        #simulationSettings.displayComputationTime = True
         
         #create animation:
         #simulationSettings.solutionSettings.recordImagesInterval = 0.002
@@ -730,9 +776,9 @@ if True:
                [-0.7689120173454285, -0.2851012349128723, 0.572269082069397]],
               'mouseCoordinates': [713.0, 395.0],
               'openGLcoordinates': [-0.05689147603698075, -0.01672859233804047]}}
-        SC.SetRenderState(exu.sys['renderState']) #load last model view
+        #SC.SetRenderState(lastRenderState) #load last model view
+        if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
     
-        mbs.WaitForUserToContinue() #press space to continue
         mbs.WaitForUserToContinue() #press space to continue
         
         exu.SolveDynamic(mbs, simulationSettings)

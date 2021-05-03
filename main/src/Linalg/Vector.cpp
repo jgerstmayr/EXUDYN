@@ -97,3 +97,13 @@ VectorBase<T> VectorBase<T>::Append(const VectorBase<T>& vector) const
 	newVector.CopyFrom(vector, 0, NumberOfItems(), vector.NumberOfItems());
 	return newVector;
 }
+
+template<>
+VectorBase<Real> VectorBase<Real>::Append(const VectorBase<Real>& vector) const
+{
+	VectorBase<Real> newVector(NumberOfItems() + vector.NumberOfItems());
+	newVector.CopyFrom(*this, 0, 0, NumberOfItems());
+	newVector.CopyFrom(vector, 0, NumberOfItems(), vector.NumberOfItems());
+	return newVector;
+}
+

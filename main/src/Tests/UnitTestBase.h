@@ -23,7 +23,7 @@
 #include "Utilities/BasicDefinitions.h"
 #ifdef PERFORM_UNIT_TESTS
 //run all unit tests; return 0 on success, otherwise the number of fails
-Index RunUnitTests(); 
+extern Index RunUnitTests(bool reportOnPass, bool printOutput);
 
 class UnitTestBase
 {
@@ -48,8 +48,9 @@ namespace UnitTestFlags {
     enum {
         reportOnPass = 1,   //!< lest reports on pass (otherwise only failed tests are reported)
         reportSections = 2, //!< lest reports on sections
-        writeToCout = 4     //!< write report into cout
-    };
+		writeToPout = 4,     //!< write report into cout
+		writeToFile = 8     //!< write report into file
+	};
 };
 
 #endif

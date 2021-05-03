@@ -814,6 +814,14 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 							ltgListODE2.Append(gIndex + i);
 						}
 					}
+					if (node->GetNumberOfODE1Coordinates())
+					{
+						Index gIndex = node->GetGlobalODE1CoordinateIndex();
+						for (Index i = 0; i < node->GetNumberOfODE1Coordinates(); i++)
+						{
+							ltgListODE1.Append(gIndex + i);
+						}
+					}
 					//exclude AE-coordinates, because markers should not act on algebraic coordinates (e.g. rigid body nodes with Euler parameters)
 					//if (node->GetNumberOfAECoordinates())
 					//{
@@ -844,6 +852,14 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 					for (Index i = 0; i < node->GetNumberOfODE2Coordinates(); i++)
 					{
 						ltgListODE2.Append(gIndex + i);
+					}
+				}
+				if (node->GetNumberOfODE1Coordinates())
+				{
+					Index gIndex = node->GetGlobalODE1CoordinateIndex();
+					for (Index i = 0; i < node->GetNumberOfODE1Coordinates(); i++)
+					{
+						ltgListODE1.Append(gIndex + i);
 					}
 				}
 				//exclude AE-coordinates, because markers should not act on algebraic coordinates (e.g. rigid body nodes with Euler parameters)
@@ -1162,7 +1178,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 		
 	for (Index i = 0; i < maxThreads; i++)
 	{
-		//for (Index j = 0; j < matSparse[i].GetEigenTriplets().size(); i++)
+		//for (Index j = 0; j < (Index)matSparse[i].GetEigenTriplets().size(); i++)
 		for (auto& item: matSparse[i].GetEigenTriplets())
 		{
 			triplets.push_back(item);
@@ -1236,7 +1252,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 	for (Index i = 0; i < nThreadsTaskmanager; i++)
 	{
 		tripletIndex[i] = totalTriplets;
-		totalTriplets += matSparse[i].GetEigenTriplets().size();
+		totalTriplets += (Index)matSparse[i].GetEigenTriplets().size();
 	}
 
 	//STARTGLOBALTIMER(TScomputeMM1);
@@ -1248,7 +1264,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 	//Index iTriplet = 0;
 	for (Index i = 0; i < nThreadsTaskmanager; i++)
 	{
-		//for (Index j = 0; j < matSparse[i].GetEigenTriplets().size(); i++)
+		//for (Index j = 0; j < (Index)matSparse[i].GetEigenTriplets().size(); i++)
 		for (auto& item : matSparse[i].GetEigenTriplets())
 		{
 			triplets.push_back(item);
@@ -1263,7 +1279,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 
 	//ngstd::ParallelFor(nThreadsTaskmanager, [&triplets, &tripletIndex](size_t j) //&temp,&systemODE2Rhs,&cSystemData
 	//{
-	//	Index matSparseSize = matSparse[j].GetEigenTriplets().size();
+	//	Index matSparseSize = (Index)matSparse[j].GetEigenTriplets().size();
 	//	for (Index k = 0; k < matSparseSize; ++k)
 	//	{
 	//		triplets[tripletIndex[j] + k] = matSparse[j].GetEigenTriplets()[k];
@@ -1458,28 +1474,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 		}
 	}
 
-
-	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
-	//{
-	//	if ((cSystemData.GetCObjects()[j])->IsActive())
-	//	{
-	//		//work over bodies, connectors, etc.
-	//		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
-
-	//		if (ltgODE2.NumberOfItems() && !EXUstd::IsOfType(cSystemData.GetCObjects()[j]->GetType(), CObjectType::Constraint)) //only if ODE2 exists and if not constraint (Constraint force action added in solver)
-	//		{
-	//			ComputeObjectODE2LHS(temp, cSystemData.GetCObjects()[j], temp.localODE2LHS);
-	//			//now add RHS to system vector
-	//			for (Index k = 0; k < temp.localODE2LHS.NumberOfItems(); k++)
-	//			{
-	//				systemODE2Rhs[ltgODE2[k]] -= temp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
-	//			}
-	//		}
-	//	}
-	//}
-	//pout << "systemODE2Rhs=" << systemODE2Rhs << "\n";
-
-	ComputeLoads(temp, systemODE2Rhs);
+	ComputeODE2Loads(temp, systemODE2Rhs);
 }
 #endif
 
@@ -1515,11 +1510,12 @@ void CSystem::ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& syste
 			}
 		}
 	}
+	ComputeODE1Loads(temp, systemODE1Rhs);
 	//std::cout << "ComputeSystemODE1RHS end\n";
 }
 
 //! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
-void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs)
+void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE2Rhs)
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++
 	//compute loads ==> not needed in jacobian, except for follower loads, 
@@ -1536,20 +1532,21 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs
 	Real currentTime = cSystemData.GetCData().currentState.time;
 	for (Index j = 0; j < nLoads; j++)
 	{
-		if (cSystemData.GetCLoads()[j]->IsVector()) 
+		CLoad* cLoad = cSystemData.GetCLoads()[j];
+		if (cLoad->IsVector()) 
 		{ 
-			loadVector3D = cSystemData.GetCLoads()[j]->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
+			loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
 			loadVector3Ddefined = true;
 		}
 		else 
 		{ 
-			loadVector1D = Vector1D(cSystemData.GetCLoads()[j]->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
+			loadVector1D = Vector1D(cLoad->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
 			loadVector1Ddefined = true;
 		}
 
-		Index markerNumber = cSystemData.GetCLoads()[j]->GetMarkerNumber();
+		Index markerNumber = cLoad->GetMarkerNumber();
 		CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
-		LoadType loadType = cSystemData.GetCLoads()[j]->GetType();
+		LoadType loadType = cLoad->GetType();
 
 		ArrayIndex* ltg = nullptr;	//for objects
 		Index nodeCoordinate = 99999;//initialize with arbitrary value for gcc; starting index for nodes (consecutively numbered)
@@ -1570,10 +1567,14 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs
 			Index markerNodeNumber = marker->GetNodeNumber();
 			if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
 			{
-				if ((marker->GetType() & Marker::Position) || (marker->GetType() & Marker::Coordinate))
+				if (((marker->GetType() & Marker::Position) || (marker->GetType() & Marker::Coordinate)) && !(marker->GetType() & Marker::ODE1))
 				{
 					nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE2CoordinateIndex();
 					applyLoad = true;
+				}
+				else if (EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1))
+				{
+					applyLoad = false; //belongs to ODE1 coordinates, but valid load
 				}
 				else
 				{
@@ -1589,10 +1590,15 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs
 			//==> lateron: depending on AccessFunctionType compute jacobians, put into markerDataStructure as in connectors
 			//    and call according jacobian function
 			//    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
+			Real loadFactor = solverData.loadFactor; //copy
+			if (cLoad->HasUserFunction())
+			{
+				loadFactor = 1.; //loadFactor not used for case of user functions, see issue #603
+			}
 
 			//bodyFixed (local) follower loads:
 			bool bodyFixed = false;
-			if (cSystemData.GetCLoads()[j]->IsBodyFixed())
+			if (cLoad->IsBodyFixed())
 			{
 				bodyFixed = true;
 			}
@@ -1635,11 +1641,9 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs
 
 			if (ltg != nullptr) //must be object
 			{
-
-				//pout << "load=" << temp.generalizedLoad << ", LF=" << solverData.loadFactor << ", rotJac=" << temp.markerDataStructure.GetMarkerData(0).positionJacobian << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
-					systemODE2Rhs[(*ltg)[k]] += solverData.loadFactor * temp.generalizedLoad[k]; //if the loadfactor shall not be used for static case: add LoadRampType structure to define behavior: StaticRampDynamicStep=0, StaticStep=1, DynamicRamp=2, ...
+					systemODE2Rhs[(*ltg)[k]] += loadFactor * temp.generalizedLoad[k]; 
 				}
 			}
 			else //must be node
@@ -1647,9 +1651,90 @@ void CSystem::ComputeLoads(TemporaryComputationData& temp, Vector& systemODE2Rhs
 				//pout << "  nodeCoordinate=" << nodeCoordinate << "\n";
 				for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
 				{
-					systemODE2Rhs[nodeCoordinate + k] += solverData.loadFactor * temp.generalizedLoad[k];
+					systemODE2Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
 				}
 
+			}
+		}
+
+	}
+	STOPGLOBALTIMER(TScomputeLoads);
+}
+
+//! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs' for ODE1 part
+void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE1Rhs)
+{
+	STARTGLOBALTIMER(TScomputeLoads);
+
+	Index nLoads = cSystemData.GetCLoads().NumberOfItems();
+	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
+	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
+	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
+	bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
+
+	Real currentTime = cSystemData.GetCData().currentState.time;
+	for (Index j = 0; j < nLoads; j++)
+	{
+		CLoad* cLoad = cSystemData.GetCLoads()[j];
+		Index markerNumber = cLoad->GetMarkerNumber();
+		CMarker* marker = cSystemData.GetCMarkers()[markerNumber];
+
+		Index nodeCoordinate = 99999;//initialize with arbitrary value for gcc; starting index for nodes (consecutively numbered)
+		bool applyLoad = false;		//loads are not applied to ground objects/nodes
+
+		if (marker->GetType() & Marker::Node) //code for body markers
+		{
+			Index markerNodeNumber = marker->GetNodeNumber();
+			if (!cSystemData.GetCNodes()[markerNodeNumber]->IsGroundNode()) //if node has zero coordinates ==> ground node; no action on ground nodes!
+			{
+				if (EXUstd::IsOfType((Index)marker->GetType(), Marker::Coordinate + Marker::ODE1))
+				{
+					nodeCoordinate = cSystemData.GetCNodes()[markerNodeNumber]->GetGlobalODE1CoordinateIndex();
+					applyLoad = true;
+				}
+			}
+		}
+
+		if (applyLoad)
+		{
+			if (cLoad->IsVector())
+			{
+				loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
+				loadVector3Ddefined = true;
+			}
+			else
+			{
+				loadVector1D = Vector1D(cLoad->GetLoadValue(cSystemData.GetMainSystemBacklink(), currentTime));
+				loadVector1Ddefined = true;
+			}
+
+			//AccessFunctionType aft = GetAccessFunctionType(loadType, marker->GetType());
+			//==> lateron: depending on AccessFunctionType compute jacobians, put into markerDataStructure as in connectors
+			//    and call according jacobian function
+			//    marker->GetAccessFunctionJacobian(AccessFunctionType, ...) ==> handles automatically the jacobian
+			Real loadFactor = solverData.loadFactor; //copy
+			if (cLoad->HasUserFunction())
+			{
+				loadFactor = 1.; //loadFactor not used for case of user functions, see issue #603
+			}
+
+			LoadType loadType = cLoad->GetType();
+			if (loadType == LoadType::Coordinate)
+			{
+				const bool computeJacobian = true;
+				CHECKandTHROW(loadVector1Ddefined, "ComputeLoads(...): illegal force vector format (expected 1D load)");
+				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
+			}
+			else { CHECKandTHROWstring("ERROR: CSystem::ComputeSystemODE1RHS, LoadType not implemented!"); }
+
+			//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
+			//pout << "genLoad=" << temp.generalizedLoad << "\n";
+
+			//pout << "  nodeCoordinate=" << nodeCoordinate << "\n";
+			for (Index k = 0; k < temp.generalizedLoad.NumberOfItems(); k++)
+			{
+				systemODE1Rhs[nodeCoordinate + k] += loadFactor * temp.generalizedLoad[k];
 			}
 		}
 
@@ -1720,8 +1805,10 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 //}
 
 //! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity
-Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
+//! recommendedStepSize must be initialized with -1 or previous recommendation: [< 0: no recommendation, 0: use minimum step size, >0: use specific step size, if no smaller size requested by other reason]
+Real CSystem::PostNewtonStep(TemporaryComputationData& temp, Real& recommendedStepSize)
 {
+	//recommendedStepSize (must be initialized with -1 or appropriately)
 	Real PNerror = 0;
 	PostNewtonFlags::Type postNewtonFlags;
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
@@ -1736,7 +1823,12 @@ Real CSystem::PostNewtonStep(TemporaryComputationData& temp)
 			const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
 			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
-			PNerror = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, postNewtonFlags), PNerror);
+			Real objectRecomStepSize = -1;
+			PNerror = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, postNewtonFlags, objectRecomStepSize), PNerror);
+			if (objectRecomStepSize >= 0 && (objectRecomStepSize < recommendedStepSize || recommendedStepSize==-1))
+			{
+				recommendedStepSize = objectRecomStepSize;
+			}
 
 			if (postNewtonFlags&PostNewtonFlags::UpdateLTGLists)
 			{
@@ -2614,28 +2706,30 @@ void CSystem::UpdatePostProcessData(bool recordImage)
 	}
 
 	//use semaphores, because the postProcessData.state is also accessed from the visualization thread
-	postProcessData.accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+	EXUstd::WaitAndLockSemaphore(postProcessData.accessState); //lock PostProcessData
 
 	postProcessData.updateCounter++;
 	postProcessData.postProcessDataReady = true;
 	if (recordImage) { postProcessData.recordImageCounter = postProcessData.updateCounter; } //this is the condition to record an image
 
+	//std::cout << "update visualization state\n";
+
 	GetSystemData().GetCData().visualizationState = GetSystemData().GetCData().currentState; //copy current (computation step result) to post process state
-	postProcessData.accessState.clear(std::memory_order_release); //clear PostProcessData
+	EXUstd::ReleaseSemaphore(postProcessData.accessState); //clear PostProcessData
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//! this function is used to only send a signal that the scene shall be redrawn because the visualization state has been updated;
+//! this function is used in Pyton to send a signal that the scene shall be redrawn (e.g.,  because the visualization state has been updated)
 void PostProcessData::SendRedrawSignal()
 {
 	//use semaphores, because the postProcessData.state is also accessed from the visualization thread
-	accessState.test_and_set(std::memory_order_acquire); //lock PostProcessData
+	EXUstd::WaitAndLockSemaphoreIgnore(accessState); //lock PostProcessData
 
 	updateCounter++;
 	postProcessDataReady = true;
 
-	accessState.clear(std::memory_order_release); //clear PostProcessData
+	EXUstd::ReleaseSemaphore(accessState);
 }
 
 //! wait for user to press space
@@ -2661,7 +2755,8 @@ void PostProcessData::WaitForUserToContinue()
 
 void PostProcessData::ProcessUserFunctionDrawing()
 {
-	requestUserFunctionDrawingAtomicFlag.test_and_set(std::memory_order_acquire);
+	EXUstd::WaitAndLockSemaphore(requestUserFunctionDrawingAtomicFlag);
+
 	if (requestUserFunctionDrawing)
 	{
 		//std::cout << "requestUserFunctionDrawing ...\n";
@@ -2686,5 +2781,5 @@ void PostProcessData::ProcessUserFunctionDrawing()
 		}
 		requestUserFunctionDrawing = false;
 	}
-	requestUserFunctionDrawingAtomicFlag.clear(std::memory_order_release); //clear outputBuffer
+	EXUstd::ReleaseSemaphore(requestUserFunctionDrawingAtomicFlag);
 }

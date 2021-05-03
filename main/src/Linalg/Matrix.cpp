@@ -94,7 +94,8 @@ bool MatrixBase<T>::Invert()
 	//throw EXUexception("MatrixBase::Invert(): only valid for quadratic matrices");
 	CHECKandTHROW(numberOfColumns == numberOfRows && data != NULL, "MatrixBase::Invert(): only valid for quadratic matrices");
 
-	static ResizableMatrix m; //memory allocation only once, if size does not change; not THREAD safe!
+	static ResizableMatrixBase<T> m; //memory allocation only once, if size does not change; not THREAD safe!
+	//static ResizableMatrix m; //memory allocation only once, if size does not change; not THREAD safe!
 
 	//Insert identity-matrix on left-hand-side
 	m.SetScalarMatrix(numberOfRows, 1.); //set unit matrix
@@ -162,6 +163,9 @@ bool MatrixBase<T>::Invert()
 	return true;
 }
 
+
+
+//if used, this should be put into Matrix.h, otherwise it will give a linker error:
 template<typename T>
 bool MatrixBase<T>::Solve(const VectorBase<T>& rhs, VectorBase<T>& q)
 {

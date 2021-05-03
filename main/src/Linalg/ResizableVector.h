@@ -50,7 +50,10 @@ public:
         maxNumberOfItems(numberOfItemsInit) {}
 
     //! constructor with initializer list; memory allocation!
-    ResizableVectorBase(std::initializer_list<T> listOfReals): VectorBase<T>(listOfReals), maxNumberOfItems(listOfReals.size()) {}
+    ResizableVectorBase(std::initializer_list<T> listOfReals): VectorBase<T>(listOfReals), maxNumberOfItems((Index)listOfReals.size()) {}
+private:
+	ResizableVectorBase(std::initializer_list<Index>) = delete; //constructor forbidden, as it would convert wrongly for ResizableVector({2}) into ResizableVector(2)
+public:
 
     //! @todo ResizableVectorBase:copy constructor should not be needed
     //! copy constructor; compile-time error, if dataSize mismatch!; copies only in range [0,vector.numberOfItems items]

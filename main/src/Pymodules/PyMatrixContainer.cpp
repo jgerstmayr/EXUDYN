@@ -61,8 +61,8 @@ void PyMatrixContainer::SetWithDenseMatrix(const py::array_t<Real>& pyArray, boo
 		else if (pyArray.ndim() == 2)
 		{
 			auto mat = pyArray.unchecked<2>();
-			Index nrows = mat.shape(0);
-			Index ncols = mat.shape(1);
+			Index nrows = (Index)mat.shape(0);
+			Index ncols = (Index)mat.shape(1);
 
 			sparseTripletMatrix.SetNumberOfRowsAndColumns(nrows, ncols);
 			for (Index i = 0; i < nrows; i++)
@@ -89,8 +89,8 @@ void PyMatrixContainer::SetWithSparseMatrixCSR(Index numberOfRowsInit, Index num
 		if (pyArray.ndim() == 2)
 		{
 			auto mat = pyArray.unchecked<2>();
-			Index nrows = mat.shape(0);
-			Index ncols = mat.shape(1);
+			Index nrows = (Index)mat.shape(0);
+			Index ncols = (Index)mat.shape(1);
 
 			if (ncols != 3)
 			{

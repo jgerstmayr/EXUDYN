@@ -51,6 +51,7 @@ public: //declared as public for direct access via pybind
 
 	//RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	const float contourPlotFlag = -2.f;	//!< this is the value of transparency used to identify contour plot values in GraphicsData items
+	//static constexpr float contourPlotFlag = -2.f;	//!< needs C++17 and is therefore avoided ...
 
 	//additional data for user functions
 	MainSystem* mainSystemUF;						//!< REMOVE: this is a temporary access to mainSystem for user functions
@@ -67,6 +68,8 @@ public:
 	//VisualizationSettings& GetVisualizationSettings() { return settings; }
     //const VisualizationSettings& GetVisualizationSettings() const { return settings; }
 
+	static const float GetContourPlotFlag() { return -2.f; }
+	static const SignedIndex GetContourPlotNormFlag() { return -1; }
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//SYSTEM FUNCTIONS
 

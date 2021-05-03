@@ -70,7 +70,7 @@ public:
 	SlimArray(std::initializer_list<T> listOfItems) //not compatible with static_assert //pass by value as a standard in C++11
 	//SlimArray(const T(&listOfItems)[dataSize]) //pass by value as a standard in C++11
     {
-		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimArray::constructor, dataSize mismatch with initializer_list");
+		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimArray::constructor, dataSize mismatch with initializer_list");
 		//static_assert supported by C++14 (supports listOfItems.size() as constexpr)
 
         Index cnt = 0;
@@ -94,7 +94,7 @@ public:
 
 	SlimArray(const std::vector<T> vector)
 	{
-		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimArray(const std::vector<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == (Index)dataSize, "ERROR: SlimArray(const std::vector<T> vector), dataSize mismatch");
 
 		Index cnt = 0;
 		for (auto& item : *this) {
@@ -104,7 +104,7 @@ public:
 
 	SlimArray(const std::array<T, dataSize> vector)
 	{
-		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimArray(const std::array<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == (Index)dataSize, "ERROR: SlimArray(const std::array<T> vector), dataSize mismatch");
 
 		Index cnt = 0;
 		for (auto& item : *this) {
@@ -243,13 +243,13 @@ public:
         return EXUstd::InvalidIndex;
     }
 
-    //! Sort items in ascending order, using external Quicksort(...) function; not available, because EXUstd::QuickSort not tested
-    //void Sort() { EXUstd::QuickSort(*this); }
+    //! Sort items in ascending order, using external Quicksort(...) function; 
+    void Sort() { EXUstd::QuickSort(*this); }
 
     //! set items according to initializer list: SlimArray<3> ({1.0, 3.14, 5.5});
     void Set(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11
     {
-		CHECKandTHROW(dataSize == listOfItems.size(), "ERROR: SlimArray::Set(...), dataSize mismatch with initializer_list");
+		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimArray::Set(...), dataSize mismatch with initializer_list");
         //static_assert supported by C++14 (supports listOfItems.size() as constexpr)
 
         Index cnt = 0;

@@ -11,24 +11,10 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys, platform
-workingReleasePath = 'C:\\DATA\\cpp\\EXUDYN_git\\main\\bin\\EXUDYN'
-#workingReleasePath = '../bin/WorkingRelease'
-if platform.architecture()[0] == '64bit':
-    workingReleasePath += '64bitsPython'
-else:
-    workingReleasePath += '32bitsPython'
-if sys.version_info.major == 3 and sys.version_info.minor == 7:
-    workingReleasePath += '37'
-elif sys.version_info.major == 3 and sys.version_info.minor == 6:
-    workingReleasePath += '36'
 
-if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 7:
-    raise ImportError("EXUDYN only supports python 3.6 or python 3.7")
+if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 8:
+    raise ImportError("EXUDYN only supports python versions >= 3.6 and <= 3.8")
 
-#only if not installed:
-#sys.path.append(workingReleasePath) #for exudyn, itemInterface and from exudyn.utilities import *
-
-#sys.path.append('TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
@@ -62,11 +48,13 @@ if len(sys.argv) > 1:
 runUnitTests = True
 runTestExamples = True
 runMiniExamples = True
+runCppUnitTests = True
+
 printTestResults = False #print list, which can be imported for new reference values
-if platform.architecture()[0] == '64bit':
-    testTolerance = 5e-11 #larger tolerance, because reference values are computed with 32bit version (WHY?)
+if platform.architecture()[0] == '32bit':
+    testTolerance = 2e-13 #larger tolerance, because reference values are computed with 64bit version (WHY?)
 else:
-    testTolerance = 3e-14
+    testTolerance = 5e-14
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #additional options for old trapezoidal solver, NOT active any more!
@@ -100,11 +88,6 @@ fileInfo=os.stat(exuCPP.__file__)
 exuDate = datetime.fromtimestamp(fileInfo.st_mtime) 
 exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
 
-#previous, with WorkingRelease:
-# fileInfo=os.stat(workingReleasePath+'\\exudyn\\exudynCPP.pyd')
-# exuDate = datetime.fromtimestamp(fileInfo.st_mtime) #mtime=modified time; ctime=created time, but contains time of first creation (2019...)
-# exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 platformString = platform.architecture()[0]#'32bit'
@@ -120,7 +103,6 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.Print('EXUDYN version      = '+exu.GetVersionString())
 exu.Print('EXUDYN build date   = '+exuDateStr)
 exu.Print('platform            = '+platform.architecture()[0])
-exu.Print('Windows binary path = ',workingReleasePath)
 exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
 exu.Print('test tolerance      = ',testTolerance)
 exu.Print('testsuite date (now)= '+dateStr)
@@ -143,6 +125,7 @@ testFileList = [
                 'genericJointUserFunctionTest.py',
                 'genericODE2test.py',
                 'geneticOptimizationTest.py',
+                'geometricallyExactBeam2Dtest.py',
                 'heavyTop.py',
                 'manualExplicitIntegrator.py',
                 'mecanumWheelRollingDiscTest.py',
@@ -153,6 +136,7 @@ testFileList = [
                 'objectGenericODE2Test.py',
                 'PARTS_ATEs_moving.py',
                 'pendulumFriction.py',
+                'postNewtonStepContactTest.py',
                 'rigidBodyCOMtest.py',
                 'rollingCoinTest.py',
                 'rollingCoinPenaltyTest.py',
@@ -184,12 +168,12 @@ timeStart= -time.time()
 testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
                               # useCorrectedAccGenAlpha = exudynTestGlobals.useCorrectedAccGenAlpha,
                               # useNewGenAlphaSolver = exudynTestGlobals.useNewGenAlphaSolver)
-rv = False
+rvModelUnitTests = False
 if runUnitTests:
     exu.Print('\n***********************')
     exu.Print('  RUN MODEL UNIT TESTS ')
     exu.Print('***********************\n')
-    rv = RunAllModelUnitTests(mbs, testInterface)
+    rvModelUnitTests = RunAllModelUnitTests(mbs, testInterface)
 SC.Reset()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -218,11 +202,15 @@ if runTestExamples:
 
         examplesTestErrorList[name] = exudynTestGlobals.testError
         examplesTestSolList[name] = exudynTestGlobals.testResult
+        
+        testTolFact = 1 #special factor for some examples which make problems, e.g., due to sparse eigenvalue solver
+        # if file == 'objectFFRFreducedOrderTest.py' and platform.architecture()[0] != '64bit':
+        #     testTolFact = 10
 
         #compute error from reference solution
         if examplesTestRefSol[name] != invalidResult:
             exudynTestGlobals.testError = exudynTestGlobals.testResult - examplesTestRefSol[name]
-        if abs(exudynTestGlobals.testError) < testTolerance:
+        if abs(exudynTestGlobals.testError) < testTolerance*testTolFact:
             exu.Print('******************************************')
             exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
             exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
@@ -281,7 +269,14 @@ if runMiniExamples:
     if printTestResults: #print reference solution list:
         for key,value in miniExamplesTestSolList.items(): print("'"+key+"':"+str(value)+",")
     
-
+if runCppUnitTests:
+    if hasattr(exu, 'RunCppUnitTests'):
+        exu.Print('\n******************************************')
+        exu.Print('RUN CPP UNIT TESTS:')
+        exu.Print('******************************************')
+        numberOfCppUnitTestsFailed = exu.RunCppUnitTests()
+    else:
+        runCppUnitTests = False #will display that they were skipped 
 timeStart += time.time()
         
         
@@ -313,7 +308,7 @@ exu.Print('time elapsed =',round(timeStart,3),'seconds')
 #10+36+13tests: 2021-01-04: 23.54 seconds on i9
 
 if runUnitTests:
-    if rv == True:
+    if rvModelUnitTests:
         exu.Print('ALL UNIT TESTS SUCCESSFUL')
     else:
         exu.Print('UNIT TESTS FAILED: see above section UNIT TESTS for detailed information')
@@ -335,21 +330,22 @@ if runMiniExamples:
         exu.Print('ALL ' + str(len(miniExamplesFileList)) + ' MINI EXAMPLE TESTS SUCCESSFUL')
     else:
         exu.Print(str(len(miniExamplesFailed)) + ' MINI EXAMPLE TEST(S) OUT OF '+ str(len(miniExamplesFileList)) + ' FAILED: ')
+        for i in miniExamplesFailed:
+            exu.Print('  MINI EXAMPLE ' + str(i) + ' (' + miniExamplesFileList[i] + ') FAILED')
+        
     exu.Print('******************************************\n')
 else:
     exu.Print('MINI EXAMPLE TESTS SKIPPED')
+
+if runCppUnitTests:
+    if numberOfCppUnitTestsFailed == 0:
+        exu.Print('ALL CPP UNIT TESTS SUCCESSFUL')
+    else:
+        exu.Print(str(numberOfCppUnitTestsFailed) + ' CPP UNIT TESTS FAILED: see above section for detailed information')
+else:
+    exu.Print('CPP UNIT TESTS SKIPPED')
 
     
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
 
 
-#delete in future: (logs anyway written in testsuitelogs)
-# if copyLog:
-#     file=open(logFileName,'r') 
-#     strLog = file.read()
-#     file.close()
-    
-#     workingReleaseLog = workingReleasePath+"/testSuiteLog.txt"
-#     file = open(workingReleaseLog,'w')
-#     file.write(strLog)
-#     file.close()

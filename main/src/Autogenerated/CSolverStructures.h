@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -262,7 +262,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -285,10 +285,11 @@ public: // AUTO:
   Real initialStepSize;                           //!< AUTO: initial stepSize for dynamic solver; only used, if automaticStepSize is activated
   Real lastStepSize;                              //!< AUTO: stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated
   Real currentStepSize;                           //!< AUTO: stepSize of current step
+  Real recommendedStepSize;                       //!< AUTO: recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason
   Index numberOfSteps;                            //!< AUTO: number of time steps (if fixed size); \f$n\f$
   Index currentStepIndex;                         //!< AUTO: current step index; \f$i\f$
   bool adaptiveStep;                              //!< AUTO: True: the step size may be reduced if step fails; no automatic stepsize control
-  bool automaticStepSize;                         //!< AUTO: True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); false: constant step size used (step may be reduced if adaptiveStep=True)
+  bool automaticStepSize;                         //!< AUTO: True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); False: constant step size used (step may be reduced if adaptiveStep=True)
   Real currentTime;                               //!< AUTO: holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration
   Real startTime;                                 //!< AUTO: time at beginning of time integration
   Real endTime;                                   //!< AUTO: end time of static/dynamic solver
@@ -311,6 +312,7 @@ public: // AUTO:
     initialStepSize = 1e-6;
     lastStepSize = 0.;
     currentStepSize = 0.;
+    recommendedStepSize = -1.;
     numberOfSteps = 0;
     currentStepIndex = 0;
     adaptiveStep = true;
@@ -340,6 +342,7 @@ public: // AUTO:
     os << "  initialStepSize = " << initialStepSize << "\n";
     os << "  lastStepSize = " << lastStepSize << "\n";
     os << "  currentStepSize = " << currentStepSize << "\n";
+    os << "  recommendedStepSize = " << recommendedStepSize << "\n";
     os << "  numberOfSteps = " << numberOfSteps << "\n";
     os << "  currentStepIndex = " << currentStepIndex << "\n";
     os << "  adaptiveStep = " << adaptiveStep << "\n";
@@ -373,7 +376,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -394,6 +397,7 @@ public: // AUTO:
   bool stepReductionFailed;                       //!< AUTO: true, if iterations over time/static steps failed (finally, cannot be recovered)
   bool discontinuousIterationSuccessful;          //!< AUTO: true, if last discontinuous iteration had success (failure may be recovered by adaptive step)
   bool linearSolverFailed;                        //!< AUTO: true, if linear solver failed to factorize
+  Index linearSolverCausingRow;                   //!< AUTO: -1 if successful, 0 ... n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed
   bool newtonConverged;                           //!< AUTO: true, if Newton has (finally) converged
   bool newtonSolutionDiverged;                    //!< AUTO: true, if Newton diverged (may be recovered)
   bool jacobianUpdateRequested;                   //!< AUTO: true, if a jacobian update is requested in modified Newton (determined in previous step)
@@ -412,6 +416,7 @@ public: // AUTO:
     stepReductionFailed = false;
     discontinuousIterationSuccessful = true;
     linearSolverFailed = false;
+    linearSolverCausingRow = -1;
     newtonConverged = false;
     newtonSolutionDiverged = false;
     jacobianUpdateRequested = true;
@@ -436,6 +441,7 @@ public: // AUTO:
     os << "  stepReductionFailed = " << stepReductionFailed << "\n";
     os << "  discontinuousIterationSuccessful = " << discontinuousIterationSuccessful << "\n";
     os << "  linearSolverFailed = " << linearSolverFailed << "\n";
+    os << "  linearSolverCausingRow = " << linearSolverCausingRow << "\n";
     os << "  newtonConverged = " << newtonConverged << "\n";
     os << "  newtonSolutionDiverged = " << newtonSolutionDiverged << "\n";
     os << "  jacobianUpdateRequested = " << jacobianUpdateRequested << "\n";
@@ -463,7 +469,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -552,7 +558,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-02-08 (last modfied)
+* @date         AUTO: 2021-05-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

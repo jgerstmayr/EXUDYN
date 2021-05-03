@@ -43,7 +43,8 @@ bool CSolverStatic::ReduceStepSize(CSystem& computationalSystem, const Simulatio
 
 	if (it.currentStepSize > it.minStepSize)
 	{
-		it.currentStepSize *= 0.25;
+		//it.currentStepSize *= 0.25;
+		it.currentStepSize *= simulationSettings.staticSolver.adaptiveStepDecrease;
 
 		it.currentStepSize = EXUstd::Maximum(it.minStepSize, it.currentStepSize);
 		return true;

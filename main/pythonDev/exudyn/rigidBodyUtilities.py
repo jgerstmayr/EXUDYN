@@ -17,7 +17,7 @@ import numpy as np #LoadSolutionFile
 from exudyn.itemInterface import *
 import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
 from exudyn.basicUtilities import NormL2
-
+from math import sin, cos, sqrt, atan2
 
 eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle is zero (rotation axis arbitrary)
 
@@ -182,7 +182,7 @@ def RotationMatrix2EulerParameters(rotationMatrix):
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute time derivative of Euler parameters from (global) angular velocity vector
-#note that for Euler parameters $\pv$, we have $\tomega=\Gm \pv_t$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \pv_t$ ==> $\Gm^T \Gm=4(\Im_{4x4} - \pv\cdot \pv^T)\pv_t = 4 (\Im_{4x4}) \pv_t$
+#note that for Euler parameters $\pv$, we have $\tomega=\Gm \dot \pv$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \dot \pv$ ==> $\Gm^T \Gm=4(\Im_{4x4} - \pv\cdot \pv^T)\dot\pv = 4 (\Im_{4x4}) \dot \pv$
 #**input: 
 #  angularVelocity: 3D vector of angular velocity in global frame, as lists or as np.array
 #  eulerParameters: vector of 4 eulerParameters as np.array or list
@@ -250,7 +250,7 @@ def ComputeRotationAxisFromRotationVector(rotationVector):
     return rotationAxis
 
 
-#**function: convert rotation vector (parameters) (v) to G-matrix (=$\partial \tomega  / \partial \vv_t$)
+#**function: convert rotation vector (parameters) (v) to G-matrix (=$\partial \tomega  / \partial \dot \vv$)
 #**input: vector of rotation vector (len=3) as list or np.array
 #**output: 3x3 matrix G as np.array
 def RotationVector2G(rotationVector):
@@ -297,6 +297,68 @@ def RotationMatrix2RotXYZ(rotationMatrix):
     rot[1] = np.arctan2(R[0][2], np.sqrt(abs(1. - R[0][2] * R[0][2]))) #fabs for safety, if small round up error in rotation matrix ...
     rot[2] = np.arctan2(-R[0][1], R[0][0])
     return np.array(rot);
+
+
+#**function: compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$)
+#**input:  3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+#**output: 3x3 matrix G as np.array
+def RotXYZ2G(rot):
+    c0 = cos(rot[0])
+    s0 = sin(rot[0])
+    c1 = cos(rot[1])
+    s1 = sin(rot[1])
+
+    return np.array([[1, 0, s1],
+                     [0, c0, -c1*s0],
+                     [0, s0,  c0*c1 ]])
+
+#**function: compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$)
+#**input:  
+#    rot: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+#    rot\_t: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
+#**output: 3x3 matrix G\_t as np.array
+def RotXYZ2G_t(rot, rot_t):
+    c0 = cos(rot[0])
+    s0 = sin(rot[0])
+    c1 = cos(rot[1])
+    s1 = sin(rot[1])
+
+    return np.array([[0, 0, rot_t[1]*c1],
+                     [0, -rot_t[0]*s0, rot_t[1]*s0*s1 - rot_t[0]*c0*c1],
+                     [0, rot_t[0]*c0, -rot_t[0]*c1*s0 - rot_t[1]*c0*s1]])
+
+
+#**function: compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$)
+#**input:  3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+#**output: 3x3 matrix GLocal as np.array
+def RotXYZ2GLocal(rot):
+    c1 = cos(rot[1])
+    s1 = sin(rot[1])
+    c2 = cos(rot[2])
+    s2 = sin(rot[2])
+
+    return np.array([[ c1*c2, s2, 0],
+                     [-c1*s2, c2, 0],
+                     [ s1,     0,  1]])
+
+#**function: compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$)
+#**input:  
+#    rot: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
+#    rot\_t: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
+#**output: 3x3 matrix GLocal\_t as np.array
+def RotXYZ2GLocal_t(rot, rot_t):
+    c1 = cos(rot[1])
+    s1 = sin(rot[1])
+    c2 = cos(rot[2])
+    s2 = sin(rot[2])
+
+    return np.array([[-rot_t[2]*c1*s2 - rot_t[1]*c2*s1, rot_t[2]*c2, 0],
+                     [ rot_t[1]*s2*s1 - rot_t[2]*c2*c1, -rot_t[2]*s2, 0],
+                     [ rot_t[1]*c1, 0, 0 ]])
+
+
+
+
 
 
 #**function: compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation

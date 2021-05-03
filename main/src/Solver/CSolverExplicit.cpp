@@ -101,10 +101,18 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 		STARTTIMER(timer.factorization); //for mass matrix
 		data.systemMassMatrix->FinalizeMatrix();
 
-		if (data.systemMassMatrix->Factorize() != 0)
+		Index factorizeOutput = data.systemMassMatrix->FactorizeNew();
+		if (factorizeOutput != -1)
 		{
+			std::string s = "CSolverExplicit: Initialization (with constant mass matrix): System mass matrix seems to be singular / not invertible!";
+			if (factorizeOutput < data.systemJacobian->NumberOfRows())
+			{
+				s += "The solver returned the causing system equation number (coordinate number) = " + EXUstd::ToString(factorizeOutput) + "\n";
+			}
 			conv.linearSolverFailed = true;
-			PyError("CSolverExplicit: Initialization (with constant mass matrix): System mass matrix not invertible!"); //this error is not recoverable
+			conv.massMatrixNotInvertible = true;
+			conv.linearSolverCausingRow = factorizeOutput;
+			SysError(s); //this error is not recoverable
 		}
 		STOPTIMER(timer.factorization);
 	}
@@ -224,6 +232,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 	//Vector& solutionData = computationalSystem.GetSystemData().GetCData().currentState.dataCoords;
 
 	conv.linearSolverFailed = false;		//(errorOccurred) signals that linear solver failed (factorize mass matrix) ==> abort integration method or reduce step size
+	conv.linearSolverCausingRow = -1;
 	conv.newtonConverged = true;			//signals that "Newton" == explicit step worked
 	conv.newtonSolutionDiverged = false;	//shows that solution diverged (e.g. in first step)
 
@@ -293,7 +302,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		STARTTIMER(timer.ODE1RHS);
 		computationalSystem.ComputeSystemODE1RHS(data.tempCompData, rk.stageDerivODE1[i]); //Ki=rk.stageDerivODE1[i]
 		STOPTIMER(timer.ODE1RHS);
-		ComputeODE2Acceleration(computationalSystem, data.tempODE2, rk.stageDerivODE2_t[i], data.systemMassMatrix);
+		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, rk.stageDerivODE2_t[i], data.systemMassMatrix);
 		if (!useLieGroupIntegration)
 		{
 			rk.stageDerivODE2[i].CopyFrom(solutionODE2_t);
@@ -385,7 +394,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 	STARTTIMER(timer.ODE1RHS);
 	computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t); //Ki=rk.stageDerivODE1[i]
 	STOPTIMER(timer.ODE1RHS);
-	ComputeODE2Acceleration(computationalSystem, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
+	ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
 
 	//also eliminate accelerations for constrained coordinates:
 	EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
@@ -531,8 +540,15 @@ bool CSolverExplicitTimeInt::ReduceStepSize(CSystem& computationalSystem, const 
 	{
 		if (it.lastStepSize > it.minStepSize)
 		{
-			//if automatic stepsize control active, currentStepSize may have been reduced already for next trial
-			it.currentStepSize = EXUstd::Minimum(it.currentStepSize,0.5*it.lastStepSize);
+			if (it.recommendedStepSize != -1.)
+			{
+				it.currentStepSize = EXUstd::Minimum(0.75*it.lastStepSize, it.recommendedStepSize); //0.75: enforce some reduction in step size, because otherwise iterations could get stuck
+			}
+			else
+			{
+				//if automatic stepsize control active, currentStepSize may have been reduced already for next trial
+				it.currentStepSize = EXUstd::Minimum(it.currentStepSize, 0.5*it.lastStepSize);
+			}
 
 			it.currentStepSize = EXUstd::Maximum(it.minStepSize, it.currentStepSize);
 			return true;
@@ -583,7 +599,7 @@ void CSolverExplicitTimeInt::UpdateCurrentTime(CSystem& computationalSystem, con
 
 
 //! helper function that computes q_tt = M^-1*ODE2RHS for given q_t and q; return true, if successful
-bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSystem, Vector& ode2Rhs,
+bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Vector& ode2Rhs,
 	Vector& ode2Acceleration, GeneralMatrix* massMatrix)
 {
 	if (!hasConstantMassMatrix)
@@ -609,19 +625,26 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 		STARTTIMER(timer.factorization); //for mass matrix
 		data.systemMassMatrix->FinalizeMatrix();
 
-		if (data.systemMassMatrix->Factorize() != 0)
+		Index factorizeOutput = data.systemMassMatrix->FactorizeNew(simulationSettings.linearSolverSettings.ignoreSingularJacobian);
+		if (factorizeOutput != -1)
 		{
 			conv.linearSolverFailed = true;
+			conv.linearSolverCausingRow = factorizeOutput;
 			if (IsVerboseCheck(1)) {
 				STDstring str = "  Explicit (time/load step #" + EXUstd::ToString(it.currentStepIndex) +
 					"): inversion of mass matrix failed";
-				if (IsStaticSolver()) { str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
-				else { str += ", time = " + EXUstd::ToString(it.currentTime); }
+				//if (IsStaticSolver()) { str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
+				str += ", time = " + EXUstd::ToString(it.currentTime);
 				str += "\n";
 				VerboseWrite(1, str);
 			}
 			//now raise exception:
-			PyError("CSolverExplicit: System mass matrix not invertible!"); //this error is not recoverable
+			std::string s = "CSolverExplicit: System mass matrix seems to be singular / not invertible!\n";
+			if (factorizeOutput < data.systemJacobian->NumberOfRows())
+			{
+				s += "The solver returned the causing system equation number (coordinate number) = " + EXUstd::ToString(factorizeOutput) + "\n";
+			}
+			SysError(s); //this error is not recoverable
 		}
 		STOPTIMER(timer.factorization);
 	}
@@ -646,8 +669,8 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 		{
 			//explicit Euler
 			rkData.A = Matrix(1, 1, { 0 });
-			rkData.time = Vector({ 0 }); //including zero time
-			rkData.weight = Vector({ 1 });
+			rkData.time = Vector({ 0. }); //including zero time
+			rkData.weight = Vector({ 1. });
 			rkData.orderMethod = 1; //order of the method
 			return rkData.time.NumberOfItems(); //nStages
 			break;
@@ -656,8 +679,8 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 		{
 			rkData.A = Matrix(2, 2, { 0, 0,
 								  0.5, 0 });
-			rkData.time = Vector({ 0, 0.5 }); //including zero time
-			rkData.weight = Vector({ 0, 1 });
+			rkData.time = Vector({ 0., 0.5 }); //including zero time
+			rkData.weight = Vector({ 0., 1. });
 			rkData.orderMethod = 2; //order of the method
 			return rkData.time.NumberOfItems(); //nStages
 			break;
@@ -667,8 +690,8 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 			rkData.A = Matrix(3, 3, { 0    ,0    ,0,//first row always zero
 								  1. / 3.,0    ,0,
 								  0    ,2. / 3.,0 });
-			rkData.time = Vector({ 0,1. / 3.,2. / 3. }); //including zero time
-			rkData.weight = Vector({ 1. / 4., 0, 3. / 4. });
+			rkData.time = Vector({ 0.,1. / 3.,2. / 3. }); //including zero time
+			rkData.weight = Vector({ 1. / 4., 0., 3. / 4. });
 			rkData.orderMethod = 3; //order of the method
 			return rkData.time.NumberOfItems(); //nStages
 			break;
@@ -679,7 +702,7 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 							0.5,0  ,0,0,
 							0  ,0.5,0,0,
 							0  ,0  ,1,0 });
-			rkData.time = Vector({ 0,0.5,0.5,1 }); //including zero time
+			rkData.time = Vector({ 0.,0.5,0.5,1. }); //including zero time
 			rkData.weight = Vector({ 1. / 6., 1. / 3., 1. / 3., 1. / 6. });
 			rkData.orderMethod = 4; //order of the method
 			return rkData.time.NumberOfItems(); //nStages
@@ -692,9 +715,9 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 			//order 6 checked in numerical example
 			rkData.A = Matrix(7, 7);
 			rkData.A.SetAll(0);
-			rkData.time = Vector({ 0, 1. / 2 - 1. / 10 * sqrt(5), 1. / 2 + 1. / 10 * sqrt(5),
-				1. / 2 - 1. / 10 * sqrt(5), 1. / 2 + 1. / 10 * sqrt(5), 1. / 2 - 1. / 10 * sqrt(5), 1 }); //including zero time
-			rkData.weight = Vector({ 1. / 12, 0, 0, 0, 5. / 12, 5. / 12, 1. / 12 });
+			rkData.time = Vector({ 0., 1. / 2 - 1. / 10 * sqrt(5), 1. / 2 + 1. / 10 * sqrt(5),
+				1. / 2 - 1. / 10 * sqrt(5), 1. / 2 + 1. / 10 * sqrt(5), 1. / 2 - 1. / 10 * sqrt(5), 1. }); //including zero time
+			rkData.weight = Vector({ 1. / 12, 0., 0., 0., 5. / 12, 5. / 12, 1. / 12 });
 
 			rkData.A(1, 0) = 1. / 2 - 1. / 10 * sqrt(5);
 			rkData.A(2, 0) = -1. / 10 * sqrt(5);
@@ -729,8 +752,8 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 								  1. / 2.,0,0,0, 
 								  0, 3. / 4.,0,0, 
 								  2. / 9., 1. / 3., 4. / 9.,0 });
-			rkData.time = Vector({ 0, 1. / 2., 3. / 4., 1. });
-			rkData.weight = Vector({ 2. / 9., 1. / 3., 4. / 9., 0 });
+			rkData.time = Vector({ 0., 1. / 2., 3. / 4., 1. });
+			rkData.weight = Vector({ 2. / 9., 1. / 3., 4. / 9., 0. });
 			Vector delta({ -5. / 72., 1. / 12., 1. / 9., -1. / 8. }); //Mathematica provides evaluation formula for error directly
 			rkData.weightEE = rkData.weight - delta;
 			rkData.hasStepSizeControl = true;
@@ -749,10 +772,10 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 			   19372. / 6561, -25360. / 2187, 64448. / 6561, -212. / 729, 0, 0, 0,
 			   9017. / 3168, -355. / 33, 46732. / 5247, 49. / 176, -5103. / 18656, 0, 0,
 			   35. / 384, 0, 500. / 1113, 125. / 192, -2187. / 6784, 11. / 84, 0 });
-			rkData.time = Vector({ 0, 1. / 5, 3. / 10, 4. / 5, 8. / 9, 1, 1 });
-			rkData.weight = Vector({ 35. / 384, 0, 500. / 1113, 125. / 192, -2187. / 6784, 11. / 84, 0 });
+			rkData.time = Vector({ 0., 1. / 5, 3. / 10, 4. / 5, 8. / 9, 1., 1. });
+			rkData.weight = Vector({ 35. / 384, 0., 500. / 1113, 125. / 192, -2187. / 6784, 11. / 84, 0. });
 			//Vector delta({ 71. / 57600, 0, -71. / 16695, 71. / 1920, -17253. / 339200, 22. / 525, -1. / 40 }); //wrong in Mathematica tutorial ...
-			rkData.weightEE = Vector({ 5179. / 57600, 0, 7571. / 16695, 393. / 640, -92097. / 339200, 187. / 2100, 1. / 40 });
+			rkData.weightEE = Vector({ 5179. / 57600, 0., 7571. / 16695, 393. / 640, -92097. / 339200, 187. / 2100, 1. / 40 });
 
 			rkData.hasStepSizeControl = true;
 

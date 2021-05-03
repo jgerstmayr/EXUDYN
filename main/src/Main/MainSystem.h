@@ -122,6 +122,8 @@ public:
 
 	//! set user function to be called by solvers at beginning of step (static or dynamic step)
 	void PySetPreStepUserFunction(const py::object& value);
+	//! set user function to be called immediately after Newton (after an update of the solution has been computed, but before discontinuous iteration)
+	void PySetPostNewtonUserFunction(const py::object& value);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   NODES

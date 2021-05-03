@@ -76,6 +76,15 @@ def GetComboBoxListsDict(exu = None):
         d['LinearSolverType'] = listOfTypes
         dT['LinearSolverType'] = listOfTypesT
 
+        listOfTypes = []
+        listOfTypesT = []
+        dTypes = exu.ItemType.__members__
+        for i in dTypes: 
+            listOfTypes+=[str(dTypes[i])]
+            listOfTypesT+=[dTypes[i]]
+        d['ItemType'] = listOfTypes
+        dT['ItemType'] = listOfTypesT
+
     else:
         print('WARNING: exudyn not loaded as "exu"')
 
@@ -85,34 +94,45 @@ def GetComboBoxListsDict(exu = None):
     
 #convert string into exudyn type
 def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
-    
+    errorMsg = ''
     if vType == 'FileName' or vType == 'String':
-        return value
+        return [value, errorMsg]
 
     if vType == 'bool':
         if value == 'True':
-            return True
+            return [True, errorMsg]
         else:
-            return False
+            return [False, errorMsg]
 
     if vType == 'float':
-        return float(value)
+        return [float(value), errorMsg]
 
-    if vType == 'Index':
-        return int(value)
+    if vType == 'Index' or vType == 'Int' or vType == 'PInt' or vType == 'UInt':
+        intValue = int(value)
+
+        if vType == 'Index' or vType == 'UInt':
+            if intValue < 0:
+                errorMsg = 'UInt must be >= 0'
+
+        if vType == 'PInt':
+            if intValue <= 0:
+                errorMsg = 'PInt must be > 0'
+                
+        return [intValue, errorMsg]
+
 #    print('vType=',vType)
 #    print('value=',value)
     
     if vType in dictionaryTypesT:#search for correct type in list
         for iValue in dictionaryTypesT[vType]:
             if str(iValue) == value:
-                return iValue
+                return [iValue, errorMsg]
 
     if len(vSize) == 2 or (len(vSize)==1 and vSize[0] > 1): #must be matrix
-        return ast.literal_eval(value)
+        return [ast.literal_eval(value), errorMsg]
 
-    print("Error in ConvertString2Value: unknown type",vType, "value=", value)
-    return 0
+    #print("Error in ConvertString2Value: unknown type",vType, "value=", value)
+    return [0, 'unknown type '+vType]
 
 #check if a valueStr corresponds to correct type and size; return True, if correct; False if type incorrect
 #returns [isValid, errorMSG]
@@ -311,8 +331,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             if nchilds == 0:
                 if len(self.tree.item(i,'values')) != 0:
                     valStr = self.tree.item(i,'values')[0]
-                    val = ConvertString2Value(valStr, str(self.typeStorage[i]), self.sizeStorage[i], self.dictionaryTypesT)
-                    d.update({self.tree.item(i,'text'): val})
+                    [val, errorMsg] = ConvertString2Value(valStr, str(self.typeStorage[i]), self.sizeStorage[i], self.dictionaryTypesT)
+                    if errorMsg == '':
+                        d.update({self.tree.item(i,'text'): val})
+                    else:
+                        print('item '+ str(self.tree.item(i,'text')) + ' has illegal value "'+valStr + '": '+errorMsg)
                 else:
                     d.update({self.tree.item(i,'text'): ''})
             else:

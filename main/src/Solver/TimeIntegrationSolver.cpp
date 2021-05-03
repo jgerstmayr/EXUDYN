@@ -172,7 +172,7 @@ bool SolverRK1::SolveSystemTemplate(CSystem& computationalSystem, const Simulati
 		//		dot u = v
 		//		dot v = M^(-1)*RHS
 		massMatrix.FinalizeMatrix();
-		massMatrix.Factorize();
+		massMatrix.FactorizeNew(); //hopefully successful, no checks ...
 		//massMatrix.Invert(); //fsolve would be faster ...
 
         //integrate:
@@ -421,7 +421,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 	computationalSystem.ComputeMassMatrix(tempCompData, systemMassMatrix);
 	computationalSystem.ComputeSystemODE2RHS(tempCompData, tempODE2);
 	systemMassMatrix.FinalizeMatrix(); //for sparse matrix
-	if (systemMassMatrix.Factorize() != 0)
+	if (systemMassMatrix.FactorizeNew() != -1)
 	{
 		PyWarning("SolverGeneralizedAlpha::SolveSystem: Mass Matrix not invertible!\nWARNING: using zero initial accelerations\n");
 		if (verbose >= 3) { pout << "mass matrix =\n" << systemMassMatrix << "\n"; }
@@ -649,7 +649,7 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 
 					timer.factorization -= EXUstd::GetTimeInSeconds();
 					systemJacobian.FinalizeMatrix();
-					if (systemJacobian.Factorize() != 0)
+					if (systemJacobian.FactorizeNew() != -1)
 					{
 						SysError("SolverGeneralizedAlpha::SolveSystem: System Jacobian not invertible!");
 						errorOccurred = true;
@@ -916,7 +916,8 @@ bool SolverGeneralizedAlpha::SolveSystemTemplate(CSystem& computationalSystem, c
 			}
 
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			discontinuousIterationError = computationalSystem.PostNewtonStep(tempCompData);
+			Real recommendedStepSize = -1; //not used here!
+			discontinuousIterationError = computationalSystem.PostNewtonStep(tempCompData, recommendedStepSize);
 			discontinuousIteration++;
 
 			//14.12.2019: changed from: if (verbose >= 0 && discontinuousIterationError > discontinuous.iterationTolerance)

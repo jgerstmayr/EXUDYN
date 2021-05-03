@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-09  16:54:33 (last modfied)
+* @date         2021-04-27  14:43:10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,16 +28,18 @@ class CMarkerSuperElementRigidParameters // AUTO:
 {
 public: // AUTO: 
     Index bodyNumber;                             //!< AUTO: body number to which marker is attached to
-    Vector3D referencePosition;                   //!< AUTO: local marker SuperElement reference position used to compute average displacement and average rotation; currently, this must be the center of weighted nodes of the marker
+    Vector3D offset;                              //!< AUTO: local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints).
     ArrayIndex meshNodeNumbers;                   //!< AUTO: a list of \f$n_m\f$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers
     Vector weightingFactors;                      //!< AUTO: a list of \f$n_m\f$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces
+    bool useAlternativeApproach;                  //!< AUTO: this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
     //! AUTO: default constructor with parameter initialization
     CMarkerSuperElementRigidParameters()
     {
         bodyNumber = EXUstd::InvalidIndex;
-        referencePosition = Vector3D({0.,0.,0.});
+        offset = Vector3D({0.,0.,0.});
         meshNodeNumbers = ArrayIndex();
         weightingFactors = Vector();
+        useAlternativeApproach = true;
     };
 };
 
@@ -69,8 +71,6 @@ protected: // AUTO:
     CMarkerSuperElementRigidParameters parameters; //! AUTO: contains all parameters for CMarkerSuperElementRigid
 
 public: // AUTO: 
-    static constexpr bool useAlternativeApproach = true; //must be same as in CObjectFFRFreducedOrder! alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
-    static constexpr bool useRefPosWeightedRot = true; //use reference position for computed weighted rotations
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

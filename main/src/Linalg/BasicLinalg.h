@@ -46,6 +46,7 @@ namespace EXUmath {
 #ifndef __APPLE__
 	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	inline static const Matrix3D zeroMatrix3D(3, 3, 0.);
 	inline static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
 	inline static const Vector3D unitVecX({ 1.,0.,0. });
 	inline static const Vector3D unitVecY({ 0.,1.,0. });

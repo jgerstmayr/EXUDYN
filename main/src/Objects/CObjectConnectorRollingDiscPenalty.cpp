@@ -223,7 +223,7 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 }
 
 //! function called after Newton method; returns a residual error (force)
-Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags)
+Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
