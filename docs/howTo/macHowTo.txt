@@ -1,0 +1,40 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# special hints for compilation on MacOS with OS X El Capitan 10.11.6
+# author: Johannes Gerstmayr
+# date: 2021-05-10
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+note: on newer systems these adaptions may not be necessary!
+
+visualizationSettings.h:
+- comment line:
+  os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
+  ==> does not work as compiler does not get clue for conversion from 3x3 into <float,9> matrix
+
+
+basicLinalg.h:
+- inline auto NumIntegrate ==> inline does not work, put #ifndef __APPLE__
+
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#do following steps to compile:
+
+python setup.py bdist_wheel
+==>gives some clang errors, like error: unknown argument '-framework Cocoa', etc.
+
+copy g++ ... output and paste it into bach again
+==> links again with warnings, but now works and creates the objects
+
+type again:
+python setup.py bdist_wheel
+==> creates wheel
+
+pip install dist/exudyn-1.0.215- ... .whl
+==> installs exudyn
+
+==> go to Examples
+python stiffFlyballGovernor2.py
+
+
+

@@ -213,6 +213,11 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 #new, defined in C++ as lambda function:
 [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'no direct link to C++ here', "Stop OpenGL rendering engine"); sL+=sL1; #s+=s1
 
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRendererIdleTasks', 
+                                defaultArgs=['0'],
+                                argList=['waitSeconds'],
+                                description="ONLY for SINGLE-THREADED environments (MAC OS); in order to interact with window, DoRendererIdleTasks() must be run; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed"); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
                                description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
@@ -295,11 +300,57 @@ sL+=sL1
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #GENERAL FUNCTIONS
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
+                                description="delete all systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )"); sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem', 
                                 description="add a new computational system", options='py::return_value_policy::reference'); sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
+                                description="obtain number of systems available in system container"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
+                                description="obtain systems with index from system container",
+                                argList=['systemNumber']); sL+=sL1
+
+
 #s += '        .def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)\n' 
 sL += '  visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \\tabnewline\n    EXAMPLE:\\tabnewline\n    SC = exu.SystemContainer()\\tabnewline\n    SC.visualizationSettings.autoFitScene=False  \\\\ \\hline  \n'
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
+                                description="Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated",
+                                example = "SC = exu.SystemContainer()\\\\renderState = SC.GetRenderState() \\\\print(renderState['zoom'])"
+                                ); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderState', cName='PySetRenderState', 
+                                description="Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; will have no effect if GLFW_GRAPHICS is deactivated",
+                                example = "SC = exu.SystemContainer()\\\\SC.SetRenderState(renderState)",
+                                argList=['renderState'],
+                                ); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
+                                description="Redraw openGL scene and save image (command waits until process is finished)"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
+                                description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
+                                description="Send zoom all signal, which will perform zoom all at next redraw request"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
+                                description="Redraw openGL scene and save image (command waits until process is finished)"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AttachToRenderEngine', cName='AttachToRenderEngine', 
+                                description="Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='DetachFromRenderEngine', cName='DetachFromRenderEngine', 
+                                description="Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cName='PyGetCurrentMouseCoordinates', 
+                                description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
+                                argList=['useOpenGLcoordinates'],
+                                defaultArgs=['False'],
+                                ); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='TimeIntegrationSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, HString solverName, const SimulationSettings& simulationSettings) {
                             		pout.precision(simulationSettings.outputPrecision);
@@ -311,7 +362,7 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
                             			PyError(HString("SystemContainer::TimeIntegrationSolve: invalid solverName '")+solverName+"'; options are: RungeKutta1 or GeneralizedAlpha");
                             		}""", 
                                 argList=['mainSystem','solverName','simulationSettings'],
-                                description="DEPRECATED, use exu.SolveDynamic(...) instead, see \refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
+                                description="DEPRECATED, use exu.SolveDynamic(...) instead, see \\refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
                                 example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)",
                                 isLambdaFunction = True
                                 ); sL+=sL1
@@ -321,46 +372,10 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
                                 msc.GetSolvers().GetSolverStatic().SolveSystem(simulationSettings, *(ms.GetCSystem()));
                                 }""", 
                                 argList=['mainSystem','simulationSettings'],
-                                description="DEPRECATED, use exu.SolveStatic(...) instead\refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)",
+                                description="DEPRECATED, use exu.SolveStatic(...) instead, see \\refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)",
                                 example = "simSettings = exu.SimulationSettings()\\\\simSettings.staticSolver.newton.relativeTolerance = 1e-6\\\\SC.StaticSolve(mbs, simSettings)",
                                 isLambdaFunction = True
                                 ); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
-                                description="Get dictionary with current render state (openGL zoom, modelview, etc.)",
-                                example = "SC = exu.SystemContainer()\\\\renderState = SC.GetRenderState() \\\\print(renderState['zoom'])"
-                                ); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderState', cName='PySetRenderState', 
-                                description="Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState",
-                                example = "SC = exu.SystemContainer()\\\\SC.SetRenderState(renderState)",
-                                argList=['renderState'],
-                                ); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
-                                description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
-                                description="Send zoom all signal, which will perform zoom all at next redraw request"); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
-                                description="Redraw openGL scene and save image (command waits until process is finished)"); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cName='PyGetCurrentMouseCoordinates', 
-                                description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
-                                argList=['useOpenGLcoordinates'],
-                                defaultArgs=['False'],
-                                ); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
-                                description="delete all systems and reset SystemContainer (including graphics)"); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
-                                description="obtain number of systems available in system container"); sL+=sL1
-
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
-                                description="obtain systems with index from system container",
-                                argList=['systemNumber']); sL+=sL1
 
 
 sL += DefLatexFinishClass()#only finalize latex table
@@ -392,6 +407,9 @@ s+=s1; sL+=sL1
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                                 description="reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory"); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSystemContainer', cName='GetMainSystemContainer', 
+                                description="return the systemContainer where the mainSystem (mbs) was created"); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForUserToContinue', cName='WaitForUserToContinue', 
                                 description="interrupt further computation until user input --> 'pause' function"); s+=s1; sL+=sL1
 
@@ -403,6 +421,11 @@ s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderEngineStopFlag', cName='SetRenderEngineStopFlag', 
                                 description="set the current stop simulation flag; set to false, in order to continue a previously user-interrupted simulation"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='ActivateRendering', 
+                                argList=['flag'],
+                                defaultArgs=['true'],
+                                description="activate (flag=True) or deactivate (flag=False) rendering for this system"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
                                 description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step",

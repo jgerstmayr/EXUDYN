@@ -100,8 +100,8 @@ def ParseOutputFileHeader(lines):
 #**example: 
 #  s0=mbs.AddSensor(SensorNode(nodeNumber=0))
 #  s1=mbs.AddSensor(SensorNode(nodeNumber=1))
-#  Plot(mbs, s0, 0)
-#  Plot(mbs, sensorNumbers=[s0,s1], components=[0,2], xlabel='time in seconds')
+#  PlotSensor(mbs, s0, 0)
+#  PlotSensor(mbs, sensorNumbers=[s0,s1], components=[0,2], xLabel='time in seconds')
 def PlotSensor(mbs, sensorNumbers, components=0, **kwargs):
     #could also be imported from exudyn.utilities import PlotLineCode
     #CC = ['k-','g-','b-','r-','c-','m-','y-','k:','g:','b:','r:','c:','m:','y:','k--','g--','b--','r--','c--','m--','y--','k-.','g-.','b-.','r-.','c-.','m-.','y-.']

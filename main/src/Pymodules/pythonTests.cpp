@@ -82,15 +82,40 @@ void PyTest()
 	}
 	if (0) //test if conversion to sensor and back works
 	{
-		Index i = 5;
-		ItemType myType = ItemType::Sensor;
-		Index itemID = Index2ItemID(i, myType);
+		Index mbsNumber = 0;
+		Index i = 0;
+		//ItemType myType = ItemType::Sensor;
+		ItemType myType = ItemType::Marker;
+		Index itemID = Index2ItemID(i, myType, mbsNumber);
 		pout << "itemID=" << itemID << "\n";
 
 		Index iNew;
 		ItemType typeNew;
-		ItemID2IndexType(itemID, iNew, typeNew);
-		pout << "type=" << typeNew << ", index="<< iNew << "\n";
+		ItemID2IndexType(itemID, iNew, typeNew, mbsNumber);
+		pout << "type=" << typeNew << ", index="<< iNew << ", mbs=" << mbsNumber << "\n";
+	}
+	if (0)
+	{
+		////! access to internal module
+		//void PyGetInternalSysDictionary()
+		//{
+		//	//internalSystemDictionary["abc"] = 123;
+		//	//py::print(internalSystemDictionary["abc"]);
+		//	STDstring key = "aaa";
+		//	Real item = 1.23;
+		//	py::module exudynCPP = py::module::import("exudyn");
+		//	exudynCPP.attr("sys")[key.c_str()] = item;
+		//
+		//	pout << "test\n";
+		//}
+	}
+	if (1)
+	{
+		//SlimArray<Real, 3> a({ 3,5,1 });
+		//pout << "a=" << a << "\n";
+		//a.Sort();
+		//pout << "a sorted=" << a << "\n";
+
 	}
 }
 

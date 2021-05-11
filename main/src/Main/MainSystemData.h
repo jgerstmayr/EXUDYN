@@ -363,14 +363,14 @@ public: //
 	//! get current (computation) time
 	Real PyGetCurrentTime()
 	{
-		PyWarning("mbs.systemData.GetCurrentTime() is deprecated! use mbs.systemData.GetTime(exu.ConfigurationType.Current) instead");
+		PyWarning("mbs.systemData.GetCurrentTime() is DEPRECATED! use mbs.systemData.GetTime(exu.ConfigurationType.Current) instead");
 		return cSystemData->GetCData().GetCurrent().GetTime();
 	}
 
 	//! set visualization time (for postprocessing, animations, etc.)
 	void PySetVisualizationTime(Real vTime)
 	{
-		PyWarning("mbs.systemData.SetVisualizationTime() is deprecated! use mbs.systemData.SetTime(exu.ConfigurationType.Visualization) instead");
+		PyWarning("mbs.systemData.SetVisualizationTime() is DEPRECATED! use mbs.systemData.SetTime(exu.ConfigurationType.Visualization) instead");
 		cSystemData->GetCData().GetVisualization().SetTime(vTime);
 	}
 

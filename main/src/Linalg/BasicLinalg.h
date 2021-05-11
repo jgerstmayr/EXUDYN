@@ -54,6 +54,7 @@ namespace EXUmath {
 #else
 	static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	static const Matrix3D zeroMatrix3D(3, 3, 0.);
 	static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
 	static const Vector3D unitVecX({ 1.,0.,0. });
 	static const Vector3D unitVecY({ 0.,1.,0. });
@@ -198,12 +199,20 @@ namespace EXUmath {
 	static const SlimVector<5> gaussRuleOrder9Weights({ 0.23692688505618914, 0.47862867049936636, 0.5688888888888889, 0.47862867049936636, 0.23692688505618914 });
 
 	//numerically integrate a function in interval [a,b]
+	//inline does not work on older MacOS
+#ifndef __APPLE__
 	inline auto NumIntegrate = [](Real(*function)(Real), auto& points, auto& weights, Real a, Real b)
 	{ 
 		Index cnt = 0; Real value = 0.;  
 		for (auto item : points) { Real x = 0.5*(b - a)*item + 0.5*(b + a); value += 0.5*(b - a)*weights[cnt++]*function(x); }
 	};
-
+#else
+	auto NumIntegrate = [](Real(*function)(Real), auto& points, auto& weights, Real a, Real b)
+	{
+		Index cnt = 0; Real value = 0.;
+		for (auto item : points) { Real x = 0.5*(b - a)*item + 0.5*(b + a); value += 0.5*(b - a)*weights[cnt++] * function(x); }
+	};
+#endif
 	//auto function = [](Real x) {return x*x; }; //define a function 
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

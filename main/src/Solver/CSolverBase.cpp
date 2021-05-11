@@ -32,6 +32,7 @@
 
 #include "Utilities/TimerStructure.h"
 #include <fstream>
+#include "Main/rendererPythonInterface.h" //for regular call to PyExecuteQueue(...)
 
 namespace py = pybind11;	//for py::object
 
@@ -735,8 +736,7 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 			py::exec(simulationSettings.staticSolver.preStepPyExecute.c_str(), scope);
 		}
 	}
-	PyProcessExecuteQueue(); //execute incoming python tasks if available
-	computationalSystem.GetPostProcessData()->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
+	DoIdleOperations(computationalSystem);
 	STOPTIMER(timer.python);
 }
 //! finish static step / time step; write output of results to file
@@ -840,7 +840,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	}
 
 	//update postprocess data only if visualization is running ...
-	if (computationalSystem.GetPostProcessData()->visualizationIsRunning)
+	if (computationalSystem.GetPostProcessData()->VisualizationIsRunning())
 	{
 		computationalSystem.UpdatePostProcessData(recordImage);
 	}
@@ -1034,7 +1034,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	while (!conv.linearSolverFailed && !conv.newtonConverged && 
 		!stopNewton && it.newtonSteps < newton.maxIterations)
 	{
-		if (data.nSys > 200) { PyProcessExecuteQueue(); computationalSystem.GetPostProcessData()->ProcessUserFunctionDrawing(); } //do this task regularly, specifically in large scale systems
+		if (data.nSys > 200) { 	DoIdleOperations(computationalSystem); } //do this task regularly, specifically in large scale systems
 
 		it.newtonSteps++; it.newtonStepsCount++;
 		if (IsVerbose(3)) { Verbose(3, "  Newton: STEP "  + EXUstd::ToString(it.newtonSteps) + ":\n"); }
@@ -1551,6 +1551,14 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void CSolverBase::DoIdleOperations(CSystem& computationalSystem)
+{
+	PyProcessExecuteQueue(); //execute incoming python tasks if available
+	computationalSystem.GetPostProcessData()->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
+
+	RendererDoSingleThreadedIdleTasks();
+}
 
 
 //! return true, if file or console output is at or above the given level

@@ -587,7 +587,9 @@ AccessFunctionType CObjectFFRFreducedOrder::GetAccessFunctionTypes() const
 //! however, DisplacementMassIntegral_q also works for the FFRF body!
 void CObjectFFRFreducedOrder::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
+#ifndef __APPLE__ //static_assert not supported by older MAC compilers
 	static_assert(CNodeRigidBody::nDim3D == CNodeRigidBody::maxDisplacementCoordinates); //add this code to raise compiler error, if max. number of displacement coordiantes changes in RigidBodyNode ==> requires reimplementation in this file!
+#endif
 	switch (accessType)
 	{
 	case AccessFunctionType::TranslationalVelocity_qt: //global translational velocity at localPosition derivative w.r.t. qt = L-matrix = [I   -A*uLocalTilde*Glocal]

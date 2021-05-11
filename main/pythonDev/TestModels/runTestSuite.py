@@ -10,11 +10,13 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys, platform
 
 if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 8:
     raise ImportError("EXUDYN only supports python versions >= 3.6 and <= 3.8")
-
+isMacOS = (sys.platform == 'darwin')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
@@ -26,7 +28,7 @@ import time
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #parse command line arguments:
 # -quiet
 writeToConsole = True  #do not output to console / shell
@@ -53,6 +55,8 @@ runCppUnitTests = True
 printTestResults = False #print list, which can be imported for new reference values
 if platform.architecture()[0] == '32bit':
     testTolerance = 2e-13 #larger tolerance, because reference values are computed with 64bit version (WHY?)
+elif isMacOS:
+    testTolerance = 2.5e-11 #use larger tolerance value due to different compilation (heavy top gives error > 2.2e-11)
 else:
     testTolerance = 5e-14
 
@@ -88,10 +92,13 @@ fileInfo=os.stat(exuCPP.__file__)
 exuDate = datetime.fromtimestamp(fileInfo.st_mtime) 
 exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 platformString = platform.architecture()[0]#'32bit'
 platformString += 'P'+str(sys.version_info.major) +'.'+ str(sys.version_info.minor)
+if isMacOS:
+    platformString += 'MacOSX'
 
 logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
@@ -109,6 +116,8 @@ exu.Print('testsuite date (now)= '+dateStr)
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.SetWriteToConsole(writeToConsole) #stop output from now on
 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 testFileList = [
                 'ANCFcontactCircleTest.py',
                 'ANCFcontactFrictionTest.py',
@@ -175,6 +184,8 @@ if runUnitTests:
     exu.Print('***********************\n')
     rvModelUnitTests = RunAllModelUnitTests(mbs, testInterface)
 SC.Reset()
+
+#sys.exit()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #run general test examples

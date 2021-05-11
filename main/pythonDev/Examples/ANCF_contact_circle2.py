@@ -109,7 +109,7 @@ if useContact:
 
 useCircleContact = True
 if useCircleContact:
-    nSegments = 2 #4; number of contact segments; must be consistent between nodedata and contact element
+    nSegments = 8 #4; number of contact segments; must be consistent between nodedata and contact element
     initialGapList = [0.1]*nSegments #initial gap of 0.1
 
     mGroundCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.65*L,-0.5,0])) 

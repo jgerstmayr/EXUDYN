@@ -53,10 +53,11 @@ public: //declared as public for direct access via pybind
 	const float contourPlotFlag = -2.f;	//!< this is the value of transparency used to identify contour plot values in GraphicsData items
 	//static constexpr float contourPlotFlag = -2.f;	//!< needs C++17 and is therefore avoided ...
 
+private:
 	//additional data for user functions
 	MainSystem* mainSystemUF;						//!< REMOVE: this is a temporary access to mainSystem for user functions
-	VisualizationSettings* visualizationSettingsUF; //!< REMOVE: set when setting postProcessData->requestUserFunctionDrawing; this is a temporary access to visualizationSettings for user functions
-
+	bool renderingActive;				//!< flag, which indicates that this system shall be drawn (true) or hidden (false)
+	//accessible through mainSytemUF: VisualizationSettings* visualizationSettingsUF; //!< REMOVE: set when setting postProcessData->requestUserFunctionDrawing; this is a temporary access to visualizationSettings for user functions
 
 public:
 	GraphicsData& GetGraphicsData() { return graphicsData; }
@@ -79,12 +80,16 @@ public:
 	void LinkToMainSystem(MainSystem* mainSystemInit);
 	//! link to postProcessData, which is the communication way of graphics to the computational system
 	void LinkPostProcessData(PostProcessData* postProcessDataInit);
+	//! set rendering true/false
+	void ActivateRendering(bool flag) { renderingActive = flag; }
+	//! check if rendering shall be done
+	bool IsRenderingActive() { return renderingActive; }
 
-	////! this function links the VisualizationSystem to a render engine, such that the changes in the graphics structure drawn upon updates, etc.
-	//bool LinkToRenderEngine(CSystem& cSystem);
+	//! return ID of mainSystem in MainSystemContainer
+	Index GetSystemID() const;
 
-	////! this function releases the VisualizationSystem from the render engine;
-	//bool DetachRenderEngine();
+	//! get backlink to MainSystem, needed for user functions and other specialized graphics operations
+	MainSystem* GetMainSystemBacklink();
 
 	//! reset all visualization functions for new system (but keep render engine linked)
 	void Reset();

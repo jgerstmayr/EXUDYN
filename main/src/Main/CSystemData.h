@@ -55,7 +55,6 @@ protected: //
 	Index numberOfCoordinatesAE;                    //!< global number of AE coordinates (sum of all node AE coordinates); must be synchronous to NumberOfItems in SystemState Vectors
 	Index numberOfCoordinatesData;                  //!< global number of Data variables/coordinates (sum of all node Data variables); must be synchronous to NumberOfItems in SystemState Vectors
 
-
 public:
 	//use lists that are directly accessible for now; performance?
 	ResizableArray<Index> objectsBodyWithODE2Coords;//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects)
@@ -117,6 +116,7 @@ public: //
 		objectsConstraintWithAE.Flush();
 		objectsWithAlgebraicEquations.Flush();
 		listObjectProjectedReactionForces.Flush();
+
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

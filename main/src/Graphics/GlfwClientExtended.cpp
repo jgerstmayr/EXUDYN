@@ -47,6 +47,140 @@
 #include "Graphics/characterBitmap.h"
 
 
+//for GetItemInformation, MainSystem*
+#include "Main/MainSystemData.h"
+#include "Main/MainSystem.h"
+//#include "Pymodules/PybindUtilities.h"
+#include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
+#include <pybind11/operators.h>
+#include <pybind11/numpy.h>       //interface to numpy
+#include <pybind11/buffer_info.h> //passing reference to matrix to numpy
+#include <pybind11/embed.h>       //scoped interpreter
+//does not work globally: #include <pybind11/iostream.h> //used to redirect cout:  py::scoped_ostream_redirect output;
+#include <pybind11/cast.h> //for arguments
+
+//extern py::dict PyGetInternalSelectionDict();
+//extern void PySetInternalSelectionDict(py::dict dict);
+extern void PyWriteToSysDictionary(const STDstring& key, py::object item);
+
+
+//! write dictionary for selected item; return true if success; MAY ONLY BE CALLED FROM PYTHON THREAD!!!
+bool GlfwRenderer::PySetRendererSelectionDict(Index itemID)
+{
+	Index itemIndex;
+	ItemType itemType;
+	Index mbsNumber;
+	ItemID2IndexType(itemID, itemIndex, itemType, mbsNumber);
+	if (mbsNumber >= basicVisualizationSystemContainer->NumberOFMainSystemsBacklink()) { return false; }
+	MainSystem* mainSystem = basicVisualizationSystemContainer->GetMainSystemBacklink(mbsNumber);
+	py::dict itemDict;
+	switch (itemType)
+	{
+	case ItemType::_None:
+		return false; break;
+	case ItemType::Node:
+		if (itemIndex < mainSystem->mainSystemData.GetMainNodes().NumberOfItems()) {
+			itemDict = mainSystem->mainSystemData.GetMainNodes().GetItem(itemIndex)->GetDictionary();
+			//itemTypeName = "Node" + py::cast<STDstring>(itemDict["nodeType"]);
+			//itemName = py::cast<STDstring>(itemDict["name"]);
+		}
+		else { return false; }
+		break;
+	case ItemType::Object:
+		if (itemIndex < mainSystem->mainSystemData.GetMainObjects().NumberOfItems()) {
+			itemDict = mainSystem->mainSystemData.GetMainObjects().GetItem(itemIndex)->GetDictionary();
+			//itemTypeName = "Object" + py::cast<STDstring>(itemDict["objectType"]);
+			//itemName = py::cast<STDstring>(itemDict["name"]);
+		}
+		else { return false; }
+		break;
+	case ItemType::Marker:
+		if (itemIndex < mainSystem->mainSystemData.GetMainMarkers().NumberOfItems()) {
+			itemDict = mainSystem->mainSystemData.GetMainMarkers().GetItem(itemIndex)->GetDictionary();
+			//itemTypeName = "Marker" + py::cast<STDstring>(itemDict["markerType"]);
+			//itemName = py::cast<STDstring>(itemDict["name"]);
+		}
+		else { return false; }
+		break;
+	case ItemType::Load:
+		if (itemIndex < mainSystem->mainSystemData.GetMainLoads().NumberOfItems()) {
+			itemDict = mainSystem->mainSystemData.GetMainLoads().GetItem(itemIndex)->GetDictionary();
+			//itemTypeName = "Load" + py::cast<STDstring>(itemDict["loadType"]);
+			//itemName = py::cast<STDstring>(itemDict["name"]);
+		}
+		else { return false; }
+		break;
+	case ItemType::Sensor:
+		if (itemIndex < mainSystem->mainSystemData.GetMainSensors().NumberOfItems()) {
+			itemDict = mainSystem->mainSystemData.GetMainSensors().GetItem(itemIndex)->GetDictionary();
+			//itemTypeName = "Sensor" + py::cast<STDstring>(itemDict["sensorType"]);
+			//itemName = py::cast<STDstring>(itemDict["name"]);
+		}
+		else { return false; }
+		break;
+	default:
+		return false;
+		break;
+	}
+	PyWriteToSysDictionary("currentRendererSelectionDict", itemDict);
+	return true;
+}
+
+//! retrieve basic item information from MainSystemBacklink; return true if success; thread safe (no Python calls)
+bool GlfwRenderer::GetItemInformation(Index itemID, STDstring& itemTypeName, STDstring& itemName)//, STDstring& itemInfo)
+{
+	Index itemIndex;
+	ItemType itemType;
+	Index mbsNumber;
+	ItemID2IndexType(itemID, itemIndex, itemType, mbsNumber);
+	if (mbsNumber >= basicVisualizationSystemContainer->NumberOFMainSystemsBacklink()) { return false; }
+	MainSystem* mainSystem = basicVisualizationSystemContainer->GetMainSystemBacklink(mbsNumber);
+	switch (itemType)
+	{
+	case ItemType::_None:
+		return false; break;
+	case ItemType::Node:
+		if (itemIndex < mainSystem->mainSystemData.GetMainNodes().NumberOfItems()) {
+			itemTypeName = STDstring("Node") + mainSystem->mainSystemData.GetMainNodes().GetItem(itemIndex)->GetTypeName();
+			itemName = mainSystem->mainSystemData.GetMainNodes().GetItem(itemIndex)->GetName();
+			return true;
+		}
+		break;
+	case ItemType::Object:
+		if (itemIndex < mainSystem->mainSystemData.GetMainObjects().NumberOfItems()) {
+			itemTypeName = STDstring("Object") + mainSystem->mainSystemData.GetMainObjects().GetItem(itemIndex)->GetTypeName();
+			itemName = mainSystem->mainSystemData.GetMainObjects().GetItem(itemIndex)->GetName();
+			return true;
+		}
+		break;
+	case ItemType::Marker:
+		if (itemIndex < mainSystem->mainSystemData.GetMainMarkers().NumberOfItems()) {
+			itemTypeName = STDstring("Marker") + mainSystem->mainSystemData.GetMainMarkers().GetItem(itemIndex)->GetTypeName();
+			itemName = mainSystem->mainSystemData.GetMainMarkers().GetItem(itemIndex)->GetName();
+			return true;
+		}
+		break;
+	case ItemType::Load:
+		if (itemIndex < mainSystem->mainSystemData.GetMainLoads().NumberOfItems()) {
+			itemTypeName = STDstring("Load") + mainSystem->mainSystemData.GetMainLoads().GetItem(itemIndex)->GetTypeName();
+			itemName = mainSystem->mainSystemData.GetMainLoads().GetItem(itemIndex)->GetName();
+			return true;
+		}
+		break;
+	case ItemType::Sensor:
+		if (itemIndex < mainSystem->mainSystemData.GetMainSensors().NumberOfItems()) {
+			itemTypeName = STDstring("Sensor") + mainSystem->mainSystemData.GetMainSensors().GetItem(itemIndex)->GetTypeName();
+			itemName = mainSystem->mainSystemData.GetMainSensors().GetItem(itemIndex)->GetName();
+			return true;
+		}
+		break;
+	default:
+		break;
+	}
+	return false; //nothing found, succuess=false
+}
+
 void GlfwRenderer::SetGLLights()
 {
 	if (visSettings->openGL.shadeModelSmooth) { glShadeModel(GL_SMOOTH); }

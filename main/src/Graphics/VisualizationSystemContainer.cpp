@@ -26,33 +26,34 @@
 
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
 
-
 //#ifdef USE_GLFW_GRAPHICS
 //#endif
 
-bool VisualizationSystemContainer::LinkToRenderEngine()
+bool VisualizationSystemContainer::AttachToRenderEngine()
 {
 #ifdef USE_GLFW_GRAPHICS
 
-	glfwRenderer.DetachVisualizationSystem(); //means, that every new systemcontainer links to the render engine and the old container is lost; necessary if an old systemcontainer is still linked
+	glfwRenderer.DetachVisualizationSystem(nullptr); //nullptr means, that every new systemcontainer links to the render engine and the old container is lost; necessary if an old systemcontainer is still linked
 
 	if (!glfwRenderer.LinkVisualizationSystem(&graphicsDataList, &settings, this, &renderState)) 
 		//(&graphicsData, &settings, this, &renderState))
 	{
-		SysError("VisualizationSystem::LinkToRenderEngine: Visualization cannot be linked to several systems at the same time yet!");
+		SysError("VisualizationSystemContainer::AttachToRenderEngine: Visualization cannot be linked to several SystemContainers at the same time; detach other SystemContainer first!");
 		return false;
 	}
 	return true;
 #else
+	PyWarning("AttachToRenderEngine(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
 	return false;
 #endif
 }
 
-bool VisualizationSystemContainer::DetachRenderEngine()
+bool VisualizationSystemContainer::DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer)
 {
 #ifdef USE_GLFW_GRAPHICS
-	return glfwRenderer.DetachVisualizationSystem();
+	return glfwRenderer.DetachVisualizationSystem(detachingVisualizationSystemContainer);
 #else
+	PyWarning("DetachFromRenderEngine(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
 	return false;
 #endif
 	
@@ -81,7 +82,7 @@ void VisualizationSystemContainer::UpdateGraphicsData()
 		if (cnt == 0 && settings.general.drawWorldBasis)
 		{
 			EXUvis::DrawOrthonormalBasis(Vector3D({ 0,0,0 }), EXUmath::unitMatrix3D, settings.general.worldBasisSize,
-				0.005*settings.general.worldBasisSize, item->GetGraphicsData(), -1, ItemType::_None); //world basis has no special index
+				0.005*settings.general.worldBasisSize, item->GetGraphicsData(), Index2ItemID(-1, ItemType::_None, 0)); //world basis has no special index
 		}
 		cnt++;
 	}
@@ -138,38 +139,62 @@ void VisualizationSystemContainer::ContinueSimulation()
 
 }
 
-//! renderer signals that visualizationIsRunning flag should be set to "flag"
-void VisualizationSystemContainer::SetVisualizationIsRunning(bool flag)
-{
-	//as we do not know, which simulation is executed, all system computations are interrupted
-	for (auto item : visualizationSystems)
-	{
-		item->postProcessData->visualizationIsRunning = flag;
-	}
-}
+//not needed any more, as visualizationSystem has backlink possibility to VisualizationSystemContainer; 
+//==> VisualizationSystemContainer has RendererIsRunning()
+////! renderer signals that visualizationIsRunning flag should be set to "flag"
+//void VisualizationSystemContainer::SetVisualizationIsRunning(bool flag)
+//{
+//	//as we do not know, which simulation is executed, all system computations are interrupted
+//	for (auto item : visualizationSystems)
+//	{
+//		item->postProcessData->visualizationIsRunning = flag;
+//	}
+//}
 
-//! this function waits for the stop flag in the render engine;
-bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
+//! check GLFW if renderer is running
+bool VisualizationSystemContainer::RendererIsRunning() const
 {
 #ifdef USE_GLFW_GRAPHICS
+	return glfwRenderer.WindowIsInitialized();
+#else
+	return false;
+#endif
+}
 
-	stopSimulationFlag = false; //initialize the flag, if used several times; this is thread safe
-	while (!stopSimulationFlag && glfwRenderer.WindowIsInitialized())
+
+//! this function does any idle operations (execute some python commands) and returns false if stop flag in the render engine, otherwise true;
+bool VisualizationSystemContainer::DoIdleOperations()
+{
+#ifdef USE_GLFW_GRAPHICS
+	if (!stopSimulationFlag && RendererIsRunning())
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		PyProcessExecuteQueue(); //use time to execute incoming python tasks
 		for (auto item : visualizationSystems)
 		{
 			item->postProcessData->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
 		}
+		RendererDoSingleThreadedIdleTasks();
+		return true;
+	}
+	else
+	{
+		stopSimulationFlag = false; //initialize the flag, if used several times; this is thread safe
 	}
 #endif
-	//now done in GlfwRenderer::StopRenderer
-	//for (auto item : visualizationSystems)
-	//{
-	//	item->postProcessData->visualizationIsRunning = false; //signal, that visualization is stopped now
-	//}
+	return false;
+}
 
+
+//! this function waits for the stop flag in the render engine;
+bool VisualizationSystemContainer::WaitForRenderEngineStopFlag()
+{
+#ifdef USE_GLFW_GRAPHICS
+	while (DoIdleOperations())
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	}
+#endif
 	return true;
 }
 
@@ -203,8 +228,10 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 	if (settings.general.autoFitScene)
 	{
 		//for now, use nodal reference coordinates to estimate the maximum zoom level
-		Vector3D pmax({ -1e30,-1e30,-1e30 });
-		Vector3D pmin({ 1e30,1e30,1e30 });
+		Vector3D pmax0({ -1e30,-1e30,-1e30 });
+		Vector3D pmin0({ 1e30,1e30,1e30 });
+		Vector3D pmax = pmax0;
+		Vector3D pmin = pmin0;
 		for (auto visSystem : visualizationSystems)
 		{
 			//! @todo extend VisualizationSystemContainer::UpdateMaximumSceneCoordinates for objects, markers and loads; maybe better to first draw all and zoom to full region?
@@ -224,6 +251,18 @@ void VisualizationSystemContainer::UpdateMaximumSceneCoordinates()
 				}
 
 			}
+		}
+		//check if some bad coordinates result
+		if (pmax == pmax0 || pmin == pmin0) 
+		{
+			pmin = Vector3D({ 0.,0.,0. });
+			pmax = Vector3D({ 1.,1.,1. });
+		}
+		else if (pmax == pmin)
+		{
+			Real d = 0.5;
+			pmax += Vector3D({ d,d,d });
+			pmin -= Vector3D({ d,d,d});
 		}
 		Vector3D center = 0.5*(pmin + pmax);
 
@@ -251,6 +290,23 @@ std::string VisualizationSystemContainer::GetComputationMessage(bool solverInfor
 	return std::string();
 }
 
+//! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
+MainSystem* VisualizationSystemContainer::GetMainSystemBacklink(Index iSystem)
+{
+	if (iSystem < visualizationSystems.NumberOfItems())
+	{
+		return visualizationSystems[iSystem]->GetMainSystemBacklink();
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+Index VisualizationSystemContainer::NumberOFMainSystemsBacklink() const
+{
+	return visualizationSystems.NumberOfItems();
+}
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -321,7 +377,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 									std::vector<float> gd = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
 
 									Index n = (Index)gd.size() / 3;
-									if (n * 3 != gd.size() || n < 2)
+									if (n * 3 != (Index)gd.size() || n < 2)
 									{
 										PyError("GraphicsData Line: data must be a float vector with exactly 3*n components and n > 1"); return false;
 									}

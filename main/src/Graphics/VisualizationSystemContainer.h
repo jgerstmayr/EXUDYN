@@ -92,12 +92,12 @@ public: //declared as public for direct access via pybind
 	RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	ResizableArray<VisualizationSystem*> visualizationSystems; //! linked to all visualization systems (placed in MainSystem); links need to be kept up-to-date by MainSystem Add/Delete
 	bool zoomAllRequest;				//! used to perform UpdateMaximumSceneCoordinates()
-	bool stopSimulationFlag;			//! used to wait for user to terminate simulation or render engine
 	bool updateGraphicsDataNow;			//! renderer signals to update the graphics data, e.g. if settings have changed; reset to false after UpdateGraphicsData(...) is called
 	std::string computationMessage;		//! message of computation to be shown in renderer window
 	bool saveImage;						//!< set true: signal to save the current state shall be rendered and saved to a given image (with consecutive number); will be set false, as soon as frame is saved
 	bool saveImageOpenGL;				//!< set true, as soon as graphics is updated (prevents that a frame is saved prior to updating to current visualization state); set false, as soon as frame is saved
 private:
+	bool stopSimulationFlag;			//! used to wait for user to terminate simulation or render engine
 	bool updateGraphicsDataNowInternal; //! internal signal to update the graphics data; reset to false after redraw 
 
 public:
@@ -110,8 +110,7 @@ public:
 		updateGraphicsDataNow = false;
 		stopSimulationFlag = false;
 
-		//this-pointer needed; too early?:
-		LinkToRenderEngine(); //links to render engine at the very beginning of the creation of the VisualizationSystemContainer
+		//now done in MainSystemContainer: AttachToRenderEngine(); //links to render engine at the very beginning of the creation of the VisualizationSystemContainer
 	}
 
 	//! list of GraphicsData of all visualizationSystems; linked from glfwclient!
@@ -133,13 +132,19 @@ public:
 	//void LinkPostProcessData(PostProcessData* postProcessDataInit);
 
 	//! this function links the VisualizationSystem to a render engine, such that the changes in the graphics structure drawn upon updates, etc.
-	bool LinkToRenderEngine(); // CSystem& cSystem);
+	bool AttachToRenderEngine();
 
-	//! this function releases the VisualizationSystem from the render engine;
-	bool DetachRenderEngine();
+	//! this function releases the VisualizationSystemContainer from the render engine (but not other VisualizationSystemContainers!);
+	bool DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer);
 
 	//! this function waits for the stop flag in the render engine;
 	bool WaitForRenderEngineStopFlag();
+
+	//! this function does any idle operations (execute some python commands) and returns false if stop flag in the render engine, otherwise true;
+	bool DoIdleOperations();
+
+	//! check GLFW if renderer is running
+	bool RendererIsRunning() const;
 
 	//! reset all visualization functions for new system (but keep render engine linked)
 	void Reset()
@@ -148,35 +153,31 @@ public:
 		{
 			item->Reset();
 		}
-		for (auto item : graphicsDataList)
-		{
-			item->FlushData();
-		}
+		//anyway done in item->Reset()
+		//for (auto item : graphicsDataList)
+		//{
+		//	item->FlushData();
+		//}
 		visualizationSystems.Flush();
 		graphicsDataList.Flush();
 
 	}
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//GRAPHICS FUNCTIONS
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//GRAPHICS FUNCTIONS, OVERRIDE from VisualizationSystemContainerBase
 
 	//! OpenGL renderer sends message that graphics shall be updated; update is only done, if current state has higher counter than already existing state
 	//  update is sent to all attached visualization systems
 	virtual void UpdateGraphicsData() override;
 	
-	//! internal signal to update the graphics data; reset to false after redraw 
-	virtual bool UpdateGraphicsDataNowInternal() const { return updateGraphicsDataNowInternal; } 
-
-	//! perform render update and save the current openGL window to file using the visualization settings
-	virtual void RedrawAndSaveImage();
-
 	//! Renderer reports to CSystem that simulation shall be interrupted
 	virtual void StopSimulation() override;		
 
 	//! renderer reports to simulation that simulation can be continued
 	virtual void ContinueSimulation() override;
 
-	//! renderer signals that visualizationIsRunning flag should be set to "flag"; used to know whether WaitForUserToContinue or UpdatePostProcessData shall be called by solver
-	virtual void SetVisualizationIsRunning(bool flag = true) override;
+	////! renderer signals that visualizationIsRunning flag should be set to "flag"; used to know whether WaitForUserToContinue or UpdatePostProcessData shall be called by solver
+	//virtual void SetVisualizationIsRunning(bool flag = true) override;
 
 	//! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box
 	virtual void UpdateMaximumSceneCoordinates() override;
@@ -201,7 +202,7 @@ public:
 	}
 
 	//! get zoom all request and reset to false
-	virtual bool GetAndResetZoomAllRequest()
+	virtual bool GetAndResetZoomAllRequest() override
 	{
 		if (zoomAllRequest) { zoomAllRequest = false; return true; }
 		return false;
@@ -210,6 +211,21 @@ public:
 	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual std::string GetComputationMessage(bool solverInformation = true, 
 		bool solutionInformation = true, bool solverTime = true) override;
+
+	//! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
+	virtual MainSystem* GetMainSystemBacklink(Index iSystem) override; 
+
+	//! REMOVE: get backlink to number of main systems, temporary for selection
+	virtual Index NumberOFMainSystemsBacklink() const;
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	//! internal signal to update the graphics data; reset to false after redraw 
+	virtual bool UpdateGraphicsDataNowInternal() const { return updateGraphicsDataNowInternal; }
+
+	//! perform render update and save the current openGL window to file using the visualization settings
+	virtual void RedrawAndSaveImage();
 
 	virtual void Print(std::ostream& os) const
 	{

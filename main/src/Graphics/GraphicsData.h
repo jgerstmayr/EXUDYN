@@ -110,7 +110,7 @@ public:
 	hMatrix4f transformation;	//!< used for rigidbody transformation, if object is rigid
 
 private:
-	std::atomic_flag lock = ATOMIC_FLAG_INIT;
+	std::atomic_flag lock;		
 	uint64_t visualizationCounter;
 	bool updateGraphicsDataNow; //! flag set by Renderer to recompute graphics data (e.g. when settings changed)
 	float contourCurrentMinValue; //! current minimum value for contour plot
@@ -121,6 +121,7 @@ public:
 	{
 		contourCurrentMinValue = EXUstd::_MAXFLOAT;
 		contourCurrentMaxValue = EXUstd::_MINFLOAT;
+		ClearLock();
 	}
 	//! Aquire lock for data, such that computation / visualization thread does not access data at the same time
 	void LockData() 
@@ -170,10 +171,10 @@ public:
 	}
 
 	Index AddLine(const Vector3D& point1, const Vector3D& point2, const Float4& color1, const Float4& color2, 
-		Index index, ItemType itemType)
+		Index itemID)
 	{
 		GLLine line;
-		line.itemID = Index2ItemID(index, itemType);
+		line.itemID = itemID;
 		line.point1 = Float3({ (float)point1[0],(float)point1[1],(float)point1[2] });
 		line.point2 = Float3({ (float)point2[0],(float)point2[1],(float)point2[2] });
 		line.color1 = color1;
@@ -181,10 +182,10 @@ public:
 		return glLines.Append(line);
 	}
 
-	Index AddPoint(const Vector3D& point, const Float4& color, Index index, ItemType itemType)
+	Index AddPoint(const Vector3D& point, const Float4& color, Index itemID)
 	{
 		GLPoint glPoint;
-		glPoint.itemID = Index2ItemID(index, itemType);
+		glPoint.itemID = itemID;
 		glPoint.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
 		glPoint.color = color;
 
@@ -194,10 +195,10 @@ public:
 	//! create circle i XY-plane with centerPoint, radius, color and numberOfSegments (0 ... use default value)
 	//Index AddCircleXY(const Vector3D& centerPoint, float radius, const Float4& color, Index numberOfSegments = 0, Index index, ItemType itemType)
 	Index AddCircleXY(const Vector3D& centerPoint, float radius, const Float4& color, Index numberOfSegments, 
-		Index index, ItemType itemType)
+		Index itemID)
 	{
 		GLCircleXY circle;
-		circle.itemID = Index2ItemID(index, itemType);
+		circle.itemID = itemID;
 		circle.point = Float3({ (float)centerPoint[0],(float)centerPoint[1],(float)centerPoint[2] });
 		circle.radius = radius;
 		circle.color = color;
@@ -207,10 +208,10 @@ public:
 
 	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Float4, 3>& colors, 
-		Index index, ItemType itemType)
+		Index itemID)
 	{
 		GLTriangle trig;
-		trig.itemID = Index2ItemID(index, itemType);
+		trig.itemID = itemID;
 
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
@@ -223,10 +224,10 @@ public:
 
 	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Vector3D, 3>& normals, const std::array<Float4, 3>& colors, 
-		Index index, ItemType itemType)
+		Index itemID)
 	{
 		GLTriangle trig;
-		trig.itemID = Index2ItemID(index, itemType);
+		trig.itemID = itemID;
 
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
@@ -240,10 +241,10 @@ public:
 	//! create text from string with 3D-point, color and size (0 ... use default text size)
 	//Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f, Index index, ItemType itemType)
 	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
-		Index index, ItemType itemType)
+		Index itemID)
 	{
 		GLText glText;
-		glText.itemID = Index2ItemID(index, itemType);
+		glText.itemID = itemID;
 
 		glText.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
 		glText.color = color;

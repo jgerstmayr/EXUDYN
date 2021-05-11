@@ -177,6 +177,42 @@ This will add a wheel in the \texttt{dist} folder.
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Build and install \codeName\ under Mac OS X?}
+\label{sec:build:MacOS}
+Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
+Requirements are an according Anaconda installation.
+
+Tested configuration:
+\bi
+  \item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory
+  \item Anaconda Navigator 1.9.7
+	\item Python 3.7.0
+	
+\ei
+
+Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
+\bi
+  \item install your Anaconda distribution including Spyder
+  \item close all Python programs (e.g. Spyder, Jupyter, ...)
+	\item run an Anaconda prompt (may need to be run as administrator)
+	\item if you cannot run Anaconda prompt directly, do:
+	\bi
+	  \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary)
+		\item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts})
+	  \item run 'activate.bat'
+	\ei
+	\item go to 'main' of your cloned github folder of exudyn
+	\item run: \texttt{python setup.py install}
+	\item read the output; if there are errors, try to solve them by installing appropriate modules
+\ei
+You can also create your own wheels, doing the above steps to activate the according python version and then calling (requires installation of Microsoft Visual Studio; recommended: VS2017):
+\bi
+  \item[] \texttt{python setup.py bdist\_wheel}
+\ei
+This will add a wheel in the \texttt{dist} folder.
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under UBUNTU?}
 \label{sec:build:ubuntu}
 Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python {\bf 3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \texttt{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:

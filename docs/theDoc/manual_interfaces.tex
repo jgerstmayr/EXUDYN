@@ -12,6 +12,7 @@ These are the access functions to the \codeName\ module.
   RequireVersion(requiredVersionString) & Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")\\ \hline 
   StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
+  DoRendererIdleTasks(waitSeconds = 0) & ONLY for SINGLE-THREADED environments (MAC OS); in order to interact with window, DoRendererIdleTasks() must be run; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed\\ \hline 
   SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
   SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
   ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
@@ -43,39 +44,42 @@ The SystemContainer is the top level of structures in \codeName. The container h
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
+  Reset() & delete all systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )\\ \hline 
   AddSystem() & add a new computational system\\ \hline 
+  NumberOfSystems() & obtain number of systems available in system container\\ \hline 
+  GetSystem(systemNumber) & obtain systems with index from system container\\ \hline 
   visualizationSettings & this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
     EXAMPLE:\tabnewline
     SC = exu.SystemContainer()\tabnewline
     SC.visualizationSettings.autoFitScene=False  \\ \hline  
-  TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & DEPRECATED, use exu.SolveDynamic(...) instead, see efSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
+  GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW\_GRAPHICS is deactivated\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{SC = exu.SystemContainer()\tabnewline
+    renderState = SC.GetRenderState() \tabnewline
+    print(renderState['zoom'])}}\\ \hline 
+  SetRenderState(renderState) & Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; will have no effect if GLFW\_GRAPHICS is deactivated\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{SC = exu.SystemContainer()\tabnewline
+    SC.SetRenderState(renderState)}}\\ \hline 
+  RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
+  WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
+  RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
+  RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
+  AttachToRenderEngine() & Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)\\ \hline 
+  DetachFromRenderEngine() & Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed\\ \hline 
+  GetCurrentMouseCoordinates(useOpenGLcoordinates = False) & Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane\\ \hline 
+  TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & DEPRECATED, use exu.SolveDynamic(...) instead, see \refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{simSettings = exu.SimulationSettings()\tabnewline
     simSettings.timeIntegration.numberOfSteps = 1000\tabnewline
     simSettings.timeIntegration.endTime = 2\tabnewline
     simSettings.timeIntegration.verboseMode = 1\tabnewline
     SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)}}\\ \hline 
-  StaticSolve(mainSystem, simulationSettings) & DEPRECATED, use exu.SolveStatic(...) insteadefSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)\tabnewline 
+  StaticSolve(mainSystem, simulationSettings) & DEPRECATED, use exu.SolveStatic(...) instead, see \refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{simSettings = exu.SimulationSettings()\tabnewline
     simSettings.staticSolver.newton.relativeTolerance = 1e-6\tabnewline
     SC.StaticSolve(mbs, simSettings)}}\\ \hline 
-  GetRenderState() & Get dictionary with current render state (openGL zoom, modelview, etc.)\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{SC = exu.SystemContainer()\tabnewline
-    renderState = SC.GetRenderState() \tabnewline
-    print(renderState['zoom'])}}\\ \hline 
-  SetRenderState(renderState) & Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{SC = exu.SystemContainer()\tabnewline
-    SC.SetRenderState(renderState)}}\\ \hline 
-  WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
-  RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
-  RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
-  GetCurrentMouseCoordinates(useOpenGLcoordinates = False) & Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane\\ \hline 
-  Reset() & delete all systems and reset SystemContainer (including graphics)\\ \hline 
-  NumberOfSystems() & obtain number of systems available in system container\\ \hline 
-  GetSystem(systemNumber) & obtain systems with index from system container\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -93,10 +97,12 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   AssembleLTGLists() & build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)\\ \hline 
   AssembleInitializeSystemCoordinates() & initialize all system-wide coordinates based on initial values given in nodes\\ \hline 
   Reset() & reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory\\ \hline 
+  GetSystemContainer() & return the systemContainer where the mainSystem (mbs) was created\\ \hline 
   WaitForUserToContinue() & interrupt further computation until user input --> 'pause' function\\ \hline 
   SendRedrawSignal() & this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated\\ \hline 
   GetRenderEngineStopFlag() & get the current stop simulation flag; true=user wants to stop simulation\\ \hline 
   SetRenderEngineStopFlag() & set the current stop simulation flag; set to false, in order to continue a previously user-interrupted simulation\\ \hline 
+  ActivateRendering(flag = true) & activate (flag=True) or deactivate (flag=False) rendering for this system\\ \hline 
   SetPreStepUserFunction() & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PreStepUserFunction(mbs, t):\tabnewline

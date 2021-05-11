@@ -253,14 +253,14 @@ if exudynTestGlobals.useGraphics:
     #plt.plot(data[:,0], data[:,2], 'g-',label='coin pos y') 
     #plt.plot(data[:,0], data[:,3], 'b-',label='coin pos z') 
 
-    data = np.loadtxt('solution/rollingDiscCarVel0.txt', comments='#', delimiter=',') 
-    #plt.plot(data[:,0], data[:,2], 'r-',label='car vel y') 
-    plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'r-',label='car |vel|') 
+    # data = np.loadtxt('solution/rollingDiscCarVel0.txt', comments='#', delimiter=',') 
+    # #plt.plot(data[:,0], data[:,2], 'r-',label='car vel y') 
+    # plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'r-',label='car |vel|') 
 
     data = np.loadtxt('solution/rollingDiscForce0.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'k-',label='friction force') 
 
-    data = np.loadtxt('solution/rollingDiscAngVel0.txt', comments='#', delimiter=',') 
+    data = np.loadtxt('solution/rollingDiscAngVelLocal0.txt', comments='#', delimiter=',') 
     #plt.plot(data[:,0], data[:,1], 'r-',label='ang vel x') 
 
     #data = np.loadtxt('solution/rollingDiscAngVelLocal.txt', comments='#', delimiter=',') 

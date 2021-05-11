@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,6 +40,7 @@ public: // AUTO:
   bool drawCoordinateSystem;                      //!< AUTO: false = no coordinate system shown
   bool drawWorldBasis;                            //!< AUTO: true = draw world basis coordinate system at (0,0,0)
   float worldBasisSize;                           //!< AUTO: size of world basis coordinate system
+  Index showHelpOnStartup;                        //!< AUTO: seconds to show help message on startup (0=deactivate)
   bool showComputationInfo;                       //!< AUTO: true = show (hide) all computation information including EXUDYN and version
   bool showSolutionInformation;                   //!< AUTO: true = show solution information (from simulationSettings.solution)
   bool showSolverInformation;                     //!< AUTO: true = solver name and further information shown in render window
@@ -50,7 +51,8 @@ public: // AUTO:
   Index cylinderTiling;                           //!< AUTO: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
   Index sphereTiling;                             //!< AUTO: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
   Index axesTiling;                               //!< AUTO: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
-  bool threadSafeGraphicsUpdate;                  //!< AUTO: true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations
+  bool threadSafeGraphicsUpdate;                  //!< AUTO: true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state
+  bool useMultiThreadedRendering;                 //!< AUTO: true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW
 
 
 public: // AUTO: 
@@ -71,6 +73,7 @@ public: // AUTO:
     drawCoordinateSystem = true;
     drawWorldBasis = false;
     worldBasisSize = 1.0f;
+    showHelpOnStartup = 5;
     showComputationInfo = true;
     showSolutionInformation = true;
     showSolverInformation = true;
@@ -81,6 +84,7 @@ public: // AUTO:
     sphereTiling = 6;
     axesTiling = 12;
     threadSafeGraphicsUpdate = true;
+    useMultiThreadedRendering = true;
   };
 
   // AUTO: access functions
@@ -98,6 +102,11 @@ public: // AUTO:
   void PySetBackgroundColorBottom(const std::array<float,4>& backgroundColorBottomInit) { backgroundColorBottom = backgroundColorBottomInit; }
   //! AUTO: Read (Copy) access to: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   std::array<float,4> PyGetBackgroundColorBottom() const { return (std::array<float,4>)(backgroundColorBottom); }
+
+  //! AUTO: Set function (needed in pybind) for: seconds to show help message on startup (0=deactivate)
+  void PySetShowHelpOnStartup(const Index& showHelpOnStartupInit) { showHelpOnStartup = EXUstd::GetSafelyPInt(showHelpOnStartupInit,"showHelpOnStartup"); }
+  //! AUTO: Read (Copy) access to: seconds to show help message on startup (0=deactivate)
+  Index PyGetShowHelpOnStartup() const { return (Index)(showHelpOnStartup); }
 
   //! AUTO: Set function (needed in pybind) for: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
   void PySetCircleTiling(const Index& circleTilingInit) { circleTiling = EXUstd::GetSafelyPInt(circleTilingInit,"circleTiling"); }
@@ -137,6 +146,7 @@ public: // AUTO:
     os << "  drawCoordinateSystem = " << drawCoordinateSystem << "\n";
     os << "  drawWorldBasis = " << drawWorldBasis << "\n";
     os << "  worldBasisSize = " << worldBasisSize << "\n";
+    os << "  showHelpOnStartup = " << showHelpOnStartup << "\n";
     os << "  showComputationInfo = " << showComputationInfo << "\n";
     os << "  showSolutionInformation = " << showSolutionInformation << "\n";
     os << "  showSolverInformation = " << showSolverInformation << "\n";
@@ -148,6 +158,7 @@ public: // AUTO:
     os << "  sphereTiling = " << sphereTiling << "\n";
     os << "  axesTiling = " << axesTiling << "\n";
     os << "  threadSafeGraphicsUpdate = " << threadSafeGraphicsUpdate << "\n";
+    os << "  useMultiThreadedRendering = " << useMultiThreadedRendering << "\n";
     os << "\n";
   }
 
@@ -166,7 +177,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -244,7 +255,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -335,7 +346,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -392,7 +403,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -468,7 +479,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -557,7 +568,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -626,7 +637,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -704,7 +715,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -773,7 +784,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -860,7 +871,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1007,7 +1018,9 @@ public: // AUTO:
     os << "  initialCenterPoint = " << initialCenterPoint << "\n";
     os << "  initialZoom = " << initialZoom << "\n";
     os << "  initialMaxSceneSize = " << initialMaxSceneSize << "\n";
+#ifndef __APPLE__
     os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
+#endif
     os << "  multiSampling = " << multiSampling << "\n";
     os << "  lineWidth = " << lineWidth << "\n";
     os << "  lineSmooth = " << lineSmooth << "\n";
@@ -1061,7 +1074,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1132,7 +1145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1156,8 +1169,11 @@ public: // AUTO:
   float zoomStepFactor;                           //!< AUTO: change of zoom per keypress (keypad +/-) or mouse wheel increment
   int highlightItemIndex;                         //!< AUTO: index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
   ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
+  Index highlightMbsNumber;                       //!< AUTO: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
   Float4 highlightColor;                          //!< AUTO: cRGB color for highlighted item; 4th value is alpha-transparency
   Float4 highlightOtherColor;                     //!< AUTO: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  bool selectionLeftMouse;                        //!< AUTO: True: left mouse click on items and show basic information
+  bool selectionRightMouse;                       //!< AUTO: True: right mouse click on items and show dictionary (read only!)
 
 
 public: // AUTO: 
@@ -1170,11 +1186,19 @@ public: // AUTO:
     zoomStepFactor = 1.15f;
     highlightItemIndex = -1;
     highlightItemType = ItemType::_None;
+    highlightMbsNumber = 0;
     highlightColor = Float4({0.8f,0.05f,0.05f,0.75f});
     highlightOtherColor = Float4({0.5f,0.5f,0.5f,0.4f});
+    selectionLeftMouse = true;
+    selectionRightMouse = false;
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
+  void PySetHighlightMbsNumber(const Index& highlightMbsNumberInit) { highlightMbsNumber = EXUstd::GetSafelyUInt(highlightMbsNumberInit,"highlightMbsNumber"); }
+  //! AUTO: Read (Copy) access to: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
+  Index PyGetHighlightMbsNumber() const { return (Index)(highlightMbsNumber); }
+
   //! AUTO: Set function (needed in pybind) for: cRGB color for highlighted item; 4th value is alpha-transparency
   void PySetHighlightColor(const std::array<float,4>& highlightColorInit) { highlightColor = highlightColorInit; }
   //! AUTO: Read (Copy) access to: cRGB color for highlighted item; 4th value is alpha-transparency
@@ -1195,8 +1219,11 @@ public: // AUTO:
     os << "  zoomStepFactor = " << zoomStepFactor << "\n";
     os << "  highlightItemIndex = " << highlightItemIndex << "\n";
     os << "  highlightItemType = " << highlightItemType << "\n";
+    os << "  highlightMbsNumber = " << highlightMbsNumber << "\n";
     os << "  highlightColor = " << highlightColor << "\n";
     os << "  highlightOtherColor = " << highlightOtherColor << "\n";
+    os << "  selectionLeftMouse = " << selectionLeftMouse << "\n";
+    os << "  selectionRightMouse = " << selectionRightMouse << "\n";
     os << "\n";
   }
 
@@ -1215,7 +1242,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-05-03 (last modfied)
+* @date         AUTO: 2021-05-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

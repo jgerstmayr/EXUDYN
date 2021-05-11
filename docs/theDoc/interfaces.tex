@@ -279,6 +279,7 @@ VSettingsGeneral has the following items:
     drawCoordinateSystem &     bool &      &     True &     false = no coordinate system shown\\ \hline
     drawWorldBasis &     bool &      &     False &     true = draw world basis coordinate system at (0,0,0)\\ \hline
     worldBasisSize &     float &      &     1.0 &     size of world basis coordinate system\\ \hline
+    showHelpOnStartup &     PInt &      &     5 &     seconds to show help message on startup (0=deactivate)\\ \hline
     showComputationInfo &     bool &      &     True &     true = show (hide) all computation information including EXUDYN and version\\ \hline
     showSolutionInformation &     bool &      &     True &     true = show solution information (from simulationSettings.solution)\\ \hline
     showSolverInformation &     bool &      &     True &     true = solver name and further information shown in render window\\ \hline
@@ -289,7 +290,8 @@ VSettingsGeneral has the following items:
     cylinderTiling &     PInt &      &     16 &     global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)\\ \hline
     sphereTiling &     PInt &      &     6 &     global number of segments for spheres; if smaller than 2, 2 segments are used (flat)\\ \hline
     axesTiling &     PInt &      &     12 &     global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
-    threadSafeGraphicsUpdate &     bool &      &     True &     true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations\\ \hline
+    threadSafeGraphicsUpdate &     bool &      &     True &     true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state\\ \hline
+    useMultiThreadedRendering &     bool &      &     True &     true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -568,8 +570,11 @@ VSettingsInteractive has the following items:
     zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
     highlightItemIndex &     Int &      &     -1 &     index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted\\ \hline
     highlightItemType &     ItemType &      &     ItemType::\_None &     item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)\\ \hline
+    highlightMbsNumber &     UInt &      &     0 &     index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)\\ \hline
     highlightColor &     Float4 &     4 &     [0.8,0.05,0.05,0.75] &     \tabnewline cRGB color for highlighted item; 4th value is alpha-transparency\\ \hline
     highlightOtherColor &     Float4 &     4 &     [0.5,0.5,0.5,0.4] &     \tabnewline cRGB color for other items (which are not highlighted); 4th value is alpha-transparency\\ \hline
+    selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
+    selectionRightMouse &     bool &      &     False &     True: right mouse click on items and show dictionary (read only!)\\ \hline
 	  \end{longtable}
 	\end{center}
 

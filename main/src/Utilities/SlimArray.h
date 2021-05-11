@@ -244,7 +244,8 @@ public:
     }
 
     //! Sort items in ascending order, using external Quicksort(...) function; 
-    void Sort() { EXUstd::QuickSort(*this); }
+	//does not compile on MacOS:
+	//void Sort() { EXUstd::QuickSort(*this); }
 
     //! set items according to initializer list: SlimArray<3> ({1.0, 3.14, 5.5});
     void Set(std::initializer_list<T> listOfItems) //pass by value as a standard in C++11

@@ -499,7 +499,10 @@ bool SolverStatic::SolveSystemTemplate(CSystem& computationalSystem, const Simul
 			loadStepNumber++; //first step = 0
 		}
 
-		if (simulationSettings.pauseAfterEachStep && !abortStaticSolver && !computationalSystem.GetPostProcessData()->stopSimulation) { computationalSystem.GetPostProcessData()->WaitForUserToContinue(); }
+		if (simulationSettings.pauseAfterEachStep && !abortStaticSolver && !computationalSystem.GetPostProcessData()->stopSimulation) 
+		{ 
+			computationalSystem.GetPostProcessData()->WaitForUserToContinue(); 
+		}
 
 	} //load steps loop
 

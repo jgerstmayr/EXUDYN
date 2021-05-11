@@ -379,7 +379,10 @@ The following table includes the mouse functions.
 	\hline
   \bf Button & action & \bf remarks \\ \hline
   \bf left mouse button & move model & keep left mouse button pressed to move the model in the current x/y plane\\ \hline
-  \bf right mouse button & rotate model & keep right mouse button pressed to rotate model around current current $X_1$/$X_2$ axes\\ \hline
+  \bf left mouse button & select item & mouse click on any node, object, etc.\ to see its basic information in status line \\ \hline
+  \bf right mouse button & rotate model & keep right mouse button pressed to rotate model around current current $X_1$/$X_2$ axes\\
+	\bf right mouse button & show item dictionary & [EXPERIMENTAL, must be activated in visualizationSettings.interactive] (short) press and release right mouse button \\ \hline
+\hline
   \bf mouse wheel & zoom & use mouse wheel to zoom (on touch screens 'pinch-to-zoom' might work as well) \\ \hline
   \end{longtable}
 \end{center}
@@ -395,9 +398,7 @@ The following table includes the keyboard shortcuts available in the window.
   \begin{longtable}{| p{4cm} | p{4cm} | p{8cm} |} 
 	\hline
   \bf Key(s) & action & \bf remarks \\ \hline
-  \bf 1,2,3,4 or 5 & visualization update speed & the entered digit controls the visualization update, which can be changed from 1=1 update per 20ms to 5=1 update per 100s\\ \hline
-  \bf '.' or KEYPAD + & zoom in & zoom one step into scene (additionally press CTRL to perform small zoom step)\\ \hline
-  \bf ',' or KEYPAD - & zoom out & zoom one step out of scene (additionally press CTRL to perform small zoom step)\\ \hline
+  \bf 1,2,3,4 or 5 & visualization update speed & the entered digit controls the visualization update, ranging within 0.02, 0.1 (default), 0.5, 2, and 100 seconds \\ \hline
 	%
   %\bf 0 or KEYPAD 0& reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
   \bf CTRL+1 or SHIFT+CTRL+1& change view& set view in 1/2-plane (+SHIFT: view from opposite side) \\ \hline
@@ -409,7 +410,6 @@ The following table includes the keyboard shortcuts available in the window.
 
   \bf A & zoom all & set zoom such that the whole scene is visible \\ \hline
   \bf CURSOR UP, DOWN, ... & move scene& use coursor keys to move the scene up, down, left, and right (use CTRL for small movements)\\ \hline
-  \bf KEYPAD 2/8,4/6,1/9 & rotate scene & about 1, 2 and 3-axis (use CTRL for small rotations) \\ \hline
 	%
   \bf C & show/hide connectors & pressing this key switches the visibility of connectors \\ \hline
   \bf CTRL+C & show/hide connector numbers & pressing this key switches the visibility of connector numbers \\ \hline
@@ -429,7 +429,7 @@ The following table includes the keyboard shortcuts available in the window.
 	\bf S & show/hide sensors & pressing this key switches the visibility of sensors \\ \hline
   \bf CTRL+S & show/hide sensor numbers & pressing this key switches the visibility of sensor numbers \\ \hline
   %
-	\bf T & faces transparent & add transparency to all faces (bodies, finite elements) in order to make node/marker/object numbers visible \\ \hline
+	\bf T & faces / edges mode & switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces visible \\ \hline
   %
 	\bf Q & stop simulation & simulation is stopped and cannot be recovered \\ \hline
 	%
@@ -438,8 +438,26 @@ The following table includes the keyboard shortcuts available in the window.
 	%
 	\bf V & visualization settings & open dialog to modify visualization settings; dialog may appear behind the visualization window! \\ \hline
 	%
+	\bf F3 & show mouse coordinates& shown in status line \\ \hline
   \bf ESCAPE & close render window & stops the simulation and closes the render window \\ \hline
   \bf SPACE & continue simulation & if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'\\ \hline
+%
+	%\bf F2 & ignore keys &  \\ \hline
+  %\bf KEYPAD 2/8,4/6,1/9 & rotate scene & about 1, 2 and 3-axis (use CTRL for small rotations) \\ \hline
+  %\bf '.' or KEYPAD + & zoom in & zoom one step into scene (additionally press CTRL to perform small zoom step)\\ \hline
+  %\bf ',' or KEYPAD - & zoom out & zoom one step out of scene (additionally press CTRL to perform small zoom step)\\ \hline
+  \end{longtable}
+\end{center}
+
+Special keys:
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4cm} | p{4cm} | p{8cm} |} 
+	\hline
+	\bf F2 & ignore keys & ignore all keyboard input, except for KeyPress user function, F2 and escape \\ \hline
+  \bf KEYPAD 2/8,4/6,1/9 & rotate scene & about 1, 2 and 3-axis (use CTRL for small rotations) \\ \hline
+  \bf '.' or KEYPAD + & zoom in & zoom one step into scene (additionally press CTRL to perform small zoom step)\\ \hline
+  \bf ',' or KEYPAD - & zoom out & zoom one step out of scene (additionally press CTRL to perform small zoom step)\\ \hline
   \end{longtable}
 \end{center}
 

@@ -176,7 +176,7 @@ def ParameterFunction(parameterSet):
             setLoad = load
             omega = mbs.GetNodeOutput(nRigid1,variableType = exu.OutputVariableType.AngularVelocity)[2]
             if omega > 2*pi*2:
-                print("t=",t)
+                #print("t=",t)
                 userLoadOn = False
         return setLoad
     

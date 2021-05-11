@@ -313,13 +313,13 @@ void case_template_array_extended_test(lest::env & lest_env)
             EXPECT(b == 1);
             EXPECT(c == EXUstd::InvalidIndex);
         };
-        SECTION("Sort")
-        {
-            a1[0] = 100;
-            a1.Sort();
-            EXPECT(a1[0] == 2.2);
-            EXPECT(a1[1] == 100);
-        }
+        //SECTION("Sort")
+        //{
+        //    a1[0] = 100;
+        //    a1.Sort();
+        //    EXPECT(a1[0] == 2.2);
+        //    EXPECT(a1[1] == 100);
+        //}
     }
 };
 

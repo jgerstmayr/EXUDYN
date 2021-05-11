@@ -188,6 +188,9 @@ public:
 		else { return simulationSettings.timeIntegration.endTime; }
 	}
 
+	//! do some idle operations for update of waiting Python queues (multithreaded) or for graphics update (single-threaded)
+	virtual void DoIdleOperations(CSystem& computationalSystem);
+
 	//! return true, if file or console output is at or above the given level
 	virtual bool IsVerboseCheck(Index level) const
 	{ 

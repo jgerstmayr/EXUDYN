@@ -248,26 +248,28 @@ writeFile=SimulationSettings.h
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class = SolverContainer
-appendToFile=False
-classDescription = "Container for handling all different available solvers"
-#V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,  solverRK1,						,  		, SolverRK1, 					, 		     ,     A, "first order Runge-Kutta solver (explicit Euler)"
-V,  solverStatic,					,  		, SolverStatic, 				, 	     ,     A, "static (non-)linear solver; requires a statically solvable system"
-V,  solverGeneralizedAlpha,,  		   , SolverGeneralizedAlpha, 	, 		  ,     A, "second order generalized-alpha, implicit trapezoidal rule or Newmark"
+# DELETE:
+# removed 2021-05-07: 
+# class = SolverContainer
+# appendToFile=False
+# classDescription = "Container for handling all different available solvers"
+# #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
+# V,  solverRK1,						,  		, SolverRK1, 					, 		     ,     A, "first order Runge-Kutta solver (explicit Euler)"
+# V,  solverStatic,					,  		, SolverStatic, 				, 	     ,     A, "static (non-)linear solver; requires a statically solvable system"
+# V,  solverGeneralizedAlpha,,  		   , SolverGeneralizedAlpha, 	, 		  ,     A, "second order generalized-alpha, implicit trapezoidal rule or Newmark"
+# #
+# writeFile=SystemContainer.h
 #
-writeFile=SystemContainer.h
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class = SystemContainer
-appendToFile=True
-classDescription = "Container class for all several computable systems (with according AdminSystem); several CSystems could be used in parallel."
-#V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-V,   cSystems,			             ,  		, ResizableArray<CSystem*>, 	 , 	 ,      A, "contains one or a set of complete multibody/finite element systems"
-#V,  visualizationSystem,			, 	 	, VisualizationSystem,  			,     , 		, "contains all linking to visualization"
-V,   solvers,						        , 	 	  , SolverContainer,  			    , 	 ,      A, "contains a structure with all solver-relevant structures (dynamic, static, etc.)"
-#
-writeFile=SystemContainer.h
+# #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# class = SystemContainer
+# appendToFile=True
+# classDescription = "Container class for all several computable systems (with according AdminSystem); several CSystems could be used in parallel."
+# #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
+# V,   cSystems,			             ,  		, ResizableArray<CSystem*>, 	 , 	 ,      A, "contains one or a set of complete multibody/finite element systems"
+# #V,  visualizationSystem,			, 	 	, VisualizationSystem,  			,     , 		, "contains all linking to visualization"
+# #removed 2021-05-07: V,   solvers,						        , 	 	  , SolverContainer,  			    , 	 ,      A, "contains a structure with all solver-relevant structures (dynamic, static, etc.)"
+# #
+# writeFile=SystemContainer.h
 
 
 
@@ -301,6 +303,7 @@ V,      coordinateSystemSize,           , 	             ,     float,        "5.f
 V,      drawCoordinateSystem,           , 	             ,     bool,         true,                   , P,      "false = no coordinate system shown"
 V,      drawWorldBasis,                 , 	             ,     bool,         false,                  , P,      "true = draw world basis coordinate system at (0,0,0)"
 V,      worldBasisSize,                 , 	             ,     float,        "1.0f",                 , P,      "size of world basis coordinate system"
+V,      showHelpOnStartup,              , 	             ,     PInt,         5,                      , P,      "seconds to show help message on startup (0=deactivate)"
 V,      showComputationInfo,            , 	             ,     bool,         true,                   , P,      "true = show (hide) all computation information including EXUDYN and version"
 V,      showSolutionInformation,        , 	             ,     bool,         true,                   , P,      "true = show solution information (from simulationSettings.solution)"
 V,      showSolverInformation,          , 	             ,     bool,         true,                   , P,      "true = solver name and further information shown in render window"
@@ -311,7 +314,8 @@ V,      circleTiling,                   , 	             ,     PInt,         "16"
 V,      cylinderTiling,                 , 	             ,     PInt,         "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
 V,      sphereTiling,                   , 	             ,     PInt,         "6",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
 V,      axesTiling,                     , 	             ,     PInt,         "12",                   , P,      "global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)"
-V,      threadSafeGraphicsUpdate,       , 	             ,     bool,         true,                   , P,      "true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations"
+V,      threadSafeGraphicsUpdate,       , 	             ,     bool,         true,                   , P,      "true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state"
+V,      useMultiThreadedRendering,      , 	             ,     bool,         true,                   , P,      "true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW"
 #
 writeFile=VisualizationSettings.h
 
@@ -547,9 +551,12 @@ V,      zoomStepFactor,                 , 	             ,     float,        "1.1
 #
 V,      highlightItemIndex,             , 	             ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted"
 V,      highlightItemType,              , 	             ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)"
+V,      highlightMbsNumber,             , 	             ,     UInt,         "0",                    , P,      "index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)"
 V,      highlightColor,                 , 	             4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "cRGB color for highlighted item; 4th value is alpha-transparency"
 V,      highlightOtherColor,            , 	             4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "cRGB color for other items (which are not highlighted); 4th value is alpha-transparency"
 #
+V,      selectionLeftMouse,             , 	             ,     bool,         true,                  , P,      "True: left mouse click on items and show basic information"
+V,      selectionRightMouse,            , 	             ,     bool,         false,                 , P,      "True: right mouse click on items and show dictionary (read only!)"
 writeFile=VisualizationSettings.h
 
 

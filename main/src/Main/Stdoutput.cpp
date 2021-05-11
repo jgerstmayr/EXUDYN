@@ -119,7 +119,7 @@ std::ostream pout(&outputBuffer);  // link ostream pout to buffer; pout behaves 
 
 bool globalPyRuntimeErrorFlag = false; //this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
 bool deactivateGlobalPyRuntimeErrorFlag = false; //this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
-std::atomic_flag outputBufferAtomicFlag;   //!< flag, which is used to lock access to outputBuffer
+std::atomic_flag outputBufferAtomicFlag = ATOMIC_FLAG_INIT;   //!< flag, which is used to lock access to outputBuffer
 
 //! used to print to python; string is temporary stored and written as soon as '\n' is detected
 int OutputBuffer::overflow(int c)
@@ -180,15 +180,23 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 
 void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber) //!< retrieve current parsed file information from python (for error/warning messages...)
 {
-	py::module inspect = py::module::import("inspect");
-	py::object currentFrame = inspect.attr("currentframe")();
-	lineNumber = int(py::int_(currentFrame.attr("f_lineno")));
+	try
+	{
+		py::module inspect = py::module::import("inspect");
+		py::object currentFrame = inspect.attr("currentframe")();
+		lineNumber = int(py::int_(currentFrame.attr("f_lineno")));
 
-	//python usage: fn = inspect.getframeinfo(inspect.currentframe()).filename
-	py::object frameInfo = inspect.attr("getframeinfo")(currentFrame);
-	fileName = std::string(py::str(frameInfo.attr("filename")));
+		//python usage: fn = inspect.getframeinfo(inspect.currentframe()).filename
+		py::object frameInfo = inspect.attr("getframeinfo")(currentFrame);
+		fileName = std::string(py::str(frameInfo.attr("filename")));
 
-	//py::print(std::string("info has been called from: ") + fileName + std::string(" at line ") + EXUstd::ToString(line));
+		//py::print(std::string("info has been called from: ") + fileName + std::string(" at line ") + EXUstd::ToString(line));
+	}
+	catch (...) //any other exception
+	{
+		fileName = "unknown file";
+		lineNumber = 0;
+	}
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
@@ -235,7 +243,8 @@ void SysError(std::string error_msg)
 void SysError(std::string error_msg, std::ofstream& file) 
 {
 	if (!deactivateGlobalPyRuntimeErrorFlag) { globalPyRuntimeErrorFlag = true; }//stop graphics, etc.
-	globalPyRuntimeErrorFlag = true; //stop graphics, etc.
+	//globalPyRuntimeErrorFlag = true; //stop graphics, etc.
+
 	STDstring fileName;
 	Index lineNumber;
 	PyGetCurrentFileInformation(fileName, lineNumber);
@@ -280,133 +289,4 @@ void PyWarning(std::string warning_msg, std::ofstream& file)
 	}
 }
 
-//these are global variables, as they are accessed from GLFW and from main part
-std::atomic_flag queuedPythonExecutableCodeAtomicFlag;  //!< flag for executable python code
-STDstring queuedPythonExecutableCodeStr;					//!< this string contains python code which shall be executed
-
-std::atomic_flag queuedRendererKeyListAtomicFlag;	//!< flag for queuedRendererKeyList
-ResizableArray<SlimArray<int, 3>> queuedRendererKeyList;	//!< this list contains keys that are transferred to python
-std::function<void(int, int, int)> keyPressUserFunction = 0; //!< must be set by GLFW, before that nothing is done; should not be changed too often, as it is not stored in list
-
-//! put executable string into queue, which is called from main thread
-void PyQueueExecutableString(STDstring str) //call python function and execute string as python code
-{
-	EXUstd::WaitAndLockSemaphore(queuedPythonExecutableCodeAtomicFlag); //lock queuedPythonExecutableCodeStr
-	queuedPythonExecutableCodeStr += '\n' + str; //for safety add a "\n", as the last command may include spaces, tabs, ... at the end
-	EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
-}
-
-//! put executable key codes into queue, which is called from main thread
-void PyQueueKeyPressed(int key, int action, int mods, std::function<void(int, int, int)> keyPressUserFunctionInit) //call python user function
-{
-	EXUstd::WaitAndLockSemaphore(queuedRendererKeyListAtomicFlag); //lock queuedRendererKeyListAtomicFlag
-	queuedRendererKeyList.Append(SlimArray<int,3>({key, action, mods}));
-	keyPressUserFunction = keyPressUserFunctionInit;
-	EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedRendererKeyListAtomicFlag
-}
-
-void PyProcessExecuteQueue() //call python function and execute string as python code
-{
-	EXUstd::WaitAndLockSemaphore(queuedPythonExecutableCodeAtomicFlag); //lock queuedPythonExecutableCodeStr
-	if (queuedPythonExecutableCodeStr.size())
-	{
-		STDstring execStr = queuedPythonExecutableCodeStr;
-		queuedPythonExecutableCodeStr.clear();
-		
-		EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
-		deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
-
-		try //catch exceptions; user may want to continue after a illegal python command 
-		{
-			py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-			py::exec(execStr.c_str(), scope);
-		}
-		//mostly catches python errors:
-		catch (const pybind11::error_already_set& ex)
-		{
-			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!");
-			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again (don't know why!)!
-			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
-		}
-		catch (const EXUexception& ex)
-		{
-			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!!");
-			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again (don't know why!)!
-			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
-		}
-		catch (...) //any other exception
-		{
-			PyWarning("Error when executing '" + STDstring(execStr) + "'\nmaybe a module is missing and check your python code!!");
-		}
-		deactivateGlobalPyRuntimeErrorFlag = false; 
-	}
-	else
-	{
-		EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
-	}
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//process pressed keys:
-	EXUstd::WaitAndLockSemaphore(queuedRendererKeyListAtomicFlag); //lock queuedPythonExecutableCodeStr
-	if (queuedRendererKeyList.NumberOfItems() != 0)
-	{
-		ResizableArray<SlimArray<int, 3>> keyList = queuedRendererKeyList; //immediately copy list for small interaction with graphics part
-		//std::cout << "keylist=" << keyList << "\n";
-		std::function<void(int, int, int)> localKeyPressUserFunction = keyPressUserFunction;
-		queuedRendererKeyList.SetNumberOfItems(0); //clear list
-		
-		EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
-		
-		deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
-
-		if (localKeyPressUserFunction) //check if function is available!
-		{
-			for (auto key : keyList)
-			{
-				//std::cout << "call key=" << key << "\n";
-				try //catch exceptions; user may want to continue after a illegal python command 
-				{
-					localKeyPressUserFunction(key[0], key[1], key[2]);
-				}
-				//mostly catches python errors:
-				catch (const pybind11::error_already_set& ex)
-				{
-					PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "':\n" + STDstring(ex.what()) + "\n; check function parameters!");
-					deactivateGlobalPyRuntimeErrorFlag = false;
-					throw; //avoid multiple exceptions trown again (don't know why!)!
-				}
-				catch (const EXUexception& ex)
-				{
-					PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "':\n" + STDstring(ex.what()) + "\n; check function parameters!");
-					deactivateGlobalPyRuntimeErrorFlag = false;
-					throw; //avoid multiple exceptions trown again (don't know why!)!
-					//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
-				}
-				catch (...) //any other exception
-				{
-					PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "\n; check function parameters!");
-				}
-			}
-		}
-		deactivateGlobalPyRuntimeErrorFlag = false;
-		//std::cout << "key process finished\n";
-	}
-	else
-	{
-		EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
-	}
-}
-
-////this solution does not work!
-//int OutputBuffer::sync() 
-//{
-//	//redirect stream "this->str()" to this buffer: 
-//	//this could go to cout or any other output (e.g. Python)
-//	//std::cout << this->str();
-//	py::print(this->str());
-//	py::print("test");
-//	return 0;
-//}
 

@@ -16,6 +16,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "Main/rendererPythonInterface.h"
 
 #include <ostream>
 //#include <stdlib.h> //only works in MSVC for initialization with std::vector
@@ -75,6 +76,16 @@ public:
 	float storedCenterPointY;	//!< stored centerpoint position during mouse-move
 
 	Float16 storedModelRotation;//!< stored rotation matrix before right mouse button pressed
+
+	//++++++++++++++++++++++++++++++++++++
+	//selection:
+	//DELETE: selectionMode;					//!< true, if in selection mode
+	Vector2D selectionMouseCoordinates; //!mouse coordinates used for selection
+	std::string selectionString;		//!< string about object to be shown on screen
+	
+	std::string rendererMessage;		//!< rendererMessage to be shown in status line
+	Real renderMessageTimeout; 			//!< time at which message shall be removed, using EXUstd::GetTimeInSeconds(); 0, if no timeout
+
 };
 
 
@@ -85,6 +96,11 @@ private:
 	//static RenderState state;
 	static bool rendererActive;			//!< signal that shows that renderer is active
 	static bool stopRenderer;			//!< signal that shows that renderer should quit
+	static bool useMultiThreadedRendering;		//!< according to visualizationSettings.general; always false for MACOS (__APPLE__)
+	static Real lastGraphicsUpdate;		//!< time of last graphics update
+	static Real lastEventUpdate;		//!< time of last event polling
+	static bool callBackSignal;			//!< for single threaded applications, react if callback is sent=> update graphics immediately
+
 	static GLFWwindow* window;
 	static RenderState* state;		//!< this represents the current OpenGL parameters
 	static RenderStateMachine stateMachine; //!< all variables (mouse, keyboard, ...) used for state machine (zoom, zoom-view, move, ...)
@@ -93,6 +109,7 @@ private:
 	static bool verboseRenderer;        //!< initialized in SetupRenderer(bool verbose): output helpful information
 	static Index firstRun; //zoom all in first run
 	static std::atomic_flag renderFunctionRunning;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice)
+	static std::atomic_flag showMessageSemaphore;   //!< semaphore to prevent calling ShowMessage twice
 
 	//+++++++++++++++++++++++++++++++++++++++++
 	static BitmapFont bitmapFont;				//!< bitmap font for regular texts and for textured fonts, initialized upon start of renderer
@@ -166,22 +183,27 @@ public:
 	}
 
 	//! Detach the GraphicsData/settings; enables the visualization of different MainSystems; return true on success
-	static bool DetachVisualizationSystem()
+	static bool DetachVisualizationSystem(VisualizationSystemContainerBase* detachingVisualizationSystemContainer)
 	{
-		StopRenderer();
+		//only detach, if detachingVisualizationSystemContainer is still linked to GLFWrenderer
+		if (detachingVisualizationSystemContainer == nullptr || basicVisualizationSystemContainer == detachingVisualizationSystemContainer)
+		{
+			StopRenderer();
 
-		if (graphicsDataList == nullptr) { return false; }//this just shows that no system was linked yet
-		else 
-		{ 
-			graphicsDataList = nullptr;
-			visSettings = nullptr;
+			if (graphicsDataList == nullptr) { return false; }//this just shows that no system was linked yet
+			else
+			{
+				graphicsDataList = nullptr;
+				visSettings = nullptr;
 
-			window = nullptr; //is set in StopRenderer anyway
-			state = nullptr;
-			basicVisualizationSystemContainer = nullptr;
+				window = nullptr; //is set in StopRenderer anyway
+				state = nullptr;
+				basicVisualizationSystemContainer = nullptr;
 
-			return true;
+				return true;
+			}
 		}
+		return false;
 	}
 
 	static void UpdateGraphicsDataNow()
@@ -191,6 +213,44 @@ public:
 			basicVisualizationSystemContainer->UpdateGraphicsDataNow();
 		}
 	}
+
+	//! write dictionary for selected item; return true if success; MAY ONLY BE CALLED FROM PYTHON THREAD!!!
+	static bool PySetRendererSelectionDict(Index itemID);
+
+	//! retrieve basic item information from MainSystemBacklink; return true if success; renderer thread safe (no Python calls)
+	static bool GetItemInformation(Index itemID, STDstring& itemTypeName, STDstring& itemName);// , STDstring& itemInfo);
+
+	//! print delayed via safe communication with main thread
+	static void PrintDelayed(const STDstring& str, bool lineFeed = true) 
+	{
+		if (useMultiThreadedRendering)
+		{
+			if (lineFeed)
+			{
+				PyQueueExecutableString("print('" + str + "')\n");
+			}
+			else
+			{
+				PyQueueExecutableString("print('" + str + "', end='')\n");
+			}
+		}
+		else
+		{
+			pout << str;
+			if (lineFeed) { pout << "\n"; }
+		}
+	};
+
+	static STDstring OnOffFromBool(bool flag) { if (flag) { return "on"; } else { return "off"; } }
+
+	//! add status message, e.g., if button is pressed
+	static void ShowMessage(const STDstring& str, Real timeout = 0);
+
+	//! run renderer idle for certain amount of time; use this for single-threaded, interactive animations; waitSeconds==-1 waits forever
+	static void DoRendererIdleTasks(Real waitSeconds);
+
+	//! check if separate thread used:
+	static bool UseMultiThreadedRendering() { return useMultiThreadedRendering; }
 
 private: //to be called internally only!
 	static void error_callback(int error, const char* description)
@@ -211,15 +271,35 @@ private: //to be called internally only!
 		//stopRenderer = false;	//if stopped by user
 
 		glfwSetWindowShouldClose(window, GLFW_FALSE); //do not close ....
-		pout << "\n+++++++++++++++++++++\npress ESC or Q to close window!\n+++++++++++++++++++++\n";
+		if (PyGetRendererCallbackLock()) { return; }
 
+		ShowMessage("PRESS ESC or Q to close window!",5);
+	
 	}
+	//! if callback function like mousemove is called, immediately refresh graphics independently of graphicsUpdateInterval
+	static void SetCallBackSignal(bool flag = true) { callBackSignal = flag; }
+	static bool GetCallBackSignal() { return callBackSignal; }
+	
+	//! zoom in to mouse position, used to render that area lateron (replacement for gluPickMatrix(...)
+	static void SetViewOnMouseCursor(GLdouble x, GLdouble y, GLdouble deltax, GLdouble deltay, GLint viewport[4]);
+	
+	//! function to evaluate selection of items
+	static void MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mouseY, Index& itemID);
+
+	//! function to evaluate selection of items, return true, if item selected
+	static bool MouseSelect(GLFWwindow* window, Index mouseX, Index mouseY, Index& itemID);
 
 	//! GlfwInit and glfw->CreateWindow() calls; returns false, if functions fail
 	static void InitCreateWindow();
 
 	//! loop which checks for keyboard/mouse input; check for visualization updates (new data, window size changed, zoom, mouse move, etc.) and calls Render()
 	static void RunLoop();
+
+	//! tasks which are regularly called by RunLoop(), used if no separate thread used in GLFW; use wait in seconds to do this 
+	static void DoRendererTasks();
+
+	//! tasks which are done if renderer is shut down
+	static void FinishRunLoop();
 
 	//! Render function called for every update of OpenGl window
 	static void Render(GLFWwindow* window); //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
@@ -230,8 +310,8 @@ private: //to be called internally only!
 	//! save scene to a file with filename
 	static void SaveSceneToFile(const STDstring& filename);
 	
-	//! Render particulalry the graphics data of multibody system
-	static void RenderGraphicsData(float fontScale);
+	//! Render particulary the graphics data of multibody system; selectionMode==true adds names
+	static void RenderGraphicsData(bool selectionMode = false); // fontScale now stored in GLFWRenderer: float fontScale); 
 
 	//! Zoom all graphics objects (for current configuration)
 	static void ZoomAll();

@@ -453,10 +453,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             if parameter['type'] == 'OutputVariableType': #special case of enum, which is not printable
                 preStr = 'GetOutputVariableTypeString('
                 postStr= ')'
-            if parameter['type'] == 'StdArray33F': #special case of enum, which is not printable
+            if parameter['type'] == 'StdArray33F': #special case of 3x3 Matrix, which is not printable
                 preStr = 'Matrix3DF('
                 postStr= ')'
+
+            if parameter['type'] == 'StdArray33F': #special case of 3x3 Matrix, which is not printable
+                s += '#ifndef __APPLE__\n' #does not compile currently
+
             s+='    os << "  ' + paramStr + ' = " << ' + preStr + refChar + paramStr + postStr + ' << "\\n";\n'
+
+            if parameter['type'] == 'StdArray33F': #special case of 3x3 Matrix, which is not printable
+                s += '#endif\n' #does not compile currently
          
     s+='    os << "\\n";\n'
     s+='  }\n\n' # end ostream operator

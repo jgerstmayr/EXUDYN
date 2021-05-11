@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  01:41:05 (last modfied)
+* @date         2021-05-05  08:06:29 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -99,7 +99,7 @@ public: // AUTO:
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
-        return "GenericODE2";
+        return "FFRF";
     }
 
     //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()

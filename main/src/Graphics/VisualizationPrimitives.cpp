@@ -59,13 +59,10 @@ namespace EXUvis {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position,
-		const Matrix3DF& rotation, Index objectIndex)
+		const Matrix3DF& rotation, Index itemID)
 	{
 		bool applyRotation = true;
 		if (rotation(0, 0) == 1.f && rotation(1, 1) == 1.f && rotation(2, 2) == 1.f) { applyRotation = false; }
-
-		Index itemID = Index2ItemID(objectIndex, ItemType::Object);
-
 
 		for (GLLine item : bodyGraphicsData.glLines) //copy objects, because we also need the transformed objects
 		{
@@ -145,7 +142,7 @@ namespace EXUvis {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! draw a simple spring in 2D with given endpoints p0,p1 a width, a (normalized) normal vector for the width drawing and number of spring points numberOfPoints
 	void DrawSpring2D(const Vector3D& p0, const Vector3D& p1, const Vector3D& vN, Index numberOfPoints, Real halfWidth, const Float4& color, 
-		GraphicsData& graphicsData, Index index, ItemType itemType)
+		GraphicsData& graphicsData, Index itemID)
 	{
 		//2D drawing in XY plane
 		Vector3D v0 = p1 - p0;
@@ -163,7 +160,7 @@ namespace EXUvis {
 
 			if (i > 0)
 			{
-				graphicsData.AddLine(pLast, pAct, color, color, index, itemType);
+				graphicsData.AddLine(pLast, pAct, color, color, itemID);
 			}
 
 			pLast = pAct;
@@ -173,7 +170,7 @@ namespace EXUvis {
 
 	//! draw a spring in 3D with given endpoints p0,p1, a width, windings and tiling
 	void DrawSpring(const Vector3D& p0, const Vector3D& p1, Index numberOfWindings, Index nTilesPerWinding,
-		Real radius, const Float4& color, GraphicsData& graphicsData, Index index, ItemType itemType, bool draw3D)
+		Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D)
 	{
 		Vector3D v0 = p1 - p0;
 
@@ -194,32 +191,36 @@ namespace EXUvis {
 					Real phi = 2 * EXUstd::pi * j / (Real)nTilesPerWinding;
 					Vector3D p = p0 + d * ((Real)i + j / (Real)nTilesPerWinding)*v0 + radius*sin(phi)*n1 + radius*cos(phi)*n2;
 
-					graphicsData.AddLine(pLast, p, color, color, index, itemType);
+					graphicsData.AddLine(pLast, p, color, color, itemID);
 					pLast = p;
 				}
 			}
-			graphicsData.AddLine(pLast, p1, color, color, index, itemType);
+			graphicsData.AddLine(pLast, p1, color, color, itemID);
 
 		}
 
 	}
 
 	//! draw number for item at selected position and with label, such as 'N' for nodes, etc.
-	void DrawItemNumber(const Vector3D& pos, VisualizationSystem* vSystem, Index itemNumber, const char* label, const Float4& color)
+	void DrawItemNumberWithoutID(const Vector3D& pos, VisualizationSystem* vSystem, Index itemNumber, const char* label, const Float4& color)
 	{
 		float offx = 0.25f; //in text coordinates, relative to textsize
 		float offy = 0.25f; //in text coordinates, relative to textsize
 		float textSize = 0.f; //use default value
-		vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, -1, ItemType::_None);
+		vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, Index2ItemID(-1, ItemType::_None, 0));
 	}
 
 	//! draw number for item at selected position and with label, such as 'N' for nodes, etc.
-	void DrawItemNumber(const Vector3D& pos, VisualizationSystem* vSystem, Index itemNumber, ItemType itemType, const char* label, const Float4& color)
+	void DrawItemNumber(const Vector3D& pos, VisualizationSystem* vSystem, Index itemID, const char* label, const Float4& color)
 	{
 		float offx = 0.25f; //in text coordinates, relative to textsize
 		float offy = 0.25f; //in text coordinates, relative to textsize
 		float textSize = 0.f; //use default value
-		vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, itemNumber, itemType);
+		Index itemNumber;
+		ItemType itemType;
+		Index mbsNumber;
+		ItemID2IndexType(itemID, itemNumber, itemType, mbsNumber);
+		vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, itemID);
 	}
 
 
@@ -229,7 +230,7 @@ namespace EXUvis {
 	//! if lastFace=true, a closing face is drawn in case of limited angle; 
 	//! cutPlain=true: a plain cut through cylinder is made; false: draw the cake shape ...
 	//! innerRadius: if > 0, then this is a cylinder with a hole
-	void DrawCylinder(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index index, ItemType itemType,
+	void DrawCylinder(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles, Real innerRadius, Vector2D angleRange, bool lastFace, bool cutPlain, bool drawSmooth)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
@@ -257,7 +258,7 @@ namespace EXUvis {
 		Vector3D nF1 = vAxis;
 		nF1.Normalize();
 
-		std::array<Vector3D, 3> normalsFace0({ nF1,nF1,nF1 });
+		std::array<Vector3D, 3> normalsFace0({ (nF1),(nF1),(nF1) });
 		nF1 = -nF1;
 		std::array<Vector3D, 3> normalsFace1({ nF1,nF1,nF1 });
 		Vector3D n0(0);
@@ -295,7 +296,7 @@ namespace EXUvis {
 			points[0] = pzL0;
 			points[1] = pzR1;
 			points[2] = pzR0;
-			graphicsData.AddTriangle(points, normals, colors, index, itemType);
+			graphicsData.AddTriangle(points, normals, colors, itemID);
 
 			//normals[0] = n0;
 			//normals[1] = n1;
@@ -303,7 +304,7 @@ namespace EXUvis {
 			//points[0] = pzL0;
 			points[1] = pzL1;
 			points[2] = pzR1;
-			graphicsData.AddTriangle(points, normals, colors, index, itemType);
+			graphicsData.AddTriangle(points, normals, colors, itemID);
 
 			if (innerRadius > 0.)
 			{
@@ -320,7 +321,7 @@ namespace EXUvis {
 				points[0] = pzL0i;
 				points[1] = pzR0i;
 				points[2] = pzR1i;
-				graphicsData.AddTriangle(points, normals, colors, index, itemType);
+				graphicsData.AddTriangle(points, normals, colors, itemID);
 
 				//normals[0] = -n0;
 				//normals[1] = -n1;
@@ -328,28 +329,28 @@ namespace EXUvis {
 				//points[0] = pzL0i;
 				points[1] = pzR1i;
 				points[2] = pzL1i;
-				graphicsData.AddTriangle(points, normals, colors, index, itemType);
+				graphicsData.AddTriangle(points, normals, colors, itemID);
 
 				//+++++++++++++++++++++++++++++++
 				//side faces:
 				points[0] = pzL0i;
 				points[1] = pzL1;
 				points[2] = pzL0;
-				graphicsData.AddTriangle(points, normalsFace0, colors, index, itemType);
+				graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
 				points[0] = pzL0i;
 				points[1] = pzL1i;
 				points[2] = pzL1;
-				graphicsData.AddTriangle(points, normalsFace0, colors, index, itemType);
+				graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
 
 				points[0] = pzR0i;
 				points[1] = pzR0;
 				points[2] = pzR1;
-				graphicsData.AddTriangle(points, normalsFace1, colors, index, itemType);
+				graphicsData.AddTriangle(points, normalsFace1, colors, itemID);
 
 				points[0] = pzR1i;
 				points[1] = pzR0i;
 				points[2] = pzR1;
-				graphicsData.AddTriangle(points, normalsFace1, colors, index, itemType);
+				graphicsData.AddTriangle(points, normalsFace1, colors, itemID);
 			}
 			else
 			{
@@ -358,18 +359,18 @@ namespace EXUvis {
 				points[0] = pAxis0;
 				points[1] = pzL1;
 				points[2] = pzL0;
-				graphicsData.AddTriangle(points, normalsFace0, colors, index, itemType);
+				graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
 
 				points[0] = pAxis1;
 				points[1] = pzR0;
 				points[2] = pzR1;
-				graphicsData.AddTriangle(points, normalsFace1, colors, index, itemType);
+				graphicsData.AddTriangle(points, normalsFace1, colors, itemID);
 			}
 		}
 	}
 
 	//! draw a sphere with center at p, radius and color; nTiles are in 2 dimensions (8 tiles gives 8x8 x 2 faces)
-	void DrawSphere(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index index, ItemType itemType,
+	void DrawSphere(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles, bool drawSmooth)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
@@ -424,7 +425,7 @@ namespace EXUvis {
 				{
 					ComputeTriangleNormals(points, normals);
 				}
-				graphicsData.AddTriangle(points, normals, colors, index, itemType);
+				graphicsData.AddTriangle(points, normals, colors, itemID);
 
 				points[0] = p + v0A;
 				points[1] = p + v0B;
@@ -443,14 +444,14 @@ namespace EXUvis {
 				{
 					ComputeTriangleNormals(points, normals);
 				}
-				graphicsData.AddTriangle(points, normals, colors, index, itemType);
+				graphicsData.AddTriangle(points, normals, colors, itemID);
 			}
 		}
 	}
 
 	//! draw cube with midpoint and size in x,y and z direction
 	void DrawOrthoCube(const Vector3D& midPoint, const Vector3D& size, const Float4& color, GraphicsData& graphicsData, 
-		Index index, ItemType itemType)
+		Index itemID)
 	{
 		//sketch of cube: (z goes upwards from node 1 to node 5)
 		// bottom :         top:
@@ -498,14 +499,14 @@ namespace EXUvis {
 			//points[1] = pc[trigList[i][1]];
 			//points[2] = pc[trigList[i][2]];
 			ComputeTriangleNormals(points, normals);
-			graphicsData.AddTriangle(points, normals, colors, index, itemType);
+			graphicsData.AddTriangle(points, normals, colors, itemID);
 		}
 	}
 
 
 	//! add a cone to graphicsData with reference point (pAxis0), axis vector (vAxis) and radius using triangle representation
 	//! cone starts at pAxis0, tip is at pAxis0+vAxis0
-	void DrawCone(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index index, ItemType itemType,
+	void DrawCone(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles, bool drawSmooth)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
@@ -565,14 +566,14 @@ namespace EXUvis {
 			points[0] = pzL0;
 			points[1] = pzL1;
 			points[2] = pAxis1;
-			graphicsData.AddTriangle(points, normals, colors, index, itemType);
+			graphicsData.AddTriangle(points, normals, colors, itemID);
 
 			//+++++++++++++++++++++++++++++++
 			//side faces:
 			points[0] = pAxis0;
 			points[1] = pzL1;
 			points[2] = pzL0;
-			graphicsData.AddTriangle(points, normalsFace0, colors, index, itemType);
+			graphicsData.AddTriangle(points, normalsFace0, colors, itemID);
 		}
 	}
 
@@ -581,7 +582,7 @@ namespace EXUvis {
 	//! length defines the length of each axis; radius is the radius of the shaft; arrowSize is diameter relative to radius
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
 	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, 
-		GraphicsData& graphicsData, Index index, ItemType itemType, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber)
+		GraphicsData& graphicsData, Index itemID, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber)
 	{
 
 		for (Index i = 0; i < 3; i++)
@@ -590,19 +591,19 @@ namespace EXUvis {
 			Float4 color(ModifyColor(GetColor(i), colorFactor));
 			if (draw3D)
 			{
-				DrawCylinder(p, length*v, radius, color, graphicsData, index, itemType, nTiles);
-				DrawCone(p + length * v, (radius*arrowSizeRelative * 3)*v, arrowSizeRelative*radius, color, graphicsData, index, itemType, nTiles);
+				DrawCylinder(p, length*v, radius, color, graphicsData, itemID, nTiles);
+				DrawCone(p + length * v, (radius*arrowSizeRelative * 3)*v, arrowSizeRelative*radius, color, graphicsData, itemID, nTiles);
 			} else //draw as simple line
 			{
-				graphicsData.AddLine(p, p + length * v, color, color, index, itemType);
+				graphicsData.AddLine(p, p + length * v, color, color, itemID);
 			}
 			if (showNumber != EXUstd::InvalidIndex)
 			{
-				graphicsData.AddText(p + (length + radius*arrowSizeRelative * 3) * v, color, EXUstd::ToString(showNumber), 0.f, 0.25f, 0.25f, index, itemType);
+				graphicsData.AddText(p + (length + radius*arrowSizeRelative * 3) * v, color, EXUstd::ToString(showNumber), 0.f, 0.25f, 0.25f, itemID);
 			}
 		}
 	}
-	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index index, ItemType itemType,
+	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles, bool doubleArrow, bool draw3D)
 	{
 		Real arrowSizeRelative = 2.5;
@@ -618,20 +619,20 @@ namespace EXUvis {
 				Vector3D n1, n2;
 				EXUmath::ComputeOrthogonalBasis(v0, n1, n2);
 
-				graphicsData.AddLine(p, p + v, color, color, index, itemType);
-				graphicsData.AddLine(p + v, p + v1 + radius * n1, color, color, index, itemType);
-				graphicsData.AddLine(p + v, p + v1 - radius * n1, color, color, index, itemType);
-				graphicsData.AddLine(p + v, p + v1 + radius * n2, color, color, index, itemType);
-				graphicsData.AddLine(p + v, p + v1 - radius * n2, color, color, index, itemType);
+				graphicsData.AddLine(p, p + v, color, color, itemID);
+				graphicsData.AddLine(p + v, p + v1 + radius * n1, color, color, itemID);
+				graphicsData.AddLine(p + v, p + v1 - radius * n1, color, color, itemID);
+				graphicsData.AddLine(p + v, p + v1 + radius * n2, color, color, itemID);
+				graphicsData.AddLine(p + v, p + v1 - radius * n2, color, color, itemID);
 
 				if (doubleArrow)
 				{
 					Vector3D v2 = (len - 2*3 * radius * arrowSizeRelative)*v0;
 
-					graphicsData.AddLine(p + v1, p + v2 + radius * n1, color, color, index, itemType);
-					graphicsData.AddLine(p + v1, p + v2 - radius * n1, color, color, index, itemType);
-					graphicsData.AddLine(p + v1, p + v2 + radius * n2, color, color, index, itemType);
-					graphicsData.AddLine(p + v1, p + v2 - radius * n2, color, color, index, itemType);
+					graphicsData.AddLine(p + v1, p + v2 + radius * n1, color, color, itemID);
+					graphicsData.AddLine(p + v1, p + v2 - radius * n1, color, color, itemID);
+					graphicsData.AddLine(p + v1, p + v2 + radius * n2, color, color, itemID);
+					graphicsData.AddLine(p + v1, p + v2 - radius * n2, color, color, itemID);
 				}
 			}
 			else
@@ -639,31 +640,31 @@ namespace EXUvis {
 				if (!doubleArrow)
 				{
 					Vector3D v1 = (len - 3 * radius * arrowSizeRelative)*v0;
-					DrawCylinder(p, v1, radius, color, graphicsData, index, itemType, nTiles);
-					DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, index, itemType, nTiles);
+					DrawCylinder(p, v1, radius, color, graphicsData, itemID, nTiles);
+					DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, itemID, nTiles);
 				}
 				else
 				{
 					Vector3D v1 = (len - 2 * 3 * radius * arrowSizeRelative)*v0;
-					DrawCylinder(p, v1, radius, color, graphicsData, index, itemType, nTiles);
-					DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, index, itemType, nTiles);
+					DrawCylinder(p, v1, radius, color, graphicsData, itemID, nTiles);
+					DrawCone(p + v1, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, color, graphicsData, itemID, nTiles);
 					DrawCone(p + v1 + (3 * radius * arrowSizeRelative) * v0, (3 * radius * arrowSizeRelative) * v0, arrowSizeRelative*radius, 
-						color, graphicsData, index, itemType, nTiles);
+						color, graphicsData, itemID, nTiles);
 				}
 			}
 		}
 	}
 
 	//! draw node either with 3 circles or with sphere at given point and with given radius
-	void DrawNode(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index nodeIndex, bool draw3D, Index nTiles)
+	void DrawNode(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D, Index nTiles)
 	{
 		if (nTiles == 0)
 		{
-			graphicsData.AddPoint(p, color, nodeIndex, ItemType::Node);
+			graphicsData.AddPoint(p, color, itemID);
 		}
 		else if (draw3D)
 		{
-			DrawSphere(p, radius, color, graphicsData, nodeIndex, ItemType::Node, nTiles);
+			DrawSphere(p, radius, color, graphicsData, itemID, nTiles);
 		}
 		else
 		{
@@ -683,7 +684,7 @@ namespace EXUvis {
 				{
 					for (Index j = 0; j < 3; j++)
 					{
-						graphicsData.AddLine(pAct[j],pPrevious[j],color,color, nodeIndex, ItemType::Node);
+						graphicsData.AddLine(pAct[j],pPrevious[j],color,color, itemID);
 					}
 				}
 				for (Index j = 0; j < 3; j++)
@@ -695,52 +696,52 @@ namespace EXUvis {
 	}
 
 	//! draw marker either with 3 crosses or with cube at given point and with given size
-	void DrawMarker(const Vector3D& p, Real size, const Float4& color, GraphicsData& graphicsData, Index markerIndex, bool draw3D)
+	void DrawMarker(const Vector3D& p, Real size, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D)
 	{
 		if (draw3D)
 		{
-			DrawOrthoCube(p, Vector3D({ size,size,size }), color, graphicsData, markerIndex, ItemType::Marker);
+			DrawOrthoCube(p, Vector3D({ size,size,size }), color, graphicsData, itemID);
 			//DrawSphere(p, size, color, graphicsData, 2, false); //draw coarse and with flat shading
 		}
 		else
 		{
 			Real s = 0.5*size;
-			graphicsData.AddLine(p + Vector3D({ s,s,0 }), p - Vector3D({ s,s,0 }), color, color, markerIndex, ItemType::Marker);
-			graphicsData.AddLine(p + Vector3D({ -s,s,0 }), p - Vector3D({ -s,s,0 }), color, color, markerIndex, ItemType::Marker);
+			graphicsData.AddLine(p + Vector3D({ s,s,0 }), p - Vector3D({ s,s,0 }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ -s,s,0 }), p - Vector3D({ -s,s,0 }), color, color, itemID);
 
-			graphicsData.AddLine(p + Vector3D({ s,0,s }), p - Vector3D({ s,0,s }), color, color, markerIndex, ItemType::Marker);
-			graphicsData.AddLine(p + Vector3D({ -s,0,s }), p - Vector3D({ -s,0,s }), color, color, markerIndex, ItemType::Marker);
+			graphicsData.AddLine(p + Vector3D({ s,0,s }), p - Vector3D({ s,0,s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ -s,0,s }), p - Vector3D({ -s,0,s }), color, color, itemID);
 
-			graphicsData.AddLine(p + Vector3D({ 0,s,s }), p - Vector3D({ 0,s,s }), color, color, markerIndex, ItemType::Marker);
-			graphicsData.AddLine(p + Vector3D({ 0,-s,s }), p - Vector3D({ 0,-s,s }), color, color, markerIndex, ItemType::Marker);
+			graphicsData.AddLine(p + Vector3D({ 0,s,s }), p - Vector3D({ 0,s,s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ 0,-s,s }), p - Vector3D({ 0,-s,s }), color, color, itemID);
 
 		}
 	}
 
 	//! draw sensor as diamond
-	void DrawSensor(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index sensorIndex, bool draw3D)
+	void DrawSensor(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D)
 	{
 		if (draw3D)
 		{
-			DrawSphere(p, radius, color, graphicsData, sensorIndex, ItemType::Sensor, 2, false); //draw coarse and with flat shading
+			DrawSphere(p, radius, color, graphicsData, itemID, 2, false); //draw coarse and with flat shading
 		}
 		else
 		{
 			Real s = radius;
-			graphicsData.AddLine(p + Vector3D({ s,0,0 }),  p - Vector3D({ 0, s,0 }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ s,0,0 }),  p - Vector3D({ 0,-s,0 }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ -s,0,0 }), p - Vector3D({ 0, s,0 }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ -s,0,0 }), p - Vector3D({ 0,-s,0 }), color, color, sensorIndex, ItemType::Sensor);
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }),  p - Vector3D({ 0, s,0 }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }),  p - Vector3D({ 0,-s,0 }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ -s,0,0 }), p - Vector3D({ 0, s,0 }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ -s,0,0 }), p - Vector3D({ 0,-s,0 }), color, color, itemID);
 
-			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,0, s }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,0,-s }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({-s,0,0 }), p - Vector3D({ 0,0, s }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({-s,0,0 }), p - Vector3D({ 0,0,-s }), color, color, sensorIndex, ItemType::Sensor);
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,0, s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ s,0,0 }), p - Vector3D({ 0,0,-s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({-s,0,0 }), p - Vector3D({ 0,0, s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({-s,0,0 }), p - Vector3D({ 0,0,-s }), color, color, itemID);
 
-			graphicsData.AddLine(p + Vector3D({ 0, s,0 }), p - Vector3D({ 0,0, s }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ 0, s,0 }), p - Vector3D({ 0,0,-s }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ 0,-s,0 }), p - Vector3D({ 0,0, s }), color, color, sensorIndex, ItemType::Sensor);
-			graphicsData.AddLine(p + Vector3D({ 0,-s,0 }), p - Vector3D({ 0,0,-s }), color, color, sensorIndex, ItemType::Sensor);
+			graphicsData.AddLine(p + Vector3D({ 0, s,0 }), p - Vector3D({ 0,0, s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ 0, s,0 }), p - Vector3D({ 0,0,-s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ 0,-s,0 }), p - Vector3D({ 0,0, s }), color, color, itemID);
+			graphicsData.AddLine(p + Vector3D({ 0,-s,0 }), p - Vector3D({ 0,0,-s }), color, color, itemID);
 		}
 	}
 

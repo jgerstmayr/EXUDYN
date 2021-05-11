@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 662, 
-Number of resolved issues = 569 (201 in current version), 
-EXUDYN version = 1.0.201, 
-last change =  2021-05-03
+Number of issues = 672, 
+Number of resolved issues = 586 (218 in current version), 
+EXUDYN version = 1.0.218, 
+last change =  2021-05-11
 
 
 <table style = "width:100%">
@@ -39,31 +39,15 @@ last change =  2021-05-03
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0661</td>
-    <td>add C++ unit tests  </td>
+    <td>0669</td>
+    <td>remove old solvers  </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add C++ unit tests to Python3.6 64bits version and to testSuite. Changed initialization of all vector types to avoid errors of Vector({5}), now allowing only Vector({4.}) in constructors</td>
-    <td>EXTENSION</td>
+    <td> remove old static and dynamic solvers as they are not any more up to date with graphics interface</td>
+    <td>CHANGE</td>
     <td></td>
-    <td>2021-05-03</td>
-    <td>2021-07-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0660</td>
-    <td>initializerList     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check if Vector is used with initializer list with one item - Vector({10}), converting to std::vector or Vector(10)</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2021-05-03</td>
-    <td>2021-07-02</td>
+    <td>2021-05-10</td>
+    <td>2021-07-09</td>
     <td></td>
     <td></td>
     <td></td>
@@ -103,38 +87,6 @@ last change =  2021-05-03
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0653</td>
-    <td>add right mouse edit dialog</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> open Edit dialog for item on right-mouse-press</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-05-01</td>
-    <td>2021-06-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0652</td>
-    <td>identify itemID under mouse coursor</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> identify object/node/... under mouse using unique color for itemID (left mouse button press)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-05-01</td>
-    <td>2021-06-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0648</td>
     <td>solver tutorial     </td>
     <td>JG</td>
@@ -144,22 +96,6 @@ last change =  2021-05-03
     <td></td>
     <td>2021-05-01</td>
     <td>2021-06-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0647</td>
-    <td>Single Thread Renderer</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Implement single thread renderer version for MAC OS compatibility test</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-04-30</td>
-    <td>2021-06-29</td>
     <td></td>
     <td></td>
     <td></td>
@@ -192,54 +128,6 @@ last change =  2021-05-03
     <td></td>
     <td>2021-04-30</td>
     <td>2021-06-29</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0637</td>
-    <td>Python3.8 windows wheels</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> create Python3.8 windows wheels automatically</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-04-26</td>
-    <td>2021-06-25</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0634</td>
-    <td>Set visualization state</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add thread-safe variant for updating the visualization state</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-04-25</td>
-    <td>2021-06-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0633</td>
-    <td>WaitAndLockSemaphoreIgnore</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check which atomic_flags are needed in C++ to make code threadsafe</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2021-04-25</td>
-    <td>2021-06-24</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1527,6 +1415,182 @@ last change =  2021-05-03
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0671</td>
+    <td>mbs.Reset() and SC.Reset()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> reset MainSystem mbs and SystemContainer SC hangs; current SC is erronously stolen from renderer when another SC is deleted</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-05-11</td>
+    <td>2021-07-10</td>
+    <td>2021-05-11 10:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0670</td>
+    <td>MacOS graphics support</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add compatibility to MacOS in single-threaded graphics mode (tested with OS X 10.7)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-10</td>
+    <td>2021-07-09</td>
+    <td>2021-05-10 22:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0668</td>
+    <td>multiple mbs and SystemContainer support</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adapt renderer and MainSystemContainer to work with multiple MainSystems (mbs) and SC instances at same time; add SC.AttachToRenderEnginer, SC.DetachFromRenderEngine</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-10</td>
+    <td>2021-07-09</td>
+    <td>2021-05-10 18:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0667</td>
+    <td>tkinter dialogs focus and on top</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> when opening tkinter dialogs - visualizationSettings, edit dialogs, help, ... - they immediately get focus and are on top</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-10</td>
+    <td>2021-07-09</td>
+    <td>2021-05-10 14:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0666</td>
+    <td>make renderer Python and thread safe</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add strict separation between renderer (thread) and Python (thread); add rendererPythonInterface between both threads; left and right mouse clicks now safe to press; render window does not accept any input as long as tkinter window is open, but does not produce crashes any more</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-05-10</td>
+    <td>2021-07-09</td>
+    <td>2021-05-10 14:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0665</td>
+    <td>StartRenderer()     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> without being in a render loop (e.g., SC.WaitForRenderEngineStopFlag()), the pure StartRenderer() crashes upon left mouse click</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-05-05</td>
+    <td>2021-07-04</td>
+    <td>2021-05-10 14:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0664</td>
+    <td>right mouse         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function to retrieve py::dict from items safely in python thread into temporary storage; check also other python calls to operate fully in main thread</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-05-05</td>
+    <td>2021-07-04</td>
+    <td>2021-05-10 14:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0663</td>
+    <td>help button         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> show "press h for help" as startup message for 10 seconds and sync help message with theDoc.pdf</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-05-05</td>
+    <td>2021-07-04</td>
+    <td>2021-05-05 10:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0662</td>
+    <td>Render window       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> during open tkinter dialogs, the render window responds on keyboard or mouse input, which calls again python functions that hang up the system</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-05-04</td>
+    <td>2021-07-03</td>
+    <td>2021-05-10 14:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0661</td>
+    <td>add C++ unit tests  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add C++ unit tests to Python3.6 64bits version and to testSuite. Changed initialization of all vector types to avoid errors of Vector({5}), now allowing only Vector({4.}) in constructors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-03</td>
+    <td>2021-07-02</td>
+    <td>2021-05-03 18:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0660</td>
+    <td>initializerList     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if Vector is used with initializer list with one item - Vector({10}), converting to std::vector or Vector(10)</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-05-03</td>
+    <td>2021-07-02</td>
+    <td>2021-05-03 18:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0659</td>
     <td>Troubleshooting     </td>
     <td>JG</td>
@@ -1591,6 +1655,38 @@ last change =  2021-05-03
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0653</td>
+    <td>add right mouse edit dialog</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> open Edit dialog for item on right-mouse-press</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-04 20:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0652</td>
+    <td>identify itemID under mouse coursor</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> identify object/node/... under mouse using unique color for itemID (left mouse button press)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2021-05-04 12:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0651</td>
     <td>add itemID to graphics objects</td>
     <td>JG</td>
@@ -1633,6 +1729,22 @@ last change =  2021-05-03
     <td>2021-05-01</td>
     <td>2021-06-30</td>
     <td>2021-05-03 01:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0647</td>
+    <td>Single Thread Renderer</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Implement single thread renderer version for MAC OS compatibility test</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-30</td>
+    <td>2021-06-29</td>
+    <td>2021-05-10 22:32</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1751,6 +1863,22 @@ last change =  2021-05-03
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0637</td>
+    <td>Python3.8 windows wheels</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> create Python3.8 windows wheels automatically</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-26</td>
+    <td>2021-06-25</td>
+    <td>2021-05-03 18:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0636</td>
     <td>Python3.8           </td>
     <td>JG</td>
@@ -1781,6 +1909,38 @@ last change =  2021-05-03
     <td></td>
     <td></td>
     <td>resolved threading conflicts, but visualization state set inbetween graphics update, which needs to resolve #634</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0634</td>
+    <td>Set visualization state</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add thread-safe variant for updating the visualization state</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-25</td>
+    <td>2021-06-24</td>
+    <td>2021-05-10 18:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0633</td>
+    <td>WaitAndLockSemaphoreIgnore</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check which atomic_flags are needed in C++ to make code threadsafe</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-04-25</td>
+    <td>2021-06-24</td>
+    <td>2021-05-10 14:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0632</td>

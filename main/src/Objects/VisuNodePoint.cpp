@@ -194,6 +194,7 @@ void ComputeContourColor(const TVector& value, OutputVariableType outputVariable
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodePoint::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodePoint* cNode = (CNodePoint*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -227,14 +228,15 @@ void VisualizationNodePoint::UpdateGraphics(const VisualizationSettings& visuali
 	//Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.general.sphereTiling : visualizationSettings.general.circleTiling;
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 	if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
-	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemNumber, visualizationSettings.openGL.showFaces, tiling);
+	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
 
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodePointGround::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodePointGround* cNode = (CNodePointGround*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -264,14 +266,15 @@ void VisualizationNodePointGround::UpdateGraphics(const VisualizationSettings& v
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 	if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
-	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemNumber, visualizationSettings.openGL.showFaces, tiling);
+	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
 
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodePoint2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodePoint2D* cNode = (CNodePoint2D*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -297,16 +300,16 @@ void VisualizationNodePoint2D::UpdateGraphics(const VisualizationSettings& visua
 		//	currentColor = Float4({ contourValue, 0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
 		//}
 	}
+	if (visualizationSettings.nodes.drawNodesAsPoint) { vSystem->graphicsData.AddPoint(pos, currentColor, itemID); }
+	else { vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemID); }
 
-	if (visualizationSettings.nodes.drawNodesAsPoint) { vSystem->graphicsData.AddPoint(pos, currentColor, itemNumber, ItemType::Node); }
-	else { vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemNumber, ItemType::Node); }
-
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodeRigidBodyEP::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodeRigidBodyEP* cNode = (CNodeRigidBodyEP*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -338,22 +341,23 @@ void VisualizationNodeRigidBodyEP::UpdateGraphics(const VisualizationSettings& v
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 	if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
-	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemNumber, visualizationSettings.openGL.showFaces, tiling);
+	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
 
 	if (visualizationSettings.nodes.showBasis) {
 		Index nn = EXUstd::InvalidIndex;
 		if (visualizationSettings.nodes.showNumbers) { nn = itemNumber; }
 		EXUvis::DrawOrthonormalBasis(pos, A, visualizationSettings.nodes.basisSize, 0.025*visualizationSettings.nodes.basisSize,
-			vSystem->graphicsData, itemNumber, ItemType::Node, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint, 
+			vSystem->graphicsData, itemID, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint, 
 			visualizationSettings.general.axesTiling, 2.5, nn);
 	}
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodeRigidBodyRxyz::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodeRigidBodyRxyz* cNode = (CNodeRigidBodyRxyz*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -384,23 +388,24 @@ void VisualizationNodeRigidBodyRxyz::UpdateGraphics(const VisualizationSettings&
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 	if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
-	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemNumber, visualizationSettings.openGL.showFaces, tiling);
+	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
 
 	if (visualizationSettings.nodes.showBasis) {
 		Index nn = EXUstd::InvalidIndex;
 		if (visualizationSettings.nodes.showNumbers) { nn = itemNumber; }
 		EXUvis::DrawOrthonormalBasis(pos, A, visualizationSettings.nodes.basisSize, 0.025*visualizationSettings.nodes.basisSize,
-			vSystem->graphicsData, itemNumber, ItemType::Node, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint,
+			vSystem->graphicsData, itemID, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint,
 			visualizationSettings.general.axesTiling, 2.5, nn);
 	}
 
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodeRigidBodyRotVecLG::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodeRigidBodyRotVecLG* cNode = (CNodeRigidBodyRotVecLG*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -431,23 +436,24 @@ void VisualizationNodeRigidBodyRotVecLG::UpdateGraphics(const VisualizationSetti
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 	if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
-	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemNumber, visualizationSettings.openGL.showFaces, tiling);
+	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
 
 	if (visualizationSettings.nodes.showBasis) {
 		Index nn = EXUstd::InvalidIndex;
 		if (visualizationSettings.nodes.showNumbers) { nn = itemNumber; }
 		EXUvis::DrawOrthonormalBasis(pos, A, visualizationSettings.nodes.basisSize, 0.025*visualizationSettings.nodes.basisSize,
-			vSystem->graphicsData, itemNumber, ItemType::Node, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint,
+			vSystem->graphicsData, itemID, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint,
 			visualizationSettings.general.axesTiling, 2.5, nn);
 	}
 
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodeRigidBody2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodeRigidBody2D* cNode = (CNodeRigidBody2D*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -476,22 +482,23 @@ void VisualizationNodeRigidBody2D::UpdateGraphics(const VisualizationSettings& v
 		//}
 	}
 
-	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemNumber, ItemType::Node);
+	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemID);
 	Vector3D vec;
 	//EXUmath::MultMatrixVector(A, Vector3D({ radius, 0., 0. }), vec);
 	vec = A * Vector3D({ radius, 0., 0. }); //this vector is to show the orientation of the node
-	vSystem->graphicsData.AddLine(pos - vec, pos + vec, currentColor, currentColor, itemNumber, ItemType::Node);
+	vSystem->graphicsData.AddLine(pos - vec, pos + vec, currentColor, currentColor, itemID);
 
 	//EXUmath::MultMatrixVector(A, Vector3D({ 0., radius, 0. }), vec);
 	vec = A * Vector3D({ 0., radius, 0. }); //this vector is to show the orientation of the node
-	vSystem->graphicsData.AddLine(pos, pos + vec, currentColor, currentColor, itemNumber, ItemType::Node);
+	vSystem->graphicsData.AddLine(pos, pos + vec, currentColor, currentColor, itemID);
 
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationNodePoint2DSlope1::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Node, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.nodes.defaultColor;
 
 	CNodePoint2DSlope1* cNode = (CNodePoint2DSlope1*)vSystem->systemData->GetCNodes()[itemNumber];
@@ -505,17 +512,17 @@ void VisualizationNodePoint2DSlope1::UpdateGraphics(const VisualizationSettings&
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
 
-	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemNumber, ItemType::Node);
+	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemID);
 
 	if (visualizationSettings.nodes.showNodalSlopes)
 	{
 		Vector3D vec;
 		//EXUmath::MultMatrixVector(A, Vector3D({ radius, 0., 0. }), vec);
 		vec = A * Vector3D({ 8 * radius, 0., 0. }); //this vector is to show the orientation of the node
-		vSystem->graphicsData.AddLine(pos, pos + vec, currentColor, currentColor, itemNumber, ItemType::Node);
+		vSystem->graphicsData.AddLine(pos, pos + vec, currentColor, currentColor, itemID);
 	}
 
-	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Node, "N", visualizationSettings.nodes.defaultColor); }
+	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }
 
 
@@ -533,6 +540,7 @@ void VisualizationNodePoint2DSlope1::UpdateGraphics(const VisualizationSettings&
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationObjectMassPoint::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectMassPoint* cObject = (CObjectMassPoint*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -543,14 +551,15 @@ void VisualizationObjectMassPoint::UpdateGraphics(const VisualizationSettings& v
 	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
 
 	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 
 }
 
 void VisualizationObjectMassPoint2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectMassPoint2D* cObject = (CObjectMassPoint2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -559,13 +568,14 @@ void VisualizationObjectMassPoint2D::UpdateGraphics(const VisualizationSettings&
 	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
 
 	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectMass1D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectMass1D* cObject = (CObjectMass1D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -574,13 +584,14 @@ void VisualizationObjectMass1D::UpdateGraphics(const VisualizationSettings& visu
 	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
 
 	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectRotationalMass1D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectRotationalMass1D* cObject = (CObjectRotationalMass1D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -590,14 +601,15 @@ void VisualizationObjectRotationalMass1D::UpdateGraphics(const VisualizationSett
 	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationObjectRigidBody::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectRigidBody* cObject = (CObjectRigidBody*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -607,15 +619,16 @@ void VisualizationObjectRigidBody::UpdateGraphics(const VisualizationSettings& v
 	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationObjectRigidBody2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectRigidBody2D* cObject = (CObjectRigidBody2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -628,9 +641,9 @@ void VisualizationObjectRigidBody2D::UpdateGraphics(const VisualizationSettings&
 	A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 
 }
 
@@ -638,6 +651,7 @@ void VisualizationObjectRigidBody2D::UpdateGraphics(const VisualizationSettings&
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 	if (GetColor()[0] != -1.f) { currentColor = GetColor(); }
 
@@ -665,6 +679,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 
 		//Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 		Vector3D nodePos;
+		Index mbsNumber = vSystem->GetSystemID();
 		for (Index i = 0; i < cObject->GetNumberOfMeshNodes(); i++)
 		{
 			if (scaleFactor == 1.)
@@ -681,11 +696,11 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 
 			Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
 			if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
-			EXUvis::DrawNode(nodePos, radius, currentColor, vSystem->graphicsData, itemNumber, visualizationSettings.openGL.showFaces, tiling);
+			EXUvis::DrawNode(nodePos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling); //itemID of SuperElement object!!!
 
 			if (visualizationSettings.nodes.showNumbers) 
 			{ 
-				EXUvis::DrawItemNumber(nodePos, vSystem, i, ItemType::_None, "NF", EXUvis::grey1); //use ItemType::_None, because should not be identified as node ...
+				EXUvis::DrawItemNumber(nodePos, vSystem, Index2ItemID(i, ItemType::_None, vSystem->GetSystemID()), "NF", EXUvis::grey1); //use ItemType::_None, because should not be identified as node ...
 			}
 		}
 	}
@@ -748,7 +763,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 			normals[1] = n;
 			normals[2] = n;
 
-			vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemNumber, ItemType::Object);
+			vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemID);
 		}
 	}
 
@@ -757,7 +772,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 	if (visualizationSettings.bodies.showNumbers)
 	{
 		Vector3D refPos3D = cObject->GetPosition(Vector3D({ 0,0,0 }), ConfigurationType::Visualization);
-		EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "RF", currentColor);
+		EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "RF", currentColor);
 	}
 
 }
@@ -773,6 +788,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationObjectGround::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectGround* cObject = (CObjectGround*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -781,14 +797,15 @@ void VisualizationObjectGround::UpdateGraphics(const VisualizationSettings& visu
 	Float3 refPos3DF;
 	refPos3DF.CopyFrom(refPos3D); // ({ (float)pos3D[0], (float)pos3D[1], (float)pos3D[2] });
 
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
 }
 
 
 void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber, const Float4& color, float drawHeight)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectANCFCable2DBase* cObject = (CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -796,7 +813,7 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 	Index tiling = visualizationSettings.bodies.beams.axialTiling;
 
 	GLLine item; 
-	item.itemID = Index2ItemID(itemNumber, ItemType::Object);
+	item.itemID = itemID;
 	if (color[0] != -1.f) { currentColor = color; }
 
 	Real L = cObject->GetLength();
@@ -878,7 +895,7 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 	}
 
 	Vector3D pos3D = cObject->GetPosition(Vector3D({ L*0.5,0.,0. }), ConfigurationType::Visualization);
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3D, vSystem, itemID, "", currentColor); }
 
 }
 
@@ -896,6 +913,7 @@ void VisualizationObjectALEANCFCable2D::UpdateGraphics(const VisualizationSettin
 
 void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
 
 	CObjectBeamGeometricallyExact2D* cObject = (CObjectBeamGeometricallyExact2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -903,7 +921,7 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 	Index tiling = 2;// visualizationSettings.bodies.beams.axialTiling; //not needed for linear beam
 
 	GLLine item;
-	item.itemID = Index2ItemID(itemNumber, ItemType::Object);
+	item.itemID = itemID;
 	if (color[0] != -1.f) { currentColor = color; }
 
 	Real L = cObject->GetParameters().physicsLength;
@@ -984,7 +1002,7 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 	}
 
 	Vector3D pos3D = cObject->GetPosition(Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization);
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3D, vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3D, vSystem, itemID, "", currentColor); }
 
 }
 
@@ -1001,6 +1019,7 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 
 void VisualizationObjectConnectorSpringDamper::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorSpringDamper* cItem = (CObjectConnectorSpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1028,13 +1047,14 @@ void VisualizationObjectConnectorSpringDamper::UpdateGraphics(const Visualizatio
 	//EXUvis::DrawSpring2D(pos[0], pos[1], vN, numberOfPoints, r, currentColor, vSystem->graphicsData);
 	Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
 	const Index nTildePerWinding = visualizationSettings.general.circleTiling;
-	EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object);
+	EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectConnectorCartesianSpringDamper::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorCartesianSpringDamper* cItem = (CObjectConnectorCartesianSpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1061,11 +1081,11 @@ void VisualizationObjectConnectorCartesianSpringDamper::UpdateGraphics(const Vis
 		Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
 		const Index nTildePerWinding = visualizationSettings.general.circleTiling;
 		p0 = pos[0]; p1 = pos[0] + Vector3D({ v0[0],0,0 });		//x-direction
-		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object);
+		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
 		p0 = p1; p1 = pos[0] + Vector3D({ v0[0],v0[1],0 });		//y-direction
-		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object);
+		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
 		p0 = p1; p1 = pos[0] + v0;								//z-direction
-		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object);
+		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
 
 		//const Index numberOfPoints = 12;
 		//p0 = pos[0]; p1 = pos[0] + Vector3D({ v0[0],0,0 });		//x-direction
@@ -1076,11 +1096,12 @@ void VisualizationObjectConnectorCartesianSpringDamper::UpdateGraphics(const Vis
 		//EXUvis::DrawSpring2D(p0, p1, Vector3D({ 0,1,0 }), numberOfPoints, r, currentColor, vSystem->graphicsData);
 	}
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectConnectorRigidBodySpringDamper::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorRigidBodySpringDamper* cItem = (CObjectConnectorRigidBodySpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1096,9 +1117,9 @@ void VisualizationObjectConnectorRigidBodySpringDamper::UpdateGraphics(const Vis
 	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
 	//draw as sphere with drawSize ...
-	EXUvis::DrawSphere(pos[0], r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object, visualizationSettings.general.sphereTiling);
-	EXUvis::DrawSphere(pos[1], r, EXUvis::ModifyColor(currentColor, EXUvis::modifyColorFactor), vSystem->graphicsData, itemNumber, ItemType::Object, visualizationSettings.general.sphereTiling);
-	EXUvis::DrawCylinder(pos[0], pos[1]-pos[0], 0.8*r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling);
+	EXUvis::DrawSphere(pos[0], r, currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.sphereTiling);
+	EXUvis::DrawSphere(pos[1], r, EXUvis::ModifyColor(currentColor, EXUvis::modifyColorFactor), vSystem->graphicsData, itemID, visualizationSettings.general.sphereTiling);
+	EXUvis::DrawCylinder(pos[0], pos[1]-pos[0], 0.8*r, currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling);
 
 	if (visualizationSettings.connectors.showJointAxes)
 	{
@@ -1111,17 +1132,18 @@ void VisualizationObjectConnectorRigidBodySpringDamper::UpdateGraphics(const Vis
 		rot[1] = rot[1] * cItem->GetParameters().rotationMarker1;
 
 		EXUvis::DrawOrthonormalBasis(pos[0], rot[0], visualizationSettings.connectors.jointAxesLength*1.5, 0.25*visualizationSettings.connectors.jointAxesRadius, 
-			vSystem->graphicsData, itemNumber, ItemType::Object, 1.f, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
+			vSystem->graphicsData, itemID, 1.f, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
 		EXUvis::DrawOrthonormalBasis(pos[1], rot[1], visualizationSettings.connectors.jointAxesLength*1.5, 0.25*visualizationSettings.connectors.jointAxesRadius, 
-			vSystem->graphicsData, itemNumber, ItemType::Object, EXUvis::modifyColorFactor, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
+			vSystem->graphicsData, itemID, EXUvis::modifyColorFactor, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
 	}
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 
 void VisualizationObjectConnectorCoordinateSpringDamper::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorCoordinateSpringDamper* cItem = (CObjectConnectorCoordinateSpringDamper*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1145,13 +1167,14 @@ void VisualizationObjectConnectorCoordinateSpringDamper::UpdateGraphics(const Vi
 	//EXUvis::DrawSpring2D(pos[0], pos[1], n, numberOfPoints, r, currentColor, vSystem->graphicsData);
 	Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
 	const Index nTildePerWinding = visualizationSettings.general.circleTiling;
-	EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object);
+	EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectConnectorDistance::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorDistance* cItem = (CObjectConnectorDistance*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1168,13 +1191,14 @@ void VisualizationObjectConnectorDistance::UpdateGraphics(const VisualizationSet
 	//float r = 0.5f*drawSize; //radius of spring
 	//if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
-	vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectConnectorCoordinate::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorCoordinate* cItem = (CObjectConnectorCoordinate*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1191,15 +1215,16 @@ void VisualizationObjectConnectorCoordinate::UpdateGraphics(const VisualizationS
 	float r = 0.5f*drawSize; //radius connectorCoordinate
 	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
-	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemID);
+	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 
 }
 
 void VisualizationObjectConnectorRollingDiscPenalty::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectConnectorRollingDiscPenalty* cItem = (CObjectConnectorRollingDiscPenalty*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1220,16 +1245,17 @@ void VisualizationObjectConnectorRollingDiscPenalty::UpdateGraphics(const Visual
 	Vector3D vAxis({ rot[1](0,0), rot[1](1,0), rot[1](2,0) }); //x-axis is disc axis ==> vAxis = A*[1,0,0]
 
 	//add drawing for disc
-	EXUvis::DrawCylinder(pos[1] - 0.5*discWidth*vAxis, discWidth*vAxis, discRadius, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object,
+	EXUvis::DrawCylinder(pos[1] - 0.5*discWidth*vAxis, discWidth*vAxis, discRadius, currentColor, vSystem->graphicsData, itemID,
 		4 * visualizationSettings.general.cylinderTiling);
 	EXUvis::DrawCylinder(pos[1] - discWidth * vAxis, 2.*discWidth*vAxis, 0.1*discRadius, EXUvis::ModifyColor(currentColor, 0.25), vSystem->graphicsData, 
-		itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling);
+		itemID, visualizationSettings.general.cylinderTiling);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectContactCoordinate::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectContactCoordinate* cItem = (CObjectContactCoordinate*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1253,15 +1279,16 @@ void VisualizationObjectContactCoordinate::UpdateGraphics(const VisualizationSet
 		{
 			currentColor = Float4({ 1.,0.,0.,1. }); //red color means contact ...
 		}
-		vSystem->graphicsData.AddCircleXY(pos[0], r, currentColor, 0, itemNumber, ItemType::Object);
-		vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemNumber, ItemType::Object);
+		vSystem->graphicsData.AddCircleXY(pos[0], r, currentColor, 0, itemID);
+		vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemID);
 	}
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectContactCircleCable2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectContactCircleCable2D* cItem = (CObjectContactCircleCable2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1280,7 +1307,7 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 		if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.contactPointsDefaultSize; } //use default size
 
 		//draw contact circle of first object:
-		vSystem->graphicsData.AddCircleXY(pos[0], (float)cItem->GetParameters().circleRadius, currentColor, 64, itemNumber, ItemType::Object);
+		vSystem->graphicsData.AddCircleXY(pos[0], (float)cItem->GetParameters().circleRadius, currentColor, 64, itemID);
 		Index nSeg = cItem->GetParameters().numberOfContactSegments;
 		Vector3D pContactLast; //previously computed point
 
@@ -1291,7 +1318,7 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 		{
 			Real locPos = (Real)i / (Real)nSeg * lCable;
 			Vector3D pContact = vSystem->systemData->GetCObjectBody(objectNum).GetPosition(Vector3D({ locPos, 0, 0 }), ConfigurationType::Visualization);
-			vSystem->graphicsData.AddCircleXY(pContact, r, currentColor, 0, itemNumber, ItemType::Object);
+			vSystem->graphicsData.AddCircleXY(pContact, r, currentColor, 0, itemID);
 
 			if (i > 0)
 			{
@@ -1300,7 +1327,7 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 				if (cItem->GetCNode(0)->GetVisualizationCoordinateVector()[i - 1] < 0) //this is the gap at the end of the discontinuous iteration
 				{
 					contactColor = Float4({ 1.,0.,0.,1. });
-					vSystem->graphicsData.AddLine(pContact, pContactLast, contactColor, contactColor, itemNumber, ItemType::Object);
+					vSystem->graphicsData.AddLine(pContact, pContactLast, contactColor, contactColor, itemID);
 				} //red color means contact ...
 
 			}
@@ -1308,12 +1335,13 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 		}
 	}
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemNumber, ItemType::Object, "", currentColor); } //midpoint of ANCF element
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemID, "", currentColor); } //midpoint of ANCF element
 
 }
 
 void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectContactFrictionCircleCable2D* cItem = (CObjectContactFrictionCircleCable2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1332,7 +1360,7 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 		if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.contactPointsDefaultSize; } //use default size
 
 		//draw contact circle of first object:
-		vSystem->graphicsData.AddCircleXY(pos[0], (float)cItem->GetParameters().circleRadius, currentColor, 64, itemNumber, ItemType::Object);
+		vSystem->graphicsData.AddCircleXY(pos[0], (float)cItem->GetParameters().circleRadius, currentColor, 64, itemID);
 		Index nSeg = cItem->GetParameters().numberOfContactSegments;
 		Vector3D pContactLast; //previously computed point
 
@@ -1344,7 +1372,7 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 		{
 			Real locPos = (Real)i / (Real)nSeg * lCable;
 			Vector3D pContact = vSystem->systemData->GetCObjectBody(objectNum).GetPosition(Vector3D({ locPos, 0, 0 }), ConfigurationType::Visualization);
-			vSystem->graphicsData.AddCircleXY(pContact, r, currentColor, 0, itemNumber, ItemType::Object);
+			vSystem->graphicsData.AddCircleXY(pContact, r, currentColor, 0, itemID);
 
 			if (i > 0)
 			{
@@ -1353,7 +1381,7 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 				if (cItem->GetCNode(0)->GetVisualizationCoordinateVector()[i - 1] < 0) //this is the gap at the end of the discontinuous iteration
 				{
 					contactColor = Float4({ 1.,0.,0.,1. });
-					vSystem->graphicsData.AddLine(pContact, pContactLast, contactColor, contactColor, itemNumber, ItemType::Object);
+					vSystem->graphicsData.AddLine(pContact, pContactLast, contactColor, contactColor, itemID);
 				} //red color means contact ...
 
 			}
@@ -1361,12 +1389,13 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 		}
 	}
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemNumber, ItemType::Object, "", currentColor); } //midpoint of ANCF element
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemID, "", currentColor); } //midpoint of ANCF element
 
 }
 
 void VisualizationObjectJointGeneric::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointGeneric* cItem = (CObjectJointGeneric*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1393,8 +1422,8 @@ void VisualizationObjectJointGeneric::UpdateGraphics(const VisualizationSettings
 	if (axesConstrained == 3) //rigid configuration, draw as sphere
 	{
 		EXUvis::DrawSphere(pos[0], 0.5*axesRadius, EXUvis::ModifyColor(currentColor, 0.25), vSystem->graphicsData,
-			itemNumber, ItemType::Object, visualizationSettings.general.sphereTiling);
-		EXUvis::DrawSphere(pos[1], 0.5*axesRadius, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object,
+			itemID, visualizationSettings.general.sphereTiling);
+		EXUvis::DrawSphere(pos[1], 0.5*axesRadius, currentColor, vSystem->graphicsData, itemID,
 			visualizationSettings.general.sphereTiling);
 	}
 	else if (axesConstrained == 2) //revolute or cylindrical joint
@@ -1405,9 +1434,9 @@ void VisualizationObjectJointGeneric::UpdateGraphics(const VisualizationSettings
 			{
 				Vector3D v = rot[0].GetColumnVector<3>(i);
 				EXUvis::DrawCylinder(pos[0] - 0.6*axesLength*v, 1.2*axesLength*v, 0.5*axesRadius, EXUvis::ModifyColor(currentColor, 0.25), 
-					vSystem->graphicsData, itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling); //axis attached to marker0
+					vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling); //axis attached to marker0
 				EXUvis::DrawCylinder(pos[1] - 0.5*axesLength*v, axesLength*v, axesRadius, currentColor, 
-					vSystem->graphicsData, itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling, 0.75*axesRadius); //hinge attached to marker1
+					vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling, 0.75*axesRadius); //hinge attached to marker1
 			}
 		}
 	}
@@ -1420,7 +1449,7 @@ void VisualizationObjectJointGeneric::UpdateGraphics(const VisualizationSettings
 			{
 				Vector3D v = rot[offset].GetColumnVector<3>(i);
 				EXUvis::DrawCylinder(pos[offset] - 0.6*axesLength*v, 1.2*axesLength*v, 0.5*axesRadius, EXUvis::ModifyColor(currentColor, 1.f-0.75f*offset), 
-					vSystem->graphicsData, itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling); //axis attached to marker0
+					vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling); //axis attached to marker0
 				offset++;
 			}
 		}
@@ -1428,17 +1457,18 @@ void VisualizationObjectJointGeneric::UpdateGraphics(const VisualizationSettings
 	if (visualizationSettings.connectors.showJointAxes)
 	{
 		EXUvis::DrawOrthonormalBasis(pos[0], rot[0], visualizationSettings.connectors.jointAxesLength*1.5, 0.25*visualizationSettings.connectors.jointAxesRadius, 
-			vSystem->graphicsData, itemNumber, ItemType::Object, 1.f, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
+			vSystem->graphicsData, itemID, 1.f, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
 		EXUvis::DrawOrthonormalBasis(pos[1], rot[1], visualizationSettings.connectors.jointAxesLength*1.5, 0.25*visualizationSettings.connectors.jointAxesRadius, 
-			vSystem->graphicsData, itemNumber, ItemType::Object, EXUvis::modifyColorFactor, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
+			vSystem->graphicsData, itemID, EXUvis::modifyColorFactor, visualizationSettings.openGL.showFaces, visualizationSettings.general.axesTiling);
 	}
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 
 void VisualizationObjectJointSpherical::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointSpherical* cItem = (CObjectJointSpherical*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1456,19 +1486,20 @@ void VisualizationObjectJointSpherical::UpdateGraphics(const VisualizationSettin
 	if (axesConstrained < 3) //draw relative vector as cylinder
 	{
 		EXUvis::DrawCylinder(pos[0], pos[1] - pos[0], 0.5*jointRadius, EXUvis::ModifyColor(currentColor, 0.5), vSystem->graphicsData,
-			itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling); //axis attached to marker0
+			itemID, visualizationSettings.general.cylinderTiling); //axis attached to marker0
 	}
 
-	EXUvis::DrawSphere(pos[0], jointRadius, EXUvis::ModifyColor(currentColor, 0.25), vSystem->graphicsData, itemNumber, ItemType::Object,
+	EXUvis::DrawSphere(pos[0], jointRadius, EXUvis::ModifyColor(currentColor, 0.25), vSystem->graphicsData, itemID,
 		visualizationSettings.general.sphereTiling);
-	EXUvis::DrawSphere(pos[1], jointRadius, currentColor, vSystem->graphicsData, itemNumber, ItemType::Object,
+	EXUvis::DrawSphere(pos[1], jointRadius, currentColor, vSystem->graphicsData, itemID,
 		visualizationSettings.general.sphereTiling);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectJointRollingDisc::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointRollingDisc* cItem = (CObjectJointRollingDisc*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1490,16 +1521,17 @@ void VisualizationObjectJointRollingDisc::UpdateGraphics(const VisualizationSett
 
 	//add drawing for disc
 	EXUvis::DrawCylinder(pos[1] - 0.5*discWidth*vAxis, discWidth*vAxis, discRadius, currentColor, vSystem->graphicsData,
-		itemNumber, ItemType::Object, 4 * visualizationSettings.general.cylinderTiling);
+		itemID, 4 * visualizationSettings.general.cylinderTiling);
 	EXUvis::DrawCylinder(pos[1] - discWidth * vAxis, 2.*discWidth*vAxis, 0.1*discRadius, EXUvis::ModifyColor(currentColor, 0.25), vSystem->graphicsData, 
-		itemNumber, ItemType::Object, visualizationSettings.general.cylinderTiling);
+		itemID, visualizationSettings.general.cylinderTiling);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(pos[1], vSystem, itemID, "", currentColor); }
 }
 
 
 void VisualizationObjectJointRevolute2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointRevolute2D* cItem = (CObjectJointRevolute2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1516,14 +1548,15 @@ void VisualizationObjectJointRevolute2D::UpdateGraphics(const VisualizationSetti
 	float r = 0.5f*drawSize; //radius of spring
 	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
-	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemID);
+	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectJointPrismatic2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointPrismatic2D* cItem = (CObjectJointPrismatic2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1540,15 +1573,16 @@ void VisualizationObjectJointPrismatic2D::UpdateGraphics(const VisualizationSett
 	float r = 0.5f*drawSize; //radius of spring
 	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
-	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemID);
+	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemID);
+	vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectJointSliding2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointSliding2D* cItem = (CObjectJointSliding2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1565,14 +1599,15 @@ void VisualizationObjectJointSliding2D::UpdateGraphics(const VisualizationSettin
 	float r = 0.5f*drawSize; //radius of spring
 	if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
-	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemID);
+	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectJointALEMoving2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.connectors.defaultColor;
 
 	CObjectJointALEMoving2D* cItem = (CObjectJointALEMoving2D*)vSystem->systemData->GetCObjects()[itemNumber];
@@ -1624,14 +1659,18 @@ void VisualizationObjectJointALEMoving2D::UpdateGraphics(const VisualizationSett
 
 	Vector3D vy({ 0,r,0 });
 	Vector3D vx({ r,0,0 });
-	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddCircleXY(pos[0], r, Float4({ 1.,0.,0.,1. }), 0, itemID);
 
-	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddLine(pos[1] - vx, pos[1] + vx, currentColor, currentColor, itemNumber, ItemType::Object);
-	vSystem->graphicsData.AddLine(pos[1] - vy, pos[1] + vy, currentColor, currentColor, itemNumber, ItemType::Object);
+	vSystem->graphicsData.AddCircleXY(pos[1], r, currentColor, 0, itemID);
+	vSystem->graphicsData.AddLine(pos[1] - vx, pos[1] + vx, currentColor, currentColor, itemID);
+	vSystem->graphicsData.AddLine(pos[1] - vy, pos[1] + vy, currentColor, currentColor, itemID);
 
-	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemNumber, ItemType::Object, "", currentColor); }
+	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }
+
+
+
+
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1640,6 +1679,7 @@ void VisualizationObjectJointALEMoving2D::UpdateGraphics(const VisualizationSett
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationMarkerBodyPosition::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerBodyPosition* cMarker = (CMarkerBodyPosition*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1651,18 +1691,19 @@ void VisualizationMarkerBodyPosition::UpdateGraphics(const VisualizationSettings
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 
 	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor);
 	//radius /= sqrt(2.f);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyMass::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerBodyMass* cMarker = (CMarkerBodyMass*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1676,13 +1717,14 @@ void VisualizationMarkerBodyMass::UpdateGraphics(const VisualizationSettings& vi
 	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor); 
 	//radius /= sqrt(2.f);
 	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor); //bodymass-marker has double circle
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyRigid::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerBodyRigid* cMarker = (CMarkerBodyRigid*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1694,7 +1736,7 @@ void VisualizationMarkerBodyRigid::UpdateGraphics(const VisualizationSettings& v
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor);
 	//radius /= sqrt(2.f);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, -radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
@@ -1702,11 +1744,12 @@ void VisualizationMarkerBodyRigid::UpdateGraphics(const VisualizationSettings& v
 	//vSystem->graphicsData.AddLine(pos + Vector3D({  radius,  radius, 0. }), pos + Vector3D({-radius, radius, 0. }), currentColor, currentColor);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ -radius,  radius, 0. }), pos + Vector3D({-radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 void VisualizationMarkerNodePosition::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerNodePosition* cMarker = (CMarkerNodePosition*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1717,17 +1760,18 @@ void VisualizationMarkerNodePosition::UpdateGraphics(const VisualizationSettings
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor);
 	//radius /= sqrt(2.f);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 void VisualizationMarkerNodeRigid::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerNodeRigid* cMarker = (CMarkerNodeRigid*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1738,7 +1782,7 @@ void VisualizationMarkerNodeRigid::UpdateGraphics(const VisualizationSettings& v
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor);
 	//radius /= sqrt(2.f);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, -radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor);
@@ -1746,12 +1790,13 @@ void VisualizationMarkerNodeRigid::UpdateGraphics(const VisualizationSettings& v
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ radius,  radius, 0. }), pos + Vector3D({ -radius, radius, 0. }), currentColor, currentColor);
 	//vSystem->graphicsData.AddLine(pos + Vector3D({ -radius,  radius, 0. }), pos + Vector3D({ -radius, -radius, 0. }), currentColor, currentColor);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationMarkerSuperElementPosition::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerSuperElementPosition* cMarker = (CMarkerSuperElementPosition*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1764,7 +1809,7 @@ void VisualizationMarkerSuperElementPosition::UpdateGraphics(const Visualization
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
 	//show marker position
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 
 	if (showMarkerNodes)
 	{
@@ -1772,17 +1817,18 @@ void VisualizationMarkerSuperElementPosition::UpdateGraphics(const Visualization
 		for (Index node : cMarker->GetParameters().meshNodeNumbers)
 		{
 			Vector3D p = cSuperElement->GetMeshNodePosition(node, ConfigurationType::Visualization);
-			EXUvis::DrawMarker(p, radius, alternativeColor, vSystem->graphicsData, itemNumber, 
+			EXUvis::DrawMarker(p, radius, alternativeColor, vSystem->graphicsData, itemID,
 				!visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 		}
 	}
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerSuperElementRigid* cMarker = (CMarkerSuperElementRigid*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1795,14 +1841,14 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
 	//show marker position
-	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemNumber, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 
 	Matrix3D A;
 	cMarker->GetRotationMatrix(*vSystem->systemData, A, ConfigurationType::Visualization);
 	
 	//show marker orientation ==> only for rigid marker
 	EXUvis::DrawOrthonormalBasis(pos, A, radius*4, 0.1*radius,
-		vSystem->graphicsData, itemNumber, ItemType::Marker, 1.f, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces,
+		vSystem->graphicsData, itemID, 1.f, !visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces,
 		visualizationSettings.general.axesTiling, 2.5);
 
 	if (showMarkerNodes)
@@ -1811,16 +1857,17 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 		for (Index node : cMarker->GetParameters().meshNodeNumbers)
 		{
 			Vector3D p = cSuperElement->GetMeshNodePosition(node, ConfigurationType::Visualization);
-			EXUvis::DrawMarker(p, radius, alternativeColor, vSystem->graphicsData, itemNumber, 
+			EXUvis::DrawMarker(p, radius, alternativeColor, vSystem->graphicsData, itemID,
 				!visualizationSettings.markers.drawSimplified && visualizationSettings.openGL.showFaces);
 		}
 	}
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyCable2DShape::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerBodyCable2DShape* cMarker = (CMarkerBodyCable2DShape*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1832,16 +1879,17 @@ void VisualizationMarkerBodyCable2DShape::UpdateGraphics(const VisualizationSett
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
-	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 0, itemNumber, ItemType::Marker);
+	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 0, itemID);
 	radius /= sqrt(2.f);
-	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor, itemNumber, ItemType::Marker);
-	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor, itemNumber, ItemType::Marker);
+	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor, itemID);
+	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor, itemID);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
 
 void VisualizationMarkerBodyCable2DCoordinates::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Marker, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.markers.defaultColor;
 
 	CMarkerBodyCable2DCoordinates* cMarker = (CMarkerBodyCable2DCoordinates*)vSystem->systemData->GetCMarkers()[itemNumber];
@@ -1853,13 +1901,15 @@ void VisualizationMarkerBodyCable2DCoordinates::UpdateGraphics(const Visualizati
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.002f; }
 
-	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 0, itemNumber, ItemType::Marker);
+	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 0, itemID);
 	radius /= sqrt(2.f);
-	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor, itemNumber, ItemType::Marker);
-	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor, itemNumber, ItemType::Marker);
+	vSystem->graphicsData.AddLine(pos + Vector3D({ radius, radius, 0. }), pos - Vector3D({ radius, radius, 0. }), currentColor, currentColor, itemID);
+	vSystem->graphicsData.AddLine(pos + Vector3D({ -radius, radius, 0. }), pos + Vector3D({ radius, -radius, 0. }), currentColor, currentColor, itemID);
 
-	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Marker, "M", currentColor); }
+	if (visualizationSettings.markers.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "M", currentColor); }
 }
+
+
 
 
 
@@ -1868,6 +1918,7 @@ void VisualizationMarkerBodyCable2DCoordinates::UpdateGraphics(const Visualizati
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void VisualizationLoadForceVector::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Load, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.loads.defaultColor;
 
 	CLoadForceVector* cLoad = (CLoadForceVector*)vSystem->systemData->GetCLoads()[itemNumber];
@@ -1902,14 +1953,15 @@ void VisualizationLoadForceVector::UpdateGraphics(const VisualizationSettings& v
 		}
 
 		EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor, 
-			vSystem->graphicsData, itemNumber, ItemType::Load, visualizationSettings.general.axesTiling, false, !visualizationSettings.loads.drawSimplified && visualizationSettings.openGL.showFaces);
+			vSystem->graphicsData, itemID, visualizationSettings.general.axesTiling, false, !visualizationSettings.loads.drawSimplified && visualizationSettings.openGL.showFaces);
 
-		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos+loadVector, vSystem, itemNumber, ItemType::Load, "L", currentColor); }
+		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos+loadVector, vSystem, itemID, "L", currentColor); }
 	}
 }
 
 void VisualizationLoadMassProportional::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Load, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.loads.defaultColor;
 
 	CLoadMassProportional* cLoad = (CLoadMassProportional*)vSystem->systemData->GetCLoads()[itemNumber];
@@ -1930,7 +1982,7 @@ void VisualizationLoadMassProportional::UpdateGraphics(const VisualizationSettin
 		loadVector *= size;
 
 		EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor,
-			vSystem->graphicsData, itemNumber, ItemType::Load, visualizationSettings.general.axesTiling, false,
+			vSystem->graphicsData, itemID, visualizationSettings.general.axesTiling, false,
 			!visualizationSettings.loads.drawSimplified && visualizationSettings.openGL.showFaces);
 
 		//if (visualizationSettings.openGL.showFaces) //show in 3D
@@ -1950,12 +2002,13 @@ void VisualizationLoadMassProportional::UpdateGraphics(const VisualizationSettin
 		//	vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector + hatOffset, currentColor, currentColor);
 		//	vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector - hatOffset, currentColor, currentColor);
 		//}
-		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Load, "L", currentColor); }
+		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "L", currentColor); }
 	}
 }
 
 void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Load, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.loads.defaultColor;
 
 	CLoadTorqueVector* cLoad = (CLoadTorqueVector*)vSystem->systemData->GetCLoads()[itemNumber];
@@ -1991,11 +2044,15 @@ void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& 
 		}
 
 		EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor,
-			vSystem->graphicsData, itemNumber, ItemType::Load, visualizationSettings.general.axesTiling, true, !visualizationSettings.loads.drawSimplified && visualizationSettings.openGL.showFaces);
+			vSystem->graphicsData, itemID, visualizationSettings.general.axesTiling, true, !visualizationSettings.loads.drawSimplified && visualizationSettings.openGL.showFaces);
 
-		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Load, "L", currentColor); }
+		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "L", currentColor); }
 	}
 }
+
+
+
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++    SENSORS    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2003,6 +2060,7 @@ void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& 
 
 void VisualizationSensorNode::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Sensor, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.sensors.defaultColor;
 
 	Index nodeNumber = vSystem->systemData->GetCSensors()[itemNumber]->GetNodeNumber();
@@ -2014,14 +2072,15 @@ void VisualizationSensorNode::UpdateGraphics(const VisualizationSettings& visual
 		if (visualizationSettings.sensors.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.003f; }
 
 		Vector3D pos(((CNodeODE2*)cNode)->GetPosition(ConfigurationType::Visualization));
-		EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
+		EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
 
-		if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Sensor, "S", currentColor); }
+		if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "S", currentColor); }
 	}
 }
 
 void VisualizationSensorObject::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Sensor, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.sensors.defaultColor;
 
 	CSensorObject* cSensor = (CSensorObject*)(vSystem->systemData->GetCSensors()[itemNumber]);
@@ -2046,8 +2105,8 @@ void VisualizationSensorObject::UpdateGraphics(const VisualizationSettings& visu
 			cMarker1.GetPosition(*(vSystem->systemData), pos1, ConfigurationType::Visualization);
 
 			Vector3D pos = 0.5*(pos0 + pos1);
-			EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
-			if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Sensor, "S", currentColor); }
+			EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
+			if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "S", currentColor); }
 		}
 
 	}
@@ -2057,6 +2116,7 @@ void VisualizationSensorObject::UpdateGraphics(const VisualizationSettings& visu
 
 void VisualizationSensorBody::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Sensor, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.sensors.defaultColor;
 
 	CSensorBody* cSensor = (CSensorBody*)(vSystem->systemData->GetCSensors()[itemNumber]);
@@ -2067,14 +2127,15 @@ void VisualizationSensorBody::UpdateGraphics(const VisualizationSettings& visual
 	if (visualizationSettings.sensors.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.003f; }
 
 	Vector3D pos(cObject.GetPosition(cSensor->GetBodyLocalPosition(), ConfigurationType::Visualization));
-	EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
 
-	if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Sensor, "S", currentColor); }
+	if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "S", currentColor); }
 
 }
 
 void VisualizationSensorSuperElement::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Sensor, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.sensors.defaultColor;
 
 	CSensorSuperElement* cSensor = (CSensorSuperElement*)(vSystem->systemData->GetCSensors()[itemNumber]);
@@ -2085,14 +2146,15 @@ void VisualizationSensorSuperElement::UpdateGraphics(const VisualizationSettings
 	if (visualizationSettings.sensors.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.003f; }
 
 	Vector3D pos(cObject->GetMeshNodePosition(cSensor->GetMeshNodeNumber(), ConfigurationType::Visualization));
-	EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
 
-	if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Sensor, "S", currentColor); }
+	if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "S", currentColor); }
 
 }
 
 void VisualizationSensorMarker::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
+	Index itemID = Index2ItemID(itemNumber, ItemType::Sensor, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.sensors.defaultColor;
 
 	Index markerNumber = vSystem->systemData->GetCSensors()[itemNumber]->GetMarkerNumber();
@@ -2105,9 +2167,9 @@ void VisualizationSensorMarker::UpdateGraphics(const VisualizationSettings& visu
 	float radius = 0.5f*visualizationSettings.sensors.defaultSize;
 	if (visualizationSettings.sensors.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.initialMaxSceneSize * 0.003f; }
 
-	EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
+	EXUvis::DrawSensor(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.sensors.drawSimplified && visualizationSettings.openGL.showFaces);
 
-	if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemNumber, ItemType::Sensor, "S", currentColor); }
+	if (visualizationSettings.sensors.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "S", currentColor); }
 }
 
 

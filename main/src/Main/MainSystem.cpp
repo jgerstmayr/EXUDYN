@@ -37,12 +37,24 @@
 //! reset all lists and deallocate memory
 void MainSystem::Reset()
 {
+	//clear all data, prepare for removal (why not delete?)
 	mainSystemData.Reset(); //
 	GetCSystem()->GetSystemData().Reset();
 	GetCSystem()->GetPythonUserFunctions().Reset();
 	GetCSystem()->Initialize();
+	GetCSystem()->GetPostProcessData()->Reset();
 	visualizationSystem.Reset();
 	interactiveMode = false;
+	//mainSystemIndex = -1; //... check if this is correctly set? test several SC.Reset and similar operations ==> this MainSystem would not be usable any more, as it is not linked to SystemContainer
+}
+
+MainSystemContainer& MainSystem::GetMainSystemContainer() 
+{
+	return *mainSystemContainerBacklink; 
+}
+const MainSystemContainer& MainSystem::GetMainSystemContainerConst() const
+{ 
+	return *mainSystemContainerBacklink; 
 }
 
 //!  if interAciveMode == true: causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
@@ -75,22 +87,27 @@ void MainSystem::PySetPostNewtonUserFunction(const py::object& value)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+	//! set rendering true/false
+void MainSystem::ActivateRendering(bool flag)
+{
+	visualizationSystem.ActivateRendering(flag);
+}
+
 //! this function links the VisualizationSystem to a render engine, such that the changes in the graphics structure drawn upon updates, etc.
 //  This function is called on creation of a main system and automatically links to renderer
-bool MainSystem::LinkToRenderEngine()
+bool MainSystem::LinkToVisualizationSystem()
 {
 	visualizationSystem.LinkToSystemData(&GetCSystem()->GetSystemData());
 	visualizationSystem.LinkToMainSystem(this);
 	visualizationSystem.LinkPostProcessData(GetCSystem()->GetPostProcessData());
-	return true; // visualizationSystem.LinkToRenderEngine(*GetCSystem());
+	visualizationSystem.ActivateRendering(true); //activate rendering on startup
+	return true; 
 }
 
-//! this function releases the VisualizationSystem from the render engine;
-bool MainSystem::DetachRenderEngine()
+//! for future, unregister mbs from renderer
+bool MainSystem::UnlinkVisualizationSystem()
 {
-	//at the moment nothing is done; but it could remove the links to systemData and postProcessData
 	return true;
-	//visualizationSystem.DetachRenderEngine();
 }
 
 

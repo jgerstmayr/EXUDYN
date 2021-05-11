@@ -16,6 +16,7 @@ import tkinter.messagebox
 import tkinter.ttk as ttk
 import numpy as np #for array checks
 import ast #for ast.literal_eval
+import exudyn
 
 #unique text height for tk with given scaling
 def TkTextHeight(systemScaling):
@@ -481,7 +482,13 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 #**output: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
 def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
     master = tk.Tk()
+    master.geometry("1024x800")
+    master.lift() #brings it to front of other; not always "strong" enough
+    master.attributes("-topmost", True) #puts window topmost (permanent)
+    #master.attributes("-topmost", False) #puts window topmost (remove permanent)
     master.title(dictionaryName)
+    master.focus_force() #window has focus
+
     systemScaling = master.call('tk', 'scaling') #obtains current scaling?
     #print('display scaling=',systemScaling)
     textHeight = TkTextHeight(systemScaling)
@@ -501,26 +508,29 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
     return ex.modifiedDictionary
 
 
-
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #hierarchical lists:
 class TkinterEditDictionary(tk.Frame):
-    def __init__(self, parent, dictionaryData):
+    def __init__(self, parent, dictionaryData, dictionaryIsEditable=True):
         tk.Frame.__init__(self, parent)
         
         self.parent = parent
+        self.dictionaryIsEditable = dictionaryIsEditable
+        self.longestColumn = 20 #min value
 
         #create treeview:
-        self.tree = ttk.Treeview(self, columns=("value",), height=15)
+        self.tree = ttk.Treeview(self, columns=("value"), height=15)
+        self.AddNodeFromDictionary(value=dictionaryData, parentNode="")
+
         self.vsb = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=self.vsb.set)
+        self.hsb = ttk.Scrollbar(self, orient="horizontal", command=self.tree.xview)
+        self.tree.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set)
 
         self.vsb.pack(side="right", fill="y")
         self.tree.pack(side="top", fill="both", expand=True)
-#        self.vsb.grid(row=0, column=1)
-#        self.tree.grid(row=0, column=0)
 
+        self.hsb.pack(side="bottom",anchor='w', fill="x",padx=10,pady=5)
 
-        self.AddNodeFromDictionary(value=dictionaryData, parentNode="")
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
         self.tree.bind("<Double-1>", self.OnTreeDoubleClick) #an item has been selected for change
         self.tree.bind("<Return>", self.OnTreeDoubleClick) #an item has been selected for change
@@ -528,25 +538,33 @@ class TkinterEditDictionary(tk.Frame):
         
         #create the entry field for editing the treeview value
 
-        self.selectedItem = '' #will change to valid item in order to change value
-        self.editItemName = tk.StringVar()
-        self.editItemVar = tk.StringVar()
-
-        self.editName = tk.Label(self, textvariable=self.editItemName)
-        self.editName.pack(side="left", fill="both", expand=True)
-
-        self.editItem = tk.Entry(self, textvariable=self.editItemVar)
-#        self.editItem.grid(row=1, column=1)
-        self.editItem.pack(side="left", fill="both", expand=False)
-        self.editItem.bind('<Return>', self.OnEditEntryItem)
-        self.editItem.bind('<FocusOut>', self.OnEditEntryItem)
-        self.editItem.bind('<Escape>', self.OnEditEscapeItem)
+        if True:
+            self.selectedItem = '' #will change to valid item in order to change value
+            self.editItemName = tk.StringVar()
+            self.editItemVar = tk.StringVar()
+    
+            self.editName = tk.Label(self, textvariable=self.editItemName)#, width=10)
+            self.editName.pack(side="left", fill="both", expand=True)
+    
+            self.editItem = tk.Entry(self, textvariable=self.editItemVar)#, width=40)
+    #        self.editItem.grid(row=1, column=1)
+            self.editItem.pack(side="right", fill="both", expand=True)
+            self.editItem.bind('<Return>', self.OnEditEntryItem)
+            self.editItem.bind('<FocusOut>', self.OnEditEntryItem)
+            self.editItem.bind('<Escape>', self.OnEditEscapeItem)
 
         first = self.tree.get_children('')[0]
         self.tree.focus_set()
         self.tree.focus(first)
         self.tree.selection_set((first))
-        
+        self.tree.heading('#0', text='variable', anchor='w')
+        self.tree.column("#0",minwidth=300, stretch=True)        
+        self.tree.heading('#1', text='value', anchor='w')
+        self.tree.column("#1",anchor='w', #width=200,
+                         minwidth=self.longestColumn*12,
+                         stretch=True)
+        self.hsb.config(command = self.tree.xview)
+
         self.modifiedDictionary = self.GetDictionary('')
 
     #create dictionary
@@ -554,15 +572,44 @@ class TkinterEditDictionary(tk.Frame):
         if key is None:
             id = ""
         else:
-            id = self.tree.insert(parentNode, "end", text=key)
+            if key != 'TODO':
+                id = self.tree.insert(parentNode, "end", text=key)
+            else:
+                id = self.tree.insert(parentNode, "end", text='<unavailable>')
 
         if isinstance(value, dict):
             self.tree.item(id, open=True)
+            #print("dict =", value)
             for (key, value) in value.items():
                 self.AddNodeFromDictionary(value, id, key)
         else:
-            self.tree.item(id, values=(value))
-            #self.tree.item(id, text=str(value))
+            #print("value =", value)
+            if isinstance(value, bool) : #bool first, bool is also int
+                self.tree.item(id, values=(str(value)))
+            elif isinstance(value, int) or isinstance(value, float):
+                self.tree.item(id, values=(value))
+            elif isinstance(value, np.ndarray):
+                if (value.size < 5000):
+                    valueList = value.tolist()
+                    valueListStr = str(valueList)
+                    self.longestColumn = max(self.longestColumn,len(valueListStr))
+                    valueStr = valueListStr.replace(' ','\ ').replace(',','\,')
+                    self.tree.item(id, values=(valueStr))
+                else:
+                    self.tree.item(id, values=('<unavailable>'))
+            elif isinstance(value, list):
+                if np.array(value).size < 5000:
+                    valueListStr = str(value)
+                    self.longestColumn = max(self.longestColumn,len(valueListStr))
+                    valueStr = valueListStr.replace(' ','\ ').replace(',','\,')
+                    self.tree.item(id, values=(valueStr))
+                else:
+                    self.tree.item(id, values=('<unavailable>'))
+            elif isinstance(value, str) and value!='Get graphics data to be implemented':
+                self.longestColumn = max(self.longestColumn,len(value))
+                self.tree.item(id, values=(value.replace(' ','\ ')))
+            else:
+                self.tree.item(id, values=('<unavailable>'))
 
     def GetDictionary(self, item):
         d=dict()
@@ -616,55 +663,74 @@ class TkinterEditDictionary(tk.Frame):
     def OnEditEntryItem(self,event):
         if self.selectedItem != '':
             #print('edit')
-            self.tree.item(self.selectedItem, values=(self.editItemVar.get()))
-            currentItem = self.selectedItem
-            self.selectedItem = '' #now item can be modified
-            self.editItemVar.set('')
-            self.editItemName.set('')
-            self.tree.focus_set()
-
-            #as return is pressed, move to next item
-            next = self.tree.next(currentItem)
-            if next != '':
-                self.tree.selection_set((next))
-                self.tree.focus(next)
-                self.tree.see(next)
-            else:
-                par = self.tree.parent(currentItem)
-                if par != '' and self.tree.next(par) != '':
-                    next = self.tree.next(par)
-                    self.tree.selection_set(next)
+            if self.dictionaryIsEditable:
+                valueStr = self.editItemVar.get()
+                valueStr = str(valueStr).replace(' ','\ ')
+                print(valueStr)
+                self.tree.item(self.selectedItem, values=(valueStr))
+                currentItem = self.selectedItem
+                self.selectedItem = '' #now item can be modified
+                self.editItemVar.set('')
+                self.editItemName.set('')
+                self.tree.focus_set()
+    
+                #as return is pressed, move to next item
+                next = self.tree.next(currentItem)
+                if next != '':
+                    self.tree.selection_set((next))
                     self.tree.focus(next)
                     self.tree.see(next)
+                else:
+                    par = self.tree.parent(currentItem)
+                    if par != '' and self.tree.next(par) != '':
+                        next = self.tree.next(par)
+                        self.tree.selection_set(next)
+                        self.tree.focus(next)
+                        self.tree.see(next)
+                self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
 
     def OnEditEscapeItem(self,event):
         #print('escape')
         if self.selectedItem != '':
-            self.editItemVar.set(self.tree.item(self.selectedItem,'values')[0])
+            valueStr = self.tree.item(self.selectedItem,'values')[0]
+            #print(valueStr)
+            valueStr = str(valueStr).replace(' ','\ ')
+            self.editItemVar.set(valueStr)
             self.selectedItem = '' #now item can be modified
 #            self.editItemVar.set('')
 #            self.editItemName.set('')
             self.tree.focus_set()
 
 #edit dictionaryData and return modified (new) dictionary
-def EditDictionary(dictionaryData):
+def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     master = tk.Tk()
+    master.geometry("600x600")
+    master.lift() #brings it to front of other; is not always strong enough
+    master.attributes("-topmost", True) #puts window topmost (permanent)
+    #master.attributes("-topmost", False) #puts window topmost (remove permanent)
     systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling?
     #print('display scaling=',systemScaling)
     textHeight = TkTextHeight(systemScaling)
-    
+    master.title(dialogName)
+    master.focus_force() #window has focus
+
     style = ttk.Style(master)
     style.configure('Treeview', rowheight=textHeight) 
     
     def closeEditDictionary(event):
         master.destroy() # if you want to bring it back
 
-    ex=TkinterEditDictionary(master, dictionaryData)
+    ex=TkinterEditDictionary(master, dictionaryData, dictionaryIsEditable)
     ex.pack(fill="both", expand=True)
 
     master.mainloop()
     
-    return ex.modifiedDictionary
+    if dictionaryIsEditable:
+        return ex.modifiedDictionary
+    else:
+        return {}
+
+
 
         
 ##+++++++++++++++++++++++++++++++++++++++
@@ -685,28 +751,3 @@ def EditDictionary(dictionaryData):
 #
 #x=EditDictionaryWithTypeInfo(DATA2)
 
-##convert a given value with type information and size to a string; depending on size, it converts from matrix, vector, scalar, ...
-##NOT NEEDED: just use str(value) ...
-#def ConvertValue2String(value, vType, vSize):
-#    s= ''
-#    if len(vSize) == 2: #must be matrix
-#        s='['
-#        delimiterRow = ''
-#        for row in value:
-#            delimiterCol = ''
-#            s += delimiterRow + '['
-#            for col in row:
-#                s += delimiterCol + str(col)
-#                delimiterCol = ','
-#            s+=']'
-#            delimiterRow = ','
-#    elif vSize[0] > 1: #vector/array
-#        delimiterCol = ''
-#        s = '['
-#        for col in value:
-#            s += delimiterCol + str(col)
-#            delimiterCol = ','
-#        s+=']'
-#    else: #scalar, string, int, type, ...
-#        s=str(value)
-#    return s

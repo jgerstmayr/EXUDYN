@@ -180,7 +180,8 @@ if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
 
 #mbs.WaitForUserToContinue()
-SC.StaticSolveOldSolver(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+#SC.StaticSolveOldSolver(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
+exu.SolveStatic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
 
 sol = mbs.systemData.GetODE2Coordinates()
 n = len(sol)
@@ -190,5 +191,5 @@ if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-exudynTestGlobals.testError = sol[n-3] - (-0.4842656547442095) #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
+exudynTestGlobals.testError = sol[n-3] - (-0.4842656133238705) #2021-05-07 (deactivated StaticSolveOldSolver):-0.4842656133238705  #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
 exudynTestGlobals.testResult = sol[n-3]

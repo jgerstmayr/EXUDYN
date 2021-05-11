@@ -19,7 +19,7 @@ def TestExamplesReferenceSolution():
     if exudynTestGlobals.useCorrectedAccGenAlpha or exudynTestGlobals.useNewGenAlphaSolver: #corrected version + new implicit solver!
         refSol = {
             #obtained on 2021-02-06(Python3.7, 64bits): with new implicit trapezoidal solver (Arnold/Bruls)
-            'ANCFcontactCircleTest.py':-0.4842656547442095,
+            'ANCFcontactCircleTest.py':-0.4842656133238705, #2021-05-07, switched from StaticSolveOldSolver to exu.SolveStatic
             'ANCFcontactFrictionTest.py':-0.014188649931863358,
             'ANCFmovingRigidBodyTest.py':-0.12893096921481131,
             'ACNFslidingAndALEjointTest.py':-4.426403043826658, #2021-02-17 (added mass proportional load in sALE direction): -4.426403043826658 #2021-02-06: -4.426403044452073,

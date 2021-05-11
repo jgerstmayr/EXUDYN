@@ -11,8 +11,7 @@
                 
 ************************************************************************************************ */
 
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
+#include "Graphics/GlfwClient.h"
 #include "Utilities/SlimArray.h"
 //#include <string>
 
@@ -48,7 +47,7 @@ using namespace std::string_literals; // enables s-suffix for std::string litera
 
 extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
 //extern bool deactivateGlobalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
-#define rendererOut std::cout //defines the type of output for renderer: pout could be problematic because of parallel threads; std::cout does not work in Spyder
+//use PrintDelayed(...) or ShowMessage(...) instead #define rendererOut std::cout //defines the type of output for renderer: pout could be problematic because of parallel threads; std::cout does not work in Spyder
 
 
 GlfwRenderer glfwRenderer;
@@ -57,6 +56,11 @@ GlfwRenderer glfwRenderer;
 //define static variables:
 bool GlfwRenderer::rendererActive = false;
 bool GlfwRenderer::stopRenderer = false;
+bool GlfwRenderer::useMultiThreadedRendering = false;
+Real GlfwRenderer::lastGraphicsUpdate = 0.;
+Real GlfwRenderer::lastEventUpdate = 0.;		
+bool GlfwRenderer::callBackSignal = false;
+
 Index GlfwRenderer::rendererError = 0;
 GLFWwindow* GlfwRenderer::window = nullptr;
 RenderState* GlfwRenderer::state;
@@ -65,6 +69,7 @@ std::thread GlfwRenderer::rendererThread;
 bool GlfwRenderer::verboseRenderer = false;        
 Index GlfwRenderer::firstRun = 0; //zoom all in first run
 std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice); initialized with clear state
+std::atomic_flag GlfwRenderer::showMessageSemaphore = ATOMIC_FLAG_INIT;   //!< semaphore for ShowMessage
 
 BitmapFont GlfwRenderer::bitmapFont;				//!< bitmap font for regular texts, initialized upon start of renderer
 float GlfwRenderer::fontScale;						//!< monitor scaling factor from windows, to scale fonts
@@ -87,6 +92,7 @@ VisualizationSystemContainerBase* GlfwRenderer::basicVisualizationSystemContaine
 
 GlfwRenderer::GlfwRenderer()
 {
+	//take care, this may not be initialized:
 	rendererActive = false;
 	graphicsDataList = nullptr;
 	window = nullptr;
@@ -102,18 +108,49 @@ GlfwRenderer::GlfwRenderer()
 	stateMachine.lastMousePressedX = 0;	//!< last left mouse button position pressed
 	stateMachine.lastMousePressedY = 0;
 
+	//DELETE: stateMachine.selectionMode = false;
+	stateMachine.selectionString = "";
+	stateMachine.selectionMouseCoordinates = Vector2D({ 0.,0. });
+
 	fontScale = 1; //initialized if needed before bitmap initialization
 	//renderState state cannot be initialized here, because it will be linked later to visualizationSystemContainer
+
 };
+
+//! add status message, e.g., if button is pressed
+void GlfwRenderer::ShowMessage(const STDstring& str, Real timeout)
+{
+	EXUstd::WaitAndLockSemaphore(showMessageSemaphore); 
+	stateMachine.rendererMessage = str;
+	if (timeout != 0)
+	{
+		stateMachine.renderMessageTimeout = EXUstd::GetTimeInSeconds() + timeout;
+	}
+	else
+	{
+		stateMachine.renderMessageTimeout = 0;
+	}
+	EXUstd::ReleaseSemaphore(showMessageSemaphore); 
+}
+
 
 void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	if (PyGetRendererCallbackLock()) { return; }
+	SetCallBackSignal();
+	//if (graphicsUpdateAtomicFlag.test_and_set(std::memory_order_acquire)) { return; } //ignore keys if currently in use
+
+	//EXUstd::WaitAndLockSemaphore(graphicsUpdateAtomicFlag);
+
+	const Real timeoutShowItem = 2; //seconds
+
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		basicVisualizationSystemContainer->StopSimulation();
 		
 		//this leads to problems when closing:
 		//std::this_thread::sleep_for(std::chrono::milliseconds(200)); //give thread time to finish the stop simulation command
+		//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
@@ -124,7 +161,9 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
 	{
 		visSettings->window.ignoreKeys = !visSettings->window.ignoreKeys;
-		rendererOut << "ignore keys mode switched to " << visSettings->window.ignoreKeys << "\n";
+		//rendererOut << "ignore keys mode switched to " << visSettings->window.ignoreKeys << "\n";
+		//PyQueueExecutableString("print('ignore keys mode switched to " + EXUstd::ToString(visSettings->window.ignoreKeys) + "')\n");
+		ShowMessage("ignore keys mode switched " + OnOffFromBool(visSettings->window.ignoreKeys), timeoutShowItem);
 	}
 
 	//do this first, as key may still have time to complete action
@@ -155,6 +194,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
 		{
 			visSettings->window.showMouseCoordinates = !visSettings->window.showMouseCoordinates;
+			stateMachine.rendererMessage = "";
 		}
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -162,31 +202,31 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == 0)
 		{
 			visSettings->general.graphicsUpdateInterval = 0.02f;
-			rendererOut << "Visualization update: 20ms\n";
+			ShowMessage("Visualization update: 20ms", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == 0)
 		{
-			visSettings->general.graphicsUpdateInterval = 0.2f;
-			rendererOut << "Visualization update: 200ms\n";
+			visSettings->general.graphicsUpdateInterval = 0.1f;
+			ShowMessage("Visualization update: 100ms", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == 0)
 		{
-			visSettings->general.graphicsUpdateInterval = 1.f;
-			rendererOut << "Visualization update: 1s\n";
+			visSettings->general.graphicsUpdateInterval = 0.5f;
+			ShowMessage("Visualization update: 0.5s", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == 0)
 		{
-			visSettings->general.graphicsUpdateInterval = 10.f;
-			rendererOut << "Visualization update: 10s\n";
+			visSettings->general.graphicsUpdateInterval = 2.f;
+			ShowMessage("Visualization update: 2s", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == 0)
 		{
 			visSettings->general.graphicsUpdateInterval = 100.f;
-			rendererOut << "Visualization update: 100s\n";
+			ShowMessage("Visualization update: 100s", timeoutShowItem);
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -194,173 +234,141 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		if (key == GLFW_KEY_N && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
 			visSettings->nodes.show = !visSettings->nodes.show; UpdateGraphicsDataNow();
-			rendererOut << "show nodes: " << visSettings->nodes.show << "\n";
+			ShowMessage("show nodes: "+ OnOffFromBool(visSettings->nodes.show), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_B && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
 			visSettings->bodies.show = !visSettings->bodies.show; UpdateGraphicsDataNow();
-			rendererOut << "show bodies: " << visSettings->bodies.show << "\n";
+			ShowMessage("show bodies: " + OnOffFromBool(visSettings->bodies.show), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_C && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
 			visSettings->connectors.show = !visSettings->connectors.show; UpdateGraphicsDataNow();
-			rendererOut << "show connectors: " << visSettings->connectors.show << "\n";
+			ShowMessage("show connectors: " + OnOffFromBool(visSettings->connectors.show), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_M && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
 			visSettings->markers.show = !visSettings->markers.show; UpdateGraphicsDataNow();
-			rendererOut << "show markers: " << visSettings->markers.show << "\n";
+			ShowMessage("show markers: " + OnOffFromBool(visSettings->markers.show), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_L && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
 			visSettings->loads.show = !visSettings->loads.show; UpdateGraphicsDataNow();
-			rendererOut << "show loads: " << visSettings->loads.show << "\n";
+			ShowMessage("show loads: " + OnOffFromBool(visSettings->loads.show), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_S && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
 			visSettings->sensors.show = !visSettings->sensors.show; UpdateGraphicsDataNow();
-			rendererOut << "show sensors: " << visSettings->sensors.show << "\n";
+			ShowMessage("show sensors: " + OnOffFromBool(visSettings->sensors.show), timeoutShowItem);
 		}
 		//show node, object, ... numbers:
 		if (key == GLFW_KEY_N && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			visSettings->nodes.showNumbers = !visSettings->nodes.showNumbers; UpdateGraphicsDataNow();
-			rendererOut << "show node numbers: " << visSettings->nodes.showNumbers << "\n";
+			if (visSettings->nodes.showNumbers) { visSettings->nodes.showNumbers = true; }
+			ShowMessage("show node numbers: " + OnOffFromBool(visSettings->nodes.showNumbers), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_B && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			visSettings->bodies.showNumbers = !visSettings->bodies.showNumbers; UpdateGraphicsDataNow();
-			rendererOut << "show body numbers: " << visSettings->bodies.showNumbers << "\n";
+			if (visSettings->bodies.showNumbers) { visSettings->bodies.show = true; }
+			ShowMessage("show body numbers: " + OnOffFromBool(visSettings->bodies.showNumbers), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_C && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			visSettings->connectors.showNumbers = !visSettings->connectors.showNumbers; UpdateGraphicsDataNow();
-			rendererOut << "show connector numbers: " << visSettings->connectors.showNumbers << "\n";
+			if (visSettings->connectors.showNumbers) { visSettings->connectors.show = true; }
+			ShowMessage("show connector numbers: " + OnOffFromBool(visSettings->connectors.showNumbers), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_M && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			visSettings->markers.showNumbers = !visSettings->markers.showNumbers; UpdateGraphicsDataNow();
-			rendererOut << "show marker numbers: " << visSettings->markers.showNumbers << "\n";
+			if (visSettings->markers.showNumbers) { visSettings->markers.show = true; }
+			ShowMessage("show markers numbers: " + OnOffFromBool(visSettings->markers.showNumbers), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_L && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			visSettings->loads.showNumbers = !visSettings->loads.showNumbers; UpdateGraphicsDataNow();
-			rendererOut << "show load numbers: " << visSettings->loads.showNumbers << "\n";
+			if (visSettings->loads.showNumbers) { visSettings->loads.show = true; }
+			ShowMessage("show loads numbers: " + OnOffFromBool(visSettings->loads.showNumbers), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_S && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			visSettings->sensors.showNumbers = !visSettings->sensors.showNumbers; UpdateGraphicsDataNow();
-			rendererOut << "show sensor numbers: " << visSettings->sensors.showNumbers << "\n";
+			if (visSettings->sensors.showNumbers) { visSettings->sensors.show = true; }
+			ShowMessage("show sensor numbers: " + OnOffFromBool(visSettings->sensors.showNumbers), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_T && action == GLFW_PRESS && mods != GLFW_MOD_CONTROL)
 		{
-			visSettings->openGL.facesTransparent = !visSettings->openGL.facesTransparent; UpdateGraphicsDataNow();
-			rendererOut << "all faces transparent: " << visSettings->openGL.facesTransparent << "\n";
+			//OLD: visSettings->openGL.facesTransparent = !visSettings->openGL.facesTransparent;
+			//switch between faces transparent + edges / faces transparent / only face edges / full faces with edges / only faces
+			if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges)
+			{
+				visSettings->openGL.facesTransparent = true;
+				visSettings->openGL.showFaces = true;
+				visSettings->openGL.showFaceEdges = true;
+			}
+			else if (visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges)
+			{
+				visSettings->openGL.facesTransparent = true;
+				visSettings->openGL.showFaces = true;
+				visSettings->openGL.showFaceEdges = false;
+			}
+			else if (visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges)
+			{
+				visSettings->openGL.facesTransparent = false;
+				visSettings->openGL.showFaces = true;
+				visSettings->openGL.showFaceEdges = true;
+			}
+			else if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges)
+			{
+				visSettings->openGL.facesTransparent = false;
+				visSettings->openGL.showFaces = false;
+				visSettings->openGL.showFaceEdges = true;
+			}
+			else if (!visSettings->openGL.facesTransparent && !visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges)
+			{
+				visSettings->openGL.facesTransparent = false;
+				visSettings->openGL.showFaces = true;
+				visSettings->openGL.showFaceEdges = false;
+			}
+			else
+			{
+				visSettings->openGL.facesTransparent = false;
+				visSettings->openGL.showFaces = true;
+				visSettings->openGL.showFaceEdges = false;
+			}
+			
+			UpdateGraphicsDataNow();
+			ShowMessage("faces transparent = " + OnOffFromBool(visSettings->openGL.facesTransparent) +
+				", faces = " + OnOffFromBool(visSettings->openGL.showFaces) +
+				", face edges = " + OnOffFromBool(visSettings->openGL.showFaceEdges), timeoutShowItem);
 		}
 		if (key == GLFW_KEY_X && action == GLFW_PRESS)
 		{
-			//open window to execute a python command ... 
-			//trys to catch errors made by user in this window
-			//std::string str =
-			std::string str = R"(
-import tkinter as tk
-from tkinter.scrolledtext import ScrolledText
-
-commandString = ''
-commandSet = False
-singleCommandMainwin = tk.Tk()
-def OnSingleCommandReturn(event): #set command string, but do not execute
-    commandString = singleCommandEntry.get()
-    print(commandString) #printout the command
-    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
-    try:
-        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
-        if locals()['tempEXUDYNexecute']!=None:
-            print(locals()['tempEXUDYNexecute'])
-        singleCommandMainwin.destroy()
-    except:
-        print("Execution of command failed. check your code!")
-
-tk.Label(singleCommandMainwin, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
-singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
-singleCommandEntry.grid(row=1, column=0)
-singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
-singleCommandMainwin.mainloop()
-)";
-			PyQueueExecutableString(str);
+			ShowMessage("execute command ... (see other window)", 2);
 			UpdateGraphicsDataNow();
+			Render(window);
+			PyQueuePythonProcess(ProcessID::ShowHelpDialog);
 		}
 		//visualization settings dialog
 		if (key == GLFW_KEY_V && action == GLFW_PRESS)
 		{
-			//open window to execute a python command ... 
-			std::string str = R"(
-import exudyn.GUI
-vis=SC.visualizationSettings.GetDictionaryWithTypeInfo()
-#if 'keyPressUserFunction' in vis['window']: #removed from Get/SetDictionary(...)
-#    del vis['window']['keyPressUserFunction'] #not possible to edit
-SC.visualizationSettings.SetDictionary(exudyn.GUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))
-)";
-			PyQueueExecutableString(str);
+			ShowMessage("edit VisualizationSettings (see other window)", 2);
+			UpdateGraphicsDataNow();
+			Render(window);
+			//queue process and execute as soon as possible in Python (main) thread
+			PyQueuePythonProcess(ProcessID::ShowVisualizationSettingsDialog);
 			UpdateGraphicsDataNow();
 		}
 		//help key
 		if (key == GLFW_KEY_H && action == GLFW_PRESS)
 		{
-			//open window to execute a python command ... (THREADSAFE???)
-			std::string str = R"(import tkinter as tk
-root = tk.Tk()
-root.title("Help on keyboard commands and mouse")
-scrollW = tk.Scrollbar(root)
-textW = tk.Text(root, height = 30, width = 90)
-scrollW.pack(side = tk.RIGHT, fill = tk.Y)
-textW.pack(side = tk.LEFT, fill = tk.Y)
-scrollW.config(command = textW.yview)
-textW.config(yscrollcommand = scrollW.set)
-msg = """
-Mouse action:
-left mouse button     ... move model
-right mouse button    ... rotate model
-mouse wheel           ... zoom
-======================
-Key(s) action:
-1,2,3,4 or 5          ... visualization update speed
-'.' or KEYPAD '+'     ... zoom in
-',' or KEYPAD '-'     ... zoom out
-CTRL+1                ... set view to 1/2-plane
-SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
-CTRL+2                ... set view to 1/3-plane
-SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
-CTRL+3,4,5,6          ... other views (with optional SHIFT key)
-CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements)
-KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
-F2                    ... ignore all keyboard input, except for KeyPress user function, F2 and escape
-F3                    ... show mouse coordinates
-A      ... zoom all
-C      ... show/hide connectors
-CTRL+C ... show/hide connector numbers
-B      ... show/hide bodies
-CTRL+B ... show/hide body numbers
-L      ... show/hide loads
-CTRL+L ... show/hide load numbers
-M      ... show/hide markers
-CTRL+M ... show/hide marker numbers
-N      ... show/hide nodes
-CTRL+N ... show/hide node numbers
-S      ... show/hide sensors
-CTRL+S ... show/hide sensor numbers
-T      ... make all faces transparent
-Q      ... stop simulation
-X      ... execute command; dialog may appear behind the visualization window! may crash!
-V      ... visualization settings; dialog may appear behind the visualization window!
-ESCAPE ... close render window
-SPACE ... continue simulation
-"""
-textW.insert(tk.END, msg)
-tk.mainloop()
-)";
-			PyQueueExecutableString(str);
+			ShowMessage("show help information (see other window)", 2);
 			UpdateGraphicsDataNow();
+			Render(window);
+			//queue process and execute as soon as possible in Python (main) thread
+			PyQueuePythonProcess(ProcessID::ShowHelpDialog);
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -401,7 +409,6 @@ tk.mainloop()
 		//	glMatrixMode(GL_MODELVIEW);
 		//	glLoadIdentity();	//start with identity
 		//	glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-		//	rendererOut << "Reset OpenGL modelview\n";
 		//}
 
 		//change view:
@@ -411,7 +418,7 @@ tk.mainloop()
 			glLoadIdentity();	//start with identity
 			//glRotated(180, 0.0, 1.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 1: 1-2-plane\n";
+			ShowMessage("View 1: 1-2-plane", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
@@ -420,7 +427,7 @@ tk.mainloop()
 			glLoadIdentity();	//start with identity
 			glRotated(-90, 1.0, 0.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 2: 1-3-plane\n";
+			ShowMessage("View 2: 1-3-plane", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
@@ -430,7 +437,7 @@ tk.mainloop()
 			glRotated(-90, 0.0, 1.0, 0.0);
 			glRotated(-90, 1.0, 0.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 3: 2-3-plane\n";
+			ShowMessage("View 3: 2-3-plane", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
@@ -439,7 +446,7 @@ tk.mainloop()
 			glLoadIdentity();	//start with identity
 			glRotated(180, 0.0, 1.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 1: 1-2-plane mirrored about vertical axis\n";
+			ShowMessage("View 1: 1-2-plane mirrored about vertical axis", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_2 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
@@ -449,7 +456,7 @@ tk.mainloop()
 			glRotated(-90, 1.0, 0.0, 0.0);
 			glRotated(180, 0.0, 0.0, 1.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 2: 1-3-plane mirrored about vertical axis\n";
+			ShowMessage("View 2: 1-3-plane mirrored about vertical axis", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
@@ -460,7 +467,7 @@ tk.mainloop()
 			glRotated(-90, 1.0, 0.0, 0.0);
 			glRotated(180, 0.0, 0.0, 1.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 3: 2-3-plane mirrored about vertical axis\n";
+			ShowMessage("View 3: 2-3-plane mirrored about vertical axis", timeoutShowItem);
 		}
 
 		//second group of views:
@@ -471,7 +478,7 @@ tk.mainloop()
 			glRotated(180, 0.0, 1.0, 0.0);
 			glRotated(90, 0.0, 0.0, 1.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 1: 2-1-plane\n";
+			ShowMessage("View 4: 2-1-plane", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
@@ -481,7 +488,7 @@ tk.mainloop()
 			glRotated(90, 0.0, 1.0, 0.0);
 			glRotated(90, 0.0, 0.0, 1.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 2: 3-1-plane\n";
+			ShowMessage("View 5: 3-1-plane", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
@@ -490,7 +497,7 @@ tk.mainloop()
 			glLoadIdentity();	//start with identity
 			glRotated(90, 0.0, 1.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 3: 3-2-plane\n";
+			ShowMessage("View 6: 3-2-plane", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_4 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
@@ -499,7 +506,7 @@ tk.mainloop()
 			glLoadIdentity();	//start with identity
 			glRotated(90, 0.0, 0.0, 1.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 1: 2-1-plane mirrored about vertical axis\n";
+			ShowMessage("View 4: 2-1-plane mirrored about vertical axis", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_5 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
@@ -509,7 +516,7 @@ tk.mainloop()
 			glRotated(-90, 1.0, 0.0, 0.0);
 			glRotated(-90, 0.0, 1.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 2: 3-1-plane mirrored about vertical axis\n";
+			ShowMessage("View 5: 3-1-plane mirrored about vertical axis", timeoutShowItem);
 		}
 
 		if (key == GLFW_KEY_6 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL + GLFW_MOD_SHIFT)
@@ -518,7 +525,7 @@ tk.mainloop()
 			glLoadIdentity();	//start with identity
 			glRotated(-90, 0.0, 1.0, 0.0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
-			rendererOut << "View 3: 3-2-plane mirrored about vertical axis\n";
+			ShowMessage("View 6: 3-2-plane mirrored about vertical axis", timeoutShowItem);
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -548,6 +555,7 @@ tk.mainloop()
 
 		if (key == GLFW_KEY_A && action == GLFW_PRESS) { ZoomAll(); UpdateGraphicsDataNow(); }
 	}
+	//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 }
 
 void GlfwRenderer::ZoomAll()
@@ -641,6 +649,8 @@ void GlfwRenderer::ZoomAll()
 
 void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+	if (PyGetRendererCallbackLock()) { return; }
+	SetCallBackSignal();
 	//rendererOut << "scroll: x=" << xoffset << ", y=" << yoffset << "\n";
 	float zoomStep = visSettings->interactive.zoomStepFactor;
 
@@ -648,11 +658,14 @@ void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yo
 	if (yoffset < 0) { state->zoom *= zoomStep * (float)(-yoffset); }
 
 	//rendererOut << "zoom=" << state->zoom << "\n";
-
 }
 
 void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
+	if (PyGetRendererCallbackLock()) { return; }
+	SetCallBackSignal();
+	//EXUstd::WaitAndLockSemaphore(graphicsUpdateAtomicFlag);
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//STATE MACHINE MOUSE MOVE
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
@@ -667,6 +680,25 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	}
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
+		//check, if it was a regular mouse press without moving
+		if (stateMachine.lastMousePressedX == stateMachine.mousePositionX &&
+			stateMachine.lastMousePressedY == stateMachine.mousePositionY &&
+			visSettings->interactive.selectionLeftMouse)
+		{
+			//rendererOut << "mouse pressed!\n";
+			//MouseSelect(window, stateMachine.mousePositionX, stateMachine.mousePositionY);
+			stateMachine.selectionMouseCoordinates = state->mouseCoordinates;
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			Index itemID;
+			//ItemType itemType;
+			//Index mbsNumber;
+			MouseSelect(window,
+				(Index)stateMachine.selectionMouseCoordinates[0],
+				(Index)stateMachine.selectionMouseCoordinates[1],
+				itemID);
+		}
+
 		stateMachine.leftMousePressed = false;
 		state->mouseLeftPressed = false;
 	}
@@ -681,6 +713,33 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	}
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 	{
+		//check, if it was a regular mouse press without moving
+		if (stateMachine.lastMousePressedX == stateMachine.mousePositionX &&
+			stateMachine.lastMousePressedY == stateMachine.mousePositionY &&
+			visSettings->interactive.selectionRightMouse)
+		{
+			//rendererOut << "mouse pressed!\n";
+			//MouseSelect(window, stateMachine.mousePositionX, stateMachine.mousePositionY);
+			stateMachine.selectionMouseCoordinates = state->mouseCoordinates;
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			Index itemID;
+			bool success = MouseSelect(window,
+				(Index)stateMachine.selectionMouseCoordinates[0],
+				(Index)stateMachine.selectionMouseCoordinates[1],
+				itemID);
+
+			if (success)
+			{
+				ShowMessage("show item properties (see other window)", 2);
+				UpdateGraphicsDataNow();
+				Render(window);
+				//queue process and execute as soon as possible in Python (main) thread
+				PyQueuePythonProcess(ProcessID::ShowRightMouseSelectionDialog, itemID);
+				//PyQueueExecutableString(STDstring("print('+++++++++++++++++++++++++++++++++++')\n") + "print(" + strDict + ")\n");
+			}
+		}
+
 		stateMachine.rightMousePressed = false;
 	}
 
@@ -704,11 +763,14 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	{
 		state->mouseMiddlePressed = false;
 	}
+	//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 
 }
 
 void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (PyGetRendererCallbackLock()) { return; }
+	SetCallBackSignal();
 	//rendererOut << "mouse cursor: x=" << xpos << ", y=" << ypos << "\n";
 	stateMachine.mousePositionX = xpos;
 	stateMachine.mousePositionY = ypos;
@@ -790,10 +852,182 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 
 }
 
+//! zoom in to mouse position (x,y), used to render that area lateron (replacement for gluPickMatrix(...)
+void GlfwRenderer::SetViewOnMouseCursor(GLdouble x, GLdouble y, GLdouble delX, GLdouble delY, GLint viewport[4])
+{
+	if (delX <= 0 || delY <= 0) 
+	{ 
+		CHECKandTHROWstring("SetViewOnMouseCursor: not allowed with delX<=0 or delY<=0");
+		return; 
+	}
+
+	/* Translate and scale the picked region to the entire window */
+	glTranslated((viewport[2] - 2 * (x - viewport[0])) / delX,
+		(viewport[3] - 2 * (y - viewport[1])) / delY, 0);
+	glScaled(viewport[2] / delX, viewport[3] / delY, 1.0);
+}
+
+//! function to evaluate selection of items, show message, return dictionary string
+bool GlfwRenderer::MouseSelect(GLFWwindow* window, Index mouseX, Index mouseY, Index& itemID)
+{
+	MouseSelectOpenGL(window,
+		(Index)stateMachine.selectionMouseCoordinates[0],
+		(Index)stateMachine.selectionMouseCoordinates[1],
+		itemID);
+	//DELETE: stateMachine.selectionMode = false;
+	Index itemIndex;
+	ItemType itemType;
+	Index mbsNumber;
+	ItemID2IndexType(itemID, itemIndex, itemType, mbsNumber);
+	//PrintDelayed("itemID=" + EXUstd::ToString(itemID));
+
+	if (itemType != ItemType::_None && itemIndex != -1)
+	{
+		STDstring itemTypeName;
+		STDstring itemName;
+		//STDstring itemInfo;
+		bool rv = GetItemInformation(itemID, itemTypeName, itemName);// , itemInfo);
+
+		if (rv)
+		{
+			ShowMessage("Selected item: " + itemTypeName +
+				//"type = " + EXUstd::ToString(itemType) + 
+				", index = " + EXUstd::ToString(itemIndex) + " (" + itemName + ")", 0);
+		}
+		//UpdateGraphicsDataNow();
+		return true;
+	}
+	else
+	{
+		ShowMessage("no item selected", 2);
+		//DELETE: stateMachine.selectionMode = false;
+		return false;
+	}
+}
+
+//! function to evaluate selection of items
+void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mouseY, Index& itemID)
+{
+	//++++++++++++++++++++++++++++++++++++++++
+	//put into separate function, for Render(...)
+	float ratio;
+	int width, height;
+
+	glfwGetFramebufferSize(window, &width, &height);
+
+	//rendererOut << "current window: width=" << width << ", height=" << height << "\n";
+	state->currentWindowSize[0] = width;
+	state->currentWindowSize[1] = height;
+
+	ratio = (float)width;
+	if (height != 0)
+	{
+		ratio = width / (float)height;
+	}
+
+	GLfloat zoom = state->zoom;
+	//++++++++++++++++++++++++++++++++++++++++
+
+
+	const Index selectBufferSize = 10000; //size for number of objects picked at same time
+	GLuint selectBuffer[selectBufferSize];
+	glSelectBuffer(selectBufferSize, selectBuffer);
+	glRenderMode(GL_SELECT);
+
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	//rendererOut << "viewport=" << viewport[0] << ", " << viewport[1] << ", " << viewport[2] << ", " << viewport[3] << "\n";
+	//rendererOut << "mouse=" << mouseX << ", " << mouseY << "\n";
+
+	////from meshDoc:
+	//glMatrixMode(GL_PROJECTION);
+	//glPushMatrix();
+
+	//GLdouble projmat[16];
+	//glGetDoublev(GL_PROJECTION_MATRIX, projmat);
+
+	//glLoadIdentity();
+
+
+	float backgroundColor = 0.f;
+	glClearColor(backgroundColor, backgroundColor, backgroundColor, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//++++++++++++++++++++++++++++++++++++++++
+	//from Render(...) / different to meshDoc implementation (uses Projection)
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	GLdouble selectArea = 3; //3 seems to work properly; size of the select area (could be larger than 1 pixel to average)
+	SetViewOnMouseCursor(mouseX, viewport[3] - mouseY, selectArea*ratio, selectArea, viewport); //add ratio to make area non-distorted?q
+
+	//++++++++++++++++++++++++++++++++++++++++
+	//use function for that part:
+	GLdouble zFactor = 100.; //original:100
+	glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f);
+	glMultMatrixf(state->modelRotation.GetDataPointer());
+	//++++++++++++++++++++++++++++++++++++++++
+
+	//add one name in hierarchie and then draw scene with names
+	glInitNames();
+	glPushName(1);
+
+	glPolygonOffset(1, 1); //why?
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	const bool selectionMode = true;
+	RenderGraphicsData(selectionMode); //render scene with names
+	//glCallList (filledlist);
+
+	glDisable(GL_POLYGON_OFFSET_FILL);
+	glPopName();
+	//++++++++++++++++++++++++++++++++++++++++
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+
+	Index numberOfItemsFound = glRenderMode(GL_RENDER);
+
+	//++++++++++++++++++++++++++++++++++++++++
+	//evaluate items:
+	//rendererOut << "number of found items = " << numberOfItemsFound << "\n";
+
+	Index  itemIDnearest = 0;
+	GLuint minimalDepth = 0; //clip other items that are closer
+	for (Index i = 0; i < numberOfItemsFound; i++)
+	{
+		GLuint currentIdemID = selectBuffer[4 * i + 3];
+		GLuint curdepth = selectBuffer[4 * i + 1];
+
+		if (currentIdemID != 0 && (curdepth < minimalDepth || !itemIDnearest))
+		{
+			minimalDepth = curdepth;
+			itemIDnearest = currentIdemID;
+		}
+	}
+
+	itemID = itemIDnearest;
+	//ItemID2IndexType(itemIDnearest, itemIndex, itemType, mbsNumber); //itemType==_None, if no item found
+	//rendererOut << "selected item: " << itemIndex << ", type=" << itemType << "\n";
+}
+
 
 bool GlfwRenderer::SetupRenderer(bool verbose)
 {
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//initializat and detect running renderer
 	verboseRenderer = verbose;
+
+	lastGraphicsUpdate = EXUstd::GetTimeInSeconds() - 1000.; //do some update at beginning
+	lastEventUpdate = lastGraphicsUpdate;
 
 	//glfwCreateThread(); //does not work properly ...
 	//auto th = new std::thread(GlfwRenderer::StartThread);
@@ -807,50 +1041,90 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 	}
 	else if (basicVisualizationSystemContainer != nullptr) //check that renderer is not already running and that link to SystemContainer exists
 	{
+		PySetRendererCallbackLock(false); //reset callback lock if still set from earlier run (for safety ...)
+
 		basicVisualizationSystemContainer->UpdateMaximumSceneCoordinates(); //this is done to make OpenGL zoom and maxSceneCoordinates work
 
 		rendererError = 0; 
 
-		if (verboseRenderer) { pout << "Setup OpenGL renderer ...\n"; }
 		if (rendererThread.joinable()) //thread is still running from previous call ...
 		{
 			rendererThread.join();
 			//rendererThread.~thread(); //this would make the thread unusable?
 		}
 
-		rendererThread = std::thread(GlfwRenderer::InitCreateWindow);
-		Index timeOut = visSettings->window.startupTimeout / 10;
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//now we startup new thread
+		if (verboseRenderer) { pout << "Setup OpenGL renderer ...\n"; } //still thread-safe
 
-		Index i = 0;
-		while(i++ < timeOut && !(rendererActive || rendererError > 0)) //wait 5 seconds for thread to answer; usually 150ms in Release and 500ms in debug mode
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		useMultiThreadedRendering = visSettings->general.useMultiThreadedRendering;
+#if defined(__APPLE__)
+		useMultiThreadedRendering = false;
+#endif
+
+		if (visSettings->general.showHelpOnStartup > 0) {
+			ShowMessage("press H for help on keyboard and mouse functionality", visSettings->general.showHelpOnStartup);
 		}
-		if (verboseRenderer) { pout << "waited for " << i * 10 << " milliseconds \n"; }
-		if (rendererActive)
+
+		if (useMultiThreadedRendering)
 		{
-			if (verboseRenderer) { pout << "OpenGL renderer started!\n"; }
-			basicVisualizationSystemContainer->SetVisualizationIsRunning(true); //render engine runs, graphicsupdate shall be done
-			return true;
+			rendererThread = std::thread(GlfwRenderer::InitCreateWindow);
+			Index timeOut = visSettings->window.startupTimeout / 10;
+
+			Index i = 0;
+			while (i++ < timeOut && !(rendererActive || rendererError > 0)) //wait 5 seconds for thread to answer; usually 150ms in Release and 500ms in debug mode
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+			if (verboseRenderer) { pout << "waited for " << i * 10 << " milliseconds \n"; }
+			if (rendererActive)
+			{
+				if (verboseRenderer) { pout << "OpenGL renderer started!\n"; }
+				//not needed as called via backlink to GLFWrenderer: basicVisualizationSystemContainer->SetVisualizationIsRunning(true); //render engine runs, graphicsupdate shall be done
+				return true;
+			}
+			else
+			{
+				//not needed as called via backlink to GLFWrenderer: basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //render engine did not start
+				if (rendererError == 1)
+				{
+					SysError("Start of OpenGL renderer failed: glfwInit() failed");
+				}
+				else if (rendererError == 2)
+				{
+					SysError("Start of OpenGL renderer failed: glfwCreateWindow() failed");
+				}
+				else { SysError("Start of OpenGL renderer failed: timeout"); }
+				return false;
+			}
 		}
-		else 
-		{ 
-			basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //render engine did not start
-			if (rendererError == 1)
+		else
+		{
+			//do all initialization for start of renderer
+			GlfwRenderer::InitCreateWindow();
+			if (rendererActive)
 			{
-				SysError("Start of OpenGL renderer failed: glfwInit() failed");
+				if (verboseRenderer) { pout << "Single-threaded OpenGL renderer started!\n"; }
+				return true;
 			}
-			else if (rendererError == 2)
+			else
 			{
-				SysError("Start of OpenGL renderer failed: glfwCreateWindow() failed");
+				if (rendererError == 1)
+				{
+					SysError("Start of Single-threaded OpenGL renderer failed: glfwInit() failed");
+				}
+				else if (rendererError == 2)
+				{
+					SysError("Start of Single-threaded OpenGL renderer failed: glfwCreateWindow() failed");
+				}
+				else { SysError("Start of Single-threaded OpenGL renderer failed"); }
+				return false;
 			}
-			else { SysError("Start of OpenGL renderer failed: timeout"); }
-			return false;
 		}
 	}
 	else
 	{
-		PyError("No SystemContainer has been. Renderer cannot be started without SystemContainer.");
+		PyError("No SystemContainer has been attached to renderer (or it has been detached). Renderer cannot be started without SystemContainer.");
 		return false;
 	}
 	return false; //not needed, but to suppress warnings
@@ -861,34 +1135,42 @@ void GlfwRenderer::StopRenderer()
 {
 	if (window)
 	{
-		basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //no further WaitForUserToContinue or GraphicsDataUpdates
+		//not needed as called via backlink to GLFWrenderer : basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //no further WaitForUserToContinue or GraphicsDataUpdates
 
 		stopRenderer = true;
 		glfwSetWindowShouldClose(window, 1);
-		Index timeOut = 100; //2020-12-09: changed to 1000ms, because window can hang very long; visSettings->window.startupTimeout / 10;
 
-		Index i = 0;
-		while (i++ < timeOut && rendererActive) //wait 5 seconds for thread to answer
+		if (useMultiThreadedRendering)
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			Index timeOut = 100; //2020-12-09: changed to 10*100ms, because window can hang very long; visSettings->window.startupTimeout / 10;
+
+			Index i = 0;
+			while (i++ < timeOut && rendererActive) //wait 5 seconds for thread to answer
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+
+			if (rendererActive) { SysError("OpenGL Renderer could not be stopped safely\n"); }
+			//else { pout << "Renderer Stopped\n"; }
+
+			//glfwDestroyWindow(window); //this is done in GLFW thread ...?
+			//not necessary: glfwTerminate(); //test if this helps; should not be needed
+
+			//delete window; //will not work? VS2017 reports warning that destructor will not be called, since window is only a struct
+			window = nullptr; //this is used to identify if window has already been generated
+
+			//after this command, this thread is terminated! ==> nothing will be done any more
+			if (rendererThread.joinable()) //thread is still running from previous call ...
+			{
+				//pout << "join thread ...\n";
+				rendererThread.join();
+				//pout << "thread joined\n";
+				//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
+			}
 		}
-
-		if (rendererActive) { SysError("OpenGL Renderer could not be stopped safely\n"); }
-		//else { pout << "Renderer Stopped\n"; }
-
-		//glfwDestroyWindow(window); //this is done in GLFW thread ...?
-		//not necessary: glfwTerminate(); //test if this helps; should not be needed
-
-		//delete window; //will not work? VS2017 reports warning that destructor will not be called, since window is only a struct
-		window = nullptr; //this is used to identify if window has already been generated
-
-		//after this command, this thread is terminated! ==> nothing will be done any more
-		if (rendererThread.joinable()) //thread is still running from previous call ...
+		else
 		{
-			//pout << "join thread ...\n";
-			rendererThread.join();
-			//pout << "thread joined\n";
-			//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
+			FinishRunLoop(); //shut down
 		}
 	}
 }
@@ -896,11 +1178,11 @@ void GlfwRenderer::StopRenderer()
 void GlfwRenderer::InitCreateWindow()
 {
 	//this is now running in separate thread, can only output to rendererOut.
-	if (verboseRenderer) { rendererOut << "InitCreateWindow\n"; }
+	if (verboseRenderer) { PrintDelayed("InitCreateWindow"); }
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
 	{
-		if (verboseRenderer) { rendererOut << "glfwInit failed\n"; }
+		if (verboseRenderer) { PrintDelayed("glfwInit failed"); }
 
 		rendererError = 1;
 		exit(EXIT_FAILURE);
@@ -910,13 +1192,13 @@ void GlfwRenderer::InitCreateWindow()
 	{
 		glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
 		glEnable(GL_MULTISAMPLE); //usually activated by default, but better to have it anyway
-		if (verboseRenderer) { rendererOut << "enable GL_MULTISAMPLE\n"; }
+		if (verboseRenderer) { PrintDelayed("enable GL_MULTISAMPLE"); }
 	}
 
 	if (visSettings->window.alwaysOnTop)
 	{
 		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); //GLFW_FLOATING (default: GLFW_FALSE)  specifies whether the windowed mode window will be floating above other regular windows, also called topmost or always - on - top.This is intended primarily for debugging purposes and cannot be used to implement proper full screen windows.Possible values are GLFW_TRUE and GLFW_FALSE.
-		if (verboseRenderer) { rendererOut << "enable GLFW_FLOATING\n"; }
+		if (verboseRenderer) { PrintDelayed("enable GLFW_FLOATING"); }
 	}
 	//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE); //(default: GLFW_TRUE) specifies whether the windowed mode window will be given input focus when created. Possible values are GLFW_TRUE and GLFW_FALSE.
 	//GLFW_FOCUS_ON_SHOW (default: GLFW_TRUE) specifies whether the window will be given input focus when glfwShowWindow is called. Possible values are GLFW_TRUE and GLFW_FALSE
@@ -943,17 +1225,25 @@ void GlfwRenderer::InitCreateWindow()
 	{
 		rendererError = 2;
 		glfwTerminate();
-		SysError("GLFWRenderer::InitCreateWindow: Render window could not be created");
-		exit(EXIT_FAILURE);
+		if (useMultiThreadedRendering)
+		{
+			PrintDelayed("GLFWRenderer::InitCreateWindow: Render window could not be created");
+			exit(EXIT_FAILURE); //for task
+		}
+		else
+		{
+			SysError("GLFWRenderer::InitCreateWindow: Render window could not be created");
+			return;
+		}
 	}
 	else
 	{
-		if (verboseRenderer) { rendererOut << "glfwCreateWindow(...) successful\n"; }
+		if (verboseRenderer) { PrintDelayed("glfwCreateWindow(...) successful"); }
 	}
 
 	//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
 	glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
-	if (verboseRenderer) { rendererOut << "glfwSetWindowSizeLimits(...) successful\n"; }
+	if (verboseRenderer) { PrintDelayed("glfwSetWindowSizeLimits(...) successful"); }
 
 	//+++++++++++++++++++++++++++++++++
 	//set keyback functions
@@ -961,14 +1251,14 @@ void GlfwRenderer::InitCreateWindow()
 	glfwSetScrollCallback(window, scroll_callback);		//mouse wheel input
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
-	if (verboseRenderer) { rendererOut << "mouse and key callbacks successful\n"; }
+	if (verboseRenderer) { PrintDelayed("mouse and key callbacks successful"); }
 
 	glfwSetWindowCloseCallback(window, window_close_callback);
 	glfwSetWindowRefreshCallback(window, Render);
-	if (verboseRenderer) { rendererOut << "window callbacks successful\n"; }
+	if (verboseRenderer) { PrintDelayed("window callbacks successful"); }
 
 	glfwMakeContextCurrent(window);
-	if (verboseRenderer) { rendererOut << "glfwMakeContextCurrent(...) successful\n"; }
+	if (verboseRenderer) { PrintDelayed("glfwMakeContextCurrent(...) successful"); }
 
 	//+++++++++++++++++
 	//initialize opengl
@@ -988,7 +1278,7 @@ void GlfwRenderer::InitCreateWindow()
 	guint fontSize = (guint)(visSettings->general.textSize*fontScale);
 
 	InitFontBitmap(fontSize);
-	if (verboseRenderer) { rendererOut << "InitFontBitmap(...) successful\n"; }
+	if (verboseRenderer) { PrintDelayed("InitFontBitmap(...) successful"); }
 
 	//+++++++++++++++++++++++++++++++++
 	//depending on flags, do some changes to window
@@ -1011,40 +1301,125 @@ void GlfwRenderer::InitCreateWindow()
 	rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
 	//+++++++++++++++++++++++++++++++++
 
-	if (verboseRenderer) { rendererOut << "InitCreateWindow finished: Starting renderer loop\n"; }
-	RunLoop();
+	if (useMultiThreadedRendering)
+	{
+		if (verboseRenderer) { PrintDelayed("InitCreateWindow finished: Starting renderer loop"); }
+		RunLoop();
+	}
+	else
+	{ 
+		if (verboseRenderer) { PrintDelayed("InitCreateWindow finished: Ready to update window using "); }
+	}
 }
-
 
 void GlfwRenderer::RunLoop()
 {
-	//this is the OpenGL thread main loop
-	while (rendererActive && !glfwWindowShouldClose(window) && 
+	while (rendererActive && !glfwWindowShouldClose(window) &&
 		!stopRenderer && !globalPyRuntimeErrorFlag)
+	{
+		DoRendererTasks();
+	}
+	FinishRunLoop();
+}
+
+void GlfwRenderer::DoRendererTasks()
+{
+	Real updateInterval = (Real)(visSettings->general.graphicsUpdateInterval);
+	Real time = EXUstd::GetTimeInSeconds();
+
+	if (!useMultiThreadedRendering) //do this before rendering ...
+	{
+		if (time >= lastEventUpdate + 0.01) //should be very responsive - 100Hz is ok
+		{
+			glfwPollEvents(); //do not wait, just do tasks if they are there
+			lastEventUpdate = time;
+		}
+	}
+
+	if (useMultiThreadedRendering || (time >= lastGraphicsUpdate + updateInterval) || GetCallBackSignal())
 	{
 		basicVisualizationSystemContainer->UpdateGraphicsData();
 		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) { ZoomAll(); }
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
-		glfwWaitEventsTimeout((double)(visSettings->general.graphicsUpdateInterval)); //wait x seconds for next event
+		lastGraphicsUpdate = time;
+		SetCallBackSignal(false);
 	}
+	if (useMultiThreadedRendering)
+	{
+		glfwWaitEventsTimeout((double)updateInterval); //wait x seconds for next event
+	}
+
+	////does not work: 
+	//const double maxInterval = 0.010;   //10ms loop, before loop is split; this is rather small in order to rapidly interupt RunLoop from PythonExecutableQueue
+	//double summedInterval = 0.;			//accumulated intervals
+	//double minInterval = EXUstd::Minimum((double)(visSettings->general.graphicsUpdateInterval), 1e-6); //1e-6 because of while loop
+	//double currentInterval = EXUstd::Minimum(maxInterval, minInterval);
+	//while (summedInterval < minInterval)
+	//{
+	//	//! get state of callback lock
+	//	if (!PyGetRendererCallbackLock())
+	//	{
+	//		glfwWaitEventsTimeout(currentInterval); //wait x seconds for next event
+	//	}
+	//	summedInterval += currentInterval;
+	//	currentInterval = maxInterval; //after first interval, always wait 5ms
+	//}
+}
+
+void GlfwRenderer::FinishRunLoop()
+{
+
 	if (globalPyRuntimeErrorFlag)
 	{
-		rendererOut << "render window stopped because of error\n";
+		PrintDelayed("render window stopped because of error");
 	}
 	basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
 
 	glfwDestroyWindow(window);
 	window = nullptr;
 	rendererActive = false; //for new startup of renderer
-	glfwTerminate(); //move to destructor
 	stopRenderer = false;	//if stopped by user
+	glfwTerminate(); //move to destructor
 
 	DeleteFonts();
 }
 
+//! run renderer idle for certain amount of time; use this for single-threaded, interactive animations; waitSeconds==-1 waits forever
+void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
+{
+	Real time = EXUstd::GetTimeInSeconds();
+	bool continueTask = true;
+	while (rendererActive && 
+		!glfwWindowShouldClose(window) &&
+		!stopRenderer && 
+		!globalPyRuntimeErrorFlag &&
+		continueTask)
+	{
+		DoRendererTasks();
+		if (waitSeconds != -1. && EXUstd::GetTimeInSeconds() > time + waitSeconds)
+		{
+			continueTask = false;
+		}
+		else
+		{
+			//wait small amount of time, not fully blocking CPU
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+		}
+	}
+
+	if (!(rendererActive &&
+		!glfwWindowShouldClose(window) &&
+		!stopRenderer &&
+		!globalPyRuntimeErrorFlag))
+	{
+		FinishRunLoop();
+	}
+}
+
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
+	if (PyGetRendererCallbackLock()) { return; }
 	EXUstd::WaitAndLockSemaphore(renderFunctionRunning); //lock Render(...) function, no second call possible
 	//std::cout << "start renderer\n";
 
@@ -1131,7 +1506,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//put here, will rotate with model-view:
 	//SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
 
-	RenderGraphicsData(fontScale);
+	RenderGraphicsData();
 
 	//glPushMatrix(); //store current matrix
 	//glPopMatrix(); //restore matrix
@@ -1182,8 +1557,16 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			DrawString((STDstring("version ")+EXUstd::exudynVersion).c_str(), fontSize*fontSmallFactor, poff3, textColor);
 		}
 
+		Float2 pStatus = PixelToVertexCoordinates((float)textIndentPixels, 5); //fixed position, very bottom left window position
+		Float3 poff({ pStatus[0], pStatus[1], hOff });
+
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		if (visSettings->window.showMouseCoordinates)
+		if (stateMachine.rendererMessage.size() != 0)
+		{
+			DrawString(stateMachine.rendererMessage.c_str(), fontSize*fontSmallFactor, poff, textColor);
+			if (stateMachine.renderMessageTimeout != 0. && stateMachine.renderMessageTimeout < EXUstd::GetTimeInSeconds()) { stateMachine.rendererMessage = ""; }
+		}
+		else if (visSettings->window.showMouseCoordinates)
 		{
 			Vector2D mp = state->mouseCoordinates;
 			Real xpos = mp[0];
@@ -1215,11 +1598,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 				//", ploc=(" + EXUstd::ToString(ploc[0]) + "," + EXUstd::ToString(ploc[1]) + ")";
 
 			//Float3 poff({ 0.f*zoom,-1.88f*zoom, hOff }); //old, using vertex coordinates
-			Float2 pMouse = PixelToVertexCoordinates((float)textIndentPixels, 5); //fixed position, very bottom left window position
-			Float3 poff({ pMouse[0], pMouse[1], hOff });
-
 			DrawString(mouseStr.c_str(), fontSize*fontSmallFactor, poff, textColor);
-		}
+		} 
 		glDepthMask(GL_TRUE); //draw lines always in front
 	}
 
@@ -1417,7 +1797,9 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//std::cout << "  finish renderer\n";
 
 	//++++++++++++++++++++++++++++++++++++++++++
-	renderFunctionRunning.clear(std::memory_order_release); //clear PostProcessData
+	//renderFunctionRunning.clear(std::memory_order_release); //clear PostProcessData
+	EXUstd::ReleaseSemaphore(renderFunctionRunning);
+
 }
 
 void GlfwRenderer::SaveImage()
@@ -1461,7 +1843,8 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 	imageFile.open(filename, std::ofstream::out | std::ofstream::binary);
 	if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
 	{
-		PyWarning(STDstring("GlfwRenderer::SaveSceneToFile: Failed to open image file '") + filename + "'");
+		//not thread/Python safe: PyWarning(STDstring("GlfwRenderer::SaveSceneToFile: Failed to open image file '") + filename + "'");
+		PrintDelayed("GlfwRenderer::SaveSceneToFile: Failed to open image file <" + filename + ">");
 	}
 	else
 	{
@@ -1478,10 +1861,15 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 }
 
 
-void GlfwRenderer::RenderGraphicsData(float fontScale)
+void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 {
 	if (graphicsDataList)
 	{
+		Index lastItemID = -1;
+		if (selectionMode)
+		{
+			glLoadName(-1); //to have some name in
+		}
 		//check if item shall be highlighted:
 		bool highlight = false;
 		Float4 highlightColor = visSettings->interactive.highlightColor;
@@ -1492,7 +1880,9 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 
 		Index highlightIndex = visSettings->interactive.highlightItemIndex;
 		ItemType highlightType = visSettings->interactive.highlightItemType;
-		Index highlightID = Index2ItemID(highlightIndex, highlightType);
+		Index highlightMbsNumber = visSettings->interactive.highlightMbsNumber;
+
+		Index highlightID = Index2ItemID(highlightIndex, highlightType, highlightMbsNumber);
 		if (highlightIndex >= 0 && highlightType != ItemType::_None) 
 		{ 
 			highlight = true; 
@@ -1515,6 +1905,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 
 			for (const GLPoint& item : data->glPoints)
 			{
+				if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
 				glBegin(GL_LINES);
 				if (!highlight)
 				{
@@ -1541,6 +1932,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			//draw a circle in xy-plane
 			for (const GLCircleXY& item : data->glCirclesXY)
 			{
+				if (selectionMode){if (item.itemID != lastItemID) {glLoadName(item.itemID); lastItemID = item.itemID;}}
 				glBegin(GL_LINE_STRIP); //list of single points to define lines
 				if (!highlight)
 				{
@@ -1571,6 +1963,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			{
 				for (const GLLine& item : data->glLines)
 				{
+					if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
 					glBegin(GL_LINES);
 					glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
 					glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
@@ -1583,6 +1976,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			{
 				for (const GLLine& item : data->glLines)
 				{
+					if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
 					glBegin(GL_LINES);
 					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
 					else { glColor4fv(highlightColor2.GetDataPointer()); }
@@ -1601,6 +1995,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 			{
 				for (const GLTriangle& trig : data->glTriangles)
 				{ //draw lines
+					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 					if (!highlight)
 					{
 						glColor4f(0.2f, 0.2f, 0.2f, 1.f);
@@ -1643,6 +2038,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 
 			for (const GLText& t : data->glTexts)
 			{
+				if (selectionMode) { if (t.itemID != lastItemID) { glLoadName(t.itemID); lastItemID = t.itemID; } }
 				//delete: float scale = textheight * scaleFactor;
 				//delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
 				textFontSize = textheight * fontScale;
@@ -1682,6 +2078,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 				{
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces
+						if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 						glBegin(GL_TRIANGLES);
 						for (Index i = 0; i < 3; i++)
 						{
@@ -1697,6 +2094,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 				{
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces
+						if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 						glBegin(GL_TRIANGLES);
 						for (Index i = 0; i < 3; i++)
 						{
@@ -1712,6 +2110,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 					const float transparencyLimit = 0.4f; //use at least this transparency
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces
+						if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 						glBegin(GL_TRIANGLES);
 						for (Index i = 0; i < 3; i++)
 						{
@@ -1734,6 +2133,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 				float len = visSettings->openGL.drawNormalsLength;
 				for (const GLTriangle& trig : data->glTriangles)
 				{
+					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 					Float3 midPoint = { 0,0,0 };
 					for (Index i = 0; i < 3; i++)
 					{
@@ -1755,6 +2155,7 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 				float len = visSettings->openGL.drawNormalsLength;
 				for (const GLTriangle& trig : data->glTriangles)
 				{
+					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 					for (Index i = 0; i < 3; i++)
 					{
 						glBegin(GL_LINES);
@@ -1768,8 +2169,13 @@ void GlfwRenderer::RenderGraphicsData(float fontScale)
 				}
 			}
 
+		} //for (auto data : *graphicsDataList)
+		if (selectionMode)
+		{
+			glLoadName(-1); //to have some name in
 		}
-	}
+
+	} //if graphicsDataList
 }
 
 

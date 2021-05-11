@@ -27,8 +27,11 @@
 
 #include <functional> //! AUTO: needed for std::function
 
-class MainSystem;
+#include "Graphics/PostProcessData.h"
+#include "Pymodules/PythonUserFunctions.h"
+
 class System;
+
 
 //! @brief class for temporary data during computation (time integration, static solver, etc.)
 //! use multiple instances for parallelization
@@ -60,86 +63,6 @@ public:
 	MarkerDataStructure markerDataStructure;
 };
 
-class VisualizationSystem; //for backlink to VisualizationSystem for PythonUserFunctions for drawing
-
-//! @brief class that contains relevant data for postprocessing:
-//! - postProcessState
-//! - flag to show that results have been updated
-class PostProcessData
-{
-private:
-	std::string solverMessage;			//!< additional solver message shown in renderer window regarding solver and state; this variable is private, because it cannot be accessed safely in multithreading
-	std::string solutionMessage;		//!< additional solution information shown in renderer window; this variable is private, because it cannot be accessed safely in multithreading
-
-public:
-	std::atomic_flag accessState;		//!< flag, which is locked / released to access data
-	std::atomic_flag accessMessage;		//!< flag, which is locked / released to access messages
-	bool postProcessDataReady;			//!< signals, that data can be plotted (CSystem must be consistent, state is a current state of the CSystem, ...); usually same as CSystem::systemIsConsistent
-	uint64_t updateCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
-	uint64_t recordImageCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
-	bool simulationFinished;			//!< shows that computation has been finished ==> visualize last step
-	bool stopSimulation;				//!< renderer or GUI sends signal that simulation shall be interrupted
-	bool simulationPaused;				//!< true: simulation sends renderer or GUI that simulation is paused, waiting for user-input (SPACE)
-	Real visualizationTime;				//!< this value is set as soon as the computation date is generated from visualization; needed to synchronize text message and visualization state
-	bool visualizationIsRunning;		//!< flag, which is set true, if visualization is running (used, e.g. for WaitForUserToContinue())
-	VisualizationSystem* visualizationSystem; //!< use this backlink only for user functions!!!
-	bool requestUserFunctionDrawing;	//!< if this flag is set, user functions request drawing update from computation thread
-	std::atomic_flag requestUserFunctionDrawingAtomicFlag;  //!< flag for user function drawing in python
-
-	PostProcessData()
-	{
-		visualizationTime = 0;
-		simulationFinished = false;
-		stopSimulation = false;
-		updateCounter = 1;				// must be larger than recordImageCounter, in order to avoid hang up in first UpdatePostProcessData(...) in CSystem
-		recordImageCounter = 0;
-		postProcessDataReady = false;
-		visualizationIsRunning = false; 
-	}
-
-	//! this function is used to only send a signal that the scene shall be redrawn because the visualization state has been updated
-	void SendRedrawSignal();
-
-	//! send flag to GUI / renderer which signals that simulation is interrupted until user interaction
-	void WaitForUserToContinue();
-
-	//! set a visualization message into openGL window
-	void SetSolverMessage(const std::string& solverMessageInit)
-	{
-		//add separate semaphore for PostProcessData.accessMessages
-		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
-		solverMessage = solverMessageInit;
-		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
-	}
-
-	void SetSolutionMessage(const std::string& solutionMessageInit)
-	{
-		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
-		solutionMessage = solutionMessageInit;
-		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
-	}
-
-	//! get the current solver message string
-	std::string GetSolverMessage()
-	{
-		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
-		std::string message = solverMessage; 		//copy message
-		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
-		return message; //now safely return message
-	}
-
-	//! get the current solution message string
-	std::string GetSolutionMessage()
-	{
-		EXUstd::WaitAndLockSemaphore(accessMessage); //lock PostProcessData
-		std::string message = solutionMessage; 		//copy message
-		EXUstd::ReleaseSemaphore(accessMessage); //clear PostProcessData
-		return message; //now safely return message
-	}
-
-	void ProcessUserFunctionDrawing();
-
-};
 
 //! @brief data which is updated during different computation tasks, e.g. load factor, load steps, time steps, solver accuracy, ...
 class SolverData
@@ -160,28 +83,6 @@ public:
 		signalJacobianUpdate = false;
 	}
 };
-
-//class PythonUserFunctions; //!< linked in MainSystem, because CSystem does not know about MainSystem
-//! @python user functions to be called e.g., by solver ==> instantiated in CSystem, but MainSystem is not available there!
-class PythonUserFunctions
-{
-public:
-	MainSystem* mainSystem; //!< stored for call to preStepFunction
-	std::function<bool(const MainSystem& mainSystem, Real t)> preStepFunction;//!< function called prior to the computation of a single step
-	std::function<StdVector2D(const MainSystem& mainSystem, Real t)> postNewtonFunction;//!< function called after Newton method
-
-	PythonUserFunctions()
-	{
-		Reset();
-	}
-	void Reset()
-	{
-		mainSystem = 0;
-		preStepFunction = 0;
-		postNewtonFunction = 0;
-	}
-};
-
 
 //call to pointer to member function (std::invoke) did not work
 ////memberfunction pointers follow idea of https://isocpp.org/wiki/faq/pointers-to-members
@@ -245,10 +146,10 @@ public:
 	void Initialize() 
 	{
 		SetSystemIsConsistent(false);
-		postProcessData.postProcessDataReady = false;
-		postProcessData.simulationFinished = false;
+		//postProcessData.postProcessDataReady = false;
+		//postProcessData.simulationFinished = false;
 
-		postProcessData.updateCounter = 1; //done synchronized with visualizationSystem.graphicsData.visualizationCounter
+		//postProcessData.updateCounter = 1; //done synchronized with visualizationSystem.graphicsData.visualizationCounter
 	}
 
 

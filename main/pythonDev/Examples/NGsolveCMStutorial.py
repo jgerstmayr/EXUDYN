@@ -254,7 +254,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.openGL.multiSampling=4
     SC.visualizationSettings.openGL.lineWidth=2
 
-    if False: #activate to animate modes
+    if True: #activate to animate modes
         from exudyn.interactive import AnimateModes
         mbs.Assemble()
         SC.visualizationSettings.nodes.show = False

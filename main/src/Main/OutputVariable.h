@@ -359,11 +359,11 @@ inline bool IsConfigurationInitialCurrentVisualization(ConfigurationType configu
 //keep this list synchronized with ofstream operator
 enum class ItemType {
 	_None  = 0, //marks that no itemType is available
-	Node   = 1 << 0,
-	Object = 1 << 1,
-	Marker = 1 << 2,
-	Load   = 1 << 3,
-	Sensor = 1 << 4, //adapt also Index2ItemIDindexShift if changed!
+	Node   = 1,
+	Object = 2,
+	Marker = 3,
+	Load   = 4,
+	Sensor = 5, //adapt also Index2ItemIDindexShift if changed!
 };
 
 //! ofstream operator for ItemType
@@ -382,23 +382,30 @@ inline std::ostream& operator<<(std::ostream& os, const ItemType& object)
 	return os;
 }
 
-const int Index2ItemIDindexShift = 5;
-inline Index Index2ItemID(Index index, ItemType type)
+const int index2ItemIDindexShift = 3; //3 bits for item Type (5 values + 0)
+const int type2ItemIDindexShift = 4;  //4 bits for mbs number (16 values)
+//! conversion of mbsNumber (m), type (t) and index (i) bits for 32 bits: [iiiiiiii iiiiiiii iiiiiiii itttmmmm]
+inline Index Index2ItemID(Index index, ItemType type, Index mbsNumber)
 {
-	return (index << Index2ItemIDindexShift) + (Index)type;
+	if (mbsNumber == -1) { return -1; }
+	return (index << (index2ItemIDindexShift + type2ItemIDindexShift)) +
+		((Index)type << type2ItemIDindexShift) + mbsNumber;
 }
 
-inline void ItemID2IndexType(Index itemID, Index& index, ItemType& type)
+//! inverse operation of Index2ItemID
+inline void ItemID2IndexType(Index itemID, Index& index, ItemType& type, Index& mbsNumber)
 {
 	if (itemID != -1)
 	{
-		type = (ItemType)(itemID & ((1 << Index2ItemIDindexShift) - 1));
-		index = itemID >> Index2ItemIDindexShift;
+		mbsNumber = (itemID & ((1 << type2ItemIDindexShift) - 1)); //logical and with mask for first 4 bits
+		type = (ItemType)((itemID >> type2ItemIDindexShift) & ((1 << index2ItemIDindexShift) - 1)); //logical and with mask for  bits 5-7
+		index = itemID >> (index2ItemIDindexShift+ type2ItemIDindexShift);
 	}
 	else
 	{
 		type = ItemType::_None;
 		index = -1;
+		mbsNumber = 0;
 	}
 }
 

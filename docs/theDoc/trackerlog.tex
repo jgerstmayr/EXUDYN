@@ -9,16 +9,132 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.201, 
-  \item last change =  2021-05-03
+  \item EXUDYN version = 1.0.218, 
+  \item last change =  2021-05-11
 
-  \item Number of issues = 662, 
-  \item Number of resolved issues = 569 (201 in current version), 
+  \item Number of issues = 672, 
+  \item Number of resolved issues = 586 (218 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.218}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0671}: {\bf mbs.Reset() and SC.Reset()}
+  \bi
+  \item {description: reset MainSystem mbs and SystemContainer SC hangs; current SC is erronously stolen from renderer when another SC is deleted}
+  \item   date resolved: {\bf 2021-05-11 10:55},
+date raised: 2021-05-11   \ei
+  \item {\bf Version 1.0.217}: \vspace{-6pt} 
+  resolved Issue 0670: {\bf MacOS graphics support}
+(extension)
+  \bi
+  \item {description: add compatibility to MacOS in single-threaded graphics mode (tested with OS X 10.7)}
+  \item   date resolved: {\bf 2021-05-10 22:34},
+date raised: 2021-05-10   \ei
+  \item {\bf Version 1.0.216}: \vspace{-6pt} 
+  resolved Issue 0647: {\bf Single Thread Renderer}
+(extension)
+  \bi
+  \item {description: Implement single thread renderer version for MAC OS compatibility test}
+  \item   date resolved: {\bf 2021-05-10 22:32},
+date raised: 2021-04-30   \ei
+  \item {\bf Version 1.0.215}: \vspace{-6pt} 
+  resolved Issue 0634: {\bf Set visualization state}
+(extension)
+  \bi
+  \item {description: add thread-safe variant for updating the visualization state}
+  \item   date resolved: {\bf 2021-05-10 18:32},
+date raised: 2021-04-25   \ei
+  \item {\bf Version 1.0.214}: \vspace{-6pt} 
+  resolved Issue 0668: {\bf multiple mbs and SystemContainer support}
+(extension)
+  \bi
+  \item {description: adapt renderer and MainSystemContainer to work with multiple MainSystems (mbs) and SC instances at same time; add SC.AttachToRenderEnginer, SC.DetachFromRenderEngine}
+  \item   date resolved: {\bf 2021-05-10 18:20},
+date raised: 2021-05-10   \ei
+  \item {\bf Version 1.0.213}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0665}: {\bf StartRenderer()}
+  \bi
+  \item {description: without being in a render loop (e.g., SC.WaitForRenderEngineStopFlag()), the pure StartRenderer() crashes upon left mouse click}
+  \item   date resolved: {\bf 2021-05-10 14:51},
+date raised: 2021-05-05   \ei
+  \item {\bf Version 1.0.212}: \vspace{-6pt} 
+  resolved Issue 0664: {\bf right mouse}
+(change)
+  \bi
+  \item {description: add function to retrieve py::dict from items safely in python thread into temporary storage; check also other python calls to operate fully in main thread}
+  \item   date resolved: {\bf 2021-05-10 14:51},
+date raised: 2021-05-05   \ei
+  \item {\bf Version 1.0.211}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0662}: {\bf Render window}
+  \bi
+  \item {description: during open tkinter dialogs, the render window responds on keyboard or mouse input, which calls again python functions that hang up the system}
+  \item   date resolved: {\bf 2021-05-10 14:51},
+date raised: 2021-05-04   \ei
+  \item {\bf Version 1.0.210}: \vspace{-6pt} 
+  resolved Issue 0633: {\bf WaitAndLockSemaphoreIgnore}
+(check)
+  \bi
+  \item {description: check which atomic\_flags are needed in C++ to make code threadsafe}
+  \item   date resolved: {\bf 2021-05-10 14:51},
+date raised: 2021-04-25   \ei
+  \item {\bf Version 1.0.209}: \vspace{-6pt} 
+  resolved Issue 0667: {\bf tkinter dialogs focus and on top}
+(extension)
+  \bi
+  \item {description: when opening tkinter dialogs - visualizationSettings, edit dialogs, help, ... - they immediately get focus and are on top}
+  \item   date resolved: {\bf 2021-05-10 14:49},
+date raised: 2021-05-10   \ei
+  \item {\bf Version 1.0.208}: \vspace{-6pt} 
+  resolved Issue 0666: {\bf make renderer Python and thread safe}
+(change)
+  \bi
+  \item {description: add strict separation between renderer (thread) and Python (thread); add rendererPythonInterface between both threads; left and right mouse clicks now safe to press; render window does not accept any input as long as tkinter window is open, but does not produce crashes any more}
+  \item   date resolved: {\bf 2021-05-10 14:49},
+date raised: 2021-05-10   \ei
+  \item {\bf Version 1.0.207}: \vspace{-6pt} 
+  resolved Issue 0663: {\bf help button}
+(docu)
+  \bi
+  \item {description: show "press h for help" as startup message for 10 seconds and sync help message with theDoc.pdf}
+  \item   date resolved: {\bf 2021-05-05 10:02},
+date raised: 2021-05-05   \ei
+  \item {\bf Version 1.0.206}: \vspace{-6pt} 
+  resolved Issue 0653: {\bf add right mouse edit dialog}
+(extension)
+  \bi
+  \item {description: open Edit dialog for item on right-mouse-press}
+  \item   date resolved: {\bf 2021-05-04 20:58},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.205}: \vspace{-6pt} 
+  resolved Issue 0652: {\bf identify itemID under mouse coursor}
+(extension)
+  \bi
+  \item {description: identify object/node/... under mouse using unique color for itemID (left mouse button press)}
+  \item   date resolved: {\bf 2021-05-04 12:49},
+date raised: 2021-05-01   \ei
+  \item {\bf Version 1.0.204}: \vspace{-6pt} 
+  resolved Issue 0637: {\bf Python3.8 windows wheels}
+(extension)
+  \bi
+  \item {description: create Python3.8 windows wheels automatically}
+  \item   date resolved: {\bf 2021-05-03 18:51},
+date raised: 2021-04-26   \ei
+  \item {\bf Version 1.0.203}: \vspace{-6pt} 
+  resolved Issue 0661: {\bf add C++ unit tests}
+(extension)
+  \bi
+  \item {description: add C++ unit tests to Python3.6 64bits version and to testSuite. Changed initialization of all vector types to avoid errors of Vector({5}), now allowing only Vector({4.}) in constructors}
+  \item   date resolved: {\bf 2021-05-03 18:50},
+date raised: 2021-05-03   \ei
+  \item {\bf Version 1.0.202}: \vspace{-6pt} 
+  resolved Issue 0660: {\bf initializerList}
+(check)
+  \bi
+  \item {description: check if Vector is used with initializer list with one item - Vector({10}), converting to std::vector or Vector(10)}
+  \item   date resolved: {\bf 2021-05-03 18:50},
+date raised: 2021-05-03   \ei
   \item {\bf Version 1.0.201}: \vspace{-6pt} 
   resolved Issue 0659: {\bf Troubleshooting}
 (docu)
