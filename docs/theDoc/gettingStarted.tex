@@ -182,34 +182,35 @@ This will add a wheel in the \texttt{dist} folder.
 Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda installation.
 
-Tested configuration:
+\noindent {\bf Tested configuration}:
 \bi
   \item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory
   \item Anaconda Navigator 1.9.7
 	\item Python 3.7.0
-	
+	\item Spyder 3.3.6
+\ei
+For a compatible Mac OS X system, you can install the pre-compiled wheel (go to local directory). Go to the \texttt{main/dist} directory in your back terminal and type, e.g.,
+\bi
+\item[] \texttt{pip install exudyn-1.0.218-cp37-cp37m-macosx\_10\_9\_x86\_64.whl} \vspace{9pt}\\
 \ei
 
-Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
+If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \texttt{main} directory of your repository and type
 \bi
-  \item install your Anaconda distribution including Spyder
-  \item close all Python programs (e.g. Spyder, Jupyter, ...)
-	\item run an Anaconda prompt (may need to be run as administrator)
-	\item if you cannot run Anaconda prompt directly, do:
-	\bi
-	  \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary)
-		\item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts})
-	  \item run 'activate.bat'
-	\ei
-	\item go to 'main' of your cloned github folder of exudyn
-	\item run: \texttt{python setup.py install}
-	\item read the output; if there are errors, try to solve them by installing appropriate modules
+  \item \texttt{python setup.py bdist\_wheel}
+	\item[] $\ra$ this compiles and takes approx.~5 minutes, depending on your machine
+	\item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Callsing that again will finalize linking; then run again
+	\item[] \texttt{python setup.py bdist\_wheel}
+	\item[] $\ra$ this now creates the wheel (if you want to distribute) in the \texttt{dist} folder
+	\item[] alternatively just call
+	\item \texttt{python setup.py install}
+	\item[] to install exudyn
 \ei
-You can also create your own wheels, doing the above steps to activate the according python version and then calling (requires installation of Microsoft Visual Studio; recommended: VS2017):
+Then just go to the \texttt{pythonDev/Examples} folder and run an example:
 \bi
-  \item[] \texttt{python setup.py bdist\_wheel}
+  \item[] \texttt{python springDamperUserFunctionTest.py}
 \ei
-This will add a wheel in the \texttt{dist} folder.
+If you have a new system, try to adapt \texttt{setup.py} accordingly, e.g., activating the \texttt{-std=c++17} support.
+If there are other issues, we are happy to receive your detailed bug reports. 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
