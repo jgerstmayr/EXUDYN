@@ -567,6 +567,12 @@ class TkinterEditDictionary(tk.Frame):
 
         self.modifiedDictionary = self.GetDictionary('')
 
+    def IsItemIndex(self, var):
+        return (isinstance(var, exudyn.NodeIndex) or
+                isinstance(var, exudyn.ObjectIndex) or
+                isinstance(var, exudyn.MarkerIndex) or
+                isinstance(var, exudyn.LoadIndex) or
+                isinstance(var, exudyn.SensorIndex))
     #create dictionary
     def AddNodeFromDictionary(self, value, parentNode="", key=None):
         if key is None:
@@ -608,6 +614,8 @@ class TkinterEditDictionary(tk.Frame):
             elif isinstance(value, str) and value!='Get graphics data to be implemented':
                 self.longestColumn = max(self.longestColumn,len(value))
                 self.tree.item(id, values=(value.replace(' ','\ ')))
+            elif self.IsItemIndex(value):
+                self.tree.item(id, values=(int(value)))
             else:
                 self.tree.item(id, values=('<unavailable>'))
 

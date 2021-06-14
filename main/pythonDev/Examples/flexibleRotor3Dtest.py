@@ -150,6 +150,7 @@ simulationSettings.displayComputationTime = True
 simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
+SC.visualizationSettings.general.useMultiThreadedRendering = False
 
 exu.StartRenderer()              #start graphics visualization
 mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue

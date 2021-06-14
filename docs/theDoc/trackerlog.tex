@@ -9,16 +9,163 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.218, 
-  \item last change =  2021-05-11
+  \item EXUDYN version = 1.0.240, 
+  \item last change =  2021-06-14
 
-  \item Number of issues = 672, 
-  \item Number of resolved issues = 586 (218 in current version), 
+  \item Number of issues = 687, 
+  \item Number of resolved issues = 608 (240 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.240}: \vspace{-6pt} 
+  resolved Issue 0686: {\bf eigenvalue solver}
+(extension)
+  \bi
+  \item {description: use ngsolve solver for eigenvalue computation speedup}
+  \item   date resolved: {\bf 2021-06-14 15:21},
+date raised: 2021-06-14   \ei
+  \item {\bf Version 1.0.239}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0684}: {\bf openGL.multisampling}
+  \bi
+  \item {description: Mac OS multisampling option in visualization settings crashes; ==> do not change this option under Mac OS}
+  \item {\bf notes: excluded multisampling option for MacOS compilation}
+  \item   date resolved: {\bf 2021-05-30 12:02},
+date raised: 2021-05-25   \ei
+  \item {\bf Version 1.0.238}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0681}: {\bf ObjectALEANCFCable2D}
+  \bi
+  \item {description: ObjectALEANCFCable2D position jacobian does not provide axially moving part for ObjectContactFrictionCircleCable2D, NEED TO BE ADDED}
+  \item {\bf notes: had been already included in MarkerBodyCable2Dshape and works for roll contact}
+  \item   date resolved: {\bf 2021-05-30 12:01},
+date raised: 2021-05-17   \ei
+  \item {\bf Version 1.0.237}: \vspace{-6pt} 
+  resolved Issue 0685: {\bf NodeRigidBody2D}
+(change)
+  \bi
+  \item {description: add same drawing as 3D nodes (with reference frame)}
+  \item   date resolved: {\bf 2021-05-30 11:37},
+date raised: 2021-05-30   \ei
+  \item {\bf Version 1.0.236}: \vspace{-6pt} 
+  resolved Issue 0683: {\bf SlidingJointRigid}
+(extension)
+  \bi
+  \item {description: Add functionality for rigid sliding joint or add a flag for sliding joint to do both options}
+  \item   date resolved: {\bf 2021-05-20 09:30},
+date raised: 2021-05-19   \ei
+  \item {\bf Version 1.0.235}: \vspace{-6pt} 
+  resolved Issue 0682: {\bf copy paste code from theDoc.pdf}
+(extension)
+  \bi
+  \item {description: changed ' characters to enable copy/paste of code with quotes}
+  \item   date resolved: {\bf 2021-05-19 08:54},
+date raised: 2021-05-19   \ei
+  \item {\bf Version 1.0.234}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0680}: {\bf SetSystemState}
+  \bi
+  \item {description: mbs.systemData.SetSystemState does not set data coordinates}
+  \item   date resolved: {\bf 2021-05-15 11:07},
+date raised: 2021-05-15   \ei
+  \item {\bf Version 1.0.233}: \vspace{-6pt} 
+  resolved Issue 0676: {\bf single threaded renderer}
+(change)
+  \bi
+  \item {description: improve exu.DoRendererIdleTasks() and use it in all python function - AnimateModes, Interactive, etc.}
+  \item {\bf notes: can now be also called in multithreaded renderer}
+  \item   date resolved: {\bf 2021-05-14 21:42},
+date raised: 2021-05-12   \ei
+  \item {\bf Version 1.0.232}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0678}: {\bf mouseInteractiveExample}
+  \bi
+  \item {description: not running any more, check new Renderer functions}
+  \item   date resolved: {\bf 2021-05-14 21:41},
+date raised: 2021-05-14   \ei
+  \item {\bf Version 1.0.231}: \vspace{-6pt} 
+  resolved Issue 0630: {\bf HurtyCraigBampton}
+(extension)
+  \bi
+  \item {description: extend computation to work with 0 eigenmodes}
+  \item   date resolved: {\bf 2021-05-12 23:51},
+date raised: 2021-04-23   \ei
+  \item {\bf Version 1.0.230}: \vspace{-6pt} 
+  resolved Issue 0642: {\bf ComputeHurtyCraigBamptonModes}
+(extension)
+  \bi
+  \item {description: add possibility to add position only interfaces}
+  \item {\bf notes: abandoned, because makes no sense with RBE2 modes}
+  \item   date resolved: {\bf 2021-05-12 23:35},
+date raised: 2021-04-30   \ei
+  \item {\bf Version 1.0.229}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0674}: {\bf OutputVariable.StressLocal}
+  \bi
+  \item {description: norm of OutputVariable stresses does not work}
+  \item   date resolved: {\bf 2021-05-12 23:21},
+date raised: 2021-05-12   \ei
+  \item {\bf Version 1.0.228}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0456}: {\bf ObjectFFRF bug with GenericJoint}
+  \bi
+  \item {description: raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity\_qt not implemented; cannot compute jacobian for orientation}
+  \item   date resolved: {\bf 2021-05-12 22:27},
+date raised: 2020-10-13   \ei
+  \item {\bf Version 1.0.226}: \vspace{-6pt} 
+  resolved Issue 0100: {\bf UPDATE Lest tests}
+(new feature)
+  \bi
+  \item {description: update lest tests (select C++ vs. python tests)    }
+  \item   date resolved: {\bf 2021-05-12 22:21},
+date raised: 2019-04-01   \ei
+  \item {\bf Version 1.0.225}: \vspace{-6pt} 
+  resolved Issue 0372: {\bf add manual solver example}
+(extension)
+  \bi
+  \item {description: add manual for solver and example; also add new prestep user function}
+  \item {\bf notes: resolved earlier}
+  \item   date resolved: {\bf 2021-05-12 22:20},
+date raised: 2020-04-10   \ei
+  \item {\bf Version 1.0.224}: \vspace{-6pt} 
+  resolved Issue 0384: {\bf Solver interface}
+(extension)
+  \bi
+  \item {description: change solver interface such that it stores MainSystem/mbs for user functions; MainSolverXYZ and CSolverXYZ take MainSystem as argument in constructor}
+  \item   date resolved: {\bf 2021-05-12 22:18},
+date raised: 2020-05-06   \ei
+  \item {\bf Version 1.0.223}: \vspace{-6pt} 
+  resolved Issue 0675: {\bf PostProcessingModes}
+(extension)
+  \bi
+  \item {description: compute PostProcessingModes with multiprocessing}
+  \item   date resolved: {\bf 2021-05-12 22:10},
+date raised: 2021-05-12   \ei
+  \item {\bf Version 1.0.222}: \vspace{-6pt} 
+  resolved Issue 0672: {\bf right-mouse-dialog}
+(extension)
+  \bi
+  \item {description: add item indices to right mouse dialog}
+  \item   date resolved: {\bf 2021-05-12 22:05},
+date raised: 2021-05-11   \ei
+  \item {\bf Version 1.0.221}: \vspace{-6pt} 
+  resolved Issue 0673: {\bf FEM.PostProcessingModes}
+(extension)
+  \bi
+  \item {description: compute PostProcessingModes in FEMinterface with multiprocessing option}
+  \item   date resolved: {\bf 2021-05-12 15:37},
+date raised: 2021-05-12   \ei
+  \item {\bf Version 1.0.220}: \vspace{-6pt} 
+  resolved Issue 0430: {\bf stress modes FEMinterface}
+(extension)
+  \bi
+  \item {description: add into FEMinterface and allow storing that data}
+  \item {\bf notes: resolved already earlier, see issue 623}
+  \item   date resolved: {\bf 2021-05-12 15:36},
+date raised: 2020-07-01   \ei
+  \item {\bf Version 1.0.219}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0631}: {\bf ObjectFFRFreducedOrder}
+  \bi
+  \item {description: freefree eigenmodes and Hurty-Craig-Bampton modes do not converge to same results}
+  \item {\bf notes: convergence for eigenmodes and HCB modes given, but differences due to HCB boundary sets, inconsistent initial conditions for MarkerSuperElementRigid; pure beam bending converges well}
+  \item   date resolved: {\bf 2021-05-12 14:05},
+date raised: 2021-04-23   \ei
   \item {\bf Version 1.0.218}: \vspace{-6pt} 
 {\bf \color{warningRed}  resolved BUG 0671}: {\bf mbs.Reset() and SC.Reset()}
   \bi
@@ -211,7 +358,7 @@ date raised: 2021-04-30   \ei
   resolved Issue 0645: {\bf redundant constraints}
 (extension)
   \bi
-  \item {description: resolve redundant constraints: add flag to ignore singular constraint jacobians}
+  \item {description: resolve redundant constraints: add flag linearSolverSettings.ignoreSingularJacobian in SC.SimulationSettings() to ignore singular constraint jacobians}
   \item   date resolved: {\bf 2021-05-01 02:29},
 date raised: 2021-04-30   \ei
   \item {\bf Version 1.0.190}: \vspace{-6pt} 
@@ -1569,14 +1716,10 @@ date raised: 2020-07-20   \ei
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 0631}:  {\bf ObjectFFRFreducedOrder}
+  \item open {\bf BUG 0677}:  {\bf single threaded renderer}
   \bi
-  \item {description: freefree eigenmodes and Hurty-Craig-Bampton modes do not converge to same results}
-  \item date raised: 2021-04-23   \ei
-  \item open {\bf BUG 0456}:  {\bf ObjectFFRF bug with GenericJoint}
-  \bi
-  \item {description: raises error: CSolverBase::SolveSteps CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity\_qt not implemented; cannot compute jacobian for orientation}
-  \item date raised: 2020-10-13   \ei
+  \item {description: correct crash with visualization dialog (MacOS)}
+  \item date raised: 2021-05-12   \ei
   \item open {\bf BUG 0448}:  {\bf ObjectGenericODE2 bug}
   \bi
   \item {description: ObjectGenericODE2 crashes without message when initialized with invalid node numbers}

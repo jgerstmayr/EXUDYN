@@ -148,20 +148,20 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
     staticSolver = exudyn.MainSolverStatic()
     if storeSolver:
         mbs.sys['staticSolver'] = staticSolver #copy solver structure to sys variable
-    
+    success = False
     try:
         success = staticSolver.SolveSystem(mbs, simulationSettings)
     except:
         pass
-        # print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
-        #                          showCausingNodes=showCausingItems, showHints=showHints))
-        # import sys
-        # sys.exit() #produce no further error messages
+        #print error message after except, to catch all errors
 
     if not success:
-        exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+        # exudyn.Print not shown in Spyder at this time (because of exception?)
+        # exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+        #                          showCausingNodes=showCausingItems, showHints=showHints))
+        print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
                                  showCausingNodes=showCausingItems, showHints=showHints))
-        raise ValueError("SolveDynamic terminated")
+        raise ValueError("SolveStatic terminated due to errors")
 
     elif updateInitialValues:
         currentState = mbs.systemData.GetSystemState() #get current values
@@ -229,6 +229,7 @@ def SolveDynamic(mbs,
             simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     
         stat = exudyn.InfoStat(False)
+        success = False
         try:
             success = dynamicSolver.SolveSystem(mbs, simulationSettings)
         except:
@@ -241,7 +242,7 @@ def SolveDynamic(mbs,
             #raise ValueError("SolveDynamic terminated due to errors, see messages above")
 
         if not success:
-            exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
+            print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
                                      showCausingNodes=showCausingItems, showHints=showHints))
             raise ValueError("SolveDynamic terminated")
             

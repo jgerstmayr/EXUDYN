@@ -64,7 +64,8 @@ void PyQueuePythonProcess(ProcessID::Type processID, Index info=-1);
 void PyQueueExecutableString(STDstring str); //call python function and execute string as python code
 
 //! put executable key codes into queue, which are the processed in main (Python) thread
-void PyQueueKeyPressed(int key, int action, int mods, std::function<void(int, int, int)> keyPressUserFunctionInit); //call python user function
+void PyQueueKeyPressed(int key, int action, int mods); //call python user function
+//void PyQueueKeyPressed(int key, int action, int mods, std::function<bool(int, int, int)> keyPressUserFunctionInit); //call python user function
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //PROCESS QUEUES

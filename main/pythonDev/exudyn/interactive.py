@@ -571,6 +571,8 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
         
 
         mbs.SendRedrawSignal()
+        if not SC.visualizationSettings.general.useMultiThreadedRendering:
+            exudyn.DoRendererIdleTasks()
         if mbs.variables['modeShapeSaveImages'] == 0:
             SC.RedrawAndSaveImage() #create images for animation
         else:
@@ -590,6 +592,9 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
     simulationSettings.solutionSettings.solutionInformation = 'Mode X'
+
+    if not SC.visualizationSettings.general.useMultiThreadedRendering:
+        exudyn.DoRendererIdleTasks() #do an update once
 
     dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
                       simulationFunction=UFshowModes, 

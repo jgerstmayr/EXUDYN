@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-03-18  21:14:15 (last modfied)
+* @date         2021-05-25  10:12:03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,11 +27,13 @@
 class CObjectJointSliding2DParameters // AUTO: 
 {
 public: // AUTO: 
-    ArrayIndex markerNumbers;                     //!< AUTO: marker m0: position-marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
+    ArrayIndex markerNumbers;                     //!< AUTO: marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
     ArrayIndex slidingMarkerNumbers;              //!< AUTO: these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker \f$m_{si}\f$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)
     Vector slidingMarkerOffsets;                  //!< AUTO: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position
-    bool classicalFormulation;                    //!< AUTO: uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation
+    bool classicalFormulation;                    //!< AUTO: True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation
+    bool constrainRotation;                       //!< AUTO: True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely
+    Real axialForce;                              //!< AUTO: ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectJointSliding2DParameters()
@@ -41,6 +43,8 @@ public: // AUTO:
         slidingMarkerOffsets = Vector();
         nodeNumber = EXUstd::InvalidIndex;
         classicalFormulation = true;
+        constrainRotation = false;
+        axialForce = 0;
         activeConnector = true;
     };
 };
@@ -150,10 +154,10 @@ public: // AUTO:
         return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);
     }
 
-    //! AUTO:  q0=forceX of sliding joint, q1=forceY of sliding joint; q2=axial (sliding) coordinate at beam
+    //! AUTO:  q0=forceX of sliding joint, q1=forceY of sliding joint; q2=axial (sliding) coordinate at beam; (optional) q3=rotation constraint
     virtual Index GetAlgebraicEquationsSize() const override
     {
-        return 3;
+        return 3 + (Index)parameters.constrainRotation;
     }
 
     //! AUTO:  return if connector is active-->speeds up computation

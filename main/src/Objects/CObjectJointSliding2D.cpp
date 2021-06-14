@@ -47,30 +47,27 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 
 	if (parameters.activeConnector)
 	{
+		algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
+		//compute ANCF position:
+		const Index ns = 4;
+		LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
+		LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
+		Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
+		Real slidingCoordinate = ComputeLocalSlidingCoordinate();
+
+		Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
+		Vector4D SV_x = CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L);
+
+		Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
+		Vector2D slopeVector = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0, qNode1);
+		Vector2D vPos;
+		vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0
+		vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
+
 		if (parameters.classicalFormulation)
 		{
 			if (!velocityLevel)
 			{
-				//compute ANCF position:
-				const Index ns = 4;
-				LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
-				LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
-
-				Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
-				Real slidingCoordinate = ComputeLocalSlidingCoordinate();
-
-				Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
-				Vector4D SV_x = CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L);
-
-				Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
-				Vector2D slopeVector = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0, qNode1);
-
-
-				algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
-				Vector2D vPos;
-				vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0
-				vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
-
 				//Vector2D normalVector({-markerData.GetMarkerData(1).vectorValue[1], markerData.GetMarkerData(1).vectorValue[0]});
 
 				algebraicEquations[0] = vPos[0];
@@ -79,48 +76,21 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 				Real forceX = GetCurrentAEcoordinate(forceXindex);
 				Real forceY = GetCurrentAEcoordinate(forceYindex);
 				algebraicEquations[2] = slopeVector[0] * forceX + slopeVector[1] * forceY; //force in sliding direction must be zero
+				if (parameters.axialForce != 0) 
+				{ 
+					algebraicEquations[2] -= slopeVector.GetL2Norm()*parameters.axialForce;
+				}
 			}
 			else
 			{
-				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not implemented");
+				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not possible for classicalFormulation");
 
 			}
 		}
 		else //new formulation
 		{
-			//compute ANCF position:
-			const Index ns = 4;
-			LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
-			LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
-
-			Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
-			Real slidingCoordinate = ComputeLocalSlidingCoordinate();
-
-			Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
-			Vector4D SV_x = CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L);
-
-			Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
-			Vector2D slopeVector = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0, qNode1);
-
-
-			algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
-			Vector2D vPos;
-			vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0
-			vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
-
-			LinkedDataVector qNode0_t(markerData.GetMarkerData(1).vectorValue_t, 0, ns); //link to velocity coordinates
-			LinkedDataVector qNode1_t(markerData.GetMarkerData(1).vectorValue_t, ns, ns); //link to velocity coordinates
-
-			Vector2D slidingVelocity = CObjectANCFCable2D::MapCoordinates(SV, qNode0_t, qNode1_t);
-			Vector2D slopeVector_t = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0_t, qNode1_t);
 
 			Vector2D normalVector({ -slopeVector[1], slopeVector[0] });
-			Vector2D normalVector_t({ -slopeVector_t[1], slopeVector_t[0] });
-
-			Vector2D vVel;
-			vVel[0] = (slidingVelocity[0] - markerData.GetMarkerData(0).velocity[0]); //this is the difference between the sliding position and the position of marker0
-			vVel[1] = (slidingVelocity[1] - markerData.GetMarkerData(0).velocity[1]);
-
 
 			Real forceX = GetCurrentAEcoordinate(forceXindex); //coordinate forceX is redundant; forceY becomes force in normal direction
 			algebraicEquations[0] = forceX; //dummy equation; should be erased in future
@@ -133,11 +103,38 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 			}
 			else
 			{
+				LinkedDataVector qNode0_t(markerData.GetMarkerData(1).vectorValue_t, 0, ns); //link to velocity coordinates
+				LinkedDataVector qNode1_t(markerData.GetMarkerData(1).vectorValue_t, ns, ns); //link to velocity coordinates
+
+				Vector2D slidingVelocity = CObjectANCFCable2D::MapCoordinates(SV, qNode0_t, qNode1_t);
+				Vector2D slopeVector_t = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0_t, qNode1_t);
+				Vector2D normalVector_t({ -slopeVector_t[1], slopeVector_t[0] });
+
+				Vector2D vVel;
+				vVel[0] = (slidingVelocity[0] - markerData.GetMarkerData(0).velocity[0]); //this is the difference between the sliding position and the position of marker0
+				vVel[1] = (slidingVelocity[1] - markerData.GetMarkerData(0).velocity[1]);
+
 				//index2; fully comes without differentiation of s (reason: s could be fully eliminated from constraint equations)
 				algebraicEquations[1] = vVel * normalVector + vPos * normalVector_t; //all slidingCoordinate_t values vanish!
 				algebraicEquations[2] = vPos * slopeVector; //index1; this equation leads immediately to sliding position if solved
+				//algebraicEquations[2] = vVel * slopeVector + vPos * slopeVector_t; //index2, does not work (because it does not retrieve sliding position?)
+
+				if (parameters.constrainRotation)
+				{
+					Vector2D n0({ markerData.GetMarkerData(0).orientation(0,1), markerData.GetMarkerData(0).orientation(1,1) }); //equivalent to A0*[0,1,0], but much faster
+					Vector2D nn0({ -markerData.GetMarkerData(0).orientation(0,0), -markerData.GetMarkerData(0).orientation(1,0) }); //equivalent to A0*[-1,0,0], but much faster
+					Real omega = markerData.GetMarkerData(0).angularVelocityLocal[2]; //z component only, because 2D problem!
+					algebraicEquations[3] = slopeVector_t * n0 + omega * (slopeVector * nn0); //does not converge very good for test problems (use full Newton)!
+				}
 			}
 		}
+		if (!velocityLevel && parameters.constrainRotation)
+		{
+			//this is for both classicalFormulation = true/false:
+			Vector2D n0({ markerData.GetMarkerData(0).orientation(0,1), markerData.GetMarkerData(0).orientation(1,1) }); //equivalent to A0*[0,1,0], but much faster
+			algebraicEquations[3] = slopeVector * n0;
+		}
+
 	}
 	else
 	{
@@ -162,34 +159,62 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 	//CHECKandTHROWstring("CObjectJointSliding2D::ComputeJacobianAE");
 
 	const Index ns = 4; //number of ANCF shape functions
+	Index nAE = GetAlgebraicEquationsSize();
+	Index nODEcable = markerData.GetMarkerData(1).vectorValue.NumberOfItems(); //2 * ns: also suitable for ALE element
 	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
-	jacobian_ODE2.SetNumberOfRowsAndColumns(3, columnsOffset + 2 * ns);
+	//jacobian_ODE2.SetNumberOfRowsAndColumns(nAE, columnsOffset + 2 * ns); //not suitable for ALE cable
+	jacobian_ODE2.SetNumberOfRowsAndColumns(nAE, columnsOffset + nODEcable); 
 	jacobian_ODE2.SetAll(0.);
 
 	if (parameters.activeConnector)
 	{
+		//marker0: contains position jacobian
+		const Index forceXindex = 0;
+		const Index forceYindex = 1;
+
+		//compute ANCF position:
+		LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
+		LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
+
+		Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
+		Real slidingCoordinate = ComputeLocalSlidingCoordinate();
+
+		Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
+		Vector4D SV_x = CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L);
+		Vector4D SV_xx = CObjectANCFCable2D::ComputeShapeFunctions_xx(slidingCoordinate, L);
+
+		Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
+		Vector2D slopeVector = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0, qNode1);
+		Vector2D slopeVector_x = CObjectANCFCable2D::MapCoordinates(SV_xx, qNode0, qNode1);
+
+		jacobian_AE.SetScalarMatrix(nAE, 0.);
+
+		if (parameters.constrainRotation)
+		{
+			const ResizableMatrix& rotJac0 = markerData.GetMarkerData(0).rotationJacobian;
+			Matrix3D A0 = markerData.GetMarkerData(0).orientation;
+
+			Vector3D n0({ markerData.GetMarkerData(0).orientation(0,1), markerData.GetMarkerData(0).orientation(1,1), 0 }); //equivalent to A0*[0,1,0], but much faster
+			Vector3D ln0({ 0., 1., 0. }); //local normal vector
+			//algebraicEquations[3] = slopeVector * (A0*ln0);
+
+			for (Index i = 0; i < columnsOffset; i++)
+			{
+				Vector3D vRotJac0({ rotJac0(0,i), rotJac0(1,i), rotJac0(2,i) }); //temporary vector
+				Vector3D n0_q = A0*ln0.CrossProduct(vRotJac0); // d/dq(A*v) = -A tilde(v) G 
+				jacobian_ODE2(3, i) = -(slopeVector[0] * n0_q[0] + slopeVector[1] * n0_q[1]);// d/dtq(A*v) = -A tilde(v) G ==> negative sign
+			}
+			for (Index i = 0; i < ns; i++)
+			{
+				jacobian_ODE2(3, 2 * i + columnsOffset) = SV_x[i] * n0[0];
+				jacobian_ODE2(3, 2 * i + 1 + columnsOffset) = SV_x[i] * n0[1];
+			}
+
+		}
+
+
 		if (parameters.classicalFormulation)
 		{
-			//marker0: contains position jacobian
-			const Index forceXindex = 0;
-			const Index forceYindex = 1;
-			//const Index slidingCoordinateIndex = 2;
-
-			//compute ANCF position:
-			LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
-			LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
-
-			Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
-			Real slidingCoordinate = ComputeLocalSlidingCoordinate();
-
-			Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
-			Vector4D SV_x = CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L);
-			Vector4D SV_xx = CObjectANCFCable2D::ComputeShapeFunctions_xx(slidingCoordinate, L);
-
-			Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
-			Vector2D slopeVector = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0, qNode1);
-			Vector2D slopeVector_x = CObjectANCFCable2D::MapCoordinates(SV_xx, qNode0, qNode1);
-
 			//Vector2D vPos;
 			//vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0
 			//vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
@@ -197,7 +222,6 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 			Real forceX = GetCurrentAEcoordinate(forceXindex);
 			Real forceY = GetCurrentAEcoordinate(forceYindex);
 
-			jacobian_AE.SetScalarMatrix(3, 0.);
 			jacobian_AE(2, 0) = slopeVector[0];
 			jacobian_AE(2, 1) = slopeVector[1];
 
@@ -222,25 +246,6 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 		}
 		else
 		{
-			//marker0: contains position jacobian
-			const Index forceXindex = 0;
-			//const Index forceYindex = 1;
-			//const Index slidingCoordinateIndex = 2;
-
-			//compute ANCF position:
-			LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns); //link to position coordinates (refCoords+displacements)
-			LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns); //link to position coordinates (refCoords+displacements)
-
-			Real L = markerData.GetMarkerData(1).GetHelper(); //kind of hack ...
-			Real slidingCoordinate = ComputeLocalSlidingCoordinate();
-
-			Vector4D SV = CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L);
-			Vector4D SV_x = CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L);
-			Vector4D SV_xx = CObjectANCFCable2D::ComputeShapeFunctions_xx(slidingCoordinate, L);
-
-			Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(SV, qNode0, qNode1);
-			Vector2D slopeVector = CObjectANCFCable2D::MapCoordinates(SV_x, qNode0, qNode1);
-			Vector2D slopeVector_x = CObjectANCFCable2D::MapCoordinates(SV_xx, qNode0, qNode1);
 
 			Vector2D normalVector({ -slopeVector[1], slopeVector[0] });
 			Vector2D normalVector_x({ -slopeVector_x[1], slopeVector_x[0] });
@@ -258,11 +263,9 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 			//Real forceX = GetCurrentAEcoordinate(forceXindex);
 			//Real forceY = GetCurrentAEcoordinate(forceYindex);
 
-			jacobian_AE.SetScalarMatrix(3, 0.);
-
 			//derivatives w.r.t. to s and w.r.t. forceX (dummy)
 			jacobian_AE(forceXindex, forceXindex) = 1;
-			//OLD: 2020-03-09: jacobian_AE(1, 2) = slidingPosition * normalVector_x;	//d(vPos * normalVector)/ds = r'*n + r*n'
+			//
 			jacobian_AE(1, 2) = slidingPosition * normalVector_x + slopeVector * normalVector;	//d(vPos * normalVector)/ds = r'*n + r*n'
 			jacobian_AE(2, 2) = slopeVector*slopeVector + vPos*slopeVector_x;	//deq2/dq2 = d(vPos * slopeVector)/ds = r'*r' + vPos*r'' ; vPos = r(s) - p0
 
@@ -290,7 +293,7 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 	}
 	else
 	{
-		jacobian_AE.SetScalarMatrix(3, 1.);
+		jacobian_AE.SetScalarMatrix(nAE, 1.);
 	}
 
 

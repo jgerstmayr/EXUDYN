@@ -475,7 +475,7 @@ VSettingsWindow has the following items:
     alwaysOnTop &     bool &      &     False &     True: OpenGL render window will be always on top of all other windows\\ \hline
     maximize &     bool &      &     False &     True: OpenGL render window will be maximized at startup\\ \hline
     showWindow &     bool &      &     True &     True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
-    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
+    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
     showMouseCoordinates &     bool &      &     False &     True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
     ignoreKeys &     bool &      &     False &     True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'\\ \hline
     ResetKeyPressUserFunction() &     void &      &      &     set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself\\ \hline
@@ -574,7 +574,7 @@ VSettingsInteractive has the following items:
     highlightColor &     Float4 &     4 &     [0.8,0.05,0.05,0.75] &     \tabnewline cRGB color for highlighted item; 4th value is alpha-transparency\\ \hline
     highlightOtherColor &     Float4 &     4 &     [0.5,0.5,0.5,0.4] &     \tabnewline cRGB color for other items (which are not highlighted); 4th value is alpha-transparency\\ \hline
     selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
-    selectionRightMouse &     bool &      &     False &     True: right mouse click on items and show dictionary (read only!)\\ \hline
+    selectionRightMouse &     bool &      &     True &     True: right mouse click on items and show dictionary (read only!)\\ \hline
 	  \end{longtable}
 	\end{center}
 

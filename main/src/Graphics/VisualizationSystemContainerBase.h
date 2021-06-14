@@ -40,6 +40,9 @@ public:
 		bool solutionInformation = true, bool solverTime = true) = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual MainSystem* GetMainSystemBacklink(Index iSystem) = 0; //! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
 	virtual Index NumberOFMainSystemsBacklink() const = 0; //! REMOVE: get backlink to number of main systems, temporary for selection
+	virtual bool DoIdleOperations() = 0; //!< this function does any idle operations (execute some python commands) and returns false if stop flag in the render engine, otherwise true;
+
+
 	virtual ~VisualizationSystemContainerBase() {} //added for correct deletion of derived classes
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

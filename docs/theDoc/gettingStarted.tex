@@ -212,6 +212,13 @@ Then just go to the \texttt{pythonDev/Examples} folder and run an example:
 If you have a new system, try to adapt \texttt{setup.py} accordingly, e.g., activating the \texttt{-std=c++17} support.
 If there are other issues, we are happy to receive your detailed bug reports. 
 
+\noindent Note that you need to run 
+\bi
+\item[] \texttt{exudyn.StartRenderer()}
+\item[] \texttt{exudyn.DoRendererIdleTasks(-1)}
+\ei
+in order to interact with the render window, as there is only a single-threaded version available for Mac OS.
+
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under UBUNTU?}

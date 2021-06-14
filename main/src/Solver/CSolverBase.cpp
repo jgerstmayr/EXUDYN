@@ -1038,7 +1038,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 
 		it.newtonSteps++; it.newtonStepsCount++;
 		if (IsVerbose(3)) { Verbose(3, "  Newton: STEP "  + EXUstd::ToString(it.newtonSteps) + ":\n"); }
-		if (IsVerbose(4)) { Verbose(4, "    systemResidual = " + EXUstd::ToString(data.systemResidual) + "\n"); }
+		if (IsVerbose(3)) { Verbose(3, "    systemResidual = " + EXUstd::ToString(data.systemResidual) + "\n"); }
 
 		//+++++++++++++++++++++++++++++
 		//compute JACOBIAN if necessary

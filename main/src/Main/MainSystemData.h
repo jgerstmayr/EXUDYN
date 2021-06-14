@@ -221,9 +221,10 @@ public: //
 		SetAECoords(vAE, configurationType); //includes safety check
 		//GetCSystemState(configurationType)->SetAECoords(vAE);
 
-		//py::object pyObjectTime = systemStateList[4];
-		//Real t = py::cast<Real>(pyObjectTime);
-		//GetCSystemState(configurationType)->SetTime(t);
+		py::object pyObjectData = systemStateList[4];
+		const std::vector<Real>& vData = py::cast<std::vector<Real>>(pyObjectData);
+		SetDataCoords(vData, configurationType); //includes safety check
+
 
 	}
 

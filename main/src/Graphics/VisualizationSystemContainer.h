@@ -140,9 +140,6 @@ public:
 	//! this function waits for the stop flag in the render engine;
 	bool WaitForRenderEngineStopFlag();
 
-	//! this function does any idle operations (execute some python commands) and returns false if stop flag in the render engine, otherwise true;
-	bool DoIdleOperations();
-
 	//! check GLFW if renderer is running
 	bool RendererIsRunning() const;
 
@@ -216,7 +213,10 @@ public:
 	virtual MainSystem* GetMainSystemBacklink(Index iSystem) override; 
 
 	//! REMOVE: get backlink to number of main systems, temporary for selection
-	virtual Index NumberOFMainSystemsBacklink() const;
+	virtual Index NumberOFMainSystemsBacklink() const override;
+
+	//! this function does any idle operations (execute some python commands) and returns false if stop flag in the render engine, otherwise true;
+	virtual bool DoIdleOperations() override;
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

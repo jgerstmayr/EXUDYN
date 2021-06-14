@@ -103,7 +103,7 @@ def ScipySparseCSRtoCSR(scipyCSR):
     sparseData = [data.row,data.col,data.data]
     return np.array(sparseData).T
 
-#**function: resort indices of given CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns
+#**function: resort indices of given NGsolve CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns
 #needed for import from NGsolve
 def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
     #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
@@ -118,6 +118,26 @@ def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
     for i in range(nSparse): #for loop is slow, but works ok for 100.000 DOF
         mXXYYZZ[i,0] = r[int(mXXYYZZ[i,0])]
         mXXYYZZ[i,1] = r[int(mXXYYZZ[i,1])]
+    
+#**function: resort indices of given NGsolve vector in XXXYYYZZZ format to XYZXYZXYZ format
+def ResortIndicesOfNGvector(vXXYYZZ):
+    #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
+    v = np.array(vXXYYZZ)
+    numberOfRows = len(v)
+    if numberOfRows%3 != 0:
+        raise ValueError("ResortIndicesOfNGvector: length must be multiple of 3")
+
+    vNew = np.zeros(numberOfRows)
+
+    #compute transformation of indices:
+    r = np.arange(numberOfRows).reshape((int(numberOfRows/3),3))
+    r = r.T.flatten()
+    
+    for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
+        vNew[r[i]] = v[i]
+        #vNew[i] = v[r[i]]
+
+    return vNew
     
 
 
@@ -1550,7 +1570,12 @@ class FEMinterface:
     #    poissonsRatio: Poisson's ratio used for mechanical model
     #    density: density used for mechanical model
     #    verbose: set True to print out some status information
-    def ImportMeshFromNGsolve(self, mesh, density, youngsModulus, poissonsRatio, verbose = False):
+    #    computeEigenmodes: set True to use NGsolve for eigenmode computation instead of ComputeEigenmodes
+    #    numberOfModes: if computeEigenmodes==True: number of eigen modes computed with NGsolve
+    #    maxEigensolveIterations: if computeEigenmodes==True: maximum number of iterations for iterative eigensolver
+    #    excludeRigidBodyModes: if computeEigenmodes==True: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+    def ImportMeshFromNGsolve(self, mesh, density, youngsModulus, poissonsRatio, verbose = False, 
+                              computeEigenmodes = False, **kwargs):
         import ngsolve as ngs
         meshOrder = 1#currently only order 1 possible, but will change!
 
@@ -1589,6 +1614,7 @@ class FEMinterface:
         K = csr_matrix( fesK.mat.CSR(), copy=True )
         M = csr_matrix( fesM.mat.CSR(), copy=True )
         if verbose: print("K.shape=",K.shape)
+
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #get node, element and surface list:
@@ -1652,6 +1678,43 @@ class FEMinterface:
         self.massMatrix = M1 
         self.stiffnessMatrix = K1 
         self.surface = [{'Name':'meshSurface','Trigs':trigList}]
+
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        if computeEigenmodes:
+            if verbose: print ("NGsolve: compute eigenmodes")
+            excludeRigidBodyModes = 0
+            if 'excludeRigidBodyModes' in kwargs:
+                excludeRigidBodyModes = kwargs['excludeRigidBodyModes']
+
+            nModes = 10
+            if 'numberOfModes' in kwargs: 
+                nModes = kwargs['numberOfModes'] 
+            maxIt = 20
+            if 'maxEigensolveIterations' in kwargs: 
+                maxIt = kwargs['maxEigensolveIterations']
+
+            from ngsolve.eigenvalues import PINVIT
+
+            with ngs.TaskManager():
+                KM = fesK.mat.CreateMatrix()
+                KM.AsVector().data = fesK.mat.AsVector() + 1e6* fesM.mat.AsVector()
+            
+                inv = KM.Inverse(inverse='sparsecholesky')
+                res = PINVIT(fesK.mat, fesM.mat, inv, num=nModes+excludeRigidBodyModes, maxit=maxIt, \
+                                printrates=verbose, GramSchmidt=True)
+
+            #self.res = res
+            nDOF = K.shape[0]
+            eigVecs = np.zeros((nDOF, nModes))
+            for i in range(nModes):
+                #eigVecs[:,i] = np.array(res[1][excludeRigidBodyModes+i])
+                eigVecs[:,i] = ResortIndicesOfNGvector(np.array(res[1][excludeRigidBodyModes+i]))
+            
+            self.modeBasis = {'matrix':eigVecs, 'type':'NormalModes'}
+            self.eigenValues = np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])
+                             
+            if verbose: print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])))
+
 
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2119,18 +2182,20 @@ class FEMinterface:
     
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bamtpon, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
+    #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
     #**input:
     #  boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
-    #  nEigenModes: number of eigen modes in addition to static modes; eigen modes are computed for the case where all rigid body motions at boundaries are fixed (on average); only smallest nEigenModes absolute eigenvalues are considered
+    #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
     #  useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver
     #  computationMode: see class HCBstaticModeSelection for available modes; select RBE2 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary
     #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
-    def ComputeHurtyCraigBamptonModes(self, 
+    def ComputeHurtyCraigBamptonModes(self,
                                       boundaryNodesList,
                                       nEigenModes, 
                                       useSparseSolver = True,
                                       computationMode = HCBstaticModeSelection.RBE2):
+
+        #only makes sense for RBE3 modes:  positionOnlyModes: provide empty list [] to compute rigid body interfaces for all boundary node lists, or a boolean list [False, False, True, ...] to indicate which modes only have 3 position but no rotation modes; only valid for computationMode = RBE2 
     
         #unsorted, dense eigen vectors
         from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
@@ -2205,17 +2270,16 @@ class FEMinterface:
                 Kii = K[np.ix_(DOFi,DOFi)]
                 Kib = K[np.ix_(DOFi,DOFb)]
             #Mii, Kii, Kib are now np.array (dense) or sparse ...
-    
-            #print("solve eigenvalues...")
-            if n>timerTreshold: print("compute eigenvalues and eigenvectors... "); start_time = time.time()
-    
-            if useSparseSolver: 
-                #for details on solver settings, see FEMinterface.ComputeEigenmodes(...)
-                [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
-                                           which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
-            else:
-                [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
-            if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+        
+            if nEigenModes != 0:
+                if n>timerTreshold: print("compute eigenvalues and eigenvectors... "); start_time = time.time()
+                if useSparseSolver: 
+                    #for details on solver settings, see FEMinterface.ComputeEigenmodes(...)
+                    [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
+                                               which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
+                else:
+                    [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
+                if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
     
             #print("assemble matrices ...")
             
@@ -2223,7 +2287,9 @@ class FEMinterface:
                 modeBasis = np.zeros((n, nb+nEigenModes))
                 DOFstatic = np.arange(nb) #for final mapping of boundary coordinates
                 DOFeig = np.arange(nb,nb+nEigenModes) #for final mapping of eigenmode coordinates
-                modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                if nEigenModes != 0:
+                    modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                
                 modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
                 if n>timerTreshold: print("factorize Kii... "); start_time = time.time()
                 if useSparseSolver: 
@@ -2241,7 +2307,8 @@ class FEMinterface:
                 DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
     
                 modeBasis = np.zeros((n, nbRBE2+nEigenModes))
-                modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                if nEigenModes != 0:
+                    modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
                 #create list of mappings between average rigid body motion and boundary DOF matrix
                 rigidBodyMappings = [[]]*nNodeLists #list of mappings
@@ -2289,6 +2356,9 @@ class FEMinterface:
                 # modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
                 
             elif computationMode == HCBstaticModeSelection.onlyEigenModes: #only eigen modes, e.g., for testing
+                if nEigenModes != 0:
+                    raise ValueError('ComputeHurtyCraigBamptonModes: in computationMode onlyEigenModes, nEigenModes must be != 0')
+
                 modeBasis = np.zeros((n, nEigenModes))
                 DOFeig = np.arange(nEigenModes) #for final mapping of eigenmode coordinates
                 modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
@@ -2297,7 +2367,10 @@ class FEMinterface:
             #print(modeBasis.round(2))
            
             self.modeBasis = {'matrix':modeBasis, 'type':'HCBmodes'}
-            self.eigenValues = abs(eigVals)
+            if nEigenModes != 0:
+                self.eigenValues = abs(eigVals)
+            else:
+                self.eigenValues = np.array([])
     
         else:
             [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
@@ -2310,14 +2383,66 @@ class FEMinterface:
     def GetEigenFrequenciesHz(self):
         return np.sqrt(self.eigenValues)/(2.*np.pi)
 
+    #internal function for ComputePostProcessingModes, do not call from outside FEM
+    def InternalComputePostprocessingMode(self,parameterList):
+        #map list of parameters to internal variables (due to multiprocessing)
+        iMode = parameterList[0]
+        nodes = parameterList[1]
+        modes = parameterList[2]
+        elemList = parameterList[3]
+        material = parameterList[4]
+        computeStrains = parameterList[5]
+        
+        nNodes = len(nodes)
+        nodesPerTet = 4
+        elemRefCoords = np.zeros(nodesPerTet*3)
+        displacements = np.zeros(nodesPerTet*3)
+        stressModesCnt = np.zeros(nNodes) #store how many elements contribute to nodal stress (for averaging)
+
+        stressModesMatrix = np.zeros((nNodes, 6)) #add up nodal stresses in this 6 modes for sigma_xx, sigma_yy, etc.
+        for elem in elemList:
+            for cnt in range(len(elem)):
+                ind = elem[cnt]
+                elemRefCoords[cnt*3:cnt*3+3] = nodes[ind,:]
+                displacements[cnt*3:cnt*3+3] = modes[ind*3:ind*3+3,iMode]
+                
+            tet=Tet4(material) #all material is the same ...
+            [Ev4, Sv4, B0, grad]=tet.ComputeMatrices(elemRefCoords, displacements)
+
+            #now write stresses into stress modes
+            for cnt in range(4): #number of nodes per element
+                ind = elem[cnt]  #node index
+                #if iMode == 0: #count how often nodes need to be averaged (count only for first mode)
+                stressModesCnt[ind] += 1
+                for j in range(6): #6 components
+                    if computeStrains:
+                        stressModesMatrix[ind,j] += Ev4[cnt, j]
+                    else:
+                        stressModesMatrix[ind,j] += Sv4[cnt, j]
+                # for j in range(6): #6 components
+                #     if computeStrains:
+                #         stressModes[ind,6*iMode+j] += Ev4[cnt, j]
+                #     else:
+                #         stressModes[ind,6*iMode+j] += Sv4[cnt, j]
+
+        for ind in range(nNodes):
+            if stressModesCnt[ind] == 0:
+                raise ValueError('Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements')
+            stressModesMatrix[ind,:] *= 1/stressModesCnt[ind]
+
+        return stressModesMatrix
+
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder
     #**input: 
     #  material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
     #  outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+    #  numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
     #**output: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
-    def ComputePostProcessingModes(self, material=0, outputVariableType='OutputVariableType.StressLocal'):
+    def ComputePostProcessingModes(self, material=0, 
+                                   outputVariableType='OutputVariableType.StressLocal',
+                                   numberOfThreads=1):
         #import exudyn as exu #needed for outputVariableType
 
         if str(outputVariableType) == 'OutputVariableType.StressLocal':
@@ -2340,7 +2465,6 @@ class FEMinterface:
         modes = self.modeBasis['matrix']
         nModes = modes.shape[1]
         stressModes = np.zeros((nNodes, 6*nModes)) #add up nodal stresses
-        stressModesCnt = np.zeros(nNodes) #store how many elements contribute to nodal stress (for averaging)
 
         if material == 0:
             material=KirchhoffMaterial(1, 0, 1)
@@ -2350,45 +2474,65 @@ class FEMinterface:
             showProgress = True
             #print("")
 
-        nodesPerTet = 4
-        elemRefCoords = np.zeros(nodesPerTet*3)
-        displacements = np.zeros(nodesPerTet*3)
-        for iMode in range(nModes):
-            if showProgress:
-                print("\rComputePostProcessingModes: " + str(iMode/nModes*100) + str("%"),end='', flush=True)
-            for elem in elemList:
-                for cnt in range(len(elem)):
-                    ind = elem[cnt]
-                    # elemRefCoords+=list(nodes[ind,:])
-                    # displacements+=list(modes[ind*3:ind*3+3,iMode])
-                    elemRefCoords[cnt*3:cnt*3+3] = nodes[ind,:]
-                    displacements[cnt*3:cnt*3+3] = modes[ind*3:ind*3+3,iMode]
-                    
-    
-                # print("  displacements=",displacements)                
-                # print("elem=",elem)
-                # print("  ref coords   =",elemRefCoords)
-                tet=Tet4(material) #all material is the same ...
-                [Ev4, Sv4, B0, grad]=tet.ComputeMatrices(elemRefCoords, displacements)
-    
-                #now write stresses into stress modes
-                for cnt in range(4): #number of nodes
-                    ind = elem[cnt]  #node index
-                    if iMode == 0: #count how often nodes need to be averaged (count only for first mode)
-                        stressModesCnt[ind] += 1
-                    for j in range(6): #6 components
-                        if computeStrains:
-                            stressModes[ind,6*iMode+j] += Ev4[cnt, j]
-                        else:
-                            stressModes[ind,6*iMode+j] += Sv4[cnt, j]
-
-        if showProgress:
-            print("") #line break
+        #create vectorized input data for ComputePostprocessingMode
+        vectorInput = [[]]*nModes
+        for i in range(nModes):
+            vectorInput[i] = [i,nodes, modes, elemList, material, computeStrains]
             
-        for ind in range(nNodes):
-            if stressModesCnt[ind] == 0:
-                raise ValueError('Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements')
-            stressModes[ind,:] *= 1/stressModesCnt[ind]
+
+        useSingleThreading = True
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        if numberOfThreads > 1 or numberOfThreads == -1:
+            try:
+                from multiprocessing import Pool, cpu_count #parallelization of computation
+                if numberOfThreads == -1:
+                    numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
+                useSingleThreading = False
+            except:
+                pass
+            if not useSingleThreading:
+                vectorInput = np.array(vectorInput)
+                
+                useTQDM = False
+                if showProgress:
+                    try:
+                        import tqdm #progress bar
+                        try: #_instances only available after first run!
+                            tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
+                        except:
+                            pass
+                        useTQDM = True
+                        print("useTQDM")
+                    except:
+                        pass
+                
+                if useTQDM:
+                    with Pool(processes=numberOfThreads) as p:
+                        values = list(tqdm.tqdm(p.imap(self.InternalComputePostprocessingMode, vectorInput), 
+                                                total=nModes))
+                    print("", flush=True) #newline after tqdm progress bar output....
+                else:
+                    # simpler approach without tqdm:
+                    with Pool(processes=numberOfThreads) as p:
+                        values = p.map(self.InternalComputePostprocessingMode, vectorInput)
+
+                for iMode in range(nModes):
+                    stressModes[:,6*iMode:6*iMode+6] = values[iMode]
+                
+            
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        if useSingleThreading:
+            for iMode in range(nModes):
+                stressModeMatrix = self.InternalComputePostprocessingMode(vectorInput[iMode])
+                stressModes[:,6*iMode:6*iMode+6] = stressModeMatrix
+                
+                if showProgress:
+                    print("\rComputePostProcessingModes: " + str(iMode/nModes*100) + str("%"),end='', flush=True)
+
+            if showProgress:
+                print("") #line break finally
+
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         self.postProcessingModes = {'matrix': stressModes, 
                                     'outputVariableType': outputVariableType}

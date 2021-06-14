@@ -245,35 +245,6 @@ writeFile=SimulationSettings.h
 
 
 
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# DELETE:
-# removed 2021-05-07: 
-# class = SolverContainer
-# appendToFile=False
-# classDescription = "Container for handling all different available solvers"
-# #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-# V,  solverRK1,						,  		, SolverRK1, 					, 		     ,     A, "first order Runge-Kutta solver (explicit Euler)"
-# V,  solverStatic,					,  		, SolverStatic, 				, 	     ,     A, "static (non-)linear solver; requires a statically solvable system"
-# V,  solverGeneralizedAlpha,,  		   , SolverGeneralizedAlpha, 	, 		  ,     A, "second order generalized-alpha, implicit trapezoidal rule or Newmark"
-# #
-# writeFile=SystemContainer.h
-#
-# #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# class = SystemContainer
-# appendToFile=True
-# classDescription = "Container class for all several computable systems (with according AdminSystem); several CSystems could be used in parallel."
-# #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
-# V,   cSystems,			             ,  		, ResizableArray<CSystem*>, 	 , 	 ,      A, "contains one or a set of complete multibody/finite element systems"
-# #V,  visualizationSystem,			, 	 	, VisualizationSystem,  			,     , 		, "contains all linking to visualization"
-# #removed 2021-05-07: V,   solvers,						        , 	 	  , SolverContainer,  			    , 	 ,      A, "contains a structure with all solver-relevant structures (dynamic, static, etc.)"
-# #
-# writeFile=SystemContainer.h
-
-
-
-
 
 
 
@@ -460,7 +431,7 @@ V,      alwaysOnTop,                    , 	             ,     bool,         fals
 V,      maximize,                       , 	             ,     bool,         false,                  , P,      "True: OpenGL render window will be maximized at startup"
 V,      showWindow,                     , 	             ,     bool,         true,                   , P,      "True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
 #special settings:
-V,      keyPressUserFunction,           , 	             ,     KeyPressUserFunction,  0,  , P,   "add a Python function f(key, action, mods) here, which is called every time a key is pressed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
+V,      keyPressUserFunction,           , 	             ,     KeyPressUserFunction,  0,             , P,      "add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
 V,      showMouseCoordinates,           , 	             ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
 V,      ignoreKeys,                     , 	             ,     bool,         "false",                , P,      "True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
 F,      ResetKeyPressUserFunction,      ,                ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
@@ -556,7 +527,7 @@ V,      highlightColor,                 , 	             4,    Float4,       "Flo
 V,      highlightOtherColor,            , 	             4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "cRGB color for other items (which are not highlighted); 4th value is alpha-transparency"
 #
 V,      selectionLeftMouse,             , 	             ,     bool,         true,                  , P,      "True: left mouse click on items and show basic information"
-V,      selectionRightMouse,            , 	             ,     bool,         false,                 , P,      "True: right mouse click on items and show dictionary (read only!)"
+V,      selectionRightMouse,            , 	             ,     bool,         true,                  , P,      "True: right mouse click on items and show dictionary (read only!)"
 writeFile=VisualizationSettings.h
 
 

@@ -216,7 +216,7 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRendererIdleTasks', 
                                 defaultArgs=['0'],
                                 argList=['waitSeconds'],
-                                description="ONLY for SINGLE-THREADED environments (MAC OS); in order to interact with window, DoRendererIdleTasks() must be run; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed"); s+=s1; sL+=sL1
+                                description="Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
                                description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',

@@ -173,7 +173,8 @@ void ComputeContourColor(const TVector& value, OutputVariableType outputVariable
 				Real Syz = value[3];
 				Real Sxz = value[4];
 				Real Sxy = value[5];
-				contourValue = sqrt(Sx*Sx + Sy * Sy + Sz * Sz - Sx * Sy - Sx * Sz - Sy * Sz + 3.*(Sxy*Sxy + Sxz * Sxz + Syz * Syz));
+				//add fabs, if there are small roundoff errors which may lead to negative values in sqrt
+				contourValue = sqrt(fabs(Sx*Sx + Sy * Sy + Sz * Sz - Sx * Sy - Sx * Sz - Sy * Sz + 3.*(Sxy*Sxy + Sxz * Sxz + Syz * Syz)));
 			}
 			else
 			{
@@ -331,11 +332,6 @@ void VisualizationNodeRigidBodyEP::UpdateGraphics(const VisualizationSettings& v
 		//Vector value;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
 		ComputeContourColor< ConstSizeVector<maxSize>>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
-		//if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
-		//{
-		//	float contourValue = (float)value[visualizationSettings.contour.outputVariableComponent];
-		//	currentColor = Float4({ contourValue, 0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
-		//}
 	}
 
 
@@ -471,28 +467,56 @@ void VisualizationNodeRigidBody2D::UpdateGraphics(const VisualizationSettings& v
 	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
 	{
 		const Index maxSize = 3; //max. 2+1 coordinates or 3 components per node ...
-		ConstSizeVector<maxSize> value; 
+		ConstSizeVector<maxSize> value;
 		//Vector value;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
 		ComputeContourColor< ConstSizeVector<maxSize>>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
-		//if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
-		//{
-		//	float contourValue = (float)value[visualizationSettings.contour.outputVariableComponent];
-		//	currentColor = Float4({ contourValue, 0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
-		//}
 	}
 
-	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemID);
-	Vector3D vec;
-	//EXUmath::MultMatrixVector(A, Vector3D({ radius, 0., 0. }), vec);
-	vec = A * Vector3D({ radius, 0., 0. }); //this vector is to show the orientation of the node
-	vSystem->graphicsData.AddLine(pos - vec, pos + vec, currentColor, currentColor, itemID);
 
-	//EXUmath::MultMatrixVector(A, Vector3D({ 0., radius, 0. }), vec);
-	vec = A * Vector3D({ 0., radius, 0. }); //this vector is to show the orientation of the node
-	vSystem->graphicsData.AddLine(pos, pos + vec, currentColor, currentColor, itemID);
+	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 4 * visualizationSettings.nodes.tiling;
+	if (visualizationSettings.nodes.drawNodesAsPoint) { tiling = 0; } //draw as point
+	EXUvis::DrawNode(pos, radius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.openGL.showFaces, tiling);
 
+	if (visualizationSettings.nodes.showBasis) {
+		Index nn = EXUstd::InvalidIndex;
+		if (visualizationSettings.nodes.showNumbers) { nn = itemNumber; }
+		EXUvis::DrawOrthonormalBasis(pos, A, visualizationSettings.nodes.basisSize, 0.025*visualizationSettings.nodes.basisSize,
+			vSystem->graphicsData, itemID, 1.f, visualizationSettings.openGL.showFaces && visualizationSettings.nodes.drawNodesAsPoint,
+			visualizationSettings.general.axesTiling, 2.5, nn);
+	}
 	if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
+
+
+
+
+
+	////add contour plot values to color:
+	//if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	//{
+	//	const Index maxSize = 3; //max. 2+1 coordinates or 3 components per node ...
+	//	ConstSizeVector<maxSize> value; 
+	//	//Vector value;
+	//	cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
+	//	ComputeContourColor< ConstSizeVector<maxSize>>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+	//	//if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
+	//	//{
+	//	//	float contourValue = (float)value[visualizationSettings.contour.outputVariableComponent];
+	//	//	currentColor = Float4({ contourValue, 0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
+	//	//}
+	//}
+
+	//vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 4 * visualizationSettings.nodes.tiling, itemID);
+	//Vector3D vec;
+	////EXUmath::MultMatrixVector(A, Vector3D({ radius, 0., 0. }), vec);
+	//vec = A * Vector3D({ radius, 0., 0. }); //this vector is to show the orientation of the node
+	//vSystem->graphicsData.AddLine(pos - vec, pos + vec, currentColor, currentColor, itemID);
+
+	////EXUmath::MultMatrixVector(A, Vector3D({ 0., radius, 0. }), vec);
+	//vec = A * Vector3D({ 0., radius, 0. }); //this vector is to show the orientation of the node
+	//vSystem->graphicsData.AddLine(pos, pos + vec, currentColor, currentColor, itemID);
+
+	//if (visualizationSettings.nodes.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "N", visualizationSettings.nodes.defaultColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
@@ -744,7 +768,8 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 					//Vector value;
 					//cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, contourValue); 
 					cObject->GetOutputVariableSuperElement(visualizationSettings.contour.outputVariable, meshNodeIndex, ConfigurationType::Visualization, contourValue); //memory allocation!
-					ComputeContourColor< Vector>(contourValue, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, colors[j]);
+					ComputeContourColor< Vector>(contourValue, visualizationSettings.contour.outputVariable, 
+						visualizationSettings.contour.outputVariableComponent, colors[j]);
 					//if (visualizationSettings.contour.outputVariableComponent < contourValue.NumberOfItems())
 					//{
 					//	float contourValueF = (float)contourValue[visualizationSettings.contour.outputVariableComponent];

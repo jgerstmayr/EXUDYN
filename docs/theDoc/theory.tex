@@ -267,7 +267,7 @@ Therefore, we can use modes based on ideas of Hurty \cite{Hurty1965} and Craig-B
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Hurty-Craig-Bampton modes}
 This section will describe the computation of static and eigen (normal) modes using FEMinterface.
-The theory is based on Hurty \cite{Hurty1965} and Craig-Bamtpon \cite{CraigBampton1968}, but often only attributed to Craig-Bampton.
+The theory is based on Hurty \cite{Hurty1965} and Craig-Bampton \cite{CraigBampton1968}, but often only attributed to Craig-Bampton.
 Furthermore, boundaries are also called interfaces\footnote{Here, and in the description of various Python functions, we will use boundary and interface often synonymously, as flexible bodies can be either connected to ground in the sense of a classical 'support-type' boundary condition, or they can represent the boundary of the flexible body as an interface to joints (via markers).}, as they either represent surface sections of our finite element model which are connected to the ground or they represent interfaces to joints and are connected to other bodies.
 
 The computation of so-called static and normal modes follows a simple concept based on finite element mass and stiffness matrices.
@@ -327,6 +327,7 @@ The disadvantage of \eq{theory:eigenmodes:HCB} is evident by the fact that there
 A powerful extension, which is available in many finite element as well as flexible multibody codes, is the definition of special boundary/interface conditions, based on pure rigid body motion.
 The so-called RBE2 boundaries are defined such that they are firmly connected to a rigid frame, thus the boundary or interface can only undergo rigid body motion.
 The advantage of this procedure is that, in comparison to \eq{theory:eigenmodes:HCB}, the number of boundary/interface modes is given by 6 {\it rigid body} modes, which allow simple integration into standard joints of multibody systems, e.g., the \texttt{GenericJoint}.
+The disadvantage is that such modes usually lead to artificial stiffening and stresses close to the boundary.
 
 \mysubsubsubsection{Computation of Hurty-Craig-Bampton modes with RBE2 interfaces}
 In the following section, we show the procedure for the computation of static modes for the RBE2 rigid-body interfaces.

@@ -379,7 +379,7 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
         example = Str2Latex(example)
         example = example.replace('\\\\','\\tabnewline\n    ')
         example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
-        sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example + '}}'
+        sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
     sLatex += '\\\\ \\hline \n'
     
     return [s,sLatex]

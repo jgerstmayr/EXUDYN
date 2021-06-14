@@ -1582,13 +1582,15 @@ class VObjectJointSliding2D:
         yield 'color', self.color
 
 class ObjectJointSliding2D:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), classicalFormulation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), classicalFormulation = True, constrainRotation = False, axialForce = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.slidingMarkerNumbers = slidingMarkerNumbers
         self.slidingMarkerOffsets = slidingMarkerOffsets
         self.nodeNumber = nodeNumber
         self.classicalFormulation = classicalFormulation
+        self.constrainRotation = constrainRotation
+        self.axialForce = axialForce
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -1600,6 +1602,8 @@ class ObjectJointSliding2D:
         yield 'slidingMarkerOffsets', self.slidingMarkerOffsets
         yield 'nodeNumber', self.nodeNumber
         yield 'classicalFormulation', self.classicalFormulation
+        yield 'constrainRotation', self.constrainRotation
+        yield 'axialForce', self.axialForce
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]

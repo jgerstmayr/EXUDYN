@@ -18,7 +18,7 @@ typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'PInt':'
              'Float9': 'std::array<float,9>', 'Float16': 'std::array<float,16>', #e.g. for OpenGL rotation matrix and homogenous transformation
              'UInt2': 'std::array<Index,2>', 'UInt3': 'std::array<Index,3>', 'UInt4': 'std::array<Index,4>', 
              'Index2': 'std::array<Index,2>', 'Index3': 'std::array<Index,3>', 'Index4': 'std::array<Index,4>', 
-             'KeyPressUserFunction': 'std::function<void(int, int, int)>',
+             'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
              } #convert parameter types to C++/DYNALFEX types
 
 #conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
@@ -623,7 +623,7 @@ try: #still close file if crashes
                       'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
                       'String':'std::string', 'FileName':'std::string',
-                      'KeyPressUserFunction': 'std::function<void(int, int, int)>'} #convert parameter types to C++/EXUDYN types
+                      'KeyPressUserFunction': 'std::function<bool(int, int, int)>'} #convert parameter types to C++/EXUDYN types
 
     parseInfo = {'class':'',            # C++ class name
                  'writeFile':'',        #filename (e.g. SensorData.h)

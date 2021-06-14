@@ -252,6 +252,19 @@ public:
 	//! check if separate thread used:
 	static bool UseMultiThreadedRendering() { return useMultiThreadedRendering; }
 
+	//! access keypress user function from current SC; only available if SC linked:
+	static std::function<bool(int, int, int)> GetKeyPressUserFunction() 
+	{ 
+		if (WindowIsInitialized() && visSettings != nullptr)
+		{
+			return visSettings->window.keyPressUserFunction;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 private: //to be called internally only!
 	static void error_callback(int error, const char* description)
 	{

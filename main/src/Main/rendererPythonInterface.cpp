@@ -52,7 +52,7 @@ STDstring queuedPythonExecutableCodeStr;						//!< this string contains (accumul
 
 std::atomic_flag queuedRendererKeyListAtomicFlag = ATOMIC_FLAG_INIT;	//!< flag for queuedRendererKeyList
 ResizableArray<SlimArray<int, 3>> queuedRendererKeyList;	//!< this list contains keys that are transferred to python
-std::function<void(int, int, int)> keyPressUserFunction = 0; //!< must be set by GLFW, before that nothing is done; should not be changed too often, as it is not stored in list
+std::function<int(int, int, int)> keyPressUserFunction = 0; //!< must be set by GLFW, before that nothing is done; should not be changed too often, as it is not stored in list
 
 //! lock renderer callbacks during critical operations 
 void PySetRendererCallbackLock(bool flag)
@@ -71,7 +71,7 @@ void PyQueuePythonProcess(ProcessID::Type processID, Index info)
 	queuedPythonProcessIDlist.Append(SlimArray<int, queuedPythonProcessIDlistLength>({ processID, info}));
 	EXUstd::ReleaseSemaphore(queuedPythonProcessAtomicFlag); 
 
-	if (RendererIsSingleThreadedOrNotRunning()) { PyProcessPythonProcessQueue(); } //immediately process queue...
+	if (RendererIsSingleThreadedOrNotRunning()) { PyProcessPythonProcessQueue(); PyProcessExecutableStringQueue();  } //immediately process queue...+executable string for right-mouse-button
 }
 
 //! put executable string into queue, which is then called from main (Python) thread
@@ -85,11 +85,11 @@ void PyQueueExecutableString(STDstring str) //call python function and execute s
 }
 
 //! put executable key codes into queue, which are the processed in main (Python) thread
-void PyQueueKeyPressed(int key, int action, int mods, std::function<void(int, int, int)> keyPressUserFunctionInit) //call python user function
+void PyQueueKeyPressed(int key, int action, int mods)
+//void PyQueueKeyPressed(int key, int action, int mods, std::function<bool(int, int, int)> keyPressUserFunctionInit) //call python user function
 {
 	EXUstd::WaitAndLockSemaphore(queuedRendererKeyListAtomicFlag); //lock queuedRendererKeyListAtomicFlag
-	queuedRendererKeyList.Append(SlimArray<int,3>({key, action, mods}));
-	keyPressUserFunction = keyPressUserFunctionInit;
+	queuedRendererKeyList.Append(SlimArray<int, 3>({ key, action, mods }));
 	EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedRendererKeyListAtomicFlag
 
 	if (RendererIsSingleThreadedOrNotRunning()) { PyProcessRendererKeyQueue(); } //immediately process queue...
@@ -235,47 +235,58 @@ void PyProcessRendererKeyQueue()
 		//EXUstd::WaitAndLockSemaphore(graphicsUpdateAtomicFlag); //lock queuedRendererKeyListAtomicFlag
 		ResizableArray<SlimArray<int, 3>> keyList = queuedRendererKeyList; //immediately copy list for small interaction with graphics part
 		//std::cout << "keylist=" << keyList << "\n";
-		std::function<void(int, int, int)> localKeyPressUserFunction = keyPressUserFunction;
-		queuedRendererKeyList.SetNumberOfItems(0); //clear list
-
-		EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
-
-		deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
-
-		if (localKeyPressUserFunction) //check if function is available!
+		if (GetGlfwRenderer().WindowIsInitialized()) //otherwise makes no sense ...! ==> ignore
 		{
-			for (auto key : keyList)
+			//keyPressUserFunction = keyPressUserFunctionInit;
+			std::function<int(int, int, int)> localKeyPressUserFunction = GetGlfwRenderer().GetKeyPressUserFunction();
+			queuedRendererKeyList.SetNumberOfItems(0); //clear list
+
+			EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
+
+			deactivateGlobalPyRuntimeErrorFlag = true; //errors will not crash the render window
+
+			if (localKeyPressUserFunction) //check if function is available!
 			{
-				//std::cout << "call key=" << key << "\n";
-				try //catch exceptions; user may want to continue after a illegal python command 
+				for (auto key : keyList)
 				{
-					localKeyPressUserFunction(key[0], key[1], key[2]);
-				}
-				//mostly catches python errors:
-				catch (const pybind11::error_already_set& ex)
-				{
+					//std::cout << "call key=" << key << "\n";
+					try //catch exceptions; user may want to continue after a illegal python command 
+					{
+						bool rv = localKeyPressUserFunction(key[0], key[1], key[2]);
+						//rv not used right now, because it is received at a time where it is too late for graphics
+					}
+					//mostly catches python errors:
+					catch (const pybind11::error_already_set& ex)
+					{
+						//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
+						PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "':\n" + STDstring(ex.what()) + "\n; check function parameters!");
+						deactivateGlobalPyRuntimeErrorFlag = false;
+						throw; //avoid multiple exceptions trown again (don't know why!)!
+					}
+					catch (const EXUexception& ex)
+					{
+						//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
+						PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "':\n" + STDstring(ex.what()) + "\n; check function parameters!");
+						deactivateGlobalPyRuntimeErrorFlag = false;
+						throw; //avoid multiple exceptions trown again (don't know why!)!
+						//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+					}
+					catch (...) //any other exception
+					{
+						//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
+						PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "\n; check function parameters!");
+					}
 					//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
-					PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "':\n" + STDstring(ex.what()) + "\n; check function parameters!");
-					deactivateGlobalPyRuntimeErrorFlag = false;
-					throw; //avoid multiple exceptions trown again (don't know why!)!
 				}
-				catch (const EXUexception& ex)
-				{
-					//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
-					PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "':\n" + STDstring(ex.what()) + "\n; check function parameters!");
-					deactivateGlobalPyRuntimeErrorFlag = false;
-					throw; //avoid multiple exceptions trown again (don't know why!)!
-					//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
-				}
-				catch (...) //any other exception
-				{
-					//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
-					PyWarning("Error when executing key press function with key " + EXUstd::ToString(key) + "\n; check function parameters!");
-				}
-				//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 			}
+			deactivateGlobalPyRuntimeErrorFlag = false;
 		}
-		deactivateGlobalPyRuntimeErrorFlag = false;
+		else
+		{
+			//remove waiting items if renderer not running
+			queuedRendererKeyList.SetNumberOfItems(0); //clear list
+			EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedPythonExecutableCodeStr
+		}
 		//std::cout << "key process finished\n";
 	}
 	else
@@ -319,8 +330,12 @@ void PyProcessShowHelpDialog()
 root = tk.Tk()
 root.attributes("-topmost", True) #puts window topmost (permanent)
 root.title("Help on keyboard commands and mouse")
+root.lift() #window has focus
+root.bind("<Escape>", lambda x: root.destroy())
+root.focus_force() #window has focus
 scrollW = tk.Scrollbar(root)
 textW = tk.Text(root, height = 30, width = 90)
+textW.focus_set()
 scrollW.pack(side = tk.RIGHT, fill = tk.Y)
 textW.pack(side = tk.LEFT, fill = tk.Y)
 scrollW.config(command = textW.yview)
@@ -388,9 +403,11 @@ from tkinter.scrolledtext import ScrolledText
 commandString = ''
 commandSet = False
 singleCommandMainwin = tk.Tk()
+singleCommandMainwin.focus_force() #window has focus
 #singleCommandMainwin.lift() #brings it to front of other
 singleCommandMainwin.attributes("-topmost", True) #puts window topmost (permanent)
 #singleCommandMainwin.attributes("-topmost", False)#keeps window topmost, but not permanent
+singleCommandMainwin.bind("<Escape>", lambda x: singleCommandMainwin.destroy())
 
 def OnSingleCommandReturn(event): #set command string, but do not execute
     commandString = singleCommandEntry.get()
@@ -446,7 +463,7 @@ void PyProcessExecuteStringAsPython(const STDstring& str)
 bool RendererIsSingleThreadedOrNotRunning()
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active
-	if (!GetGlfwRenderer().UseMultiThreadedRendering())
+	if (!GetGlfwRenderer().UseMultiThreadedRendering() || !GetGlfwRenderer().WindowIsInitialized())
 	{
 		return true;
 	}

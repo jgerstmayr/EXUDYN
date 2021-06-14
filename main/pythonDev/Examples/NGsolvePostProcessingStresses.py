@@ -37,64 +37,66 @@ useGraphics = True
 fileName = 'testData/netgenBrick' #for load/save of FEM data
 
 
+if __name__ == '__main__': #needed to use multiprocessing for mode computation
 
-
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#netgen/meshing part:
-fem = FEMinterface()
-#standard:
-a = 0.025 #height/width of beam
-b = a
-h = 0.4*a
-L = 1     #Length of beam
-nModes = 10
-
-#plate:
-# a = 0.025 #height/width of beam
-# b = 0.4
-# L = 1     #Length of beam
-# h = 0.6*a
-# nModes = 40
-
-rho = 1000
-Emodulus=1e7
-nu=0.3
-
-#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
-    import sys
-    #adjust path to your ngsolve installation (if not added to global path)
-    sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
-
-    import ngsolve as ngs
-    from netgen.geom2d import unit_square
-    import netgen.libngpy as libng
-    from netgen.csg import *
     
-    geo = CSGeometry()
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #netgen/meshing part:
+    fem = FEMinterface()
+    #standard:
+    a = 0.025 #height/width of beam
+    b = a
+    h = 0.3*a
+    L = 1     #Length of beam
+    nModes = 10
     
-    block = OrthoBrick(Pnt(0,-a,-b),Pnt(L,a,b))
-    geo.Add(block)
+    #plate:
+    # a = 0.025 #height/width of beam
+    # b = 0.4
+    # L = 1     #Length of beam
+    # h = 0.6*a
+    # nModes = 40
     
-    #Draw (geo)
+    rho = 1000
+    Emodulus=1e7
+    nu=0.3
+    meshCreated = False
     
-    mesh = ngs.Mesh( geo.GenerateMesh(maxh=h))
-    mesh.Curve(1)
-
-    if False: #set this to true, if you want to visualize the mesh inside netgen/ngsolve
-        import netgen.gui
-        Draw (mesh)
-        netgen.Redraw()
-
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #Use fem to import FEM model and create FFRFreducedOrder object
-    fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    fem.SaveToFile(fileName)
-
+    if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
+        import sys
+        #adjust path to your ngsolve installation (if not added to global path)
+        sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
+    
+        import ngsolve as ngs
+        from netgen.geom2d import unit_square
+        import netgen.libngpy as libng
+        from netgen.csg import *
+        
+        geo = CSGeometry()
+        
+        block = OrthoBrick(Pnt(0,-a,-b),Pnt(L,a,b))
+        geo.Add(block)
+        
+        #Draw (geo)
+        
+        mesh = ngs.Mesh( geo.GenerateMesh(maxh=h))
+        mesh.Curve(1)
+    
+        if False: #set this to true, if you want to visualize the mesh inside netgen/ngsolve
+            import netgen.gui
+            Draw (mesh)
+            netgen.Redraw()
+    
+        #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #Use fem to import FEM model and create FFRFreducedOrder object
+        fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
+        meshCreated  = True
+        if (h==a): #save only if it has smaller size
+            fem.SaveToFile(fileName)
+    
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-if True: #now import mesh as mechanical model to EXUDYN
-    fem.LoadFromFile(fileName)
+    if not meshCreated: fem.LoadFromFile(fileName)
     
     print("nNodes=",fem.NumberOfNodes())
     fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
@@ -108,7 +110,8 @@ if True: #now import mesh as mechanical model to EXUDYN
     print("ComputePostProcessingModes ... (may take a while)")
     start_time = time.time()
     fem.ComputePostProcessingModes(material=mat, 
-                                   outputVariableType=varType)
+                                   outputVariableType=varType,
+                                   numberOfThreads=5)
     print("--- %s seconds ---" % (time.time() - start_time))
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -224,7 +227,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
     
     h=0.25e-3
-    tEnd = 4
+    tEnd = 0.05
     #if exudynTestGlobals.useGraphics:
     #    tEnd = 0.1
     

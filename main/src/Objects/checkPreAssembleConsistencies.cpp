@@ -1235,13 +1235,28 @@ bool MainObjectJointSliding2D::CheckPreAssembleConsistency(const MainSystem& mai
 		return false;
 	}
 
+	if (cObject->GetParameters().axialForce != 0 && !cObject->GetParameters().classicalFormulation)
+	{
+		errorString = STDstring("ObjectJointSliding2D: in case of classicalFormulation == False, no axialForce may be applied; set axialForce=0 !");
+		return false;
+	}
+
 	//Check indidual types:
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
-	if (!(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType() & Marker::Position))
+	if (cObject->GetParameters().constrainRotation)
+	{
+		if (!EXUstd::IsOfType(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType(), (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation)))
+		{
+			errorString = STDstring("ObjectJointSliding2D: in case of constrainRotation == True, Marker 0 must be of type = 'Position' + 'Orientation'");
+			return false;
+		}
+	}
+	else if (!EXUstd::IsOfType(mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetType(), Marker::Position))
 	{
 		errorString = STDstring("ObjectJointSliding2D: Marker 0 must be of type = 'Position'");
 		return false;
 	}
+
 
 	if (STDstring(mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName()) != STDstring("BodyCable2DCoordinates"))
 	{

@@ -275,8 +275,8 @@ Hereafter, values of the structure can be modified, e.g.,
   simulationSettings.timeIntegration.verboseMode = 2                 
 	#write solution every 0.1 seconds:
   simulationSettings.solutionSettings.solutionWritePeriod = 0.1      
-	#use sparse matrix storage and solver (package Eigen):
-	simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse 
+  #use sparse matrix storage and solver (package Eigen):
+  simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse 
 \end{lstlisting}
 
 \mysubsubsection{Visualization settings}
@@ -341,9 +341,9 @@ Out[1]:
  'maxSceneSize': 2.0,
  'zoom': 1.0,
  'currentWindowSize': [1024, 768],
- 'modelRotation': [[ 0.34202015,  0.        ,  0.9396926 ],
-                   [-0.60402274,  0.76604444,  0.21984631],
-                   [-0.7198463 , -0.6427876 ,  0.26200265]])}
+ 'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
+                   [-0.60402274,  0.76604444, 0.21984631],
+                   [-0.7198463 , -0.6427876 , 0.26200265]])}
 \end{lstlisting}
 %
 which contains the last state of the renderer.
@@ -356,9 +356,9 @@ renderState={'centerPoint': [1.0, 0.0, 0.0],
              'maxSceneSize': 2.0,
              'zoom': 1.0,
              'currentWindowSize': [1024, 768],
-             'modelRotation': [[ 0.34202015,  0.        ,  0.9396926 ],
-                               [-0.60402274,  0.76604444,  0.21984631],
-                               [-0.7198463 , -0.6427876 ,  0.26200265]])
+             'modelRotation':     [[ 0.34202015,  0.        ,  0.9396926 ],
+                                  [-0.60402274,  0.76604444,  0.21984631],
+                                  [-0.7198463 , -0.6427876 ,  0.26200265]])
 SC.SetRenderState(renderState)
 #.... further code for simulation here
 \end{lstlisting}
@@ -545,7 +545,7 @@ This section provides general coding rules and conventions, partly applicable to
 %
 The following notation conventions are applied ({\bf no exceptions!}):
 \bi
-		\item use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., $f = M*q_tt + K*q$, GBar, ...
+		\item use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., $f = M*q_{tt} + K*q$, GBar, ...
 		\item use UpperCamelCase for functions, classes, structs, ...
 		\item Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
 		\item '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'

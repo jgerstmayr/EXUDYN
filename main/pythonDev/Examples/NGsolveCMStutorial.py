@@ -31,9 +31,7 @@ import exudyn.utilities as eu
 import numpy as np
 
 useGraphics = True
-fileName = 'testData/netgenBrick' #for load/save of FEM data
-
-
+fileName = 'testData/netgenHinge' #for load/save of FEM data
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #netgen/meshing part:
@@ -46,8 +44,8 @@ h = 0.02 #height of plate (Z)
 d = 0.03    #diameter of bolt
 D = d*2 #diameter of bushing
 b = 0.05 #length of bolt
-nModes = 4
-meshH = 0.01 #0.01 is default, 0.002 gives 100000 nodes and is fairly converged
+nModes = 8
+meshH = 0.005 #0.01 is default, 0.002 gives 100000 nodes and is fairly converged
 #meshH = 0.0014 #203443 nodes, takes 1540 seconds for eigenmode computation (free-free) and 753 seconds for postprocessing on i9
 
 #steel:
@@ -68,6 +66,7 @@ def CSGcylinder(p0,p1,r):
                    r) * Plane(Pnt(p0[0],p0[1],p0[2]), Vec(-v[0],-v[1],-v[2])) * Plane(Pnt(p1[0],p1[1],p1[2]), Vec(v[0],v[1],v[2])) 
     return cyl
 
+meshCreated = False
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
@@ -110,12 +109,13 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #Use fem to import FEM model and create FFRFreducedOrder object
     fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    fem.SaveToFile(fileName)
+    meshCreated = True
+    if (meshH==0.01): fem.SaveToFile(fileName)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute Hurty-Craig-Bampton modes
 if True: #now import mesh as mechanical model to EXUDYN
-    fem.LoadFromFile(fileName)
+    if not meshCreated: fem.LoadFromFile(fileName)
 
     boltP1=[0,0,0]
     boltP2=[0,-b,0]
@@ -174,7 +174,7 @@ if True: #now import mesh as mechanical model to EXUDYN
         SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
     else:
         SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
-        SC.visualizationSettings.contour.outputVariableComponent = -1
+        SC.visualizationSettings.contour.outputVariableComponent = 0
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     print("create CMS element ...")
@@ -254,7 +254,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.openGL.multiSampling=4
     SC.visualizationSettings.openGL.lineWidth=2
 
-    if True: #activate to animate modes
+    if False: #activate to animate modes
         from exudyn.interactive import AnimateModes
         mbs.Assemble()
         SC.visualizationSettings.nodes.show = False
@@ -282,15 +282,18 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     fileDir = 'solution/'
-    sensBolt = mbs.AddSensor(SensorMarker(markerNumber=mBolt, 
-                                          fileName=fileDir+'hingePartBoltPos.txt', 
-                                          outputVariableType = exu.OutputVariableType.Position))
-    sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
-                                          fileName=fileDir+'hingePartBushingPos.txt', 
-                                          outputVariableType = exu.OutputVariableType.Position))
+    # sensBolt = mbs.AddSensor(SensorMarker(markerNumber=mBolt, 
+    #                                       fileName=fileDir+'hingePartBoltPos'+str(nModes)+strMode+'.txt', 
+    #                                       outputVariableType = exu.OutputVariableType.Position))
+    # sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
+    #                                       fileName=fileDir+'hingePartBushingPos'+str(nModes)+strMode+'.txt', 
+    #                                       outputVariableType = exu.OutputVariableType.Position))
     sensBushingVel= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
                                           fileName=fileDir+'hingePartBushingVel'+str(nModes)+strMode+'.txt', 
                                           outputVariableType = exu.OutputVariableType.Velocity))
+    sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
+                                          fileName=fileDir+'hingePartBushing'+str(nModes)+strMode+'.txt', 
+                                          outputVariableType = exu.OutputVariableType.Position))
         
     mbs.Assemble()
     
@@ -313,10 +316,10 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.sensors.defaultSize = 0.01
     
     
-    simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
+    simulationSettings.solutionSettings.solutionInformation = "CMStutorial "+str(nModes)+" "+strMode+"modes"
     
-    h=1e-3
-    tEnd = 10
+    h=0.25e-3*4
+    tEnd = 0.25*8
     #if exudynTestGlobals.useGraphics:
     #    tEnd = 0.1
     
@@ -372,28 +375,36 @@ if True: #now import mesh as mechanical model to EXUDYN
 if False:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
-    CC = exudyn.utilities.PlotLineCode
-    comp = 2 #1=x, 2=y, ...
-    # data = np.loadtxt('solution/hingePartBushingVel2.txt', comments='#', delimiter=',')
+    import exudyn as exu
+    from exudyn.utilities import *
+    CC = PlotLineCode
+    comp = 1 #1=x, 2=y, ...
+    var = ''
+    # data = np.loadtxt('solution/hingePartBushing'+var+'2.txt', comments='#', delimiter=',')
     # plt.plot(data[:,0], data[:,comp], CC(7), label='2 eigenmodes') 
-    # data = np.loadtxt('solution/hingePartBushingVel4.txt', comments='#', delimiter=',')
+    # data = np.loadtxt('solution/hingePartBushing'+var+'4.txt', comments='#', delimiter=',')
     # plt.plot(data[:,0], data[:,comp], CC(8), label='4 eigenmodes') 
-    data = np.loadtxt('solution/hingePartBushingVel8.txt', comments='#', delimiter=',')
+    data = np.loadtxt('solution/hingePartBushing'+var+'8.txt', comments='#', delimiter=',')
     plt.plot(data[:,0], data[:,comp], CC(9), label='8 eigenmodes') 
-    data = np.loadtxt('solution/hingePartBushingVel16.txt', comments='#', delimiter=',')
+    data = np.loadtxt('solution/hingePartBushing'+var+'16.txt', comments='#', delimiter=',')
     plt.plot(data[:,0], data[:,comp], CC(10), label='16 eigenmodes') 
-    data = np.loadtxt('solution/hingePartBushingVel32.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,comp], CC(10), label='32 eigenmodes') 
-    data = np.loadtxt('solution/hingePartBushingVel2HCB.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,comp], CC(0), label='HCB + 2 eigenmodes') 
-    data = np.loadtxt('solution/hingePartBushingVel4HCB.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,comp], CC(1), label='HCB + 4 eigenmodes') 
-    data = np.loadtxt('solution/hingePartBushingVel8HCB.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,comp], CC(2), label='HCB + 8 eigenmodes') 
-    # data = np.loadtxt('solution/hingePartBushingVel12HCB.txt', comments='#', delimiter=',')
-    # plt.plot(data[:,0], data[:,comp], CC(3), label='HCB + 12 eigenmodes') 
-    # data = np.loadtxt('solution/hingePartBushingVel24HCB.txt', comments='#', delimiter=',')
-    # plt.plot(data[:,0], data[:,comp], CC(4), label='HCB + 24 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'32.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(11), label='32 eigenmodes') 
+
+    data = np.loadtxt('solution/hingePartBushing'+var+'2HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(1), label='HCB + 2 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'4HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(2), label='HCB + 4 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'8HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(3), label='HCB + 8 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'16HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(4), label='HCB + 16 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'32HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(5), label='HCB + 32 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'64HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(6), label='HCB + 64 eigenmodes') 
+    data = np.loadtxt('solution/hingePartBushing'+var+'128HCB.txt', comments='#', delimiter=',')
+    plt.plot(data[:,0], data[:,comp], CC(7), label='HCB + 128 eigenmodes') 
 
     
     ax=plt.gca() # get current axes
@@ -402,7 +413,7 @@ if False:
     ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
     #
     plt.xlabel("time (s)")
-    plt.ylabel("z-component of tip velocity of hinge (m)")
+    plt.ylabel("y-component of tip velocity of hinge (m)")
     plt.legend() #show labels as legend
     plt.tight_layout()
     plt.show() 

@@ -1972,7 +1972,7 @@ equations =
     \be
       \Lm = \left[\tPhi\indt ,\;\; -\LU{0b}{\Am_{bd}} \LU{b}{\tilde \rv} \LU{b}{\Gm} ,\;\; \LU{0b}{\Am_{bd}} \right]
     \ee
-    with the rotation parameters specific matrix $\LU{b}{\Gm}$, implicitly defined in the rigid body node by the relation $\LU{b}{\tomega} = \LU{b}{\Gm} \ttheta$
+    with the rotation parameters specific matrix $\LU{b}{\Gm}$, implicitly defined in the rigid body node by the relation $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \ttheta$
     and the body-fixed nodal position vector (for node $i$)
     \be
       \LU{b}{\rv} = \LU{b}{\xv\cRef} + \LU{b}{\qv\indf}, \quad \LU{b}{\rv^{(i)}} = \LU{b}{\xv^{(i)}\cRef} + \LU{b}{\qv_{\mathrm{f},i}^{(i)}}
@@ -2234,8 +2234,8 @@ equations =
     %\mysubsubsubsection{Definition of quantities}
     %The object additionally provides the following output variables for mesh nodes (use \texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
     \startTable{super element output variables}{symbol}{description}
-    	\rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \pv_{\mathrm{(red)}}\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$}{local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement}
-    	\rowTable{VelocityLocal (mesh node $(i)$)}{$\LU{b}{\dot \uv_\mathrm{f}^{(i)}} = \left( \LU{b}{\tPsi} \dot \pv_{\mathrm{(red)}}\right)_{3\cdot i \ldots 3\cdot i+2}$}{local nodal mesh velocity in reference (body) frame, only for flexible part of displacement}
+    	\rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$}{local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement}
+    	\rowTable{VelocityLocal (mesh node $(i)$)}{$\LU{b}{\dot \uv_\mathrm{f}^{(i)}} = \left( \LU{b}{\tPsi} \dot \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}$}{local nodal mesh velocity in reference (body) frame, only for flexible part of displacement}
     	\rowTable{Displacement (mesh node $(i)$)}{$\LU{0}{\uv\cConfig^{(i)}} = \LU{0}{\qv_{\mathrm{t,config}}} + \LU{0b}{\Am_\mathrm{config}} \LU{b}{\pv_\mathrm{f,config}^{(i)}} - (\LU{0}{\qv_{\mathrm{t,ref}}} + \LU{0b}{\Am_{ref}} \LU{b}{\xv\cRef^{(i)}})$}{nodal mesh displacement in global coordinates}
     	\rowTable{Position (mesh node $(i)$)}{$\LU{0}{\pv^{(i)}} = \LU{0}{\pv\indt} + \LU{0b}{\Am} \LU{b}{\pv\indf^{(i)}}$}{nodal mesh position in global coordinates}
     	\rowTable{Velocity (mesh node $(i)$)}{$\LU{0}{\dot \uv^{(i)}} = \LU{0}{\dot \qv\indt} + \LU{0b}{\Am} (\LU{b}{\dot \uv\indf^{(i)}} + \LU{b}{\tilde \tomega} \LU{b}{\pv\indf^{(i)}})$}{nodal mesh velocity in global coordinates}
@@ -2278,7 +2278,7 @@ equations =
     and some input parameters, \refSection{sec:item:ObjectFFRF}, and 
     can be found in Zw{\"o}lfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
     The notation of kinematics quantities follows the floating frame of reference idea with
-    quantities given in the tables above and sketched in \fig{}.
+    quantities given in the tables above and sketched in \fig{fig:ObjectFFRFreducedOrder:mesh}.
     %++++++++++++++++++++++++
     \begin{figure}[tbph]
       \begin{center}
@@ -4992,7 +4992,7 @@ equations =
     \mysubsubsubsection{Definition of quantities}
     %\startTable{input parameter}{symbol}{description}
     %\rowTable{nodeNumber}{$n_{GD}$}{node number of generic data node}
-    %\rowTable{markerNumbers[0]}{$m0$}{position-marker of mass point or rigid body}
+    %\rowTable{markerNumbers[0]}{$m0$}{position-marker of mass point or rigid body (needs to be rigid body marker if constrainRotation==True)}
     %\rowTable{markerNumbers[1]}{$m1$}{marker to a Cable2D element, which is {\bf updated} in every PostNewtonStep; if the sliding body ($m0$) is in the range of all sliding cable elements, $m1$ contains the current marker number, which is active for the sliding joint}
     %\rowTable{slidingMarkerNumbers}{$[m_{s0}, \ldots, m_{sn}]\tp$}{a list of $sn$ (global) marker numbers which are are used to update marker1}
     %\rowTable{slidingMarkerOffsets}{$[d_{s0}, \ldots, d_{sn}]$}{a list of $sn$ scalar offsets, which represent the (reference arc) length of all previous sliding cable elements}
@@ -5004,6 +5004,9 @@ equations =
     \rowTable{data coordinate 1}{$x_{data1}$}{the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+%
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
+    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
 %
     \rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
     \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
@@ -5042,12 +5045,12 @@ equations =
 %
     %+++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector constraint equations (classicalFormulation=True)}
-    The 2D sliding joint is implemented having 3 equations, using the special algebraic coordinates $\zv$.
+    The 2D sliding joint is implemented having 3 equations (4 if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
     The algebraic equations read
     \bea
-      \LU{0}{\Delta\pv} &=& \Null, \quad \mbox{... two index 3 equations, ensuring the sliding body to stay at cable}\\
-      \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} &=& 0, \quad \mbox{... one index 1 equation, 
-                                               ensuring force in sliding direction = 0}  \\
+      \LU{0}{\Delta\pv} &=& \Null, \quad \mbox{... two index 3 eqs, ensure sliding body stays at cable}\\
+      \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} &=& 0, \quad \mbox{... one index 1 equ., 
+                                               ensure force in sliding dir.~= 0}  \\
     \eea
     No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and ODE2 coordinates read
     \be
@@ -5065,11 +5068,11 @@ equations =
     %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
     %+++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector constraint equations (classicalFormulation=False)}
-    The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated), using the special algebraic coordinates $\zv$. 
+    The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated; 4 equations if constrainRotation==True, see below), using the special algebraic coordinates $\zv$. 
     The algebraic equations read
     \bea
-      \lambda_0 &=& 0, \quad \mbox{... this equation is not necessary, but can be used for switching to other modes}  \\
-      \LU{0}{\Delta\pv\tp} \LU{0}{\nv} &=& 0, \quad \mbox{... equation ensures that sliding body stays at cable centerline; index3 equation}\\
+      \lambda_0 &=& 0, \quad \mbox{... equation not necessary, but can be used for switching to other modes}  \\
+      \LU{0}{\Delta\pv\tp} \LU{0}{\nv} &=& 0, \quad \mbox{... equation ensures that sliding body stays at cable centerline; index3}\\
       \LU{0}{\Delta\pv\tp} \LURU{0}{\rv}{ANCF}{\prime} &=& 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 equation!}
     \eea
     In the index 2 case, the second equation reads
@@ -5084,6 +5087,19 @@ equations =
     \eea   
     %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
 %
+    %+++++++++++++++++++++++++++++++++++++++++++++
+    In case that \texttt{constrainRotation = True}, an additional constraint is added for the relative rotation
+    between the slope of the cable and the orientation of marker m0 body.
+    Assuming that the orientation of marker m0 is a 2D matrix (taking only $x$ and $y$ coordinates), the constraint reads
+    \be
+      \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1} = 0
+    \ee
+    The index 2 case follows straightforward to 
+    \be
+      \LURU{0}{\dot \rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1}  + 
+      \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \LU{0}{\tilde \tomega}_{m0} \vp{0}{1} = 0
+    \ee
+    again assuming, that $\LU{0}{\tilde \tomega}_{m0}$ is only a $2 \times 2$ matrix.
     %+++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Post Newton Step}
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
@@ -5105,11 +5121,13 @@ equations =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
-V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$marker m0: position-marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)"
 V,      CP,     slidingMarkerNumbers,           ,               ,       ArrayMarkerIndex,"ArrayIndex()",              ,       I,      "$[m_{s0}, \ldots, m_{sn}]\tp$these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)"
 V,      CP,     slidingMarkerOffsets,           ,               ,       Vector,"Vector()", ,                            I,      "$[d_{s0}, \ldots, d_{sn}]$this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ..."
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",       ,       I,     "$n_{GD}$node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position"
-V,      CP,     classicalFormulation,           ,               ,       Bool,       "true",                      ,       IO,     "uses a formulation with 3 equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; alternatively: use local formulation, which only needs two equations and can be used with index 2 formulation"
+V,      CP,     classicalFormulation,           ,               ,       Bool,       "true",                      ,       IO,     "True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation"
+V,      CP,     constrainRotation,              ,               ,       Bool,       "false",                     ,       IO,     "True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely"
+V,      CP,     axialForce,                     ,               ,       Real,       "0",                         ,       IO,     "$f_\mathrm{ax}$ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
@@ -5133,7 +5151,7 @@ Fv,     C,      GetOutputVariableConnector,              ,               ,      
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
-Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 3;",                ,       CI,     "q0=forceX of sliding joint, q1=forceY of sliding joint; q2=axial (sliding) coordinate at beam" 
+Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 3 + (Index)parameters.constrainRotation;", , CI, "q0=forceX of sliding joint, q1=forceY of sliding joint; q2=axial (sliding) coordinate at beam; (optional) q3=rotation constraint" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointSliding2D';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #internal functions:

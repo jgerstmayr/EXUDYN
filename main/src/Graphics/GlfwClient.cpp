@@ -169,7 +169,8 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 	//do this first, as key may still have time to complete action
 	if (visSettings->window.ignoreKeys || !(key == GLFW_KEY_Q && action == GLFW_PRESS && mods == 0))
 	{
-		PyQueueKeyPressed(key, action, mods, visSettings->window.keyPressUserFunction); //call python user function
+		//keyPressUserFunction uses the pybind interface and thus causes crashes when set or copied (Python thread!):
+		PyQueueKeyPressed(key, action, mods); // visSettings->window.keyPressUserFunction); //call python user function
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++
@@ -349,7 +350,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 			ShowMessage("execute command ... (see other window)", 2);
 			UpdateGraphicsDataNow();
 			Render(window);
-			PyQueuePythonProcess(ProcessID::ShowHelpDialog);
+			PyQueuePythonProcess(ProcessID::ShowPythonCommandDialog);
 		}
 		//visualization settings dialog
 		if (key == GLFW_KEY_V && action == GLFW_PRESS)
@@ -1060,6 +1061,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 		useMultiThreadedRendering = visSettings->general.useMultiThreadedRendering;
 #if defined(__APPLE__)
 		useMultiThreadedRendering = false;
+		visSettings->general.useMultiThreadedRendering = false; //make sure that this is also set in visualization settings
 #endif
 
 		if (visSettings->general.showHelpOnStartup > 0) {
@@ -1188,12 +1190,15 @@ void GlfwRenderer::InitCreateWindow()
 		exit(EXIT_FAILURE);
 	}
 	
+
+#ifndef __APPLE__
 	if (visSettings->openGL.multiSampling == 2 || visSettings->openGL.multiSampling == 4 || visSettings->openGL.multiSampling == 8 || visSettings->openGL.multiSampling == 16) //only 4 is possible right now ... otherwise no multisampling
 	{
 		glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
 		glEnable(GL_MULTISAMPLE); //usually activated by default, but better to have it anyway
 		if (verboseRenderer) { PrintDelayed("enable GL_MULTISAMPLE"); }
 	}
+#endif
 
 	if (visSettings->window.alwaysOnTop)
 	{
@@ -1333,6 +1338,7 @@ void GlfwRenderer::DoRendererTasks()
 		{
 			glfwPollEvents(); //do not wait, just do tasks if they are there
 			lastEventUpdate = time;
+			PyProcessExecuteQueue(); //if still some elements open in queue; MAY ONLY BE DONE IN SINGLE-THREADED MODE
 		}
 	}
 
@@ -1345,6 +1351,7 @@ void GlfwRenderer::DoRendererTasks()
 		lastGraphicsUpdate = time;
 		SetCallBackSignal(false);
 	}
+
 	if (useMultiThreadedRendering)
 	{
 		glfwWaitEventsTimeout((double)updateInterval); //wait x seconds for next event
@@ -1396,7 +1403,14 @@ void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
 		!globalPyRuntimeErrorFlag &&
 		continueTask)
 	{
-		DoRendererTasks();
+		if (!useMultiThreadedRendering)
+		{
+			DoRendererTasks();
+		}
+		else
+		{
+			basicVisualizationSystemContainer->DoIdleOperations(); //this calls the Python functions, which is ok, because DoRendererIdleTasks() called from Python!
+		}
 		if (waitSeconds != -1. && EXUstd::GetTimeInSeconds() > time + waitSeconds)
 		{
 			continueTask = false;

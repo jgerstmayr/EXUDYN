@@ -9,13 +9,14 @@
 %\usepackage{xcolor} %for colors
 %\usepackage{floatrow} %?
 \usepackage{graphicx} %\includegraphics
- 
+\usepackage{upquote} %' displayed correctly in Python code; %keep "'" sign for copy/paste with Python!
+
 \usepackage{import}
 \usepackage{longtable} %for tables in reference manual
 \usepackage{mathtools} %for \prescript
 
 \usepackage[latin1]{inputenc} %this is the file encoding; should be ANSI if special characters (german) are used
-\usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc} %makes problems with quotes '
 
 %\input{docincludes}
 \usepackage{hyperref} %for pdf bookmarks, \url, \href...; must be included before docincludes
@@ -92,6 +93,15 @@
     minimum height=2em]
 %END: environment for flowcharts
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%\texttt with correct ', does not work
+%\usepackage{textcomp,lmodern,letltxmacro}
+%\usepackage{textcomp,letltxmacro}
+%\LetLtxMacro{\svtexttt}{\texttt}
+%\catcode`'=\active %
+%\let\svprime'
+%\renewcommand\texttt{\catcode`'=\active \def'{\textquotesingle}\textttaux}
+%\newcommand\textttaux[1]{\svtexttt{#1}\gdef'{\svprime}\catcode`'=12 }
+%\catcode`'=12 %
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 % include python codes:
@@ -108,43 +118,65 @@
 \definecolor{deepgreen}{rgb}{0,0.5,0}
 \definecolor{commentgreen}{rgb}{0.5,0.6,0.5}
 
+
+%DELTE: for font adjustments:
+%\newlength{\lstcolumnwidth}
+%\settowidth{\lstcolumnwidth}{\ttfamily M}
+%\lstset{basicstyle=\ttfamily,basewidth=\lstcolumnwidth,columns=fixed, fontadjust=true}
+
 \usepackage{listings}
+%\usepackage{lmodern} %for bold face in ttfamily in listings
+
+%show spaces at beginning of listings (copy/paste from pdf); set showspaces=true in lstset:
+%%crashes pdflatex:
+%\makeatletter
+%\def\lst@visiblespace{\textcolor{codebg}{-}}
+%\makeatother
 
 % Python style for highlighting example codes:
 \newcommand\pythonstyle{\lstset{
 language=Python,
-basicstyle=\ttm,
+%basicstyle=\ttm, %ttm is not fixedspaced
+basicstyle=\ttfamily\small,
 otherkeywords={self},             % Add keywords here
-keywordstyle=\ttb\color{deepblue},
+keywordstyle=\ttfamily\small\bfseries\color{deepblue},
 emph={AddNode, AddObject, AddMarker, AddLoad, AddSensor, SystemContainer, 
 AddSystem, Assemble, SimulationSettings,
 StartRenderer, StopRenderer, GetNodeOutput,
 DynamicSolverType, SolveDynamic, SolveStatic, 
 TimeIntegrationSolve,__init__},          % Custom highlighting
-emphstyle=\ttb\color{deepred},    % Custom highlighting style
+emphstyle=\ttfamily\small\bfseries\color{deepred},    % Custom highlighting style
 stringstyle=\color{deepgreen},
 commentstyle=\color{commentgreen},
 frame=none,                         % horizontal line top and bottom
 %frame=tb,                         % horizontal line top and bottom
-showstringspaces=false,           % 
 %numbers=left,										 %show line numbers
 breaklines=true,									 %automatically breaks lines
-numberstyle=\ttm    						% line number style
+numberstyle=\ttfamily\small,    	% line number style
+showstringspaces=false,
+showspaces=false,
+keepspaces=true,
+tabsize=4,
+%columns=flexible, %do not add Phantom spaces at "'"
+%morestring=[b]',%not needed, standard in Python style
+%morestring=[d]',
 }}
 %plain listing style:
 \newcommand\plainlststyle{\lstset{
 language=Python,
-basicstyle=\ttm,
+showstringspaces=false,
+basicstyle=\ttfamily\small,
 otherkeywords={self},             % Add keywords here
-keywordstyle=\ttm,
-emphstyle=\ttm,    % Custom highlighting style
+keywordstyle=\ttfamily\small,
+emphstyle=\ttfamily\small,    % Custom highlighting style
 stringstyle=\color{deepblack},
 commentstyle=\color{deepblack},
 frame=tb,                         % Any extra options here
 showstringspaces=false,           % 
 numbers=none,										 %show line numbers
 breaklines=true,									 %automatically breaks lines
-numberstyle=\ttm    						% line number style
+numberstyle=\ttfamily\small,    						% line number style
+columns=flexible, %do not add Phantom spaces at "'"
 }}
 % Python for external files
 \newcommand\pythonexternal[2][]{{

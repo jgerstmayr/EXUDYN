@@ -106,9 +106,25 @@ def SmoothStep(x, x0, x1, value0, value1):
     if x > x0:
         if x < x1:
             dx = x1-x0
-            loadValue = value0 + (value1-value0) * 0.5*(1-cos((x-x0)/dx*pi)) #t=[0 .. 25]
+            loadValue = value0 + (value1-value0) * 0.5*(1-cos((x-x0)/dx*pi)) 
         else:
             loadValue = value1
+    return loadValue
+
+#**function: derivative of SmoothStep using same arguments
+#**input:
+#  x: argument at which function is evaluated
+#  x0: start of step (f(x) = value0)
+#  x1: end of step (f(x) = value1)
+#  value0: value before smooth step
+#  value1: value at end of smooth step
+#**output: returns d/dx(f(x))
+def SmoothStepDerivative(x, x0, x1, value0, value1): 
+    loadValue = 0
+
+    if x > x0 and x < x1:
+        dx = x1-x0
+        loadValue = (value1-value0) * 0.5*(pi/dx*sin((x-x0)/dx*pi)) 
     return loadValue
 
 #**function: get index from value in given data vector (numpy array); usually used to get specific index of time vector
@@ -400,6 +416,7 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
         print('ERROR in AnimateSolution: rowIncrement must be at least 1 and must not be larger than the number of rows in the solution file')
     oldUpdateInterval = SC.visualizationSettings.general.graphicsUpdateInterval
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.5*min(timeout, 2e-3) #avoid too small values to run multithreading properly
+    mbs.SetRenderEngineStopFlag(False) #not to stop right at the beginning
 
     while runLoop and not mbs.GetRenderEngineStopFlag():
         for i in range(0,nRows,rowIncrement):
@@ -407,7 +424,8 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
                 SetVisualizationState(exu, mbs, solution, i)
                 if createImages:
                     SC.RedrawAndSaveImage() #create images for animation
-                time.sleep(timeout)
+                #time.sleep(timeout)
+                exudyn.DoRendererIdleTasks(timeout)
 
     SC.visualizationSettings.general.graphicsUpdateInterval = oldUpdateInterval #set values back to original
 
@@ -774,6 +792,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
                 cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
+        for j in range(4):            
             if fixedConstraintsNode1[j] != 0:                 
                 # fix right end position coordinates, i.e., add markers and constraints:
                 mCableCoordinateConstraint1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker

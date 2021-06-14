@@ -81,7 +81,9 @@ void VisualizationSystem::StopSimulation()
 }
 
 bool visualizationSystemUpdateGraphicsDataTimeoutWarned = false;
+
 //! OpenGL renderer calls UpdateGraphicsData (different thread) to update graphics data
+// ==> do not call Python functions from here!
 void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visualizationSystemContainer)
 {
 	if (visualizationSystemContainer.GetVisualizationSettings().general.threadSafeGraphicsUpdate) //if not set, graphics will be sometimes distorted due to update of visualization state during rendering
@@ -133,7 +135,6 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		{
 			if (!RendererIsSingleThreadedOrNotRunning())
 			{
-
 				EXUstd::WaitAndLockSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);
 				postProcessData->requestUserFunctionDrawing = true;
 				EXUstd::ReleaseSemaphore(postProcessData->requestUserFunctionDrawingAtomicFlag);

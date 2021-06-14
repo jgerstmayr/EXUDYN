@@ -22,7 +22,7 @@ from math import sin, cos, pi
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-activateWithKeyPress = True #activate mouse drag with keypress 'T'
+activateWithKeyPress = True #activate mouse drag with keypress 'D'
 
 nBodies = 2
 color = [0.1,0.1,0.8,1]
@@ -107,7 +107,7 @@ for i in range(nBodies):
     # mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName="solution/sensorPos.txt", 
     #                          outputVariableType=exu.OutputVariableType.Coordinates))
 
-#activate by keypress 'T':
+#activate by keypress 'D':
 mbs.variables['activateMouseDrag'] = True
 if activateWithKeyPress:
     mbs.variables['activateMouseDrag'] = False
@@ -171,7 +171,7 @@ simulationSettings.timeIntegration.newton.absoluteTolerance = 1e2 #if no force a
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 
 
-simulationSettings.solutionSettings.solutionInformation = "mouse interaction example: use your mouse"
+simulationSettings.solutionSettings.solutionInformation = "mouse interaction example: press 'D' to (de-)activate mouse drag"
 
 #+++++++++++++++++++++++++++++++++++
 #these options are not necessary:
@@ -193,6 +193,8 @@ SC.visualizationSettings.general.drawWorldBasis= True
 
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
+
+SC.visualizationSettings.general.useMultiThreadedRendering = True
 
 useGraphics = True
 if useGraphics:
@@ -219,7 +221,7 @@ if useGraphics:
 #react on key press, in development state:
 #causes crash at termination of python code ...
 def UFkeyPress(key, action, mods):
-    if chr(key) == 'T' and action == 1: #use capital letters for comparison!!! action 1 == press
+    if chr(key) == 'D' and action == 1: #use capital letters for comparison!!! action 1 == press
         mbs.variables['activateMouseDrag'] = not mbs.variables['activateMouseDrag']
     
 if activateWithKeyPress:
