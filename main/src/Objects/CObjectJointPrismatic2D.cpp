@@ -16,7 +16,7 @@
 
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -74,7 +74,7 @@ void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 
 
 void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	if (parameters.activeConnector)
 	{
@@ -158,7 +158,7 @@ OutputVariableType CObjectJointPrismatic2D::GetOutputVariableTypes() const
 }
 
 //! provide according output variable in "value"
-void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	SysError("CObjectJointPrismatic2D::GetOutputVariableConnector not implemented");
 }

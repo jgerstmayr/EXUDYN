@@ -16,7 +16,7 @@
 
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointRevolute2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectJointRevolute2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -47,7 +47,7 @@ void CObjectJointRevolute2D::ComputeAlgebraicEquations(Vector& algebraicEquation
 
 
 void CObjectJointRevolute2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	if (parameters.activeConnector)
 	{
@@ -94,7 +94,7 @@ OutputVariableType CObjectJointRevolute2D::GetOutputVariableTypes() const
 }
 
 //! provide according output variable in "value"
-void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	SysError("CObjectJointRevolute2D::GetOutputVariableConnector not implemented");
 }

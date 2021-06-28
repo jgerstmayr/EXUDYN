@@ -61,6 +61,23 @@ def SwitchTripletOrder(vector):
     v[1] = a
     return v
 
+
+#************************************************
+#**function: add rigid body transformation to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
+def MoveGraphicsData(g, pOff, Aoff):
+    gNew = copy.deepcopy(g)
+    p0 = np.array(pOff)
+    A0 = np.array(Aoff)
+    
+    if gNew['type'] == 'TriangleList':
+        n=int(len(g['points'])/3)
+        for i in range(n):
+            v = gNew['points'][i*3:i*3+3]
+            v = p0 + A0 @ v
+            gNew['points'][i*3:i*3+3] = list(v)
+
+    return gNew
+
 #************************************************
 #**function: merge 2 different graphics data with triangle lists
 #**input: graphicsData dictionaries g1 and g2 obtained from GraphicsData functions

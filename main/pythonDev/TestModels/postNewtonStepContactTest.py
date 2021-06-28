@@ -49,7 +49,7 @@ n1=mbs.AddNode(Point(referenceCoordinates = [0,L,0],
                      initialVelocities = [0,-1,0]))
 
 #user function for spring force
-def springForce(mbs, t, u, v, k, d, offset, mu, muPropZone):
+def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
     p = L+u-r
     #print(p)
     data = mbs.systemData.GetDataCoordinates()

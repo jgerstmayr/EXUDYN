@@ -71,7 +71,7 @@ void CObjectGenericODE2::ComputeObjectCoordinates_tt(Vector& coordinates_tt, Con
 }
 
 //! Computational function: compute mass matrix
-void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	if (parameters.massMatrixUserFunction)
 	{
@@ -84,7 +84,7 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
+		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
 	}
 	else //standard constant matrix
 	{
@@ -103,7 +103,7 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix) const
 
 //! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	Index nODE2 = GetODE2Size();
 	ode2Lhs.SetNumberOfItems(nODE2);
@@ -137,7 +137,7 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs) const
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 		Vector userForce;
 
-		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
+		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
 
 		ode2Lhs -= userForce;
 	}
@@ -158,7 +158,7 @@ void CObjectGenericODE2::GetAccessFunctionBody(AccessFunctionType accessType, co
 }
 
 //! provide according output variable in "value"
-void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	Index nODE2 = GetODE2Size();
 	//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
@@ -179,7 +179,7 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 		value.CopyFrom(tempCoordinates_tt);
 		break;
 	}
-	case OutputVariableType::Force:			ComputeODE2LHS(value);	break;
+	case OutputVariableType::Force:			ComputeODE2LHS(value, objectNumber);	break;
 	default:
 		SysError("CObjectGenericODE2::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

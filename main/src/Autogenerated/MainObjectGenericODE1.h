@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-22  19:12:49 (last modfied)
+* @date         2021-06-25  12:47:59 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,7 +119,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "systemMatrix")) { EPyUtils::SetNumpyMatrixSafely(d, "systemMatrix", cObjectGenericODE1->GetParameters().systemMatrix); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "rhsVector")) { EPyUtils::SetNumpyVectorSafely(d, "rhsVector", cObjectGenericODE1->GetParameters().rhsVector); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "rhsUserFunction")) { if (EPyUtils::CheckForValidFunction(d["rhsUserFunction"])) 
-            { cObjectGenericODE1->GetParameters().rhsUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector)>>((py::function)d["rhsUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectGenericODE1->GetParameters().rhsUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector)>>((py::function)d["rhsUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectGenericODE1->GetParameters().rhsUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectGenericODE1->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -135,7 +135,7 @@ public: // AUTO:
         d["systemMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE1->GetParameters().systemMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["rhsVector"] = EPyUtils::Vector2NumPy(cObjectGenericODE1->GetParameters().rhsVector); //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectGenericODE1->GetParameters().rhsUserFunction)
-            {d["rhsUserFunction"] = (std::function<StdVector(const MainSystem&,Real,StdVector)>)cObjectGenericODE1->GetParameters().rhsUserFunction;}
+            {d["rhsUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector)>)cObjectGenericODE1->GetParameters().rhsUserFunction;}
         else
             {d["rhsUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -154,7 +154,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectGenericODE1->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("systemMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE1->GetParameters().systemMatrix);} //! AUTO: get parameter
         else if (parameterName.compare("rhsVector") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE1->GetParameters().rhsVector);} //! AUTO: get parameter
-        else if (parameterName.compare("rhsUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector)>)cObjectGenericODE1->GetParameters().rhsUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("rhsUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector)>)cObjectGenericODE1->GetParameters().rhsUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectGenericODE1->GetParameters().coordinateIndexPerNode);} //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE1->GetTempCoordinates());} //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE1->GetTempCoordinates_t());} //! AUTO: get parameter
@@ -171,7 +171,7 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumbers") == 0) { cObjectGenericODE1->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("systemMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE1->GetParameters().systemMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rhsVector") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectGenericODE1->GetParameters().rhsVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rhsUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectGenericODE1->GetParameters().rhsUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("rhsUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectGenericODE1->GetParameters().rhsUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectGenericODE1->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

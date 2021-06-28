@@ -518,7 +518,7 @@ sL+=DefLatexStartClass(classStr+': Node', '\label{sec:mainsystem:node}\n This se
                                 description="get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)",
                                 argList=['nodeNumber','variableType','configuration'],
                                 defaultArgs=['','','ConfigurationType::Current'],
-                                example = "mbs.GetNodeOutput(nodeNumber=0, variableType='exu.OutputVariable.Displacement')"
+                                example = "mbs.GetNodeOutput(nodeNumber=0, variableType=exu.OutputVariableType.Displacement)"
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeODE2Index', cName='PyGetNodeODE2Index', 

@@ -81,7 +81,7 @@ bool CObjectContactCircleCable2D::IsContactActive() const
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
+void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
 	ode2Lhs.SetAll(0.);
@@ -156,7 +156,7 @@ OutputVariableType CObjectContactCircleCable2D::GetOutputVariableTypes() const
 }
 
 //! provide according output variable in "value"
-void CObjectContactCircleCable2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectContactCircleCable2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	SysError("ObjectContactCircleCable2D::GetOutputVariableConnector not implemented");
 }
@@ -164,7 +164,7 @@ void CObjectContactCircleCable2D::GetOutputVariableConnector(OutputVariableType 
 
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectContactCircleCable2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectContactCircleCable2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error

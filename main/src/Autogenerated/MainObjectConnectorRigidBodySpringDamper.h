@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-08  12:41:46 (last modfied)
+* @date         2021-06-27  17:08:54 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -121,10 +121,10 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::SetVector6DSafely(d, "offset", cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springForceTorqueUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springForceTorqueUserFunction"])) 
-            { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>((py::function)d["springForceTorqueUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>((py::function)d["springForceTorqueUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "postNewtonStepUserFunction")) { if (EPyUtils::CheckForValidFunction(d["postNewtonStepUserFunction"])) 
-            { cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>((py::function)d["postNewtonStepUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>((py::function)d["postNewtonStepUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorRigidBodySpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -147,12 +147,12 @@ public: // AUTO:
         d["offset"] = (std::vector<Real>)cObjectConnectorRigidBodySpringDamper->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction)
-            {d["springForceTorqueUserFunction"] = (std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction;}
+            {d["springForceTorqueUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction;}
         else
             {d["springForceTorqueUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction)
-            {d["postNewtonStepUserFunction"] = (std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction;}
+            {d["postNewtonStepUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction;}
         else
             {d["postNewtonStepUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -175,8 +175,8 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker1") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1));} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((std::vector<Real>)cObjectConnectorRigidBodySpringDamper->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
-        else if (parameterName.compare("springForceTorqueUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("springForceTorqueUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>)cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorRigidBodySpringDamper->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectConnectorRigidBodySpringDamper->GetColor());} //! AUTO: get parameter
@@ -197,9 +197,9 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::SetVector6DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("springForceTorqueUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("springForceTorqueUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
-        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("postNewtonStepUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorRigidBodySpringDamper->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

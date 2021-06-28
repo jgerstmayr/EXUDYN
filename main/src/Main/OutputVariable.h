@@ -48,22 +48,22 @@ namespace Marker { //==>put into pybindings file in future!
 		Position = 1 << 4,					//!< can measure position, apply Distance constraint
 		Orientation = 1 << 5,				//!< can measure rotation, apply general rigid body constraint (if Position is set)
 		Coordinate = 1 << 6,				//!< access any coordinate (always available)
+		Coordinates = 1 << 7,				//!< access all coordinates (always available)
 		//bits for geometrical dimension: force applied to volume, displacement of volume (center of mass ...)
 		//BodyPoint = 1 << xx, //default is always point; not necessary for Body+Position!
-		BodyLine = 1 << 7,					//!< represents a line load (vector load applied to line)
-		BodySurface = 1 << 8,				//!< represents a surface load / connector (e.g. for revolute joint with FE-mesh)
-		BodyVolume = 1 << 9,				//!< volume load ==> usually gravity
-		BodyMass = 1 << 10,					//!< volume load ==> usually gravity
-		BodySurfaceNormal = 1 << 11,		//!< for surface pressure (uses scalar load)
+		BodyLine = 1 << 8,					//!< represents a line load (vector load applied to line)
+		BodySurface = 1 << 9,				//!< represents a surface load / connector (e.g. for revolute joint with FE-mesh)
+		BodyVolume = 1 << 10,				//!< volume load ==> usually gravity
+		BodyMass = 1 << 11,					//!< volume load ==> usually gravity
+		BodySurfaceNormal = 1 << 12,		//!< for surface pressure (uses scalar load)
 		//++++for SuperElementMarkers:
-		MultiNodal = 1 << 12,				//!< multinodal marker uses a weighting matrix for transformation of node values to marker value (e.g., list of positions averaged to one position)
-		ReducedCoordinates = 1 << 13,		//!< multinodal marker uses a weighting matrix for transformation of node values to marker value (e.g., list of positions averaged to one position)
-
+		MultiNodal = 1 << 13,				//!< multinodal marker uses a weighting matrix for transformation of node values to marker value (e.g., list of positions averaged to one position)
+		ReducedCoordinates = 1 << 14,		//!< multinodal marker uses a weighting matrix for transformation of node values to marker value (e.g., list of positions averaged to one position)
 		//Rotv1v2v3 = 1 << 1xx,				//!< for special joints that need a attached triad; in fact, a marker of orientation type must also provide Rotv1v2v3
 
-		ODE1 = 1 << 14,						//!< marker addresses ODE1 coordinates (otherwise, standard is ODE2)
+		ODE1 = 1 << 15,						//!< marker addresses ODE1 coordinates (otherwise, standard is ODE2)
 		//NOTE that SuperElementAlternativeRotationMode = (1 << 31) ==> do not use this value here!
-		EndOfEnumList = 1 << 15				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+		EndOfEnumList = 1 << 16				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 		//available Types are, e.g.
 		//Node: 2+4+16, 2+4+8, 2+16
 		//Body: 1+4+16, 1+4+8, 1+16, 1+4+128, ...
@@ -80,6 +80,7 @@ namespace Marker { //==>put into pybindings file in future!
 		if (var & Position) { t += "Position"; }
 		if (var & Orientation) { t += "Orientation"; }
 		if (var & Coordinate) { t += "Coordinate"; }
+		if (var & Coordinates) { t += "Coordinates"; }
 		if (var & BodyLine) { t += "Line"; } //'Body' already added via (var & Body)
 		if (var & BodySurface) { t += "Surface"; } //'Body' already added via (var & Body)
 		if (var & BodyVolume) { t += "Volume"; } //'Body' already added via (var & Body)

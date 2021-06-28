@@ -194,10 +194,10 @@ public:
 	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
 	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE2Lhs, false otherwise
-	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs);
+	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber);
 		
 	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE1Rhs, false otherwise
-	bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs);
+	bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs, Index objectNumber);
 
 	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'systemODE2Rhs' for ODE2 part
 	void ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs);
@@ -288,6 +288,12 @@ public:
 	//! the jacobian computed in according temp structure
 	void ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 		bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled);
+
+	//implemented direcly in JacobianAE
+	////!compute per-node jacobians for node j, providing TemporaryComputationData;
+	////! the jacobian computed in according temp structure
+	//void ComputeNodeJacobianAE(Index j, TemporaryComputationData& temp,
+	//	bool& nodeUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled);
 
 	//! compute constraint jacobian of AE with respect to ODE2 (fillIntoSystemMatrix=true: also w.r.t. ODE1 and AE) coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian

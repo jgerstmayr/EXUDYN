@@ -65,7 +65,7 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 		const bool computeJacobian = false; //not needed for OutputVariables
 		cSystemData.ComputeMarkerDataStructure(cConnector, computeJacobian, markerDataStructure);
 
-		cConnector->GetOutputVariableConnector(parameters.outputVariableType, markerDataStructure, values);
+		cConnector->GetOutputVariableConnector(parameters.outputVariableType, markerDataStructure, parameters.objectNumber, values);
 
 	}
 }
@@ -74,7 +74,7 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 void CSensorBody::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
 {
 	const CObjectBody& cObject = cSystemData.GetCObjectBody(parameters.bodyNumber);
-	cObject.GetOutputVariableBody(parameters.outputVariableType, parameters.localPosition, configuration, values);
+	cObject.GetOutputVariableBody(parameters.outputVariableType, parameters.localPosition, configuration, values, parameters.bodyNumber);
 }
 
 //! main function to generate sensor output values

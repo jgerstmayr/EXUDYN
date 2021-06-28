@@ -1,13 +1,13 @@
 #Exudyn implicit second order time integration sensor output file
 #measure Node number = 0
 #OutputVariableType = AngularVelocity
-#simulation started = 2021-06-14,15:43:16
+#simulation started = 2021-06-28,21:51:03
 #columns contain: time, comma separated sensor values (e.g, x,y,z position coordinates)
 #number of sensor values = 3
 #
 0,0,0,0
 0.001,0.01873957844,-2.830896706e-15,1.598341575e-17
 0.002,0.04253782791,4.203018218e-15,-2.071814399e-16
-0.003,0.0727804902,-6.428936325e-15,2.747900163e-16
-0.004,0.1066374696,9.254189251e-15,-3.558688325e-16
-0.005,0.1382596558,-5.761047653e-15,4.821913954e-16
+0.003,0.0727804902,-6.428912237e-15,2.747900286e-16
+0.004,0.1066374696,9.255183998e-15,-3.561769808e-16
+0.005,0.1382596558,-5.77158935e-15,4.820995073e-16

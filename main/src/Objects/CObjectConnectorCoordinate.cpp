@@ -17,7 +17,7 @@
 
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -28,7 +28,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 			Real offset = parameters.offset;
 			if (parameters.offsetUserFunction)
 			{
-				EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t);
+				EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
 			}
 
 
@@ -45,7 +45,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 			if (parameters.offsetUserFunction_t)
 			{
 				Real offset=0;
-				EvaluateUserFunctionOffset_t(offset, cSystemData->GetMainSystemBacklink(), t);
+				EvaluateUserFunctionOffset_t(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
 				algebraicEquations[0] -= offset;
 			}
 			else if (parameters.velocityLevel) { algebraicEquations[0] -= parameters.offset; }
@@ -59,7 +59,7 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 }
 
 void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	if (parameters.activeConnector)
 	{
@@ -116,7 +116,7 @@ JacobianType::Type CObjectConnectorCoordinate::GetAvailableJacobians() const
 
 
 //! provide according output variable in "value"
-void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	Real relPos = markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0];
 	Real relVel = markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]; //this is the index-reduced equation: does not have offset!!!

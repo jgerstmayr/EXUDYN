@@ -285,7 +285,7 @@ for node in nodes:
 #exu.Print("nForce=", nForce)
 
 #conventional user function:
-def UFforce(mbs, t, q, q_t):
+def UFforce(mbs, t, itemIndex, q, q_t):
     force = np.zeros(nODE2FFRF)
     Avec = mbs.GetNodeOutput(nRB,  exu.OutputVariableType.RotationMatrix)
     A = Avec.reshape((3,3))
@@ -331,7 +331,7 @@ def UFforce(mbs, t, q, q_t):
     return force
 
 #ffrf mass matrix:
-def UFmassGenericODE2(mbs, t, q, q_t):
+def UFmassGenericODE2(mbs, t, itemIndex, q, q_t):
     Avec = mbs.GetNodeOutput(nRB,  exu.OutputVariableType.RotationMatrix)
     A = Avec.reshape((3,3))
     ep = q[dim3D:nODE2rigid] + ep0 #add reference values, q are only the change w.r.t. reference values!

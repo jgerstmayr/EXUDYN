@@ -21,8 +21,8 @@ def TestExamplesReferenceSolution():
             #obtained on 2021-02-06(Python3.7, 64bits): with new implicit trapezoidal solver (Arnold/Bruls)
             'ANCFcontactCircleTest.py':-0.4842656133238705, #2021-05-07, switched from StaticSolveOldSolver to exu.SolveStatic
             'ANCFcontactFrictionTest.py':-0.014188649931863358,
-            'ANCFmovingRigidBodyTest.py':-0.12893096921481131,
-            'ACNFslidingAndALEjointTest.py':-4.426403043826658, #2021-02-17 (added mass proportional load in sALE direction): -4.426403043826658 #2021-02-06: -4.426403044452073,
+            'ANCFmovingRigidBodyTest.py':-0.1289309692152536, #until ~2021-06-27: -0.12893096921481131,
+            'ACNFslidingAndALEjointTest.py':-4.42640288393854, #until ~2021-06-27: -4.426403043826658, #2021-02-17 (added mass proportional load in sALE direction): -4.426403043826658 #2021-02-06: -4.426403044452073,
             'carRollingDiscTest.py':-0.23940048717113455,
             'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228511,
             'compareFullModifiedNewton.py':0.00020079676000188396,
@@ -46,16 +46,17 @@ def TestExamplesReferenceSolution():
             'PARTS_ATEs_moving.py':0.44656762760262225,
             'pendulumFriction.py':0.3999999877698232,
             'postNewtonStepContactTest.py':0.057286638346409235, #new 2021-03-20
+            'rigidBodyAsUserFunctionTest.py':8.950865271552146, #new 2021-06-28
             'rigidBodyCOMtest.py':3.409431467726292,
             'rollingCoinTest.py':0.002004099927337848,
             'rollingCoinPenaltyTest.py':0.03489603106696451,
             'scissorPrismaticRevolute2D.py':27.202556489044575, #until 2021-03-20: 27.202556489044397,
-            'serialRobotTest.py':0.7712176106955341,#-4.309882450925784e-10 diff between old corrected and new gen alpha solver
+            'serialRobotTest.py': 0.7712176106978085,#change in EP constraints to nodes causes tiny error, seems to be error propagation; up to 2021-06-28: 0.7712176106955341; -4.309882450925784e-10 diff between old corrected and new gen alpha solver
             'sliderCrank3Dbenchmark.py':3.3642761780921897,
             'sliderCrankFloatingTest.py':0.5916491633788336,
             'solverExplicitODE1ODE2test.py':3.3767933275918964,
             'sparseMatrixSpringDamperTest.py':-0.06779862983767654,
-            'sphericalJointTest.py':4.409080446580333,
+            'sphericalJointTest.py':4.409080446574593, #change in EP constraints to nodes causes tiny error ==> solution is identical (all digits) up to 100 steps; up to 2021-06-28: 4.409080446580333
             'springDamperUserFunctionTest.py':0.506287227301091,
             'stiffFlyballGovernor.py':0.8962488779114738,
             'superElementRigidJointTest.py':0.015217208913982934,  #until 2021-04-27 (improved MarkerSuperElementRigid): 0.015214887106830069,

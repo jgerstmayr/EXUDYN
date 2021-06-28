@@ -20,11 +20,16 @@
 Index CObjectConnectorCoordinateVector::GetAlgebraicEquationsSize() const
 {
 	//one scaling matrix could have zero rows, but not both! checked in CheckPreAssembleConsistency
-	return EXUstd::Maximum(parameters.scalingMarker0.NumberOfRows(), parameters.scalingMarker1.NumberOfRows()); //number of algebraic equations
+	//return EXUstd::Maximum(parameters.scalingMarker0.NumberOfRows(),
+	//	parameters.scalingMarker1.NumberOfRows()); //number of algebraic equations
+	return EXUstd::Maximum(EXUstd::Maximum(EXUstd::Maximum(parameters.scalingMarker0.NumberOfRows(),
+		parameters.scalingMarker1.NumberOfRows()),
+		parameters.quadraticTermMarker0.NumberOfRows()),
+		parameters.quadraticTermMarker1.NumberOfRows()); //number of algebraic equations
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -34,21 +39,31 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 		{
 			//algebraicEquations.SetAll(0.);
 
-			//C(q,q_t,t) = scalingMarker1*qMarker1 - scalingMarker0*qMarker0 - offset = 0
-			if (markerData.GetMarkerData(0).vectorValue.NumberOfItems() != 0 && parameters.scalingMarker0.NumberOfColumns() != 0)
+			//C(q,q_t,t) = scalingMarker1*qMarker1 - scalingMarker0*qMarker0 - quadraticTermMarker0*qMarker0^2 - quadraticTermMarker1*qMarker1^2 - offset = 0
+			algebraicEquations.SetAll(0.);
+			if (markerData.GetMarkerData(0).vectorValue.NumberOfItems() != 0)
 			{
-				EXUmath::MultMatrixVector(parameters.scalingMarker0, markerData.GetMarkerData(0).vectorValue, algebraicEquations);
+				if (parameters.scalingMarker0.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorAdd(parameters.scalingMarker0, markerData.GetMarkerData(0).vectorValue, algebraicEquations);
+				}
+				if (parameters.quadraticTermMarker0.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker0, markerData.GetMarkerData(0).vectorValue, algebraicEquations);
+				}
 				algebraicEquations *= -1.;
 			}
-			else
+			if (markerData.GetMarkerData(1).vectorValue.NumberOfItems() != 0)
 			{
-				algebraicEquations.SetAll(0.);
+				if (parameters.scalingMarker1.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorAdd(parameters.scalingMarker1, markerData.GetMarkerData(1).vectorValue, algebraicEquations);
+				}
+				if (parameters.quadraticTermMarker1.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker1, markerData.GetMarkerData(1).vectorValue, algebraicEquations);
+				}
 			}
-			if (markerData.GetMarkerData(1).vectorValue.NumberOfItems() != 0 && parameters.scalingMarker1.NumberOfColumns() != 0)
-			{
-				EXUmath::MultMatrixVectorAdd(parameters.scalingMarker1, markerData.GetMarkerData(1).vectorValue, algebraicEquations);
-			}
-
 			//if (parameters.offsetUserFunction)
 			//{
 			//	Vector offset;
@@ -69,6 +84,17 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 					algebraicEquations -= parameters.offset;
 				}
 			}
+			//pout << "+++++++++++\n";
+			//pout << "sm0=" << parameters.scalingMarker0 << "\n";
+			//pout << "sm1=" << parameters.scalingMarker1 << "\n";
+			//pout << "qm0=" << parameters.quadraticTermMarker0 << "\n";
+			//pout << "qm1=" << parameters.quadraticTermMarker1 << "\n";
+			//pout << "off=" << parameters.offset << "\n";
+			//pout << "AE =" << algebraicEquations << "\n";
+			//pout << "qm0=" << markerData.GetMarkerData(0).vectorValue << "\n";
+			//pout << "qm1=" << markerData.GetMarkerData(1).vectorValue << "\n";
+
+
 		}
 		else
 		{
@@ -76,18 +102,29 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 				"CObjectConnectorCoordinateVector::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
 
 			//C(q,q_t,t) = scalingMarker1*qMarker1_t - scalingMarker0*qMarker0_t = 0
-			if (markerData.GetMarkerData(0).vectorValue_t.NumberOfItems() != 0 && parameters.scalingMarker0.NumberOfColumns() != 0)
+			algebraicEquations.SetAll(0.);
+			if (markerData.GetMarkerData(0).vectorValue_t.NumberOfItems() != 0)
 			{
-				EXUmath::MultMatrixVector(parameters.scalingMarker0, markerData.GetMarkerData(0).vectorValue_t, algebraicEquations);
+				if (parameters.scalingMarker0.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorAdd(parameters.scalingMarker0, markerData.GetMarkerData(0).vectorValue_t, algebraicEquations);
+				}
+				if (parameters.quadraticTermMarker0.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker0, markerData.GetMarkerData(0).vectorValue_t, algebraicEquations);
+				}
 				algebraicEquations *= -1.;
 			}
-			else
+			if (markerData.GetMarkerData(1).vectorValue_t.NumberOfItems() != 0)
 			{
-				algebraicEquations.SetAll(0.);
-			}
-			if (markerData.GetMarkerData(1).vectorValue_t.NumberOfItems() != 0 && parameters.scalingMarker1.NumberOfColumns() != 0)
-			{
-				EXUmath::MultMatrixVectorAdd(parameters.scalingMarker1, markerData.GetMarkerData(1).vectorValue_t, algebraicEquations);
+				if (parameters.scalingMarker1.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorAdd(parameters.scalingMarker1, markerData.GetMarkerData(1).vectorValue_t, algebraicEquations);
+				}
+				if (parameters.quadraticTermMarker1.NumberOfColumns() != 0)
+				{
+					EXUmath::MultMatrixVectorSquaredAddTemplate<Matrix, ResizableVector, Vector>(parameters.quadraticTermMarker1, markerData.GetMarkerData(1).vectorValue_t, algebraicEquations);
+				}
 			}
 
 
@@ -123,7 +160,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 }
 
 void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	Index nAE = GetAlgebraicEquationsSize();
 	if (parameters.activeConnector)
@@ -142,19 +179,52 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 
 		usedJac->SetNumberOfRowsAndColumns(nAE, markerData.GetMarkerData(0).jacobian.NumberOfColumns()
 			+ markerData.GetMarkerData(1).jacobian.NumberOfColumns());
+		usedJac->SetAll(0.); //in case that no linear part exists
 
 		//needs memory allocation:
 		ResizableMatrix temp;
-		if (markerData.GetMarkerData(0).jacobian.NumberOfColumns() != 0 && parameters.scalingMarker0.NumberOfColumns() != 0)
+		Index jacOffset = markerData.GetMarkerData(0).jacobian.NumberOfColumns();
+		if (markerData.GetMarkerData(0).jacobian.NumberOfColumns() != 0)
 		{
-			EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix,ResizableMatrix>(parameters.scalingMarker0, markerData.GetMarkerData(0).jacobian, temp);
-			usedJac->SetSubmatrix(temp, 0, 0, -1.);
+			if (parameters.scalingMarker0.NumberOfColumns() != 0)
+			{
+				EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(parameters.scalingMarker0, markerData.GetMarkerData(0).jacobian, temp);
+				usedJac->SetSubmatrix(temp, 0, 0, -1.);
+			}
+			if (parameters.quadraticTermMarker0.NumberOfColumns() != 0)
+			{
+				ResizableMatrix temp2;
+				temp2.CopyFrom(parameters.quadraticTermMarker0);
+				for (Index i = 0; i < temp2.NumberOfColumns(); i++)
+				{
+					temp2.MultiplyColumn(i, -2.*markerData.GetMarkerData(0).vectorValue[i]); //'-' because of factor -1 for marker0
+				}
+				EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(temp2, markerData.GetMarkerData(0).jacobian, temp);
+				usedJac->AddSubmatrix(temp, 0, 0);
+			}
 		}
-		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns() != 0 && parameters.scalingMarker1.NumberOfColumns() != 0)
+		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns() != 0)
 		{
-			EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(parameters.scalingMarker1, markerData.GetMarkerData(1).jacobian, temp);
-			usedJac->SetSubmatrix(temp, 0, markerData.GetMarkerData(0).jacobian.NumberOfColumns());
+			if (parameters.scalingMarker1.NumberOfColumns() != 0)
+			{
+				//parameters.scalingMarker1 * eye(2*[v[0],2*v[1], ...) * GetMarkerData(1).jacobian
+				EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(parameters.scalingMarker1, markerData.GetMarkerData(1).jacobian, temp);
+				usedJac->SetSubmatrix(temp, 0, jacOffset);
+			}
+			if (parameters.quadraticTermMarker1.NumberOfColumns() != 0)
+			{
+				ResizableMatrix temp2;
+				temp2.CopyFrom(parameters.quadraticTermMarker1);
+				for (Index i = 0; i < temp2.NumberOfColumns(); i++)
+				{
+					temp2.MultiplyColumn(i, 2.*markerData.GetMarkerData(1).vectorValue[i]); 
+				}
+				//pout << "temp2=" << temp2 << "\n";
+				EXUmath::MultMatrixMatrixTemplate<Matrix, ResizableMatrix, ResizableMatrix>(temp2, markerData.GetMarkerData(1).jacobian, temp);
+				usedJac->AddSubmatrix(temp, 0, jacOffset);
+			}
 		}
+		//pout << "jac=" << *usedJac << "\n";
 	}
 	else
 	{
@@ -186,20 +256,46 @@ JacobianType::Type CObjectConnectorCoordinateVector::GetAvailableJacobians() con
 
 
 //! provide according output variable in "value"
-void CObjectConnectorCoordinateVector::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectConnectorCoordinateVector::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	switch (variableType)
 	{
 	case OutputVariableType::Displacement: 
 	{
-		value.CopyFrom(markerData.GetMarkerData(1).vectorValue);
-		value -= markerData.GetMarkerData(0).vectorValue;
+		if (markerData.GetMarkerData(1).vectorValue.NumberOfItems() != 0)
+		{
+			value.CopyFrom(markerData.GetMarkerData(1).vectorValue);
+
+			if (markerData.GetMarkerData(0).vectorValue.NumberOfItems() != 0)
+			{
+				value -= markerData.GetMarkerData(0).vectorValue;
+			}
+		}
+		else
+			if (markerData.GetMarkerData(0).vectorValue.NumberOfItems() != 0)
+			{
+				value.CopyFrom(markerData.GetMarkerData(0).vectorValue);
+				value *= -1;
+			}
 		break;
 	}
 	case OutputVariableType::Velocity: 
 	{
-		value.CopyFrom(markerData.GetMarkerData(1).vectorValue_t);
-		value -= markerData.GetMarkerData(0).vectorValue_t;
+		if (markerData.GetMarkerData(1).vectorValue_t.NumberOfItems() != 0)
+		{
+			value.CopyFrom(markerData.GetMarkerData(1).vectorValue_t);
+
+			if (markerData.GetMarkerData(0).vectorValue_t.NumberOfItems() != 0)
+			{
+				value -= markerData.GetMarkerData(0).vectorValue_t;
+			}
+		}
+		else
+			if (markerData.GetMarkerData(0).vectorValue_t.NumberOfItems() != 0)
+			{
+				value.CopyFrom(markerData.GetMarkerData(0).vectorValue_t);
+				value *= -1;
+			}
 		break;
 	}
 	case OutputVariableType::ConstraintEquation: 

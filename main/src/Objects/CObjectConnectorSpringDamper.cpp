@@ -17,7 +17,7 @@
 
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataStructure& markerData,
+void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex,
 	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const
 {
 	relPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
@@ -47,7 +47,7 @@ void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataSt
 		else
 		{
 			Real forceAdd;
-			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), 
+			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex,
 				springLength - parameters.referenceLength, relVel*forceDirection);
 			force += forceAdd;
 		}
@@ -56,7 +56,7 @@ void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataSt
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectConnectorSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
+void CObjectConnectorSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	//relative position, spring length and inverse spring length
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
@@ -70,7 +70,7 @@ void CObjectConnectorSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerD
 	{
 		Real force;
 		Vector3D relPos, relVel, forceDirection;
-		ComputeConnectorProperties(markerData, relPos, relVel, force, forceDirection);
+		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
 		Vector3D fVec = force * forceDirection;
 
 		//now link ode2Lhs Vector to partial result using the two jacobians
@@ -106,11 +106,11 @@ void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jac
 //}
 
 //! provide according output variable in "value"
-void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	Real force;
 	Vector3D relPos, relVel, forceDirection;
-	ComputeConnectorProperties(markerData, relPos, relVel, force, forceDirection);
+	ComputeConnectorProperties(markerData, itemIndex, relPos, relVel, force, forceDirection);
 
 	switch (variableType)
 	{

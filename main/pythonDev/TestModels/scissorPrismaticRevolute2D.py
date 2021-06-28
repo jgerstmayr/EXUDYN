@@ -41,7 +41,7 @@ graphicscube2 = GraphicsDataRectangle(-L,-0.5*b, n*L*2**0.5, 0.5*b, color4steelb
 pi = 3.1415926535897932384626
 
 #prescribed driving function:
-def springForceUF(mbs, t, u, v, k, d, offset, mu, muPropZone):
+def springForceUF(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
     f=k*(u+offset)+v*d
     return f
 

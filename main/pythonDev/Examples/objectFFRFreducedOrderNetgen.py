@@ -85,10 +85,10 @@ if True: #now import mesh as mechanical model to EXUDYN
     cms = ObjectFFRFreducedOrderInterface(femInterface)
     
     #user functions should be defined outside of class:
-    def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
+    def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
         return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
+    def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
         return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
     objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 

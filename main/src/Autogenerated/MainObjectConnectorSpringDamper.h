@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  01:41:05 (last modfied)
+* @date         2021-06-27  17:08:53 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,7 +113,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "force")) { cObjectConnectorSpringDamper->GetParameters().force = py::cast<Real>(d["force"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springForceUserFunction"])) 
-            { cObjectConnectorSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectConnectorSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>>((py::function)d["springForceUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectConnectorSpringDamper->GetParameters().springForceUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorSpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -134,7 +134,7 @@ public: // AUTO:
         d["force"] = (Real)cObjectConnectorSpringDamper->GetParameters().force; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorSpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorSpringDamper->GetParameters().springForceUserFunction)
-            {d["springForceUserFunction"] = (std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)>)cObjectConnectorSpringDamper->GetParameters().springForceUserFunction;}
+            {d["springForceUserFunction"] = (std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>)cObjectConnectorSpringDamper->GetParameters().springForceUserFunction;}
         else
             {d["springForceUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -155,7 +155,7 @@ public: // AUTO:
         else if (parameterName.compare("damping") == 0) { return py::cast((Real)cObjectConnectorSpringDamper->GetParameters().damping);} //! AUTO: get parameter
         else if (parameterName.compare("force") == 0) { return py::cast((Real)cObjectConnectorSpringDamper->GetParameters().force);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorSpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
-        else if (parameterName.compare("springForceUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)>)cObjectConnectorSpringDamper->GetParameters().springForceUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("springForceUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>)cObjectConnectorSpringDamper->GetParameters().springForceUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorSpringDamper->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorSpringDamper->GetDrawSize());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectConnectorSpringDamper->GetColor());} //! AUTO: get parameter
@@ -174,7 +174,7 @@ public: // AUTO:
         else if (parameterName.compare("damping") == 0) { cObjectConnectorSpringDamper->GetParameters().damping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("force") == 0) { cObjectConnectorSpringDamper->GetParameters().force = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorSpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("springForceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("springForceUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorSpringDamper->GetParameters().springForceUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorSpringDamper->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorSpringDamper->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

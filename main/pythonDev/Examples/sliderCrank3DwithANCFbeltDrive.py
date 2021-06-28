@@ -277,7 +277,7 @@ mNDisk01 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nDisk0, coordinate=1))
 
 #Generate disc joints
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def OffsetUF(mbs, t, lOffset):
+def OffsetUF(mbs, t, itemIndex, lOffset):
     if t < duration: return L0*(1-np.cos(t*np.pi/duration))/2
     else: return L0
 

@@ -69,20 +69,20 @@ public:
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//specific Connector/Marker functions!
-	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'; provides time t for user functions
-	virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }
+	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'; provides objectNumber for user functions
+	virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }
 
 	//! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates
-	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeAlgebraicEquations"); }
+	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeAlgebraicEquations"); }
 
 	//! compute derivative of right-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
 	virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
 
 	//! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
-	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
+	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
 
 	//! get output variable 'variableType' in (vector) value; for connectors, marker information must be provided as in ComputeODE2LHS (e.g. to compute distance)
-	virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariableConnector(...)"); }
+	virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariableConnector(...)"); }
 
 	////! compute derivative of right-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE2Size() x GetODE2Size(); this is the tangent stiffness matrix; q are the system coordinates
 	//virtual void ComputeODE2LHSJacobian(Matrix& jac, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
@@ -102,7 +102,7 @@ public:
 	//virtual void InitializeDiscontinuousIteration() {  } ==> use initial conditions of data coordinates?
 
 	//! function called after Newton method; returns a residual error (force); gets marker data for current configuration to achieve the correct behavior; recommendedStepSize = [< 0 for no recommendation, 0 for min step size, > 0 for reduction of step size to given value]
-	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) { return 0; };
+	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize) { return 0; };
 	//virtual Real PostNewtonStep(const MarkerDataStructure& markerDataStartOfStep, const MarkerDataStructure& markerDataCurrent) { return 0; };
 
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)

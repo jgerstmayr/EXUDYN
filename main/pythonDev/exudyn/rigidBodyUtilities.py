@@ -433,6 +433,7 @@ def RotationMatrixZ(angleRad):
 
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#functions for homogeneous transformations
 #**function: compute homogeneous transformation matrix from rotation matrix A and translation vector r
 def HomogeneousTransformation(A, r):
     T = np.zeros((4,4))
@@ -447,6 +448,24 @@ HT = HomogeneousTransformation #shortcut
 def HTtranslate(r):
     T = np.eye(4)
     T[0:3,3] = r
+    return T
+
+#**function: homogeneous transformation for translation along x axis with value x
+def HTtranslateX(x):
+    T = np.eye(4)
+    T[0,3] = x
+    return T
+
+#**function: homogeneous transformation for translation along y axis with value y
+def HTtranslateY(y):
+    T = np.eye(4)
+    T[1,3] = y
+    return T
+
+#**function: homogeneous transformation for translation along z axis with value z
+def HTtranslateZ(z):
+    T = np.eye(4)
+    T[2,3] = z
     return T
 
 #**function: identity homogeneous transformation:
@@ -479,7 +498,7 @@ def HT2translation(T):
 def HT2rotationMatrix(T):
     return T[0:3,0:3]
 
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: return inverse homogeneous transformation such that inv(T)*T = np.eye(4)
 def InverseHT(T):
     Tinv = np.eye(4)
@@ -498,6 +517,121 @@ def InverseHT(T):
 #print("R=",R.round(4))
 
 ################################################################################
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#functions for 6x6 transformation matrices , see Featherstone / Handbook of robotics \cite{Siciliano2016}
+#**function: compute 6x6 transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics \cite{Siciliano2016}
+def RotationX2T66(angle):
+    c = cos(angle);
+    s = sin(angle);
+    return np.array(
+        [[1,  0,  0,  0,  0,  0],
+         [0,  c,  s,  0,  0,  0],
+         [0, -s,  c,  0,  0,  0],
+         [0,  0,  0,  1,  0,  0],
+         [0,  0,  0,  0,  c,  s],
+         [0,  0,  0,  0, -s,  c]])
+
+#**function: compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation!
+def RotationY2T66(angle):
+    c = cos(angle);
+    s = sin(angle);
+    return np.array(
+        [[c,  0, -s,  0,  0,  0],
+         [0,  1,  0,  0,  0,  0],
+         [s,  0,  c,  0,  0,  0],
+         [0,  0,  0,  c,  0, -s],
+         [0,  0,  0,  0,  1,  0],
+         [0,  0,  0,  s,  0,  c]])
+
+#**function: compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation!
+def RotationZ2T66(angle):
+    c = cos(angle);
+    s = sin(angle);
+    return np.array(
+        [[ c,  s,  0,  0,  0,  0],
+         [-s,  c,  0,  0,  0,  0],
+         [ 0,  0,  1,  0,  0,  0],
+         [ 0,  0,  0,  c,  s,  0],
+         [ 0,  0,  0, -s,  c,  0],
+         [ 0,  0,  0,  0,  0,  1]])
+
+#**function: compute 6x6 transformation matrix for translation according to 3D vector translation3D; output: first 3 components for rotation, second 3 components for translation!
+def Translation2T66(translation3D):
+    t = translation3D
+    return np.array(
+        [[    1,    0,    0,  0,  0,  0],
+         [    0,    1,    0,  0,  0,  0],
+         [    0,    0,    1,  0,  0,  0],
+         [    0, t[2],-t[1],  1,  0,  0],
+         [-t[2],    0, t[0],  0,  1,  0],
+         [ t[1],-t[0],    0,  0,  0,  1]])
+
+#**function: compute 6x6 transformation matrix for translation along X axis; output: first 3 components for rotation, second 3 components for translation!
+def TranslationX2T66(translation):
+    return Translation2T66([translation,0,0])
+
+#**function: compute 6x6 transformation matrix for translation along Y axis; output: first 3 components for rotation, second 3 components for translation!
+def TranslationY2T66(translation):
+    return Translation2T66([0,translation,0])
+
+#**function: compute 6x6 transformation matrix for translation along Z axis; output: first 3 components for rotation, second 3 components for translation!
+def TranslationZ2T66(translation):
+    return Translation2T66([0,0,translation])
+
+#**function convert 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+#**input: T66 given as  6x6 numpy array
+#**output: [A, v] with 3x3 rotation matrix A and 3D translation vector v
+def T66toRotationTranslation(T66):
+    A = T66[0:3,0:3]
+    v = -Skew2Vec(A.T @ T66[3:6,0:3])
+    return [A, v]
+
+#**function convert rotation and translation int 6x6 coordinate transformation (Pl\"ucker transform)
+#**input:
+#  A: 3x3 rotation matrix A
+#  v: 3D translation vector v
+#**output: return 6x6 transformation matrix 'T66'
+def RotationTranslation2T66(A, v):
+    return np.block([
+        [A, np.zeros((3,3))],
+        [-A@Skew(v), A]])
+
+#**function convert 6x6 coordinate transformation (Pl\"ucker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+#**input: T66 given as 6x6 numpy array
+#**output: homogeneous transformation (4x4 numpy array)
+def T66toHT(T66):
+    A = T66[0:3,0:3]
+    T = np.zeros((4,4))
+    T[0:3,0:3] = A
+    T[0:3,3] = -Skew2Vec(A.T @ T66[3:6,0:3])
+    T[3,3] = 1
+    return T
+
+#**function: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Pl\"ucker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+#**output: 4x4 homogeneous transformation in numpy array format
+#**outputinput: T66 (6x6 numpy array)
+def HT2T66(T):
+    A = T[0:3,0:3]
+    v = T[0:3,3]
+    return np.block([
+        [A, np.zeros((3,3))],
+        [-A@Skew(v), A]])
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#inertia 6D functions
+
+#**function: convert a 3x3 matrix (list or numpy array) into a list with 6 inertia components, sorted as J00, J11, J22, J12, J02, J01
+def InertiaTensor2Inertia6D(inertiaTensor):
+    J = np.array(inertiaTensor)
+    return [J[0,0], J[1,1], J[2,2],  J[1,2], J[0,2], J[0,1]]
+
+#**function: convert a list or numpy array with 6 inertia components (sorted as [J00, J11, J22, J12, J02, J01]) (list or numpy array) into a 3x3 matrix (np.array)
+def Inertia6D2InertiaTensor(inertia6D):
+    J = inertia6D
+    return np.array([[J[0],J[5],J[4]],
+                     [J[5],J[1],J[3]],
+                     [J[4],J[3],J[2]]])
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: helper class for rigid body inertia (see also derived classes Inertia...).
@@ -558,8 +692,9 @@ class RigidBodyInertia:
 
     #**classFunction: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) as needed in ObjectRigidBody
     def GetInertia6D(self):
-        J = self.inertiaTensor
-        return [J[0][0], J[1][1], J[2][2],  J[1][2], J[0][2], J[0][1]]
+        return InertiaTensor2Inertia6D(self.inertiaTensor)
+        # J = self.inertiaTensor
+        # return [J[0][0], J[1][1], J[2][2],  J[1][2], J[0][2], J[0][1]]
 
     def __str__(self):
         s = 'mass = ' + str(self.mass)
@@ -639,11 +774,12 @@ class InertiaCylinder(RigidBodyInertia):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
 #**input:
-#   position: reference position as list or numpy array with 3 components
-#   velocity: initial translational velocity as list or numpy array with 3 components
+#   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters'
+#   position: reference position as list or numpy array with 3 components (in global/world frame)
+#   velocity: initial translational velocity as list or numpy array with 3 components (in global/world frame)
 #   rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
 #   rotationParameters: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
-#   angularVelocity: initial angular velocity as list or numpy array with 3 components
+#   angularVelocity: initial angular velocity as list or numpy array with 3 components (in global/world frame)
 #**output: returns list containing node number and body number: [nodeNumber, bodyNumber]
 def GetRigidBodyNode(nodeType, 
                  position=[0,0,0], 
@@ -698,11 +834,13 @@ def GetRigidBodyNode(nodeType,
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
 #**input:
-#   position: reference position as list or numpy array with 3 components
-#   velocity: initial translational velocity as list or numpy array with 3 components
+#   inertia: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia
+#   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters'
+#   position: reference position as list or numpy array with 3 components (in global/world frame)
+#   velocity: initial translational velocity as list or numpy array with 3 components (in global/world frame)
 #   rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
 #   rotationParameters: reference rotation parameters; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
-#   angularVelocity: initial angular velocity as list or numpy array with 3 components
+#   angularVelocity: initial angular velocity as list or numpy array with 3 components (in global/world frame)
 #   gravity: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity
 #   graphicsDataList: list of graphicsData objects to define appearance of body
 #**output: returns list containing node number and body number: [nodeNumber, bodyNumber]

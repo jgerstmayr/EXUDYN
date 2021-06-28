@@ -66,7 +66,7 @@ mbs.AddLoad(Force(markerNumber = mNodeR0, loadVector = [0, -mass*g, 0]))
 zeroZoneFriction = 1e-3 #zero-zone for velocity in friction
 fFriction = 1          #friction force (norm); acts against velocity
 #user function for friction against velocity vector, including zeroZone
-def UserFunctionSpringDamper(mbs, t, u, v, k, d, offset):
+def UserFunctionSpringDamper(mbs, t, itemIndex, u, v, k, d, offset):
     vNorm = NormL2(v)
     f=[v[0],v[1],v[2]]
     if abs(vNorm) < offset[0]:

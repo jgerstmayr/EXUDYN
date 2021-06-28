@@ -25,12 +25,19 @@ Index CObjectRigidBody::GetODE2Size() const
 //! number of AE coordinates; depends on node
 Index CObjectRigidBody::GetAlgebraicEquationsSize() const
 {
-	return ((CNodeRigidBody*)GetCNode(0))->GetNumberOfAECoordinates();
+	if (CNodeRigidBodyEP::useNodeAE)
+	{
+		return 0;
+	}
+	else
+	{
+		return ((CNodeRigidBody*)GetCNode(0))->GetNumberOfAECoordinates();
+	}
 }
 
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectRigidBody::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	static_assert(nDisplacementCoordinates == CNodeRigidBody::maxDisplacementCoordinates); //add this code to raise compiler error, if max. number of displacement coordiantes changes in RigidBodyNode ==> requires reimplementation in this file!
 
@@ -86,7 +93,7 @@ void CObjectRigidBody::ComputeMassMatrix(Matrix& massMatrix) const
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(GetODE2Size());
 	ode2Lhs.SetAll(0.);
@@ -353,13 +360,14 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 }
 
 //! provide according output variable in "value"
-void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	switch (variableType)
 	{
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
+	case OutputVariableType::VelocityLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetVelocity(localPosition, configuration)); break; //inefficient, but useful
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
 
 	case OutputVariableType::Rotation: {

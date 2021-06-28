@@ -85,7 +85,7 @@ void CObjectFFRFreducedOrder::InitializeObject()
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! Computational function: compute mass matrix
-void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	if (!objectIsInitialized) { PyError("CObjectFFRFreducedOrder::ComputeMassMatrix: objectIsInitialized = false: run Assemble() before computation."); }
 
@@ -101,7 +101,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix) const
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
+		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
 		//UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		//{
 		//	//user function args:(t, coordinates, coordinates_t)
@@ -241,7 +241,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix) const
 
 //! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
 	Index nODE2FF = GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates();
@@ -473,7 +473,7 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs) const
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
+		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
 		//UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		//{
 		//	//user function args:(t, coordinates, coordinates_t)
@@ -760,7 +760,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionBody(AccessFunctionType accessTyp
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! provide according output variable in "value", localPosition ONLY REFERS TO THE REFERENCE FRAME!
-void CObjectFFRFreducedOrder::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectFFRFreducedOrder::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	Index nODE2 = GetODE2Size();
 	tempCoordinates.SetNumberOfItems(nODE2);
@@ -772,7 +772,7 @@ void CObjectFFRFreducedOrder::GetOutputVariableBody(OutputVariableType variableT
 	{
 	case OutputVariableType::Coordinates:	value.CopyFrom(tempCoordinates);	break;
 	case OutputVariableType::Coordinates_t: value.CopyFrom(tempCoordinates_t);	break;
-	case OutputVariableType::Force:			ComputeODE2LHS(value);	break;
+	case OutputVariableType::Force:			ComputeODE2LHS(value, objectNumber);	break;
 	default:
 		SysError("CObjectFFRFreducedOrder::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

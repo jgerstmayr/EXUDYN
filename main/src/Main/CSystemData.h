@@ -63,9 +63,10 @@ public:
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
 
 	ResizableArray<Index> objectsBodyWithAE;			//!< list of objects that are bodies and have AE
+	ResizableArray<Index> nodesODE2WithAE;					//!< list of nodes that have AE (Euler parameters)
 	ResizableArray<Index> objectsConstraintWithAE;		//!< list of objects that are constraints and have AE
 	ResizableArray<Index> objectsWithAlgebraicEquations;//!< list of objects that have algebraic equations (AE)
-	ResizableArray<Index> listObjectProjectedReactionForces;//!< list of objects that produce projected reaction forces for constraints
+	ResizableArray<Index> listObjectProjectedReactionForcesODE2;//!< list of objects that produce projected reaction forces for constraints
 
 public: //
 
@@ -113,9 +114,10 @@ public: //
 		listDiscontinuousIteration.Flush();
 
 		objectsBodyWithAE.Flush();
+		nodesODE2WithAE.Flush();
 		objectsConstraintWithAE.Flush();
 		objectsWithAlgebraicEquations.Flush();
-		listObjectProjectedReactionForces.Flush();
+		listObjectProjectedReactionForcesODE2.Flush();
 
 	}
 

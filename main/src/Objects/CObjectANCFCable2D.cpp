@@ -117,7 +117,7 @@ void CObjectANCFCable2DBase::ComputeCurrentObjectVelocities(ConstSizeVector<8>& 
 }
 
 //! Computational function: compute mass matrix
-void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	if (massMatrixComputed)
 	{
@@ -159,7 +159,7 @@ void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix) const
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
 	ode2Lhs.SetAll(0.);
@@ -650,7 +650,7 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 }
 
 //! provide according output variable in "value"
-void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	//outputVariables = "{
 	//'Position':'global position vector of local axis (1) and cross section (2) position', 

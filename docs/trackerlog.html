@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 687, 
-Number of resolved issues = 608 (240 in current version), 
-EXUDYN version = 1.0.240, 
-last change =  2021-06-14
+Number of issues = 694, 
+Number of resolved issues = 616 (248 in current version), 
+EXUDYN version = 1.0.248, 
+last change =  2021-06-28
 
 
 <table style = "width:100%">
@@ -38,6 +38,22 @@ last change =  2021-06-14
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0692</td>
+    <td>CSystem             </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2\_t ... if \_t is correctly used</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-06-28</td>
+    <td>2021-08-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0679</td>
     <td>Renderer tkinter    </td>
@@ -150,7 +166,7 @@ last change =  2021-06-14
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0627</td>
     <td>ObjectContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -166,7 +182,7 @@ last change =  2021-06-14
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0626</td>
     <td>GenericJoint        </td>
     <td>JG</td>
@@ -368,22 +384,6 @@ last change =  2021-06-14
     <td></td>
     <td>2021-01-29</td>
     <td>2021-03-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0564</td>
-    <td>NodeRigidBodyEP     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> transfer EP constraint from object to node, for future application to 3D beams</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2021-01-28</td>
-    <td>2021-03-29</td>
     <td></td>
     <td></td>
     <td></td>
@@ -688,22 +688,6 @@ last change =  2021-06-14
     <td></td>
     <td>2020-07-21</td>
     <td>2020-09-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0413</td>
-    <td>ConnectorCoordinateVectorUF</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> implement coordinate vector constraint user function; can be used as generic joint</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-05-25</td>
-    <td>2020-07-24</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1298,6 +1282,102 @@ last change =  2021-06-14
     <td>2019-07-01</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0693</td>
+    <td>RigidBody user function</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add test model for GenericODE2 user function based rigid body with Euler parameter and constraint</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-06-28</td>
+    <td>2021-08-27</td>
+    <td>2021-06-28 19:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0691</td>
+    <td>extend ConnectorCoordinateVector </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend ConnectorCoordinateVector for quadratic terms to be used as Euler Parameters constraint</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-06-27</td>
+    <td>2021-08-26</td>
+    <td>2021-06-27 23:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0690</td>
+    <td>add MarkerNodeCoordinates</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> used for CoordinateVector constraint</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-06-27</td>
+    <td>2021-08-26</td>
+    <td>2021-06-27 23:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0689</td>
+    <td>add itemIndex to user functions</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CHANGE OF userFunctions interface with additional itemIndex for ConnectorSpringDamper, ConnectorCartesianSpringDamper, ConnectorRigidBodySpringDamper, ConnectorCoordinate, ConnectorCoordinateVector, ConnectorJointGeneric; see theDoc for changes in the interface of these user functions and adapt your models!</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-06-27</td>
+    <td>2021-08-26</td>
+    <td>2021-06-27 20:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>WARNING: Interface of user functions for ConnectorSpringDamper, ConnectorCartesianSpringDamper, ConnectorRigidBodySpringDamper, ConnectorCoordinate, ConnectorCoordinateVector, ConnectorJointGeneric changed!!!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0688</td>
+    <td>ObjectGenericODE2   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend ObjectGenericODE2 and ObjectGenericODE1 user functions for the item index to have access to nodes and other informaiton: WARNING: you need to adapt your existing user functions!</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-06-24</td>
+    <td>2021-08-23</td>
+    <td>2021-06-27 20:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>WARNING: Interface of user functions for ObjectGenericODE2, ObjectFFRF... changed!!!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0687</td>
+    <td>ObjectRigidBody     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add output variable VelocityLocal to 2D and 3D rigid body objects</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-06-22</td>
+    <td>2021-08-21</td>
+    <td>2021-06-22 16:55</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2913,6 +2993,22 @@ last change =  2021-06-14
     <td>2021-01-29</td>
     <td>2021-03-30</td>
     <td>2021-02-01 01:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0564</td>
+    <td>NodeRigidBodyEP     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> transfer EP constraint from object to node, for future application to 3D beams</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-01-28</td>
+    <td>2021-03-29</td>
+    <td>2021-06-28 19:34</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -5009,6 +5105,22 @@ last change =  2021-06-14
     <td>2020-05-26</td>
     <td>2020-07-25</td>
     <td>2020-05-29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0413</td>
+    <td>ConnectorCoordinateVectorUF</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> implement coordinate vector constraint user function; can be used as generic joint</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-05-25</td>
+    <td>2020-07-24</td>
+    <td>2021-06-28 16:19</td>
     <td>JG</td>
     <td></td>
     <td></td>

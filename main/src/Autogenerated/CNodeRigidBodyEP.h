@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-11-13  00:46:29 (last modfied)
+* @date         2021-06-28  20:40:34 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,10 +28,12 @@ class CNodeRigidBodyEPParameters // AUTO:
 {
 public: // AUTO: 
     Vector7D referenceCoordinates;                //!< AUTO: reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
+    bool addConstraintEquation;                   //!< AUTO: True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint)
     //! AUTO: default constructor with parameter initialization
     CNodeRigidBodyEPParameters()
     {
         referenceCoordinates = Vector7D({0.,0.,0., 0.,0.,0.,0.});
+        addConstraintEquation = true;
     };
 };
 
@@ -60,12 +62,13 @@ public: // AUTO:
 class CNodeRigidBodyEP: public CNodeRigidBody // AUTO: 
 {
 protected: // AUTO: 
-    static constexpr Index nRotationCoordinates = 4;
+    static constexpr Index nRotationCoordinates = 4;//AUTO: 
     static constexpr Index nDisplacementCoordinates = 3;
     Index globalAECoordinateIndex;
     CNodeRigidBodyEPParameters parameters; //! AUTO: contains all parameters for CNodeRigidBodyEP
 
 public: // AUTO: 
+    static constexpr bool useNodeAE = true;//AUTO: decide old/new mode for EP constraints; will be always true in future
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -94,7 +97,7 @@ public: // AUTO:
     //! AUTO:  return number of (internal) algebraic eq. coordinates
     virtual Index GetNumberOfAECoordinates() const override
     {
-        return 1;
+        return (Index)parameters.addConstraintEquation;
     }
 
     //! AUTO:  return number of displacement coordinates
@@ -107,6 +110,12 @@ public: // AUTO:
     virtual Index GetNumberOfRotationCoordinates() const override
     {
         return nRotationCoordinates;
+    }
+
+    //! AUTO:  number of AE equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)
+    virtual Index GetAlgebraicEquationsSize() const override
+    {
+        return (Index)(useNodeAE&&parameters.addConstraintEquation);
     }
 
     //! AUTO:  return node type (for node treatment in computation)
@@ -156,6 +165,12 @@ public: // AUTO:
 
     //! AUTO:  provide according output variable in 'value'; used e.g. for postprocessing and sensors
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
+
+    //! AUTO:  ONLY for nodes with AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
+    virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
+
+    //! AUTO:  ONLY for nodes with AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
+    virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const override;
 
     //! AUTO:  Compute vector to of 4 Euler Parameters from reference and configuration coordinates
     virtual ConstSizeVector<maxRotationCoordinates> GetRotationParameters(ConfigurationType configuration = ConfigurationType::Current) const override;

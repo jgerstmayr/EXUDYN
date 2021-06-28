@@ -45,7 +45,7 @@ void CObjectJointGenericLockedRotAxis(const ArrayIndex& constrainedAxes, Index& 
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -63,7 +63,7 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 			Vector6D userOffset(0.);
 			if (parameters.offsetUserFunction) //from here on it becomes much slower ... (python)
 			{
-				EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t);
+				EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
 
 				if (userOffset[3] != 0. || userOffset[4] != 0. || userOffset[5] != 0.)
 				{
@@ -297,7 +297,7 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 
 
 void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	if (parameters.activeConnector)
 	{
@@ -326,7 +326,7 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resi
 		if (parameters.offsetUserFunction) //from here on it becomes much slower ... (python)
 		{
 			Vector6D userOffset(0.);
-			EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t);
+			EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
 
 			if (userOffset[3] != 0. || userOffset[4] != 0. || userOffset[5] != 0.)
 			{
@@ -544,7 +544,7 @@ JacobianType::Type CObjectJointGeneric::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 

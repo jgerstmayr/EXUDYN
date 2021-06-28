@@ -50,7 +50,7 @@ mbs.variables['damping'] = damper
 
 
 #user function for spring force
-def springForce(mbs, t, u, v, k, d, offset, mu, muPropZone):
+def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
     k=mbs.variables['stiffness']
     d=mbs.variables['damping']
     if mbs.variables['mode'] == 0:
@@ -85,7 +85,7 @@ def userFrequency(mbs, t, load):
     return mbs.variables['frequency']
 
 #user function used in GenericODE2 to integrate current omega
-def UFintegrateOmega(mbs, t, q, q_t):
+def UFintegrateOmega(mbs, t, itemIndex, q, q_t):
     return [mbs.variables['frequency']*(2*pi)] #current frequency*2*pi is integrated into phi, return vector!
 
 #node for 3D mass point:

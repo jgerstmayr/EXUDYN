@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-01-05  01:41:05 (last modfied)
+* @date         2021-06-27  17:08:54 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,10 +111,10 @@ public: // AUTO:
         cObjectConnectorCoordinate->GetParameters().factorValue1 = py::cast<Real>(d["factorValue1"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinate->GetParameters().velocityLevel = py::cast<bool>(d["velocityLevel"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "offsetUserFunction")) { if (EPyUtils::CheckForValidFunction(d["offsetUserFunction"])) 
-            { cObjectConnectorCoordinate->GetParameters().offsetUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Real)>>((py::function)d["offsetUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectConnectorCoordinate->GetParameters().offsetUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real)>>((py::function)d["offsetUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectConnectorCoordinate->GetParameters().offsetUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "offsetUserFunction_t")) { if (EPyUtils::CheckForValidFunction(d["offsetUserFunction_t"])) 
-            { cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = py::cast<std::function<Real(const MainSystem&,Real,Real)>>((py::function)d["offsetUserFunction_t"]); /* AUTO:  read out dictionary and cast to C++ type*/}
+            { cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = py::cast<std::function<Real(const MainSystem&,Real,Index,Real)>>((py::function)d["offsetUserFunction_t"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCoordinate->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -134,12 +134,12 @@ public: // AUTO:
         d["factorValue1"] = (Real)cObjectConnectorCoordinate->GetParameters().factorValue1; //! AUTO: cast variables into python (not needed for standard types) 
         d["velocityLevel"] = (bool)cObjectConnectorCoordinate->GetParameters().velocityLevel; //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorCoordinate->GetParameters().offsetUserFunction)
-            {d["offsetUserFunction"] = (std::function<Real(const MainSystem&,Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction;}
+            {d["offsetUserFunction"] = (std::function<Real(const MainSystem&,Real,Index,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction;}
         else
             {d["offsetUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t)
-            {d["offsetUserFunction_t"] = (std::function<Real(const MainSystem&,Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t;}
+            {d["offsetUserFunction_t"] = (std::function<Real(const MainSystem&,Real,Index,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t;}
         else
             {d["offsetUserFunction_t"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
@@ -159,8 +159,8 @@ public: // AUTO:
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("factorValue1") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().factorValue1);} //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { return py::cast((bool)cObjectConnectorCoordinate->GetParameters().velocityLevel);} //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction_t") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t);} //! AUTO: get parameter
+        else if (parameterName.compare("offsetUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("offsetUserFunction_t") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real)>)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCoordinate->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCoordinate->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorCoordinate->GetDrawSize());} //! AUTO: get parameter
@@ -178,9 +178,9 @@ public: // AUTO:
         else if (parameterName.compare("offset") == 0) { cObjectConnectorCoordinate->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("factorValue1") == 0) { cObjectConnectorCoordinate->GetParameters().factorValue1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { cObjectConnectorCoordinate->GetParameters().velocityLevel = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCoordinate->GetParameters().offsetUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("offsetUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCoordinate->GetParameters().offsetUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunction_t") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = py::cast<std::function<Real(const MainSystem&,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
+        else if (parameterName.compare("offsetUserFunction_t") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = py::cast<std::function<Real(const MainSystem&,Real,Index,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorCoordinate->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

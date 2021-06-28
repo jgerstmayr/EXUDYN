@@ -33,7 +33,7 @@ Real CObjectJointSliding2D::ComputeLocalSlidingCoordinate() const
 //bool sjnew = true; //new formulation of sliding joint using projection into tangential and normal direction, also suitable for index 2 formulation
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	//markerData.GetMarkerData(1).vectorValue/_t:cable (refCoordinates+coordinates)/velocities
 	//markerData.GetMarkerData(1).value:cable Length (current cable)
@@ -154,7 +154,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 
 
 void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	//CHECKandTHROWstring("CObjectJointSliding2D::ComputeJacobianAE");
 
@@ -310,7 +310,7 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 //}
 
 //! provide according output variable in "value"
-void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -343,7 +343,7 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 bool slidingJoint2Dwarned = false;
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectJointSliding2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectJointSliding2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error

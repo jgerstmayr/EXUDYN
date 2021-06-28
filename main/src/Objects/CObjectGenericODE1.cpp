@@ -59,7 +59,7 @@ void CObjectGenericODE1::ComputeObjectCoordinates(Vector& coordinates, Configura
 
 //! Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to "ODE1Rhs"
 //in fact, this is the LHS function!
-void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs) const
+void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) const
 {
 	Index nODE1 = GetODE1Size();
 	ODE1Rhs.SetNumberOfItems(nODE1);
@@ -85,7 +85,7 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs) const
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 		Vector userForce;
 
-		EvaluateUserFunctionRHS(userForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates);
+		EvaluateUserFunctionRHS(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates);
 
 		ODE1Rhs += userForce;
 	}

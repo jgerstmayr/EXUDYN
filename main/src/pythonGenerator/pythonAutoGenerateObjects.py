@@ -140,17 +140,17 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
 #conversion list for python functions; names must always start with 'PyFunction'...
 pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&, Index)>',
                             'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',
-                            'PyFunctionMbsScalar8': 'std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
+                            'PyFunctionMbsScalarIndexScalar7': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
                             'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
-                            'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',
-                            'PyFunctionMbsScalar6': 'std::function<Real(const MainSystem&,Real,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
-                            'PyFunctionVector6DmbsScalarVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector6D)>', #GenericJoint
-                            'PyFunctionVector3DmbsScalar5Vector3D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
-                            'PyFunctionVectorMbsScalar2Vector': 'std::function<StdVector(const MainSystem&,Real,StdVector,StdVector)>', #ObjectGenericODE2
-                            'PyFunctionMatrixMbsScalar2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,StdVector,StdVector)>', #ObjectGenericODE2
-                            'PyFunctionVectorMbsScalarVector': 'std::function<StdVector(const MainSystem&,Real,StdVector)>', #ObjectGenericODE1
-                            'PyFunctionVector6Dmbs4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper
-                            'PyFunctionVectorMbs4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
+                            'PyFunctionMbsScalarIndexScalar': 'std::function<Real(const MainSystem&,Real,Index,Real)>', #ConnectorCoordainte
+                            'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
+                            'PyFunctionVector6DmbsScalarIndexVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>', #GenericJoint
+                            'PyFunctionVector3DmbsScalarIndexScalar4Vector3D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
+                            'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2
+                            'PyFunctionMatrixMbsScalarIndex2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2
+                            'PyFunctionVectorMbsScalarIndexVector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector)>', #ObjectGenericODE1
+                            'PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper
+                            'PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
                             'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration': 'std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>', #SensorUserFunction
 #StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             }

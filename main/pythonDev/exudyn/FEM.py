@@ -799,7 +799,7 @@ class ObjectFFRFinterface:
         if constrainRigidBodyMotion:
             mObjectCoordinates = mbs.AddMarker(MarkerObjectODE2Coordinates(objectNumber=self.oFFRF))
             nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0], visualization = VNodePointGround(show=False))) #ground node for coordinate constraint
-            mGroundCoordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
+            mGroundCoordinate = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber = nGround)) #Ground node ==> no action
 
             X1 = np.zeros((6, self.nODE2FFRF))
             X1rot = ComputeSkewMatrix(self.xRef).T @ self.massMatrixCSR
@@ -809,7 +809,8 @@ class ObjectFFRFinterface:
             offset[0:3] = self.PhitTM @ self.xRef #constrain current COM to reference COM
 
             #add constraint: X1*qObjectFFRF - offset = 0
-            self.oRigidBodyConstraint = mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mGroundCoordinate, mObjectCoordinates], scalingMarker1 = X1, offset=offset))
+            self.oRigidBodyConstraint = mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mGroundCoordinate, mObjectCoordinates], 
+                                                                                 scalingMarker1 = X1, offset=offset))
 
         dictReturn = {'nRigidBody':self.nRigidBody,
                       'nodeList':self.nodeList,

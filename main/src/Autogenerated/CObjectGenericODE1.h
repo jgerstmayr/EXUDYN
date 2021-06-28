@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-03-01  11:07:51 (last modfied)
+* @date         2021-06-25  13:27:33 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,7 +36,7 @@ public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list)
     Matrix systemMatrix;                          //!< AUTO: system matrix (state space matrix) of first order ODE
     Vector rhsVector;                             //!< AUTO: a constant rhs vector (e.g., for constant input)
-    std::function<StdVector(const MainSystem&,Real,StdVector)> rhsUserFunction;//!< AUTO: A python user function which computes the right-hand-side (rhs) of the first order ODE; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector)> rhsUserFunction;//!< AUTO: A python user function which computes the right-hand-side (rhs) of the first order ODE; see description below
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE1Parameters()
@@ -107,7 +107,7 @@ public: // AUTO:
     Vector& GetTempCoordinates_t() { return tempCoordinates_t; }
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode1Rhs'
-    virtual void ComputeODE1RHS(Vector& ode1Rhs) const override;
+    virtual void ComputeODE1RHS(Vector& ode1Rhs, Index objectNumber) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
@@ -167,7 +167,7 @@ public: // AUTO:
     void InitializeCoordinateIndices();
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionRHS(Vector& rhs, const MainSystemBase& mainSystem, Real t, const StdVector& coordinates) const;
+    void EvaluateUserFunctionRHS(Vector& rhs, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

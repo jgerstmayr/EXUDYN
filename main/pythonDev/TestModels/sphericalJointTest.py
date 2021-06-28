@@ -21,6 +21,8 @@ from exudyn.graphicsDataUtilities import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
+#exudynTestGlobals.useGraphics=False
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -115,7 +117,7 @@ for i in range(14): #take coordinates of first two bodies
 
 exu.Print('solution of sphericalJointTest=',u)
 
-exudynTestGlobals.testError = u - (4.409004179180698) #2020-04-04: 4.409004179180698
+exudynTestGlobals.testError = u - (4.409080446574593) #up to 2021-06-28: 4.409080446580333; 2020-04-04: 4.409004179180698
 exudynTestGlobals.testResult = u
 
 

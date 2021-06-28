@@ -246,3 +246,44 @@ void CNodeRigidBodyEP::GetOutputVariable(OutputVariableType variableType, Config
 	}
 }
 
+void CNodeRigidBodyEP::ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2) const
+{
+	algebraicEquations.SetNumberOfItems(1);
+	if (!useIndex2)
+	{
+		//position level constraint:
+
+		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = GetRotationParameters();
+		algebraicEquations[0] = ep * ep - 1.;
+	}
+	else
+	{
+		//velocity level constraint:
+		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = GetRotationParameters();
+		LinkedDataVector ep_t = GetRotationParameters_t();
+
+		algebraicEquations[0] = 2. * (ep * ep_t);
+	}
+}
+
+//! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
+void CNodeRigidBodyEP::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t,
+	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const
+{
+	jacobian_ODE2.SetNumberOfRowsAndColumns(GetNumberOfAECoordinates(), GetNumberOfODE2Coordinates());
+	jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+	jacobian_ODE1.SetNumberOfRowsAndColumns(0, 0); //for safety!
+	jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+
+	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = GetRotationParameters();
+
+	//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
+	for (Index i = 0; i < nDisplacementCoordinates; i++) { jacobian_ODE2(0, i) = 0.; }
+	for (Index i = 0; i < GetNumberOfRotationCoordinates(); i++)
+	{
+		jacobian_ODE2(0, 3 + i) = 2.*ep[i];
+	}
+	//pout << "jacRB=" << jacobian_ODE2 << "\n";
+}
+
+

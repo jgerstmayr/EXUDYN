@@ -51,7 +51,7 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType) const
 	}
 }
 
-py::object MainObject::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData) const
+py::object MainObject::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	Vector value;
 	//check if type is valid:
@@ -60,7 +60,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 		if ((Index)GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			const CObjectConnector* connector = (CObjectConnector*)GetCObject();
-			connector->GetOutputVariableConnector(variableType, markerData, value);
+			connector->GetOutputVariableConnector(variableType, markerData, objectNumber, value);
 
 			//now check if it is scalar or a vector-valued:
 			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
@@ -80,7 +80,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 
 
 //! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
+py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Index objectNumber) const
 {
 	Vector value;
 	//check if type is valid:
@@ -90,7 +90,7 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 		{
 			const CObjectBody* cObjectBody = (const CObjectBody*)GetCObject();
 
-			cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value);
+			cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value, objectNumber);
 			//now check if it is scalar or a vector-valued:
 			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
 			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }

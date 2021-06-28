@@ -107,7 +107,7 @@ void CObjectConnectorRollingDiscPenalty::ComputeContactForces(const MarkerDataSt
 
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
+void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 		"CObjectConnectorRollingDiscPenalty::ComputeODE2LHS: marker do not provide velocityLevel information");
@@ -170,7 +170,7 @@ void CObjectConnectorRollingDiscPenalty::ComputeJacobianODE2_ODE2(ResizableMatri
 }
 
 //! provide according output variable in "value"
-void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
@@ -223,7 +223,7 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 }
 
 //! function called after Newton method; returns a residual error (force)
-Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;

@@ -678,6 +678,14 @@ public:
 		for (Index i = row*numberOfColumns; i < (row+1) * numberOfColumns; i++) { data[i] *= value; }
 	}
 
+	//Multiplies the column 'column' with 'value'
+	void MultiplyColumn(Index column, T value)
+	{
+		CHECKandTHROW(column < numberOfColumns, "Matrix::MultiplyColumn: invalid column");
+
+		for (Index i = column; i < numberOfRows*numberOfColumns; i+=numberOfColumns) { data[i] *= value; }
+	}
+
 	//! Swaps the rows 'row1' and 'row2'
 	void SwapRows(Index row1, Index row2)
 	{
@@ -731,6 +739,20 @@ public:
 		}
 	}
 
+	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
+	void AddSubmatrixWithFactor(const MatrixBase<T>& sm, Real factor, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrixWithFactor size mismatch");
+
+		for (Index i = 0; i < sm.numberOfRows; i++)
+		{
+			for (Index j = 0; j < sm.numberOfColumns; j++)
+			{
+				data[(i + row)*numberOfColumns + column + j] += factor*sm(i, j);
+			}
+		}
+	}
+
 	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
 	void AddSubmatrixTransposed(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
 	{
@@ -741,6 +763,20 @@ public:
 			for (Index j = 0; j < sm.numberOfColumns; j++)
 			{
 				data[(j + row)*numberOfColumns + column + i] += sm(i, j);
+			}
+		}
+	}
+
+	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
+	void AddSubmatrixTransposedWithFactor(const MatrixBase<T>& sm, Real factor, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposedWithFactor size mismatch");
+
+		for (Index i = 0; i < sm.numberOfRows; i++)
+		{
+			for (Index j = 0; j < sm.numberOfColumns; j++)
+			{
+				data[(j + row)*numberOfColumns + column + i] += factor*sm(i, j);
 			}
 		}
 	}
@@ -898,6 +934,55 @@ namespace EXUmath {
 				mr += resultLength;
 			}
 			result[i] = val;
+		}
+	}
+
+	//! matrix*square(vector) multiplication with given result vector (does not invoke memory allocation if result vector has appropriate size)
+	template<class TMatrix, class TVector, class TVectorResult>
+	inline void MultMatrixVectorSquaredTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	{
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+			"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+
+		result.SetNumberOfItems(matrix.NumberOfRows());
+
+		auto* mm = matrix.GetDataPointer();
+		const auto* vv = vector.GetDataPointer();
+		Index resultLength = result.NumberOfItems();
+		Index vectorLength = vector.NumberOfItems();
+
+		for (Index i = 0; i < resultLength; i++)
+		{
+			result[i] = 0;
+			auto* mr = &mm[i*matrix.NumberOfColumns()];
+			for (Index j = 0; j < vectorLength; j++)
+			{
+				result[i] += mr[j] * EXU::Square(vv[j]);
+			}
+		}
+	}
+
+	//! matrix*square(vector) multiplication with given result vector and add to result (does not invoke memory allocation if result vector has appropriate size)
+	template<class TMatrix, class TVector, class TVectorResult>
+	inline void MultMatrixVectorSquaredAddTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	{
+		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+			"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+
+		result.SetNumberOfItems(matrix.NumberOfRows());
+
+		auto* mm = matrix.GetDataPointer();
+		const auto* vv = vector.GetDataPointer();
+		Index resultLength = result.NumberOfItems();
+		Index vectorLength = vector.NumberOfItems();
+
+		for (Index i = 0; i < resultLength; i++)
+		{
+			auto* mr = &mm[i*matrix.NumberOfColumns()];
+			for (Index j = 0; j < vectorLength; j++)
+			{
+				result[i] += mr[j] * EXUstd::Square(vv[j]);
+			}
 		}
 	}
 

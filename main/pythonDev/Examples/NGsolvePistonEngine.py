@@ -427,10 +427,10 @@ if __name__ == '__main__': #only main thread for multiprocessing Pool
         cmsCrank = ObjectFFRFreducedOrderInterface(femCrank)
         
         #user functions should be defined outside of class:
-        def UFmassFFRFreducedOrderCrank(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderCrank(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsCrank.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
         
-        def UFforceFFRFreducedOrderCrank(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderCrank(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsCrank.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
         
         objFFRFcrank = cmsCrank.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
@@ -519,57 +519,57 @@ if __name__ == '__main__': #only main thread for multiprocessing Pool
         #import multiple conrods and pistons
     
         #user functions should be defined outside of class:
-        def UFmassFFRFreducedOrderConrod0(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderConrod0(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[0].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderConrod1(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderConrod1(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[1].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderConrod2(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderConrod2(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[2].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderConrod3(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderConrod3(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[3].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderConrod4(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderConrod4(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[4].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderConrod5(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderConrod5(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[5].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
         
-        def UFforceFFRFreducedOrderConrod0(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderConrod0(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[0].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderConrod1(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderConrod1(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[1].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderConrod2(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderConrod2(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[2].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderConrod3(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderConrod3(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[3].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderConrod4(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderConrod4(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[4].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderConrod5(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderConrod5(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsConrodList[5].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
         #user functions should be defined outside of class:
-        def UFmassFFRFreducedOrderPiston0(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderPiston0(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[0].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderPiston1(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderPiston1(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[1].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderPiston2(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderPiston2(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[2].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderPiston3(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderPiston3(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[3].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderPiston4(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderPiston4(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[4].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFmassFFRFreducedOrderPiston5(mbs, t, qReduced, qReduced_t):
+        def UFmassFFRFreducedOrderPiston5(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[5].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
         
-        def UFforceFFRFreducedOrderPiston0(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderPiston0(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[0].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderPiston1(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderPiston1(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[1].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderPiston2(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderPiston2(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[2].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderPiston3(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderPiston3(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[3].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderPiston4(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderPiston4(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[4].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-        def UFforceFFRFreducedOrderPiston5(mbs, t, qReduced, qReduced_t):
+        def UFforceFFRFreducedOrderPiston5(mbs, t, itemIndex, qReduced, qReduced_t):
             return cmsPistonList[5].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
         
         #lists for multiple objects in conrods and pistons:
@@ -787,7 +787,7 @@ if __name__ == '__main__': #only main thread for multiprocessing Pool
             SC.visualizationSettings.general.autoFitScene = False #for reloading of renderState to work
             
             #create animation:
-            if True:
+            if False:
                 simulationSettings.solutionSettings.recordImagesInterval = 0.001
                 SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
                 SC.visualizationSettings.window.renderWindowSize=[1920,1080]

@@ -516,7 +516,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
 			GetCSystem()->ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
 
-			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableConnector(variableType, markerDataStructure);
+			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableConnector(variableType, markerDataStructure, itemNumber);
 
 		} else
 		{
@@ -545,7 +545,7 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 			const MainObject* mo = mainSystemData.GetMainObjects().GetItem(itemNumber);
 
 			//return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableBody(variableType, pos, configuration);
-			return mo->GetOutputVariableBody(variableType, localPosition, configuration);
+			return mo->GetOutputVariableBody(variableType, localPosition, configuration, itemNumber);
 		}
 		else
 		{

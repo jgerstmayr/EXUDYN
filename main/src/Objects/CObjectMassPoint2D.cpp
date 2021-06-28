@@ -16,13 +16,13 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectMassPoint2D::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectMassPoint2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	massMatrix.SetScalarMatrix(nODE2Coordinates, parameters.physicsMass);
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectMassPoint2D::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectMassPoint2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
 	ode2Lhs.SetAll(0.);
@@ -51,7 +51,7 @@ void CObjectMassPoint2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 }
 
 //! provide according output variable in "value"
-void CObjectMassPoint2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectMassPoint2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	switch (variableType)
 	{

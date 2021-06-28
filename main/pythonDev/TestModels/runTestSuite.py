@@ -146,6 +146,7 @@ testFileList = [
                 'PARTS_ATEs_moving.py',
                 'pendulumFriction.py',
                 'postNewtonStepContactTest.py',
+                'rigidBodyAsUserFunctionTest.py',
                 'rigidBodyCOMtest.py',
                 'rollingCoinTest.py',
                 'rollingCoinPenaltyTest.py',

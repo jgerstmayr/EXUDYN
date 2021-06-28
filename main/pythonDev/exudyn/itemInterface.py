@@ -121,11 +121,12 @@ class VNodeRigidBodyEP:
         yield 'color', self.color
 
 class NodeRigidBodyEP:
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], addConstraintEquation = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = referenceCoordinates
         self.initialCoordinates = initialCoordinates
         self.initialVelocities = initialVelocities
+        self.addConstraintEquation = addConstraintEquation
         self.visualization = visualization
 
     def __iter__(self):
@@ -134,6 +135,7 @@ class NodeRigidBodyEP:
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
+        yield 'addConstraintEquation', self.addConstraintEquation
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
@@ -1192,11 +1194,13 @@ class VObjectConnectorCoordinateVector:
         yield 'color', self.color
 
 class ObjectConnectorCoordinateVector:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], offset = [], velocityLevel = False, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.scalingMarker0 = scalingMarker0
         self.scalingMarker1 = scalingMarker1
+        self.quadraticTermMarker0 = quadraticTermMarker0
+        self.quadraticTermMarker1 = quadraticTermMarker1
         self.offset = offset
         self.velocityLevel = velocityLevel
         self.activeConnector = activeConnector
@@ -1208,6 +1212,8 @@ class ObjectConnectorCoordinateVector:
         yield 'markerNumbers', self.markerNumbers
         yield 'scalingMarker0', self.scalingMarker0
         yield 'scalingMarker1', self.scalingMarker1
+        yield 'quadraticTermMarker0', self.quadraticTermMarker0
+        yield 'quadraticTermMarker1', self.quadraticTermMarker1
         yield 'offset', self.offset
         yield 'velocityLevel', self.velocityLevel
         yield 'activeConnector', self.activeConnector
@@ -1778,25 +1784,23 @@ class MarkerNodeCoordinate:
         yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
-class VMarkerNodeCoordinate:
+class VMarkerNodeCoordinates:
     def __init__(self, show = True):
         self.show = show
 
     def __iter__(self):
         yield 'show', self.show
 
-class MarkerNodeCoordinate:
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
+class MarkerNodeCoordinates:
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.coordinate = CheckForValidUInt(coordinate,"coordinate","MarkerNodeCoordinate")
         self.visualization = visualization
 
     def __iter__(self):
-        yield 'markerType', 'NodeCoordinate'
+        yield 'markerType', 'NodeCoordinates'
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
-        yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
 class VMarkerNodeODE1Coordinate:

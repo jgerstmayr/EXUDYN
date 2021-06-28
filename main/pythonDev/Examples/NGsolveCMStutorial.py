@@ -134,7 +134,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     print("nNodes=",fem.NumberOfNodes())
 
     strMode = ''
-    if False: #pure eigenmodes
+    if Tru: #pure eigenmodes
         print("compute eigen modes... ")
         start_time = time.time()
         fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)

@@ -19,7 +19,7 @@
 #include "Main/MainSystem.h"
 
 //! function provides the force, relative displacement and relative velocity of the connector
-inline void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(const MarkerDataStructure& markerData, 
+inline void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex,
 	Real& relPos, Real& relVel, Real& force) const
 {
 	//relative position, spring length and inverse spring length
@@ -53,7 +53,7 @@ inline void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(const Mar
 			UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 			{
 				//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-				force = parameters.springForceUserFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
+				force = parameters.springForceUserFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex,
 					relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.dryFriction, parameters.dryFrictionProportionalZone);
 			}, "ObjectConnectorCoordinateSpringDamper::springForceUserFunction");
 		}
@@ -64,7 +64,7 @@ inline void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(const Mar
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
+void CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 		"CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS: marker do not provide velocityLevel information");
@@ -78,7 +78,7 @@ void CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, con
 		Real relPos;
 		Real relVel;
 		Real force;
-		ComputeSpringForce(markerData, relPos, relVel, force);
+		ComputeSpringForce(markerData, objectNumber, relPos, relVel, force);
 
 
 		Vector1D fVec(force); //convert to vector to allow matrix-multiplication as usual ...
@@ -117,12 +117,12 @@ void CObjectConnectorCoordinateSpringDamper::ComputeJacobianODE2_ODE2(ResizableM
 //}
 
 //! provide according output variable in "value"
-void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	Real relPos;
 	Real relVel;
 	Real force;
-	ComputeSpringForce(markerData, relPos, relVel, force);
+	ComputeSpringForce(markerData, itemIndex, relPos, relVel, force);
 
 	switch (variableType)
 	{

@@ -105,7 +105,7 @@ mbs.variables['relDamping'] = dRel
 mbs.variables['dynamicFriction'] = fFriction
 mbs.variables['staticFrictionOffset'] = fFriction
 mbs.variables['stiffness'] = stiffness
-def UFbandVelocity(mbs, t, lOffset):
+def UFbandVelocity(mbs, t, itemIndex, lOffset):
     return mbs.variables['bandVelocity']
 
 bandCoordinateMarker = 0

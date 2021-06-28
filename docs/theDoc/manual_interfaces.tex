@@ -164,7 +164,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     nodeDict = mbs.GetNodeDefaults(nodeType)}}\\ \hline 
   GetNodeOutput(nodeNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{mbs.GetNodeOutput(nodeNumber=0, variableType={\textquotesingle}exu.OutputVariable.Displacement{\textquotesingle})}}\\ \hline 
+    \texttt{mbs.GetNodeOutput(nodeNumber=0, variableType=exu.OutputVariableType.Displacement)}}\\ \hline 
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeODE2Index(nodeNumber=0)}}\\ \hline 

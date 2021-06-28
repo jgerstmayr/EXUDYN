@@ -50,10 +50,10 @@ fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
 cms = ObjectFFRFreducedOrderInterface(fem)
 
 #user functions should be defined outside of class:
-def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
+def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
     return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced_t):
+def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
     return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
 objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
@@ -63,10 +63,10 @@ objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[
                                               color=[0.1,0.9,0.1,1.])
 cms2 = ObjectFFRFreducedOrderInterface(fem)
 #user functions should be defined outside of class:
-def UFmassFFRFreducedOrder2(mbs, t, qReduced, qReduced_t):
+def UFmassFFRFreducedOrder2(mbs, t, itemIndex, qReduced, qReduced_t):
     return cms2.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-def UFforceFFRFreducedOrder2(mbs, t, qReduced, qReduced_t):
+def UFforceFFRFreducedOrder2(mbs, t, itemIndex, qReduced, qReduced_t):
     return cms2.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
 objFFRF2 = cms2.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0.5], eulerParametersRef=eulerParameters0, 

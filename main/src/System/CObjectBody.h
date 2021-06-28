@@ -67,7 +67,7 @@ public:
 
     virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetAccessFunctionBody"); }
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
-									   ConfigurationType configuration, Vector& value) const {
+									   ConfigurationType configuration, Vector& value, Index objectNumber) const {
 		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetOutputVariableBody");
 	}
 
@@ -117,7 +117,7 @@ public:
 	// Computation FUNCTIONS
 
 	//! compute object massmatrix to massMatrix ==> only possible for bodies!!!
-	virtual void ComputeMassMatrix(Matrix& massMatrix) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
+	virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
 
 	//! return true if object has time and coordinate independent (=constant) mass matrix; used by solver
 	virtual bool HasConstantMassMatrix() const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::HasConstantMassMatrix"); return false; }

@@ -63,14 +63,14 @@ public:
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
 	virtual py::object GetOutputVariable(OutputVariableType variableType) const;
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-	virtual py::object GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData) const;
+	virtual py::object GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index objectNumber) const;
 
 	//put this access function directly to MainObject in order to perform according checks here
 	//virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
 	//{ SysError("Illegal call to MainObject::GetOutputVariableBody"); return py::object(); }
 
 	//! GetOutputVariable for a body with type, local position, configuration (reference, current, ...) and return value; copies values==>slow!
-	virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const;
+	virtual py::object GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Index objectNumber) const;
 
 	//! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
 	virtual py::object GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration) const;

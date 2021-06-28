@@ -134,6 +134,7 @@ ext_modules = [
                  'src/Objects/CMarkerBodyPosition.cpp',
                  'src/Objects/CMarkerBodyRigid.cpp',
                  'src/Objects/CMarkerNodeCoordinate.cpp',
+                 'src/Objects/CMarkerNodeCoordinates.cpp',
                  'src/Objects/CMarkerNodeODE1Coordinate.cpp',
                  'src/Objects/CMarkerNodePosition.cpp',
                  'src/Objects/CMarkerNodeRigid.cpp',

@@ -16,13 +16,13 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectALEANCFCable2D::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectALEANCFCable2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	const int ns = 4; //number of shape functions
 
 	if (!massMatrixComputed)
 	{
-		CObjectANCFCable2DBase::ComputeMassMatrix(massMatrix); //also fills in massMatrix, but only in first step
+		CObjectANCFCable2DBase::ComputeMassMatrix(massMatrix, objectNumber); //also fills in massMatrix, but only in first step
 		//==>moves result into 'precomputedMassMatrix'
 		//pout << "Mass0=" << massMatrix << "\n";
 	}
@@ -142,18 +142,18 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(Matrix& massMatrix) const
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	if (!massTermsALEComputed)
 	{
 		ConstSizeMatrix< (nODE2Coordinates + 1)*(nODE2Coordinates + 1)> temp;
 		//Matrix temp;
-		ComputeMassMatrix(temp); //temp matrix is not used
+		ComputeMassMatrix(temp, objectNumber); //temp matrix is not used
 		//now preComputedM,M1,M2,B1 and B2 matrices are available
 	}
 
 	ConstSizeVector<nODE2Coordinates> temp;
-	CObjectANCFCable2DBase::ComputeODE2LHS(temp); //compute stiffness terms
+	CObjectANCFCable2DBase::ComputeODE2LHS(temp, objectNumber); //compute stiffness terms
 	
 	ode2Lhs.SetNumberOfItems(nODE2Coordinates + 1);
 

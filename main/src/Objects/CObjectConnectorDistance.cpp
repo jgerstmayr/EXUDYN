@@ -16,7 +16,7 @@
 
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectConnectorDistance::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectConnectorDistance::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -52,7 +52,7 @@ void CObjectConnectorDistance::ComputeAlgebraicEquations(Vector& algebraicEquati
 }
 
 void CObjectConnectorDistance::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	if (parameters.activeConnector)
 	{
@@ -108,7 +108,7 @@ JacobianType::Type CObjectConnectorDistance::GetAvailableJacobians() const
 //}
 
 //! provide according output variable in "value"
-void CObjectConnectorDistance::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectConnectorDistance::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 	Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);

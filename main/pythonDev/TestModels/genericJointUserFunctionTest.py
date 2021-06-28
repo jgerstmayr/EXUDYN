@@ -38,7 +38,7 @@ mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround,
                                             localPosition=[-sx,0,0]))
 oRB = -1 #for output value
 
-def UFgenericJoint(mbs, t, param):
+def UFgenericJoint(mbs, t, itemIndex, param):
     phiZ = -2*pi*0.5*(1.-np.cos(t*2*pi / 4)) / nBodies
     phiX = -0.5*pi*0.5*(1.-np.cos(t*2*pi / 4)) / nBodies
     #exu.Print("phi=", phi)

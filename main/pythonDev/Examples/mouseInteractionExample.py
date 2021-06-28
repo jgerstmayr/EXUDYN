@@ -112,7 +112,7 @@ mbs.variables['activateMouseDrag'] = True
 if activateWithKeyPress:
     mbs.variables['activateMouseDrag'] = False
     
-def UFmouseDrag0(mbs, t, u, v, k, d, offset, frict, frictZone):
+def UFmouseDrag0(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
     if not mbs.variables['activateMouseDrag'] == True:
         return 0
     p = SC.GetCurrentMouseCoordinates(True)
@@ -120,13 +120,13 @@ def UFmouseDrag0(mbs, t, u, v, k, d, offset, frict, frictZone):
     #print("u=",u)
     return k*(Ltot-0.5*sx+u-p[0]) + d*v
 
-def UFmouseDrag1(mbs, t, u, v, k, d, offset, frict, frictZone):
+def UFmouseDrag1(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
     if not mbs.variables['activateMouseDrag'] == True:
         return 0
     p = SC.GetCurrentMouseCoordinates(True)
     return k*(u-p[1]) + d*v
 
-def UFmouseDrag2(mbs, t, u, v, k, d, offset, frict, frictZone):
+def UFmouseDrag2(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
     if not mbs.variables['activateMouseDrag'] == True:
         return 0
     p = SC.GetCurrentMouseCoordinates(True)
@@ -166,6 +166,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 #good for interactive examples, as it is independent of CPU power ...
 simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e2 #if no force acts
 simulationSettings.timeIntegration.newton.useModifiedNewton = True

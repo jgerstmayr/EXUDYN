@@ -43,7 +43,7 @@ public:
 	virtual bool UseReducedOrderIntegration() const { return false; }
 
 	//!  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(Matrix& massMatrix) const override;
+    virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const override;
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -71,7 +71,7 @@ public:
 
 
 	//!  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
+    virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
 
     ////!  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     //virtual JacobianType::Type GetAvailableJacobians() const override
@@ -92,7 +92,7 @@ public:
     virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const override;
 
     //!  provide according output variable in "value"
-    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const override;
+    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
 
     //!  return the (global) position of "localPosition" according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;

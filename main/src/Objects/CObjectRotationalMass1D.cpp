@@ -17,13 +17,13 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectRotationalMass1D::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectRotationalMass1D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	massMatrix.SetScalarMatrix(1, parameters.physicsInertia);
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectRotationalMass1D::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectRotationalMass1D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(1);
 	ode2Lhs.SetAll(0.);
@@ -63,7 +63,7 @@ void CObjectRotationalMass1D::GetAccessFunctionBody(AccessFunctionType accessTyp
 }
 
 //! provide according output variable in "value"
-void CObjectRotationalMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectRotationalMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	switch (variableType)
 	{

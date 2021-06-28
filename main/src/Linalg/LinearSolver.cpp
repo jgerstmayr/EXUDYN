@@ -210,6 +210,46 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, R
 	}
 }
 
+//! add (possibly) smaller factor*Matrix to this matrix; 
+//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+void GeneralMatrixEigenSparse::AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset, Index columnOffset)
+{
+	//only allowed in triplet mode:
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrixWithFactor(...): only possible in triplet mode!");
+	for (Index i = 0; i < submatrix.NumberOfRows(); i++)
+	{
+		for (Index j = 0; j < submatrix.NumberOfColumns(); j++)
+		{
+			Real value = submatrix(i, j);
+			if (value != 0.)
+			{
+				triplets.push_back(EigenTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
+			}
+		}
+	}
+
+}
+
+//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
+//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+void GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset, Index columnOffset)
+{
+	//only allowed in triplet mode:
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(...): only possible in triplet mode!");
+	for (Index j = 0; j < submatrix.NumberOfRows(); j++)
+	{
+		for (Index i = 0; i < submatrix.NumberOfColumns(); i++)
+		{
+			Real value = submatrix(j, i);
+			if (value != 0.)
+			{
+				triplets.push_back(EigenTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
+			}
+		}
+	}
+}
+
+
 //! add possibly GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 //! matrix types of submatrix and *this must be same
 //! operations must be both in triplet mode!

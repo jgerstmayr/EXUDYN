@@ -43,7 +43,7 @@ Matrix2D CObjectBeamGeometricallyExact2D::GetRotationMatrix2D(Real theta) const
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! Computational function: compute mass matrix
-void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	if (massMatrixComputed) //advantage due to precomputed mass matrix comparatively small (will improve in case of sparse matrices)
 	{
@@ -105,7 +105,7 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real u1_x, Real 
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
 	ode2Lhs.SetAll(0.);
@@ -272,7 +272,7 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 }
 
 //! provide according output variable in 'value'
-void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	//CHECKandTHROWstring("CObjectBeamGeometricallyExact2D::GetOutputVariableBody not implemented!");
 

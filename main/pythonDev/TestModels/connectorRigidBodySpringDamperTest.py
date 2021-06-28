@@ -37,7 +37,7 @@ mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
                                         localPosition = [0,0,0]))
 
-def UFforce(mbs, t, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset): 
+def UFforce(mbs, t, itemIndex, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset): 
     k = stiffness
     u = displacement
     v = velocity

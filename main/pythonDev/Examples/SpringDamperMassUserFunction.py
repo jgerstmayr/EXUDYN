@@ -22,7 +22,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 #defines relative displacement, relative velocity, stiffness k, damping d, and additional spring force f0
-def springForce(mbs, t, u, v, k, d, f0):
+def springForce(mbs, t, itemIndex, u, v, k, d, f0):
     return u*k+v*d
 
 sqrt2 = 2**0.5

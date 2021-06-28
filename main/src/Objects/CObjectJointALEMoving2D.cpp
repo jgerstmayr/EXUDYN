@@ -36,7 +36,7 @@ Real CObjectJointALEMoving2D::ComputeLocalSlidingCoordinate_t() const
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
+void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	//markerData.GetMarkerData(1).vectorValue/_t:cable (refCoordinates+coordinates)/velocities
 	//markerData.GetMarkerData(1).value:cable Length (current cable)
@@ -135,7 +135,7 @@ void CObjectJointALEMoving2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 }
 
 void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
 	const Index ns = 4;
 	Index columnsOffset = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(); //moving body coordinates length
@@ -208,7 +208,7 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 //}
 
 //! provide according output variable in "value"
-void CObjectJointALEMoving2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
+void CObjectJointALEMoving2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
 	//SysError("CObjectJointALEMoving2D::GetOutputVariableConnector not implemented");
 	switch (variableType)
@@ -250,7 +250,7 @@ void CObjectJointALEMoving2D::GetOutputVariableConnector(OutputVariableType vari
 bool aleMovingJoint2Dwarned = false;
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectJointALEMoving2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectJointALEMoving2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error

@@ -95,6 +95,14 @@ public:
 	//! add possibly smaller GeneralMatrix (with same type as *this !) to *this matrix; in case of sparse matrices, only the triplets of GeneralMatrixEigenSparse are added
 	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0) = 0;
 
+	//! add (possibly) smaller factor*Matrix to this matrix; 
+	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) = 0;
+
+	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
+	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) = 0;
+
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
 	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0) = 0;
 
@@ -213,6 +221,23 @@ public:
 		matrix.AddSubmatrixTransposed(submatrix, factor, LTGrows, LTGcolumns, rowOffset, columnOffset);
 	}
 
+	//! add (possibly) smaller factor*Matrix to this matrix; 
+	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0)
+	{
+		SetMatrixIsFactorized(false);
+		matrix.AddSubmatrixWithFactor(submatrix, factor, rowOffset, columnOffset);
+	}
+
+	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
+	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0)
+	{
+		SetMatrixIsFactorized(false);
+		matrix.AddSubmatrixTransposedWithFactor(submatrix, factor, rowOffset, columnOffset);
+	}
+
+
 	//! add possibly smaller matrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0)
 	{
@@ -221,6 +246,7 @@ public:
 		const GeneralMatrixEXUdense& m = (const GeneralMatrixEXUdense&)submatrix;
 		matrix.AddSubmatrix(m.GetMatrixEXUdense(), rowOffset, columnOffset);
 	}
+
 
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
 	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0)
@@ -378,6 +404,14 @@ public:
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
 	virtual void AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0);
+
+	//! add (possibly) smaller factor*Matrix to this matrix; 
+	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0);
+
+	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
+	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
+	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0);
 
 	//! add possibly GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 	//! matrix types of submatrix and *this must be same

@@ -9,16 +9,74 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.240, 
-  \item last change =  2021-06-14
+  \item EXUDYN version = 1.0.248, 
+  \item last change =  2021-06-28
 
-  \item Number of issues = 687, 
-  \item Number of resolved issues = 608 (240 in current version), 
+  \item Number of issues = 694, 
+  \item Number of resolved issues = 616 (248 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.248}: \vspace{-6pt} 
+  resolved Issue 0693: {\bf RigidBody user function}
+(extension)
+  \bi
+  \item {description: add test model for GenericODE2 user function based rigid body with Euler parameter and constraint}
+  \item   date resolved: {\bf 2021-06-28 19:34},
+date raised: 2021-06-28   \ei
+  \item {\bf Version 1.0.247}: \vspace{-6pt} 
+  resolved Issue 0564: {\bf NodeRigidBodyEP}
+(change)
+  \bi
+  \item {description: transfer EP constraint from object to node, for future application to 3D beams}
+  \item   date resolved: {\bf 2021-06-28 19:34},
+date raised: 2021-01-28   \ei
+  \item {\bf Version 1.0.246}: \vspace{-6pt} 
+  resolved Issue 0413: {\bf ConnectorCoordinateVectorUF}
+(extension)
+  \bi
+  \item {description: implement coordinate vector constraint user function; can be used as generic joint}
+  \item   date resolved: {\bf 2021-06-28 16:19},
+date raised: 2020-05-25   \ei
+  \item {\bf Version 1.0.245}: \vspace{-6pt} 
+  resolved Issue 0691: {\bf extend ConnectorCoordinateVector}
+(extension)
+  \bi
+  \item {description: extend ConnectorCoordinateVector for quadratic terms to be used as Euler Parameters constraint}
+  \item   date resolved: {\bf 2021-06-27 23:29},
+date raised: 2021-06-27   \ei
+  \item {\bf Version 1.0.244}: \vspace{-6pt} 
+  resolved Issue 0690: {\bf add MarkerNodeCoordinates}
+(extension)
+  \bi
+  \item {description: used for CoordinateVector constraint}
+  \item   date resolved: {\bf 2021-06-27 23:29},
+date raised: 2021-06-27   \ei
+  \item {\bf Version 1.0.243}: \vspace{-6pt} 
+  resolved Issue 0689: {\bf add itemIndex to user functions}
+(change)
+  \bi
+  \item {description: CHANGE OF userFunctions interface with additional itemIndex for ConnectorSpringDamper, ConnectorCartesianSpringDamper, ConnectorRigidBodySpringDamper, ConnectorCoordinate, ConnectorCoordinateVector, ConnectorJointGeneric; see theDoc for changes in the interface of these user functions and adapt your models!}
+  \item {\bf notes: WARNING: Interface of user functions for ConnectorSpringDamper, ConnectorCartesianSpringDamper, ConnectorRigidBodySpringDamper, ConnectorCoordinate, ConnectorCoordinateVector, ConnectorJointGeneric changed!!!}
+  \item   date resolved: {\bf 2021-06-27 20:45},
+date raised: 2021-06-27   \ei
+  \item {\bf Version 1.0.242}: \vspace{-6pt} 
+  resolved Issue 0688: {\bf ObjectGenericODE2}
+(change)
+  \bi
+  \item {description: extend ObjectGenericODE2 and ObjectGenericODE1 user functions for the item index to have access to nodes and other informaiton: WARNING: you need to adapt your existing user functions!}
+  \item {\bf notes: WARNING: Interface of user functions for ObjectGenericODE2, ObjectFFRF... changed!!!}
+  \item   date resolved: {\bf 2021-06-27 20:44},
+date raised: 2021-06-24   \ei
+  \item {\bf Version 1.0.241}: \vspace{-6pt} 
+  resolved Issue 0687: {\bf ObjectRigidBody}
+(extension)
+  \bi
+  \item {description: add output variable VelocityLocal to 2D and 3D rigid body objects}
+  \item   date resolved: {\bf 2021-06-22 16:55},
+date raised: 2021-06-22   \ei
   \item {\bf Version 1.0.240}: \vspace{-6pt} 
   resolved Issue 0686: {\bf eigenvalue solver}
 (extension)

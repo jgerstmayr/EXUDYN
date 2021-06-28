@@ -16,7 +16,7 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody2D::ComputeMassMatrix(Matrix& massMatrix) const
+void CObjectRigidBody2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
 	massMatrix.SetMatrix(nODE2Coordinates, nODE2Coordinates, 
 		{ parameters.physicsMass,0.,0., 
@@ -25,7 +25,7 @@ void CObjectRigidBody2D::ComputeMassMatrix(Matrix& massMatrix) const
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs) const
+void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
 	ode2Lhs.SetAll(0.);
@@ -84,13 +84,14 @@ void CObjectRigidBody2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 }
 
 //! provide according output variable in "value"
-void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
+void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	switch (variableType)
 	{
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
+	case OutputVariableType::VelocityLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetVelocity(localPosition, configuration)); break; //inefficient, but useful
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
 
 	case OutputVariableType::Rotation: value.CopyFrom(Vector1D( GetCNode(0)->GetCoordinateVector(configuration)[2])); break;

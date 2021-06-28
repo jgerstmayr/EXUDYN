@@ -852,14 +852,14 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 	{
 		//ConstSizeVector<9> value; //cable elements have no more than 9 cooordinates ...
 		Vector value;
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({0.,0.,0.}), ConfigurationType::Visualization, value);
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({0.,0.,0.}), ConfigurationType::Visualization, value, itemNumber);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			ComputeContourColor< Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			//value1 = (float)value[visualizationSettings.contour.outputVariableComponent]; //value at x=0
 			//item.color1 = Float4({ 0.,0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
 
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value);
+			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
 			ComputeContourColor< Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 
 			//value2 = (float)value[visualizationSettings.contour.outputVariableComponent]; //value at x=L
@@ -960,14 +960,14 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 	{
 		//ConstSizeVector<9> value; //cable elements have no more than 9 cooordinates ...
 		Vector value;
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value);
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			ComputeContourColor< Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			//value1 = (float)value[visualizationSettings.contour.outputVariableComponent]; //value at x=0
 			//item.color1 = Float4({ 0.,0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
 
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value);
+			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
 			ComputeContourColor< Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 
 			//value2 = (float)value[visualizationSettings.contour.outputVariableComponent]; //value at x=L
