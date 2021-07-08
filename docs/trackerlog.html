@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 694, 
-Number of resolved issues = 616 (248 in current version), 
-EXUDYN version = 1.0.248, 
-last change =  2021-06-28
+Number of issues = 711, 
+Number of resolved issues = 629 (261 in current version), 
+EXUDYN version = 1.0.261, 
+last change =  2021-07-08
 
 
 <table style = "width:100%">
@@ -38,6 +38,86 @@ last change =  2021-06-28
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0710</td>
+    <td>CollectCurrentNodeData</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> implement CollectCurrentNodeData for NodeRigidBody2D, optimize CollectCurrentNodeData for all rigid body nodes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-07-08</td>
+    <td>2021-09-06</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0707</td>
+    <td>LinkedDataVector,ResizableVector</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> consider removing ResizableVector(integrate into Vector), implement LinkedDataVector as templated spezialization of Vector, no virtual calls in Vector</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-06</td>
+    <td>2021-09-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0706</td>
+    <td>ConstSizeVector     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> decouple ConstSizeVector and ConstSizeMatrix from Vector / Matrix and avoid virtual calls, erase all rule of 5 member functions, optimize algebra</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-06</td>
+    <td>2021-09-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0704</td>
+    <td>Optimization2       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add direct function to NodeRigidBody to retrieve essential data for rigid body EOM and MarkerRigidBody; add flag, if rotation matrix and other quantities needed</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-04</td>
+    <td>2021-09-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0698</td>
+    <td>GetAvailableJacobians</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> unify constraint.GetAvailableJacobians() with jacobian computations in joints, in order to avoid large overheads for jacobian assembly</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-01</td>
+    <td>2021-08-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0692</td>
     <td>CSystem             </td>
@@ -102,7 +182,7 @@ last change =  2021-06-28
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0657</td>
     <td>Delete item         </td>
     <td>JG</td>
@@ -118,7 +198,7 @@ last change =  2021-06-28
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0655</td>
     <td>add KinematicTree   </td>
     <td>JG</td>
@@ -134,7 +214,7 @@ last change =  2021-06-28
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0648</td>
     <td>solver tutorial     </td>
     <td>JG</td>
@@ -150,7 +230,7 @@ last change =  2021-06-28
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0643</td>
     <td>ObjectFFRFreducedOrder / CMS</td>
     <td>JG</td>
@@ -775,22 +855,6 @@ last change =  2021-06-28
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0369</td>
-    <td>add RevoluteJoint   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add separate revolute joint with local axis in marker0 coordinates</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-04-10</td>
-    <td>2020-06-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0354</td>
     <td>autodiff            </td>
     <td>JG</td>
@@ -1282,6 +1346,198 @@ last change =  2021-06-28
     <td>2019-07-01</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0709</td>
+    <td>Linux/MacOS compile error</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> compiler error caused by EXU::Square</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-07</td>
+    <td>2021-09-05</td>
+    <td>2021-07-07 19:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0708</td>
+    <td>preprocessor flags  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> move EXUDYN_RELEASE to preprocessor flags in setup.py</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-07</td>
+    <td>2021-09-05</td>
+    <td>2021-07-07 08:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0705</td>
+    <td>Optimization3       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> optimize ObjectRigidBody EOM, take Glocal columns instead numberOfRotationCoordinates, move rot_t into loop, etc.</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-04</td>
+    <td>2021-09-02</td>
+    <td>2021-07-06 23:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0703</td>
+    <td>ComputeOrthonormalBasis</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> changed rigidBodyUtilities function, which returns a list of basis vectors, into ComputeOrthonormalBasisVectors, while ComputeOrthonormalBasis now returns a rotation matrix</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-02</td>
+    <td>2021-08-31</td>
+    <td>2021-07-02 08:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0702</td>
+    <td>AddPrismaticJoint   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add convenient utility function to add prismatic joint based on 2 bodies, point and axis, doing all necessary work in background</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-07-02</td>
+    <td>2021-08-31</td>
+    <td>2021-07-02 08:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0701</td>
+    <td>AddRevoluteJoint    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add convenient utility function to add revolute joint based on 2 bodies, point and axis, doing all necessary work in background</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-07-02</td>
+    <td>2021-08-31</td>
+    <td>2021-07-02 08:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0700</td>
+    <td>add links for utility functions</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> ADDED LINKS to Examples/ and TestModels/ example files at end of each python utility function and class, see \refSection{sec:pythonUtilityFunctions}</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-07-01</td>
+    <td>2021-08-30</td>
+    <td>2021-07-01 21:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0699</td>
+    <td>CMarkerBodyRigid::ComputeMarkerData</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> implement optimized version for Rigid node and ObjectRigidBody and avoid repeated computation of rotation matrix, etc.</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-01</td>
+    <td>2021-08-30</td>
+    <td>2021-07-08 00:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0697</td>
+    <td>GenericJoint        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> index2 equations not properly implemented for prismatic joints</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-01</td>
+    <td>2021-08-30</td>
+    <td>2021-07-01 15:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added second term for index2 case if joint position not constrained; TrapezoidalIndex2 solver now works if translational joint axes not constrained</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0696</td>
+    <td>add PrismaticJoint  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add 3D prismatic joint with rotationMarker0/1 to adjust local coordinate systems and joint local x axis as the free axis of the joint</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-07-01</td>
+    <td>2021-08-30</td>
+    <td>2021-07-01 13:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0695</td>
+    <td>Solution functions  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove exu and SC arguments from exudyn.utilities functions SetSolutionState(...), AnimateSolution(...); remove functoin SetVisualizationState(...): use SetSolutionState instead!</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-06-29</td>
+    <td>2021-08-28</td>
+    <td>2021-06-29 17:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0694</td>
+    <td>SolutionViewer      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add interactive dialog to view solution based on coordinateSolution.txt</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-06-29</td>
+    <td>2021-08-28</td>
+    <td>2021-06-29 17:31</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>
@@ -5729,6 +5985,22 @@ last change =  2021-06-28
     <td>2020-04-10</td>
     <td>2020-06-09</td>
     <td>2020-04-20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0369</td>
+    <td>add RevoluteJoint   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add 3D revolute joint with rotationMarker0/1 to adjust joint coordinates and joint local z axis as rotation axis</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-04-10</td>
+    <td>2020-06-09</td>
+    <td>2021-07-01 13:43</td>
     <td>JG</td>
     <td></td>
     <td></td>

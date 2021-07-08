@@ -104,7 +104,7 @@ void CSensorLoad::GetSensorValues(const CSystemData& cSystemData, Vector& values
 //! main function to generate sensor output values
 void CSensorMarker::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
 {
-	Real time = cSystemData.GetCData().GetCurrent().GetTime();
+	//Real time = cSystemData.GetCData().GetCurrent().GetTime();
 
 	const CMarker& cMarker = cSystemData.GetCMarker(parameters.markerNumber);
 	bool computeJacobian = false;

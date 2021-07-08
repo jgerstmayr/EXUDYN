@@ -37,6 +37,35 @@ namespace RigidBodyMath {
 										 -v[1], v[0],    0 });
 	}
 
+	////template<class TVector>
+	////! compute matrix B = Skew(v) * A from matrix A; A must have 3 rows
+	template<class TMatrixA, class TMatrixB>
+	inline void ApplySkewMatrixTemplate(const Vector3D& v, const TMatrixA& A, TMatrixB& B)
+	{
+		CHECKandTHROW(A.NumberOfRows() == 3, "ApplySkewMatrixTemplate: MatrixA must contain 3 rows!");
+		B.SetNumberOfRowsAndColumns(3, A.NumberOfColumns());
+		for (Index i = 0; i < A.NumberOfColumns(); i++)
+		{
+			B.GetUnsafe(0, i) =                          - A.GetUnsafe(1, i) * v[2] + A.GetUnsafe(2, i) * v[1];
+			B.GetUnsafe(1, i) = A.GetUnsafe(0, i) * v[2]                            - A.GetUnsafe(2, i) * v[0];
+			B.GetUnsafe(2, i) =-A.GetUnsafe(0, i) * v[1] + A.GetUnsafe(1, i) * v[0] ;
+		}
+	}
+
+	//! compute matrix Skew(v) * A from matrix A; A must have 3 rows; fill result into B matrix at columnOffset
+	template<class TMatrixA, class TMatrixB>
+	inline void ApplySkewMatrixTemplate(const Vector3D& v, const TMatrixA& A, TMatrixB& B, Index columnOffset)
+	{
+		CHECKandTHROW(A.NumberOfRows() == 3, "ApplySkewMatrixTemplate: MatrixA must contain 3 rows!");
+		//B.SetNumberOfRowsAndColumns(3, A.NumberOfColumns()); //do not change size of B!
+		for (Index i = 0; i < A.NumberOfColumns(); i++)
+		{
+			B.GetUnsafe(0, i+ columnOffset) = -A.GetUnsafe(1, i) * v[2] + A.GetUnsafe(2, i) * v[1];
+			B.GetUnsafe(1, i+ columnOffset) = A.GetUnsafe(0, i) * v[2] - A.GetUnsafe(2, i) * v[0];
+			B.GetUnsafe(2, i+ columnOffset) = -A.GetUnsafe(0, i) * v[1] + A.GetUnsafe(1, i) * v[0];
+		}
+	}
+
 	//********************************************************************************
 	//functions containing EULER PARAMETERS (QUATERNIONS)
 
@@ -123,12 +152,91 @@ namespace RigidBodyMath {
 								-4.0*ep[2] * ep_t[2] - 4.0*ep[1] * ep_t[1] });
 	}
 
+	inline void EP2Glocal(ConstSizeMatrix<3 * maxRotCoordinates>& Glocal, Real ep0, Real ep1, Real ep2, Real ep3)
+	{
+		Glocal.SetNumberOfRowsAndColumns(3, 4);
+		Real* p = Glocal.GetDataPointer();
+		p[0] = -2.*ep1; 
+		p[1] = 2.*ep0;
+		p[2] = 2.*ep3;
+		p[3] = -2.*ep2;
+
+		p[4] = -2.*ep2;
+		p[5] = -2.*ep3;
+		p[6] = 2.*ep0;
+		p[7] = 2.*ep1;
+
+		p[8] = -2.*ep3;
+		p[9] = 2.*ep2;
+		p[10]= -2.*ep1;
+		p[11]= 2.*ep0;
+	}
+
+	inline void EP2G(ConstSizeMatrix<3 * maxRotCoordinates>& G, Real ep0, Real ep1, Real ep2, Real ep3)
+	{
+		G.SetNumberOfRowsAndColumns(3, 4);
+		Real* p = G.GetDataPointer();
+		p[0] = -2.*ep1;
+		p[1] = 2.*ep0;
+		p[2] = -2.*ep3;
+		p[3] = 2.*ep2;
+		
+		p[4] = -2.*ep2;
+		p[5] = 2.*ep3;
+		p[6] = 2.*ep0;
+		p[7] = -2.*ep1;
+		
+		p[8] = -2.*ep3;
+		p[9] = -2.*ep2;
+		p[10] = 2.*ep1;
+		p[11] = 2.*ep0;
+	}
+
+
 	//! compute rotation matrix from Euler parameters ep0, ..., ep3
 	inline Matrix3D EP2RotationMatrix(Real ep0, Real ep1, Real ep2, Real ep3)
 	{
 		return Matrix3D(3, 3, { -2.0*ep3*ep3 - 2.0*ep2*ep2 + 1.0, -2.0*ep3*ep0 + 2.0*ep2*ep1, 2.0*ep3*ep1 + 2.0*ep2*ep0,
 							2.0*ep3*ep0 + 2.0*ep2*ep1, -2.0*ep3*ep3 - 2.0*ep1*ep1 + 1.0, 2.0*ep3*ep2 - 2.0*ep1*ep0,
 							-2.0*ep2*ep0 + 2.0*ep3*ep1, 2.0*ep3*ep2 + 2.0*ep1*ep0, -2.0*ep2*ep2 - 2.0*ep1*ep1 + 1.0 });
+	}
+
+	//! compute rotation matrix from Euler parameters ep0, ..., ep3
+	inline void EP2RotationMatrix(Matrix3D& A, Real ep0, Real ep1, Real ep2, Real ep3)
+	{
+		A.SetNumberOfRowsAndColumns(3, 3);
+		Real* p = A.GetDataPointer();
+		p[0] = -2.0*ep3*ep3 - 2.0*ep2*ep2 + 1.0;
+		p[1] = -2.0*ep3*ep0 + 2.0*ep2*ep1;
+		p[2] = 2.0*ep3*ep1 + 2.0*ep2*ep0;
+		p[3] = 2.0*ep3*ep0 + 2.0*ep2*ep1;
+		p[4] = -2.0*ep3*ep3 - 2.0*ep1*ep1 + 1.0;
+		p[5] = 2.0*ep3*ep2 - 2.0*ep1*ep0;
+		p[6] = -2.0*ep2*ep0 + 2.0*ep3*ep1;
+		p[7] = 2.0*ep3*ep2 + 2.0*ep1*ep0;
+		p[8] = -2.0*ep2*ep2 - 2.0*ep1*ep1 + 1.0;
+
+		//optimized version, slower!:
+		//Real ep3ep3 = ep3 * ep3;
+		//Real ep2ep2 = ep2 * ep2;
+		//Real ep1ep1 = ep1 * ep1;
+		//Real ep0ep0 = ep0 * ep0;
+		//Real ep3ep0 = ep3 * ep0;
+		//Real ep3ep1 = ep3 * ep1;
+		//Real ep3ep2 = ep3 * ep2;
+		//Real ep2ep0 = ep2 * ep0;
+		//Real ep2ep1 = ep2 * ep1;
+		//Real ep1ep0 = ep1 * ep0;
+
+		//p[0] = -2.0*(ep3ep3 + ep2ep2) + 1.0;
+		//p[1] = -2.0*(ep3ep0 - ep2ep1);
+		//p[2] = 2.0*(ep3ep1 + ep2ep0);
+		//p[3] = 2.0*(ep3ep0 + ep2ep1);
+		//p[4] = -2.0*(ep3ep3 + ep1ep1) + 1.0;
+		//p[5] = 2.0*(ep3ep2 - ep1ep0);
+		//p[6] = -2.0*(ep2ep0 - ep3ep1);
+		//p[7] = 2.0*(ep3ep2 + ep1ep0);
+		//p[8] = -2.0*(ep2ep2 + ep1ep1) + 1.0;
 	}
 
 	//! compute euler parameters ep0, ..., ep3 from rotation matrix A

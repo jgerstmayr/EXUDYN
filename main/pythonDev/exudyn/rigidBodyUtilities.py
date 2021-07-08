@@ -19,11 +19,14 @@ import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
 from exudyn.basicUtilities import NormL2
 from math import sin, cos, sqrt, atan2
 
+import copy
+
 eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle is zero (rotation axis arbitrary)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); if vector0 == [0,0,0], then any normal basis is returned
-def ComputeOrthonormalBasis(vector0):
+#**function: compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
+#**output: returns [vector0normalized, normal1, normal2], in which vector0normalized is the normalized vector0 (has unit length); all vectors in numpy array format
+def ComputeOrthonormalBasisVectors(vector0):
     v = np.array([vector0[0],vector0[1],vector0[2]])
 
     L0 = np.linalg.norm(v)
@@ -44,6 +47,13 @@ def ComputeOrthonormalBasis(vector0):
         n2 = np.cross(v,n1)
     #print("basis=", v,n1,n2)
     return [v, n1, n2]
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: compute orthogonal basis, in which the normalized vector0 is the first column and the other columns are normals to vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
+#**output: returns A, a rotation matrix, in which the first column is parallel to vector0; A is a 2D numpy array
+def ComputeOrthonormalBasis(vector0):
+    return np.vstack(ComputeOrthonormalBasisVectors(vector0)).T
+    
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
@@ -708,6 +718,7 @@ class RigidBodyInertia:
 #**class: create RigidBodyInertia with moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=[0,0,0]
 #**example: InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])
 class InertiaCuboid(RigidBodyInertia):
+    #**classFunction: initialize inertia
     def __init__(self, density, sideLengths):
         L1=sideLengths[0]
         L2=sideLengths[1]
@@ -719,6 +730,7 @@ class InertiaCuboid(RigidBodyInertia):
 
 #**class: create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaRodX(RigidBodyInertia):
+    #**classFunction: initialize inertia with mass and length of rod
     def __init__(self, mass, length):
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=mass/12.*np.diag([0.,length**2,length**2]),
@@ -726,6 +738,7 @@ class InertiaRodX(RigidBodyInertia):
         
 #**class: create RigidBodyInertia with moment of inertia and mass of mass point with 'mass'; inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaMassPoint(RigidBodyInertia):
+    #**classFunction: initialize inertia with mass of point
     def __init__(self, mass):
         RigidBodyInertia.__init__(self, mass=mass,
                                   inertiaTensor=np.zeros([3,3]),
@@ -733,6 +746,7 @@ class InertiaMassPoint(RigidBodyInertia):
 
 #**class: create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaSphere(RigidBodyInertia):
+    #**classFunction: initialize inertia with mass and radius of sphere
     def __init__(self, mass, radius):
         J = 2.*mass/5.*radius**2
         RigidBodyInertia.__init__(self, mass=mass,
@@ -741,6 +755,7 @@ class InertiaSphere(RigidBodyInertia):
         
 #**class: create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
 class InertiaHollowSphere(RigidBodyInertia):
+    #**classFunction: initialize inertia with mass and (inner==outer) radius of hollow sphere
     def __init__(self, mass, radius):
         J = 2.*mass/3.*radius**2
         RigidBodyInertia.__init__(self, mass=mass,
@@ -749,6 +764,7 @@ class InertiaHollowSphere(RigidBodyInertia):
 
 #**class: create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]
 class InertiaCylinder(RigidBodyInertia):
+    #**classFunction: initialize inertia with density, length, outer radius, axis (0=x-axis, 1=y-axis, 2=z-axis) and optional inner radius (for hollow cylinder)
     def __init__(self, density, length, outerRadius, axis, innerRadius=0):
         m = density*length*np.pi*(outerRadius**2-innerRadius**2)
         Jaxis = 0.5*m*(outerRadius**2+innerRadius**2)
@@ -860,38 +876,6 @@ def AddRigidBody(mainSys, inertia, nodeType,
     nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrix, rotationParameters, angularVelocity)
     nodeNumber = mainSys.AddNode(nodeItem)
     
-#     strNodeType = str(nodeType)
-#     if strNodeType == 'NodeType.RotationEulerParameters':
-#         if len(rotationParameters) == 0:
-#             ep0 = RotationMatrix2EulerParameters(rotationMatrix)
-#         else:
-#             ep0 = rotationParameters
-           
-#         ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
-#         nodeNumber = mainSys.AddNode(NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0), 
-#                                                      initialVelocities=list(velocity)+list(ep_t0)))
-#     elif strNodeType == 'NodeType.RotationRxyz':
-#         if len(rotationParameters) == 0:
-#             rot0 = RotationMatrix2RotXYZ(rotationMatrix)
-#         else:
-#             rot0 = rotationParameters
-
-#         rot_t0 = AngularVelocity2RotXYZ_t(angularVelocity, rot0)
-#         nodeNumber = mainSys.AddNode(NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0), 
-#                                                        initialVelocities=list(velocity)+list(rot_t0)))
-#     elif strNodeType == 'NodeType.RotationRotationVector':
-#         if len(rotationParameters) == 0:
-#             #raise ValueError('NodeType.RotationRotationVector not implemented!')
-#             rot0 = RotationMatrix2RotationVector(rotationMatrix)
-#         else:
-#             rot0 = rotationParameters
-        
-#         rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
-#         angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
-            
-#         nodeNumber = mainSys.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
-#                                                            initialVelocities=list(velocity)+list(angularVelocityLocal)))
-
     bodyNumber = mainSys.AddObject(ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
                                                    physicsCenterOfMass=inertia.com,
                                                    nodeNumber=nodeNumber, 
@@ -904,7 +888,119 @@ def AddRigidBody(mainSys, inertia, nodeType,
     return [nodeNumber, bodyNumber]
 
 
+#**function: add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
+#**input:
+#  mbs: the MainSystem to which the joint and markers shall be added
+#  body0: a object number for body0, must be rigid body or ground object
+#  body1: a object number for body1, must be rigid body or ground object
+#  point: a 3D vector as list or np.array containing the global center point of the joint in reference configuration
+#  axis: a 3D vector as list or np.array containing the global rotation axis of the joint in reference configuration
+#  useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
+#**output: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
+                     showJoint=True, axisRadius=0.1, axisLength=0.4):
+        
+    p0 = mbs.GetObjectOutputBody(body0,exu.OutputVariableType.Position,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference)
+    A0 = mbs.GetObjectOutputBody(body0,exu.OutputVariableType.RotationMatrix,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference).reshape((3,3))
+    p1 = mbs.GetObjectOutputBody(body1,exu.OutputVariableType.Position,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference)
+    A1 = mbs.GetObjectOutputBody(body1,exu.OutputVariableType.RotationMatrix,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference).reshape((3,3))
 
+    if useGlobalFrame:
+        pJoint = point
+        vAxis = copy.copy(axis)
+    else: #transform into global coordinates, then everything works same
+        pJoint = A0 @ point + p0
+        vAxis = A0 @ axis
 
-
+    #compute joint frame (not unique, only rotation axis must coincide)
+    B = ComputeOrthonormalBasis(vAxis) #axis = x-axis
+    #interchange z and x axis (needs sign change, otherwise det(A)=-1)
+    AJ = np.eye(3)
+    AJ[:,0]=-B[2]
+    AJ[:,1]= B[1]
+    AJ[:,2]= B[0] #axis ==> rotation axis z for revolute joint ... 
+    #print(AJ)
     
+    #compute joint position and axis in body0 / 1 coordinates:
+    pJ0 = A0.T @ (np.array(pJoint) - p0)
+    pJ1 = A1.T @ (np.array(pJoint) - p1)
+
+    #compute joint marker orientations:
+    MR0 = A0.T @ AJ  
+    MR1 = A1.T @ AJ  
+    
+    mBody0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
+    mBody1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
+    
+    oJoint = mbs.AddObject(ObjectJointRevoluteZ(markerNumbers=[mBody0,mBody1],
+                                                rotationMarker0=MR0,
+                                                rotationMarker1=MR1,
+             visualization=VRevoluteJointZ(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
+
+    return [oJoint, mBody0, mBody1]
+
+
+#**function: add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
+#**input:
+#  mbs: the MainSystem to which the joint and markers shall be added
+#  body0: a object number for body0, must be rigid body or ground object
+#  body1: a object number for body1, must be rigid body or ground object
+#  point: a 3D vector as list or np.array containing the global center point of the joint in reference configuration
+#  axis: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration
+#  useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
+#**output: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
+                     showJoint=True, axisRadius=0.1, axisLength=0.4):
+        
+    p0 = mbs.GetObjectOutputBody(body0,exu.OutputVariableType.Position,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference)
+    A0 = mbs.GetObjectOutputBody(body0,exu.OutputVariableType.RotationMatrix,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference).reshape((3,3))
+    p1 = mbs.GetObjectOutputBody(body1,exu.OutputVariableType.Position,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference)
+    A1 = mbs.GetObjectOutputBody(body1,exu.OutputVariableType.RotationMatrix,
+                                 localPosition=[0,0,0],
+                                 configuration=exu.ConfigurationType.Reference).reshape((3,3))
+
+    if useGlobalFrame:
+        pJoint = point
+        vAxis = copy.copy(axis)
+    else: #transform into global coordinates, then everything works same
+        pJoint = A0 @ point + p0
+        vAxis = A0 @ axis
+
+    #compute joint frame (not unique, only rotation axis must coincide)
+    AJ = ComputeOrthonormalBasis(vAxis) #axis = x-axis
+    
+    #compute joint position and axis in body0 / 1 coordinates:
+    pJ0 = A0.T @ (np.array(pJoint) - p0)
+    pJ1 = A1.T @ (np.array(pJoint) - p1)
+
+    #compute joint marker orientations:
+    MR0 = A0.T @ AJ  
+    MR1 = A1.T @ AJ  
+    
+    mBody0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
+    mBody1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
+    
+    oJoint = mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mBody0,mBody1],
+                                                rotationMarker0=MR0,
+                                                rotationMarker1=MR1,
+             visualization=VPrismaticJointX(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
+
+    return [oJoint, mBody0, mBody1]
+
+
+
+

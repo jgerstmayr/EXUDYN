@@ -181,9 +181,12 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 			else
 			{
 				//use difference of velocities in local coordinates
-				//the term A0all_t is not considered here as we assume that the positions are identical ...; may this cause problems in Newton or drift?
-				vVel = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
-				//+ A0all_t.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
+				Matrix3D A0_t = markerData.GetMarkerData(0).orientation * RigidBodyMath::Vector2SkewMatrix(markerData.GetMarkerData(0).angularVelocityLocal);
+				Matrix3D A0all_t = (A0_t*A0off);
+				vVel = A0all.GetTransposed()*(markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity)
+				       + A0all_t.GetTransposed()*(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); 
+				//the term A0all_t is needed for prismatic joints, because then the positions are not any more identical ...; 
+				//==> causes divergence of index2 solver after short time!
 			}
 			//++++++++++++++++++++++++++++++++
 			//translation constraints:
@@ -214,20 +217,20 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 				if (constrainedRotations == 3) //rigid joint (at least regarding rotations)
 				{
 					Vector3D vx0 = A0all.GetColumnVector<3>(0);
-					Vector3D vy0 = A0all.GetColumnVector<3>(1);
+					//Vector3D vy0 = A0all.GetColumnVector<3>(1);
 					Vector3D vz0 = A0all.GetColumnVector<3>(2);
 
 					Vector3D vx1 = A1all.GetColumnVector<3>(0);
 					Vector3D vy1 = A1all.GetColumnVector<3>(1);
-					Vector3D vz1 = A1all.GetColumnVector<3>(2);
+					//Vector3D vz1 = A1all.GetColumnVector<3>(2);
 
 					Vector3D vx0_t = A0all_t.GetColumnVector<3>(0);
-					Vector3D vy0_t = A0all_t.GetColumnVector<3>(1);
+					//Vector3D vy0_t = A0all_t.GetColumnVector<3>(1);
 					Vector3D vz0_t = A0all_t.GetColumnVector<3>(2);
 
 					Vector3D vx1_t = A1all_t.GetColumnVector<3>(0);
 					Vector3D vy1_t = A1all_t.GetColumnVector<3>(1);
-					Vector3D vz1_t = A1all_t.GetColumnVector<3>(2);
+					//Vector3D vz1_t = A1all_t.GetColumnVector<3>(2);
 
 					algebraicEquations[3] = vz0_t * vy1 + vz0 * vy1_t;
 					algebraicEquations[4] = vz0_t * vx1 + vz0 * vx1_t;
@@ -364,7 +367,7 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resi
 			//	jacobian_ODE2(0, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(0, i);
 			//	jacobian_ODE2(1, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(1, i);
 			//	jacobian_ODE2(2, i + nColumnsJac0) = markerData.GetMarkerData(1).positionJacobian(2, i);
-			//}
+			//} 
 		}
 		else
 		{

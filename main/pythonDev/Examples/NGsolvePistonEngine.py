@@ -809,7 +809,18 @@ if __name__ == '__main__': #only main thread for multiprocessing Pool
         
             mbs.WaitForUserToContinue() #press space to continue
             
-            exu.SolveDynamic(mbs, simulationSettings)
+            simulate = True #set false to show last stored solution
+            if simulate:
+                exu.SolveDynamic(mbs, simulationSettings)
+            else:
+                SC.visualizationSettings.general.autoFitScene = False
+                sol = LoadSolutionFile('coordinatesSolution.txt')
+                if False: #directly show animation
+                    AnimateSolution(mbs, solution=sol, rowIncrement = 5, timeout=0.01, 
+                                    createImages = False, runLoop = True)
+                else: #interact with animation
+                    from exudyn.interactive import SolutionViewer
+                    SolutionViewer(mbs, sol, rowIncrement=5, timeout=0.02)
             
             SC.WaitForRenderEngineStopFlag()
             exu.StopRenderer() #safely close rendering window!

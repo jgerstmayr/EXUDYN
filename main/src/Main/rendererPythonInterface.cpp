@@ -235,8 +235,13 @@ void PyProcessRendererKeyQueue()
 		//EXUstd::WaitAndLockSemaphore(graphicsUpdateAtomicFlag); //lock queuedRendererKeyListAtomicFlag
 		ResizableArray<SlimArray<int, 3>> keyList = queuedRendererKeyList; //immediately copy list for small interaction with graphics part
 		//std::cout << "keylist=" << keyList << "\n";
-		if (GetGlfwRenderer().WindowIsInitialized()) //otherwise makes no sense ...! ==> ignore
+		bool glfwInitialized = false;
+#ifdef USE_GLFW_GRAPHICS
+		glfwInitialized = GetGlfwRenderer().WindowIsInitialized();
+#endif //USE_GLFW_GRAPHICS
+		if (glfwInitialized) //otherwise makes no sense ...! ==> ignore
 		{
+#ifdef USE_GLFW_GRAPHICS
 			//keyPressUserFunction = keyPressUserFunctionInit;
 			std::function<int(int, int, int)> localKeyPressUserFunction = GetGlfwRenderer().GetKeyPressUserFunction();
 			queuedRendererKeyList.SetNumberOfItems(0); //clear list
@@ -252,8 +257,8 @@ void PyProcessRendererKeyQueue()
 					//std::cout << "call key=" << key << "\n";
 					try //catch exceptions; user may want to continue after a illegal python command 
 					{
-						bool rv = localKeyPressUserFunction(key[0], key[1], key[2]);
-						//rv not used right now, because it is received at a time where it is too late for graphics
+						//bool rv = //rv not used right now, because it is received at a time where it is too late for graphics
+						localKeyPressUserFunction(key[0], key[1], key[2]);
 					}
 					//mostly catches python errors:
 					catch (const pybind11::error_already_set& ex)
@@ -280,6 +285,7 @@ void PyProcessRendererKeyQueue()
 				}
 			}
 			deactivateGlobalPyRuntimeErrorFlag = false;
+#endif //USE_GLFW_GRAPHICS
 		}
 		else
 		{

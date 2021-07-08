@@ -165,5 +165,5 @@ plt.show()
 ##animate solution
 #fileName = 'coordinatesSolution.txt'
 #solution = LoadSolutionFile('coordinatesSolution.txt')
-#AnimateSolution(df, SC, mbs, solution, 10, 0.05)
+#AnimateSolution(mbs, solution, 10, 0.05)
 

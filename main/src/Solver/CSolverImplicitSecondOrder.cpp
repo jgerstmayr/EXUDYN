@@ -109,9 +109,11 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 		//add unit matrix for ODE1 components (nothing to be solved for)
 		ConstSizeVector<1> unit(1, 1.);
+		LinkedDataVector linkedUnit(unit);
+
 		for (Index i = 0; i < data.nODE1; i++)
 		{
-			data.systemJacobian->AddColumnVector(data.nODE2 + i, unit, data.nODE2 + i); //add single components
+			data.systemJacobian->AddColumnVector(data.nODE2 + i, linkedUnit, data.nODE2 + i); //add single components
 		}
 
 		//compute RHS

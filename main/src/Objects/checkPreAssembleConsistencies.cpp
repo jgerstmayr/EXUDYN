@@ -102,10 +102,10 @@ bool MainMarkerNodeCoordinate::CheckPreAssembleConsistency(const MainSystem& mai
 
 bool MainMarkerNodeCoordinates::CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const
 {
-	CMarkerNodeCoordinates* cMarker = (CMarkerNodeCoordinates*)GetCMarker();
+	//CMarkerNodeCoordinates* cMarker = (CMarkerNodeCoordinates*)GetCMarker();
 
-	Index nodeNumber = cMarker->GetNodeNumber();
-	Index nodeCoordinates0 = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
+	//Index nodeNumber = cMarker->GetNodeNumber();
+	//Index nodeCoordinates0 = mainSystem.GetCSystem()->GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
 	//nothing to check here, function could be erased
 

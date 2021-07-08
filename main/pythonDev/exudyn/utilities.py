@@ -24,7 +24,6 @@ from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.itemInterface import *
 
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
 #**input: index in range(0:28)
@@ -368,8 +367,8 @@ def LoadSolutionFile(fileName):
     return dict({'data': data, 'columnsExported': columnsExported,'nColumns': nColumns,'nRows': nRows})
     
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state
-def SetSolutionState(exu, mbs, solution, row, configuration):
+#**function: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
+def SetSolutionState(mbs, solution, row, configuration=exudyn.ConfigurationType.Current, sendRedrawSignal=True):
     if row < solution['nRows']:
         rowData = solution['data'][row]
         #cols = solution['columnsExported']
@@ -378,31 +377,22 @@ def SetSolutionState(exu, mbs, solution, row, configuration):
         #note that these visualization updates are not threading safe!
         mbs.systemData.SetODE2Coordinates(rowData[1:1+nODE2], configuration)
         if (nVel2): mbs.systemData.SetODE2Coordinates_t(rowData[1+nODE2:1+nODE2+nVel2], configuration)
+        if (nAcc2): mbs.systemData.SetODE2Coordinates_tt(rowData[1+nODE2+nVel2:1+nODE2+nVel2+nAcc2], configuration)
+        if (nODE1): mbs.systemData.SetODE1Coordinates(rowData[1+nODE2+nVel2+nAcc2:1+nODE2+nVel2+nAcc2+nODE1], configuration)
+        if (nVel1): mbs.systemData.SetODE1Coordinates_t(rowData[1+nODE2+nVel2+nAcc2+nODE1:1+nODE2+nVel2+nAcc2+nODE1+nVel1], configuration)
+        
         if (nAlgebraic): mbs.systemData.SetAECoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic], configuration)
         if (nData): mbs.systemData.SetDataCoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic+nData], configuration)
 
-        if configuration == exu.ConfigurationType.Visualization:
-            mbs.systemData.SetTime(rowData[0], exu.ConfigurationType.Visualization)
+        if configuration == exudyn.ConfigurationType.Visualization:
+            mbs.systemData.SetTime(rowData[0], exudyn.ConfigurationType.Visualization)
             mbs.SendRedrawSignal()
     else:
         print("ERROR in SetVisualizationState: invalid row (out of range)")
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: load selected row of solution dictionary into visualization state and redraw
-#**input: 
-#  exu: the exudyn library
-#  mbs: the system, where the state is applied to
-#  solution: solution dictionary previously loaded with LoadSolutionFile
-#  row: the according row of the solution file which is visualized
-#**output: renders the scene in mbs and changes the visualization state in mbs
-def SetVisualizationState(exu, mbs, solution, row):
-    SetSolutionState(exu, mbs, solution, row, exu.ConfigurationType.Visualization)
-
-#++++++++++++++++++++++++++++++++++++++++++++
 #**function: consecutively load the rows of a solution file and visualize the result
 #**input: 
-#  exu: the exudyn library
-#  SC: the system container, where the mbs lives in
 #  mbs: the system used for animation
 #  solution: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
 #  rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
@@ -410,9 +400,13 @@ def SetVisualizationState(exu, mbs, solution, row):
 #  createImages: creates consecutively images from the animation, which can be converted into an animation
 #  runLoop: if True, the animation is played in a loop until 'q' is pressed in render window
 #**output: renders the scene in mbs and changes the visualization state in mbs continuously
-def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, createImages = False, runLoop = False):
+def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages = False, runLoop = False):
+    SC = mbs.GetSystemContainer()
     nRows = solution['nRows']
-    if (rowIncrement < 1) | (rowIncrement > nRows):
+    if nRows == 0:
+        print('ERROR in AnimateSolution: solution file is empty')
+        return
+    if (rowIncrement < 1) or (rowIncrement > nRows):
         print('ERROR in AnimateSolution: rowIncrement must be at least 1 and must not be larger than the number of rows in the solution file')
     oldUpdateInterval = SC.visualizationSettings.general.graphicsUpdateInterval
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.5*min(timeout, 2e-3) #avoid too small values to run multithreading properly
@@ -421,7 +415,8 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
     while runLoop and not mbs.GetRenderEngineStopFlag():
         for i in range(0,nRows,rowIncrement):
             if not(mbs.GetRenderEngineStopFlag()):
-                SetVisualizationState(exu, mbs, solution, i)
+                #SetVisualizationState(exudyn, mbs, solution, i) #OLD
+                SetSolutionState(mbs, solution, i, exudyn.ConfigurationType.Visualization)
                 if createImages:
                     SC.RedrawAndSaveImage() #create images for animation
                 #time.sleep(timeout)
@@ -443,7 +438,6 @@ def AnimateSolution(exu, SC, mbs, solution, rowIncrement = 1, timeout=0.04, crea
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, 
                     useItemNames = False, useItemTypes = False):
     
-    import exudyn
     try:
         #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
         import numpy as np

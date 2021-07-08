@@ -745,7 +745,7 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 					ltgListODE1.Append(gIndex + i);
 				}
 			}
-			if (node->GetNumberOfAECoordinates()) //this is for algebraic nodes (e.g. Euler Parameters)
+			if (node->GetNumberOfAECoordinates()) //this is for algebraic nodes (e.g. Euler Parameters); but constraint equation handled by node!
 			{
 				Index gIndex = node->GetGlobalAECoordinateIndex();
 				for (Index i = 0; i < node->GetNumberOfAECoordinates(); i++)
@@ -985,14 +985,17 @@ void CSystem::PreComputeItemLists()
 		//ComputeAlgebraicEquations:
 		if (cSystemData.GetLocalToGlobalAE()[i].NumberOfItems() != 0)
 		{
+			bool AEavailable = false;
 			if (EXUstd::IsOfType(object->GetType(), CObjectType::Body) &&
 				object->GetAlgebraicEquationsSize() != 0)
 			{
+				AEavailable = true;
 				cSystemData.objectsBodyWithAE.Append(i);
 				cSystemData.objectsWithAlgebraicEquations.Append(i);
 			}
 			else if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
 			{
+				AEavailable = true;
 				cSystemData.objectsConstraintWithAE.Append(i);
 				cSystemData.objectsWithAlgebraicEquations.Append(i);
 			}
@@ -1006,7 +1009,8 @@ void CSystem::PreComputeItemLists()
 				CHECKandTHROW(object->GetAlgebraicEquationsSize() == 0, "CSystem::PreComputeItemLists: not implemented for pure objects with AE");
 			}
 
-			if (cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
+			//add projected equations only if algebraic equation is available (i.e., do not add for rigid bodies, because this term is handled by nodes)
+			if (AEavailable && cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
 			{
 				cSystemData.listObjectProjectedReactionForcesODE2.Append(i); //for constraints, reaction forces on ODE2 coordinates
 			}
@@ -1367,6 +1371,15 @@ bool CSystem::HasConstantMassMatrix()
 //TimerStructureRegistrator TSRcomputeODE2LHSmarkerData("computeODE2LHSmarkerData", TScomputeODE2LHSmarkerData, globalTimers);
 Index TScomputeLoads;
 TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, globalTimers);
+Index TScomputeObjectODE2;
+TimerStructureRegistrator TSRcomputeObjectODE2("computeObjectODE2", TScomputeObjectODE2, globalTimers);
+Index TScomputeLoadsMarkerData;
+TimerStructureRegistrator TSRcomputeLoadsMarkerData("computeLoadsMarkerData", TScomputeLoadsMarkerData, globalTimers);
+Index TScomputeConnectorsMarkerData;
+TimerStructureRegistrator TSRcomputeConnectorsMarkerData("connectorsMarkerData", TScomputeConnectorsMarkerData, globalTimers);
+//Index TScomputeMarkerDataODE2;
+//TimerStructureRegistrator TSRcomputeMarkerDataODE2("computeMarkerDataODE2", TScomputeMarkerDataODE2, globalTimers);
+
 
 //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Lhs, false otherwise
@@ -1383,7 +1396,7 @@ inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObjec
 			CObjectConnector* connector = (CObjectConnector*)object;
 
 			//compute MarkerData for connector:
-			const bool computeJacobian = true;
+			const bool computeJacobian = true; //jacobian needed for connectors, to add correct projection of forces!
 			ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
 			connector->ComputeODE2LHS(localODE2Lhs, temp.markerDataStructure, objectNumber);
@@ -1473,6 +1486,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 //! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
 void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs)
 {
+	STARTGLOBALTIMER(TScomputeObjectODE2);
 	systemODE2Rhs.SetAll(0.);
 
 	for (Index j : cSystemData.listComputeObjectODE2Lhs)
@@ -1488,8 +1502,11 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& syste
 			}
 		}
 	}
+	STOPGLOBALTIMER(TScomputeObjectODE2);
 
+	//STARTGLOBALTIMER(TScomputeLoads);
 	ComputeODE2Loads(temp, systemODE2Rhs);
+	//STOPGLOBALTIMER(TScomputeLoads);
 }
 #endif
 
@@ -1529,6 +1546,7 @@ void CSystem::ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& syste
 	//std::cout << "ComputeSystemODE1RHS end\n";
 }
 
+
 //! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'ode2rhs' for ODE2 part
 void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE2Rhs)
 {
@@ -1536,7 +1554,6 @@ void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE
 	//compute loads ==> not needed in jacobian, except for follower loads, 
 	//  using e.g. local body coordinate system
 
-	STARTGLOBALTIMER(TScomputeLoads);
 
 	Index nLoads = cSystemData.GetCLoads().NumberOfItems();
 	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
@@ -1622,7 +1639,9 @@ void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE
 			{
 				const bool computeJacobian = true;
 				CHECKandTHROW(loadVector3Ddefined, "ComputeLoads(...): illegal force vector format (expected 3D load)");
+				//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+				//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
 				if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).positionJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dPos/dq)^T * Force
 
@@ -1633,7 +1652,9 @@ void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE
 			{
 				const bool computeJacobian = true;
 				CHECKandTHROW(loadVector3Ddefined, "ComputeLoads(...): illegal force vector format (expected 3D torque)");
+				//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+				//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
 				if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).rotationJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
 				//pout << "rotationJacobian=" << temp.markerDataStructure.GetMarkerData(0).rotationJacobian << "\n";
@@ -1643,7 +1664,9 @@ void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE
 			{
 				const bool computeJacobian = true;
 				CHECKandTHROW(loadVector1Ddefined, "ComputeLoads(...): illegal force vector format (expected 1D load)");
+				//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
+				//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
 				//pout << "jacobian=" << temp.markerDataStructure.GetMarkerData(0).jacobian << "\n";
 				//pout << "generalizedLoad=" << temp.generalizedLoad << "\n";
@@ -1673,7 +1696,6 @@ void CSystem::ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE
 		}
 
 	}
-	STOPGLOBALTIMER(TScomputeLoads);
 }
 
 //! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1rhs' for ODE1 part
@@ -1682,10 +1704,10 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 	STARTGLOBALTIMER(TScomputeLoads);
 
 	Index nLoads = cSystemData.GetCLoads().NumberOfItems();
-	Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
+	//Vector3D loadVector3D(0); //initialization in order to avoid gcc warnings
 	Vector1D loadVector1D(0); //scalar loads...//initialization in order to avoid gcc warnings
 	bool loadVector1Ddefined = false; //add checks such that wrong formats would fail
-	bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
+	//bool loadVector3Ddefined = false; //add checks such that wrong formats would fail
 
 	Real currentTime = cSystemData.GetCData().currentState.time;
 	for (Index j = 0; j < nLoads; j++)
@@ -1714,8 +1736,9 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 		{
 			if (cLoad->IsVector())
 			{
-				loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
-				loadVector3Ddefined = true;
+				//loadVector3D = cLoad->GetLoadVector(cSystemData.GetMainSystemBacklink(), currentTime);
+				//loadVector3Ddefined = true;
+				CHECKandTHROW(true, "ComputeODE1Loads(...): illegal 3D force vector ");
 			}
 			else
 			{
@@ -1737,7 +1760,7 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 			if (loadType == LoadType::Coordinate)
 			{
 				const bool computeJacobian = true;
-				CHECKandTHROW(loadVector1Ddefined, "ComputeLoads(...): illegal force vector format (expected 1D load)");
+				CHECKandTHROW(loadVector1Ddefined, "ComputeODE1Loads(...): illegal force vector format (expected 1D load)");
 				marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
 				EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
 			}
@@ -1801,7 +1824,9 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 		ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[j];
 
 		const bool computeJacobian = false;
+		//STARTGLOBALTIMER(TScomputeConnectorsMarkerData);
 		ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
+		//STOPGLOBALTIMER(TScomputeConnectorsMarkerData);
 
 		constraint->ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, j, velocityLevel);
 		CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
@@ -2403,6 +2428,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 	//for body, evaluate algebraic equations directly --> depend only on body coordinates
 	if ((Index)object.GetType() & (Index)CObjectType::Body)
 	{
+		//this is currently only used, if Euler Parameter constraints are attached to bodies (deprecated mode)
 		if (object.GetAlgebraicEquationsSize()) //either body or constraint
 		{
 			object.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
@@ -2412,13 +2438,15 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 			if (temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0) { flagAE_AEfilled = true; }
 		}
 	}
-	//for constraint, algebraic equations depend on Markers
+	//for constraint, algebraic equations depend on Markers 
 	else if ((Index)object.GetType() & (Index)CObjectType::Constraint)
 	{
 		CObjectConstraint& constraint = (CObjectConstraint&)object;
 
 		const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
+		//STARTGLOBALTIMER(TScomputeConnectorsMarkerData);
 		ComputeMarkerDataStructure(&constraint, computeJacobian, temp.markerDataStructure);
+		//STOPGLOBALTIMER(TScomputeConnectorsMarkerData);
 
 
 		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2)
@@ -2599,6 +2627,11 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 
 }
 
+Index TSreactionForces1;
+TimerStructureRegistrator TSRreactionForces1("TSreactionForces1", TSreactionForces1, globalTimers);
+Index TSreactionForces2;
+TimerStructureRegistrator TSRreactionForces2("TSreactionForces2", TSreactionForces2, globalTimers);
+
 //! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 //! ode2ReactionForces += C_{q2}^T * \lambda
 void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp, const Vector& reactionForces, Vector& ode2ReactionForces)
@@ -2617,7 +2650,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 		//work over bodies, connectors, etc.
 		ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[j];
 		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
-		ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+		//ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
 
 		bool objectUsesVelocityLevel;// = false;
 		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
@@ -2625,8 +2658,11 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
 		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
+		//STARTGLOBALTIMER(TSreactionForces1);
 		ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
-			
+		//STOPGLOBALTIMER(TSreactionForces1);
+
+		//STARTGLOBALTIMER(TSreactionForces2);
 		if (flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
 		{
 			if ((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
@@ -2661,10 +2697,12 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp,
 			//}
 
 		}
+		//STOPGLOBALTIMER(TSreactionForces2);
+
 		//else  //for pure algebraic constraints(e.g. if joints are deactivated), no projected reaction forces ...! 
 	}
 
-	//they all cause reaction forces
+	//nodes with AE: usually only Euler Parameters
 	for (Index j : cSystemData.nodesODE2WithAE)
 	{
 		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted

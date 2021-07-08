@@ -48,6 +48,11 @@
 //#include "Utilities/BasicDefinitions.h" //defines Real
 #include "Utilities/BasicFunctions.h"   //for Minimum
 
+//#ifdef USE_NEW_CONSTSIZEVECTOR
+//#include "Linalg/ConstSizeVector.h"
+//#endif
+
+
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index vector_new_counts; //global counter of item allocations; is increased every time a new is called
 extern Index linkedDataVectorCast_counts; //global counter for unwanted type conversion from LinkedDataVector to Vector
@@ -68,7 +73,7 @@ template<typename T>
 class VectorBase
 {
 protected:
-    mutable T* data;				//!< pointer to data containing Reals; in derived class pointer to linked data
+    mutable T* data;		//!< pointer to data containing Reals; in derived class pointer to linked data
     Index numberOfItems;	//!< currently used number of Reals; represents size of VectorBase (equivalent to numberOfPReals in VectorX)
 
     //! constructor which links data, no memory allocation; ONLY for ConstDataVector and LinkedDataVector
@@ -179,10 +184,16 @@ public:
     //the iterator functions are declared virtual in order to override in ConstSizeVector (CHECK PERFORMANCE)
     //virtual T* begin() { return &data[0]; }						//!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
     //virtual const T* begin() const { return &data[0]; }			//!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
-    virtual T* begin() const { return data; }							    //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
-    //virtual const T* begin() const { return data; }				    //!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
-    virtual T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
-    //virtual const T* end() const { return &data[numberOfItems]; }	//!< C++11 std::end() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
+	//virtual const T* begin() const { return data; }				    //!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
+	//virtual const T* end() const { return &data[numberOfItems]; }	//!< C++11 std::end() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
+	
+	//OLD: until 2021-07-04:
+	//virtual T* begin() const { return data; }							    //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	//virtual T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
+	
+	//T* begin() const { return &data[0]; }					    //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	T* begin() const { return data; }					    //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
 
     Index NumberOfItems() const { return numberOfItems; }	            //!< Number of currently used Reals; WILL BE DIFFERENT in ResizableVector and in VectorX
 	T* GetDataPointer() const { return data; }                       //!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
@@ -240,17 +251,30 @@ public:
 
     //VectorBase& operator= (T scalarValue) //would be nice for compatibility with SlimVector, but is dangerous to use for VectorBase (which size?)
 
+	//unsafe Referencing access-operator, ZERO-based, without CHECKS
+	T& GetUnsafe(Index item)
+	{
+		return data[item];
+	};
+
+	//unsafe const Referencing access-operator, ZERO-based, without CHECKS
+	const T& GetUnsafe(Index item) const
+	{
+		return data[item];
+	};
+
+
     //Referencing access-operator, ZERO-based
     T& operator[](Index item)
     {
-		CHECKandTHROW(/*(item >= 0) && */(item < numberOfItems), "VectorBase::operator[]: request of invalid item");
+		CHECKandTHROW((item >= 0) && (item < numberOfItems), "VectorBase::operator[] const: request of invalid item");
 		return data[item];
     };
 
-    //Referencing access-operator, ZERO-based
+    //const Referencing access-operator, ZERO-based
     const T& operator[](Index item) const
     {
-		CHECKandTHROW(/*(item >= 0) && */item < numberOfItems, "VectorBase::operator[] const: request of invalid item");
+		CHECKandTHROW((item >= 0) && (item < numberOfItems), "VectorBase::operator[] const: request of invalid item");
 		return data[item];
     };
 
@@ -305,6 +329,7 @@ public:
 		return true;
 	}
 
+#ifndef USE_NEW_CONSTSIZEVECTOR
 	//! add vector v to *this vector (for each component); both vectors must have same size
     VectorBase& operator+=(const VectorBase& v)
     {
@@ -327,7 +352,30 @@ public:
 		}
 		return *this;
 	}
-
+#else
+	//! add Tvector v to *this vector (for each component); both vectors must have same size
+	template <class Tvector>
+	VectorBase& operator+=(const Tvector& v)
+	{
+		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(Tvector): incompatible size of vectors");
+		Index cnt = 0;
+		for (auto item : v) {
+			(*this)[cnt++] += item;
+		}
+		return *this;
+	}
+	////! add ConstSizeVectorBase v to *this vector (for each component); both vectors must have same size
+	//template <Index dataSize>
+	//VectorBase& operator+=(const ConstSizeVectorBase<T, dataSize>& v)
+	//{
+	//	CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(ConstSizeVectorBase): incompatible size of vectors");
+	//	Index cnt = 0;
+	//	for (auto item : v) {
+	//		(*this)[cnt++] += item;
+	//	}
+	//	return *this;
+	//}
+#endif
     //! substract vector v from *this vector (for each component); both vectors must have same size
     VectorBase& operator-=(const VectorBase& v)
     {
@@ -452,6 +500,7 @@ public:
     // EXTENDED FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#ifndef USE_NEW_CONSTSIZEVECTOR
 	//! add vector scalar * v to *this vector
 	void MultAdd(T scalar, const VectorBase& v)
 	{
@@ -461,6 +510,20 @@ public:
 			data[i] += scalar * v[i];
 		}
 	}
+#else
+		//! add vector scalar * v to *this vector
+	template<class Tvector>
+	void MultAdd(T scalar, const Tvector& v)
+	{
+		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultAdd: incompatible size of vectors");
+		for (Index i = 0; i < NumberOfItems(); i++)
+		{
+			data[i] += scalar * v[i];
+		}
+	}
+#endif
+
+
 	//DELETE: duplicate
 	////! add factor*vector to *this; no memory allocated; might be more efficient than doing this separatly
 	//void MultiplyAdd(const T& factor, const VectorBase& vector)
@@ -497,19 +560,37 @@ public:
         for (auto &item : *this) { item /= norm; }
     }
 
-    //! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
-    void CopyFrom(const VectorBase& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-    {
-        //CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
-        //CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
+#ifndef USE_NEW_CONSTSIZEVECTOR
+	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	void CopyFrom(const VectorBase& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	{
+		//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
+		//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
 		CHECKandTHROW((thisPosition + numberOfCopiedItems <= NumberOfItems()), "VectorBase::CopyFrom(...): thisPosition index mismatch");
 		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "VectorBase::CopyFrom(...): vectorPosition index mismatch");
 
-        for (Index i = 0; i < numberOfCopiedItems; i++)
-        {
-            (*this)[i + thisPosition] = vector[i + vectorPosition];
-        }
-    }
+		for (Index i = 0; i < numberOfCopiedItems; i++)
+		{
+			(*this)[i + thisPosition] = vector[i + vectorPosition];
+		}
+	}
+#else
+	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	template<class Tvector>
+	void CopyFrom(const Tvector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	{
+		//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
+		//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
+		CHECKandTHROW((thisPosition + numberOfCopiedItems <= NumberOfItems()), "VectorBase::CopyFrom(...): thisPosition index mismatch");
+		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "VectorBase::CopyFrom(...): vectorPosition index mismatch");
+
+		for (Index i = 0; i < numberOfCopiedItems; i++)
+		{
+			this->GetUnsafe(i + thisPosition) = vector.GetUnsafe(i + vectorPosition);
+			//this->GetUnsafe(i + thisPosition) = vector[i + vectorPosition];
+		}
+	}
+#endif
 
 	//! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
 	template<class TVector>
@@ -519,7 +600,7 @@ public:
 
 		Index cnt = 0;
 		for (auto val : vector) {
-			(*this)[cnt++] = (T)val;
+			this->GetUnsafe(cnt++) = (T)val;
 		}
 	}
 	

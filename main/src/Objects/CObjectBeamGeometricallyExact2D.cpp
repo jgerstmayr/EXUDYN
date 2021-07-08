@@ -111,7 +111,7 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index obje
 	ode2Lhs.SetAll(0.);
 
 	//could be speed up by only computing relevant components!
-	const int ns = 2; //number of shape functions
+	//const int ns = 2; //number of shape functions
 	CSVector3D qNode0( ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector(),0 ); //displacement coordinates node 0
 	CSVector3D qNode1( ((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector(),0 ); //displacement coordinates node 1
 
@@ -164,7 +164,7 @@ AccessFunctionType CObjectBeamGeometricallyExact2D::GetAccessFunctionTypes() con
 //! provide Jacobian at localPosition in 'value' according to object access
 void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
-	Real L = parameters.physicsLength;
+	//Real L = parameters.physicsLength;
 
 	switch (accessType)
 	{
@@ -236,7 +236,7 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 	}
 	case AccessFunctionType::AngularVelocity_qt:
 	{
-		const Index ns = 2;   //number of shape functions
+		//const Index ns = 2;   //number of shape functions
 
 		Real x = localPosition[0]; //only x-coordinate
 
@@ -373,7 +373,7 @@ Matrix3D CObjectBeamGeometricallyExact2D::GetRotationMatrix(const Vector3D& loca
 		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
 	}
 
-	return Matrix2D(2, 2, { cos(u[2]), -sin(u[2]), 0, 
+	return Matrix3D(3, 3, { cos(u[2]), -sin(u[2]), 0, 
 		                    sin(u[2]),  cos(u[2]), 0,
 		                    0,          0,         1}); //rotation about z-axis, stored in 3D matrix
 }

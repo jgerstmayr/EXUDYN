@@ -9,16 +9,106 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.248, 
-  \item last change =  2021-06-28
+  \item EXUDYN version = 1.0.261, 
+  \item last change =  2021-07-08
 
-  \item Number of issues = 694, 
-  \item Number of resolved issues = 616 (248 in current version), 
+  \item Number of issues = 711, 
+  \item Number of resolved issues = 629 (261 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.261}: \vspace{-6pt} 
+  resolved Issue 0699: {\bf CMarkerBodyRigid::ComputeMarkerData}
+(optimize)
+  \bi
+  \item {description: implement optimized version for Rigid node and ObjectRigidBody and avoid repeated computation of rotation matrix, etc.}
+  \item   date resolved: {\bf 2021-07-08 00:46},
+date raised: 2021-07-01   \ei
+  \item {\bf Version 1.0.260}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0709}: {\bf Linux/MacOS compile error}
+  \bi
+  \item {description: compiler error caused by EXU::Square}
+  \item   date resolved: {\bf 2021-07-07 19:11},
+date raised: 2021-07-07   \ei
+  \item {\bf Version 1.0.259}: \vspace{-6pt} 
+  resolved Issue 0708: {\bf preprocessor flags}
+(change)
+  \bi
+  \item {description: move EXUDYN\_RELEASE to preprocessor flags in setup.py}
+  \item   date resolved: {\bf 2021-07-07 08:53},
+date raised: 2021-07-07   \ei
+  \item {\bf Version 1.0.258}: \vspace{-6pt} 
+  resolved Issue 0705: {\bf Optimization3}
+(optimize)
+  \bi
+  \item {description: optimize ObjectRigidBody EOM, take Glocal columns instead numberOfRotationCoordinates, move rot\_t into loop, etc.}
+  \item   date resolved: {\bf 2021-07-06 23:04},
+date raised: 2021-07-04   \ei
+  \item {\bf Version 1.0.257}: \vspace{-6pt} 
+  resolved Issue 0703: {\bf ComputeOrthonormalBasis}
+(change)
+  \bi
+  \item {description: changed rigidBodyUtilities function, which returns a list of basis vectors, into ComputeOrthonormalBasisVectors, while ComputeOrthonormalBasis now returns a rotation matrix}
+  \item   date resolved: {\bf 2021-07-02 08:49},
+date raised: 2021-07-02   \ei
+  \item {\bf Version 1.0.256}: \vspace{-6pt} 
+  resolved Issue 0702: {\bf AddPrismaticJoint}
+(extension)
+  \bi
+  \item {description: add convenient utility function to add prismatic joint based on 2 bodies, point and axis, doing all necessary work in background}
+  \item   date resolved: {\bf 2021-07-02 08:49},
+date raised: 2021-07-02   \ei
+  \item {\bf Version 1.0.255}: \vspace{-6pt} 
+  resolved Issue 0701: {\bf AddRevoluteJoint}
+(extension)
+  \bi
+  \item {description: add convenient utility function to add revolute joint based on 2 bodies, point and axis, doing all necessary work in background}
+  \item   date resolved: {\bf 2021-07-02 08:49},
+date raised: 2021-07-02   \ei
+  \item {\bf Version 1.0.254}: \vspace{-6pt} 
+  resolved Issue 0700: {\bf add links for utility functions}
+(docu)
+  \bi
+  \item {description: ADDED LINKS to Examples/ and TestModels/ example files at end of each python utility function and class, see \refSection{sec:pythonUtilityFunctions}}
+  \item   date resolved: {\bf 2021-07-01 21:46},
+date raised: 2021-07-01   \ei
+  \item {\bf Version 1.0.253}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0697}: {\bf GenericJoint}
+  \bi
+  \item {description: index2 equations not properly implemented for prismatic joints}
+  \item {\bf notes: added second term for index2 case if joint position not constrained; TrapezoidalIndex2 solver now works if translational joint axes not constrained}
+  \item   date resolved: {\bf 2021-07-01 15:50},
+date raised: 2021-07-01   \ei
+  \item {\bf Version 1.0.252}: \vspace{-6pt} 
+  resolved Issue 0696: {\bf add PrismaticJoint}
+(extension)
+  \bi
+  \item {description: add 3D prismatic joint with rotationMarker0/1 to adjust local coordinate systems and joint local x axis as the free axis of the joint}
+  \item   date resolved: {\bf 2021-07-01 13:43},
+date raised: 2021-07-01   \ei
+  \item {\bf Version 1.0.251}: \vspace{-6pt} 
+  resolved Issue 0369: {\bf add RevoluteJoint}
+(extension)
+  \bi
+  \item {description: add 3D revolute joint with rotationMarker0/1 to adjust joint coordinates and joint local z axis as rotation axis}
+  \item   date resolved: {\bf 2021-07-01 13:43},
+date raised: 2020-04-10   \ei
+  \item {\bf Version 1.0.250}: \vspace{-6pt} 
+  resolved Issue 0695: {\bf Solution functions}
+(change)
+  \bi
+  \item {description: remove exu and SC arguments from exudyn.utilities functions SetSolutionState(...), AnimateSolution(...); remove functoin SetVisualizationState(...): use SetSolutionState instead!}
+  \item   date resolved: {\bf 2021-06-29 17:47},
+date raised: 2021-06-29   \ei
+  \item {\bf Version 1.0.249}: \vspace{-6pt} 
+  resolved Issue 0694: {\bf SolutionViewer}
+(extension)
+  \bi
+  \item {description: add interactive dialog to view solution based on coordinateSolution.txt}
+  \item   date resolved: {\bf 2021-06-29 17:31},
+date raised: 2021-06-29   \ei
   \item {\bf Version 1.0.248}: \vspace{-6pt} 
   resolved Issue 0693: {\bf RigidBody user function}
 (extension)

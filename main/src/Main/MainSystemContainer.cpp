@@ -84,7 +84,7 @@ void MainSystemContainer::PySetRenderState(py::dict renderState)
 	{
 		RenderState& state = visualizationSystems.renderState;
 			
-		Vector3D centerPoint;
+		//Vector3D centerPoint;
 		EPyUtils::SetVectorTemplateSafely<float,3>(renderState["centerPoint"], state.centerPoint);
 
 		state.maxSceneSize = py::cast<float>(renderState["maxSceneSize"]);

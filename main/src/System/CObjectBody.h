@@ -28,6 +28,8 @@
 #include "Main/OutputVariable.h" 
 #include "System/CObject.h" 
 
+#include "Main/MarkerData.h"
+
 class CNode;
 
 class CObjectBody: public CObject 
@@ -111,6 +113,25 @@ public:
 	virtual Vector3D GetLocalCenterOfMass() const {
 		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetLocalCenterOfMass");
 		return Vector3D({ 0., 0., 0. });
+	}
+
+	//! speedup function for rigid body marker access
+	virtual void ComputeRigidBodyMarkerData(const Vector3D& localPosition, bool computeJacobian, MarkerData& markerData) const {
+		//CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeRigidBodyMarkerData");
+		
+		markerData.position = GetPosition(localPosition, ConfigurationType::Current);
+		markerData.velocity = GetVelocity(localPosition, ConfigurationType::Current);
+
+		markerData.orientation = GetRotationMatrix(localPosition, ConfigurationType::Current);
+		markerData.angularVelocityLocal = GetAngularVelocityLocal(localPosition, ConfigurationType::Current);
+		markerData.velocityAvailable = true;
+
+		if (computeJacobian)
+		{
+			GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, localPosition, markerData.positionJacobian);
+			GetAccessFunctionBody(AccessFunctionType::AngularVelocity_qt, localPosition, markerData.rotationJacobian);
+		}
+
 	}
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

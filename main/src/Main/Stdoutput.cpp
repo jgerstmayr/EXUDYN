@@ -111,7 +111,7 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 
 
 //global variable for timers:
-TimerStructure globalTimers; //global timers crash in debug mode! (use Resizable Array instead of std::vector ?)
+TimerStructure globalTimers(4.5e-08); //offset added to correct measurements (i9: 4.521e-08); may lead to negative timings!
 
 //these two variables become global
 OutputBuffer outputBuffer; //this is my customized output buffer, which can redirect the output stream;

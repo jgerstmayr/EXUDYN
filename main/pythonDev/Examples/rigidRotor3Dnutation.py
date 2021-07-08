@@ -121,7 +121,7 @@ mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 fileName = 'coordinatesSolution.txt'
 solution = LoadSolutionFile('coordinatesSolution.txt')
-AnimateSolution(exu, SC, mbs, solution, 5, 0.02)
+AnimateSolution(mbs, solution, 5, 0.02)
     
 #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
 exu.StopRenderer()               #safely close rendering window!

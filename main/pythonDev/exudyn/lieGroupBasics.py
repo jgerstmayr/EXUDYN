@@ -128,7 +128,10 @@ def ExpS3(Omega):
 #**input: 3x3 rotation matrix as np.array
 #**output: 3x3 skew symmetric matrix as np.array
 def LogSO3(R):
-    phi = acos(0.5*(np.trace(R)-1))
+    val = 0.5*(np.trace(R)-1) #if slightly larger than 1, due to numerical differentiation
+    if abs(val)>1:
+        val = val/abs(val)
+    phi = acos(val)
     if phi == 0.:
         X = np.zeros((3,3))
     else:

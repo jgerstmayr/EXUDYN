@@ -299,14 +299,14 @@ namespace EXUmath {
 		//! this function fails in dense matrix mode! implementation is slow!
 		virtual const SparseTripletMatrix& GetInternalSparseTripletMatrix() const
 		{
-			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletMatrix failed"); return SparseTripletMatrix(); }
+			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletMatrix failed"); return sparseTripletMatrix; }
 			else { return sparseTripletMatrix; }
 		}
 
 		//! this function fails in dense matrix mode! implementation is slow!
 		virtual Matrix GetInternalSparseTripletsAsMatrix() const
 		{
-			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletsAsMatrix failed"); return Matrix(); }
+			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletsAsMatrix failed"); return sparseTripletMatrix.GetTripletsAsMatrix(); }
 			else { return sparseTripletMatrix.GetTripletsAsMatrix(); }
 		}
 

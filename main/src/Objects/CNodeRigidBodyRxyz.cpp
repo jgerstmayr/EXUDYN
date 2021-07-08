@@ -20,6 +20,25 @@
 #include "Utilities/RigidBodyMath.h"
 
 
+//! provide nodal values efficiently for rigid body computation
+void CNodeRigidBodyRxyz::CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const
+{
+	//CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): not implemented");
+	GetGlocal(Glocal);
+	angularVelocityLocal = GetAngularVelocityLocal();
+}
+
+void CNodeRigidBodyRxyz::CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, 
+	Vector3D& pos, Vector3D& vel, Matrix3D& A,	Vector3D& angularVelocityLocal) const 
+{
+	GetGlocal(Glocal);
+	GetG(G);
+	pos = GetPosition();
+	vel = GetVelocity();
+	A = GetRotationMatrix();
+	angularVelocityLocal = GetAngularVelocityLocal();
+}
+
 // Compute vector to of 3 Euler angles from reference and configuration coordinates
 ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> CNodeRigidBodyRxyz::GetRotationParameters(ConfigurationType configuration) const
 {

@@ -1438,6 +1438,82 @@ class ObjectJointGeneric:
 GenericJoint = ObjectJointGeneric
 VGenericJoint = VObjectJointGeneric
 
+class VObjectJointRevoluteZ:
+    def __init__(self, show = True, axisRadius = 0.1, axisLength = 0.4, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.axisRadius = axisRadius
+        self.axisLength = axisLength
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'axisRadius', self.axisRadius
+        yield 'axisLength', self.axisLength
+        yield 'color', self.color
+
+class ObjectJointRevoluteZ:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = {'show': True, 'axisRadius': 0.1, 'axisLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.rotationMarker0 = rotationMarker0
+        self.rotationMarker1 = rotationMarker1
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointRevoluteZ'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'rotationMarker1', self.rotationMarker1
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VaxisRadius', dict(self.visualization)["axisRadius"]
+        yield 'VaxisLength', dict(self.visualization)["axisLength"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+RevoluteJointZ = ObjectJointRevoluteZ
+VRevoluteJointZ = VObjectJointRevoluteZ
+
+class VObjectJointPrismaticX:
+    def __init__(self, show = True, axisRadius = 0.1, axisLength = 0.4, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.axisRadius = axisRadius
+        self.axisLength = axisLength
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'axisRadius', self.axisRadius
+        yield 'axisLength', self.axisLength
+        yield 'color', self.color
+
+class ObjectJointPrismaticX:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = {'show': True, 'axisRadius': 0.1, 'axisLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.rotationMarker0 = rotationMarker0
+        self.rotationMarker1 = rotationMarker1
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'JointPrismaticX'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'rotationMarker1', self.rotationMarker1
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VaxisRadius', dict(self.visualization)["axisRadius"]
+        yield 'VaxisLength', dict(self.visualization)["axisLength"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+PrismaticJointX = ObjectJointPrismaticX
+VPrismaticJointX = VObjectJointPrismaticX
+
 class VObjectJointSpherical:
     def __init__(self, show = True, jointRadius = 0.1, color = [-1.,-1.,-1.,-1.]):
         self.show = show

@@ -63,9 +63,9 @@ The following people have contributed to the examples:
 \mysubsubsection{How to install \codeName ?}
 
 In order to run \codeName , you need an appropriate Python installation.
-We currently (2021-02) recommend to use
+We currently (2021-07) recommend to use
 \bi
-  \item {\bf Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}}
+  \item {\bf Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}} (but Python 3.8 is also working well!)
 	\item {\bf Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are {\bf either} 32bit {\bf or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
 	There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}
 \ei
@@ -73,8 +73,8 @@ Many alternative options exist:
 \bi
   \item In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5)\footnote{Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
 	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
-	\item Users report successful use of \codeName\ with {\bf Visual Studio Code} and {\bf Jupyter} has been tested with some examples; both environments should work with default settings
-	\item Anaconda 2020-11 with {\bf Python 3.8} and Spyder 4.1.5: not much experience for now (2021-04), but TestSuite runs without errors for \codeName\ version 1.0.182.
+	\item Users report successful use of \codeName\ with {\bf Visual Studio Code}. {\bf Jupyter} has been tested with some examples; both environments should work with default settings.
+	\item Anaconda 2020-11 with {\bf Python 3.8} and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since \codeName\ version 1.0.182.
   \item Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
 	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
 %Anaconda3-5.2.0-Windows-x86\_64.exe
@@ -93,7 +93,7 @@ Once again, remember that Python versions and the version of the \codeName\ modu
 \mysubsubsection{Install with Windows MSI installer}
 The simplest way on Windows 10 (and maybe also Windows 7), which works well {\bf if you installed only one python version} and if you installed Anaconda with the option {\bf 'Register Anaconda as my default Python 3.x'} or similar, then you can use the provided \texttt{.msi} installers in the \texttt{main/dist} directory:
 \bi
-  \item For the 64bits python 3.6 version, double click on (version may differ):\\ \texttt{exudyn-1.0.8.win-amd64-py3.6.msi}
+  \item For the 64bits python 3.7 version, double click on (version may differ):\\ \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
 	\item Follow the instructions of the installer
 	\item If python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:\\
 	\texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}

@@ -564,7 +564,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 									py::list gList = (py::list)(gDictList);
 									std::vector<float> stdGList = py::cast<std::vector<float>>(gList); //! # read out dictionary and cast to C++ type
 
-									if ((stdGList.size() % 4) == 0 && stdGList.size() / 4 == points.NumberOfItems())
+									if ((stdGList.size() % 4) == 0 && (int)(stdGList.size() / 4) == points.NumberOfItems())
 									{
 										Index n = (Index)stdGList.size() / 4;
 										colors.SetNumberOfItems(n);
@@ -592,7 +592,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 									py::list gList = (py::list)(gDictList);
 									std::vector<float> stdGList = py::cast<std::vector<float>>(gList); //! # read out dictionary and cast to C++ type
 
-									if ((stdGList.size() % 3) == 0 && stdGList.size() / 3 == points.NumberOfItems())
+									if ((stdGList.size() % 3) == 0 && (int)(stdGList.size() / 3) == points.NumberOfItems())
 									{
 										Index n = (Index)stdGList.size() / 3;
 										normals.SetNumberOfItems(n);

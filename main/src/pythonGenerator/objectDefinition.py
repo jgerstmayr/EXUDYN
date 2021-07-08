@@ -230,6 +230,8 @@ Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D
 Fv,     C,      GetAngularAcceleration,         ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular acceleration of node" 
 Fv,     C,      GetPositionJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide position jacobian of node; derivative of 3D Position with respect to 7 coordinates ux,uy,uz,ep0,...,ep3" 
 Fv,     C,      GetRotationJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide 'rotation' jacobian $\Jm_R$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque $\mv$: $\Qm_m = \Jm_R^T \mv$" 
+Fv,     C,      CollectCurrentNodeData1,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal",          CDI,    "provide nodal values efficiently for rigid body computation" 
+Fv,     C,      CollectCurrentNodeData2,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal", CDI, "obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity " 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyEP';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
@@ -314,6 +316,8 @@ Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D
 Fv,     C,      GetAngularAcceleration,         ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular acceleration of node" 
 Fv,     C,      GetPositionJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide position jacobian of node; derivative of 3D Position with respect to 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$" 
 Fv,     C,      GetRotationJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide 'rotation' jacobian $\Jm_R$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque $\mv$: $\Qm_m = \Jm_R^T \mv$" 
+Fv,     C,      CollectCurrentNodeData1,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal",          CDI,    "provide nodal values efficiently for rigid body computation" 
+Fv,     C,      CollectCurrentNodeData2,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal", CDI, "obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity " 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyRxyz';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
@@ -393,6 +397,8 @@ Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
 Fv,     C,      GetPositionJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide position jacobian of node; derivative of 3D Position with respect to all coordinates" 
 Fv,     C,      GetRotationJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide 'rotation' jacobian $\Jm_R$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates (='G-matrix'); action of torque $\mv$: $\Qm_m = \Jm_R^T \mv$" 
+Fv,     C,      CollectCurrentNodeData1,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal",          CDI,    "provide nodal values efficiently for rigid body computation" 
+Fv,     C,      CollectCurrentNodeData2,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal", CDI, "obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity " 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyRotVecLG';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
@@ -1171,7 +1177,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectRigidBody
-classDescription = "A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{AddRigidBody(...)}, see \refSection{sec:rigidBodyUtilities:AddRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, COM and mass."
+classDescription = "A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{AddRigidBody(...)}, see \refSection{sec:rigidBodyUtilities:AddRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, COM and mass.\n \addExampleImage{ObjectRigidBody}"
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -1357,6 +1363,7 @@ Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 F,      C,      GetAngularAcceleration,         ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) angular acceleration of 'localPosition' according to configuration type" 
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return parameters.physicsCenterOfMass;", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+Fv,     C,      ComputeRigidBodyMarkerData,     ,               ,       void,       ,                           "const Vector3D& localPosition, bool computeJacobian, MarkerData& markerData",          CDI, "accelerator function for faster computation of MarkerData for rigid bodies/joints" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBody';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -2907,6 +2914,7 @@ Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,   
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific object function ==> automatically generated in future?" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massTermsALEComputed = false; massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     C,      PreComputeMassTerms,            ,               ,       void,       ,                           ,       CDI,    "precompute mass terms if it has not been done yet" 
 #internal functions:
 #Fs,     C,      MapCoordinates,                 ,               ,       Vector2D,   ,                           "const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1",          DI, "map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc." 
 #Fs,     C,      ComputeShapeFunctions,          ,               ,       Vector4D,   ,                           "Real x, Real L",          DI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
@@ -4564,7 +4572,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectJointGeneric
-classDescription = "A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers; an additional local rotation can be used to define three rotation axes and/or sliding axes"
+classDescription = "A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes."
 cParentClass = CObjectConstraint
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -4577,16 +4585,16 @@ classType = Object
 #add input quantities
 #add equations
 equations =
-    \mysubsubsubsection{Definition of quantities}
+    \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointGeneric:DefinitionOfQuantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
     \rowTable{joint J0 orientation}{$\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$}{joint $J0$ rotation matrix}
-    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\vv_{x0},\,\vv_{y0},\,\vv_{z0}]\tp$}{orientation vectors used for definition of constraint equations}
+    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
-    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\vv_{x1},\,\vv_{y1},\,\vv_{z1}]\tp$}{orientation vectors used for definition of constraint equations}
+    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
 
 %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
@@ -4631,25 +4639,27 @@ equations =
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
+    Note that the axes are always given in global coordinates, compare the table in \refSection{sec:ObjectJointGeneric:DefinitionOfQuantitie}.
+    
     Equations are only given for the index 3 case; the index 2 case can be derived from these equations easily (see C++ code...).
     In case of user functions, the additional rotation matrix $\LU{J0,J0U}{\Rot}(UF_{3,4,5}(mbs, t, \pv_{par}))$, in which the three components of 
     $UF_{3,4,5}$ are interpreted as Tait-Bryan angles that are added to the joint frame.
     
-    If {\bf 3 rotation axes are constrained},  $[j_3,\,\ldots,\,j_5] = [1,1,1]\tp$, the index 3 constraint equations read
+    If {\bf 3 rotation axes are constrained} (e.g., translational or planar joint),  $[j_3,\,\ldots,\,j_5] = [1,1,1]\tp$, the index 3 constraint equations read
     \bea
-       \vv_{z0}\tp \vv_{y1} &=& 0 \\
-       \vv_{z0}\tp \vv_{x1} &=& 0 \\
-       \vv_{x0}\tp \vv_{y1} &=& 0
+       \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &=& 0 \\
+       \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &=& 0 \\
+       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0
     \eea
-    If {\bf 2 rotation axes are constrained}, e.g., $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$, the index 3 constraint equations read
+    If {\bf 2 rotation axes are constrained} (revolute joint), e.g., $[j_3,\,\ldots,\,j_5] = [0,1,1]\tp$, the index 3 constraint equations read
     \bea
        \lambda_3 &=& 0 \\
-       \vv_{x0}\tp \vv_{y1} &=& 0 \\
-       \vv_{x0}\tp \vv_{z1} &=& 0
+       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0 \\
+       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{z1} &=& 0
     \eea
-    If {\bf 1 rotation axis is constrained}, e.g.,  $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$, the index 3 constraint equations read
+    If {\bf 1 rotation axis is constrained} (universal joint), e.g.,  $[j_3,\,\ldots,\,j_5] = [1,0,0]\tp$, the index 3 constraint equations read
     \bea
-       \vv_{y0}\tp \vv_{z1} &=& 0 \\
+       \LU{0}{\tv}_{y0}\tp \LU{0}{\tv}_{z1} &=& 0 \\
        \lambda_4 &=& 0 \\
        \lambda_5 &=& 0
     \eea
@@ -4756,6 +4766,227 @@ V,      V,      axesLength,                     ,               ,       float,  
 V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
 #file names automatically determined from class name
 writeFile = True
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectJointRevoluteZ
+classDescription = "A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), \refSection{sec:rigidBodyUtilities:AddRevoluteJoint}, for two rigid bodies (or ground).\n \addExampleImage{RevoluteJointZ}"
+cParentClass = CObjectConstraint
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = RevoluteJointZ
+addProtectedC = "    static constexpr Index nConstraints = 5;\n"
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}"
+classType = Object
+#add input quantities
+#add equations
+equations =
+    \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
+    \rowTable{joint J0 orientation}{$\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$}{joint $J0$ rotation matrix}
+    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
+    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
+    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
+    \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
+    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
+
+%
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
+    \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
+    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$} {used, if all translational axes are constrained}
+    \rowTable{Velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{used, if all translational axes are constrained (velocity level)}
+%
+    \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
+    \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
+    \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
+    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
+    \finishTable
+%
+    \mysubsubsubsection{Connector constraint equations}
+    \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    The translational index 3 constraints read,
+    \be
+      \LU{0}{\Delta\pv} = \Null
+    \ee
+    and the translational index 2 constraints read
+    \be
+      \LU{0}{\Delta \vv} = \Null    
+    \ee
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
+    Note that the axes are always given in global coordinates, compare the table in \refSection{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}.
+    %
+    The index 3 constraint equations read
+    \bea \label{eq:ObjectJointRevoluteZ:index3}
+       \lambda_3 &=& 0 \\
+       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0 \\
+       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{z1} &=& 0
+    \eea
+    The index 2 constraints follow from the derivative of \eq{eq:ObjectJointRevoluteZ:index3} w.r.t., and are given in the C++ code.
+%    
+    if \texttt{activeConnector = False}, 
+    \be
+      \zv = \Null
+    \ee
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
+V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"
+V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+#
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
+Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,  "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex", CDI, "compute derivative of algebraic equations w.r.t. ODE2, ODE2_t, ODE1 and AE coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
+#Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
+Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
+Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 5;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRevolute';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+F,      C,      EvaluateUserFunctionOffset,     ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+F,      C,      EvaluateUserFunctionOffset_t,   ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      axisRadius,                     ,               ,       float,  "0.1f",                          ,       IO,    "radius of joint axis to draw"
+V,      V,      axisLength,                     ,               ,       float,  "0.4f",                          ,       IO,    "length of joint axis to draw"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectJointPrismaticX
+classDescription = "A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), \refSection{sec:rigidBodyUtilities:AddPrismaticJoint}, for two rigid bodies (or ground). \n \addExampleImage{PrismaticJointX}"
+cParentClass = CObjectConstraint
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = PrismaticJointX
+addProtectedC = "    static constexpr Index nConstraints = 5;\n"
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}"
+classType = Object
+#add input quantities
+#add equations
+equations =
+    \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointPrismaticX:DefinitionOfQuantities}
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
+    \rowTable{joint J0 orientation}{$\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}$}{joint $J0$ rotation matrix}
+    \rowTable{joint J0 orientation vectors}{$\LU{0,J0}{\Rot} = [\LU{0}{\tv_{x0}},\,\LU{0}{\tv_{y0}},\,\LU{0}{\tv_{z0}}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
+    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
+    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
+    \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
+    \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
+
+%
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
+    \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
+    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$} {used, if all translational axes are constrained}
+%
+    \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
+    \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
+    \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
+    \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
+    \finishTable
+%
+    \mysubsubsubsection{Connector constraint equations}
+    \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    The two translational index 3 constraints for a free motion along the local $x$-axis read (in the coordinate system $J0$),
+    \bea
+      \LU{J0}{\pv}_{y,m1} - \LU{J0}{\pv}_{y,m0} &=& \Null \nonumber \\
+      \LU{J0}{\pv}_{z,m1} - \LU{J0}{\pv}_{z,m0} &=& \Null 
+    \eea
+    and the translational index 2 constraints read
+    \bea
+      \LU{J0}{\vv}_{y,m1} - \LU{J0}{\vv}_{y,m0} &=& \Null \nonumber \\
+      \LU{J0}{\vv}_{z,m1} - \LU{J0}{\vv}_{z,m0} &=& \Null 
+    \eea
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
+    Note that the axes are always given in global coordinates, compare the table in 
+    \refSection{sec:ObjectJointPrismaticX:DefinitionOfQuantities}.
+    %
+    The index 3 constraint equations read
+    \bea \label{eq:ObjectJointPrismaticX:index3}
+       \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{y1} &=& 0 \\
+       \LU{0}{\tv}_{z0}\tp \LU{0}{\tv}_{x1} &=& 0 \\
+       \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0
+    \eea
+    The index 2 constraints follow from the derivative of \eq{eq:ObjectJointPrismaticX:index3} w.r.t., and are given in the C++ code.
+%    
+    if \texttt{activeConnector = False}, 
+    \be
+      \zv = \Null
+    \ee
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
+V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"
+V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+#
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return true;",             ,      CI,     "constraint also implements velocity level equations" 
+Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
+Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,  "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex", CDI, "compute derivative of algebraic equations w.r.t. ODE2, ODE2_t, ODE1 and AE coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
+#Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
+Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
+Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 5;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointRevolute';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+F,      C,      EvaluateUserFunctionOffset,     ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+F,      C,      EvaluateUserFunctionOffset_t,   ,               ,       void,      ,"Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      axisRadius,                     ,               ,       float,  "0.1f",                          ,       IO,    "radius of joint axis to draw"
+V,      V,      axisLength,                     ,               ,       float,  "0.4f",                          ,       IO,    "length of joint axis to draw"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

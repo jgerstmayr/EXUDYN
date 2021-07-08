@@ -13,6 +13,7 @@
 
 
 #include "Utilities/BasicDefinitions.h"
+#define PERFORM_UNIT_TESTS
 #ifdef PERFORM_UNIT_TESTS
 using namespace std;
 
@@ -61,7 +62,7 @@ using namespace EXUmath;
 //#include "Linalg/Matrix.h"
 //using namespace EXUmath;
 
-#define PerformUnitTests
+//#define PerformUnitTests //set with compiler flags in setup.py
 #ifdef PerformUnitTests
     #include "AllVectorUnitTests.h" 
     #include "AllArrayUnitTests.h" 

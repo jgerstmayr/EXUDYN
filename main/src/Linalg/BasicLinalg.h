@@ -82,8 +82,8 @@ namespace EXUmath {
 	}
 
 	//convert 3x3 Matrix to std::array<std::array<Real, matrixColumns>, matrixRows>; used mainly for pybind conversion
-	template<Index rows, Index columns, class T>
-	inline std::array<std::array<T, rows>, columns> MatrixToStdArrayTemplate(const MatrixBase<T>& matrix)
+	template<class TMatrix, Index rows, Index columns, class T>
+	inline std::array<std::array<T, rows>, columns> MatrixToStdArrayTemplate(const TMatrix& matrix)
 	{
 		std::array<std::array<T, columns>, rows> stdarray;
 		for (Index i = 0; i < rows; i++) {
@@ -97,21 +97,21 @@ namespace EXUmath {
 
 	//convert Matrix6D to std::array (e.g. used to convert to python)
 	inline std::array<std::array<Real, 6>, 6> Matrix6DToStdArray66(const Matrix6D& matrix) {
-		return MatrixToStdArrayTemplate<6, 6, Real>(matrix);
+		return MatrixToStdArrayTemplate<Matrix6D, 6, 6, Real>(matrix);
 	}
 
 	//convert Matrix3D to std::array (e.g. used to convert to python)
 	inline std::array<std::array<Real, 3>, 3> Matrix3DToStdArray33(const Matrix3D& matrix) {
-		return MatrixToStdArrayTemplate<3, 3, Real>(matrix);
+		return MatrixToStdArrayTemplate<Matrix3D, 3, 3, Real>(matrix);
 	}
 
 	//convert Matrix to std::array (e.g. used to convert to python)
 	inline std::array<std::array<Real, 3>, 3> MatrixToStdArray33(const Matrix& matrix) {
-		return MatrixToStdArrayTemplate<3, 3, Real>(matrix);
+		return MatrixToStdArrayTemplate<Matrix, 3, 3, Real>(matrix);
 	}
 
 	inline std::array<std::array<float, 3>, 3> Matrix3DFToStdArray33(const Matrix3DF& matrix) {
-		return MatrixToStdArrayTemplate<3, 3, float>(matrix);
+		return MatrixToStdArrayTemplate<Matrix3DF, 3, 3, float>(matrix);
 	}
 
 	//convert Vector to std::array<std::array<Real, matrixColumns>, matrixRows>; used mainly for pybind conversion
@@ -291,6 +291,11 @@ namespace EXUmath {
 		MultMatrixVectorTemplate<ConstSizeMatrix<36>, Vector6D, Vector6D>(matrix, vector, result);
 	}
 
+	//for ANCFCable-ALE:
+	inline void MultMatrixVector(const ConstSizeMatrix<64>& matrix, const CSVector8D& vector, CSVector8D& result) {
+		MultMatrixVectorTemplate<ConstSizeMatrix<64>, CSVector8D, CSVector8D>(matrix, vector, result);
+	}
+
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//transposed version of Matrix x Vector:
@@ -345,6 +350,12 @@ namespace EXUmath {
 		MultMatrixVectorAddTemplate<ConstSizeMatrix<12>, Vector, Vector3D>(matrix, vector, result);
 	}
 
+	//! result += matrix*vector (ADD results)
+	inline void MultMatrixVectorAdd(const ConstSizeMatrix<12>& matrix, const Vector3D& vector, Vector& result) {
+		MultMatrixVectorAddTemplate<ConstSizeMatrix<12>, Vector3D, Vector>(matrix, vector, result);
+	}
+
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Matrix * Matrix multiplication templates; this should also work with operator* in ConstSizeMatrix<9>
 	inline void MultMatrixMatrix(const ConstSizeMatrix<9>& m1, const ConstSizeMatrix<9>& m2, ConstSizeMatrix<9>& result) {
@@ -376,23 +387,27 @@ namespace EXUmath {
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! apply column-wise a transformation matrix of fixed size (e.g. for a 3xn matrix, multiply with 3x3 rotation matrix A => size=3)
-	template<Index size>
-	inline void ApplyTransformation(ConstSizeMatrix<size*size> transformationMatrix, Matrix& sourceDestination)
+	template<class TMatrix>
+	inline void ApplyTransformation33Template(const Matrix3D& transformationMatrix, TMatrix& sourceDestination)
 	{
-		CHECKandTHROW(size == sourceDestination.NumberOfRows() && 
-			size == transformationMatrix.NumberOfColumns() && 
-			size == transformationMatrix.NumberOfRows(),
+		CHECKandTHROW(3 == sourceDestination.NumberOfRows() && 
+			3 == transformationMatrix.NumberOfColumns() && 
+			3 == transformationMatrix.NumberOfRows(),
 			"ApplyTransformation: transformationMatrix must be square and equal to number of rows of sourceDestination");
 
 		Vector3D temp;
 		for (Index i = 0; i < sourceDestination.NumberOfColumns(); i++)
 		{
-			MultMatrixVector(transformationMatrix, sourceDestination.GetColumnVector<size>(i), temp);
-			for (Index j = 0; j < sourceDestination.NumberOfRows(); j++)
+			MultMatrixVector(transformationMatrix, sourceDestination.GetColumnVector(i), temp);
+			for (Index j = 0; j < 3; j++)
 			{
 				sourceDestination(j, i) = temp[j];
 			}
 		}
+	}
+
+	inline void ApplyTransformation33(const Matrix3D& transformationMatrix, ConstSizeMatrix<12>& sourceDestination) {
+		ApplyTransformation33Template<ConstSizeMatrix<12>>(transformationMatrix, sourceDestination);
 	}
 
 

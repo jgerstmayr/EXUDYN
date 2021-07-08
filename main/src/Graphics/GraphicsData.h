@@ -18,13 +18,7 @@
 
 #include <ostream>
 
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include <atomic>
-#include "Linalg/ConstSizeVector.h"		//includes Vector.h
-#include "Linalg/ResizableVector.h"		//includes Vector.h
-#include "Linalg/SlimVector.h"			//includes Vector.h
-#include "Utilities/ResizableArray.h"	//includes SlimArray.h and BasicFunctions.h
+#include "Linalg/BasicLinalg.h"	
 #include "Main/OutputVariable.h"		//for ItemType conversion, used in GlfwClient and others
 
 #include <array>						//std::array

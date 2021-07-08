@@ -71,7 +71,7 @@ void PyTest()
 		ArrayIndex rows;
 		//minv.Invert();
 		Index success = minv.InvertSpecial(temp, rows, true, 0, 0.);
-		//pout << "success=" << success << "\n";
+		pout << "success=" << success << "\n";
 		//pout << "Minv=" << minv << ", rows=" << rows << ", I=" << minv * m << "\n";
 		//pout << "Minv*[1,-2,3]=" << minv * Vector({1,-2,3}) << "\n";
 

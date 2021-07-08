@@ -96,7 +96,7 @@ P3 = np.array([w, 0, -0.35*sZ])
 vMin = 4.29238253634111
 vMax = 6.02426201538837
 
-maneuver = 'M3'
+maneuver = 'M1'
 if maneuver == 'M1':
     vX0 = 4.                #initial forward velocity in x-direction
     omegaX0 = 0.05          #initial roll velocity around x axis
@@ -120,6 +120,23 @@ graphicsB = GraphicsDataCylinder(pAxis=P1-bCOM, vAxis=P2-P1, radius=dY*1.5, colo
 graphicsB2 = GraphicsDataSphere(point=[0,0,0], radius=3*dY, color=color4lightgrey)
 graphicsH = GraphicsDataCylinder(pAxis=P3-hCOM, vAxis=P2-P3, radius=dY*1.3, color=color4lightgreen)
 
+#option to track motion of bicycle
+if True: 
+    #add user function to track bicycle frame
+    def UFgraphics(mbs, objectNum):
+        n = mbs.variables['nTrackNode']
+        p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
+                              configuration=exu.ConfigurationType.Visualization)
+        rs=SC.GetRenderState()
+        A = np.array(rs['modelRotation'])
+        p = A.T @ p
+        rs['centerPoint']=[p[0],p[1],p[2]]
+        SC.SetRenderState(rs)
+        return []
+    
+    #add object with graphics user function
+    oGround2 = mbs.AddObject(ObjectGround(visualization=
+                                          VObjectGround(graphicsDataUserFunction=UFgraphics)))
 #add rigid bodies
 #rear wheel
 [nR,bR]=AddRigidBody(mainSys = mbs, 
@@ -132,6 +149,8 @@ graphicsH = GraphicsDataCylinder(pAxis=P3-hCOM, vAxis=P2-P3, radius=dY*1.3, colo
                      angularVelocity=[omegaX0,omegaRy0,0], #local rotation axis is now x
                      gravity = g, 
                      graphicsDataList = [graphicsR])
+
+mbs.variables['nTrackNode'] = nR #node to be tracked
 
 #front wheel
 [nF,bF]=AddRigidBody(mainSys = mbs, 
@@ -335,8 +354,8 @@ h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile= False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
+simulationSettings.solutionSettings.writeSolutionToFile= False #set False for CPU performance measurement
+simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
 simulationSettings.solutionSettings.outputPrecision = 16
 
 simulationSettings.timeIntegration.verboseMode = 1
@@ -344,7 +363,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 # simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.2
+simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.7
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
@@ -355,9 +374,9 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 if False: #record animation frames:
     SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-    SC.visualizationSettings.window.renderWindowSize=[1980,1080]
+    SC.visualizationSettings.window.renderWindowSize=[1600,1024]
     SC.visualizationSettings.openGL.multiSampling = 4
-    simulationSettings.solutionSettings.recordImagesInterval = 0.01
+    simulationSettings.solutionSettings.recordImagesInterval = 0.02
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True
@@ -368,7 +387,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()
 
 exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-# exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+ exu.SolveDynamic(mbs, simulationSettings, showHints=True)
 
 
 #%%+++++++++++++++++++++++++++++

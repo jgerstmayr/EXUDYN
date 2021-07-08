@@ -204,7 +204,7 @@ thus having the vector of system coordinates $\qv \in \Rcal^n$,
 vector of applied forces $\fv \in \Rcal^n$, 
 mass matrix $\Mm \in \Rcal^{n \times n}$ and stiffness matrix $\Km \in \Rcal^{n \times n}$. 
 If we are interested in free vibrations of the system, without any boundary conditions or interconnections to other bodies, \eq{theory:eigenmodes:EOM} can be converted to a generalized eigenvalue problem. Using the approach 
-$\qv(t) = \vv \mathrm{e}^{\i \omega t}$ in \eq{theory:eigenmodes:EOM}, and thus $\ddot \qv(t) = -\omega^2 \qv(t)$, we obtain
+$\qv(t) = \vv \mathrm{e}^{\mathrm{i} \omega t}$ in \eq{theory:eigenmodes:EOM}, and thus $\ddot \qv(t) = -\omega^2 \qv(t)$, we obtain
 \be \label{theory:eigenmodes:harmonicEquation}
 		\left[ \left(-\omega^2 \Mm + \Km \right) \vv \right] \mathrm{e}^{i\omega t} = \Null \eqDot
 \ee
@@ -213,7 +213,7 @@ Assuming that \eq{theory:eigenmodes:harmonicEquation} is valid for all times, th
 	\left(-\omega^2 \Mm + \Km \right) \vv = \Null \eqComma
 \ee
 which can be rewritten as
-\be \label{theory:eigenmodes:GEP}
+\be \label{theory:eigenmodes:GEP2}
 	\det \left(-\omega^2 \Mm + \Km \right) = 0 \eqComma
 \ee
 and which defines the eigenvalues $\omega_i^2$ of the linear system, where $i \in \{0, \ldots, n-1\}$. Note that in this case, the eigenvalues are the squared eigenfrequencies (in rad/s).

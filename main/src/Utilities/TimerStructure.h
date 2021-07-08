@@ -20,8 +20,12 @@
 
 //! use macros to completely avoid timings in fast mode
 #ifndef EXUDYN_RELEASE
-	#define USEGLOBALTIMERS
+	//timer registration does not work in debug mode (and is not needed!)
+	#ifndef _MYDEBUG
+		#define USEGLOBALTIMERS
+	#endif
 #endif
+
 
 #ifdef __FAST_EXUDYN_LINALG
 	#define STARTGLOBALTIMER(_Expression) 
@@ -48,8 +52,14 @@ private:
 	//this class has two coupled lists, which do the work
 	std::vector<Real> counters;
 	std::vector<const char*> counterNames;
+	Real offsetSecondsPerCall;
 public:
-	//create a new timer; name must be a static name (must exist until end of timer) or dynamically allocated string, may not be deleted
+	TimerStructure() { offsetSecondsPerCall = 0; };
+
+	//! initialize structure with given (measured offset per call, to obtain more accurate measurements)
+	TimerStructure(Real offsetSecondsPerCallInit) { offsetSecondsPerCall = offsetSecondsPerCallInit; };
+	
+	//! create a new timer; name must be a static name (must exist until end of timer) or dynamically allocated string, may not be deleted
 	Index AddTimer(const char* name)
 	{
 		Index n = (Index)counters.size();
@@ -73,6 +83,12 @@ public:
 		for (auto& item : counters) { item = 0; }
 	}
 
+	//! set counter to specific value
+	void SetCounter(Index counterIndex, Real value) { counters[counterIndex] = value; }
+
+	//! get counter value
+	Real GetCounter(Index counterIndex) { return counters[counterIndex]; }
+
 	//! start measurement
 	void StartTimer(Index counterIndex)
 	{
@@ -82,7 +98,7 @@ public:
 	//! stop measurement
 	void StopTimer(Index counterIndex)
 	{
-		counters[counterIndex] += EXUstd::GetTimeInSeconds();
+		counters[counterIndex] += EXUstd::GetTimeInSeconds() - offsetSecondsPerCall;
 	}
 
 	//! print current timers into string
@@ -107,7 +123,9 @@ public:
 	//! register a timer by creating instance with this constructor:
 	TimerStructureRegistrator(const char* timerName, Index& timerNumber, TimerStructure& globalTimerStructure)
 	{
+	#ifdef USEGLOBALTIMERS
 		timerNumber = globalTimerStructure.AddTimer(timerName);
+	#endif
 	}
 };
 

@@ -102,15 +102,17 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 		{
 			Index iNode = meshNodeNumbers[i] + refFrameOffset;
-
-			if (GetCNode(iNode)->GetNumberOfODE2Coordinates() >= CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates) 
+			Index nodeODE2 = GetCNode(iNode)->GetNumberOfODE2Coordinates();
+			if (nodeODE2 >= CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)
 			{ 
 				CHECKandTHROWstring("CObjectSuperElement::GetAccessFunctionSuperElement: MarkerSuperElement only available in case of nodes with equal or less than 7 coordinates!"); 
 			}
 
-			//use temporary jacobian structure, to get node jacobian
-			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
-			((const CNodeODE2*)GetCNode(iNode))->GetPositionJacobian(posJac0);
+			//use temporary jacobian structure, to get node jacobian; posJac0 MUST have already correct size, because LinkedDataMatrix cannot change size!
+			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + 
+				CNodeRigidBody::maxRotationCoordinates)> posJac0(nDim3D, nodeODE2);
+			LinkedDataMatrix linkedPosJac0(posJac0);
+			((const CNodeODE2*)GetCNode(iNode))->GetPositionJacobian(linkedPosJac0);
 
 			//assume that the first 3 coordinates of the node are the displacement coordinates!!!
 			Matrix3D jac = A;
@@ -128,7 +130,8 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 					}
 				}
 			}
-			EXUmath::ApplyTransformation<3>(jac, posJac0); //size=3: always 3D
+			EXUmath::ApplyTransformation33Template< ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates +
+				CNodeRigidBody::maxRotationCoordinates)>>(jac, posJac0); //size=3: always 3D
 
 			Index offset = GetLocalODE2CoordinateIndexPerNode(iNode); //gives correct coordinates also in case of referenceFrame node
 			//pout << "offsetFFRF" << i << "=" << offset << "\n";
@@ -157,17 +160,26 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 			}
 
 			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(localReferenceNodeIndex);
+			Index nodeODE2 = cNode->GetNumberOfODE2Coordinates();
+			//if (nodeODE2 >= CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)
+			//{
+			//	CHECKandTHROWstring("CObjectSuperElement::GetAccessFunctionSuperElement: MarkerSuperElement only available in case of reference node with equal or less than 7 coordinates!");
+			//}
+
 
 			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
 
 			//compute: -A*pLocalTilde*GLocal
 			cNode->GetGlocal(Glocal);
-			EXUmath::ApplyTransformation<3>(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
-			EXUmath::ApplyTransformation<3>(A, Glocal);
+			EXUmath::ApplyTransformation33(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), Glocal);
+			EXUmath::ApplyTransformation33(A, Glocal);
 
 			//now compute remaining jacobian terms for reference frame motion:
-			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
-			((const CNodeODE2*)GetCNode(localReferenceNodeIndex))->GetPositionJacobian(posJac0);
+			//posJac0 MUST have already correct size, because LinkedDataMatrix cannot change size!
+			ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + 
+				CNodeRigidBody::maxRotationCoordinates)> posJac0(nDim3D, nodeODE2);
+			LinkedDataMatrix linkedPosJac0(posJac0);
+			((const CNodeODE2*)GetCNode(localReferenceNodeIndex))->GetPositionJacobian(linkedPosJac0);
 
 			value.SetSubmatrix(posJac0, 0, 0);
 			value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);

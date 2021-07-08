@@ -180,7 +180,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
 
 			//positive force on marker1
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
+			EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
 		}
 
 		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
@@ -191,7 +191,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 			torqueSum *= -1; //negative force on marker0
 			ConstSizeVector<CObjectContactFrictionCircleCable2DmaxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, forceSum, ldv0);
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).rotationJacobian, torqueSum, temp);
+			EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(0).rotationJacobian, torqueSum, temp);
 			ldv0 += temp;
 		}
 	}

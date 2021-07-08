@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-27  17:08:54 (last modfied)
+* @date         2021-07-01  09:35:50 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectJointGeneric
-* @brief        A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers; an additional local rotation can be used to define three rotation axes and/or sliding axes
+* @brief        A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

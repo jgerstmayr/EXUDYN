@@ -117,15 +117,11 @@ void CObjectANCFCable2DBase::ComputeCurrentObjectVelocities(ConstSizeVector<8>& 
 }
 
 //! Computational function: compute mass matrix
-void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectANCFCable2DBase::PreComputeMassTerms() const
 {
-	if (massMatrixComputed)
+	if (!massMatrixComputed)
 	{
-		massMatrix.CopyFrom(precomputedMassMatrix); //just assignement; ConstSizeMatrix is directly assigned to Matrix (no double copy)
-	}
-	else
-	{
-		massMatrix.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
+		precomputedMassMatrix.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
 		Real L = GetLength();
 		Real rhoA = GetMassPerLength();
 		const Index ns = 4;   //number of shape functions
@@ -144,17 +140,57 @@ void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix, Index objectN
 			{
 				for (Index j = 0; j < ns; j++)
 				{
-					massMatrix(i * 2, j * 2)		 += SV[i] * SVint[j];
-					massMatrix(i * 2 + 1, j * 2 + 1) += SV[i] * SVint[j];
+					precomputedMassMatrix(i * 2, j * 2) += SV[i] * SVint[j];
+					precomputedMassMatrix(i * 2 + 1, j * 2 + 1) += SV[i] * SVint[j];
 				}
 			}
 		}
-		precomputedMassMatrix.CopyFrom(massMatrix); //assignement operator would cause double copy!
 		massMatrixComputed = true;
-
 	}
+}
 
-	//pout << "Mass=" << massMatrix << "\n";
+//! Computational function: compute mass matrix
+void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+{
+	PreComputeMassTerms();
+	massMatrix.CopyFrom(precomputedMassMatrix); //just assignement; ConstSizeMatrix is directly assigned to Matrix (no double copy)
+
+	//if (massMatrixComputed)
+	//{
+	//	massMatrix.CopyFrom(precomputedMassMatrix); //just assignement; ConstSizeMatrix is directly assigned to Matrix (no double copy)
+	//}
+	//else
+	//{
+	//	massMatrix.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
+	//	Real L = GetLength();
+	//	Real rhoA = GetMassPerLength();
+	//	const Index ns = 4;   //number of shape functions
+
+	//	Index cnt = 0;
+	//	Real a = 0; //integration interval [a,b]
+	//	Real b = L;
+	//	for (auto item : EXUmath::gaussRuleOrder7Points)
+	//	{
+	//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+	//		Vector4D SV = ComputeShapeFunctions(x, L);
+	//		Vector4D SVint = SV;
+	//		SVint *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder7Weights[cnt++]);
+
+	//		for (Index i = 0; i < ns; i++)
+	//		{
+	//			for (Index j = 0; j < ns; j++)
+	//			{
+	//				massMatrix(i * 2, j * 2)		 += SV[i] * SVint[j];
+	//				massMatrix(i * 2 + 1, j * 2 + 1) += SV[i] * SVint[j];
+	//			}
+	//		}
+	//	}
+	//	precomputedMassMatrix.CopyFrom(massMatrix); //assignement operator would cause double copy!
+	//	massMatrixComputed = true;
+
+	//}
+
+	////pout << "Mass=" << massMatrix << "\n";
 		
 }
 
@@ -482,8 +518,9 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian,
 		qANCF_t[i].DValue((int)(i+2*ns)) = 1; //mark that this is the corresponding derivative; velocity derivatives are in second block
 	}
 	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
+	LinkedDataVectorBase<DReal16> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 
-	ComputeODE2LHStemplate<DReal16>(ode2Lhs, qANCF, qANCF_t);
+	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t);
 	//now copy autodifferentiated result:
 	for (Index i = 0; i < 2 * ns; i++)
 	{

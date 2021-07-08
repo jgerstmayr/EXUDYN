@@ -51,6 +51,8 @@ extern Index matrix_delete_counts; //global counter of item deallocations; is in
 #endif
 
 template <typename T> class ResizableMatrixBase;
+template <typename T, Index dataSize> class ConstSizeMatrixBase;
+template <typename T> class LinkedDataMatrixBase;
 
 //! templated base matrix, which is used as Matrix (Real) or MatrixF (float) - for graphics
 template<typename T>
@@ -68,11 +70,29 @@ public:
 	// CONSTRUCTOR, DESTRUCTOR
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	//! Default constructor: no memory allocation; matrix of dimension 0 x 0
+	//! Default constructor: no memory allocation; matrix of dimension 0 x 0, rule of 5
 	MatrixBase()
 	{
 		Init();
 	};
+
+	//! copy constructor, based on iterators, rule of 5
+	MatrixBase(const MatrixBase<T>& matrix)
+	{
+		Init();
+		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
+
+		Index cnt = 0;
+		for (auto value : matrix) { data[cnt++] = value; }
+	}
+
+	//! move constructor, rule of 5
+	MatrixBase(MatrixBase&& other) noexcept :
+		data(std::exchange(other.data, nullptr)),
+		numberOfRows(std::exchange(other.numberOfRows, 0)),
+		numberOfColumns(std::exchange(other.numberOfColumns, 0))
+	{
+	}
 
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; data is not initialized
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit)
@@ -82,10 +102,6 @@ public:
 		Init();
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
 	}
-	//! @todo disable copy/move constructors/operators: NotCopyableOrMovable(NotCopyableOrMovable&&) = delete;
-	//! NotCopyableOrMovable& operator=(NotCopyableOrMovable&&) = delete;
-	//! Copyable(const Copyable& rhs) = default;
-	//! Copyable& operator=(const Copyable& rhs) = default;
 
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize items with 'initializationValue'
 	MatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, T initializationValue)
@@ -117,16 +133,6 @@ public:
 		}
 	}
 
-	//! copy constructor, based on iterators
-	MatrixBase(const MatrixBase<T>& matrix)
-	{
-		Init();
-		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
-
-		Index cnt = 0;
-		for (auto value : matrix) { data[cnt++] = value; }
-	}
-
 	//! @todo Matrix: add constructor with SlimMatrix
 	//Matrix(const SlimMatrix matrix);
 
@@ -142,6 +148,16 @@ public:
 		}
 	};
 
+private:
+	//remove constructors:
+	MatrixBase(LinkedDataMatrixBase<T>&& other) = delete; //this move constructor is forbidden, as it will lead to crash as memory will be deleted wrongly
+	MatrixBase(const LinkedDataMatrixBase<T>& other) = delete; //this copy constructor is forbidden, as it will unintendedly copy memory
+
+	template<Index dataSize>
+	MatrixBase(ConstSizeMatrixBase<T, dataSize>&& other) = delete; //this move constructor is forbidden, as it will lead to crash as memory will be deleted wrongly
+
+	template<Index dataSize>
+	MatrixBase(const ConstSizeMatrixBase<T, dataSize>& other) = delete; //this copy constructor is forbidden, as it will unintendedly copy memory
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// BASIC FUNCTIONS
@@ -288,14 +304,25 @@ public:
 		//CHECKandTHROW(rowsColumns >= 0 && "Matrix::SetScalarMatrix(Index, T): invalid parameters!");
 		SetNumberOfRowsAndColumns(rowsColumns, rowsColumns); //JG2019-05-13: changed from ResizeMatrix(...)
 
-		for (Index i = 0; i < rowsColumns; i++)
+		//for (Index i = 0; i < rowsColumns; i++)
+		//{
+		//	for (Index j = 0; j < rowsColumns; j++)
+		//	{
+		//		if (i != j) (*this)(i, j) = 0;
+		//		else (*this)(i, j) = value;
+		//	}
+		//}
+		for (Index i = 0; i < rowsColumns*rowsColumns; i++)
 		{
-			for (Index j = 0; j < rowsColumns; j++)
-			{
-				if (i != j) (*this)(i, j) = 0;
-				else (*this)(i, j) = value;
-			}
+			data[i] = 0;
 		}
+		for (Index j = 0; j < rowsColumns; j++)
+		{
+			(*this)(j, j) = value;
+		}
+
+
+
 	}
 
 
@@ -323,13 +350,24 @@ public:
 		return data[row*numberOfColumns + column];
 	}
 
-
 	//Referencing constant access-operator on element using row- and column-values, WARNING: ZERO-BASED (DIFFERENT TO HOTINT1)
 	const T& GetItem(Index row, Index column) const
 	{
 		CHECKandTHROW((row < numberOfRows), "Matrix::GetItem()(Index, Index) const: request of invalid row");
 		CHECKandTHROW((column < numberOfColumns), "Matrix::GetItem()(Index, Index) const: request of invalid column");
 
+		return data[row*numberOfColumns + column];
+	};
+
+	//Referencing access-operator UNCHECKED on element using row- and column-values
+	T& GetUnsafe(Index row, Index column)
+	{
+		return data[row*numberOfColumns + column];
+	}
+
+	//Referencing constant access-operator UNCHECKED on element using row- and column-values, WARNING: ZERO-BASED (DIFFERENT TO HOTINT1)
+	const T& GetUnsafe(Index row, Index column) const
+	{
 		return data[row*numberOfColumns + column];
 	};
 
@@ -373,7 +411,7 @@ public:
 		return data[row*numberOfColumns + column];
 	};
 
-	//Assignment-operator
+	//Assignment-operator, rule of 5
 	MatrixBase<T>& operator= (const MatrixBase<T>& matrix)
 	{
 		if (this == &matrix) { return *this; }
@@ -385,6 +423,22 @@ public:
 
 		return *this;
 	}
+
+	//! move assignment operator, rule of 5
+	MatrixBase<T>& operator= (MatrixBase<T>&& other) noexcept
+	{
+		std::swap(data, other.data);
+		std::swap(numberOfRows, other.numberOfRows);
+		std::swap(numberOfColumns, other.numberOfColumns);
+		return *this;
+	}
+
+private:
+	MatrixBase<T>& operator= (LinkedDataMatrixBase<T>&& other) = delete; //avoid move operator with linked data, will fail!
+	
+    template<Index dataSize>
+	MatrixBase<T>& operator= (ConstSizeMatrixBase<T, dataSize>&& other) = delete; //avoid move operator with linked data, will fail!
+public:
 
 	//! comparison operator, component-wise compare; MATRIX DIMENSIONS MUST BE SAME; returns true, if all components are equal
 	bool operator== (const MatrixBase<T>& matrix) const
@@ -725,20 +779,83 @@ public:
 		}
 	}
 
+#ifdef USE_NEW_CONSTSIZEMATRIX
 	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
-	void AddSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
+	template<class TMatrix>
+	void AddSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0)
 	{
+#ifndef EXUDYN_RELEASE
 		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
+#endif
+		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			{
+				data[(i + row)*numberOfColumns + column + j] += sm.GetUnsafe(i, j);
+			}
+		}
+	}
+
+	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
+	template<class TMatrix>
+	void AddSubmatrixWithFactor(const TMatrix& sm, Real factor, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrixWithFactor size mismatch");
 
 		for (Index i = 0; i < sm.numberOfRows; i++)
 		{
 			for (Index j = 0; j < sm.numberOfColumns; j++)
 			{
-				data[(i + row)*numberOfColumns + column + j] += sm(i, j);
+				data[(i + row)*numberOfColumns + column + j] += factor * sm(i, j);
 			}
 		}
 	}
 
+	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
+	template<class TMatrix>
+	void AddSubmatrixTransposed(const TMatrix& sm, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposed size mismatch");
+
+		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			{
+				data[(j + row)*numberOfColumns + column + i] += sm(i, j);
+			}
+		}
+	}
+
+	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
+	template<class TMatrix>
+	void AddSubmatrixTransposedWithFactor(const TMatrix& sm, Real factor, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposedWithFactor size mismatch");
+
+		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			{
+				data[(j + row)*numberOfColumns + column + i] += factor * sm(i, j);
+			}
+		}
+	}
+
+#else
+	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
+	void AddSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
+	{
+#ifndef EXUDYN_RELEASE
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
+#endif
+		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			{
+				data[(i + row)*numberOfColumns + column + j] += sm.GetUnsafe(i, j);
+			}
+		}
+	}
 	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
 	void AddSubmatrixWithFactor(const MatrixBase<T>& sm, Real factor, Index row = 0, Index column = 0)
 	{
@@ -748,7 +865,7 @@ public:
 		{
 			for (Index j = 0; j < sm.numberOfColumns; j++)
 			{
-				data[(i + row)*numberOfColumns + column + j] += factor*sm(i, j);
+				data[(i + row)*numberOfColumns + column + j] += factor * sm(i, j);
 			}
 		}
 	}
@@ -776,10 +893,13 @@ public:
 		{
 			for (Index j = 0; j < sm.numberOfColumns; j++)
 			{
-				data[(j + row)*numberOfColumns + column + i] += factor*sm(i, j);
+				data[(j + row)*numberOfColumns + column + i] += factor * sm(i, j);
 			}
 		}
 	}
+
+#endif
+
 
 	//! Add submatrix (factor * sm) with possibly smaller size than *this matrix
 	//! the destination rows and columns of the submatrix (sm) relative to row and column are given in LTGrows and LTGcolumns
@@ -811,19 +931,39 @@ public:
 		}
 	}
 
+
 	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
+#ifndef USE_NEW_CONSTSIZEMATRIX
 	void SetSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0, Real factor = 1.)
 	{
+	#ifndef EXUDYN_RELEASE
 		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::SetSubmatrix size mismatch");
-
+	#endif
 		for (Index i = 0; i < sm.numberOfRows; i++)
 		{
 			for (Index j = 0; j < sm.numberOfColumns; j++)
 			{
-				data[(i + row)*numberOfColumns + column + j] = factor * sm(i, j);
+				data[(i + row)*numberOfColumns + column + j] = factor * sm.GetUnsafe(i, j);
 			}
 		}
 	}
+#else
+	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
+	template <class TMatrix>
+	void SetSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0, Real factor = 1.)
+	{
+	#ifndef EXUDYN_RELEASE
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::SetSubmatrix size mismatch");
+	#endif
+		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			{
+				data[(i + row)*numberOfColumns + column + j] = factor * sm.GetUnsafe(i, j);
+			}
+		}
+	}
+#endif
 
 	//! Get submatrix at certain row/column with numberOfRows/numberOfColumnsGet taken; performs COPY and may be SLOW
 	MatrixBase<T> GetSubmatrix(Index startRow, Index startColumn,
@@ -902,6 +1042,7 @@ namespace EXUmath {
 		{
 			result[i] = 0;
 			auto* mr = &mm[i*matrix.NumberOfColumns()];
+			//auto* mr = &mm[i*vectorLength];
 			for (Index j = 0; j < vectorLength; j++)
 			{
 				result[i] += mr[j] * vv[j];
@@ -937,30 +1078,30 @@ namespace EXUmath {
 		}
 	}
 
-	//! matrix*square(vector) multiplication with given result vector (does not invoke memory allocation if result vector has appropriate size)
-	template<class TMatrix, class TVector, class TVectorResult>
-	inline void MultMatrixVectorSquaredTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
-	{
-		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+	////! matrix*square(vector) multiplication with given result vector (does not invoke memory allocation if result vector has appropriate size)
+	//template<class TMatrix, class TVector, class TVectorResult>
+	//inline void MultMatrixVectorSquaredTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
+	//{
+	//	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+	//		"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
 
-		result.SetNumberOfItems(matrix.NumberOfRows());
+	//	result.SetNumberOfItems(matrix.NumberOfRows());
 
-		auto* mm = matrix.GetDataPointer();
-		const auto* vv = vector.GetDataPointer();
-		Index resultLength = result.NumberOfItems();
-		Index vectorLength = vector.NumberOfItems();
+	//	auto* mm = matrix.GetDataPointer();
+	//	const auto* vv = vector.GetDataPointer();
+	//	Index resultLength = result.NumberOfItems();
+	//	Index vectorLength = vector.NumberOfItems();
 
-		for (Index i = 0; i < resultLength; i++)
-		{
-			result[i] = 0;
-			auto* mr = &mm[i*matrix.NumberOfColumns()];
-			for (Index j = 0; j < vectorLength; j++)
-			{
-				result[i] += mr[j] * EXU::Square(vv[j]);
-			}
-		}
-	}
+	//	for (Index i = 0; i < resultLength; i++)
+	//	{
+	//		result[i] = 0;
+	//		auto* mr = &mm[i*matrix.NumberOfColumns()];
+	//		for (Index j = 0; j < vectorLength; j++)
+	//		{
+	//			result[i] += mr[j] * EXUstd::Square(vv[j]);
+	//		}
+	//	}
+	//}
 
 	//! matrix*square(vector) multiplication with given result vector and add to result (does not invoke memory allocation if result vector has appropriate size)
 	template<class TMatrix, class TVector, class TVectorResult>
@@ -1062,9 +1203,34 @@ namespace EXUmath {
 				Real value = 0.; //in this way, we can determine double or float! ==> TEST
 				for (Index k = 0; k < m1.NumberOfColumns(); k++)
 				{
+					value += m1.GetUnsafe(j, k)*m2.GetUnsafe(k, i);
+				}
+				result.GetUnsafe(j, i) = value;
+			}
+		}
+	}
+
+	//! generic matrix*matrix multiplication template, which writes results directly into submatrix (larger than the written submatrix) at position (offRows, offColumns)
+	template<class TMatrix1, class TMatrix2, class TMatrixResult>
+	inline void MultMatrixMatrix2SubmatrixTemplate(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result, Index offRows, Index offColumns)
+	{
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
+			"MultMatrixMatrix2SubmatrixTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
+
+		//not needed here, because larger matrix already set
+		//result.SetNumberOfRowsAndColumns(m1.NumberOfRows(), m2.NumberOfColumns());
+
+		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		{
+			for (Index j = 0; j < m1.NumberOfRows(); j++)
+			{
+				//auto value = (decltype(result(0, 0)))0.; //in this way, we can determine double or float! ==> TEST
+				Real value = 0.; //in this way, we can determine double or float! ==> TEST
+				for (Index k = 0; k < m1.NumberOfColumns(); k++)
+				{
 					value += m1(j, k)*m2(k, i);
 				}
-				result(j, i) = value;
+				result(j+offRows, i+offColumns) = value;
 			}
 		}
 	}

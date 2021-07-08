@@ -20,9 +20,13 @@
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //this part contains important definition of flags to set up hte compiled module
 
-#define EXUDYN_RELEASE			//!< set this flag to exclude experimental parts of the code
+//#define EXUDYN_RELEASE			//!< defined in preprocessor flags, in setup.py (for all versions), set this flag to exclude experimental parts of the code
 #define _USE_MATH_DEFINES		//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
 
+#define USE_NEW_CONSTSIZEVECTOR //!< remove virtual functions and decouple ConstSizeVector from Vector
+#define USE_NEW_CONSTSIZEMATRIX //!< remove virtual functions and decouple ConstSizeMatrix from Matrix
+
+//#define __NOGLFW //passed from compiler
 #ifndef __NOGLFW //passed from compiler
   #define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
 #endif

@@ -17,7 +17,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from exudyn.basicUtilities import *
-from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis
+from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors
 
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
@@ -278,7 +278,7 @@ def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16,
     p0 = np.array(pAxis)
     p1 = np.array(pAxis) + np.array(vAxis)
     
-    basis = ComputeOrthonormalBasis(vAxis)
+    basis = ComputeOrthonormalBasisVectors(vAxis)
     #v0 = basis[0]
     n1 = basis[1]
     n2 = basis[2]
@@ -564,7 +564,7 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
 
     p0 = np.array(pAxis)
     #local coordinate system:
-    [v,n1,n2] = ComputeOrthonormalBasis(vAxis)
+    [v,n1,n2] = ComputeOrthonormalBasisVectors(vAxis)
 
     color2 = color
     if 'alternatingColor' in kwargs:
@@ -787,7 +787,7 @@ def GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
     if 'size2' in kwargs:
         size2 = kwargs['size2']
 
-    [v,n1,n2] = ComputeOrthonormalBasis(normal)
+    [v,n1,n2] = ComputeOrthonormalBasisVectors(normal)
     p0=np.array(point)
     points = [list(p0-0.5*size*n1-0.5*size2*n2),
               list(p0+0.5*size*n1-0.5*size2*n2),

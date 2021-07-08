@@ -8,105 +8,12 @@ goal: automatically generate interfaces for structures
 currently: automatic generate structures with ostream and initialization
 """
 
-from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex
+from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex
 import os
 
 space4 = '    '
 space8 = space4+space4
 space12 = space8+space4
-
-#get list of filenames in folder dirPath which contain keyword (to find examples with specific items)
-def ExtractExamplesWithKeyword(keyword, dirPath):
-    from os import listdir
-    from os.path import isfile, join
-    
-    fileNames = [f for f in listdir(dirPath) if isfile(join(dirPath, f))]
-    
-    filesWithKeyword = []
-
-    for fileName in fileNames:
-        if fileName[-3:]=='.py':
-            #print("extract example:",fileName)
-            file = open(dirPath+'/'+fileName)
-            text = file.read()
-            if text.find(keyword) != -1:
-                filesWithKeyword += [fileName]
-            file.close()
-    return filesWithKeyword
-
-#generate latex string containing a list of file references (and hyperref links), 
-#based on a search through Examples and TestModels
-def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName):
-    s = ''
-
-    keywords = ['mbs.Add'+itemType+'('+itemName+'(']
-    if itemName == 'ObjectRigidBody' or itemName == 'NodeRigidBodyEP':
-        keywords += ['AddRigidBody('] #additional keyword
-
-    if itemName == 'ObjectFFRF':
-        keywords += ['AddObjectFFRF('] #additional keyword
-
-    if itemName == 'ObjectFFRFreducedOrder':
-        keywords += ['AddObjectFFRFreducedOrderWithUserFunctions('] #additional keyword
-
-
-
-    if itemShortName != '' and itemName != itemShortName:
-        keywords += ['mbs.Add'+itemType+'('+itemShortName]
-
-    fileListOrig = []
-    for kw in keywords:
-        dirPath = '../../pythonDev/Examples'
-        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
-                                              dirPath = dirPath)
-    
-    fileList = []
-    for f in fileListOrig:
-        if f not in fileList: fileList += [f]
-    
-    if len(fileList) != 0:
-        s += '%\n\\noindent For further examples on '+itemName+' see Examples:\n'
-        sep = ''
-        cnt = 0
-        s += '\\bi\n'
-        for name in fileList:
-            s += '\\item'+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/' + name+'}'
-            s += '{\\texttt{'+name.replace('_','\\_')+'}}'
-            #sep = ', \n'
-            cnt += 1
-            if cnt >= 10: #max. 10 examples ...
-                s += '\\item ...\n'
-                break
-        s += '\\ei\n'
-        s += '\n%\n'
-        
-
-    fileListOrig = []
-    for kw in keywords:
-        dirPath = '../../pythonDev/TestModels'
-        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
-                                              dirPath = dirPath)
-
-    fileList = []
-    for f in fileListOrig:
-        if f not in fileList: fileList += [f]
-
-    if len(fileList) != 0:
-        s += '%\n\\noindent For further examples on '+itemName+' see TestModels:\n'
-        s += '\\bi\n'
-        sep = ''
-        cnt = 0
-        for name in fileList:
-            s += '\\item'+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/' + name+'}'
-            s += '{\\texttt{'+name.replace('_','\\_')+'}}'
-            #sep = ', \n'
-            cnt += 1
-            if cnt >= 10: #max. 10 examples ...
-                s += '\\item ...\n'
-                break
-        s += '\\ei\n'
-        s += '\n%\n'
-    return s
 
 # compute destination number of str given from [C|M][P]
 # [sParamComp=0, sParamMain=1, sComp=2, sMain=3]
@@ -510,7 +417,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #            sLatex += '\\end{itemize}\n'
 
         addLatex = ''
-        if len(symbolList) != 0: #automatically generated import parameter symbol list
+        if len(symbolList) != 0: #automatically generated import parameter symbol list 
             #addLatex += "\\vspace{6pt}\\\\ \n"
             addLatex += "\paragraph{Information on input parameters:} \n"
             addLatex += "\\startTable{input parameter}{symbol}{description see tables above}\n"

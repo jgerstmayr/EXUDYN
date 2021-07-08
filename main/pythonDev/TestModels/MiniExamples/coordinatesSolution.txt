@@ -1,5 +1,5 @@
 #Exudyn implicit second order time integration solver solution file
-#simulation started=2021-01-07,09:15:24
+#simulation started=2021-02-04,21:19:53
 #columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations, AE coordinates, ODE2 velocities
 #number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [6,0,0,0]
 #number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [6,6,6,0,0,0,0]
@@ -107,5 +107,5 @@
 0.98,0,1.168122903,0,0,0,0,0,-82.92083299,0,0,0,0,0,-169.4572867,0,0,0,0
 0.99,0,0.3412442022,0,0,0,0,0,-82.46030847,0,0,0,0,0,241.6794412,0,0,0,0
 1,0,-0.4612983536,0,0,0,0,0,-78.05319098,0,0,0,0,0,620.9151317,0,0,0,0
-#simulation finished=2021-01-07,09:15:24
-#Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationsFailed=0,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100
+#simulation finished=2021-02-04,21:19:53
+#Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100

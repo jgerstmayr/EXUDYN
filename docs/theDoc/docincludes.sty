@@ -178,7 +178,8 @@
 \newcommand{\mysubsubsection}[1]{\subsection{#1}}
 \newcommand{\mysubsubsubsection}[1]{\subsubsection{#1}}
 
-\newcommand{\codeName}{EXUDYN}
+%\newcommand{\codeName}{\textrm{\textsc{EXUDYN}}}
+\newcommand{\codeName}{\textsc{Exudyn}}
 
 \newcommand{\SO}{q}
 \newcommand{\FO}{y}
@@ -192,5 +193,15 @@
 
 \newcommand{\eqDot}{\; .} %dot at end of equations
 \newcommand{\eqComma}{\; ,} %comma at end of equations
+
+\newcommand{\addExampleImage}[1]{
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=6cm]{figures/#1}
+	\end{center}
+	\caption{Example of #1}
+	\label{fig:#1}
+\end{figure}
+}
 
 \endinput %for .sty files

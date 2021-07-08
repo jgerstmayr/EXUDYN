@@ -176,7 +176,9 @@ ext_modules = [
                  'src/Objects/CObjectJointALEMoving2D.cpp',
                  'src/Objects/CObjectJointGeneric.cpp',
                  'src/Objects/CObjectJointPrismatic2D.cpp',
+                 'src/Objects/CObjectJointPrismaticX.cpp',
                  'src/Objects/CObjectJointRevolute2D.cpp',
+                 'src/Objects/CObjectJointRevoluteZ.cpp',
                  'src/Objects/CObjectJointRollingDisc.cpp',
                  'src/Objects/CObjectJointSliding2D.cpp',
                  'src/Objects/CObjectJointSpherical.cpp',
@@ -266,6 +268,24 @@ def cpp_flag(compiler):
 
 class BuildExt(build_ext):
 #    A custom build extension for adding compiler-specific options.
+    #options used for all builds:
+    allMacros = ['EXUDYN_RELEASE'] #exclude experimental parts
+    
+    if isWindows and pyVersionString == '3.8':
+        allMacros += ['__FAST_EXUDYN_LINALG'] #exclude range checks for Python 3.8 version
+        print('******************************************************')
+        print('*  using __FAST_EXUDYN_LINALG in Python 3.8 version  *')
+        print('******************************************************')
+    
+    
+    commonCopts = []
+    for macroString in allMacros:
+        if isWindows:
+            commonCopts += ['/D', macroString]
+        else: #works same for MacOS and linux
+            commonCopts += ['-D'+macroString]
+    
+    #platform-specific s_opts:
     c_opts = {
         #'msvc': ['/EHsc'],
         'msvc': ['/EHsc',
@@ -293,7 +313,7 @@ class BuildExt(build_ext):
 				'/FC',
             '/Ot', #favor faster code
 				'/Zc:twoPhase-',
-            ]+msvcCppGLFWflag,
+            ]+msvcCppGLFWflag+commonCopts,
         'unix': [
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
  		 '-Wall',
@@ -309,7 +329,7 @@ class BuildExt(build_ext):
 #		'-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
 #		'-Wall',
 #		'-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
-        ]+unixCppGLFWflag,
+        ]+unixCppGLFWflag+commonCopts,
     }
     if not is32bits: #for 32bits, we assume that processors may not support avx
         c_opts['msvc'] += ['/arch:AVX2']
@@ -334,8 +354,10 @@ class BuildExt(build_ext):
     if sys.platform == 'darwin':
         darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']  #without c++17 support
         darwin_opts += ['-Wno-unused-variable','-Wno-missing-braces','-Wno-return-stack-address']
-        #darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support
-        c_opts['unix'] += darwin_opts + ['-Wno-inconsistent-missing-override', '-Wno-overloaded-virtual'] #avoid too many warnings
+        #darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support (not working on older MacOSX)
+        c_opts['unix'] += darwin_opts + ['-Wno-inconsistent-missing-override', 
+        '-Wno-overloaded-virtual' #avoid too many warnings
+        ]+commonCopts
         l_opts['unix'] += darwin_opts
     else:
         l_opts['unix'] += [
@@ -344,7 +366,7 @@ class BuildExt(build_ext):
             ]        
         #warnings not available in clang:
         c_opts['unix'] += ['-Wno-non-template-friend', #deactivate warning for several vector/array templates
-                 		 '-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
+                 		 #'-Wno-class-memaccess', #removed: does not work on older gcc; avoid warnings on gcc-8 regarding memory access in class
                           ]
 
     def build_extensions(self):

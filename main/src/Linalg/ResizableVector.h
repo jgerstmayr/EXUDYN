@@ -31,6 +31,9 @@
 #define RESIZABLEVECTORBASE__H
 
 #include "Linalg/Vector.h"
+#ifdef USE_NEW_CONSTSIZEVECTOR
+#include "Linalg/ConstSizeVector.h"
+#endif
 
 template<typename T>
 class ResizableVectorBase: public VectorBase<T>
@@ -108,6 +111,26 @@ public:
 		}
 	}
 
+#ifdef USE_NEW_CONSTSIZEVECTOR
+	//template<class Tvector>
+	//void CopyFrom(const Tvector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	template<Index dataSize>
+	void CopyFrom(const ConstSizeVectorBase<T, dataSize>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	{
+		//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
+		//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
+		CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): thisPosition index mismatch");
+		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): vectorPosition index mismatch");
+
+		for (Index i = 0; i < numberOfCopiedItems; i++)
+		{
+			this->GetUnsafe(i + thisPosition) = vector.GetUnsafe(i + vectorPosition);
+			//this->GetUnsafe(i + thisPosition) = vector[i + vectorPosition];
+		}
+	}
+
+#endif
 	void CopyFrom(const VectorBase<T>& vector)
 	{
 		SetNumberOfItems(vector.NumberOfItems());

@@ -43,6 +43,7 @@ class SlimVectorBase
 {
 protected:
     T data[dataSize]; //!< const number of T given by template parameter 'dataSize'
+	//std::array<T, dataSize> data;
 
 public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -50,20 +51,34 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //! default constructor: no initialization here, in order to allow simple copy of data
-	SlimVectorBase() {}; //rule of 5
+	SlimVectorBase() {}; //rule of 5 ==> would require to eliminate this, but still faster in this way!
 
 	//! copy constructor
-	SlimVectorBase(const SlimVectorBase<T, dataSize>& other)
-	{
-		Index cnt = 0;
-		for (auto val : other) {
-			data[cnt++] = val;
-		}
-	}
+	//SlimVectorBase(const SlimVectorBase<T, dataSize>& other): data(other.data)
+	//{
+	//}
+	//SlimVectorBase(const SlimVectorBase<T, dataSize>& other)
+	//{
+	//	Index cnt = 0;
+	//	for (auto val : other) {
+	//		data[cnt++] = val;
+	//	}
+	//}
+
+	////! move constructor
+	//SlimVectorBase(SlimVectorBase<T, dataSize>&& other) noexcept
+	//{
+	//	Index cnt = 0;
+	//	for (auto val : other) 
+	//	{
+	//		data[cnt++] = std::exchange(val, (T)0.);
+	//	}
+	//}
 
 	//! constructor with a single scalar value used for all vector components.
-	SlimVectorBase(T scalarValue)
-    {
+	//SlimVectorBase(T scalarValue = (T)0) //add default argument as replacement for default constructor
+	SlimVectorBase(T scalarValue) 
+	{
         for (auto &item : *this) { item = scalarValue; }
     }
 
@@ -78,7 +93,7 @@ public:
 		
         Index cnt = 0;
         for (auto val : listOfItems) {
-            (*this)[cnt++] = val;
+            GetUnsafe(cnt++) = val;
         }
     }
 
@@ -92,7 +107,7 @@ public:
 
         Index cnt = startPositionVector;
         for (auto& item : *this) {
-            item = vector[cnt++];
+            item = vector.GetUnsafe(cnt++);
         }
     }
 
@@ -120,7 +135,7 @@ public:
 		}
 	}
 
-	~SlimVectorBase() { }; //rule of 5
+	//~SlimVectorBase() { }; //rule of 5
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // BASIC FUNCTIONS
@@ -147,7 +162,7 @@ public:
 
 		Index cnt = 0;
 		for (auto val : listOfItems) {
-			(*this)[cnt++] = val;
+			data[cnt++] = val;
 		}
 	}
 
@@ -165,7 +180,7 @@ public:
 		CHECKandTHROW(vector.NumberOfItems() == dataSize, "SlimVectorBase<T, >::CopyFrom(TVector) size mismatch");
 		Index cnt = 0;
 		for (auto val : vector) {
-			(*this)[cnt++] = (T)val;
+			data[cnt++] = (T)val;
 		}
 	}
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -174,8 +189,7 @@ public:
     //! reference (write) access-operator.
     T& operator[](Index item)
     {
-		CHECKandTHROW((item >= 0), "ERROR: SlimVector T& operator[]: item < 0");
-		CHECKandTHROW((item < dataSize), "ERROR: SlimVector T& operator[]: item >= dataSize");
+		CHECKandTHROW((item >= 0) && (item < dataSize), "ERROR: SlimVector T& operator[]: index out of range");
 
         return data[item];
     };
@@ -183,34 +197,47 @@ public:
     //! const (read) access-operator
     const T& operator[](Index item) const
     {
-		CHECKandTHROW((item >= 0), "ERROR: SlimVector T operator[] const: item < 0");
-		CHECKandTHROW((item < dataSize), "ERROR: SlimVector T operator[] const: item >= dataSize");
+		CHECKandTHROW((item >= 0) && (item < dataSize), "ERROR: SlimVector const T& operator[] const: index out of range");
 
         return data[item];
     };
 
-    //this is dangerous: use SetAll(...) instead!
-    ////! assign a scalar value to all components of the vector
-    //SlimVectorBase<T, dataSize>& operator= (T scalarValue)
-    //{
-    //    for (auto &item : *this) {
-    //        item = scalarValue;
-    //    }
-    //    return *this;
-    //}
-
-	//! copy assignment operator
-	SlimVectorBase<T,dataSize>& operator= (const SlimVectorBase<T, dataSize>& other)
+	//unsafe Referencing access-operator, ZERO-based, without CHECKS
+	T& GetUnsafe(Index item)
 	{
-		if (this == &other) { return *this; }
+		return data[item];
+	};
 
-		Index cnt = 0;
-		for (auto item : other) {
-			(*this)[cnt++] = item;
-		}
-		return *this;
-	}
+	//unsafe const Referencing access-operator, ZERO-based, without CHECKS
+	const T& GetUnsafe(Index item) const
+	{
+		return data[item];
+	};
 
+	//////! copy assignment operator
+	//SlimVectorBase<T,dataSize>& operator= (const SlimVectorBase<T, dataSize>& other)
+	//{
+	//	if (this == &other) { return *this; }
+
+	//	//return *this = other;
+	//	Index cnt = 0;
+	//	for (auto item : other) {
+	//		(*this)[cnt++] = item;
+	//	}
+	//	return *this;
+	//}
+
+	//////! move assignment operator
+	//SlimVectorBase<T, dataSize>& operator= (SlimVectorBase<T, dataSize>&& other) noexcept
+	//{
+	//	//std::swap(data, other.data); //no option, because swap cannot work on C-array
+	//	//return *this;
+	//	Index cnt = 0;
+	//	for (auto item : other) {
+	//		std::swap(data[cnt++], item);
+	//	}
+	//	return *this;
+	//}
 
     //! comparison operator, component-wise compare; returns true, if all components are equal
     bool operator== (const SlimVectorBase<T, dataSize>& v) const
@@ -218,7 +245,7 @@ public:
         Index cnt = 0;
         for (auto item : v)
         {
-            if (item != (*this)[cnt++]) { return false; }
+            if (item != data[cnt++]) { return false; }
         }
         return true;
     }
@@ -238,7 +265,7 @@ public:
     {
         Index cnt = 0;
         for (auto item : v) {
-            (*this)[cnt++] += item;
+			data[cnt++] += item;
         }
         return *this;
     }
@@ -248,7 +275,7 @@ public:
     {
         Index cnt = 0;
         for (auto item : v) {
-            (*this)[cnt++] -= item;
+			data[cnt++] -= item;
         }
         return *this;
     }
@@ -259,7 +286,7 @@ public:
 		CHECKandTHROW(v.NumberOfItems() == dataSize, "ERROR: SlimVectorBase operator+= with VectorBase size mismatch");
 		Index cnt = 0;
 		for (auto item : v) {
-			(*this)[cnt++] += item;
+			data[cnt++] += item;
 		}
 		return *this;
 	}
@@ -270,7 +297,7 @@ public:
 		CHECKandTHROW(v.NumberOfItems() == dataSize, "ERROR: SlimVectorBase operator-= with VectorBase size mismatch");
 		Index cnt = 0;
 		for (auto item : v) {
-			(*this)[cnt++] -= item;
+			data[cnt++] -= item;
 		}
 		return *this;
 	}
@@ -298,7 +325,7 @@ public:
 		SlimVectorBase<T, dataSize> result;
         Index cnt = 0;
         for (auto &item : result) {
-            item = v1[cnt] + v2[cnt];
+            item = v1.data[cnt] + v2.data[cnt];
             cnt++;
         }
         return result;
@@ -310,7 +337,7 @@ public:
 		SlimVectorBase<T, dataSize> result;
 		Index cnt = 0;
 		for (auto &item : result) {
-			item = v1[cnt] - v2[cnt];
+			item = v1.data[cnt] - v2.data[cnt];
 			cnt++;
 		}
 		return result;
@@ -322,7 +349,7 @@ public:
 		SlimVectorBase<T, dataSize> result;
 		Index cnt = 0;
 		for (auto &item : result) {
-			item = -v1[cnt];
+			item = -v1.data[cnt];
 			cnt++;
 		}
 		return result;
@@ -334,7 +361,7 @@ public:
         SlimVectorBase<T, dataSize> result;
         Index cnt = 0;
         for (auto &item : result) {
-            item = scalar * v[cnt++];
+            item = scalar * v.data[cnt++];
         }
         return result;
     }
@@ -345,7 +372,7 @@ public:
         SlimVectorBase<T, dataSize> result;
         Index cnt = 0;
         for (auto &item : result) {
-            item = scalar * v[cnt++];
+            item = scalar * v.data[cnt++];
         }
         return result;
     }
@@ -356,7 +383,7 @@ public:
         T result = 0;
         Index cnt = 0;
         for (auto &item : v1) {
-            result += item * v2[cnt++];
+            result += item * v2.data[cnt++];
         }
         return result;
     }
@@ -372,11 +399,6 @@ public:
 	{
 		std::array<T, dataSize> v;
 		std::copy(begin(), end(), v.begin());
-
-		//for (Index i = 0; i < dataSize; i++)
-		//{
-		//	v[i] = data[i];
-		//}
 		return v;
 	}
 

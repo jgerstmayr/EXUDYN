@@ -199,7 +199,7 @@ if exudynTestGlobals.useGraphics:
 #        mbs.WaitForUserToContinue
 #        fileName = 'coordinatesSolution.txt'
 #        solution = LoadSolutionFile('coordinatesSolution.txt')
-#        AnimateSolution(exu, SC, mbs, solution, 10, 0.025, True)
+#        AnimateSolution(mbs, solution, 10, 0.025, True)
     #+++++++++++++++++++++++++++++++++++++
 
     #SC.WaitForRenderEngineStopFlag()

@@ -25,6 +25,13 @@ except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
 
+try:
+    from .interactive import SolutionViewer
+except:
+    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
+    from interactive import SolutionViewer
+
+
 __version__ = GetVersionString() #add __version__ to exudyn module ...
 
 

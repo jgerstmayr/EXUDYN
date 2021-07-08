@@ -102,7 +102,7 @@ animate = True
 if animate:
     fileName = 'coordinatesSolution.txt'
     solution = LoadSolutionFile('coordinatesSolution.txt')
-    AnimateSolution(exu, SC, mbs, solution, 1, 0.05)
+    AnimateSolution(mbs, solution, 1, 0.05)
 
 
 #SC.WaitForRenderEngineStopFlag()

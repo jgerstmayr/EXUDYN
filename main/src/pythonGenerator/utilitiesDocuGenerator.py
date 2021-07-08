@@ -7,7 +7,7 @@ Created on Tue Jun 09 23:53:30 2020
 goal: generate latex documentation for all utilities packages
 """
 import copy #for deep copies
-from autoGenerateHelper import Str2Latex
+from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword
 
 fileDir='../../pythonDev/exudyn/'
 filesParsed=[
@@ -447,12 +447,20 @@ for fileName in filesParsed:
     
 #*****************************************************
     isFirstFunction = True
-    #insert function descriptions
+    #insert function descriptions 
     for funcDict in functionList:
         if not isFirstFunction:
             sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
             #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
         sLatex += WriteFunctionDescription2Latex(funcDict, moduleName)
+        
+        #++++++++++++++++++++++++++++++++++++
+        #add example references for function
+        sExamples = GenerateLatexStrKeywordExamples('UtilityFunction', funcDict['functionName'], '')
+        if len(sExamples) != 0:
+            #sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            sLatex += sExamples
+
         isFirstFunction=False
 
     #insert class descriptions with functions
@@ -479,6 +487,12 @@ for fileName in filesParsed:
                 #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
             sLatex += WriteFunctionDescription2Latex(funcDict, moduleName, isClassFunction=True, className=classDict['className'])
             isFirstFunction=False
+
+        #use split in class, for derived classes like InertiaCylinder(RigidBodyInertia)
+        sExamples = GenerateLatexStrKeywordExamples('UtilityFunction', classDict['className'].split('(')[0], '')
+        if len(sExamples) != 0:
+            #sLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
+            sLatex += sExamples
 
         
 latexFile = '..\\..\\..\\docs\\theDoc\\pythonUtilitiesDescription.tex'

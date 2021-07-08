@@ -134,7 +134,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     print("nNodes=",fem.NumberOfNodes())
 
     strMode = ''
-    if Tru: #pure eigenmodes
+    if True: #pure eigenmodes
         print("compute eigen modes... ")
         start_time = time.time()
         fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
@@ -270,7 +270,8 @@ if True: #now import mesh as mechanical model to EXUDYN
         SC.visualizationSettings.general.autoFitScene = False #otherwise, model may be difficult to be moved
         
         nodeNumber = objFFRF['nGenericODE2'] #this is the node with the generalized coordinates
-        AnimateModes(SC, mbs, nodeNumber, period=0.1, showTime=False, renderWindowText='Hurty-Craig-Bampton: 2 x 6 static modes and 8 eigenmodes\n')
+        AnimateModes(SC, mbs, nodeNumber, period=0.1, showTime=False, renderWindowText='Hurty-Craig-Bampton: 2 x 6 static modes and 8 eigenmodes\n',
+                     runOnStart=True)
         # import sys
         # sys.exit()
 

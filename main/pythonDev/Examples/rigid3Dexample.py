@@ -28,7 +28,8 @@ s = 0.1 #size of cube
 sx = 3*s #x-size
 cPosZ = 0.1 #offset of constraint in z-direction
 
-background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,color)
+#create background, in order to have according zoom all
+background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,color4white)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
@@ -89,6 +90,7 @@ simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
 exu.StartRenderer()
+mbs.WaitForUserToContinue()
 
 exu.SolveDynamic(mbs, simulationSettings)
 

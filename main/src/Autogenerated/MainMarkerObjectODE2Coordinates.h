@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-03-21  10:24:55 (last modfied)
+* @date         2021-07-01  09:10:52 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainMarkerObjectODE2Coordinates
-* @brief        A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates. This marker is under development and UNTESTED.
+* @brief        A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

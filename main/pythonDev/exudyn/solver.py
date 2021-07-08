@@ -116,7 +116,7 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
-#   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'] 
+#   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 #**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf section \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**example:
 # import exudyn as exu
@@ -148,6 +148,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
     staticSolver = exudyn.MainSolverStatic()
     if storeSolver:
         mbs.sys['staticSolver'] = staticSolver #copy solver structure to sys variable
+        mbs.sys['simulationSettings'] = simulationSettings #link to last simulation settings
     success = False
     try:
         success = staticSolver.SolveSystem(mbs, simulationSettings)
@@ -176,7 +177,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 #   simulationSettings: specific simulation settings
 #   solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
-#   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'] 
+#   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 #   showHints: show additional hints, if solver fails
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 #**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf section \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
@@ -215,6 +216,7 @@ def SolveDynamic(mbs,
         dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
         if storeSolver:
             mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
+            mbs.sys['simulationSettings'] = simulationSettings #link to last simulation settings
         #if (experimentalNewSolver or #solver flag
         #    ('experimentalNewSolver' in exudyn.sys)): #flag set in test suite
         #    dynamicSolver.experimentalUseSolverNew = True #must be set at the very beginning when MainSolverImplicitSecondOrder() is initialized
@@ -263,6 +265,7 @@ def SolveDynamic(mbs,
         dynamicSolver = exudyn.MainSolverExplicit()
         if storeSolver:
             mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
+            mbs.sys['simulationSettings'] = simulationSettings #link to last simulation settings
 
         stat = exudyn.InfoStat(False)
         success = dynamicSolver.SolveSystem(mbs, simulationSettings)

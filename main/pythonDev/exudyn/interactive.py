@@ -88,12 +88,14 @@ class InteractiveDialog:
     #  showTime: shows current time in dialog
     #  fontSize: adjust font size for all dialog items
     #  doTimeIntegration: performs internal time integration with given parameters
+    #  runOnStart: immediately activate 'Run' button on start
     #**notes: detailed description of dialogItems and plots list/dictionary is given in commented the example below
     def __init__(self, mbs, simulationSettings, simulationFunction, 
                  dialogItems, plots = [], period = 0.04, 
                  realtimeFactor = 1, userStartSimulation=False,
                  title='',  showTime=False, fontSize = 12,
-                 doTimeIntegration = True):
+                 doTimeIntegration = True,
+                 runOnStart = False):
         #store init arguments
         self.mbs = mbs
         self.simulationFunction = simulationFunction
@@ -177,12 +179,15 @@ class InteractiveDialog:
                     initialValue = item['value']
                 if initialValue < minValue or initialValue > maxValue:
                     initialValue = 0.5*(minValue+maxValue)
+                resolutionItem = (maxValue-minValue)/(steps-1)
+                if 'resolution' in item: #resolution is needed, if we want to do bi-directional set/get of slider values (otherwise digits are lost)
+                     resolutionItem = item['resolution']
 
                 nDigits = 4
                 if maxValue-minValue == steps-1:
                     nDigits = 0
                 widget = tkinter.Scale(root, from_=minValue, to=maxValue,
-                                       length = steps, digits=nDigits, resolution=(maxValue-minValue)/(steps-1),
+                                       length = steps, digits=nDigits, resolution=resolutionItem,
                                        orient=tkinter.HORIZONTAL,
                                        font=defaultFont)
                 widget.set(initialValue)
@@ -277,6 +282,8 @@ class InteractiveDialog:
         self.InitializePlots()  #set up all structures for plots
         self.UpdatePlots()      #update all subplots with new sensor values
 
+        if runOnStart:          #immediately activate run function on startup
+            self.StartSimulation()
         root.deiconify()
         root.mainloop()
 
@@ -298,7 +305,7 @@ class InteractiveDialog:
 
         if self.userStartSimulation:
             self.userStartSimulation(self.simulationStopped)
-        
+        #self.ProcessWidgetStates() #do this finally, to update states, which may have changed in last step (SolutionViewer!)
         self.ContinuousRunFunction()
 
     #**classFunction: assign current values of radio buttons and sliders to mbs.variables
@@ -475,10 +482,13 @@ class InteractiveDialog:
 #    stepsPerPeriod: number of steps into which the animation of one cycle of the mode is split into
 #    showTime: show a virtual time running from 0 to 2*pi during one mode cycle
 #    renderWindowText: additional text written into renderwindow before 'Mode X' (use $\backslash$n to add line breaks)
+#    runOnStart: immediately go into 'Run' mode
+#    runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
 #**output: opens interactive dialog with further settings
 #**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. 
 #    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{secGeneratingAnimations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
-def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = ''):
+def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, 
+                 renderWindowText = '', runOnStart = False, runMode=0):
 
     SC = systemContainer
     mbs = mainSystem
@@ -492,6 +502,10 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     nodeCoords = mbs.GetNodeOutput(nodeNumber,exudyn.OutputVariableType.Coordinates,exudyn.ConfigurationType.Reference)
     numberOfModes = len(nodeCoords)
     #numberOfModes = mbs.GetNode(nODE2)['numberOfODE2Coordinates']
+
+    if (runMode != 0 and runMode != 1 and runMode != 2):
+        print('ERROR in AnimateModes: illegal run mode:', runMode)
+        return
     
     #use interactive dialog:
     dialogItems = [
@@ -510,9 +524,9 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
                    {'type':'slider', 'range':(0, 0.5), 'value':0.05, 'steps':501, 'variable':'modeShapeAmplitude', 'grid':(5,1)},
                    {'type':'label', 'text':'update period:', 'grid':(6,0)},
                    {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1)},
-                   {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':0, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2)]},
+                   {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2)]},
                    {'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
-                   {'type':'radio', 'textValueList':[('Record animation',0), ('Off',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
+                   {'type':'radio', 'textValueList':[('Record animation',0), ('No recording',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
                    ]
 
     mbs.variables['modeShapePeriod'] = period
@@ -602,10 +616,160 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
                       title='Animate mode shapes',
                       doTimeIntegration=False, period=period,
                       showTime=False,#done in UFshowModes
+                      runOnStart=runOnStart
                       )
 
     
     #SC.WaitForRenderEngineStopFlag() #not needed, Render window closes when dialog is quit
     exudyn.StopRenderer() #safely close rendering window!
+
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++
+#**function: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
+#**input: 
+#  mainSystem: the system used for animation
+#  solution: solution dictionary previously loaded with exudyn.utilities.LoadSolutionFile(...); will be played from first to last row; if solution=='', it tries to load the file coordinatesSolutionFileName as stored in mbs.sys['simulationSettings'], which are the simulationSettings of the previous simulation
+#  rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+#  timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+#  runOnStart: immediately go into 'Run' mode
+#  runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
+#**output: updates current visualization state, renders the scene continuously (after pressing button 'Run')
+def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2):
+    from exudyn.utilities import SetSolutionState, LoadSolutionFile
+    
+    mbs = mainSystem
+    SC = mbs.GetSystemContainer()
+
+    if solution==[]:
+        if not 'simulationSettings' in mbs.sys:
+            raise ValueError('SolutionViewer: no solution file found (already simulated?)!')
+        sims = mbs.sys['simulationSettings']
+        if not sims.solutionSettings.writeSolutionToFile:
+            raise ValueError('SolutionViewer: previous simulation has writeSolutionToFile==False; no solution file available!')
+        solution = LoadSolutionFile(sims.solutionSettings.coordinatesSolutionFileName) #load solution file of previous simulation
+
+    nRows = solution['nRows']
+    if nRows == 0:
+        print('ERROR in SolutionViewer: solution file is empty')
+        return
+    if (runMode != 0 and runMode != 1 and runMode != 2):
+        print('ERROR in SolutionViewer: illegal run mode:', runMode)
+        return
+    if (rowIncrement < 1) or (rowIncrement > nRows):
+        print('ERROR in SolutionViewer: rowIncrement must be at least 1 and must not be larger than the number of rows in the solution file')
+    oldUpdateInterval = SC.visualizationSettings.general.graphicsUpdateInterval
+    SC.visualizationSettings.general.graphicsUpdateInterval = 0.5*min(timeout, 2e-3) #avoid too small values to run multithreading properly
+    mbs.SetRenderEngineStopFlag(False) #not to stop right at the beginning
+
+    # runLoop = False
+    # while runLoop and not mainSystem.GetRenderEngineStopFlag():
+    #     for i in range(0,nRows,rowIncrement):
+    #         if not(mainSystem.GetRenderEngineStopFlag()):
+    #             SetSolutionState(mainSystem, solution, i, exudyn.ConfigurationType.Visualization)
+    #             exudyn.DoRendererIdleTasks(timeout)
+
+    SetSolutionState(mainSystem, solution, 0, exudyn.ConfigurationType.Visualization)
+    exudyn.DoRendererIdleTasks(timeout)
+
+    nSteps = int(nRows)              #only make these steps available in slider!
+    maxNSteps = max(500,min(nSteps,1200))     #do not allow more steps, because dialog may be too large ...
+    resolution = min(1.,maxNSteps/nSteps) #do not use values smaller than 1
+    
+    dialogItems = [
+                   {'type':'label', 'text':'Solution steps:', 'grid':(1,0)},
+                   {'type':'slider', 'range':(0, nSteps-1), 'value':0, 'steps':maxNSteps, 'variable':'solutionViewerStep','resolution': resolution, 'grid':(1,1)},
+                    {'type':'label', 'text':'Increment:', 'grid':(2,0)},
+                    {'type':'slider', 'range':(1, 200), 'value':rowIncrement, 'steps':200, 'variable':'solutionViewerRowIncrement', 'grid':(2,1)},
+                   {'type':'label', 'text':'update period:', 'grid':(3,0)},
+                   {'type':'slider', 'range':(0.005, 1), 'value':timeout, 'steps':200, 'variable':'solutionViewerPeriod', 'grid':(3,1)},
+                   {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'solutionViewerRunModus', 'grid': [(4,0),(4,1),(4,2)]},
+                   #{'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
+                   {'type':'radio', 'textValueList':[('Record animation',0), ('No recording',1)],'value':1, 'variable':'solutionViewerSaveImages', 'grid': [(5,0),(5,1)]},
+                   ]
+
+
+    mbs.variables['solutionViewerRowIncrement'] = float(rowIncrement)
+    mbs.variables['solutionViewerNSteps'] = nSteps
+    mbs.variables['solutionViewerSolution'] = solution
+    # mbs.variables['solutionViewerStep'] = 0
+    # mbs.variables['solutionViewerPeriod'] = timeout
+
+    def UFviewer(mbs, dialog):
+        i = int(mbs.variables['solutionViewerStep'])
+
+        # mbs.systemData.SetTime(t, exudyn.ConfigurationType.Visualization)
+        SetSolutionState(mainSystem, mbs.variables['solutionViewerSolution'], i, exudyn.ConfigurationType.Visualization)
+        #exudyn.DoRendererIdleTasks(timeout)
+        # SC.visualizationSettings.contour.reduceRange = False
+        
+        mbs.SendRedrawSignal()
+        exudyn.DoRendererIdleTasks() #as there is no simulation, we must do this for graphicsDataUserFunctions
+        # if mbs.variables['modeShapeSaveImages'] == 0:
+        #     SC.RedrawAndSaveImage() #create images for animation
+        # else:
+        #     SC.visualizationSettings.exportImages.saveImageFileCounter = 0 #for next mode ...
+
+        dialog.period = mbs.variables['solutionViewerPeriod']
+
+        if mbs.variables['solutionViewerRunModus'] < 2:
+            mbs.variables['solutionViewerStep'] += mbs.variables['solutionViewerRowIncrement']
+            # print("step=", mbs.variables['solutionViewerStep'])
+    
+            #first variable is scale, which contains step
+            dialog.variableList[0][0].set(mbs.variables['solutionViewerStep'])
+            # for var in dialog.variableList:
+            #     #self.mbs.variables[var[1]] = var[0].get()
+            #     print(var[1],'=', var[0].get())
+
+        if mbs.variables['solutionViewerSaveImages'] == 0:
+            SC.RedrawAndSaveImage() #create images for animation
+        # else: #do not reset image counter to allow creating of multi-view images, slow motion, etc.
+        #     SC.visualizationSettings.exportImages.saveImageFileCounter = 0 #
+
+        if mbs.variables['solutionViewerStep']>mbs.variables['solutionViewerNSteps']-1.:
+            #or (mbs.variables['solutionViewerRunModus'] and mbs.variables['solutionViewerStep']==mbs.variables['solutionViewerNSteps']-1.):
+            mbs.variables['solutionViewerStep'] = 0
+            dialog.variableList[0][0].set(0)
+
+            SetSolutionState(mainSystem, mbs.variables['solutionViewerSolution'], 0, exudyn.ConfigurationType.Visualization)
+            # mbs.SendRedrawSignal()
+            # exudyn.DoRendererIdleTasks() #as there is no simulation, we must do this for graphicsDataUserFunctions
+            if mbs.variables['solutionViewerRunModus'] == 1: #one cylce ==> stop
+                dialog.StartSimulation() #start/stop simulation
+
+        
+
+    exudyn.StartRenderer()
+    if 'renderState' in exudyn.sys: SC.SetRenderState(exudyn.sys['renderState']) #load last model view
+
+    simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
+     #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
+    simulationSettings.solutionSettings.solutionInformation = ''
+
+    if not SC.visualizationSettings.general.useMultiThreadedRendering:
+        exudyn.DoRendererIdleTasks() #do an update once
+
+    dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
+                      simulationFunction=UFviewer, 
+                      dialogItems=dialogItems,
+                      title='Solution Viewer',
+                      doTimeIntegration=False, period=timeout,
+                      showTime=True, runOnStart=runOnStart
+                      )
+
+    
+    #SC.WaitForRenderEngineStopFlag() #not needed, Render window closes when dialog is quit
+    exudyn.StopRenderer() #safely close rendering window!
+
+
+
+
+    SC.visualizationSettings.general.graphicsUpdateInterval = oldUpdateInterval #set values back to original
+
+
+
+
 
 

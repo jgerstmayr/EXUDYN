@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  13:31:26 (last modfied)
+* @date         2021-07-08  15:40:50 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -167,6 +167,9 @@ public: // AUTO:
     {
         massTermsALEComputed = false; massMatrixComputed = false;
     }
+
+    //! AUTO:  precompute mass terms if it has not been done yet
+    virtual void PreComputeMassTerms() const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

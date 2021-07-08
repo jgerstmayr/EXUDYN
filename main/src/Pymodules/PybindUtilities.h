@@ -573,8 +573,8 @@ namespace EPyUtils {
 
 
 	//!convert numpy matrix to Matrix
-	template<typename T>
-	inline void NumPy2Matrix(const py::array_t<T>& pyArray, MatrixBase<T>& m)
+	template<typename T, class TMatrix>
+	inline void NumPy2Matrix(const py::array_t<T>& pyArray, TMatrix& m)
 	{
 		if (pyArray.size() == 0) //process empty arrays, which leads to empty matrix, but has no dimension 2
 		{
@@ -686,7 +686,8 @@ namespace EPyUtils {
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	inline bool SetNumpyMatrixSafely(const py::object& value, Matrix& destination)
+	template<class TMatrix>
+	inline bool SetNumpyMatrixSafely(const py::object& value, TMatrix& destination)
 	{
 		NumPy2Matrix<Real>(py::cast<py::array_t<Real>>(value), destination);
 		return true;

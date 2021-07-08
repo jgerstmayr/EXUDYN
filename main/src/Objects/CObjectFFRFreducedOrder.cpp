@@ -909,12 +909,13 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 
 		//compute: -A*pLocalTilde*GLocal
 		cNode->GetGlocal(ApLocalTildeGlocal);
-		EXUmath::ApplyTransformation<3>(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), ApLocalTildeGlocal);
-		EXUmath::ApplyTransformation<3>(A, ApLocalTildeGlocal);
+		EXUmath::ApplyTransformation33(RigidBodyMath::Vector2SkewMatrixTemplate(-localPosition), ApLocalTildeGlocal);
+		EXUmath::ApplyTransformation33(A, ApLocalTildeGlocal);
 
-		//now compute remaining jacobian terms for reference frame motion:
-		ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0;
-		cNode->GetPositionJacobian(posJac0); //usually identity, because node does not include localPosition
+		//now compute remaining jacobian terms for reference frame motion; posJac0 must have already correct size (because of LinkedDataMatrix)
+		ConstSizeMatrix<CNodeRigidBody::nDim3D * (CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)> posJac0(nDim3D, nODE2rigid);
+		LinkedDataMatrix linkedPosJac0(posJac0);
+		cNode->GetPositionJacobian(linkedPosJac0); //usually identity, because node does not include localPosition
 
 		value.SetSubmatrix(posJac0, 0, 0); //writes 3x7 matrix for Euler parameters...
 		value.SetSubmatrix(ApLocalTildeGlocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
@@ -1011,7 +1012,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
 
 		cNode->GetGlocal(Glocal);
-		EXUmath::ApplyTransformation<3>(A, Glocal); //G, because d(omega)/d(qRot) = G
+		EXUmath::ApplyTransformation33(A, Glocal); //G, because d(omega)/d(qRot) = G
 
 		value.SetSubmatrix(Glocal, 0, CNodeRigidBody::maxDisplacementCoordinates);
 		//pout << "value=" << value << "\n";

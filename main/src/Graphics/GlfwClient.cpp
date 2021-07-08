@@ -40,7 +40,7 @@ using namespace std::string_literals; // enables s-suffix for std::string litera
 //#include <GLFW/glfw3.h>
 
 
-#include "Graphics/characterBitmap.h"
+//#include "Graphics/characterBitmap.h"
 #include "Graphics/GlfwClient.h"
 #include "System/versionCpp.h"
 
@@ -1582,14 +1582,14 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		}
 		else if (visSettings->window.showMouseCoordinates)
 		{
-			Vector2D mp = state->mouseCoordinates;
-			Real xpos = mp[0];
-			Real ypos = mp[1];
+			//Vector2D mp = state->mouseCoordinates; //not showing mouse coordinates
+			//Real xpos = mp[0];
+			//Real ypos = mp[1];
 
 			float height = (float)state->currentWindowSize[1];
 			float factor = 2.f*state->zoom / height;
 
-			Vector2D ploc = factor * Vector2D({ xpos - 0.5*state->currentWindowSize[0], -1.*(ypos - 0.5*state->currentWindowSize[1]) });
+			//Vector2D ploc = factor * Vector2D({ xpos - 0.5*state->currentWindowSize[0], -1.*(ypos - 0.5*state->currentWindowSize[1]) });
 			Vector2D cp({(double)state->centerPoint[0], (double)state->centerPoint[1] });
 
 			Vector2D lastPressedCoords = factor * Vector2D({ stateMachine.lastMousePressedX - 0.5*state->currentWindowSize[0],

@@ -43,7 +43,10 @@ public:
 	virtual bool UseReducedOrderIntegration() const { return false; }
 
 	//!  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const override;
+	virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const override;
+
+	//!  precompute mass terms if it has not been done yet
+	virtual void PreComputeMassTerms() const;
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -472,6 +472,7 @@ public:
 	//CNodeRigidBody(): CNodeODE2()
 	//{
 	//}
+
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
 	virtual CNodeRigidBody* GetClone() const { return new CNodeRigidBody(*this); }
 
@@ -502,6 +503,12 @@ public:
 	virtual void GetG_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetG_t(...): invalid call"); }
 	virtual void GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGlocal_t(...): invalid call"); }
 
+	//! obtain Glocal and local angular velocity
+	virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }
+
+	//! obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
+	virtual void CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
+		Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }
 };
 
 //! node with data variables

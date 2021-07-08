@@ -112,7 +112,8 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 {
 	if (parameters.activeConnector)
 	{
-		//for free axes, set jacobian_AE diagonal term to 1
+		CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable, "CObjectJointRollingDisc::ComputeJacobianAE: marker do not provide velocityLevel information");
+		//for free axes, set jacobian_AE diagonal term to 1 
 		jacobian_AE.SetScalarMatrix(nConstraints, 0.); //represents derivative of algebraic equation '[lambda0,lambda1]^T = [0,0]^T'
 		for (Index i = 0; i < nConstraints; i++)
 		{
@@ -138,7 +139,7 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 		const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
 		Vector3D omega0 = A0 * markerData.GetMarkerData(0).angularVelocityLocal;
 
-		Vector3D constraintVec; //will contain constraint violation in the end
+		//Vector3D constraintVec; //will contain constraint violation in the end
 
 		Vector3D pC, vCm0, vCm1, w2, w3; //all vectors in global coordinates; therefore, lambda is also in global coordinates for now
 		ComputeContactPoint(p0, A0, v0, omega0, p1, A1, v1, omega1, A0*parameters.planeNormal, parameters.discRadius, pC, vCm0, vCm1, w2, w3);
@@ -228,7 +229,7 @@ void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType vari
 	const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
 	Vector3D omega0 = A0 * markerData.GetMarkerData(0).angularVelocityLocal;
 
-	Vector3D constraintVec; //will contain constraint violation in the end
+	//Vector3D constraintVec; //will contain constraint violation in the end
 
 	//Vector3D pC, vC, w2, w3;
 	//ComputeContactPoint(p1, A1, v1, omega1, parameters.planeNormal, parameters.discRadius, pC, vC, w2, w3);

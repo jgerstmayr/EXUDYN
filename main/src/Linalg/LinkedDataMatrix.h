@@ -52,6 +52,17 @@ public:
 		this->data = m.data;
 	}
 
+#ifdef USE_NEW_CONSTSIZEMATRIX
+	//! link to existing const matrix
+	template<Index dataSize>
+	LinkedDataMatrixBase(const ConstSizeMatrixBase<T,dataSize>& m)
+	{
+		this->numberOfRows = m.NumberOfRows();
+		this->numberOfColumns = m.NumberOfColumns();
+		this->data = m.GetDataPointer();
+	}
+#endif 
+
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize items with values stored at pointer T*; this method can potentially link to invalid data!
 	//! can also link to vectors, matrices of other formats, etc.
 	LinkedDataMatrixBase(const T* dataPointer, Index numberOfRowsInit, Index numberOfColumnsInit)
@@ -116,7 +127,11 @@ protected:
 	//! if new size (rows*cols) fits into allocatedSize ==> reshape matrix; else: delete data if data != nullptr; Set new size of matrix; for external access, use 'SetNumberOfRowsAndColumns' to modify size of matrix
 	virtual void ResizeMatrix(Index numberOfRowsInit, Index numberOfColumnsInit) override
 	{
-		CHECKandTHROW(numberOfRowsInit == this->NumberOfRows() && numberOfColumnsInit == this->NumberOfColumns(), "LinkedDataMatrixBase<>::ResizeMatrix: cannot change size of matrix");
+		if (!(numberOfRowsInit == this->NumberOfRows() && numberOfColumnsInit == this->NumberOfColumns()))
+		{
+		CHECKandTHROW(numberOfRowsInit == this->NumberOfRows() && numberOfColumnsInit == this->NumberOfColumns(),
+			"LinkedDataMatrixBase<>::ResizeMatrix: cannot change size of matrix");
+		}
 	}
 
 

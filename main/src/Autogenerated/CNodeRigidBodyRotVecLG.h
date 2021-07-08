@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2021-07-06  09:41:17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,6 +122,12 @@ public: // AUTO:
 
     //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates (='G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
     virtual void GetRotationJacobian(Matrix& value) const override;
+
+    //! AUTO:  provide nodal values efficiently for rigid body computation
+    virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const override;
+
+    //! AUTO:  obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
+    virtual void CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const override;
 
     //! AUTO:  return internally stored reference coordinates of node
     virtual LinkedDataVector GetReferenceCoordinateVector() const override

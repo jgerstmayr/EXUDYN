@@ -130,7 +130,7 @@ void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDa
 			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
 
 			//positive force on marker1
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
+			EXUmath::MultMatrixTransposedVectorTemplate<ResizableMatrix, ConstSizeVector<maxNumberOfPoints * 2>, LinkedDataVector>(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
 		}
 
 		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian

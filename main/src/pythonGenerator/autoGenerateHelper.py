@@ -453,6 +453,169 @@ def AddEnumValue(className, itemName, description):
 
 
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the following functions were originally in pythonAutoGenerateObjects.py
+    
+#get list of filenames in folder dirPath which contain keyword (to find examples with specific items)
+def ExtractExamplesWithKeyword(keyword, dirPath):
+    from os import listdir
+    from os.path import isfile, join
+    
+    fileNames = [f for f in listdir(dirPath) if isfile(join(dirPath, f))]
+    
+    filesWithKeyword = []
+
+    for fileName in fileNames:
+        if fileName[-3:]=='.py':
+            #print("extract example:",fileName)
+            file = open(dirPath+'/'+fileName)
+            text = file.read()
+            if text.find(keyword) != -1:
+                filesWithKeyword += [fileName]
+            file.close()
+    return filesWithKeyword
+
+#generate latex string containing a list of file references (and hyperref links), 
+#based on a search through Examples and TestModels
+def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName):
+    s = ''
+    sepItem1 = '\\item ' #for items, put example in separate line, for utility functions, use one liner
+    sepItem2 = '\n' 
+    maxExamples = 12   #only 8 examples for utility functions
+    initString = ''    #smaller font for utility function
+    ufMode = False
+    testModelString = ' (TestModels/)'
+    examplesString = ' (Examples/)'
+
+    if itemType != 'UtilityFunction':
+        keywords = ['mbs.Add'+itemType+'('+itemName+'(']
+        if itemName == 'ObjectRigidBody' or itemName == 'NodeRigidBodyEP':
+            keywords += ['AddRigidBody('] #additional keyword
+    
+        if itemName == 'ObjectFFRF':
+            keywords += ['AddObjectFFRF('] #additional keyword
+    
+        if itemName == 'ObjectFFRFreducedOrder':
+            keywords += ['AddObjectFFRFreducedOrderWithUserFunctions('] #additional keyword
+
+        if itemName == 'ObjectJointRevoluteZ':
+            keywords += ['AddRevoluteJoint('] #additional keyword
+        if itemName == 'ObjectPrismaticJointX':
+            keywords += ['AddPrismaticJoint('] #additional keyword
+
+    else:
+        testModelString = ' (TM)'
+        examplesString = ' (Ex)'
+        ufMode = True
+        keywords = [itemName + '(']
+        sepItem1 = ', \n'     #for items, put example in separate line, for utility functions, use one liner
+        sepItem2 = ''   #for items, put example in separate line, for utility functions, use one liner
+        maxExamples = 5   #only 8 examples for utility functions
+        initString = ' \\item \\footnotesize '    #smaller font for utility function
+
+
+    if itemShortName != '' and itemName != itemShortName:
+        keywords += ['mbs.Add'+itemType+'('+itemShortName]
+
+    fileListOrig = []
+    for kw in keywords:
+        dirPath = '../../pythonDev/Examples'
+        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
+                                              dirPath = dirPath)
+    
+    fileList = []
+    for f in fileListOrig:
+        if f not in fileList: fileList += [f]
+
+    unifyExamples=True #only one list for testmodels and examples
+    
+    cnt = 0 #examples counter
+    sep = ''
+    headerCreated = False
+    if len(fileList) != 0:
+        s += '%\n\\noindent For examples on '+itemName+' see '
+        if unifyExamples:
+            if ufMode:
+                s += 'Examples (Ex) and TestModels (TM):\n'
+            else:
+                s += 'Examples and TestModels:\n'
+        else:
+            s += 'Examples:\n'
+
+        sep = ''
+        headerCreated = True
+        if not ufMode:
+            sep = sepItem1
+        s += '\\bi\n'
+        s += initString
+        for name in fileList:
+            s += sep+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/' + name+'}'
+            s += '{\\texttt{'+name.replace('_','\\_')+'}}' 
+            if unifyExamples:
+                s += examplesString
+            s += sepItem2
+            sep = sepItem1
+
+            cnt += 1
+            if cnt == 3 and ufMode: sep = sep+'\\\\ ' #shorten lines a little
+            if cnt >= maxExamples: #some functions would appear in all examples... 
+                s += sepItem1 + ' ...' + sepItem2 + '\n'
+                break
+        if not unifyExamples:
+            s += '\\ei\n'
+            s += '\n%\n'
+        
+
+    fileListOrig = []
+    for kw in keywords:
+        dirPath = '../../pythonDev/TestModels'
+        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
+                                              dirPath = dirPath)
+
+    fileList = []
+    for f in fileListOrig:
+        if f not in fileList: fileList += [f]
+
+    if len(fileList) != 0 and cnt < maxExamples+3:
+        if not unifyExamples or not headerCreated:
+            headerCreated = True
+            s += '%\n\\noindent For examples on '+itemName+' see '
+            
+            if not unifyExamples:
+                s += 'TestModels:\n'
+            else:
+                if ufMode:
+                    s += 'Examples (Ex) and TestModels (TM):\n'
+                else:
+                    s += 'Examples and TestModels:\n'
+                
+            s += '\\bi\n'
+            s += initString
+            sep = ''
+        if not ufMode:
+            sep = sepItem1
+        for name in fileList:
+            s += sep+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/' + name+'}'
+            s += '{\\texttt{'+name.replace('_','\\_')+'}}'
+            if unifyExamples:
+                s += testModelString
+            s += sepItem2
+            sep = sepItem1
+
+            cnt += 1
+            if cnt == 3 and ufMode: sep = sep+'\\\\ ' #shorten lines a little
+
+            if cnt >= maxExamples+3: #some functions would appear in all examples...
+                s += sepItem1 + ' ...' + sepItem2 + '\n'
+                break
+        if not unifyExamples:
+            s += '\\ei\n'
+            s += '\n%\n'
+
+    if headerCreated and unifyExamples:
+        s += '\\ei\n'
+        s += '\n%\n'
+    return s
 
 
 

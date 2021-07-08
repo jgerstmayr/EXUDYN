@@ -1,4 +1,4 @@
-##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
 # Details:  Slidercrank 3D  (iftomm benchmark problem)
@@ -22,14 +22,15 @@ from exudyn.graphicsDataUtilities import *
 from exudyn.robotics import *
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
+
 import numpy as np
 from numpy import linalg as LA
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#exudynTestGlobals.useGraphics=False
-
+exudynTestGlobals.useGraphics = False
 if exudynTestGlobals.useGraphics:
     sensorWriteToFile = True
 else:
@@ -78,6 +79,12 @@ myRobot={'links':[link0, link1, link2, link3, link4, link5],
        'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the myRobot is built
        } 
 
+newRobot = Robot(gravity=[0,0,-9.81],
+              baseHT = HT0(),
+              toolHT = HTtranslate([0,0,0]),
+             referenceConfiguration = [])
+newRobot.BuildFromDictionary(myRobot)
+
 #assumption, as the bodies in the mbs have their COM at the reference position
 #for link in robot['links']:
 #    link['COM']=[0,0,0]
@@ -118,23 +125,28 @@ robotTrajectory={'PTP':[point0,point1,point2,point3]}
 #test robot model
 
 output = False
-HT0=ComputeJointHT(myRobot, q0)
+HT0_=ComputeJointHT(myRobot, q0)
 HTN=ComputeJointHT(myRobot, qN)
 HTR=ComputeJointHT(myRobot, qR)
-if output: exu.Print("Orientation tool =", HT0[5])
+if False:
+    if output: exu.Print("Orientation tool =", HT0_[5])
+    
+    delta=1e-8
+    q0delta = [delta,0,0,0,0,0]
+    HT0delta=ComputeJointHT(myRobot, q0delta)
+    if output: exu.Print("Orientation tool delta =", HT0delta[5])
+    
+    v1 = 1/delta*(np.array(HT0delta[5]) - HT0_[5])
+    if output: exu.Print("dHT0/dq1=", v1.round(3))
 
-delta=1e-8
-q0delta = [delta,0,0,0,0,0]
-HT0delta=ComputeJointHT(myRobot, q0delta)
-if output: exu.Print("Orientation tool delta =", HT0delta[5])
-
-v1 = 1/delta*(np.array(HT0delta[5]) - HT0[5])
-if output: exu.Print("dHT0/dq1=", v1.round(3))
-
-J0=Jacobian(myRobot,HT0)
-JN=Jacobian(myRobot,HTN)
+J0=Jacobian(myRobot,HT0_)
+#JN=Jacobian(myRobot,HTN)
+JN=newRobot.Jacobian(HTN)
 #exu.Print("jacobian=\n",J0.round(4))
-if output: exu.Print("jacobian J0=\n",J0.round(4))
+if output: 
+    exu.Print("jacobian J0=\n",J0.round(4))
+    exu.Print("new jac  J0=\n",newRobot.Jacobian(HT0_).round(4))
+
 #exu.Print("jacobian=\n",J1.round(4))
 #JN in Corke toolbox:
 #0.1501 0.0144 0.3197 0 0 0
@@ -151,9 +163,9 @@ tau0X = J0.T @ [100,0,0, 0,0,0]
 if output: exu.Print("HT0: torques due to fX=100 at tool: tauX=\n", tau0X.round(4))
 #Corke toolbox:
 #11.9261 0.0000 0.0000 0 0 0
-#3.0010 0.2871 6.3937 0 0 0
+#3.0010 0.2871 6.3937 0 0 0 ?not used for this test
 
-tauG = ComputeStaticTorques(myRobot,HT0)
+tauG = ComputeStaticTorques(myRobot,HT0_)
 if output: exu.Print("torques due to gravity: c0\n",tauG.round(4))
 tauG = ComputeStaticTorques(myRobot,HTN)
 if output: exu.Print("torques due to gravity: cN\n",tauG.round(4))
@@ -163,13 +175,13 @@ if output: exu.Print("torques due to gravity: cN\n",tauG.round(4))
 #[ 0.0000 31.6399 6.0351 0.0000 0.0283 0.000]
 
 
-HT0COM = ComputeCOMHT(myRobot, HT0)
+HT0COM = ComputeCOMHT(myRobot, HT0_)
 cnt = 0
 for HT in HT0COM:
     #exu.Print("HT",cnt,"=\n",HT.round(3))
     cnt+=1
 
-#tauG = ComputeStaticTorques(myRobot,HT0)
+#tauG = ComputeStaticTorques(myRobot,HT0_)
 #exu.Print("torques due to gravity: c0\n",tauG.round(8))
 
 HTE=ComputeJointHT(myRobot, qE)
@@ -196,7 +208,7 @@ qE = [np.pi*0.5,-np.pi*0.25,np.pi*0.75, 0,0,0]
 tStart = [0,0,0, 0,0,0]
 duration = 0.1
 
-compensateStaticTorques = False
+compensateStaticTorques = False #false for test case
 
 jointList = [0]*len(myRobot['links']) #this list must be filled with the joint numbers in the mbs!
 
@@ -204,8 +216,8 @@ def ComputeMBSrobotTorques(myRobot):
     q=[]
     for joint in jointList:
         q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
-    HT=ComputeJointHT(myRobot, q)
-    return ComputeStaticTorques(myRobot,HT)
+    HT=newRobot.JointHT(q)
+    return newRobot.StaticTorques(HT)
 
 #compute load for joint number
 def ComputeJointLoad(t, load, joint):
@@ -266,12 +278,19 @@ baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPositio
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #build mbs robot model:
-robotDict = SerialRobot2MBS(mbs, myRobot, loadJointUserFunctionslist, baseMarker,
-                            'addSensors', showCOM = 0.02, bodyAlpha = 0.25, 
-                            toolGraphicsSize=[0.05,0.02,0.06],
-                            drawLinkSize = [0.06,0.05])
+if False:
+    robotDict = SerialRobot2MBS(mbs, myRobot, loadJointUserFunctionslist, baseMarker,
+                                showCOM = 0.02, bodyAlpha = 0.25, 
+                                toolGraphicsSize=[0.05,0.02,0.06],
+                                drawLinkSize = [0.06,0.05])
+else:
+    robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, loadJointUserFunctionslist, baseMarker)
+    
 #   !!!!!IMPORTANT!!!!!:
 jointList = robotDict['jointList'] #must be stored there for the load user function
+
+
+
 
 #add sensors:
 cnt = 0
@@ -350,7 +369,6 @@ if simulate:
     exu.SolveDynamic(mbs, simulationSettings)
 
 
-
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer()
@@ -366,6 +384,7 @@ exu.Print("torques at tEnd=", VSum(measuredTorques))
 #add larger test tolerance for 32/64bits difference
 exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
 exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
+
 
 if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt

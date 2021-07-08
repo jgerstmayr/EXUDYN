@@ -46,6 +46,7 @@ def TestExamplesReferenceSolution():
             'PARTS_ATEs_moving.py':0.44656762760262225,
             'pendulumFriction.py':0.3999999877698232,
             'postNewtonStepContactTest.py':0.057286638346409235, #new 2021-03-20
+            'revoluteJointprismaticJointTest.py':1.2538806799246283, #new 2021-07-01
             'rigidBodyAsUserFunctionTest.py':8.950865271552146, #new 2021-06-28
             'rigidBodyCOMtest.py':3.409431467726292,
             'rollingCoinTest.py':0.002004099927337848,

@@ -118,7 +118,14 @@ py::str PyGetVersionString()
 #ifndef EXUDYN_RELEASE
 	str += "(pre-release)";
 #pragma message("====================================")
+#pragma message("====================================")
 #pragma message("EXUDYN not compiled in release mode!")
+#pragma message("====================================")
+#pragma message("====================================")
+#endif
+#ifdef __FAST_EXUDYN_LINALG
+#pragma message("====================================")
+#pragma message("EXUDYN using __FAST_EXUDYN_LINALG without range checks!")
 #pragma message("====================================")
 #endif
 	return str;
@@ -186,7 +193,17 @@ py::list PythonInfoStat(bool writeOutput = true)
 	list.append(matrix_delete_counts);
 	list.append(linkedDataVectorCast_counts);
 #else
-	pout << "Linalg stats deactivated (needs re-compile)\n";
+	if (writeOutput)
+	{
+		pout << "Linalg stats deactivated (needs re-compile)\n";
+	}
+	list.append(0); //used by Static/DynamicSolver, therefore list needs to be created
+	list.append(0);
+	list.append(0);
+	list.append(0);
+	list.append(0);
+	list.append(0);
+	list.append(0);
 #endif
 	return list;
 
