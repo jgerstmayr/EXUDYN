@@ -97,7 +97,6 @@ if computeDynamic:
 
     exu.InfoStat()
     exu.SolveDynamic(mbs, simulationSettings)
-    #SC.TimeIntegrationSolve(mbs, 'RK1', simulationSettings)
     exu.InfoStat()
 
 else:

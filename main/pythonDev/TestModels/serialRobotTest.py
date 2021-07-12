@@ -1,11 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Slidercrank 3D  (iftomm benchmark problem)
-#           Ref.: https://www.iftomm-multibody.org/benchmark/problem/... spatial rigid slider-crank mechanism
+# Details:  Example of a serial robot with redundant coordinates
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-02-16
+# Revised:  2021-07-09
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -30,7 +30,7 @@ from numpy import linalg as LA
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-exudynTestGlobals.useGraphics = False
+#exudynTestGlobals.useGraphics = False
 if exudynTestGlobals.useGraphics:
     sensorWriteToFile = True
 else:
@@ -79,11 +79,19 @@ myRobot={'links':[link0, link1, link2, link3, link4, link5],
        'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the myRobot is built
        } 
 
-newRobot = Robot(gravity=[0,0,-9.81],
+newRobot = Robot(gravity=[0,0,9.81],
               baseHT = HT0(),
-              toolHT = HTtranslate([0,0,0]),
-             referenceConfiguration = [])
-newRobot.BuildFromDictionary(myRobot)
+              toolHT = HTtranslate([0,0,0.1]),
+             referenceConfiguration = []) #referenceConfiguration created with 0s automatically
+
+newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2])))
+newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0])))
+newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2])))
+newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,np.pi/2])))
+newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2])))
+newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0])))
+
+#newRobot.BuildFromDictionary(myRobot)
 
 #assumption, as the bodies in the mbs have their COM at the reference position
 #for link in robot['links']:
@@ -92,9 +100,6 @@ newRobot.BuildFromDictionary(myRobot)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #configurations and trajectory
 q0 = [0,0,0,0,0,0] #zero angle configuration
-qN = [0,np.pi/4,np.pi,0,np.pi/4,0] #nominal configuration
-qR = [0,np.pi/2,-np.pi/2,0,0,0] #other configuration
-qE = [np.pi*0.5,np.pi*0.25,np.pi*0.75, 0,0,0]
 
 q1 = [0,       np.pi/8, np.pi*0.25, 0,np.pi/8,0] #configuration 1
 q2 = [np.pi/2,-np.pi/8,-np.pi*0.125, 0,np.pi/4,0] #configuration 2
@@ -104,96 +109,34 @@ point0={'q':q0, #use any initial configuration!
         #'q_t':q0,
         'type':'linearVelocity',
         'time':0}
-myRobot['referenceConfiguration']=point0['q']
-point1={'q':q1, #q1
+
+pointList = [point0]
+pointList += [{'q':q1, #q1
         #'q_t':q0,
         'type':'linearVelocity',
-        'time':0.25}
-point2={'q':q0, #q2
+        'time':0.25}]
+pointList +=[{'q':q2, #q2
         #'q_t':q0,
         'type':'linearVelocity',
-        'time':0.5}
-point3={'q':q0, #q2, forever
+        'time':0.5}]
+pointList +=[{'q':q0, #q2
         #'q_t':q0,
         'type':'linearVelocity',
-        'time':1e6} #forever
-robotTrajectory={'PTP':[point0,point1,point2,point3]}
+        'time':1}]
+pointList +=[{'q':q0, #q2
+        #'q_t':q0,
+        'type':'linearVelocity',
+        'time':1}]
+pointList +=[{'q':q0, #q2, forever
+        #'q_t':q0,
+        'type':'linearVelocity',
+        'time':1e6}] #forever
+robotTrajectory={'PTP':pointList}
 
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #test robot model
-
-output = False
-HT0_=ComputeJointHT(myRobot, q0)
-HTN=ComputeJointHT(myRobot, qN)
-HTR=ComputeJointHT(myRobot, qR)
-if False:
-    if output: exu.Print("Orientation tool =", HT0_[5])
-    
-    delta=1e-8
-    q0delta = [delta,0,0,0,0,0]
-    HT0delta=ComputeJointHT(myRobot, q0delta)
-    if output: exu.Print("Orientation tool delta =", HT0delta[5])
-    
-    v1 = 1/delta*(np.array(HT0delta[5]) - HT0_[5])
-    if output: exu.Print("dHT0/dq1=", v1.round(3))
-
-J0=Jacobian(myRobot,HT0_)
-#JN=Jacobian(myRobot,HTN)
-JN=newRobot.Jacobian(HTN)
-#exu.Print("jacobian=\n",J0.round(4))
-if output: 
-    exu.Print("jacobian J0=\n",J0.round(4))
-    exu.Print("new jac  J0=\n",newRobot.Jacobian(HT0_).round(4))
-
-#exu.Print("jacobian=\n",J1.round(4))
-#JN in Corke toolbox:
-#0.1501 0.0144 0.3197 0 0 0
-#0.5963 0.0000 0.0000 0 0 0
-#0 0.5963 0.2910 0 0 0
-#0 -0.0000 -0.0000 0.7071 -0.0000 -0.0000
-#0 -1.0000 -1.0000 -0.0000 -1.0000 -0.0000
-#1.0000 0.0000 0.0000 -0.7071 0.0000 -1.0000
-
-#compute torques due to tool force
-tauNY = JN.T @ [0,20,0, 0,0,0]
-if output: exu.Print("torques due to fY=20 at tool: tauY=\n", tauNY.round(4))
-tau0X = J0.T @ [100,0,0, 0,0,0]
-if output: exu.Print("HT0: torques due to fX=100 at tool: tauX=\n", tau0X.round(4))
-#Corke toolbox:
-#11.9261 0.0000 0.0000 0 0 0
-#3.0010 0.2871 6.3937 0 0 0 ?not used for this test
-
-tauG = ComputeStaticTorques(myRobot,HT0_)
-if output: exu.Print("torques due to gravity: c0\n",tauG.round(4))
-tauG = ComputeStaticTorques(myRobot,HTN)
-if output: exu.Print("torques due to gravity: cN\n",tauG.round(4))
-#Corke toolbox:
-#0   37.4837    0.2489         0         0         0
-# -0.0000 31.6399 6.0351 0.0000 0.0283 0
-#[ 0.0000 31.6399 6.0351 0.0000 0.0283 0.000]
-
-
-HT0COM = ComputeCOMHT(myRobot, HT0_)
-cnt = 0
-for HT in HT0COM:
-    #exu.Print("HT",cnt,"=\n",HT.round(3))
-    cnt+=1
-
-#tauG = ComputeStaticTorques(myRobot,HT0_)
-#exu.Print("torques due to gravity: c0\n",tauG.round(8))
-
-HTE=ComputeJointHT(myRobot, qE)
-#tauGE = ComputeStaticTorques(myRobot,HTE)
-#exu.Print("torques due to gravity: cE\n",tauGE.round(16))
-#0,-75.469,-5.2961
-
-#q1 = [0.1,0.1,0.1,0.1,0.1,0.1] #zero angle configuration
-#HT1=ComputeJointHT(myRobot, q1)
-#tauG = ComputeStaticTorques(myRobot,HT1)
-#exu.Print("torques due to gravity: c1\n",tauG.round(16))
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #control parameters, per joint:
 Pcontrol = [40000, 40000, 40000, 100, 100, 10]
@@ -208,58 +151,15 @@ qE = [np.pi*0.5,-np.pi*0.25,np.pi*0.75, 0,0,0]
 tStart = [0,0,0, 0,0,0]
 duration = 0.1
 
-compensateStaticTorques = False #false for test case
 
 jointList = [0]*len(myRobot['links']) #this list must be filled with the joint numbers in the mbs!
 
-def ComputeMBSrobotTorques(myRobot):
+def ComputeMBSstaticRobotTorques(myRobot):
     q=[]
     for joint in jointList:
         q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
     HT=newRobot.JointHT(q)
     return newRobot.StaticTorques(HT)
-
-#compute load for joint number
-def ComputeJointLoad(t, load, joint):
-    phi = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.Rotation)[2] #z-rotation
-    omega = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
-    [u,v,a] = MotionInterpolator(t, robotTrajectory, joint)
-
-    #[u,v,a] = ConstantAccelerationProfile(t, tStart[joint], 0, duration, qE[joint])
-    torque = (Pcontrol[joint]*(phi+u) + Dcontrol[joint]*(omega+v))
-    if compensateStaticTorques:
-        torque -= ComputeMBSrobotTorques(myRobot)[joint] #add static torque compensation
-    return torque * np.array(load) #includes sign in both torques
-
-#load user functions which provide simple PD control per axis:
-def UFloadJoint0(mbs, t, load):
-    return ComputeJointLoad(t, load, 0)
-def UFloadJoint1(mbs, t, load):
-    return ComputeJointLoad(t, load, 1)
-def UFloadJoint2(mbs, t, load):
-    return ComputeJointLoad(t, load, 2)
-def UFloadJoint3(mbs, t, load):
-    return ComputeJointLoad(t, load, 3)
-def UFloadJoint4(mbs, t, load):
-    return ComputeJointLoad(t, load, 4)
-def UFloadJoint5(mbs, t, load):
-    return ComputeJointLoad(t, load, 5)
-
-#def ff(x, *args, **kwargs):
-#    exu.Print("x=",x)
-#    if 'test' in args:
-#        exu.Print('yes')
-#    for num in args:
-#        exu.Print(num)
-#        
-#    exu.Print("z=",kwargs['z'])
-#    for key, value in kwargs.items():
-#        exu.Print("The value of {} is {}".format(key, value))
-#
-
-
-#make list of user functions for serial robot
-loadJointUserFunctionslist = [UFloadJoint0, UFloadJoint1, UFloadJoint2, UFloadJoint3, UFloadJoint4, UFloadJoint5]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #base, graphics, object and marker:
@@ -284,11 +184,47 @@ if False:
                                 toolGraphicsSize=[0.05,0.02,0.06],
                                 drawLinkSize = [0.06,0.05])
 else:
-    robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, loadJointUserFunctionslist, baseMarker)
+    robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, baseMarker=baseMarker)
     
 #   !!!!!IMPORTANT!!!!!:
 jointList = robotDict['jointList'] #must be stored there for the load user function
 
+unitTorques0 = robotDict['unitTorque0List'] #(left body)
+unitTorques1 = robotDict['unitTorque1List'] #(right body)
+
+loadList0 = robotDict['jointTorque0List'] #(left body)
+loadList1 = robotDict['jointTorque1List'] #(right body)
+#print(loadList0, loadList1)
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#control robot
+compensateStaticTorques = True 
+
+#user function which is called only once per step, speeds up simulation drastically
+def PreStepUF(mbs, t):
+    if compensateStaticTorques:
+        staticTorques = ComputeMBSstaticRobotTorques(myRobot)
+    else:
+        staticTorques = np.zeros(len(jointList))
+    #compute load for joint number
+    for i in range(len(jointList)):
+        joint = i
+        phi = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.Rotation)[2] #z-rotation
+        omega = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
+        [u,v,a] = MotionInterpolator(t, robotTrajectory, joint)
+    
+        torque = (Pcontrol[joint]*(phi+u) + Dcontrol[joint]*(omega+v))
+        torque -= staticTorques[joint] #add static torque compensation
+        
+        load0 = torque * unitTorques0[i] #includes sign and correct unit-torque vector
+        load1 = torque * unitTorques1[i] #includes sign and correct unit-torque vector
+        
+    #     #write updated torque to joint loads, applied to left and right body
+        mbs.SetLoadParameter(loadList0[i], 'loadVector', list(load0))
+        mbs.SetLoadParameter(loadList1[i], 'loadVector', list(load1))
+    
+    return True
+
+mbs.SetPreStepUserFunction(PreStepUF)
 
 
 
@@ -327,35 +263,28 @@ SC.visualizationSettings.nodes.basisSize = 0.1
 SC.visualizationSettings.loads.show = False
 
 SC.visualizationSettings.openGL.multiSampling=4
-
-#renderState = {'centerPoint': [0.24947646260261536, 0.10509094595909119, 0.2159000039100647],
-# 'maxSceneSize': 0.6429196000099182,
-# 'zoom': 0.48890015482902527,
-# 'currentWindowSize': [1024, 768],
-# 'modelRotation': [[0.4840640127658844,0.17399033904075623,-0.8575602769851685],
-#  [-0.8726294636726379, 0.16856835782527924, -0.45836928486824036],
-#  [0.06480571627616882, 0.9702123999595642, 0.2334269881248474]]}
-#
     
-nSteps = 200 #1000 for testing
+tEnd = 0.2 #0.2 for testing
+h = 0.001
+
 if exudynTestGlobals.useGraphics:
-    nSteps = 550 #1000 for testing
-    exu.StartRenderer()
-    if 'lastRenderState' in vars():
-        SC.SetRenderState(lastRenderState) #load last model view
+    tEnd = 1.2
 
 #mbs.WaitForUserToContinue()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.timeIntegration.numberOfSteps = nSteps
-simulationSettings.timeIntegration.endTime = nSteps/1000 #0.2 for testing
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/nSteps
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/nSteps
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.solutionSettings.sensorsWritePeriod = h
 #simulationSettings.solutionSettings.writeSolutionToFile = False
+# simulationSettings.timeIntegration.simulateInRealtime = True
+# simulationSettings.timeIntegration.realtimeFactor = 0.25
+
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayComputationTime = False
 simulationSettings.displayStatistics = False
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 #simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
@@ -364,13 +293,15 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 wo
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 
-simulate = True
-if simulate:
-    exu.SolveDynamic(mbs, simulationSettings)
-
+exu.SolveDynamic(mbs, simulationSettings)
 
 if exudynTestGlobals.useGraphics:
-    SC.WaitForRenderEngineStopFlag()
+    exu.StartRenderer()
+    if 'renderState' in exu.sys:
+        SC.SetRenderState(exu.sys['renderState'])
+
+    from exudyn.interactive import SolutionViewer
+    SolutionViewer(mbs)
     exu.StopRenderer()
 
 lastRenderState = SC.GetRenderState() #store model view
@@ -382,7 +313,7 @@ for sensorNumber in jointTorque0List:
 exu.Print("torques at tEnd=", VSum(measuredTorques))
 
 #add larger test tolerance for 32/64bits difference
-exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
+exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
 exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
 
 

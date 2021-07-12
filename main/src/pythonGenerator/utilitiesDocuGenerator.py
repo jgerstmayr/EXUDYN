@@ -495,7 +495,7 @@ for fileName in filesParsed:
             sLatex += sExamples
 
         
-latexFile = '..\\..\\..\\docs\\theDoc\\pythonUtilitiesDescription.tex'
+latexFile = '../../../docs/theDoc/pythonUtilitiesDescription.tex'
 
 file=open(latexFile,'w')  #clear file by one write access
 file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')

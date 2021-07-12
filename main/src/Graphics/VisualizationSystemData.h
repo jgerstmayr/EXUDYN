@@ -44,7 +44,7 @@ public:
 	//! clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer
 	VisualizationSystemData* GetClone() const { return new VisualizationSystemData(*this); }
 	//! Specific destructor do deallocate data (allocated in MainSystem/ObjectFactory)
-	virtual ~VisualizationSystemData() { Reset(); }
+	//makes problems (runTestSuite() ?)virtual ~VisualizationSystemData() { } //Reset() called in MainSystem.Reset() !! do not call twice
 
 	//! reset VisualizationSystemData and deallocate all memory (call this at end of system!)
 	void Reset();

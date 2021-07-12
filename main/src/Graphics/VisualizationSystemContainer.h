@@ -86,7 +86,7 @@ class CSystem;
 class VisualizationSystemContainer: public VisualizationSystemContainerBase
 {
 public: //declared as public for direct access via pybind
-	ResizableArray<GraphicsData*> graphicsDataList; //!< list of GraphicsData of every visualization System; this list is shared with OpenGL renderer and must be linked to GraphicsData of every VisualizationSystem
+	ResizableArray<GraphicsData*> graphicsDataList; //!< list of (linked) GraphicsData of every visualization System; this list is shared with OpenGL renderer and must be linked to GraphicsData of every VisualizationSystem
 	//GraphicsData graphicsData;			//!< data to be processed by OpenGL renderer
 	VisualizationSettings settings;		//!< general settings for visualization
 	RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
@@ -112,6 +112,9 @@ public:
 
 		//now done in MainSystemContainer: AttachToRenderEngine(); //links to render engine at the very beginning of the creation of the VisualizationSystemContainer
 	}
+
+	virtual ~VisualizationSystemContainer() { Reset(); }
+
 
 	//! list of GraphicsData of all visualizationSystems; linked from glfwclient!
 	ResizableArray<GraphicsData*>& GetGraphicsDataList() { return graphicsDataList; }
@@ -146,15 +149,21 @@ public:
 	//! reset all visualization functions for new system (but keep render engine linked)
 	void Reset()
 	{
-		for (auto item : visualizationSystems)
-		{
-			item->Reset();
-		}
+		//********************************************
+		//is done in MainSystemContainer.Reset() ==> MainSystem.Reset() calls VisualizationSystem.Reset()
+		//after MainSystem has been deleted, this pointer is invalid and item->Reset() fails
+		//VisualizationSystem.Reset() must be done in MainSystem, because needed when calling mbs.Reset() in Python!
+
+		//for (auto item : visualizationSystems)
+		//{
+		//	item->Reset();
+		//}
 		//anyway done in item->Reset()
 		//for (auto item : graphicsDataList)
 		//{
 		//	item->FlushData();
 		//}
+		//********************************************
 		visualizationSystems.Flush();
 		graphicsDataList.Flush();
 

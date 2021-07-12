@@ -97,8 +97,7 @@ SC.visualizationSettings.nodes.defaultSize = 0.2*2
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
 SC.visualizationSettings.contour.outputVariableComponent = 0 #y-component
 
-#SC.TimeIntegrationSolve(mbs, 'RungeKutta1', simulationSettings)
-#exu.SolveDynamic(mbs, simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings, solverType =  exudyn.DynamicSolverType.ExplicitMidpoint)
 #u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
 #print('dynamic tip displacement (y)=', u[1]) #dense: -11.085967426937412, sparse:-11.085967426937431
 

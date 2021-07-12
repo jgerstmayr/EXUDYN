@@ -73,7 +73,7 @@ git commit -m "notes on changes to exudyn..."
 git remote add origin https://github.com/jgerstmayr/EXUDYN
 
 #create ssh key for github (also add that in your github settings: https://github.com/settings/keys):
-ssh-keygen -o -t rsa -C "johannes.gerstmayr@uibk.ac.at"
+ssh-keygen -o -t rsa -C "firstname.name@asdf.ac.at"
 #==> this is required that you can login to this account and to commit changes!
 
 #push files to remote directory (requires login ...):

@@ -60,6 +60,8 @@ The following people have contributed to the examples:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
 \mysubsection{Installation instructions}
+\label{sec:installationInstructions}
+%
 \mysubsubsection{How to install \codeName ?}
 
 In order to run \codeName , you need an appropriate Python installation.
@@ -81,6 +83,22 @@ Many alternative options exist:
 \ei
 If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
 Once again, remember that Python versions and the version of the \codeName\ module must be identical (e.g., Python 3.6 32 bit {\bf both} in the \codeName\ module and in Spyder).
+
+\paragraph{Installation without Anaconda:}
+If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:
+\bi
+	\item \texttt{numpy} (used throughout the code, inevitable)
+	\item \texttt{matplotlib} (for any plot, also PlotSensor(...))
+	\item \texttt{tkinter} (for interactive dialogs, SolutionViewer, etc.)
+	\item \texttt{scipy} (needed for eigenvalue computation)
+\ei
+You can install most of these packages using \texttt{pip install numpy} (Windows) or \texttt{pip3 install numpy} (Linux).
+
+For interaction (right-mouse-click, some key-board commands) you need the python module \texttt{tkinter}. This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
+\bi
+  \item[] \texttt{sudo apt-get install python3-tk}
+\ei
+see also common blogs for your operating system.
 
 %The simplest way to start is, to copy the files (and possibly further files that are needed)
 %\bi
@@ -469,7 +487,18 @@ n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0],
 nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
   \end{lstlisting}
 	}
-\ei
+%
+%
+  \item Typical Python {\bf import error} message on Linux / UBUNTU if Python modules are missing:
+	{\ttfamily \footnotesize
+	\begin{lstlisting}[breaklines=true]
+Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 
+Error when executing process ShowVisualizationSettingsDialog':
+ModuleNotFoundError: No module named 'tkinter'
+		\end{lstlisting}}
+	$\ra$ see installation instructions to install missing Python modules, \refSection{sec:installationInstructions}.
+\ei 
+
 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -573,7 +602,7 @@ Solver stopped! use showHints=True to show helpful information
 	\texttt{sin} function has not been defined (must be imported, e.g., from \texttt{math}).
 	It indicates that the error occurred in line 48 in \texttt{springDamperUserFunctionTest.py} within function \texttt{Sweep},
 	which has been called from function \texttt{userLoad}, etc.
-\ei
+\ei \vspace{12pt}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{FAQ}

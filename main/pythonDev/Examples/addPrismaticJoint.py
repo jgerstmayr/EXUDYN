@@ -132,7 +132,8 @@ else:
 exu.SolveDynamic(mbs, simulationSettings, showHints=True)
 
 if True: #use this to reload the solution and use SolutionViewer
-    exu.SolutionViewer(mbs, runMode=2, runOnStart=True)
+    from exudyn.interactive import SolutionViewer
+    SolutionViewer(mbs, runMode=2, runOnStart=True)
 
 
 u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

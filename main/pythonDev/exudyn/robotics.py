@@ -216,25 +216,29 @@ class Robot:
     
         return J
 
-    #**classFunction: add items to existing mbs from the robot structure, a baseMarker (can be ground object or body)
-    #            and the user function list for the joints; there are options that can be passed as args / kwargs, which can contains options as described below. For details, see the python file and \texttt{serialRobotTest.py} in TestModels
+    #**classFunction: add items to existing mbs from the robot structure inside this robot class, a baseMarker (can be ground object or body), 
+    #                 an optional user function list for joint loads; there are options that can be passed as args / kwargs, which can contains options as described below. For details, see the python file and \texttt{serialRobotTest.py} in TestModels;
+    #                 the robot is built as rigid bodies (containing rigid body nodes), bodies represent the links which are connected by joints; joint torques need to be applied to bodies, applying a torque always with opposite direction to previous (=left) and next (=right) links (=bodies)
     #**input: 
     #   mbs: the multibody system, which will be extended
-    #   robot: the robot model as dictionary, described in function ComputeJointHT
-    #   jointLoadUserFunctionList: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
     #   baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
+    #   jointLoadUserFunctionList: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
+    #   createJointTorqueLoads: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
     #   rotationMarkerBase: used in Generic joint between first joint and base; note, that for moving base, the static compensation does not work (base rotation must be updated)
     #   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint
-    #**output: the function returns a dictionary containing information on nodes, bodies, joints, markers, torques, for every joint
-    def CreateRedundantCoordinateMBS(self, mbs, jointLoadUserFunctionList, baseMarker, *args, **kwargs):
+    #**output: the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List), and unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List)
+    def CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointLoadUserFunctionList=[], 
+                                     createJointTorqueLoads=True, *args, **kwargs):
         #build robot model:
         nodeList = []           #node number or rigid node for link
         bodyList = []           #body number or rigid body for link
         jointList = []          #joint which links to previous link or base
-        markerList0 = [] #contains n marker numbers per link which connect to previous body
-        markerList1 = [] #contains n marker numbers per link which connect to next body
-        jointTorque0List = []  #load number of joint torque at previous link (negative)
-        jointTorque1List = []  #load number of joint torque at next link (positive)
+        markerList0 = []        #contains n marker numbers per link (=body) which connect to previous/left link
+        markerList1 = []        #contains n marker numbers per link (=body) which connect to next/right link
+        jointTorque0List = []   #load number of joint torque at previous/left link (negative); 
+        jointTorque1List = []   #load number of joint torque at next/right link (positive)
+        unitTorque0List = []    #contains unit torque0 (previous/left link) for joint i, should be multiplied with according factor to represent joint torque
+        unitTorque1List = []    #contains unit torque1 (next/right link) for joint i, should be multiplied with according factor to represent joint torque
         
         Tcurrent = self.baseHT
         
@@ -322,14 +326,23 @@ class Robot:
                     
             #load on previous body, negative sign
             loadSize = 1
-            torque1 = A0T @ np.array([0,0, loadSize]) #rotated torque vector for current link, it is not the z-axis
-            #print("torque1=", torque1)
+            torque0 = np.array([0,0, -loadSize])
+            torque1 = -A0T @ torque0 #rotated negative torque vector for current link, it is not the z-axis
+            unitTorque0List += [torque0]
+            unitTorque1List += [torque1]
+
             if i < len(jointLoadUserFunctionList):
-                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=[0,0,-loadSize], 
+                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=torque0,
                                                                 bodyFixed=True, loadVectorUserFunction=jointLoadUserFunctionList[i]))
                 load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=mLink0, loadVector=torque1, 
                                                                 bodyFixed=True, loadVectorUserFunction=jointLoadUserFunctionList[i]))
-        
+                jointTorque0List += [load0]
+                jointTorque1List += [load1]
+            elif createJointTorqueLoads: #loads then must be updated in, e.g., mbs.SetPreStepUserFunction(...)
+                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=[0,0,0], 
+                                                                bodyFixed=True))
+                load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=mLink0, loadVector=[0,0,0],
+                                                                bodyFixed=True))
                 jointTorque0List += [load0]
                 jointTorque1List += [load1]
         
@@ -341,8 +354,12 @@ class Robot:
 
         #return some needed variables for further use        
         d = {'nodeList': nodeList,'bodyList': bodyList,'jointList': jointList,
-             'markerList0': markerList0,'markerList1': markerList1,
-             'jointTorque0List': jointTorque0List,'jointTorque1List': jointTorque1List}
+             'markerList0': markerList0,
+             'markerList1': markerList1,
+             'jointTorque0List': jointTorque0List,
+             'jointTorque1List': jointTorque1List,
+             'unitTorque0List': unitTorque0List,
+             'unitTorque1List': unitTorque1List}
         return d
     
     #**classFunction: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...)
@@ -414,9 +431,9 @@ class Robot:
         warnedModDH = False
         for i in range(len(robotDict['links'])):
             link = robotDict['links'][i]
-            qRef = 0
-            if len(robotDict['referenceConfiguration']) > i:
-                qRef = robotDict['referenceConfiguration'][i]
+            # qRef = 0
+            # if len(robotDict['referenceConfiguration']) > i:
+            #     qRef = robotDict['referenceConfiguration'][i]
             
             if 'stdDH' in link:
                 localHT = StdDH2HT(link['stdDH']) #using theta=0

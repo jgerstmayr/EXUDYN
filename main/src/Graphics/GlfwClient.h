@@ -81,7 +81,7 @@ public:
 	//selection:
 	//DELETE: selectionMode;					//!< true, if in selection mode
 	Vector2D selectionMouseCoordinates; //!mouse coordinates used for selection
-	std::string selectionString;		//!< string about object to be shown on screen
+	//std::string selectionString;		//!< string about object to be shown on screen
 	
 	std::string rendererMessage;		//!< rendererMessage to be shown in status line
 	Real renderMessageTimeout; 			//!< time at which message shall be removed, using EXUstd::GetTimeInSeconds(); 0, if no timeout

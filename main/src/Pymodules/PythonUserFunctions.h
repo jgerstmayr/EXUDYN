@@ -33,7 +33,7 @@ public:
 	}
 	void Reset()
 	{
-		mainSystem = 0;
+		mainSystem = nullptr;
 		preStepFunction = 0;
 		postNewtonFunction = 0;
 	}

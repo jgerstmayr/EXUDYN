@@ -180,15 +180,23 @@ MainSystem& MainSystemContainer::AddMainSystem()
 //! delete all MainSystems, detach render engine from main systems and and, delete all VisualizationSystems
 void MainSystemContainer::Reset()
 {
+	//pout << "MainSystemContainer::Reset()" << "\n";
 	visualizationSystems.DetachFromRenderEngine(&visualizationSystems);
+	//pout << "MainSystemContainer::Reset():1" << "\n";
+	visualizationSystems.Reset(); //this takes care that no invalid pointers to some VisualizationSystem are left
 	for (auto item : mainSystems)
 	{
 		item->UnlinkVisualizationSystem();
+		//pout << "MainSystemContainer::Reset():2" << "\n";
 		item->Reset();
+		//pout << "MainSystemContainer::Reset():3" << "\n";
 		delete item->cSystem; //allocated in AddMainSystem; C-Items are deleted in SystemData.Reset()
+		//pout << "MainSystemContainer::Reset():4" << "\n";
 		delete item; //allocated in AddMainSystem; MainItems are deleted in MainSystemData.Reset()
+		//pout << "MainSystemContainer::Reset():5" << "\n";
 	}
 	mainSystems.Flush();
+	//pout << "MainSystemContainer::Reset() finished" << "\n";
 	//visualizationSystems are already deleted by "delete item" above: DON'T DO THAT; visualizationSystems.Reset();
 }
 

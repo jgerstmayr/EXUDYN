@@ -68,18 +68,6 @@ The SystemContainer is the top level of structures in \codeName. The container h
   AttachToRenderEngine() & Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)\\ \hline 
   DetachFromRenderEngine() & Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed\\ \hline 
   GetCurrentMouseCoordinates(useOpenGLcoordinates = False) & Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane\\ \hline 
-  TimeIntegrationSolve(mainSystem, solverName, simulationSettings) & DEPRECATED, use exu.SolveDynamic(...) instead, see \refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{simSettings = exu.SimulationSettings()\tabnewline
-    simSettings.timeIntegration.numberOfSteps = 1000\tabnewline
-    simSettings.timeIntegration.endTime = 2\tabnewline
-    simSettings.timeIntegration.verboseMode = 1\tabnewline
-    SC.TimeIntegrationSolve(mbs, {\textquotesingle}GeneralizedAlpha{\textquotesingle}, simSettings)}}\\ \hline 
-  StaticSolve(mainSystem, simulationSettings) & DEPRECATED, use exu.SolveStatic(...) instead, see \refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)\tabnewline 
-    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
-    \texttt{simSettings = exu.SimulationSettings()\tabnewline
-    simSettings.staticSolver.newton.relativeTolerance = 1e-6\tabnewline
-    SC.StaticSolve(mbs, simSettings)}}\\ \hline 
 \end{longtable}
 \end{center}
 

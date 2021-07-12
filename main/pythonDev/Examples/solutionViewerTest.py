@@ -139,9 +139,8 @@ exu.SolveDynamic(mbs, simulationSettings, showHints=True)
 
 if True: #use this to reload the solution and use SolutionViewer
     #sol = LoadSolutionFile('coordinatesSolution.txt')
-    #from exudyn.interactive import SolutionViewer
-    #SolutionViewer(mbs, sol, runMode=2, runOnStart=True)
-    exu.SolutionViewer(mbs) #can also be entered in IPython ...
+    from exudyn.interactive import SolutionViewer
+    SolutionViewer(mbs) #can also be entered in IPython ...
 
 
 u0 = mbs.GetNodeOutput(nRB, exu.OutputVariableType.Displacement)

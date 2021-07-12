@@ -86,8 +86,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 for i in range(800): #1000
     print('iteration '+str(i)+':')
-    #testInterface.exu.SolveDynamic(mbs, simulationSettings)
-    SC.TimeIntegrationSolve(mbs, 'RungeKutta1', simulationSettings)
+    exu.SolveDynamic(mbs, simulationSettings, solverType = exudyn.DynamicSolverType.DOPRI5)
 
     for spring in springList:
         dist = mbs.GetObjectOutput(spring, exu.OutputVariableType.Distance)

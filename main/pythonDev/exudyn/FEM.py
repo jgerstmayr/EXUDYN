@@ -995,8 +995,8 @@ class ObjectFFRFreducedOrderInterface:
     #  gravity: ONLY available if user functions are applied; otherwise use LoadMassProportional and add to ObjectFFRFreducedOrder; set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
     #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
-    #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
-    #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
+    #  massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
+    #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
     #  color: provided as list of 4 RGBA values
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
                                                   positionRef=[0,0,0], 
@@ -1572,8 +1572,8 @@ class FEMinterface:
     #    density: density used for mechanical model
     #    verbose: set True to print out some status information
     #    computeEigenmodes: set True to use NGsolve for eigenmode computation instead of ComputeEigenmodes
-    #    numberOfModes: if computeEigenmodes==True: number of eigen modes computed with NGsolve
-    #    maxEigensolveIterations: if computeEigenmodes==True: maximum number of iterations for iterative eigensolver
+    #    numberOfModes: if computeEigenmodes==True: number of eigen modes computed with NGsolve; default=10
+    #    maxEigensolveIterations: if computeEigenmodes==True: maximum number of iterations for iterative eigensolver; default=40
     #    excludeRigidBodyModes: if computeEigenmodes==True: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
     def ImportMeshFromNGsolve(self, mesh, density, youngsModulus, poissonsRatio, verbose = False, 
                               computeEigenmodes = False, **kwargs):
@@ -1690,7 +1690,7 @@ class FEMinterface:
             nModes = 10
             if 'numberOfModes' in kwargs: 
                 nModes = kwargs['numberOfModes'] 
-            maxIt = 20
+            maxIt = 40
             if 'maxEigensolveIterations' in kwargs: 
                 maxIt = kwargs['maxEigensolveIterations']
 
@@ -1790,7 +1790,9 @@ class FEMinterface:
         return nodeList
 
     #**classFunction: get node numbers in cube, given by pMin and pMax, containing the minimum and maximum x, y, and z coordinates
-    #if not found, it returns an empty list
+    #**example:
+    #nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])
+    #**output: returns list of nodes; if no nodes found, return an empty list
     def GetNodesInCube(self, pMin, pMax):
         cnt = 0
         nodeList=[]
@@ -1807,7 +1809,7 @@ class FEMinterface:
 
     #**classFunction: get node numbers lying on line defined by points p1 and p2 and tolerance, which is accepted for points slightly outside the surface
     def GetNodesOnLine(self, p1, p2, tolerance=1e-5):
-        return GetNodesOnCylinder(self, p1, p2, radius=0, tolerance=1e-5)
+        return self.GetNodesOnCylinder(self, p1, p2, radius=0, tolerance=1e-5)
 
     #**classFunction: get node numbers lying on cylinder surface; cylinder defined by cylinder axes (points p1 and p2), 
     #  cylinder radius and tolerance, which is accepted for points slightly outside the surface

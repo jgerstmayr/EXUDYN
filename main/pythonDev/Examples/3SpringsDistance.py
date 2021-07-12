@@ -108,7 +108,6 @@ if computeDynamic:
     simulationSettings.displayStatistics = True
 
     exu.SolveDynamic(mbs, simulationSettings)
-    #SC.TimeIntegrationSolve(mbs, 'RK1', simulationSettings)
 
 else:
     simulationSettings.solutionSettings.coordinatesSolutionFileName = "staticSolution.txt"

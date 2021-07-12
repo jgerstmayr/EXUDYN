@@ -180,7 +180,6 @@ if exudynTestGlobals.useGraphics:
     exu.StartRenderer()
 
 #mbs.WaitForUserToContinue()
-#SC.StaticSolveOldSolver(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
 exu.SolveStatic(mbs, simulationSettings) #183 Newton iterations, 0.114 seconds
 
 sol = mbs.systemData.GetODE2Coordinates()

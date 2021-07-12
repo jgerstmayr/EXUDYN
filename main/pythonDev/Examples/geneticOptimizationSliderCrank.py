@@ -235,7 +235,6 @@ def ParameterFunction(parameterSet):
         exu.StartRenderer()
    
     exu.SolveDynamic(mbs, simulationSettings)
-    #SC.TimeIntegrationSolve(mbs, 'SecondOrderImplicit', simulationSettings)
         
     if useGraphics: 
         #+++++++++++++++++++++++++++++++++++++

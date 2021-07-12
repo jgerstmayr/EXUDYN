@@ -9,16 +9,122 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.261, 
-  \item last change =  2021-07-08
+  \item EXUDYN version = 1.0.276, 
+  \item last change =  2021-07-12
 
-  \item Number of issues = 711, 
-  \item Number of resolved issues = 629 (261 in current version), 
+  \item Number of issues = 725, 
+  \item Number of resolved issues = 644 (276 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.276}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0724}: {\bf Linux version}
+  \bi
+  \item {description: exudyn fails after import exudyn on Ubuntu18.04 and 20.04, showing error with RenderStateMachine selectionString}
+  \item {\bf notes: version 276 tested with Ubuntu20.04, working again}
+  \item   date resolved: {\bf 2021-07-12 22:47},
+date raised: 2021-07-12   \ei
+  \item {\bf Version 1.0.275}: \vspace{-6pt} 
+  resolved Issue 0723: {\bf SolutionViewer}
+(change)
+  \bi
+  \item {description: remove SolutionViewer from exudyn init file, as it causes problems if no tkinter or matplotlib installed}
+  \item {\bf notes: use exudyn.interactive.SolutionViewer(...) instead}
+  \item   date resolved: {\bf 2021-07-12 20:23},
+date raised: 2021-07-12   \ei
+  \item {\bf Version 1.0.274}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0722}: {\bf glfwGetWindowContentScale}
+  \bi
+  \item {description: function causes immediate crash on linux (UBUNTU) when importing exudyn}
+  \item {\bf notes: added flag for linux compilation, excluding font scaling}
+  \item   date resolved: {\bf 2021-07-12 19:31},
+date raised: 2021-07-12   \ei
+  \item {\bf Version 1.0.273}: \vspace{-6pt} 
+  resolved Issue 0719: {\bf Pybind11 2.6}
+(change)
+  \bi
+  \item {description: switch to Pybind11 2.6 in included C++ files}
+  \item   date resolved: {\bf 2021-07-12 16:57},
+date raised: 2021-07-12   \ei
+  \item {\bf Version 1.0.272}: \vspace{-6pt} 
+  resolved Issue 0718: {\bf Python3.8 FASTLINALG}
+(change)
+  \bi
+  \item {description: using now \_\_FAST\_EXUDYN\_LINALG option, which excludes all range checks and other checks in arrays, matrices, etc.; leads usually to 30percent higher performance}
+  \item   date resolved: {\bf 2021-07-12 16:57},
+date raised: 2021-07-12   \ei
+  \item {\bf Version 1.0.271}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0721}: {\bf FEM.GetNodesOnLine(..)}
+  \bi
+  \item {description: fails because self. missing in call to GetNodesOnCylinder}
+  \item   date resolved: {\bf 2021-07-12 16:35},
+date raised: 2021-07-12   \ei
+  \item {\bf Version 1.0.270}: \vspace{-6pt} 
+  resolved Issue 0717: {\bf SC.StaticSolve, SC.TimeIntegrationSolve}
+(change)
+  \bi
+  \item {description: remove these deprecated functions from interface}
+  \item   date resolved: {\bf 2021-07-12 15:33},
+date raised: 2021-07-11   \ei
+  \item {\bf Version 1.0.269}: \vspace{-6pt} 
+  resolved Issue 0669: {\bf remove old solvers}
+(change)
+  \bi
+  \item {description: remove old static and dynamic solvers as they are not any more up to date with graphics interface}
+  \item   date resolved: {\bf 2021-07-12 15:32},
+date raised: 2021-05-10   \ei
+  \item {\bf Version 1.0.268}: \vspace{-6pt} 
+  resolved Issue 0716: {\bf SystemIsConsistent}
+(change)
+  \bi
+  \item {description: add checks for functions that may not be called if not SystemIsConsistent}
+  \item   date resolved: {\bf 2021-07-11 17:30},
+date raised: 2021-07-11   \ei
+  \item {\bf Version 1.0.267}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0714}: {\bf mbs.GetSensorValues}
+  \bi
+  \item {description: raises error for ObjectFFRFreducedOrder: ERROR: LinkedDataVectorBase(const VectorBase<T>\&, Index), startPosition < 0}
+  \item {\bf notes: caused when called before Assemble(); checks added in future}
+  \item   date resolved: {\bf 2021-07-11 17:08},
+date raised: 2021-07-10   \ei
+  \item {\bf Version 1.0.266}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0715}: {\bf ObjectFFRFreducedOrder}
+  \bi
+  \item {description: OutputVariable Displacement includes localPosition, but should not}
+  \item {\bf notes: GetMeshNodeLocalPosition included reference position twice}
+  \item   date resolved: {\bf 2021-07-11 16:33},
+date raised: 2021-07-10   \ei
+  \item {\bf Version 1.0.265}: \vspace{-6pt} 
+  resolved Issue 0706: {\bf ConstSizeVector}
+(optimize)
+  \bi
+  \item {description: decouple ConstSizeVector and ConstSizeMatrix from Vector / Matrix and avoid virtual calls, erase all rule of 5 member functions, optimize algebra}
+  \item {\bf notes: improved speed up to factor 2 for some items!}
+  \item   date resolved: {\bf 2021-07-11 15:06},
+date raised: 2021-07-06   \ei
+  \item {\bf Version 1.0.264}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0713}: {\bf ObjectFFRFreducedOrder}
+  \bi
+  \item {description: GetOutputVariableSuperElement does not agree with types described in theDoc; object does not provide Displacement or Position, sensors return wrong values}
+  \item {\bf notes: corrected C++ implementation and theDoc.pdf for OutputVariableTypesSuperElement}
+  \item   date resolved: {\bf 2021-07-09 20:53},
+date raised: 2021-07-09   \ei
+  \item {\bf Version 1.0.263}: \vspace{-6pt} 
+  resolved Issue 0712: {\bf serialRobot}
+(change)
+  \bi
+  \item {description: improve speed of serial robot by transferring controllers from load userfunctions to mbs.SetPreStepUserFunction}
+  \item   date resolved: {\bf 2021-07-09 13:28},
+date raised: 2021-07-09   \ei
+  \item {\bf Version 1.0.262}: \vspace{-6pt} 
+  resolved Issue 0711: {\bf generator files}
+(change)
+  \bi
+  \item {description: changed backslash to slash in generator files such that they can also be executed on Linux and MacOS}
+  \item   date resolved: {\bf 2021-07-09 12:18},
+date raised: 2021-07-09   \ei
   \item {\bf Version 1.0.261}: \vspace{-6pt} 
   resolved Issue 0699: {\bf CMarkerBodyRigid::ComputeMarkerData}
 (optimize)

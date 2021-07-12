@@ -37,13 +37,20 @@
 //! reset all lists and deallocate memory
 void MainSystem::Reset()
 {
+	//pout << "  MainSystem::Reset():1" << "\n";
 	//clear all data, prepare for removal (why not delete?)
 	mainSystemData.Reset(); //
+	//pout << "  MainSystem::Reset():2" << "\n";
 	GetCSystem()->GetSystemData().Reset();
+	//pout << "  MainSystem::Reset():3" << "\n";
 	GetCSystem()->GetPythonUserFunctions().Reset();
+	//pout << "  MainSystem::Reset():4" << "\n";
 	GetCSystem()->Initialize();
+	//pout << "  MainSystem::Reset():5" << "\n";
 	GetCSystem()->GetPostProcessData()->Reset();
+	//pout << "  MainSystem::Reset():6" << "\n";
 	visualizationSystem.Reset();
+	//pout << "  MainSystem::Reset():7" << "\n";
 	interactiveMode = false;
 	//mainSystemIndex = -1; //... check if this is correctly set? test several SC.Reset and similar operations ==> this MainSystem would not be usable any more, as it is not linked to SystemContainer
 }
@@ -110,6 +117,25 @@ bool MainSystem::UnlinkVisualizationSystem()
 	return true;
 }
 
+void MainSystem::RaiseIfConfigurationNotReference(const char* functionName, ConfigurationType configuration) const
+{
+	if (!GetCSystem()->IsSystemConsistent() && configuration != ConfigurationType::Reference)
+	{
+		STDstring s = STDstring("MainSystem::") + functionName;
+		s += ": called for inconsistent system; possible reason: mbs.Assemble() has not been called prior to this function call; alternative: may be called if configuration is ConfigurationType.Reference";
+		CHECKandTHROWstring(s);
+	}
+}
+
+void MainSystem::RaiseIfNotConsistent(const char* functionName) const
+{
+	if (!GetCSystem()->IsSystemConsistent() )
+	{
+		STDstring s = STDstring("MainSystem::") + functionName;
+		s += ": called for inconsistent system; possible reason: mbs.Assemble() has not been called prior to this function call";
+		CHECKandTHROWstring(s);
+	}
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -271,6 +297,7 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 
 py::object MainSystem::PyGetNodeOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
+	RaiseIfConfigurationNotReference("GetNodeOutput", configuration);
 	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
@@ -506,6 +533,7 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 //! Get specific output variable with variable type
 py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType) const
 {
+	RaiseIfNotConsistent("GetObjectOutput");
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
@@ -537,6 +565,8 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex, OutputVariableType variableType,
 		const std::vector<Real>& localPosition, ConfigurationType configuration) const
 {
+	RaiseIfConfigurationNotReference("GetObjectOutputBody", configuration);
+
 	if (localPosition.size() == 3)
 	{
 		Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
@@ -566,6 +596,8 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 py::object MainSystem::PyGetObjectOutputVariableSuperElement(const py::object& itemIndex, OutputVariableType variableType, 
 	Index meshNodeNumber, ConfigurationType configuration) const
 {
+	RaiseIfConfigurationNotReference("GetObjectOutputSuperElement", configuration);
+
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
@@ -904,6 +936,8 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 //! Get current load values, specifically if user-defined loads are used
 py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 {
+	RaiseIfNotConsistent("GetLoadValues");
+
 	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
@@ -1081,6 +1115,8 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 //! get sensor's values
 py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, ConfigurationType configuration)
 {
+	RaiseIfConfigurationNotReference("GetSensorValues", configuration);
+
 	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{

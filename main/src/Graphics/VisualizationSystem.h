@@ -47,7 +47,7 @@ public: //declared as public for direct access via pybind
     GraphicsData graphicsData;			//!< data to be processed by OpenGL renderer
 	//VisualizationSettings settings;		//!< general settings for visualization
 	PostProcessData* postProcessData;	//!< link to postProcessData of CSystem ==> communication between the two threads
-	CSystemData* systemData;			//!< REMOVE: this is a temporary access, before visualization objects are introduced
+	CSystemData* systemData;			//!< REMOVE: link to CSystemData; this is a temporary access, before visualization objects are introduced
 
 	//RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	const float contourPlotFlag = -2.f;	//!< this is the value of transparency used to identify contour plot values in GraphicsData items

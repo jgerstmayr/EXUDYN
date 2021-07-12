@@ -393,8 +393,6 @@
     <ClCompile Include="..\src\Solver\CSolverStatic.cpp" />
     <ClCompile Include="..\src\Solver\MainSolver.cpp" />
     <ClCompile Include="..\src\Solver\MainSolverBase.cpp" />
-    <ClCompile Include="..\src\Solver\StaticSolver.cpp" />
-    <ClCompile Include="..\src\solver\TimeIntegrationSolver.cpp" />
     <ClCompile Include="..\src\System\CLoad.cpp" />
     <ClCompile Include="..\src\System\CNode.cpp" />
     <ClCompile Include="..\src\System\CObjectBody.cpp" />
@@ -668,7 +666,6 @@
     <ClInclude Include="..\src\Solver\CSolverImplicitSecondOrder.h" />
     <ClInclude Include="..\src\Solver\CSolverStatic.h" />
     <ClInclude Include="..\src\Solver\MainSolverBase.h" />
-    <ClInclude Include="..\src\solver\TimeIntegrationSolver.h" />
     <ClInclude Include="..\src\System\CLoad.h" />
     <ClInclude Include="..\src\System\CMarker.h" />
     <ClInclude Include="..\src\system\CMaterial.h" />

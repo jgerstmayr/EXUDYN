@@ -200,8 +200,6 @@ ext_modules = [
                  'src/Solver/CSolverStatic.cpp',
                  'src/Solver/MainSolver.cpp',
                  'src/Solver/MainSolverBase.cpp',
-                 'src/Solver/StaticSolver.cpp',
-                 'src/Solver/TimeIntegrationSolver.cpp',
                  'src/System/CLoad.cpp',
                  'src/System/CNode.cpp',
                  'src/System/CObjectBody.cpp',

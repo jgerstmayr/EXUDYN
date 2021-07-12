@@ -111,7 +111,7 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
     return s
 
 
-#**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver
+#**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; NOTE that this function is directly available from exudyn (using exudyn.SolveStatic(...))
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
@@ -171,7 +171,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 
     return success
 
-#**function: solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver
+#**function: solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; NOTE that this function is directly available from exudyn (using exudyn.SolveDynamic(...))
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
 #   simulationSettings: specific simulation settings

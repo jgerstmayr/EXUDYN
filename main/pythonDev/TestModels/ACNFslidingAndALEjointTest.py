@@ -214,7 +214,6 @@ if exudynTestGlobals.useGraphics:
 vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationType.Initial)
 
 #start static calculation
-#SC.StaticSolveOldSolver(mbs, simulationSettings)
 exu.SolveStatic(mbs, simulationSettings) 
 
 #++++++++++++++++++++++++++++++++++++++++

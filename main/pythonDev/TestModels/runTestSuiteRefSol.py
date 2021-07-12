@@ -52,7 +52,7 @@ def TestExamplesReferenceSolution():
             'rollingCoinTest.py':0.002004099927337848,
             'rollingCoinPenaltyTest.py':0.03489603106696451,
             'scissorPrismaticRevolute2D.py':27.202556489044575, #until 2021-03-20: 27.202556489044397,
-            'serialRobotTest.py': 0.7712176106978085,#change in EP constraints to nodes causes tiny error, seems to be error propagation; up to 2021-06-28: 0.7712176106955341; -4.309882450925784e-10 diff between old corrected and new gen alpha solver
+            'serialRobotTest.py': 0.7680031232091771 , #old controller (loadUserFunction): 0.7712176106978085,#change in EP constraints to nodes causes tiny error, seems to be error propagation; up to 2021-06-28: 0.7712176106955341; -4.309882450925784e-10 diff between old corrected and new gen alpha solver
             'sliderCrank3Dbenchmark.py':3.3642761780921897,
             'sliderCrankFloatingTest.py':0.5916491633788336,
             'solverExplicitODE1ODE2test.py':3.3767933275918964,

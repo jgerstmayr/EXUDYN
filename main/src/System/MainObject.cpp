@@ -86,7 +86,7 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 	//check if type is valid:
 	if ((Index)GetCObject()->GetType() & (Index)CObjectType::Body) //use '&': might be CObjectType::Body and also CObjectType::MultiNoded
 	{
-		if ((Index)GetCObject()->GetOutputVariableTypes() & (Index)variableType)
+		if (EXUstd::IsOfType(GetCObject()->GetOutputVariableTypes(),  variableType))
 		{
 			const CObjectBody* cObjectBody = (const CObjectBody*)GetCObject();
 
@@ -119,9 +119,10 @@ py::object MainObject::GetOutputVariableSuperElement(OutputVariableType variable
 	//check if type is valid:
 	if ((Index)GetCObject()->GetType() & (Index)CObjectType::SuperElement) //use '&': might contain also other types
 	{
-		if ((Index)GetCObject()->GetOutputVariableTypes() & (Index)variableType)
+		const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)GetCObject();
+		//if ((Index)GetCObject()->GetOutputVariableTypes() & (Index)variableType)
+		if (EXUstd::IsOfType(cObjectSuperElement->GetOutputVariableTypesSuperElement(meshNodeNumber), variableType))
 		{
-			const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)GetCObject();
 
 			cObjectSuperElement->GetOutputVariableSuperElement(variableType, meshNodeNumber, configuration, value);
 			//now check if it is scalar or a vector-valued:

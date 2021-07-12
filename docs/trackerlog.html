@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 711, 
-Number of resolved issues = 629 (261 in current version), 
-EXUDYN version = 1.0.261, 
-last change =  2021-07-08
+Number of issues = 725, 
+Number of resolved issues = 644 (276 in current version), 
+EXUDYN version = 1.0.276, 
+last change =  2021-07-12
 
 
 <table style = "width:100%">
@@ -38,6 +38,22 @@ last change =  2021-07-08
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0720</td>
+    <td>AddObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add gravity as with user functions version, similar to AddRigidBody</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0710</td>
     <td>CollectCurrentNodeData</td>
@@ -60,22 +76,6 @@ last change =  2021-07-08
     <td>JG</td>
     <td>RAISED  </td>
     <td> consider removing ResizableVector(integrate into Vector), implement LinkedDataVector as templated spezialization of Vector, no virtual calls in Vector</td>
-    <td>OPTIMIZE</td>
-    <td></td>
-    <td>2021-07-06</td>
-    <td>2021-09-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0706</td>
-    <td>ConstSizeVector     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> decouple ConstSizeVector and ConstSizeMatrix from Vector / Matrix and avoid virtual calls, erase all rule of 5 member functions, optimize algebra</td>
     <td>OPTIMIZE</td>
     <td></td>
     <td>2021-07-06</td>
@@ -150,7 +150,7 @@ last change =  2021-07-08
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0677</td>
     <td>single threaded renderer</td>
     <td>JG</td>
@@ -160,22 +160,6 @@ last change =  2021-07-08
     <td></td>
     <td>2021-05-12</td>
     <td>2021-07-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0669</td>
-    <td>remove old solvers  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> remove old static and dynamic solvers as they are not any more up to date with graphics interface</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2021-05-10</td>
-    <td>2021-07-09</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1351,6 +1335,214 @@ last change =  2021-07-08
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0724</td>
+    <td>Linux version       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> exudyn fails after import exudyn on Ubuntu18.04 and 20.04, showing error with RenderStateMachine selectionString</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2021-07-12 22:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>version 276 tested with Ubuntu20.04, working again</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0723</td>
+    <td>SolutionViewer      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove SolutionViewer from exudyn init file, as it causes problems if no tkinter or matplotlib installed</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2021-07-12 20:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>use exudyn.interactive.SolutionViewer(...) instead</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0722</td>
+    <td>glfwGetWindowContentScale</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> function causes immediate crash on linux (UBUNTU) when importing exudyn</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2021-07-12 19:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added flag for linux compilation, excluding font scaling</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0721</td>
+    <td>FEM.GetNodesOnLine(..)</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fails because self. missing in call to GetNodesOnCylinder</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2021-07-12 16:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0719</td>
+    <td>Pybind11 2.6        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> switch to Pybind11 2.6 in included C++ files</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2021-07-12 16:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0718</td>
+    <td>Python3.8 FASTLINALG</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> using now __FAST_EXUDYN_LINALG option, which excludes all range checks and other checks in arrays, matrices, etc.; leads usually to 30percent higher performance</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2021-07-12 16:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0717</td>
+    <td>SC.StaticSolve, SC.TimeIntegrationSolve</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove these deprecated functions from interface</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-11</td>
+    <td>2021-09-09</td>
+    <td>2021-07-12 15:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0716</td>
+    <td>SystemIsConsistent  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add checks for functions that may not be called if not SystemIsConsistent</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-11</td>
+    <td>2021-09-09</td>
+    <td>2021-07-11 17:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0715</td>
+    <td>ObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> OutputVariable Displacement includes localPosition, but should not</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-10</td>
+    <td>2021-09-08</td>
+    <td>2021-07-11 16:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>GetMeshNodeLocalPosition included reference position twice</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0714</td>
+    <td>mbs.GetSensorValues </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> raises error for ObjectFFRFreducedOrder: ERROR: LinkedDataVectorBase(const VectorBase<T>&, Index), startPosition < 0</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-10</td>
+    <td>2021-09-08</td>
+    <td>2021-07-11 17:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>caused when called before Assemble(); checks added in future</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0713</td>
+    <td>ObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> GetOutputVariableSuperElement does not agree with types described in theDoc; object does not provide Displacement or Position, sensors return wrong values</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-07-09</td>
+    <td>2021-09-07</td>
+    <td>2021-07-09 20:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>corrected C++ implementation and theDoc.pdf for OutputVariableTypesSuperElement</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0712</td>
+    <td>serialRobot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> improve speed of serial robot by transferring controllers from load userfunctions to mbs.SetPreStepUserFunction</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-09</td>
+    <td>2021-09-07</td>
+    <td>2021-07-09 13:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0711</td>
+    <td>generator files     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> changed backslash to slash in generator files such that they can also be executed on Linux and MacOS</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-07-09</td>
+    <td>2021-09-07</td>
+    <td>2021-07-09 12:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0709</td>
     <td>Linux/MacOS compile error</td>
     <td>JG</td>
@@ -1381,6 +1573,22 @@ last change =  2021-07-08
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0706</td>
+    <td>ConstSizeVector     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> decouple ConstSizeVector and ConstSizeMatrix from Vector / Matrix and avoid virtual calls, erase all rule of 5 member functions, optimize algebra</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-06</td>
+    <td>2021-09-04</td>
+    <td>2021-07-11 15:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>improved speed up to factor 2 for some items!</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0705</td>
@@ -1873,6 +2081,22 @@ last change =  2021-07-08
     <td>2021-05-10</td>
     <td>2021-07-09</td>
     <td>2021-05-10 22:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0669</td>
+    <td>remove old solvers  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove old static and dynamic solvers as they are not any more up to date with graphics interface</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-05-10</td>
+    <td>2021-07-09</td>
+    <td>2021-07-12 15:32</td>
     <td>JG</td>
     <td></td>
     <td></td>

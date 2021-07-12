@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  13:31:26 (last modfied)
+* @date         2021-07-09  20:48:45 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -403,9 +403,7 @@ public: // AUTO:
         return (OutputVariableType)(
             (Index)OutputVariableType::Coordinates +
             (Index)OutputVariableType::Coordinates_t +
-            (Index)OutputVariableType::Force +
-            (Index)OutputVariableType::StressLocal +
-            (Index)OutputVariableType::StrainLocal );
+            (Index)OutputVariableType::Force );
     }
 
 };

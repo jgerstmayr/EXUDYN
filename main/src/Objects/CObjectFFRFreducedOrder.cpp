@@ -1100,7 +1100,7 @@ void CObjectFFRFreducedOrder::GetOutputVariableSuperElement(OutputVariableType v
 		break;
 	}
 	default:
-		SysError("CObjectFFRFreducedOrder::GetOutputVariableBody failed"); //error should not occur, because types are checked!
+		SysError("CObjectFFRFreducedOrder::GetOutputVariableSuperElement failed"); //error should not occur, because types are checked!
 	}
 
 }
@@ -1110,10 +1110,19 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalPosition(Index meshNodeNumber,
 {
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNodeLocalPosition: meshNodeNumber out of range (mesh node 0 is node 1 in ObjectFFRFreducedOrder)");
 
-	return GetMeshNodeCoordinates(meshNodeNumber, ((CNodeODE2*)GetCNode(genericNodeNumber))->GetCoordinateVector(configuration))
-		+ Vector3D({ parameters.referencePositions[meshNodeNumber * 3], 
-			parameters.referencePositions[meshNodeNumber * 3+1],
-			parameters.referencePositions[meshNodeNumber * 3+2] });
+	if (configuration == ConfigurationType::Reference) {
+		return Vector3D({ parameters.referencePositions[meshNodeNumber * 3],
+			parameters.referencePositions[meshNodeNumber * 3 + 1],
+			parameters.referencePositions[meshNodeNumber * 3 + 2] });
+		//note that GetCoordinateVector(ConfigurationType::Reference) is all zero, guaranteed by checkPReAssembleConsistencies()
+	}
+	else
+	{
+		return GetMeshNodeCoordinates(meshNodeNumber, ((CNodeODE2*)GetCNode(genericNodeNumber))->GetCoordinateVector(configuration))
+		+ Vector3D({ parameters.referencePositions[meshNodeNumber * 3],
+			parameters.referencePositions[meshNodeNumber * 3 + 1],
+			parameters.referencePositions[meshNodeNumber * 3 + 2] });
+	}
 }
 
 //! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh

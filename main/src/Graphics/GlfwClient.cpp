@@ -109,7 +109,7 @@ GlfwRenderer::GlfwRenderer()
 	stateMachine.lastMousePressedY = 0;
 
 	//DELETE: stateMachine.selectionMode = false;
-	stateMachine.selectionString = "";
+	//stateMachine.selectionString = "";
 	stateMachine.selectionMouseCoordinates = Vector2D({ 0.,0. });
 
 	fontScale = 1; //initialized if needed before bitmap initialization
@@ -1275,11 +1275,14 @@ void GlfwRenderer::InitCreateWindow()
 
 	//+++++++++++++++++
 	//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
+#ifdef __linux__
+	fontScale = 1; //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
+#else
 	float xWindowScale, yWindowScale;
 	glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
 	fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
 	if (!visSettings->general.useWindowsMonitorScaleFactor) { fontScale = 1; }
-
+#endif
 	guint fontSize = (guint)(visSettings->general.textSize*fontScale);
 
 	InitFontBitmap(fontSize);

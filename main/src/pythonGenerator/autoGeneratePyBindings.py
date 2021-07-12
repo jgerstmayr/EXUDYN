@@ -352,30 +352,31 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
                                 defaultArgs=['False'],
                                 ); sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='TimeIntegrationSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, HString solverName, const SimulationSettings& simulationSettings) {
-                            		pout.precision(simulationSettings.outputPrecision);
-                            		if (solverName == "RungeKutta1")
-                            			msc.GetSolvers().GetSolverRK1().SolveSystem(simulationSettings, *(ms.GetCSystem()));
-                            		else if (solverName == "GeneralizedAlpha")
-                            			msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(simulationSettings, *(ms.GetCSystem()));
-                            		else
-                            			PyError(HString("SystemContainer::TimeIntegrationSolve: invalid solverName '")+solverName+"'; options are: RungeKutta1 or GeneralizedAlpha");
-                            		}""", 
-                                argList=['mainSystem','solverName','simulationSettings'],
-                                description="DEPRECATED, use exu.SolveDynamic(...) instead, see \\refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
-                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)",
-                                isLambdaFunction = True
-                                ); sL+=sL1
+#removed 2021-07-12 as deprecated:
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='TimeIntegrationSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, HString solverName, const SimulationSettings& simulationSettings) {
+#                             		pout.precision(simulationSettings.outputPrecision);
+#                             		if (solverName == "RungeKutta1")
+#                             			msc.GetSolvers().GetSolverRK1().SolveSystem(simulationSettings, *(ms.GetCSystem()));
+#                             		else if (solverName == "GeneralizedAlpha")
+#                             			msc.GetSolvers().GetSolverGeneralizedAlpha().SolveSystem(simulationSettings, *(ms.GetCSystem()));
+#                             		else
+#                             			PyError(HString("SystemContainer::TimeIntegrationSolve: invalid solverName '")+solverName+"'; options are: RungeKutta1 or GeneralizedAlpha");
+#                             		}""", 
+#                                 argList=['mainSystem','solverName','simulationSettings'],
+#                                 description="DEPRECATED, use exu.SolveDynamic(...) instead, see \\refSection{sec:solver:SolveDynamic}! Call time integration solver for given system with solverName ('RungeKutta1'...explicit solver, 'GeneralizedAlpha'...implicit solver); use simulationSettings to individually configure the solver",
+#                                 example = "simSettings = exu.SimulationSettings()\\\\simSettings.timeIntegration.numberOfSteps = 1000\\\\simSettings.timeIntegration.endTime = 2\\\\simSettings.timeIntegration.verboseMode = 1\\\\SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simSettings)",
+#                                 isLambdaFunction = True
+#                                 ); sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='StaticSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
-                                pout.precision(simulationSettings.outputPrecision);
-                                msc.GetSolvers().GetSolverStatic().SolveSystem(simulationSettings, *(ms.GetCSystem()));
-                                }""", 
-                                argList=['mainSystem','simulationSettings'],
-                                description="DEPRECATED, use exu.SolveStatic(...) instead, see \\refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)",
-                                example = "simSettings = exu.SimulationSettings()\\\\simSettings.staticSolver.newton.relativeTolerance = 1e-6\\\\SC.StaticSolve(mbs, simSettings)",
-                                isLambdaFunction = True
-                                ); sL+=sL1
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='StaticSolve', cName="""[](MainSystemContainer& msc, MainSystem& ms, const SimulationSettings& simulationSettings) {
+#                                 pout.precision(simulationSettings.outputPrecision);
+#                                 msc.GetSolvers().GetSolverStatic().SolveSystem(simulationSettings, *(ms.GetCSystem()));
+#                                 }""", 
+#                                 argList=['mainSystem','simulationSettings'],
+#                                 description="DEPRECATED, use exu.SolveStatic(...) instead, see \\refSection{sec:solver:SolveStatic}! Call solver to compute a static solution of the system, considering acceleration and velocity coordinates to be zero (initial velocities may be considered by certain objects)",
+#                                 example = "simSettings = exu.SimulationSettings()\\\\simSettings.staticSolver.newton.relativeTolerance = 1e-6\\\\SC.StaticSolve(mbs, simSettings)",
+#                                 isLambdaFunction = True
+#                                 ); sL+=sL1
 
 
 sL += DefLatexFinishClass()#only finalize latex table
