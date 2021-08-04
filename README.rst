@@ -3,10 +3,6 @@ Exudyn
 ======
 EXUDYN version = 1.0.281
 
-
- ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
-
-
 *A flexible multibody dynamics systems simulation code with Python and C++*
 
 This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
@@ -370,11 +366,12 @@ To uninstall under UBUNTU, run:
 
 
 If you upgrade to a newer version, uninstall is usually not necessary!
-How to install Exudyn and using the C++ code (advanced)?
-============================================================
+
+How to install Exudyn and use the C++ source code (advanced)?
+=================================================================
 
 Exudyn is still under intensive development of core modules.
-There are several ways to using the code, but you \ **cannot**\  install Exudyn as compared to other executable programs and apps.
+There are several ways of using the code, but you \ **cannot**\  install Exudyn as compared to other executable programs and apps.
 
 
 
@@ -750,10 +747,6 @@ FAQ
 	
 
 
-
-
-
- ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
 
 
 ======================
@@ -1367,10 +1360,6 @@ Exceptions to the NO-ABBREVIATIONS-RULE:
 
 
 
-
-
-
- ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
 
 
 ========
