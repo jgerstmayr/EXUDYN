@@ -3,6 +3,10 @@ Exudyn
 ======
 EXUDYN version = 1.0.281
 
+
+ ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
+
+
 *A flexible multibody dynamics systems simulation code with Python and C++*
 
 This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
@@ -14,6 +18,7 @@ For license, see LICENSE.txt in the root folder!
 In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
+
 
 
 
@@ -47,6 +52,7 @@ This section will show:
 +  Run a simple example in Spyder
 +  FAQ -- Frequently asked questions
 
+
 What is Exudyn ?
 ===================
 
@@ -61,6 +67,7 @@ Exudyn is designed to easily set up complex multibody models, consisting of rigi
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see theDoc.pdf.
+
 Developers of Exudyn and thanks
 ===================================
 
@@ -745,6 +752,10 @@ FAQ
 
 
 
+
+ ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
+
+
 ======================
 Overview on Exudyn 
 ======================
@@ -1358,6 +1369,10 @@ Exceptions to the NO-ABBREVIATIONS-RULE:
 
 
 
+
+ ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
+
+
 ========
 Tutorial
 ========
@@ -1631,4 +1646,8 @@ Further examples can be found in your copy of exudyn:
      \ ``main/pythonDev/TestModels``\ 
 
 
+
+
+
+ ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!
 
