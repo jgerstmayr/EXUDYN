@@ -5,6 +5,9 @@ EXUDYN version = 1.0.288
 
 *A flexible multibody dynamics systems simulation code with Python and C++*
 
+.. image:: docs/theDoc/intro2.jpg
+   :width: 400
+
 This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
 It is auto-generated from .tex files (sorry for some conversion errors!). 
 Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !
