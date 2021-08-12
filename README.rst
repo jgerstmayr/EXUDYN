@@ -1,7 +1,7 @@
 ======
 Exudyn
 ======
-EXUDYN version = 1.0.283
+EXUDYN version = 1.0.288
 
 *A flexible multibody dynamics systems simulation code with Python and C++*
 
