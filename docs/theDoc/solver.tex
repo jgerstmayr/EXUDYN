@@ -4,22 +4,22 @@
 \mysection{Notation and System of equations of motion}
 \label{sec:notationSystemOfEOM}
 %
-The general idea of the code is to have objects, which provide equations (ODE2, ODE1, AE).
+The general idea of the code is to have objects, which provide equations (\hac{ODE2}, \hac{ODE1}, \hac{AE}).
 The solver then assembles these equations and solves the static or dynamic problem.
 The system structure and solver are similar but much more advanced and modular as earlier solvers by the main developer \cite{GerstmayrStangl2004,Gerstmayr2009,GerstmayrEtAl2013}.
 
-\mysubsection{LHS-RHS naming conventions in EXUDYN} \label{eq_equationLHSRHS}
+\mysubsection{\hac{LHS}--\hac{RHS} naming conventions in EXUDYN} \label{eq_equationLHSRHS}
+%\acl{LHS} (\hacs{LHS}) and \acl{RHS} (\hacs{RHS})
+Functions and variables contain the abbreviations \hac{LHS} and \hac{RHS}, sometimes lower-case, in order
+to distinguish if terms are computed at the \hac{LHS} or \hac{RHS}.
 
-Functions and variables contain the abbreviations LHS ({\it left-hand-side}) and RHS ({\it right-hand-side}), sometimes lower-case, in order
-to distinguish if terms are computed at the LHS or RHS.
-
-The objects have the following LHS--RHS conventions:
+The objects have the following \hac{LHS}--\hac{RHS} conventions:
 \bi
-		\item the acceleration term, e.g., $m \cdot \ddot q$ is always positive on the LHS
-	  \item objects, connectors, etc., use LHS conventions for most terms: mass, stiffness matrix, elastic forces, damping, etc., are computed at LHS of the object equation
-		\item object forces are written at the RHS of the object equation
-		\item in case of constraint or connector equations, there is no LHS or RHS, as there is no acceleration term. 
-		Therefore, the computation function evaluates the term as given in the description of the object, adding it to the LHS.
+		\item the acceleration term, e.g., $m \cdot \ddot q$ is always positive on the \hac{LHS}
+	  \item objects, connectors, etc., use \hac{LHS} conventions for most terms: mass, stiffness matrix, elastic forces, damping, etc., are computed at \hac{LHS} of the object equation
+		\item object forces are written at the \hac{RHS} of the object equation
+		\item in case of constraint or connector equations, there is no \hac{LHS} or \hac{RHS}, as there is no acceleration term. 
+		Therefore, the computation function evaluates the term as given in the description of the object, adding it to the \hac{LHS}.
 \ei
 Object equations may read, e.g., for one coordinate $q$, mass $m$, damping coefficient $d$, stiffness $k$ and applied force $f$,
 \be
@@ -29,7 +29,7 @@ In this case, the C++ function \texttt{ComputeODE2LHS(const Vector\& ode2Lhs)} w
 $d \cdot \dot q + k \cdot q$ with positive sign. Note that the acceleration term $m \cdot \ddot q$ is computed separately, as it 
 is computed from mass matrix and acceleration.
 
-However, system quantities (e.g.\ within the solver) are always written on RHS\footnote{except for the acceleration $\times$ mass matrix and constraint reaction forces, see \eq{eq_system_EOM}}: 
+However, system quantities (e.g.\ within the solver) are always written on \hac{RHS}\footnote{except for the acceleration $\times$ mass matrix and constraint reaction forces, see \eq{eq_system_EOM}}: 
 \be 
   \underbrace{M_{sys} \cdot \ddot q_{sys}}_{LHS} = \underbrace{f_{sys}}_{RHS} \,.
 \ee
@@ -37,9 +37,9 @@ In the case of the object equation
 \be
   m \cdot \ddot q + d \cdot \dot q + k \cdot q = f \, ,
 \ee 
-the RHS term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is computed by the C++ function \texttt{ComputeSystemODE2RHS}.
+the \hac{RHS} term becomes $f_{sys} = -(d \cdot \dot q + k \cdot q) + f $ and it is computed by the C++ function \texttt{ComputeSystemODE2RHS}.
 %
-This means, that during computation, terms which appear at the LHS of the object are transferred to the RHS of the system equation.
+This means, that during computation, terms which appear at the \hac{LHS} of the object are transferred to the \hac{RHS} of the system equation.
 This enables a simpler setup of equations for the solver.
 
 \mysubsection{System assembly}
@@ -65,7 +65,7 @@ In this case, the total object residuals read
 \eea 
 It is clear, that now the mass in the first equation is increased due to the fact that two objects contribute to the same coordinate. The same would happen, if several loads are applied to the same coordinate.
 
-Finally, if we add a \texttt{CoordinateSpringDamper}, assuming a spring $k$ between coordinates $c0$ and $c1$, the RHS of equations related to $c0$ and $c1$ is now augmented to
+Finally, if we add a \texttt{CoordinateSpringDamper}, assuming a spring $k$ between coordinates $c0$ and $c1$, the \hac{RHS} of equations related to $c0$ and $c1$ is now augmented to
 \bea
   RHS_{c0} &=& f_{c0} + k \cdot (q_{c1} - q_{c0}) \eqComma \\
   RHS_{c1} &=& f_{c1} + k \cdot (q_{c0} - q_{c1}) \eqDot
@@ -90,7 +90,7 @@ Therefore, it is not possible right now to attach two \texttt{ObjectRigidBody}  
 %\ei
 %\newcommand{\acc}{\av} %avoid due to possible mix up with algorithmic acceleration
 \newcommand{\aalg}{\av} 
-\newcommand{\vel}{\vv} %use this for transformation of ODE2 into first order equations
+\newcommand{\vel}{\vv} %use this for transformation of \hac{ODE2} into first order equations
 Using the basic notation for coordinates in \refSection{sec:itemnotation}, we use the following quantities and symbols for equations of motion and solvers:
 \begin{center}
   \footnotesize
@@ -98,28 +98,28 @@ Using the basic notation for coordinates in \refSection{sec:itemnotation}, we us
     \hline
     \bf quantity & \bf symbol & \bf description \\ \hline
 %
-    number of ODE2 coordinates & $n$ & ODE2 = \SON \\ \hline
-    number of ODE1 coordinates & $n_\FO$ & ODE1 = \FON \\ \hline
-    number of AE coordinates & $m$ & AE = \AEN \\ \hline
+    number of \hac{ODE2} coordinates & $n$ & \acf{ODE2} \\ \hline % = \SON
+    number of \hac{ODE1} coordinates & $n_\FO$ & \acf{ODE1} \\ \hline % = \FON
+    number of \hac{AE} coordinates & $m$ & \acf{AE} \\ \hline % = \AEN
     number of system coordinates & $n_{\SYS}$ & \SYSN \\ \hline
 %
-    ODE2 coordinates & $\qv = [q_0,\, \ldots,\, q_{n_q}]\tp$ & ODE2, displacement-based coordinates (could also be rotation or deformation coordinates)\\ \hline
+    \hac{ODE2} coordinates & $\qv = [q_0,\, \ldots,\, q_{n_q}]\tp$ & \hac{ODE2}, displacement-based coordinates (could also be rotation or deformation coordinates)\\ \hline
 		%\vel needed for transformation to first order equations
-    ODE2 velocities & $\vel = \dot \qv = [\dot q_0,\, \ldots,\, \dot q_{n_q}]\tp$ & ODE2 velocity coordinates\\ \hline
-    ODE2 accelerations & $\ddot \qv = [\ddot q_0,\, \ldots,\, \ddot q_{n_q}]\tp$ & ODE2 acceleration coordinates\\ \hline
-    ODE1 coordinates & $\yv = [y_0,\, \ldots,\, y_{n_y}]\tp$ & vector of $n_y$ coordinates for first order ordinary differential equations (ODE1)\\ \hline
-    ODE1 velocities & $\dot \yv = [\dot y_0,\, \ldots,\, \dot y_{n_y}]\tp$ & vector of $n$ velocities for first order ordinary differential equations (ODE1)\\ \hline
+    \hac{ODE2} velocities & $\vel = \dot \qv = [\dot q_0,\, \ldots,\, \dot q_{n_q}]\tp$ & \hac{ODE2} velocity coordinates\\ \hline
+    \hac{ODE2} accelerations & $\ddot \qv = [\ddot q_0,\, \ldots,\, \ddot q_{n_q}]\tp$ & \hac{ODE2} acceleration coordinates\\ \hline
+    \hac{ODE1} coordinates & $\yv = [y_0,\, \ldots,\, y_{n_y}]\tp$ & vector of $n_y$ coordinates for \acf{ODE1}\\ \hline
+    \hac{ODE1} velocities & $\dot \yv = [\dot y_0,\, \ldots,\, \dot y_{n_y}]\tp$ & vector of $n$ velocities for \acf{ODE1}\\ \hline
 %currently not used/needed:    algebraic coordinates & $\zv = [z_0,\, \ldots,\, z_m]\tp$ & vector of $m$ algebraic coordinates if not Lagrange multipliers in any configuration\\ \hline
-    ODE2 Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates), representing the linear factors (often forces or torques) to fulfill the algebraic equations; for ODE1 and ODE2 coordinates\\ \hline
-%not needed, because lambda can act on ODE2 and ODE1
-    %ODE1 Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates) for \FON ; needed if constraints are applied to ODE1 coordinates\\ \hline
+    \hac{ODE2} Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates), representing the linear factors (often forces or torques) to fulfill the algebraic equations; for \hac{ODE1} and \hac{ODE2} coordinates\\ \hline
+%not needed, because lambda can act on \hac{ODE2} and \hac{ODE1}
+    %\hac{ODE1} Lagrange multipliers & $\tlambda = [\lambda_0,\, \ldots,\, \lambda_m]\tp$ & vector of $m$ Lagrange multipliers (=algebraic coordinates) for \FON ; needed if constraints are applied to \hac{ODE1} coordinates\\ \hline
     data coordinates & $\xv = [x_0,\, \ldots,\, x_l]\tp$ & vector of $l$ data coordinates in any configuration\\ \hline
 %
-  RHS ODE2 & $\fv_\SO\in \Rcal^{n_q}$ & right-hand-side of ODE2 equations; (all terms except mass matrix $\times$ acceleration and joint reaction forces)\\ \hline
-  RHS ODE1 & $\fv_\SO\in \Rcal^{n_y}$ & right-hand-side of ODE1 equations\\ \hline
-  AE & $\gv\in \Rcal^{m}$ & algebraic equations\\ \hline
+  \hac{RHS} \hac{ODE2} & $\fv_\SO\in \Rcal^{n_q}$ & right-hand-side of \hac{ODE2} equations; (all terms except mass matrix $\times$ acceleration and joint reaction forces)\\ \hline
+  \hac{RHS} \hac{ODE1} & $\fv_\SO\in \Rcal^{n_y}$ & right-hand-side of \hac{ODE1} equations\\ \hline
+  \hac{AE} & $\gv\in \Rcal^{m}$ & algebraic equations\\ \hline
 %
-  mass matrix & $\Mm\in \Rcal^{n_q \times n_q}$ & mass matrix, only for ODE2 equations\\ \hline
+  mass matrix & $\Mm\in \Rcal^{n_q \times n_q}$ & mass matrix, only for \hac{ODE2} equations\\ \hline
   (tangent) stiffness matrix & $\Km\in \Rcal^{n_q \times n_q}$ & includes all derivatives of $\fv_\SO$ w.r.t.\ $\qv$\\ \hline
   damping/gyroscopic matrix & $\Dm\in \Rcal^{n_q \times n_q}$ & includes all derivatives of $\fv_\SO$ w.r.t.\ $\vel$ \\ \hline
 %
@@ -128,14 +128,14 @@ Using the basic notation for coordinates in \refSection{sec:itemnotation}, we us
   system residual & $\rv\in \Rcal^{n_s}$ & system residual -- depends on method\\ \hline
   system coordinates & $\txi$ & system coordinates and unknowns for solver; definition depends on solver\\ \hline
   Jacobian & $\Jm\in \Rcal^{n_s \times n_s}$ & system Jacobian -- depends on method\\ \hline
-  %\item $\fv_\SO$ $\ldots$ right-hand-side of ODE2 equations (except for action of joint reaction forces)
-  %\item $\fv_\FO$ $\ldots$ right-hand-side of ODE1 equations
-  %\item $\qv_\SO$ $\ldots$ 'displacement' coordinates of ODE2 equations
-  %\item $\dot \qv_\SO$ $\ldots$ 'velocity' coordinates of ODE2 equations
-  %\item $\ddot \qv_\SO$ $\ldots$ 'acceleration' coordinates of ODE2 equations
+  %\item $\fv_\SO$ $\ldots$ right-hand-side of \hac{ODE2} equations (except for action of joint reaction forces)
+  %\item $\fv_\FO$ $\ldots$ right-hand-side of \hac{ODE1} equations
+  %\item $\qv_\SO$ $\ldots$ 'displacement' coordinates of \hac{ODE2} equations
+  %\item $\dot \qv_\SO$ $\ldots$ 'velocity' coordinates of \hac{ODE2} equations
+  %\item $\ddot \qv_\SO$ $\ldots$ 'acceleration' coordinates of \hac{ODE2} equations
 	%%
-  %\item $\qv_\FO$ $\ldots$ coordinates of ODE1 equations
-  %\item $\dot \qv_\FO$ $\ldots$ 'velocity' coordinates of ODE1 equations
+  %\item $\qv_\FO$ $\ldots$ coordinates of \hac{ODE1} equations
+  %\item $\dot \qv_\FO$ $\ldots$ 'velocity' coordinates of \hac{ODE1} equations
   %\item $\qv_\AE$ $\ldots$ Lagrange multipliers
 	%
 	  \end{longtable}
@@ -407,9 +407,9 @@ The solution vector $\txi$ (denoted as $y$ in the literature \cite{Hairer1987}),
 \be
   \txi = [\qv\tp \;\; \dot \qv\tp \;\; \yv\tp ]\tp
 \ee
-and which includes ODE2 coordinates and velocities and ODE1 coordinates. All coordinates are computed without reference values.
+and which includes \hac{ODE2} coordinates and velocities and \hac{ODE1} coordinates. All coordinates are computed without reference values.
 
-The ODE1 and ODE2 equations of \eq{eq_systemEOM}, with $\tlambda=0$, are written in explicit form and converted to first order equations,
+The \hac{ODE1} and \hac{ODE2} equations of \eq{eq_systemEOM}, with $\tlambda=0$, are written in explicit form and converted to first order equations,
 \bea \label{eq_systemEOM}
   \dot \qv &=& \vel \nonumber \\
   \ddot \vel & = &\Mm^{-1} \fv_\SO(\qv, \vel, t) \nonumber \\
@@ -566,11 +566,11 @@ are in general not solvable by explicit solvers.
 Currently, only \texttt{CoordinateConstraint} with one coordinate fixed to ground can be accounted for, 
 if \texttt{explicitIntegration.eliminateConstraints == True}. 
 However, this offers the great flexibility to compute finite elements (imported meshes or ANCF beams) to be (partially) fixed to ground.
-A \texttt{CoordinateConstraint} that fixes a coordinate with index $j$ to ground leads to the simple algebraic ODE2 equation
+A \texttt{CoordinateConstraint} that fixes a coordinate with index $j$ to ground leads to the simple algebraic \hac{ODE2} equation
 \be
 	g_j(\qv) = 0 \quad \Leftrightarrow \quad  q_j = 0
 \ee
-which can be solved by the implemented explicit solvers by just setting $q_j = 0$ previously to every computation and $\dot q_j = 0$ after every RHS evaluation.
+which can be solved by the implemented explicit solvers by just setting $q_j = 0$ previously to every computation and $\dot q_j = 0$ after every \hac{RHS} evaluation.
 
 NOTE that, if \texttt{explicitIntegration.eliminateConstraints == False}, constraints are ignored by the explicit solver (and all algebraic variables are set to zero). This may be wanted (e.g.\ to investigate the free motion of bodies), but in general leads to wrong and meaningless solution.
 
@@ -600,7 +600,7 @@ The main ideas are
 Remarks:
 \bi
   \item The system of equations may be solved for accelerations $\ddot \qv$, but also for displacements $\qv$ or even velocities as unknowns while the remaining quantities are reconstructed from \eq{eq_Newmark_interpolation}. In case of displacements as unknowns, a scaling of the Jacobian is necessary, see later.
-	\item For consistency reasons, one may set $\gamma_\FO = \gamma$, but {\bf currently we use} $\gamma_T = \frac 1 2$, leading to no numerical damping for ODE1 variables $\yv$.
+	\item For consistency reasons, one may set $\gamma_\FO = \gamma$, but {\bf currently we use} $\gamma_T = \frac 1 2$, leading to no numerical damping for \hac{ODE1} variables $\yv$.
 	\item In the extension to the so-called generalized-$\alpha$ method \cite{Chung1993}, algorithmic accelerations $\aalg$ are used in \eq{eq_Newmark_interpolation}. Algorithmic accelerations are no longer equivalent to the time derivatives of displacements, $\aalg \neq \ddot \qv$; thus, both sets of variables are used independently. In case of Newmark or the implicit trapezoidal rule just use $\aalg = \ddot \qv$.
 	\item For generalized-$\alpha$, the algorithmic accelerations $\aalg$ are computed from the recurrence relation
 	\be
@@ -661,7 +661,7 @@ $T$ is the period of an equivalent single DOF mass-spring-damper system.}%
 %
 \newcommand{\GA}{{G\alpha}} %abbreviation to mark equations, residuals, etc.
 %
-Thus, the residuals at the end of the time step ($T$) read (put all terms to LHS):
+Thus, the residuals at the end of the time step ($T$) read (put all terms to \hac{LHS}):
 \bea \label{eq_generalizedAlphaRes}
   \rv^\GA_\SO &=& \Mm \ddot \qv_T + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_T - \fv_\SO(\qv_T, \dot \qv_T, t) = 0\\
   \rv^\GA_\FO &=& \dot \yv_T + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda_T - \fv_\FO(\yv_T, t) = 0\\
@@ -696,7 +696,7 @@ The Jacobian has the following $3 \times 3$ structure,
            {\Null}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
            {\Jm_{\AE\SO}}{\Jm_{\AE\FO}}{\Jm_{\AE\AE}}
 \ee
-in which we consider $\Jm_{\FO\SO}$ and $\Jm_{\SO\FO}$ to vanish in the current implementations, which means that coupling of ODE1 and ODE2 coordinates is only possible due to algebraic equations.
+in which we consider $\Jm_{\FO\SO}$ and $\Jm_{\SO\FO}$ to vanish in the current implementations, which means that coupling of \hac{ODE1} and \hac{ODE2} coordinates is only possible due to algebraic equations.
 
 The remaining terms in the Jacobian read
 \bea
@@ -724,7 +724,7 @@ Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation 
 %
 \mysubsubsubsection{(B) Solve for unknown displacements}
 %
-This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Br\"uls \cite{Arnold2007}, however, extended for ODE1 variables, which are integrated by the (undamped) trapezoidal rule.
+This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Br\"uls \cite{Arnold2007}, however, extended for \hac{ODE1} variables, which are integrated by the (undamped) trapezoidal rule.
 Documentation will be added lateron.
 
 \mysubsubsection{Initial accelerations}
@@ -761,7 +761,7 @@ note that $\yv_{init}$ are the nodal initial values for $\yv$,
 	      {-\frac{\partial \gv}{\partial \qv} \dot \qv_0-\frac{\partial \gv}{\partial \yv} \dot \yv_0 - \frac{\partial \gv}{\partial t}}  \eqComma
 \ee
 %
-The term $\frac{\partial \gv}{\partial t}$ can only occur in case of user functions and therefore currently not implemented, and the ODE1 term $\frac{\partial \gv}{\partial \yv} = 0$ is not used yet in constraints.
+The term $\frac{\partial \gv}{\partial t}$ can only occur in case of user functions and therefore currently not implemented, and the \hac{ODE1} term $\frac{\partial \gv}{\partial \yv} = 0$ is not used yet in constraints.
 
 For position level constraints, we assume $\frac{\partial \gv}{\partial \dot \qv} = 0$ and $\frac{\partial \gv}{\partial \yv} = 0$ in \eq{eq_initialAccelerationsVel} and perform a second derivation w.r.t.\ time,
 \be \label{eq_initialAccelerationsPos}
@@ -854,10 +854,10 @@ which is the default value.
 %
 %For efficient computation purpose, the elements provide a list of flags, which determine the dependencies as well as available (analytical) functions to compute the local (object) jacobian:
 %\bi
-  %\item ODE2\_ODE2 $\ldots$ derivative of ODE2 equations with respect to ODE2 variables
-  %\item ODE2\_ODE2\_t $\ldots$ derivative of ODE2 equations with respect to ODE2\_t (velocity) variables
+  %\item ODE2\_ODE2 $\ldots$ derivative of \hac{ODE2} equations with respect to \hac{ODE2} variables
+  %\item ODE2\_ODE2\_t $\ldots$ derivative of \hac{ODE2} equations with respect to ODE2\_t (velocity) variables
   %\item ODE1\_ODE1 $\ldots$ derivative of ODE1 equations with respect to ODE1 variables (NOT YET AVAILABLE)
-  %\item AE\_ODE2 $\ldots$ derivative of AE (algebraic) equations with respect to ODE2 variables
+  %\item AE\_ODE2 $\ldots$ derivative of AE (algebraic) equations with respect to \hac{ODE2} variables
   %\item AE\_ODE2\_t $\ldots$ derivative of AE (algebraic) equations with respect to ODE2\_t (velocity) variables (NOT YET AVAILABLE)
   %\item AE\_ODE1 $\ldots$ derivative of AE (algebraic) equations with respect to ODE1 variables (NOT YET AVAILABLE)
   %\item AE\_AE $\ldots$ derivative of AE (algebraic) equations with respect to AE variables

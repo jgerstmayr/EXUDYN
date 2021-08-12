@@ -166,6 +166,7 @@ ext_modules = [
                  'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
                  'src/Objects/CObjectConnectorSpringDamper.cpp',
                  'src/Objects/CObjectContactCircleCable2D.cpp',
+                 'src/Objects/CObjectContactConvexRoll.cpp',
                  'src/Objects/CObjectContactCoordinate.cpp',
                  'src/Objects/CObjectContactFrictionCircleCable2D.cpp',
                  'src/Objects/CObjectFFRF.cpp',
@@ -253,8 +254,9 @@ def cpp_flag(compiler):
 #    Return the -std=c++[11/14/17] compiler flag.
 #    The newer version is prefered over c++11 (when it is available).
     flags = ['-std=c++17', '-std=c++14', '-std=c++11']
-    if isMacOS: #C++ code will work without C++17
-        flags = ['-std=c++14', '-std=c++11']
+    # only needed for older MacOS: (ElCapitan):
+    # if isMacOS: #C++ code will work without C++17
+    #     flags = ['-std=c++14', '-std=c++11']
 
     for flag in flags:
         if has_flag(compiler, flag):
@@ -350,9 +352,9 @@ class BuildExt(build_ext):
     }
 
     if sys.platform == 'darwin':
-        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']  #without c++17 support
-        darwin_opts += ['-Wno-unused-variable','-Wno-missing-braces','-Wno-return-stack-address']
-        #darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support (not working on older MacOSX)
+        # darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.7']  #without c++17 support
+        # darwin_opts += ['-Wno-unused-variable','-Wno-missing-braces','-Wno-return-stack-address']
+        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support (not working on older MacOSX)
         c_opts['unix'] += darwin_opts + ['-Wno-inconsistent-missing-override', 
         '-Wno-overloaded-virtual' #avoid too many warnings
         ]+commonCopts

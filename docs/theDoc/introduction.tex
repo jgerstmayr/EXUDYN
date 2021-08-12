@@ -1,11 +1,12 @@
-
+\mysection{Overview on \codeName }
+%
 \mysubsection{Module structure} \label{sec:programStructure}
 This section will show:
 \bi
   \item Overview of modules
   \item Conventions: dimension of nodes, objects and vectors
-	\item Coordinates: reference coordinates and displacements
-	\item Nodes, Objects, Markers and Loads
+  \item Coordinates: reference coordinates and displacements
+  \item Nodes, Objects, Markers and Loads
 \ei
 For an introduction to the solvers, see \refSection{sec:solvers}.
 
@@ -13,111 +14,111 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 Currently, the module structure is simple:
 \bi
   \item Python parts:
-	\bi
-	  \item \texttt{itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
-	  \item \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with EXUDYN
-	\ei
+  \bi
+    \item[--] \texttt{itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+    \item[--] \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with EXUDYN
+  \ei
   \item C++ parts, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
-	\bi
-	  \item \texttt{exudyn}\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
-	  \item \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
-	  \item \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
-		loads can added to the system, see \refSection{sec:item:reference:manual};
-		\item \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
-	\ei
+  \bi
+    \item[--] \texttt{exudyn}\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+    \item[--] \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
+    \item[--] \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+    loads can added to the system, see \refSection{sec:item:reference:manual};
+    \item[--] \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
+  \ei
 \ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
   \centering
-	\begin{tikzpicture}[node distance = 2cm, auto]
-			% Place nodes
-			\node [cloud] (exu) {exudyn};
-			\node [wideblock, below of=exu] (systemContainer) {SystemContainer};
-			\node [wideblock, below of=systemContainer] (system) {MainSystem (e.g. 'mbs')};
-			\node [wideblock, right of=systemContainer,  node distance=6cm] (visualizationSettings) {visualizationSettings};
-			\node [block, below of=system] (systemData) {systemData};
-			\node [wideblock, below of=systemData] (systemStates) {system states (initial, current, ...)};
-			
-			\node [wideblock, dashed, fill=gray!10, right of=system,  node distance=6cm] (anotherSystem) {MainSystem (e.g. 'anotherMbs')};
-			\node [block, dashed, fill=gray!10, below of=anotherSystem] (anotherSystemData) {systemData};
-			\node [wideblock, dashed, fill=gray!10, below of=anotherSystemData] (anotherSystemStates) {system states (initial, current, ...)};
+  \begin{tikzpicture}[node distance = 2cm, auto]
+      % Place nodes
+      \node [cloud] (exu) {exudyn};
+      \node [wideblock, below of=exu] (systemContainer) {SystemContainer};
+      \node [wideblock, below of=systemContainer] (system) {MainSystem (e.g. 'mbs')};
+      \node [wideblock, right of=systemContainer,  node distance=6cm] (visualizationSettings) {visualizationSettings};
+      \node [block, below of=system] (systemData) {systemData};
+      \node [wideblock, below of=systemData] (systemStates) {system states (initial, current, ...)};
+      
+      \node [wideblock, dashed, fill=gray!10, right of=system,  node distance=6cm] (anotherSystem) {MainSystem (e.g. 'anotherMbs')};
+      \node [block, dashed, fill=gray!10, below of=anotherSystem] (anotherSystemData) {systemData};
+      \node [wideblock, dashed, fill=gray!10, below of=anotherSystemData] (anotherSystemStates) {system states (initial, current, ...)};
 
-			%\node [cloud, right of=exu] (itemInterface) {itemInterface.py};
-			%\node [cloud, right of=itemInterface] (exudynUtilities) {exudynUtilities.py};
+      %\node [cloud, right of=exu] (itemInterface) {itemInterface.py};
+      %\node [cloud, right of=itemInterface] (exudynUtilities) {exudynUtilities.py};
 
-			% Draw edges
-			\path [line] (exu) -- (systemContainer);
-			\path [line] (systemContainer) -- (system);
-			\path [line] (systemContainer) -- (visualizationSettings);
-			\path [line] (system) -- (systemData);
-			\path [line] (systemData) -- (systemStates);
+      % Draw edges
+      \path [line] (exu) -- (systemContainer);
+      \path [line] (systemContainer) -- (system);
+      \path [line] (systemContainer) -- (visualizationSettings);
+      \path [line] (system) -- (systemData);
+      \path [line] (systemData) -- (systemStates);
 
-			\path [line, dashed] (systemContainer) -- (anotherSystem);
-			\path [line, dashed] (anotherSystem) -- (anotherSystemData);
-			\path [line, dashed] (anotherSystemData) -- (anotherSystemStates);
-	\end{tikzpicture}
+      \path [line, dashed] (systemContainer) -- (anotherSystem);
+      \path [line, dashed] (anotherSystem) -- (anotherSystemData);
+      \path [line, dashed] (anotherSystemData) -- (anotherSystemStates);
+  \end{tikzpicture}
   \caption{Overview of exudyn module.}
-	\label{fig_exudyn_overview}
+  \label{fig_exudyn_overview}
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
   \centering
-	\begin{tikzpicture}[node distance = 2cm, auto]
-			% 
-			\node [cloud] (system) {MainSystem ('mbs')};
-			\node [wideblock, below of=system] (systemData) {systemData};
-			\node [wideblock, left of=systemData, node distance=5cm] (systemStates) {system states};
-			\node [wideblock, text width=3cm, below of=systemStates, xshift=-2cm] (current) {current state};
-			\node [wideblock, text width=3cm, below of=current] (initial) {initial state};
-			\node [wideblock, text width=3cm, below of=initial] (reference) {reference state};
-			\node [wideblock, text width=3cm, dashed, fill=gray!10, below of=reference] (otherStates) {other states};
-			
-			\node [wideblock, right of=systemData, node distance=5cm] (ltg) {local to global (LTG) coordinate index lists};
-			
-			\node [wideblock, below of=systemData, xshift=2.4cm] (nodes) {list of nodes};
-			\node [wideblock, below of=nodes] (objects) {list of objects};
-			\node [wideblock, below of=objects] (markers) {list of markers};
-			\node [wideblock, below of=markers] (loads) {list of loads};
-			\node [wideblock, below of=loads] (sensors) {list of sensors};
+  \begin{tikzpicture}[node distance = 2cm, auto]
+      % 
+      \node [cloud] (system) {MainSystem ('mbs')};
+      \node [wideblock, below of=system] (systemData) {systemData};
+      \node [wideblock, left of=systemData, node distance=5cm] (systemStates) {system states};
+      \node [wideblock, text width=3cm, below of=systemStates, xshift=-2cm] (current) {current state};
+      \node [wideblock, text width=3cm, below of=current] (initial) {initial state};
+      \node [wideblock, text width=3cm, below of=initial] (reference) {reference state};
+      \node [wideblock, text width=3cm, dashed, fill=gray!10, below of=reference] (otherStates) {other states};
+      
+      \node [wideblock, right of=systemData, node distance=5cm] (ltg) {local to global (LTG) coordinate index lists};
+      
+      \node [wideblock, below of=systemData, xshift=2.4cm] (nodes) {list of nodes};
+      \node [wideblock, below of=nodes] (objects) {list of objects};
+      \node [wideblock, below of=objects] (markers) {list of markers};
+      \node [wideblock, below of=markers] (loads) {list of loads};
+      \node [wideblock, below of=loads] (sensors) {list of sensors};
 
-			% Draw edges
-			\path [line] (system) -- (systemData);
-			\path [line] (systemData) -- (systemStates);
-			\path [line] (systemStates) |- (current);
-			\path [line] (systemStates) |- (initial);
-			\path [line] (systemStates) |- (reference);
-			\path [line, dashed] (systemStates) |- (otherStates);
+      % Draw edges
+      \path [line] (system) -- (systemData);
+      \path [line] (systemData) -- (systemStates);
+      \path [line] (systemStates) |- (current);
+      \path [line] (systemStates) |- (initial);
+      \path [line] (systemStates) |- (reference);
+      \path [line, dashed] (systemStates) |- (otherStates);
 
-			\path [line] (systemData) -- (ltg);
+      \path [line] (systemData) -- (ltg);
 
-			\path [line] (systemData) |- (nodes);
-			\path [line] (systemData) |- (objects);
-			\path [line] (systemData) |- (markers);
-			\path [line] (systemData) |- (loads);
-			\path [line] (systemData) |- (sensors);
+      \path [line] (systemData) |- (nodes);
+      \path [line] (systemData) |- (objects);
+      \path [line] (systemData) |- (markers);
+      \path [line] (systemData) |- (loads);
+      \path [line] (systemData) |- (sensors);
 %
-	\end{tikzpicture}
+  \end{tikzpicture}
   \caption{Overview of systemData, which connects items and states. Note that access to items is provided via functions in \texttt{system}.}
-	\label{fig_system_overview}
+  \label{fig_system_overview}
 
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 \mysubsubsection{Conventions: items, indices, coordinates}
-In this documentation, we will use the term {\bf item} to identify nodes, objects, markers and loads:
+In this documentation, we will use the term \mybold{item} to identify nodes, objects, markers and loads:
 \be
   \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load} \}
 \ee
 \vspace{12pt}\\
-{\bf Indices: arrays and vector starting with 0:} \vspace{6pt}\\
-As known from Python, all {\bf indices} of arrays, vectors, etc.\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
+\mybold{Indices: arrays and vector starting with 0:} \vspace{6pt}\\
+As known from Python, all \mybold{indices} of arrays, vectors, etc.\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
 %
 \vspace{12pt}\\
-{\bf Dimensionality of objects and vectors:}\vspace{6pt}\\ 
+\mybold{Dimensionality of objects and vectors:}\vspace{6pt}\\ 
 As a convention, quantities in \codeName\ are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
 For that reason, we denote planar nodes, objects, etc.\ with the suffix '2D', but 3D objects do not get this suffix.
 
@@ -125,8 +126,8 @@ Output and input to objects, markers, loads, etc.\ is usually given by 3D vector
 As an example, consider a \texttt{NodePoint2D}:
 \bi
   \item \texttt{referenceCoordinates} is a 2D vector (but could be any dimension in general nodes)
-	\item measuring the current position of \texttt{NodePoint2D} gives a 3D vector
-	\item when attaching a \texttt{MarkerNodePosition} and a \texttt{LoadForceVector}, the force will be still a 3D vector
+  \item measuring the current position of \texttt{NodePoint2D} gives a 3D vector
+  \item when attaching a \texttt{MarkerNodePosition} and a \texttt{LoadForceVector}, the force will be still a 3D vector
 \ei
 Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
 
@@ -137,40 +138,40 @@ In this section, the most important part of \codeName\ are provided. An overview
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
   \centering
-	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
-			% Place nodes
-			\node [nodeBlock] (node0) {node 0};
-			\node [nodeBlock, below of=node0, node distance=2cm] (node1) {node 1};
-			\node [nodeBlock, below of=node1, node distance=2cm] (node2) {node 2};
+  \begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+      % Place nodes
+      \node [nodeBlock] (node0) {node 0};
+      \node [nodeBlock, below of=node0, node distance=2cm] (node1) {node 1};
+      \node [nodeBlock, below of=node1, node distance=2cm] (node2) {node 2};
 
-			\node [objectBlock, right of=node0] (object0) {object 0 (body)};
-			\node [objectBlock, right of=node1, yshift = -1cm] (object1) {object 1 (body)};
-			
-			\node [markerBlock, right of=object0] (marker0) {marker 0};
-			\node [loadBlock, right of=marker0, node distance=3cm] (load0) {load 0};
-			
-			\node [markerBlock, left of=node2, yshift = -2cm, xshift = 1cm] (marker1) {marker 1};
-			\node [markerBlock, right of=node2, yshift = -2cm] (marker2) {marker 2};
+      \node [objectBlock, right of=node0] (object0) {object 0 (body)};
+      \node [objectBlock, right of=node1, yshift = -1cm] (object1) {object 1 (body)};
+      
+      \node [markerBlock, right of=object0] (marker0) {marker 0};
+      \node [loadBlock, right of=marker0, node distance=3cm] (load0) {load 0};
+      
+      \node [markerBlock, left of=node2, yshift = -2cm, xshift = 1cm] (marker1) {marker 1};
+      \node [markerBlock, right of=node2, yshift = -2cm] (marker2) {marker 2};
 
-			\node [connectorBlock, below of=node2] (connector) {connector};
+      \node [connectorBlock, below of=node2] (connector) {connector};
 
 
-			\path [arrow] (object0) -- (node0);
-			\path [arrow] (marker0) -- (object0);
-			\path [arrow] (load0) -- (marker0);
-			\path [arrow] (object1) -- (node1);
-			\path [arrow] (object1) -- (node2);
-			\path [arrow] (marker1) |- (node0);
-			\path [arrow] (marker2) -- (object1);
-			\path [arrow] (connector) -- (marker1);
-			\path [arrow] (connector) -- (marker2);
-			%\path [line] (systemData) |- (objects);
-			%\path [line] (systemData) |- (markers);
-			%\path [line] (systemData) |- (loads);
+      \path [arrow] (object0) -- (node0);
+      \path [arrow] (marker0) -- (object0);
+      \path [arrow] (load0) -- (marker0);
+      \path [arrow] (object1) -- (node1);
+      \path [arrow] (object1) -- (node2);
+      \path [arrow] (marker1) |- (node0);
+      \path [arrow] (marker2) -- (object1);
+      \path [arrow] (connector) -- (marker1);
+      \path [arrow] (connector) -- (marker2);
+      %\path [line] (systemData) |- (objects);
+      %\path [line] (systemData) |- (markers);
+      %\path [line] (systemData) |- (loads);
 
-	\end{tikzpicture}
+  \end{tikzpicture}
   \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indices) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.}
-	\label{fig_items_interaction}
+  \label{fig_items_interaction}
 
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -186,18 +187,18 @@ Objects are 'computational objects' and they provide equations to your system. O
 Objects can be a:
 \bi
   \item general object (e.g.\ a controller, user defined object, ...; no example yet)
-	\item body: has a mass or mass distribution; markers can be placed on bodies; loads can be applied; constraints can be attached via markers; bodies can be:
-	\bi
-	  \item[--] ground object: has no nodes
-	  \item[--] simple body: has one node (e.g. mass point, rigid body)
-	  \item[--] finite element and more complicated body (e.g. FFRF-object): has more than one node
-	\ei
-	\item connector: uses markers to connect nodes and/or bodies; adds additional terms to system equations either based on stiffness/damping or with constraints (and Lagrange multipliers). Possible connectors:
-	\bi
-		\item[--] algebraic constraint (e.g. constrain two coordinates: $q_1 = q_2$)
-		\item[--] classical joint
-		\item[--] spring-damper or penalty constraint
-	\ei
+  \item body: has a mass or mass distribution; markers can be placed on bodies; loads can be applied; constraints can be attached via markers; bodies can be:
+  \bi
+    \item[--] ground object: has no nodes
+    \item[--] simple body: has one node (e.g. mass point, rigid body)
+    \item[--] finite element and more complicated body (e.g. FFRF-object): has more than one node
+  \ei
+  \item connector: uses markers to connect nodes and/or bodies; adds additional terms to system equations either based on stiffness/damping or with constraints (and Lagrange multipliers). Possible connectors:
+  \bi
+    \item[--] algebraic constraint (e.g. constrain two coordinates: $q_1 = q_2$)
+    \item[--] classical joint
+    \item[--] spring-damper or penalty constraint
+  \ei
 \ei
 
 \mysubsubsection{Markers}
@@ -208,9 +209,9 @@ As a benefit, the constraint or load does not need to know whether it is applied
 Typical situations are:
 \bi
   \item Node -- Marker -- Load
-	\item Node -- Marker -- Constraint (object)
-	\item Body(object) -- Marker -- Load
-	\item Body1 -- Marker1 -- Joint(object) -- Marker2 -- Body2
+  \item Node -- Marker -- Constraint (object)
+  \item Body(object) -- Marker -- Load
+  \item Body1 -- Marker1 -- Joint(object) -- Marker2 -- Body2
 \ei
 
 \mysubsubsection{Loads}
@@ -231,19 +232,19 @@ As an example, the initial configuration of a \texttt{NodePoint} is given by \te
 \mysubsection{Exudyn Basics} \label{sec:exudynBasics}
 This section will show:
 \bi
-	\item Interaction with the \codeName\ module
-	\item Simulation settings
-	\item Visualization settings
-	\item Generating output and results
-	\item Graphics pipeline
-	\item Generating animations
+  \item Interaction with the \codeName\ module
+  \item Simulation settings
+  \item Visualization settings
+  \item Generating output and results
+  \item Graphics pipeline
+  \item Generating animations
 \ei
 
 
 \mysubsubsection{Interaction with the \codeName\ module}
 It is important that the \codeName\ module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
 \vspace{12pt}\\
-{\bf Where do objects live?}\vspace{6pt}\\
+\mybold{Where do objects live?}\vspace{6pt}\\
 %(where do objects live? state machine; graphics interaction)
 Whenever a system container is created with \texttt{SC = exu.SystemContainer()}, the structure \texttt{SC} lives in C++ and will be modified via the python interface.
 Usually, the system container will hold at least one system, usually called \texttt{mbs}.
@@ -258,22 +259,21 @@ The simulation settings consists of a couple of substructures, e.g., for \texttt
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
 The simulation settings structure is created with 
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
+\pythonstyle\begin{lstlisting}
   simulationSettings = exu.SimulationSettings()
 \end{lstlisting}
 %
 Hereafter, values of the structure can be modified, e.g.,
-\begin{lstlisting}[language=Python, firstnumber=1]
-	#10 seconds of simulation time:
+\pythonstyle\begin{lstlisting}
+  #10 seconds of simulation time:
   simulationSettings.timeIntegration.endTime = 10                    
-	#1000 steps for time integration:
+  #1000 steps for time integration:
   simulationSettings.timeIntegration.numberOfSteps = 1000            
-	#assigns a new tolerance for Newton's method:
+  #assigns a new tolerance for Newton's method:
   simulationSettings.timeIntegration.newton.relativeTolerance = 1e-9 
-	#write some output while the solver is active (SLOWER):
+  #write some output while the solver is active (SLOWER):
   simulationSettings.timeIntegration.verboseMode = 2                 
-	#write solution every 0.1 seconds:
+  #write solution every 0.1 seconds:
   simulationSettings.solutionSettings.solutionWritePeriod = 0.1      
   #use sparse matrix storage and solver (package Eigen):
   simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse 
@@ -284,11 +284,10 @@ Hereafter, values of the structure can be modified, e.g.,
 The solvers provide a number of options in \texttt{solutionSettings} to generate a solution file. As a default, exporting solution to the solution file is activated with a writing period of 0.01 seconds.
 
 Typical output settings are:
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
+\pythonstyle\begin{lstlisting}
   #create a new simulationSettings structure:
   simulationSettings = exu.SimulationSettings()
-	
+  
   #activate writing to solution file:
   simulationSettings.solutionSettings.writeSolutionToFile = True
   #write results every 1ms:
@@ -309,8 +308,7 @@ Visualization settings are used for user interaction with the model. E.g., the n
 Details on visualization settings and its substructures are provided in Sections \ref{sec:VSettingsGeneral} -- \ref{sec:VisualizationSettings}.
 
 The visualization settings structure can be accessed in the system container \texttt{SC} (access per reference, no copying!), accessing every value or structure directly, e.g.,
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
+\pythonstyle\begin{lstlisting}
   SC.visualizationSettings.nodes.defaultSize = 0.001      #draw nodes very small
 
   #change openGL parameters; current values can be obtained from SC.GetRenderState()
@@ -324,13 +322,13 @@ The visualization settings structure can be accessed in the system container \te
 
   #change smoothness of a cylinder:
   SC.visualizationSettings.general.cylinderTiling = 100
-	
-	#make round objects flat:
-	SC.visualizationSettings.openGL.shadeModelSmooth = False
+  
+  #make round objects flat:
+  SC.visualizationSettings.openGL.shadeModelSmooth = False
 
-	#turn on coloured plot, using y-component of displacements:
-	SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
-	SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
+  #turn on coloured plot, using y-component of displacements:
+  SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+  SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
 \end{lstlisting}
 
 \mysubsubsubsection{Storing the model view}
@@ -339,54 +337,51 @@ There is a simple way to store the current view (zoom, centerpoint, orientation,
 %
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\footnote{
 note that \texttt{visualizationSettings.general.autoFitScene} should be set False if you want to use the stored zoom factor}:
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
-import exudyn as exu
-SC=exu.SystemContainer()
-SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-exu.StartRenderer()
-if 'renderState' in exu.sys:
-    SC.SetRenderState(exu.sys['renderState']) 
-#+++++++++++++++
-#do simulation here and adjust model view settings with mouse
-#+++++++++++++++
+\pythonstyle\begin{lstlisting}
+  import exudyn as exu
+  SC=exu.SystemContainer()
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  exu.StartRenderer()
+  if 'renderState' in exu.sys:
+      SC.SetRenderState(exu.sys['renderState']) 
+  #+++++++++++++++
+  #do simulation here and adjust model view settings with mouse
+  #+++++++++++++++
 
-#store model view for next run:
-StopRenderer() #stores render state in exu.sys['renderState']
+  #store model view for next run:
+  StopRenderer() #stores render state in exu.sys['renderState']
 \end{lstlisting}
-\par\noindent\rule{\textwidth}{0.4pt}
+\horizontalRuler
 %
 Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
-\pythonstyle
-\begin{lstlisting}
-In[1] : SC.GetRenderState()
-Out[1]: 
-{'centerPoint': [1.0, 0.0, 0.0],
- 'maxSceneSize': 2.0,
- 'zoom': 1.0,
- 'currentWindowSize': [1024, 768],
- 'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
-                   [-0.60402274,  0.76604444, 0.21984631],
-                   [-0.7198463 , -0.6427876 , 0.26200265]])}
+\pythonstyle\begin{lstlisting}
+  In[1] : SC.GetRenderState()
+  Out[1]: 
+  {'centerPoint': [1.0, 0.0, 0.0],
+   'maxSceneSize': 2.0,
+   'zoom': 1.0,
+   'currentWindowSize': [1024, 768],
+   'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
+                     [-0.60402274,  0.76604444, 0.21984631],
+                     [-0.7198463 , -0.6427876 , 0.26200265]])}
 \end{lstlisting}
 %
 which contains the last state of the renderer.
 Now copy the output and set this with \texttt{SC.SetRenderState} in your Python code to have a fixed model view in every simulation (\texttt{SC.SetRenderState} AFTER \texttt{exu.StartRenderer()}):
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
-SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-exu.StartRenderer()
-renderState={'centerPoint': [1.0, 0.0, 0.0],
-             'maxSceneSize': 2.0,
-             'zoom': 1.0,
-             'currentWindowSize': [1024, 768],
-             'modelRotation':     [[ 0.34202015,  0.        ,  0.9396926 ],
-                                  [-0.60402274,  0.76604444,  0.21984631],
-                                  [-0.7198463 , -0.6427876 ,  0.26200265]])
-SC.SetRenderState(renderState)
-#.... further code for simulation here
+\pythonstyle\begin{lstlisting}
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  exu.StartRenderer()
+  renderState={'centerPoint': [1.0, 0.0, 0.0],
+               'maxSceneSize': 2.0,
+               'zoom': 1.0,
+               'currentWindowSize': [1024, 768],
+               'modelRotation':     [[ 0.34202015,  0.        ,  0.9396926 ],
+                                    [-0.60402274,  0.76604444,  0.21984631],
+                                    [-0.7198463 , -0.6427876 ,  0.26200265]])
+  SC.SetRenderState(renderState)
+  #.... further code for simulation here
 \end{lstlisting}
-\par\noindent\rule{\textwidth}{0.4pt}
+\horizontalRuler
 %
 %
 
@@ -396,25 +391,25 @@ There are basically two loops during simulation, which feed the graphics pipelin
 The solver runs a loop:
 \bi
   \item compute new step
-	\item finish computation step; results are in current state
-	\item copy current state to visualization state (thread safe)
-	\item signal graphics pipeline that new visualization data is available
+  \item finish computation step; results are in current state
+  \item copy current state to visualization state (thread safe)
+  \item signal graphics pipeline that new visualization data is available
 \ei
 The openGL graphics thread (=separate thread) runs the following loop:
 \bi
   \item render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
   \item go idle for some milliseconds
-	\item check if openGL rendering needs an update (e.g. due to user interaction)
-	\item[] $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
-	\item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
+  \item check if openGL rendering needs an update (e.g. due to user interaction)
+  \item[] $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
+  \item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 \ei
 
 \mysubsubsection{Graphics user Python functions}
 There are some user functions in order to customize drawing:
 \bi
-	\item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\texttt{GraphicsDataFromSTLfileTxt}).
-	\item Some objects, e.g., \texttt{ObjectGenericODE2} or \texttt{ObjectRigidBody}, provide customized a function \texttt{graphicsDataUserFunction}. This user function just returns a list of GraphicsData, see \refSection{sec:graphicsData}. With this function you can change the shape of the body in every step of the computation.
-	\item Specifically, the \texttt{graphicsDataUserFunction} in \texttt{ObjectGround} can be used to draw any moving background in the scene.
+  \item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\texttt{GraphicsDataFromSTLfileTxt}).
+  \item Some objects, e.g., \texttt{ObjectGenericODE2} or \texttt{ObjectRigidBody}, provide customized a function \texttt{graphicsDataUserFunction}. This user function just returns a list of GraphicsData, see \refSection{sec:graphicsData}. With this function you can change the shape of the body in every step of the computation.
+  \item Specifically, the \texttt{graphicsDataUserFunction} in \texttt{ObjectGround} can be used to draw any moving background in the scene.
 \ei
 Note that all kinds of graphicsUserPythonFunctions need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \texttt{graphicsDataUserFunction} between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
@@ -422,9 +417,9 @@ Note that all kinds of graphicsUserPythonFunctions need to be called from the ma
 Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
 \bi
   \item red (R) channel 
-	\item green (G) channel  
-	\item blue (B) channel 
-	\item alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
+  \item green (G) channel  
+  \item blue (B) channel 
+  \item alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
 \ei
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 10 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
 
@@ -434,24 +429,23 @@ For some models, it may be advantageous to track the translation and/or rotation
 To do so, the current render state (\texttt{SC.GetRenderState()}, \texttt{SC.SetRenderState(...)}) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \texttt{mbs.variables['nTrackNode']} is a node number to be tracked:
 %
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
-#mbs.variables['nTrackNode'] contains node number
-def UFgraphics(mbs, objectNum):
-    n = mbs.variables['nTrackNode']
-    p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
-                          configuration=exu.ConfigurationType.Visualization)
-    rs=SC.GetRenderState() #get current render state
-    A = np.array(rs['modelRotation'])
-    p = A.T @ p #transform point into model view coordinates
-    rs['centerPoint']=[p[0],p[1],p[2]]
-    SC.SetRenderState(rs)  #modify render state
-    return []
+\pythonstyle\begin{lstlisting}
+  #mbs.variables['nTrackNode'] contains node number
+  def UFgraphics(mbs, objectNum):
+      n = mbs.variables['nTrackNode']
+      p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
+                            configuration=exu.ConfigurationType.Visualization)
+      rs=SC.GetRenderState() #get current render state
+      A = np.array(rs['modelRotation'])
+      p = A.T @ p #transform point into model view coordinates
+      rs['centerPoint']=[p[0],p[1],p[2]]
+      SC.SetRenderState(rs)  #modify render state
+      return []
 
-#add object with graphics user function
-oGround2 = mbs.AddObject(ObjectGround(visualization=
-               VObjectGround(graphicsDataUserFunction=UFgraphics)))
-#.... further code for simulation here
+  #add object with graphics user function
+  oGround2 = mbs.AddObject(ObjectGround(visualization=
+                 VObjectGround(graphicsDataUserFunction=UFgraphics)))
+  #.... further code for simulation here
 \end{lstlisting}
 
 \mysubsubsection{Solution viewer}
@@ -472,14 +466,18 @@ see
 \bi
   \item \texttt{exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName}
 \ei
-An example for the \texttt{SolutionViewer} is integrated into the examples \texttt{NGsolvePistionEngine.py}. You can call the \texttt{SolutionViewer} either in the model, or at the command line / IPython:
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
-from exudyn.interactive import SolutionViewer
-sol = LoadSolutionFile('coordinatesSolution.txt')
-SolutionViewer(mbs, sol)
+You can call the \texttt{SolutionViewer} either in the model, or at the command line / IPython to load a previous solution (belonging to the same mbs underlying the solution!):
+\pythonstyle\begin{lstlisting}
+  from exudyn.interactive import SolutionViewer
+  sol = LoadSolutionFile('coordinatesSolution.txt')
+  SolutionViewer(mbs, sol)
 \end{lstlisting}
-
+\mybold{Alternatively}, you can just reload the last stored solution (according to your \texttt{simulationSettings}):
+\pythonstyle\begin{lstlisting}
+  from exudyn.interactive import SolutionViewer
+  SolutionViewer(mbs)
+\end{lstlisting}
+An example for the \texttt{SolutionViewer} is integrated into the \texttt{Examples/} directory, see \texttt{solutionViewerTest.py}. 
 
 \mysubsubsection{Generating animations}
 \label{secGeneratingAnimations}
@@ -498,13 +496,15 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 By default, a consecutive numbering is generated for the image, e.g., 'frame0000.tga, frame0001.tga,...'. Note that '.tga' files contain raw image data and therefore can become very large.
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
+\onlyRST{$\ra$ see theDoc.pdf !}
+\ignoreRST{
 In windows, simple DOS batch files can do the job to convert frames given in the local directory to animations, e.g.:
 \plainlststyle
 \lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/convertToVideo.bat}
 After the video has been created, you should delete the single images:
 \plainlststyle
 \lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/deleteTGAimages.bat}
-
+}
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -515,12 +515,12 @@ This section covers some information on the C++ code. For more information see t
 Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.
 
 \mysubsubsection{Focus of the C++ code}
-{\bf Four principles}: 
+\mybold{Four principles}: 
 \bn
   \item developer-friendly
-	\item error minimization
-	\item efficiency
-	\item user-friendliness
+  \item error minimization
+  \item efficiency
+  \item user-friendliness
 \en
 The focus is therefore on:
 \bi
@@ -535,43 +535,43 @@ The focus is therefore on:
 \mysubsubsection{C++ Code structure}
 The functionality of the code is based on systems (MainSystem/CSystem) representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
 \bi
-	\item CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
-	\item SystemContainer: holds a set of systems; connects to visualization (container)
-	\item node: used to hold coordinates (unknowns)
-	\item (computational) object: leads to equations, using nodes
-	\item marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
-	\item load: acts on an object or node via a marker
-	\item computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
-	\item visualization objects: interface between computational objects and 3D graphics
-	\item main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
-	\item static solver, kinematic solver, time integration
-	\item python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
-	\item interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
+  \item CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
+  \item SystemContainer: holds a set of systems; connects to visualization (container)
+  \item node: used to hold coordinates (unknowns)
+  \item (computational) object: leads to equations, using nodes
+  \item marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
+  \item load: acts on an object or node via a marker
+  \item computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
+  \item visualization objects: interface between computational objects and 3D graphics
+  \item main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
+  \item static solver, kinematic solver, time integration
+  \item python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
+  \item interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
 \ei
 
 
 \mysubsubsection{C++ Code: Modules}
 The following internal modules are used, which are represented by directories in \texttt{main/src}:
 \bi
-	\item Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
-	\item Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
+  \item Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
+  \item Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
     \item Linalg: Linear algebra with vectors and matrices; separate classes for small vectors (SlimVector), large vectors (Vector and ResizableVector), vectors without copying data (LinkedDataVector), and vectors with constant size (ConstVector)
-	\item Main: mainly contains SystemContainer, System and ObjectFactory
-	\item Objects: contains the implementation part of the autogenerated items
-	\item Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
-	\item pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
-	\item Solver: contains all solvers for solving a CSystem
-	\item System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
-	\item Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
+  \item Main: mainly contains SystemContainer, System and ObjectFactory
+  \item Objects: contains the implementation part of the autogenerated items
+  \item Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
+  \item pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
+  \item Solver: contains all solvers for solving a CSystem
+  \item System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
+  \item Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
     \item Utilities: array structures for administrative/managing tasks (indices of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
 \ei
 
 The following main external libraries are linked to Exudyn:
 \bi
-	\item LEST: for testing of internal functions (e.g. linalg)
-	\item GLFW: 3D graphics with openGL; cross-platform capabilities
-	\item Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
-	\item pybind11: linking of C++ to python
+  \item LEST: for testing of internal functions (e.g. linalg)
+  \item GLFW: 3D graphics with openGL; cross-platform capabilities
+  \item Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
+  \item pybind11: linking of C++ to python
 \ei
 
 \mysubsubsection{Code style and conventions}
@@ -597,30 +597,31 @@ This section provides general coding rules and conventions, partly applicable to
 
 \mysubsubsection{Notation conventions}
 %
-The following notation conventions are applied ({\bf no exceptions!}):
+The following notation conventions are applied (\mybold{no exceptions!}):
 \bi
-		\item use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., $f = M*q_{tt} + K*q$, GBar, ...
-		\item use UpperCamelCase for functions, classes, structs, ...
-		\item Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
-		\item '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
-		\item use American English troughout: Visualization, etc.
-		\item for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
-		\item do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
-		\item for functions use \texttt{ODEComputeCoords()}, for variables avoid 'ODE' at beginning: use nODE or write odeCoords
-		\item do not use '\_' within variable or function names; exception: derivatives
-		\item use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
-		\item examples for variable names: secondOrderSize, massMatrix, mThetaTheta
-		\item examples for function/class names: \texttt{SecondOrderSize}, \texttt{EvaluateMassMatrix}, \texttt{Position(const Vector3D\& localPosition)}
-		\item use the Get/Set...() convention if data is retrieved from a class (Get) or something is set in a class (Set); Use \texttt{const T\& Get()/T\& Get} if direct access to variables is needed; Use Get/Set for pybind11
-		\item example Get/Set: \texttt{Real* GetDataPointer()}, \texttt{Vector::SetAll(Real)}, \texttt{GetTransposed()}, \texttt{SetRotationalParameters(...)}, \texttt{SetColor(...)}, ...
-		\item use 'Real' instead of double or float: for compatibility, also for AVX with SP/DP
-		\item use 'Index' for array/vector size and index instead of size\_t or int
-		\item item: object, node, marker, load: anything handled within the computational/visualization systems
+    \item use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., $f = M*q_{tt} + K*q$, GBar, ...
+    \item use UpperCamelCase for functions, classes, structs, ...
+    \item Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
+    \item '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
+    \item use American English troughout: Visualization, etc.
+    \item for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
+    \item do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
+    \item for functions use \texttt{ODEComputeCoords()}, for variables avoid 'ODE' at beginning: use nODE or write odeCoords
+    \item do not use '\_' within variable or function names; exception: derivatives
+    \item use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
+    \item examples for variable names: secondOrderSize, massMatrix, mThetaTheta
+    \item examples for function/class names: \texttt{SecondOrderSize}, \texttt{EvaluateMassMatrix}, \texttt{Position(const Vector3D\& localPosition)}
+    \item use the Get/Set...() convention if data is retrieved from a class (Get) or something is set in a class (Set); Use \texttt{const T\& Get()/T\& Get} if direct access to variables is needed; Use Get/Set for pybind11
+    \item example Get/Set: \texttt{Real* GetDataPointer()}, \texttt{Vector::SetAll(Real)}, \texttt{GetTransposed()}, \texttt{SetRotationalParameters(...)}, \texttt{SetColor(...)}, ...
+    \item use 'Real' instead of double or float: for compatibility, also for AVX with SP/DP
+    \item use 'Index' for array/vector size and index instead of size\_t or int
+    \item item: object, node, marker, load: anything handled within the computational/visualization systems
+    \item Do not use numbers (3 for 3D or any other number which represents, e.g., the number of rotation parameters). Use const Index or constexpr to define constants.
 \ei
 
 \mysubsubsection{No-abbreviations-rule}
 %
-The code uses a {\bf minimum set of abbreviations}; however, the following abbreviation rules are used throughout:
+The code uses a \mybold{minimum set of abbreviations}; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (5-line member functions).
 
 Exceptions to the NO-ABBREVIATIONS-RULE:
@@ -642,205 +643,207 @@ Exceptions to the NO-ABBREVIATIONS-RULE:
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+\ignoreRST{
 \mysubsection{Changes}
 \label{sec:changes}
 For continuous tracking of changes, see \refSection{sec:issueTracker}.
+}
 %
 %The following list covers changes in the python interface and functionality:
 %\bi \small
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%%\item {\bf Version 0.1.2xx $\ra$ Version 0.1.2yy}
-	%%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-	%%\bi
-	  %%\item {\bf xxxx}: 
-	%%\ei
-	%%\item[] Changes in the python interface:
-	%%\bi \ttfamily
-	  %%\item $\ra$ 
-	%%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.59$\ra$ Version 1.0.61}
-	%\bi
-	  %\item {\bf Major changes}: Changed interface of \texttt{processing.GeneticOptimization()}; 
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.56$\ra$ Version 1.0.57}
-	%\bi
-	  %\item {\bf Major changes}: added new submodule \texttt{exudyn.signal}; 
-		%\item {\bf Major changes}: \texttt{FilterSignal} renamed into \texttt{FilterSensorOutput} and moved from \texttt{exudyn.utilities} to \texttt{exudyn.signal}
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.49$\ra$ Version 1.0.51}
-	%\bi
-	%\item user functions can now be set to zero, e.g.:
-	%\item[] \phantom{XXXX} \texttt{mbs.AddObject(CoordinateSpringDamper(markerNumbers=[m0,m1],
-	%\item[] \phantom{XXXXXXXX} stiffness=k, damping=0.01*k, 
-	%\item[] \phantom{XXXXXXXX} springForceUserFunction=0)}
-	%\item Exception: for \texttt{visualizationSettings.window.keyPressUserFunction} use \\ \texttt{SC.visualizationSettings.window.ResetKeyPressUserFunction()} to set it to zero
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.42$\ra$ Version 1.0.49}
-	%\bi
-	%\item {\bf Major changes}: OpenGL default settings for lights and material have been changed; slightly different appearance might result from that! per default, light1 is active as well.
-	%\item {\bf Major changes}: Added key callback functionality \texttt{keyPressUserFunction} to \texttt{VisualizationSettings.window}
-	%\item added mouse coordinates (OpenGL and screen pixels) to renderState and added a \texttt{GetCurrentMouseCoordinates()} function to SystemContainer
-	%\item added mouse coordinates to renderer window (press 'F3')
-	%\item identified problems with OpenGL lights; light1 is now working
-	%\item solved problems with coordinateSystem
-	%\item added a world basis (coordinate system) at origin of model (0,0,0); \\see \texttt{VisualizationSettings.general.drawWorldBasis}
-	%\item added flag \texttt{simulateInRealtime} to \texttt{simulationSettings.timeIntegration}
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.38$\ra$ Version 1.0.42}
-	%\bi
-	%\item completed \texttt{Acceleration} output variables for all relevant objects and nodes; 
-	%\item added FilterSignal(...) (\refSection{sec:signal:FilterSignal}) functionality to utilities, which enables numerical differentiation and filtering, using savgol filter, applied to all output values of data loaded from sensors.
-	%\item for example, see \texttt{TestModels/objectFFRFreducedOrderAccelerations.py}.
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.37$\ra$ Version 1.0.38}
-	%\bi
-	%\item \texttt{SC.StopRenderer()} now stores the last renderState in \texttt{exu.sys['renderState']}, which can be used in subsequent simulations to always have the same view and zoom; 
-	%for an example, see \refSection{sec:storing:modelview}.
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.32$\ra$ Version 1.0.37}
-	%\bi
-	%\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
-	%\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.17 $\ra$ Version 1.0.18}
-	%\bi
-	%\item {\bf removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
-	%\item added acceleration sensor functionality to most objects and nodes
-	%\item added Lie group utilities (see \texttt{exudyn.lieGroup})
-	%\item added processing utilities for parameter variation and optimization (see \texttt{exudyn.processing})
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.12 $\ra$ Version 1.0.13}
-	%\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see \refSection{eq_equationLHSRHS}:
-	%\bi
-	  %\item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
-		%\item forces are written at the RHS
-		%\item system quantities are always written on RHS: $m \ddot q = f_{RHS}$
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.8 $\ra$ Version 1.0.9}
-	%\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):
-	%\bi %\ttfamily
-	%\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
-	%\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
-	%\item before: \texttt{mbs.AddMarker(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddMarker(...)} $\ra$ MarkerIndex
-	%\item before: \texttt{mbs.AddLoad(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddLoad(...)} $\ra$ LoadIndex
-	%\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; {\bf now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
-	%\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
-		%\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
-		%to avoid mistakes due to wrong types of indices.
-	%\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
-	%%\item {\bf NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
-	%%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
-	%%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
-	%%\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
-	%%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
-	%\ei
-	%\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)
-	%\item[] removed functions mbs.GetNodeByName(...), GetObjectByName(...), etc. (issue: 445)
-	%%
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 1.0.6 $\ra$ Version 1.0.7}
-	%\item[] autocreate directories (issue: 431):
-	%\bi %\ttfamily
-	%\item directories (folders) will be created for given paths
-	%\item this applies, e.g., to sensor's \texttt{fileName} or simulation settings \texttt{coordinatesSolutionFileName}
-	%\item previously, a non-existing directory led to an exception
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.368 $\ra$ Version 1.0.0}
-	%\item[] {\bf Major changes} in the python interface, as the utilities moved into the exudyn package:
-	%\bi \ttfamily
-	  %\item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
-	  %\item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
-	  %\item \texttt{from exudynBasicUtilities import *} $\ra$ \texttt{from exudyn.basicUtilities import *}
-	  %\item \texttt{from exudynFEM import *} $\ra$ \texttt{from exudyn.FEM import *}
-	  %\item \texttt{from exudynGraphicsDataUtilities import *} $\ra$ \texttt{from exudyn.graphicsDataUtilities import *}
-	  %\item \texttt{from exudynGUI import *} $\ra$ \texttt{from exudyn.GUI import *}
-	  %\item \texttt{from exudynLieGroupIntegration import *} $\ra$ \texttt{from exudyn.lieGroupIntegration import *}
-	  %\item \texttt{from exudynRigidBodyUtilities import *} $\ra$ \texttt{from exudyn.rigidBodyUtilities import *}
-	  %\item \texttt{from exudynRobotics import *} $\ra$ \texttt{from exudyn.robotics import *}
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.360 $\ra$ Version 0.1.361}
-	%\item[] Changes in the python interface:
-	%\bi \ttfamily
-	  %\item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
-		%\texttt{simulationSettings.staticSolver.preStepPyExecute}
-		%are deprecated, DON'T USE any more
-	  %\item Use \texttt{mbs.SetPreStepUserFunction(...)} instead!
-	%\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %%\item \mybold{Version 0.1.2xx $\ra$ Version 0.1.2yy}
+  %%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+  %%\bi
+    %%\item \mybold{xxxx}: 
+  %%\ei
+  %%\item[] Changes in the python interface:
+  %%\bi \ttfamily
+    %%\item $\ra$ 
+  %%\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.59$\ra$ Version 1.0.61}
+  %\bi
+    %\item \mybold{Major changes}: Changed interface of \texttt{processing.GeneticOptimization()}; 
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.56$\ra$ Version 1.0.57}
+  %\bi
+    %\item \mybold{Major changes}: added new submodule \texttt{exudyn.signal}; 
+    %\item \mybold{Major changes}: \texttt{FilterSignal} renamed into \texttt{FilterSensorOutput} and moved from \texttt{exudyn.utilities} to \texttt{exudyn.signal}
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.49$\ra$ Version 1.0.51}
+  %\bi
+  %\item user functions can now be set to zero, e.g.:
+  %\item[] \phantom{XXXX} \texttt{mbs.AddObject(CoordinateSpringDamper(markerNumbers=[m0,m1],
+  %\item[] \phantom{XXXXXXXX} stiffness=k, damping=0.01*k, 
+  %\item[] \phantom{XXXXXXXX} springForceUserFunction=0)}
+  %\item Exception: for \texttt{visualizationSettings.window.keyPressUserFunction} use \\ \texttt{SC.visualizationSettings.window.ResetKeyPressUserFunction()} to set it to zero
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.42$\ra$ Version 1.0.49}
+  %\bi
+  %\item \mybold{Major changes}: OpenGL default settings for lights and material have been changed; slightly different appearance might result from that! per default, light1 is active as well.
+  %\item \mybold{Major changes}: Added key callback functionality \texttt{keyPressUserFunction} to \texttt{VisualizationSettings.window}
+  %\item added mouse coordinates (OpenGL and screen pixels) to renderState and added a \texttt{GetCurrentMouseCoordinates()} function to SystemContainer
+  %\item added mouse coordinates to renderer window (press 'F3')
+  %\item identified problems with OpenGL lights; light1 is now working
+  %\item solved problems with coordinateSystem
+  %\item added a world basis (coordinate system) at origin of model (0,0,0); \\see \texttt{VisualizationSettings.general.drawWorldBasis}
+  %\item added flag \texttt{simulateInRealtime} to \texttt{simulationSettings.timeIntegration}
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.38$\ra$ Version 1.0.42}
+  %\bi
+  %\item completed \texttt{Acceleration} output variables for all relevant objects and nodes; 
+  %\item added FilterSignal(...) (\refSection{sec:signal:FilterSignal}) functionality to utilities, which enables numerical differentiation and filtering, using savgol filter, applied to all output values of data loaded from sensors.
+  %\item for example, see \texttt{TestModels/objectFFRFreducedOrderAccelerations.py}.
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.37$\ra$ Version 1.0.38}
+  %\bi
+  %\item \texttt{SC.StopRenderer()} now stores the last renderState in \texttt{exu.sys['renderState']}, which can be used in subsequent simulations to always have the same view and zoom; 
+  %for an example, see \refSection{sec:storing:modelview}.
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.32$\ra$ Version 1.0.37}
+  %\bi
+  %\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
+  %\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.17 $\ra$ Version 1.0.18}
+  %\bi
+  %\item \mybold{removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
+  %\item added acceleration sensor functionality to most objects and nodes
+  %\item added Lie group utilities (see \texttt{exudyn.lieGroup})
+  %\item added processing utilities for parameter variation and optimization (see \texttt{exudyn.processing})
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.12 $\ra$ Version 1.0.13}
+  %\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see \refSection{eq_equationLHSRHS}:
+  %\bi
+    %\item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
+    %\item forces are written at the RHS
+    %\item system quantities are always written on RHS: $m \ddot q = f_{RHS}$
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.8 $\ra$ Version 1.0.9}
+  %\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):
+  %\bi %\ttfamily
+  %\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
+  %\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
+  %\item before: \texttt{mbs.AddMarker(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddMarker(...)} $\ra$ MarkerIndex
+  %\item before: \texttt{mbs.AddLoad(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddLoad(...)} $\ra$ LoadIndex
+  %\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
+  %\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
+    %\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
+    %to avoid mistakes due to wrong types of indices.
+  %\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
+  %%\item \mybold{NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
+  %%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
+  %%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
+  %%\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
+  %%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
+  %\ei
+  %\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)
+  %\item[] removed functions mbs.GetNodeByName(...), GetObjectByName(...), etc. (issue: 445)
+  %%
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 1.0.6 $\ra$ Version 1.0.7}
+  %\item[] autocreate directories (issue: 431):
+  %\bi %\ttfamily
+  %\item directories (folders) will be created for given paths
+  %\item this applies, e.g., to sensor's \texttt{fileName} or simulation settings \texttt{coordinatesSolutionFileName}
+  %\item previously, a non-existing directory led to an exception
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.368 $\ra$ Version 1.0.0}
+  %\item[] \mybold{Major changes} in the python interface, as the utilities moved into the exudyn package:
+  %\bi \ttfamily
+    %\item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
+    %\item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
+    %\item \texttt{from exudynBasicUtilities import *} $\ra$ \texttt{from exudyn.basicUtilities import *}
+    %\item \texttt{from exudynFEM import *} $\ra$ \texttt{from exudyn.FEM import *}
+    %\item \texttt{from exudynGraphicsDataUtilities import *} $\ra$ \texttt{from exudyn.graphicsDataUtilities import *}
+    %\item \texttt{from exudynGUI import *} $\ra$ \texttt{from exudyn.GUI import *}
+    %\item \texttt{from exudynLieGroupIntegration import *} $\ra$ \texttt{from exudyn.lieGroupIntegration import *}
+    %\item \texttt{from exudynRigidBodyUtilities import *} $\ra$ \texttt{from exudyn.rigidBodyUtilities import *}
+    %\item \texttt{from exudynRobotics import *} $\ra$ \texttt{from exudyn.robotics import *}
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.360 $\ra$ Version 0.1.361}
+  %\item[] Changes in the python interface:
+  %\bi \ttfamily
+    %\item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
+    %\texttt{simulationSettings.staticSolver.preStepPyExecute}
+    %are deprecated, DON'T USE any more
+    %\item Use \texttt{mbs.SetPreStepUserFunction(...)} instead!
+  %\ei
   %%\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.352 $\ra$ Version 0.1.353}
-	%\item[] Changes in the renderer screen:
-	%\bi \ttfamily
-	  %\item Keys '0' and 'KEYPAD 0' $\ra$ not available any more (set default rotation x/y)
-	  %\item Use keys CTRL+'1', SHIFT+CTRL+'1', CTRL+'2', ...  $\ra$ keys for new standard views!
-	%\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.352 $\ra$ Version 0.1.353}
+  %\item[] Changes in the renderer screen:
+  %\bi \ttfamily
+    %\item Keys '0' and 'KEYPAD 0' $\ra$ not available any more (set default rotation x/y)
+    %\item Use keys CTRL+'1', SHIFT+CTRL+'1', CTRL+'2', ...  $\ra$ keys for new standard views!
+  %\ei
   %%\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
 %
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.288 $\ra$ Version 0.1.289}
-	%\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
-	%\bi \ttfamily
-	  %\item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.287 $\ra$ Version 0.1.288}
-	%\item[] Changes in the python interface {\bf (ESSENTIAL!)}:
-	%\bi \ttfamily
-	  %\item changed the name of {\bf initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.282 $\ra$ Version 0.1.284}
-	%\item[] Changes in the python interface:
-	%\bi \ttfamily
-	  %\item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.260 $\ra$ Version 0.1.263}
-	%\item[] Changes in the python interface:
-	%\bi \ttfamily
-	  %\item mbs.systemData.GetCurrentTime() $\ra$ mbs.systemData.GetTime()
-	  %\item mbs.systemData.GetVisualizationTime() $\ra$ mbs.systemData.GetTime(configurationType=exu.ConfigurationType.Visualization)
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.244 $\ra$ Version 0.1.245}
-	%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-	%\bi
-	  %\item {\bf Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
-	%\ei
-	%\item[] Changes in the python interface (new functions / interface to call the old solvers):
-	%\bi \ttfamily
-	  %\item SC.SolveStaticOldSolver(...)
-	  %\item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 	%\item {\bf Version 0.1.243 $\ra$ Version 0.1.244}
-	%\item[] Changes in the python interface:
-	%\bi \ttfamily
-	  %\item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
-	%\ei
-	%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	%\item {\bf Version 0.1.238 $\ra$ Version 0.1.240}
-	%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-	%\bi
-	  %\item {\bf generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
-		%\item {\bf time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
-	%\ei
-	%\item[] Changes in the python interface:
-	%\bi \ttfamily
-	  %\item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
-		%\item ADDED: simulationSettings.timeIntegration.verboseModeFile
-		%\item ADDED: simulationSettings.staticSolver.verboseModeFile
-	%\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.288 $\ra$ Version 0.1.289}
+  %\item[] Changes in the python interface \mybold{(ESSENTIAL!)}:
+  %\bi \ttfamily
+    %\item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.287 $\ra$ Version 0.1.288}
+  %\item[] Changes in the python interface \mybold{(ESSENTIAL!)}:
+  %\bi \ttfamily
+    %\item changed the name of \mybold{initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.282 $\ra$ Version 0.1.284}
+  %\item[] Changes in the python interface:
+  %\bi \ttfamily
+    %\item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.260 $\ra$ Version 0.1.263}
+  %\item[] Changes in the python interface:
+  %\bi \ttfamily
+    %\item mbs.systemData.GetCurrentTime() $\ra$ mbs.systemData.GetTime()
+    %\item mbs.systemData.GetVisualizationTime() $\ra$ mbs.systemData.GetTime(configurationType=exu.ConfigurationType.Visualization)
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.244 $\ra$ Version 0.1.245}
+  %\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+  %\bi
+    %\item \mybold{Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
+  %\ei
+  %\item[] Changes in the python interface (new functions / interface to call the old solvers):
+  %\bi \ttfamily
+    %\item SC.SolveStaticOldSolver(...)
+    %\item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   %\item \mybold{Version 0.1.243 $\ra$ Version 0.1.244}
+  %\item[] Changes in the python interface:
+  %\bi \ttfamily
+    %\item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
+  %\ei
+  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %\item \mybold{Version 0.1.238 $\ra$ Version 0.1.240}
+  %\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
+  %\bi
+    %\item \mybold{generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
+    %\item \mybold{time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
+  %\ei
+  %\item[] Changes in the python interface:
+  %\bi \ttfamily
+    %\item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
+    %\item ADDED: simulationSettings.timeIntegration.verboseModeFile
+    %\item ADDED: simulationSettings.staticSolver.verboseModeFile
+  %\ei
 %\ei

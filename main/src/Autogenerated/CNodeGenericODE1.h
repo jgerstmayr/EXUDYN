@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-03-20  14:22:08 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CNodeGenericODE1Parameters // AUTO:
 {
 public: // AUTO: 
     Vector referenceCoordinates;                  //!< AUTO: generic reference coordinates of node; must be consistent with numberOfODE1Coordinates
-    Index numberOfODE1Coordinates;                //!< AUTO: number of generic ODE1 coordinates
+    Index numberOfODE1Coordinates;                //!< AUTO: number of generic \hac{ODE1} coordinates
     //! AUTO: default constructor with parameter initialization
     CNodeGenericODE1Parameters()
     {
@@ -40,7 +40,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeGenericODE1
-* @brief        A node containing a number of ODE1 variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
+* @brief        A node containing a number of \hac{ODE1} variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,8 +31,8 @@ public: // AUTO:
   bool writeFileHeader;                           //!< AUTO: flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)
   bool writeFileFooter;                           //!< AUTO: flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics
   Real solutionWritePeriod;                       //!< AUTO: time span (period), determines how often the solution is written during a simulation
-  bool exportVelocities;                          //!< AUTO: add ODE2 velocities to solution file
-  bool exportAccelerations;                       //!< AUTO: add ODE2 accelerations to solution file
+  bool exportVelocities;                          //!< AUTO: add \hac{ODE2} velocities to solution file
+  bool exportAccelerations;                       //!< AUTO: add \hac{ODE2} accelerations to solution file
   bool exportODE1Velocities;                      //!< AUTO: add coordinatesODE1\_t to solution file
   bool exportAlgebraicCoordinates;                //!< AUTO: add algebraicCoordinates (=Lagrange multipliers) to solution file
   bool exportDataCoordinates;                     //!< AUTO: add DataCoordinates to solution file
@@ -125,7 +125,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -145,8 +145,8 @@ class NumericalDifferentiationSettings // AUTO:
 public: // AUTO: 
   Real relativeEpsilon;                           //!< AUTO: relative differentiation parameter epsilon; the numerical differentiation parameter \f$\varepsilon\f$ follows from the formula (\f$\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\f$, with \f$\varepsilon_\mathrm{relative}\f$=relativeEpsilon, \f$q_{min} = \f$minimumCoordinateSize, \f$q_i\f$ is the current coordinate which is differentiated, and \f$qRef_i\f$ is the reference coordinate of the current coordinate
   Real minimumCoordinateSize;                     //!< AUTO: minimum size of coordinates in relative differentiation parameter
-  bool doSystemWideDifferentiation;               //!< AUTO: True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation
-  bool addReferenceCoordinatesToEpsilon;          //!< AUTO: True: for the size estimation of the differentiation parameter, the reference coordinate \f$q^{Ref}_i\f$ is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
+  bool doSystemWideDifferentiation;               //!< AUTO: True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation
+  bool addReferenceCoordinatesToEpsilon;          //!< AUTO: True: for the size estimation of the differentiation parameter, the reference coordinate \f$q^{Ref}_i\f$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
 
 
 public: // AUTO: 
@@ -196,7 +196,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -264,7 +264,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -288,7 +288,7 @@ public: // AUTO:
   Real relativeTolerance;                         //!< AUTO: relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
   Real absoluteTolerance;                         //!< AUTO: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
   bool weightTolerancePerCoordinate;              //!< AUTO: flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size
-  Index newtonResidualMode;                       //!< AUTO: 0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
+  Index newtonResidualMode;                       //!< AUTO: 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   bool adaptInitialResidual;                      //!< AUTO: flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration
   Real modifiedNewtonContractivity;               //!< AUTO: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
   bool useModifiedNewton;                         //!< AUTO: True: compute Jacobian only at first step; no Jacobian updates per step; False: Jacobian computed in every step
@@ -330,9 +330,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
   Real PyGetAbsoluteTolerance() const { return (Real)(absoluteTolerance); }
 
-  //! AUTO: Set function (needed in pybind) for: 0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
+  //! AUTO: Set function (needed in pybind) for: 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   void PySetNewtonResidualMode(const Index& newtonResidualModeInit) { newtonResidualMode = EXUstd::GetSafelyUInt(newtonResidualModeInit,"newtonResidualMode"); }
-  //! AUTO: Read (Copy) access to: 0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
+  //! AUTO: Read (Copy) access to: 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   Index PyGetNewtonResidualMode() const { return (Index)(newtonResidualMode); }
 
   //! AUTO: Set function (needed in pybind) for: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
@@ -397,7 +397,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -479,7 +479,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -537,7 +537,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -733,7 +733,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -759,7 +759,7 @@ public: // AUTO:
   bool loadStepGeometric;                         //!< AUTO: if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for \f$n=8\f$ numberOfLoadSteps and \f$d = 1000\f$ loadStepGeometricRange, it follows: \f$1000^{1/8}/1000=0.00237\f$, \f$1000^{2/8}/1000=0.00562\f$, \f$1000^{3/8}/1000=0.0133\f$, ..., \f$1000^{7/8}/1000=0.422\f$, \f$1000^{8/8}/1000=1\f$
   Real loadStepGeometricRange;                    //!< AUTO: if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
   bool useLoadFactor;                             //!< AUTO: True: compute a load factor \f$\in [0,1]\f$ from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction
-  Real stabilizerODE2term;                        //!< AUTO: add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
+  Real stabilizerODE2term;                        //!< AUTO: add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
   bool adaptiveStep;                              //!< AUTO: True: use step reduction if step fails; False: fixed step size
   Index adaptiveStepRecoverySteps;                //!< AUTO: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
   Real adaptiveStepIncrease;                      //!< AUTO: Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
@@ -813,9 +813,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
   Real PyGetLoadStepGeometricRange() const { return (Real)(loadStepGeometricRange); }
 
-  //! AUTO: Set function (needed in pybind) for: add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
+  //! AUTO: Set function (needed in pybind) for: add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
   void PySetStabilizerODE2term(const Real& stabilizerODE2termInit) { stabilizerODE2term = EXUstd::GetSafelyUReal(stabilizerODE2termInit,"stabilizerODE2term"); }
-  //! AUTO: Read (Copy) access to: add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
+  //! AUTO: Read (Copy) access to: add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
   Real PyGetStabilizerODE2term() const { return (Real)(stabilizerODE2term); }
 
   //! AUTO: Set function (needed in pybind) for: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
@@ -893,7 +893,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -959,7 +959,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-07-06  09:41:17 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,7 +40,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeRigidBodyEP
-* @brief        A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions).
+* @brief        A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (representing displacement of reference point \f$\LU{0}{\rv}\f$) and four rotation coordinates (Euler parameters = unit quaternions).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -112,7 +112,7 @@ public: // AUTO:
         return nRotationCoordinates;
     }
 
-    //! AUTO:  number of AE equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)
+    //! AUTO:  number of \hac{AE} equations, may be different from algebraic coordinates: if only coordinates are provided, but equations provided by other objects (ObjectRigidBody)
     virtual Index GetAlgebraicEquationsSize() const override
     {
         return (Index)(useNodeAE&&parameters.addConstraintEquation);
@@ -161,7 +161,7 @@ public: // AUTO:
     virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const override;
 
     //! AUTO:  obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
-    virtual void CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const override;
+    virtual void CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const override;
 
     //! AUTO:  return internally stored reference coordinates of node
     virtual LinkedDataVector GetReferenceCoordinateVector() const override
@@ -172,10 +172,10 @@ public: // AUTO:
     //! AUTO:  provide according output variable in 'value'; used e.g. for postprocessing and sensors
     virtual void GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const override;
 
-    //! AUTO:  ONLY for nodes with AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
+    //! AUTO:  ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
 
-    //! AUTO:  ONLY for nodes with AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
+    //! AUTO:  ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const override;
 
     //! AUTO:  Compute vector to of 4 Euler Parameters from reference and configuration coordinates

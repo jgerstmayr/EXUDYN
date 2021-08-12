@@ -790,7 +790,7 @@ class InertiaCylinder(RigidBodyInertia):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
 #**input:
-#   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters'
+#   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
 #   position: reference position as list or numpy array with 3 components (in global/world frame)
 #   velocity: initial translational velocity as list or numpy array with 3 components (in global/world frame)
 #   rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
@@ -851,7 +851,7 @@ def GetRigidBodyNode(nodeType,
 #**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
 #**input:
 #   inertia: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia
-#   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters'
+#   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
 #   position: reference position as list or numpy array with 3 components (in global/world frame)
 #   velocity: initial translational velocity as list or numpy array with 3 components (in global/world frame)
 #   rotationMatrix: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[]) 
@@ -924,9 +924,9 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     B = ComputeOrthonormalBasis(vAxis) #axis = x-axis
     #interchange z and x axis (needs sign change, otherwise det(A)=-1)
     AJ = np.eye(3)
-    AJ[:,0]=-B[2]
-    AJ[:,1]= B[1]
-    AJ[:,2]= B[0] #axis ==> rotation axis z for revolute joint ... 
+    AJ[:,0]=-B[:,2]
+    AJ[:,1]= B[:,1]
+    AJ[:,2]= B[:,0] #axis ==> rotation axis z for revolute joint ... 
     #print(AJ)
     
     #compute joint position and axis in body0 / 1 coordinates:

@@ -40,7 +40,7 @@ def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit in
 
 #************************************************
 #convert string to latex readable string --> used in auto-generated docu
-def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into latex code
+def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and other symbols to fit into latex code
 
     if isDefaultValue:
         s = s.replace('true','True') #correct python notation
@@ -84,8 +84,9 @@ def Str2Latex(s, isDefaultValue=False): #replace _ and other symbols to fit into
 
     #s = s.replace('\\','\\\\') #leads to double \\ in latex
     s = s.replace('_','\_')
-    s = s.replace('{','\{')
-    s = s.replace('}','\}')
+    if replaceCurlyBracket: #don't do that for systemstructures definitions, allowing hyperlinks, etc.
+        s = s.replace('{','\{')
+        s = s.replace('}','\}')
     #s = s.replace('/',' / ')
     #s = s.replace('$','\$') #do not exclude $ in order to allow latex formulas
 
@@ -240,7 +241,7 @@ def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnc
     s+='* @author       Gerstmayr Johannes\n'
     s+='* @date         2019-07-01 (generated)\n'
     if addModifiedDate:
-        s+='* @date         '+ dateStr+ '  ' + timeStr + ' (last modfied)\n' #this causes all files to change ...
+        s+='* @date         '+ dateStr+ '  ' + timeStr + ' (last modified)\n' #this causes all files to change ...
     #s+='* @date         2019-09-12 (last modfied)\n'
     s+='*\n'
     s+='* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.\n'

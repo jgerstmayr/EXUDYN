@@ -30,7 +30,7 @@ from numpy import linalg as LA
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#exudynTestGlobals.useGraphics = False
+# exudynTestGlobals.useGraphics = False
 if exudynTestGlobals.useGraphics:
     sensorWriteToFile = True
 else:
@@ -38,47 +38,49 @@ else:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#define myRobot kinematics, puma560
-#DH-parameters: [theta, d, a, alpha], according to P. Corke
-link0={'stdDH':[0,0,0,np.pi/2], 
-       'mass':20,  #not needed!
-       'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM!
-       'COM':[0,0,0]}
+#now in the new structure
+# #define myRobot kinematics, puma560
+# #DH-parameters: [theta, d, a, alpha], according to P. Corke
+# link0={'stdDH':[0,0,0,np.pi/2], 
+#        'mass':20,  #not needed!
+#        'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM!
+#        'COM':[0,0,0]}
 
-link1={'stdDH':[0,0,0.4318,0],
-       'mass':17.4, 
-       'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM!
-       'COM':[-0.3638, 0.006, 0.2275]}
+# link1={'stdDH':[0,0,0.4318,0],
+#        'mass':17.4, 
+#        'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM!
+#        'COM':[-0.3638, 0.006, 0.2275]}
 
-link2={'stdDH':[0,0.15,0.0203,-np.pi/2], 
-       'mass':4.8, 
-       'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM!
-       'COM':[-0.0203,-0.0141,0.07]}
+# link2={'stdDH':[0,0.15,0.0203,-np.pi/2], 
+#        'mass':4.8, 
+#        'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM!
+#        'COM':[-0.0203,-0.0141,0.07]}
 
-link3={'stdDH':[0,0.4318,0,np.pi/2], 
-       'mass':0.82, 
-       'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM!
-       'COM':[0,0.019,0]}
+# link3={'stdDH':[0,0.4318,0,np.pi/2], 
+#        'mass':0.82, 
+#        'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM!
+#        'COM':[0,0.019,0]}
 
-link4={'stdDH':[0,0,0,-np.pi/2], 
-       'mass':0.34, 
-       'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM!
-       'COM':[0,0,0]}
+# link4={'stdDH':[0,0,0,-np.pi/2], 
+#        'mass':0.34, 
+#        'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM!
+#        'COM':[0,0,0]}
 
-link5={'stdDH':[0,0,0,0], 
-       'mass':0.09, 
-       'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM!
-       'COM':[0,0,0.032]}
+# link5={'stdDH':[0,0,0,0], 
+#        'mass':0.09, 
+#        'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM!
+#        'COM':[0,0,0.032]}
 
-#this is the global myRobot structure
-myRobot={'links':[link0, link1, link2, link3, link4, link5],
-       'jointType':[1,1,1,1,1,1], #1=revolute, 0=prismatic
-       'base':{'HT':HT0()},
-       'tool':{'HT':HTtranslate([0,0,0.1])},
-       'gravity':[0,0,9.81],
-       'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the myRobot is built
-       } 
+# #this is the global myRobot structure
+# myRobot={'links':[link0, link1, link2, link3, link4, link5],
+#        'jointType':[1,1,1,1,1,1], #1=revolute, 0=prismatic
+#        'base':{'HT':HT0()},
+#        'tool':{'HT':HTtranslate([0,0,0.1])},
+#        'gravity':[0,0,9.81],
+#        'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the myRobot is built
+#        } 
 
+#changed to new robot structure July 2021:
 newRobot = Robot(gravity=[0,0,9.81],
               baseHT = HT0(),
               toolHT = HTtranslate([0,0,0.1]),
@@ -91,7 +93,7 @@ newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0
 newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2])))
 newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0])))
 
-#newRobot.BuildFromDictionary(myRobot)
+#newRobot.BuildFromDictionary(myRobot) #this allows conversion from old structure
 
 #assumption, as the bodies in the mbs have their COM at the reference position
 #for link in robot['links']:
@@ -152,9 +154,9 @@ tStart = [0,0,0, 0,0,0]
 duration = 0.1
 
 
-jointList = [0]*len(myRobot['links']) #this list must be filled with the joint numbers in the mbs!
+jointList = [0]*newRobot.NumberOfLinks() #this list must be filled afterwards with the joint numbers in the mbs!
 
-def ComputeMBSstaticRobotTorques(myRobot):
+def ComputeMBSstaticRobotTorques(newRobot):
     q=[]
     for joint in jointList:
         q += [mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2]] #z-rotation
@@ -168,7 +170,7 @@ graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
 #oGround = mbs.AddObject(ObjectGround(referencePosition=list(HT2translation(Tcurrent)), 
-objectGround = mbs.AddObject(ObjectGround(referencePosition=HT2translation(myRobot['base']['HT']), 
+objectGround = mbs.AddObject(ObjectGround(referencePosition=HT2translation(newRobot.GetBaseHT()), 
                                      visualization=VObjectGround(graphicsData=graphicsBaseList)))
 
 #baseMarker; could also be a moving base!
@@ -202,7 +204,7 @@ compensateStaticTorques = True
 #user function which is called only once per step, speeds up simulation drastically
 def PreStepUF(mbs, t):
     if compensateStaticTorques:
-        staticTorques = ComputeMBSstaticRobotTorques(myRobot)
+        staticTorques = ComputeMBSstaticRobotTorques(newRobot)
     else:
         staticTorques = np.zeros(len(jointList))
     #compute load for joint number

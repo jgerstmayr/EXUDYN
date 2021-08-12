@@ -416,24 +416,6 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.value("EndOfEnumList", CObjectType::EndOfEnumList)
 		.export_values();
 
-	py::enum_<Node::Type>(m, "NodeType")
-		.value("_None", Node::_None)
-		.value("Ground", Node::Ground)
-		.value("Position2D", Node::Position2D)
-		.value("Orientation2D", Node::Orientation2D)
-		.value("Point2DSlope1", Node::Point2DSlope1)
-		.value("Position", Node::Position)
-		.value("Orientation", Node::Orientation)
-		.value("RigidBody", Node::RigidBody)
-		.value("RotationEulerParameters", Node::RotationEulerParameters)
-		.value("RotationRxyz", Node::RotationRxyz)
-		.value("RotationRotationVector", Node::RotationRotationVector)
-		.value("RotationLieGroup", Node::RotationLieGroup)
-		.value("GenericODE2", Node::GenericODE2)
-		.value("GenericODE1", Node::GenericODE1)
-		.value("GenericAE", Node::GenericAE)
-		.value("GenericData", Node::GenericData)
-		.export_values();
 
 	//py::enum_<CNodeType>(m, "CNodeType")
 	//	.value("_None", CNodeType::_None)
@@ -442,6 +424,25 @@ PYBIND11_MODULE(exudynCPP, m) {
 	//	.value("Temperature", CNodeType::Temperature)
 	//	.value("General", CNodeType::General)
 	//	.export_values();
+
+		//py::enum_<Node::Type>(m, "NodeType")
+		//.value("_None", Node::_None)
+		//.value("Ground", Node::Ground)
+		//.value("Position2D", Node::Position2D)
+		//.value("Orientation2D", Node::Orientation2D)
+		//.value("Point2DSlope1", Node::Point2DSlope1)
+		//.value("Position", Node::Position)
+		//.value("Orientation", Node::Orientation)
+		//.value("RigidBody", Node::RigidBody)
+		//.value("RotationEulerParameters", Node::RotationEulerParameters)
+		//.value("RotationRxyz", Node::RotationRxyz)
+		//.value("RotationRotationVector", Node::RotationRotationVector)
+		//.value("RotationLieGroup", Node::RotationLieGroup)
+		//.value("GenericODE2", Node::GenericODE2)
+		//.value("GenericODE1", Node::GenericODE1)
+		//.value("GenericAE", Node::GenericAE)
+		//.value("GenericData", Node::GenericData)
+		//.export_values();
 
 	py::enum_<CNodeGroup>(m, "NodeGroup")
 		.value("_None", CNodeGroup::_None)

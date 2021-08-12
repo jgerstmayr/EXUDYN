@@ -439,8 +439,6 @@ namespace RigidBodyMath {
 		Vector3D v;
 		v.CopyFrom(rot);
 		Real angle = rot.GetL2Norm();
-		Real cAngle = cos(angle);
-		//Real sAngle = sin(angle);
 
 		if (angle == 0) {
 			return EXUmath::unitMatrix3D;
@@ -450,8 +448,15 @@ namespace RigidBodyMath {
 			Matrix3D mat(EXUmath::unitMatrix3D);
 			Matrix3D vTilde(Vector2SkewMatrix(v));
 
-			mat += (sin(angle) / angle)*vTilde;
-			mat += ((1. - cAngle) / (angle * angle))*vTilde*vTilde;
+			Real sAngle = sin(angle);
+			mat += (sAngle / angle)*vTilde;
+
+			//Real cAngle = cos(angle);
+			//mat += ((1. - cAngle) / (angle * angle))*vTilde*vTilde; //very inaccurate around angle=0
+
+			Real sAngle2 = sin(0.5*angle);
+			mat += (2. * sAngle2 * sAngle2 / (angle * angle))*vTilde*vTilde;
+
 			return mat;
 		}
 	}

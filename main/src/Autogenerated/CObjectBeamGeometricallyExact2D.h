@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  13:31:26 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -50,7 +50,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectBeamGeometricallyExact2D
-* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D. The beam with length \f$L\f$=physicsLength uses a localPosition\f$\in [-L/2, L/2]\f$.
+* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -134,7 +134,7 @@ public: // AUTO:
         return 2;
     }
 
-    //! AUTO:  number of ODE2 coordinates; needed for object?
+    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
         return nODE2Coordinates;

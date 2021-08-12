@@ -507,7 +507,7 @@ public:
 	virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }
 
 	//! obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
-	virtual void CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
+	virtual void CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
 		Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }
 };
 
@@ -545,6 +545,9 @@ public:
 	//! read globally stored initial coordinates (displacements)
 	virtual LinkedDataVector GetInitialCoordinateVector() const override;
 
+	//! read globally stored start of step coordinates (displacements)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector() const override;
+
 	//! read visualization coordinates (displacements)
 	virtual LinkedDataVector GetVisualizationCoordinateVector() const override;
 
@@ -554,6 +557,7 @@ public:
 		{
 		case ConfigurationType::Current: return GetCurrentCoordinateVector();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector();
+		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector();
 		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
 		default: CHECKandTHROWstring("CODE2Node::GetCoordinateVector: invalid ConfigurationType (Reference not possible)!"); return LinkedDataVector();
 		}

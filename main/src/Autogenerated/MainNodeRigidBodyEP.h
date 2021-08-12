@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-28  15:08:07 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeRigidBodyEP
-* @brief        A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (displacements of center of mass - COM: ux,uy,uz) and four rotation coordinates (Euler parameters = quaternions).
+* @brief        A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (representing displacement of reference point \f$\LU{0}{\rv}\f$) and four rotation coordinates (Euler parameters = unit quaternions).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

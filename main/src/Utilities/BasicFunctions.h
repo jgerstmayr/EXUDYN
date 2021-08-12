@@ -68,16 +68,22 @@ namespace EXUstd {
         b = temp;
     }
 
-    //! compute sign function (gives 0 for a==0, -1 for a < 0 and +1 for a > 0)
-    template <class T>
-    inline int Sgn(T a)
-    {
-        if (a > 0) return 1;
-        if (a < 0) return -1;
-        return 0;
-    }
+	//! compute sign function (gives 0 for a==0, -1 for a < 0 and +1 for a > 0)
+	template <class T>
+	inline int Sgn(T a)
+	{
+		if (a > 0) return 1;
+		if (a < 0) return -1;
+		return 0;
+	}
 
-    //! compute square of an object (e.g. Real or int)
+	//! compute sign function (gives 0 for a==0, -1 for a < 0 and +1 for a > 0)
+	inline Real SignReal(Real val)
+	{
+		return (Real)((SignedIndex)(0. < val) - (SignedIndex)(val < 0.));
+	}
+	
+	//! compute square of an object (e.g. Real or int)
     template <class T>
     inline T Square(T a)
     {

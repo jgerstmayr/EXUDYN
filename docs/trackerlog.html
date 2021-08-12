@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 725, 
-Number of resolved issues = 644 (276 in current version), 
-EXUDYN version = 1.0.276, 
-last change =  2021-07-12
+Number of issues = 733, 
+Number of resolved issues = 656 (288 in current version), 
+EXUDYN version = 1.0.288, 
+last change =  2021-08-10
 
 
 <table style = "width:100%">
@@ -38,6 +38,22 @@ last change =  2021-07-12
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0728</td>
+    <td>optimize CollectCurrentNodeMarkerData</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> optimize function for CNodeRigidBodyRotVecLG</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-31</td>
+    <td>2021-09-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0720</td>
     <td>AddObjectFFRFreducedOrder</td>
@@ -87,22 +103,6 @@ last change =  2021-07-12
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0704</td>
-    <td>Optimization2       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add direct function to NodeRigidBody to retrieve essential data for rigid body EOM and MarkerRigidBody; add flag, if rotation matrix and other quantities needed</td>
-    <td>OPTIMIZE</td>
-    <td></td>
-    <td>2021-07-04</td>
-    <td>2021-09-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>0698</td>
     <td>GetAvailableJacobians</td>
     <td>JG</td>
@@ -134,7 +134,7 @@ last change =  2021-07-12
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0679</td>
     <td>Renderer tkinter    </td>
     <td>JG</td>
@@ -503,22 +503,6 @@ last change =  2021-07-12
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0540</td>
-    <td>github              </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> update README.rst file and make it similar to other packages (e.g. pydy)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-01-09</td>
-    <td>2021-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0538</td>
     <td>monitorScaling      </td>
     <td>JG</td>
@@ -544,38 +528,6 @@ last change =  2021-07-12
     <td></td>
     <td>2020-12-22</td>
     <td>2021-02-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0514</td>
-    <td>general wheel       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add general wheel model (with general rotation body); for mecanum wheel rolls</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-12-19</td>
-    <td>2021-02-17</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0504</td>
-    <td>serialrobot         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> build completely from homogenouos transformations, COMs, inertia tensors, masses, axes, axesTypes</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-12-16</td>
-    <td>2021-02-14</td>
     <td></td>
     <td></td>
     <td></td>
@@ -924,22 +876,6 @@ last change =  2021-07-12
     <td>JG</td>
     <td>RAISED  </td>
     <td> add user marker</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-10</td>
-    <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0313</td>
-    <td>Add user node ODE2  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add user node with getposition, rotation, access functions</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-01-10</td>
@@ -1335,6 +1271,118 @@ last change =  2021-07-12
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0732</td>
+    <td>DrawSystemGraph     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> improve visualization and return graph and other information</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-08-06</td>
+    <td>2021-10-05</td>
+    <td>2021-08-06 17:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0731</td>
+    <td>AddRevoluteJoint    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> AddRevoluteJoint shows error in axis definition</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-08-05</td>
+    <td>2021-10-04</td>
+    <td>2021-08-05 13:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0730</td>
+    <td>RigidBody tutorial  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add tutorial for rigid body with AddRigidBody(...), AddRevoluteJoint(...) functionalities</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-08-05</td>
+    <td>2021-10-04</td>
+    <td>2021-08-06 20:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0729</td>
+    <td>README.rst          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add .rst readme file containing gettingStarted, introduction, tutorial and other information</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-08-05</td>
+    <td>2021-10-04</td>
+    <td>2021-08-06 20:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0727</td>
+    <td>NodeRigidBody2D     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Outputvariable Rotation gives 3D vector, but wrong description in DOCU</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-07-14</td>
+    <td>2021-09-12</td>
+    <td>2021-07-31 21:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>additionally: rotation is now directly copied from rotation coordinate and is not recomputed from Tait-Bryan angles of rotation matrix</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0726</td>
+    <td>description of nodes</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> finish detailed description of 3D nodes and add rotation parameter description for Tait-Bryan in theory part</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-07-13</td>
+    <td>2021-09-11</td>
+    <td>2021-07-13 21:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0725</td>
+    <td>unify description   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> unify notation for special vectors, e.g., reference point or local position; add unified abbreviations for ODE2, etc.</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-07-13</td>
+    <td>2021-09-11</td>
+    <td>2021-07-13 21:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0724</td>
     <td>Linux version       </td>
     <td>JG</td>
@@ -1605,6 +1653,22 @@ last change =  2021-07-12
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0704</td>
+    <td>Optimization2       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add direct function to NodeRigidBody to retrieve essential data for rigid body EOM and MarkerRigidBody; add flag, if rotation matrix and other quantities needed</td>
+    <td>OPTIMIZE</td>
+    <td></td>
+    <td>2021-07-04</td>
+    <td>2021-09-02</td>
+    <td>2021-07-31 22:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>still no optimization for Lie group nodes, which however have simpler matrices</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0703</td>
@@ -3815,6 +3879,22 @@ last change =  2021-07-12
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0540</td>
+    <td>github              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> update README.rst file and make it similar to other packages (e.g. pydy)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-01-09</td>
+    <td>2021-03-10</td>
+    <td>2021-08-10 12:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0539</td>
     <td>RigidBodySpringDamper</td>
     <td>JG</td>
@@ -4183,6 +4263,22 @@ last change =  2021-07-12
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0514</td>
+    <td>general wheel       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add general wheel model (with general rotation body); for mecanum wheel rolls</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-19</td>
+    <td>2021-02-17</td>
+    <td>2021-07-31 21:20</td>
+    <td>Peter Manzl</td>
+    <td></td>
+    <td></td>
+    <td>implemented ObjectContactConvexRoll for general usage in Mecanum wheels and other applications</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0513</td>
     <td>add RK4 integrator  </td>
     <td>JG</td>
@@ -4321,6 +4417,22 @@ last change =  2021-07-12
     <td>2020-12-16</td>
     <td>2021-02-14</td>
     <td>2020-12-17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0504</td>
+    <td>serialrobot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> build completely from homogenouos transformations, COMs, inertia tensors, masses, axes, axesTypes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td>2021-08-10 12:56</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -7013,6 +7125,22 @@ last change =  2021-07-12
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0313</td>
+    <td>Add user node ODE2  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add user node with getposition, rotation, access functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-10</td>
+    <td>2020-03-10</td>
+    <td>2021-08-10 12:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not needed: GenericNodes can be used for that</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0311</td>

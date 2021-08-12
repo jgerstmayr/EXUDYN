@@ -40,10 +40,12 @@ headerTags = ['Details','Author','Date','Copyright','References','Notes','Exampl
 
 tagPreamble = '#**' #this must be given at beginning of any tag
 
-def ToLatex(s): #replace _ and other symbols to fit into latex code
-    s = s.replace('_','\_')
-    s = s.replace('{','\{')
-    s = s.replace('}','\}')
+def ToLatex(s, replaceCurlyBracket=True): #replace _ and other symbols to fit into latex code
+    if replaceCurlyBracket:
+        s = s.replace('{','\{')
+        s = s.replace('}','\}')
+        s = s.replace('_','\_')
+
     # s = s.replace('[','\\[')
     # s = s.replace(']','\\]')
     s = s.replace('&','\&')
@@ -163,7 +165,7 @@ def ParsePythonFile(fileName):
     headerString = ''
     currentTag = ''
     while lineCnt < nLines and isHeader:
-        lineString = ToLatex(fileLines[lineCnt])
+        lineString = ToLatex(fileLines[lineCnt], replaceCurlyBracket=False) #allow latex code in header!
         if lineString[0] != '#':
             isHeader = False
             if tagMode:

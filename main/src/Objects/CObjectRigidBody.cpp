@@ -696,7 +696,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 	//STARTGLOBALTIMER(TSRBmarkerData1);
 
 	//39ns:
-	((CNodeRigidBody*)GetCNode(0))->CollectCurrentNodeData2(Glocal, G, pos0, vel0, markerData.orientation, markerData.angularVelocityLocal); 
+	((CNodeRigidBody*)GetCNode(0))->CollectCurrentNodeMarkerData(Glocal, G, pos0, vel0, markerData.orientation, markerData.angularVelocityLocal); 
 	//STOPGLOBALTIMER(TSRBmarkerData1);
 
 	//***********

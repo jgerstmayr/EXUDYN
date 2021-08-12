@@ -32,7 +32,7 @@ void CNodeRigidBodyRotVecLG::CollectCurrentNodeData1(ConstSizeMatrix<maxRotation
 	angularVelocityLocal = GetAngularVelocityLocal();
 }
 
-void CNodeRigidBodyRotVecLG::CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
+void CNodeRigidBodyRotVecLG::CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
 	Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const
 {
 	GetGlocal(Glocal);

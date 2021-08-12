@@ -99,6 +99,14 @@ class Robot:
             self.links[i].parent = i-1
         return i #return index of link
 
+    #**classFunction: return Link object of link i
+    def GetLink(self, i):
+        return self.links[i]
+    
+    #**classFunction: return number of links
+    def NumberOfLinks(self):
+        return len(self.links)
+
     #**classFunction: return base as homogeneous transformation
     def GetBaseHT(self):
         return self.baseHT

@@ -194,7 +194,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \texttt{objectType = {\textquotesingle}MassPoint{\textquotesingle}\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
   GetObjectOutput(objectNumber, variableType) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
-  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType\tabnewline 
+  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition $\pLocB$ similar to MarkerBody and SensorBody\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
@@ -545,6 +545,37 @@ This section shows the ItemType structure, which is used for defining types of i
   Marker & item or index is of type Marker\\ \hline 
   Load & item or index is of type Load\\ \hline 
   Sensor & item or index is of type Sensor\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{NodeType}
+\label{sec:NodeType}
+This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  \_None & node has no type\\ \hline 
+  Ground & ground node\\ \hline 
+  Position2D & 2D position node \\ \hline 
+  Orientation2D & node with 2D rotation\\ \hline 
+  Point2DSlope1 & 2D node with 1 slope vector\\ \hline 
+  Position & 3D position node\\ \hline 
+  Orientation & 3D orientation node\\ \hline 
+  RigidBody & node that can be used for rigid bodies\\ \hline 
+  RotationEulerParameters & node with 3D orientations that are modelled with Euler parameters (unit quaternions)\\ \hline 
+  RotationRxyz & node with 3D orientations that are modelled with Tait-Bryan angles\\ \hline 
+  RotationRotationVector & node with 3D orientations that are modelled with the rotation vector\\ \hline 
+  RotationLieGroup & node intended to be solved with Lie group methods\\ \hline 
+  GenericODE2 & node with general ODE2 variables\\ \hline 
+  GenericODE1 & node with general ODE1 variables\\ \hline 
+  GenericAE & node with general algebraic variables\\ \hline 
+  GenericData & node with general data variables\\ \hline 
 \end{longtable}
 \end{center}
 

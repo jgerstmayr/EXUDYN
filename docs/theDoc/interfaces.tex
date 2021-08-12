@@ -20,8 +20,8 @@ SolutionSettings has the following items:
     writeFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)\\ \hline
     writeFileFooter &     bool &      &     True &     flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics\\ \hline
     solutionWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the solution is written during a simulation\\ \hline
-    exportVelocities &     bool &      &     True &     add ODE2 velocities to solution file\\ \hline
-    exportAccelerations &     bool &      &     True &     add ODE2 accelerations to solution file\\ \hline
+    exportVelocities &     bool &      &     True &     add \hac{ODE2} velocities to solution file\\ \hline
+    exportAccelerations &     bool &      &     True &     add \hac{ODE2} accelerations to solution file\\ \hline
     exportODE1Velocities &     bool &      &     True &     add coordinatesODE1\_t to solution file\\ \hline
     exportAlgebraicCoordinates &     bool &      &     True &     add algebraicCoordinates (=Lagrange multipliers) to solution file\\ \hline
     exportDataCoordinates &     bool &      &     True &     add DataCoordinates to solution file\\ \hline
@@ -49,8 +49,8 @@ NumericalDifferentiationSettings has the following items:
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     relativeEpsilon &     UReal &      &     1e-7 &     relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate\\ \hline
     minimumCoordinateSize &     UReal &      &     1e-2 &     minimum size of coordinates in relative differentiation parameter\\ \hline
-    doSystemWideDifferentiation &     bool &      &     False &     True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation\\ \hline
-    addReferenceCoordinatesToEpsilon &     \tabnewline bool &      &     False &     True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter\\ \hline
+    doSystemWideDifferentiation &     bool &      &     False &     True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation\\ \hline
+    addReferenceCoordinatesToEpsilon &     \tabnewline bool &      &     False &     True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -88,7 +88,7 @@ NewtonSettings has the following items:
     relativeTolerance &     UReal &      &     1e-8 &     relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)\\ \hline
     absoluteTolerance &     UReal &      &     1e-10 &     absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance\\ \hline
     weightTolerancePerCoordinate &     bool &      &     False &     flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size\\ \hline
-    newtonResidualMode &     UInt &      &     0 &     0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag\\ \hline
+    newtonResidualMode &     UInt &      &     0 &     0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag\\ \hline
     adaptInitialResidual &     bool &      &     True &     flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration\\ \hline
     modifiedNewtonContractivity &     PReal &      &     0.5 &     maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed\\ \hline
     useModifiedNewton &     bool &      &     False &     True: compute Jacobian only at first step; no Jacobian updates per step; False: Jacobian computed in every step\\ \hline
@@ -194,7 +194,7 @@ StaticSolverSettings has the following items:
     loadStepGeometric &     bool &      &     False &     if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$\\ \hline
     loadStepGeometricRange &     PReal &      &     1000 &     if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric\\ \hline
     useLoadFactor &     bool &      &     True &     True: compute a load factor $\in [0,1]$ from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction\\ \hline
-    stabilizerODE2term &     UReal &      &     0 &     add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$\\ \hline
+    stabilizerODE2term &     UReal &      &     0 &     add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$\\ \hline
     adaptiveStep &     bool &      &     True &     True: use step reduction if step fails; False: fixed step size\\ \hline
     adaptiveStepRecoverySteps &     UInt &      &     4 &     Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors\\ \hline
     adaptiveStepIncrease &     UReal &      &     2 &     Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors\\ \hline
@@ -624,13 +624,13 @@ CSolverTimer has the following items:
     factorization &     Real &      &     0. &     solve or inverse\\ \hline
     newtonIncrement &     Real &      &     0. &     Jac$^{-1}$ * RHS; backsubstitution\\ \hline
     integrationFormula &     Real &      &     0. &     time spent for evaluation of integration formulas\\ \hline
-    ODE2RHS &     Real &      &     0. &     time for residual evaluation of ODE2 right-hand-side\\ \hline
-    ODE1RHS &     Real &      &     0. &     time for residual evaluation of ODE1 right-hand-side\\ \hline
+    ODE2RHS &     Real &      &     0. &     time for residual evaluation of \hac{ODE2} right-hand-side\\ \hline
+    ODE1RHS &     Real &      &     0. &     time for residual evaluation of \hac{ODE1} right-hand-side\\ \hline
     AERHS &     Real &      &     0. &     time for residual evaluation of algebraic equations right-hand-side\\ \hline
     totalJacobian &     Real &      &     0. &     time for all jacobian computations\\ \hline
-    jacobianODE1 &     Real &      &     0. &     jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)\\ \hline
-    jacobianODE2 &     Real &      &     0. &     jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)\\ \hline
-    jacobianODE2\_t &     Real &      &     0. &     jacobian w.r.t. coordinates\_t of ODE2 equations (not counted in sum)\\ \hline
+    jacobianODE1 &     Real &      &     0. &     jacobian w.r.t. coordinates of \hac{ODE1} equations (not counted in sum)\\ \hline
+    jacobianODE2 &     Real &      &     0. &     jacobian w.r.t. coordinates of \hac{ODE2} equations (not counted in sum)\\ \hline
+    jacobianODE2\_t &     Real &      &     0. &     jacobian w.r.t. coordinates\_t of \hac{ODE2} equations (not counted in sum)\\ \hline
     jacobianAE &     Real &      &     0. &     jacobian of algebraic equations (not counted in sum)\\ \hline
     massMatrix &     Real &      &     0. &     mass matrix computation\\ \hline
     reactionForces &     Real &      &     0. &     CqT * lambda\\ \hline
@@ -667,12 +667,12 @@ SolverLocalData has the following items:
     startAE &     Index &      &     0 &     start of algebraic coordinates, but set to zero if nAE==0\\ \hline
     systemResidual &     ResizableVector &      &      &     system residual vector (vectors will be linked to this vector!)\\ \hline
     newtonSolution &     ResizableVector &      &      &     Newton decrement (computed from residual and jacobian)\\ \hline
-    tempODE2 &     ResizableVector &      &      &     temporary vector for ODE2 quantities; use in initial accelerations and during Newton\\ \hline
-    temp2ODE2 &     ResizableVector &      &      &     second temporary vector for ODE2 quantities; use in static computation\\ \hline
-    tempODE2F0 &     ResizableVector &      &      &     temporary vector for ODE2 Jacobian\\ \hline
-    tempODE2F1 &     ResizableVector &      &      &     temporary vector for ODE2 Jacobian\\ \hline
-    tempODE1F0 &     ResizableVector &      &      &     temporary vector for ODE1 Jacobian\\ \hline
-    tempODE1F1 &     ResizableVector &      &      &     temporary vector for ODE1 Jacobian\\ \hline
+    tempODE2 &     ResizableVector &      &      &     temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton\\ \hline
+    temp2ODE2 &     ResizableVector &      &      &     second temporary vector for \hac{ODE2} quantities; use in static computation\\ \hline
+    tempODE2F0 &     ResizableVector &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
+    tempODE2F1 &     ResizableVector &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
+    tempODE1F0 &     ResizableVector &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
+    tempODE1F1 &     ResizableVector &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
     startOfStepStateAAlgorithmic &     ResizableVector &      &      &     additional term needed for generalized alpha (startOfStep state)\\ \hline
     aAlgorithmic &     ResizableVector &      &      &     additional term needed for generalized alpha (current state)\\ \hline
     CleanUpMemory() &     void &      &      &     if desired, temporary data is cleaned up to safe memory\\ \hline
@@ -821,8 +821,8 @@ MainSolverStatic has the following items:
     WriteCoordinatesToFile(...) &     void &      &     mainSystem, simulationSettings &     write unique coordinates solution file\\ \hline
     IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
     VerboseWrite(...) &     void &      &     level, str &     write to console and/or file in case of level\\ \hline
-    GetODE2size() &     Index &      &      &     number of ODE2 equations in solver\\ \hline
-    GetODE1size() &     Index &      &      &     number of ODE1 equations in solver (not yet implemented)\\ \hline
+    GetODE2size() &     Index &      &      &     number of \hac{ODE2} equations in solver\\ \hline
+    GetODE1size() &     Index &      &      &     number of \hac{ODE1} equations in solver (not yet implemented)\\ \hline
     GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
     GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
     GetSystemJacobian() &     NumpyMatrix &      &      &     get locally stored / last computed system jacobian of solver\\ \hline
@@ -835,8 +835,8 @@ MainSolverStatic has the following items:
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix\\ \hline
     ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor=1. &     set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver\\ \hline
     ComputeJacobianODE2RHS\_t(...) &     \tabnewline void &      &     mainSystem, scalarFactor=1. &     add jacobian of ODE2RHS\_t (multiplied with factor) to systemJacobian in cSolver\\ \hline
-    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2\_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level\\ \hline
-    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)\\ \hline
+    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates and w.r.t. ODE2\_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level\\ \hline
+    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)\\ \hline
     ComputeAlgebraicEquations(...) &     \tabnewline void &      &     mainSystem, velocityLevel=false &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -908,8 +908,8 @@ MainSolverImplicitSecondOrder has the following items:
     WriteCoordinatesToFile(...) &     void &      &     mainSystem, simulationSettings &     write unique coordinates solution file\\ \hline
     IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
     VerboseWrite(...) &     void &      &     level, str &     write to console and/or file in case of level\\ \hline
-    GetODE2size() &     Index &      &      &     number of ODE2 equations in solver\\ \hline
-    GetODE1size() &     Index &      &      &     number of ODE1 equations in solver (not yet implemented)\\ \hline
+    GetODE2size() &     Index &      &      &     number of \hac{ODE2} equations in solver\\ \hline
+    GetODE1size() &     Index &      &      &     number of \hac{ODE1} equations in solver (not yet implemented)\\ \hline
     GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
     GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
     GetSystemJacobian() &     NumpyMatrix &      &      &     get locally stored / last computed system jacobian of solver\\ \hline
@@ -922,9 +922,9 @@ MainSolverImplicitSecondOrder has the following items:
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix\\ \hline
     ComputeJacobianODE2RHS(...) &     void &      &     mainSystem, scalarFactor=1. &     set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver\\ \hline
     ComputeJacobianODE2RHS\_t(...) &     \tabnewline void &      &     mainSystem, scalarFactor=1. &     add jacobian of ODE2RHS\_t (multiplied with factor) to systemJacobian in cSolver\\ \hline
-    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2\_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level\\ \hline
-    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)\\ \hline
-    ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)\\ \hline
+    ComputeJacobianAE(...) &     void &      &     mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=1., velocityLevel=false &     add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates and w.r.t. ODE2\_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level\\ \hline
+    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)\\ \hline
+    ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)\\ \hline
     ComputeAlgebraicEquations(...) &     \tabnewline void &      &     mainSystem, velocityLevel=false &     compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -978,8 +978,8 @@ MainSolverExplicit has the following items:
     WriteCoordinatesToFile(...) &     void &      &     mainSystem, simulationSettings &     write unique coordinates solution file\\ \hline
     IsVerboseCheck(...) &     bool &      &     level &     return true, if file or console output is at or above the given level\\ \hline
     VerboseWrite(...) &     void &      &     level, str &     write to console and/or file in case of level\\ \hline
-    GetODE2size() &     Index &      &      &     number of ODE2 equations in solver\\ \hline
-    GetODE1size() &     Index &      &      &     number of ODE1 equations in solver (not yet implemented)\\ \hline
+    GetODE2size() &     Index &      &      &     number of \hac{ODE2} equations in solver\\ \hline
+    GetODE1size() &     Index &      &      &     number of \hac{ODE1} equations in solver (not yet implemented)\\ \hline
     GetAEsize() &     Index &      &      &     number of algebraic equations in solver\\ \hline
     GetDataSize() &     Index &      &      &     number of data (history) variables in solver\\ \hline
     GetSystemMassMatrix() &     NumpyMatrix &      &      &     get locally stored / last computed mass matrix of solver\\ \hline
@@ -987,7 +987,7 @@ MainSolverExplicit has the following items:
     SetSystemMassMatrix(...) &     void &      &     systemMassMatrix &     set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE\\ \hline
     SetSystemResidual(...) &     void &      &     systemResidual &     set locally stored system residual; must have size nODE2+nODE1+nAE\\ \hline
     ComputeMassMatrix(...) &     void &      &     mainSystem, scalarFactor=1. &     compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix\\ \hline
-    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)\\ \hline
-    ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)\\ \hline
+    ComputeODE2RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)\\ \hline
+    ComputeODE1RHS(...) &     void &      &     mainSystem &     compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)\\ \hline
 	  \end{longtable}
 	\end{center}

@@ -433,8 +433,8 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 #   showLoads: toggle appearance of loads in mbs
 #   showSensors: toggle appearance of sensors in mbs
 #   useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
-#   useItemTypes: if True, object type names (ObjectMassPoint, ...) are shown instead of basic object types (Node, Load, ...)
-#**output: nothing
+#   useItemTypes: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+#**output: [nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, 
                     useItemNames = False, useItemTypes = False):
     
@@ -469,6 +469,11 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             
     G = nx.Graph()
     
+    showLegend = False
+    addItemNames = False #Object, Node, ... not added but legend added
+    if useItemTypes or useItemNames:
+        showLegend = True
+
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     itemType = 'Node'
     n = mbs.systemData.NumberOfNodes()
@@ -481,7 +486,9 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         if useItemNames:
             itemName=item['name']+str(i)
         elif useItemTypes:
-            itemName='Node'+item['nodeType']+str(i)
+            itemName=item['nodeType']+str(i)
+            if addItemNames:
+                itemName = 'Node' + itemName
     
     
         G.add_node(itemName) #attributes: size, weight, ...
@@ -500,7 +507,9 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         if useItemNames:
             itemName=item['name']+str(i)
         elif useItemTypes:
-            itemName='Marker'+item['markerType']+str(i)
+            itemName=item['markerType']+str(i)
+            if addItemNames:
+                itemName = 'Marker' + itemName
     
         G.add_node(itemName) #attributes: size, weight, ...
         markersToItems += [len(itemColorMap)]
@@ -525,7 +534,9 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         if useItemNames:
             itemName=item['name']+str(i)
         elif useItemTypes:
-            itemName='Object'+item['objectType']+str(i)
+            itemName=item['objectType']+str(i)
+            if addItemNames:
+                itemName = 'Object'+itemName
             
         G.add_node(itemName) #attributes: size, weight, ...
         objectsToItems += [len(itemColorMap)]
@@ -571,8 +582,6 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         nodeNumbers = []
         if 'nodeNumber' in item:
             nodeNumbers += [item['nodeNumber']]
-    #    if 'nodeNumbers' in item:
-    #        nodeNumbers += item['nodeNumbers']
        
         for j in range(len(nodeNumbers)):
             nodeNumbers[j] = int(nodeNumbers[j])
@@ -602,7 +611,9 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             if useItemNames:
                 itemName=item['name']+str(i)
             elif useItemTypes:
-                itemName='Load'+item['loadType']+str(i)
+                itemName=item['loadType']+str(i)
+                if addItemNames:
+                    itemName = 'Load'+itemName
         
             G.add_node(itemName) #attributes: size, weight, ...
             loadsToItems += [len(itemColorMap)]
@@ -626,7 +637,9 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             if useItemNames:
                 itemName=item['name']+str(i)
             elif useItemTypes:
-                itemName='Sensor'+item['sensorType']+str(i)
+                itemName=item['sensorType']+str(i)
+                if addItemNames:
+                    itemName = 'Sensor'+itemName
         
             G.add_node(itemName) #attributes: size, weight, ...
             sensorsToItems += [len(itemColorMap)]
@@ -651,7 +664,17 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
                    
             for j in nodeNumbers:
                 G.add_edge(itemNames[sensorsToItems[i]],itemNames[nodesToItems[j]],color=itemColors[itemType])
-    
+       
+    if showLegend:
+        legendColors = {'Node':'red', 'Object':'skyblue', 'Object(Connector)':'dodgerblue', 
+                      'Marker': 'orange', 'Load': 'mediumorchid', 
+                      'Sensor': 'forestgreen'} 
+        #f = plt.figure(1)
+        #ax = f.add_subplot(1,1,1)
+        for label in legendColors:
+            plt.plot([0],[0],linewidth=8,color=legendColors[label],label=label)
+        plt.legend(fontsize=10)
+
     
     #now get out the right sorting of colors ...
     edgeColorMap = []
@@ -661,17 +684,19 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         edgeColorMap += [item[1]['color']] #color is in item[1], which is a dictionary ...
         edgeWidth = 2
         if item[1]['color'] == objectNodeColor: #object-node should be emphasized
-            edgeWidth = 5
+            edgeWidth = 4
         edgeWidths += [edgeWidth]
     
-    pos = nx.drawing.spring_layout(G)
+    pos = nx.drawing.spring_layout(G, scale=0.5, k=3/sqrt(G.size()), threshold = 1e-5, iterations = 100)
     nx.draw_networkx_nodes(G, pos, node_size=1)
     nx.draw_networkx_edges(G, pos, edge_color=edgeColorMap, width=edgeWidths)#width=2)
     
     #reproduce what draw_networkx_labels does, allowing different colors for nodes
     #check: https://networkx.github.io/documentation/stable/_modules/networkx/drawing/nx_pylab.html
-    items = nx.draw_networkx_labels(G, pos, font_size=10,
-                                    bbox=dict(facecolor='skyblue', edgecolor='black', boxstyle='round,pad=0.1'))
+    items = nx.draw_networkx_labels(G, pos, font_size=10, clip_on=False, #clip at plot boundary
+                                    bbox=dict(facecolor='skyblue', edgecolor='black', 
+                                              boxstyle='round,pad=0.1', lw=10)) #lw is border size (no effect?)
+
     
     #now assign correct colors:
     for i in range(len(itemNames)):
@@ -691,11 +716,15 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
     
         #print("color=",currentColor)
         items[itemNames[i]].set_bbox(dict(facecolor=currentColor,  
-             edgecolor=currentColor, boxstyle=boxStyle))
+              edgecolor=currentColor, boxstyle=boxStyle))
         items[itemNames[i]].set_fontsize(fontSize)
     
+    plt.axis('off') #do not show frame, because usually some nodes are very close to frame ...
+    plt.tight_layout()
+    plt.margins(x=0.2, y=0.2) #larger margin, to avoid clipping of long texts
     plt.draw() #force redraw after colors have changed
     
+    return [nx, G, items]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

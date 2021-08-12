@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-07-01  09:10:52 (last modfied)
+* @date         2021-08-11  16:21:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -94,7 +94,7 @@ public: // AUTO:
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
 
-    //! AUTO:  return the ODE2 coordinate vectors (and derivative) of the attached object
+    //! AUTO:  return the \hac{ODE2} coordinate vectors (and derivative) of the attached object
     void GetObjectODE2Coordinates(const CSystemData& cSystemData, Vector& objectCoordinates, Vector& objectCoordinates_t) const;
 
 };

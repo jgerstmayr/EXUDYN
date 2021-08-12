@@ -1425,7 +1425,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiMbsTest.py}{\texttt{multiMbsTest.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial.py}{\texttt{rigidBodyTutorial.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial2.py}{\texttt{rigidBodyTutorial2.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py}{\texttt{fourBarMechanismRedundant.py}} (TM), 
@@ -1529,7 +1529,8 @@ rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0],
 %
 \noindent For examples on GraphicsDataBasis see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM)\ei
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -1767,7 +1768,10 @@ points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py}{\texttt{addPrismaticJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py}{\texttt{solutionViewerTest.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py}{\texttt{solutionViewerTest.py}} (Ex), 
+ ...
+, 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py}{\texttt{revoluteJointPrismaticJointTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}} (TM)\ei
 
@@ -1950,19 +1954,11 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \vspace{-22pt}\begin{itemize}[leftmargin=0.5cm]
 \setlength{\itemindent}{-0.5cm}
 \item[]   
-\item[]				[Bruels2011]     Bruels, O., Cardona, A.: Two Lie Group Formulations for Dynamic Multibody Systems With Large Rotations, Proceedings of the ASME 2011 International Design Engineering Technical Conferences \& Computers and Information in Engineering Conference IDETC/CIE 2011, August 28-31, 2011, Washington, USA
-\item[]               [Sonneville2014] Sonneville, V., Cardona A., Bruels, O.: Geometrically exact beam finite element formulated on the special Euclidean group SE(3)
-\item[]               [Sonneville2017] Sonneville, Bruels, O., Bauchau, O.A.: Interpolation schemes for geometrically exact beams: A motion approach.  International Journal for Numerical Methods in Engineering 112, 1129-1153 (2017)
-\item[]               [Terze2016]      Terze, Z., Mueller, A., Zlatar, D.: Singularity-free time integration of rotational quaternions using non-redundant ordinary differential equations. Multibody System Dynamics 38(3), 201-225 (2016)
-\item[]               [Henderson1977]  Henderson, D.: Euler angles, quaternions, and transformation matrices for space shuttle analysis. Tech. rep., NASA (1977)
-\item[]               [Holzinger2020]  Holzinger, S., Gerstmayr, J.: Explicit time integration of multibody systems modelled with three rotation parameters. In: Proceedings of the ASME 2020 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference IDETC/CIE2020, August 17-19. Virtual, Online (2020)
-\item[]               [Holzinger2021]  Holzinger, S., Gerstmayr, J.: Time integration of rigid bodies modelled with three rotation parameters, Multibody System Dynamics 2021
-\item[]               [Simo1988]       Simo, J.C., Vu-Quoc, L.: On the dynamics in space of rods undergoing large motions-A geometrically exact approach. Computer methods in applied mechanics and engineering 66, 125-161 (1988)
-\item[]               [Mueller2017]    Mueller, A.: Coordinate Mappings for Rigid Body Motions. Journal of Computational and Nonlinear Dynamics 12(2), 10 (2017)               
+\item[]               For details on Lie group methods used here, see the references \cite{Henderson1977, Simo1988, Bruels2011, Sonneville2014, Sonneville2017, Terze2016, Mueller2017}.               Lie group methods for rotation vector are described in Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020, Holzinger2021}.               
 \ei
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L49}{Sinc}{}}}\label{sec:lieGroupBasics:Sinc}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L42}{Sinc}{}}}\label{sec:lieGroupBasics:Sinc}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1971,7 +1967,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L61}{Cot}{}}}\label{sec:lieGroupBasics:Cot}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L54}{Cot}{}}}\label{sec:lieGroupBasics:Cot}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1980,7 +1976,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L69}{R3xSO3Matrix2RotationMatrix}{}}}\label{sec:lieGroupBasics:R3xSO3Matrix2RotationMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L62}{R3xSO3Matrix2RotationMatrix}{}}}\label{sec:lieGroupBasics:R3xSO3Matrix2RotationMatrix}
 ({\it G})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1989,7 +1985,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L77}{R3xSO3Matrix2Translation}{}}}\label{sec:lieGroupBasics:R3xSO3Matrix2Translation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L70}{R3xSO3Matrix2Translation}{}}}\label{sec:lieGroupBasics:R3xSO3Matrix2Translation}
 ({\it G})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1998,7 +1994,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L86}{R3xSO3Matrix}{}}}\label{sec:lieGroupBasics:R3xSO3Matrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L79}{R3xSO3Matrix}{}}}\label{sec:lieGroupBasics:R3xSO3Matrix}
 ({\it x}, {\it R})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2013,7 +2009,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L108}{ExpSO3}{}}}\label{sec:lieGroupBasics:ExpSO3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L101}{ExpSO3}{}}}\label{sec:lieGroupBasics:ExpSO3}
 ({\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2022,7 +2018,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L120}{ExpS3}{}}}\label{sec:lieGroupBasics:ExpS3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L113}{ExpS3}{}}}\label{sec:lieGroupBasics:ExpS3}
 ({\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2037,7 +2033,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L130}{LogSO3}{}}}\label{sec:lieGroupBasics:LogSO3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L123}{LogSO3}{}}}\label{sec:lieGroupBasics:LogSO3}
 ({\it R})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2046,7 +2042,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L147}{TExpSO3}{}}}\label{sec:lieGroupBasics:TExpSO3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L140}{TExpSO3}{}}}\label{sec:lieGroupBasics:TExpSO3}
 ({\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2055,7 +2051,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L167}{TExpSO3Inv}{}}}\label{sec:lieGroupBasics:TExpSO3Inv}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L160}{TExpSO3Inv}{}}}\label{sec:lieGroupBasics:TExpSO3Inv}
 ({\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2070,7 +2066,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L189}{ExpSE3}{}}}\label{sec:lieGroupBasics:ExpSE3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L182}{ExpSE3}{}}}\label{sec:lieGroupBasics:ExpSE3}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2079,7 +2075,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L200}{LogSE3}{}}}\label{sec:lieGroupBasics:LogSE3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L193}{LogSE3}{}}}\label{sec:lieGroupBasics:LogSE3}
 ({\it H})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2088,7 +2084,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L215}{TExpSE3}{}}}\label{sec:lieGroupBasics:TExpSE3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L208}{TExpSE3}{}}}\label{sec:lieGroupBasics:TExpSE3}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2097,7 +2093,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L241}{TExpSE3Inv}{}}}\label{sec:lieGroupBasics:TExpSE3Inv}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L234}{TExpSE3Inv}{}}}\label{sec:lieGroupBasics:TExpSE3Inv}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2106,7 +2102,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L265}{ExpR3xSO3}{}}}\label{sec:lieGroupBasics:ExpR3xSO3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L258}{ExpR3xSO3}{}}}\label{sec:lieGroupBasics:ExpR3xSO3}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2115,7 +2111,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L275}{TExpR3xSO3}{}}}\label{sec:lieGroupBasics:TExpR3xSO3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L268}{TExpR3xSO3}{}}}\label{sec:lieGroupBasics:TExpR3xSO3}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2124,7 +2120,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L284}{TExpR3xSO3Inv}{}}}\label{sec:lieGroupBasics:TExpR3xSO3Inv}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L277}{TExpR3xSO3Inv}{}}}\label{sec:lieGroupBasics:TExpR3xSO3Inv}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2133,7 +2129,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L307}{CompositionRuleDirectProductR3AndS3}{}}}\label{sec:lieGroupBasics:CompositionRuleDirectProductR3AndS3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L300}{CompositionRuleDirectProductR3AndS3}{}}}\label{sec:lieGroupBasics:CompositionRuleDirectProductR3AndS3}
 ({\it q0}, {\it incrementalMotionVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2148,7 +2144,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L329}{CompositionRuleSemiDirectProductR3AndS3}{}}}\label{sec:lieGroupBasics:CompositionRuleSemiDirectProductR3AndS3}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L322}{CompositionRuleSemiDirectProductR3AndS3}{}}}\label{sec:lieGroupBasics:CompositionRuleSemiDirectProductR3AndS3}
 ({\it q0}, {\it incrementalMotionVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2163,7 +2159,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L354}{CompositionRuleDirectProductR3AndR3RotVec}{}}}\label{sec:lieGroupBasics:CompositionRuleDirectProductR3AndR3RotVec}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L347}{CompositionRuleDirectProductR3AndR3RotVec}{}}}\label{sec:lieGroupBasics:CompositionRuleDirectProductR3AndR3RotVec}
 ({\it q0}, {\it incrementalMotionVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2185,7 +2181,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L378}{CompositionRuleSemiDirectProductR3AndR3RotVec}{}}}\label{sec:lieGroupBasics:CompositionRuleSemiDirectProductR3AndR3RotVec}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L371}{CompositionRuleSemiDirectProductR3AndR3RotVec}{}}}\label{sec:lieGroupBasics:CompositionRuleSemiDirectProductR3AndR3RotVec}
 ({\it q0}, {\it incrementalMotionVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2207,7 +2203,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L403}{CompositionRuleDirectProductR3AndR3RotXYZAngles}{}}}\label{sec:lieGroupBasics:CompositionRuleDirectProductR3AndR3RotXYZAngles}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L396}{CompositionRuleDirectProductR3AndR3RotXYZAngles}{}}}\label{sec:lieGroupBasics:CompositionRuleDirectProductR3AndR3RotXYZAngles}
 ({\it q0}, {\it incrementalMotionVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2229,7 +2225,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L427}{CompositionRuleSemiDirectProductR3AndR3RotXYZAngles}{}}}\label{sec:lieGroupBasics:CompositionRuleSemiDirectProductR3AndR3RotXYZAngles}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L420}{CompositionRuleSemiDirectProductR3AndR3RotXYZAngles}{}}}\label{sec:lieGroupBasics:CompositionRuleSemiDirectProductR3AndR3RotXYZAngles}
 ({\it q0}, {\it incrementalMotionVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2251,7 +2247,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L451}{CompositionRuleForEulerParameters}{}}}\label{sec:lieGroupBasics:CompositionRuleForEulerParameters}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L444}{CompositionRuleForEulerParameters}{}}}\label{sec:lieGroupBasics:CompositionRuleForEulerParameters}
 ({\it q}, {\it p})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2272,7 +2268,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L466}{CompositionRuleForRotationVectors}{}}}\label{sec:lieGroupBasics:CompositionRuleForRotationVectors}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L459}{CompositionRuleForRotationVectors}{}}}\label{sec:lieGroupBasics:CompositionRuleForRotationVectors}
 ({\it v0}, {\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2287,7 +2283,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L488}{CompositionRuleRotXYZAnglesRotationVector}{}}}\label{sec:lieGroupBasics:CompositionRuleRotXYZAnglesRotationVector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L481}{CompositionRuleRotXYZAnglesRotationVector}{}}}\label{sec:lieGroupBasics:CompositionRuleRotXYZAnglesRotationVector}
 ({\it alpha0}, {\it Omega})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3281,7 +3277,7 @@ GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffn
   \item[--]  {\bf function description}: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix  \item[--]  {\bf input}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-    \item[] {\it nodeType}: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters'
+    \item[] {\it nodeType}: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
     \item[] {\it    position}: reference position as list or numpy array with 3 components (in global/world frame)
     \item[] {\it    velocity}: initial translational velocity as list or numpy array with 3 components (in global/world frame)
     \item[] {\it    rotationMatrix}: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[])
@@ -3301,7 +3297,7 @@ GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffn
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
     \item[] {\it inertia}: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia
-    \item[] {\it    nodeType}: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters'
+    \item[] {\it    nodeType}: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
     \item[] {\it    position}: reference position as list or numpy array with 3 components (in global/world frame)
     \item[] {\it    velocity}: initial translational velocity as list or numpy array with 3 components (in global/world frame)
     \item[] {\it    rotationMatrix}: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[...],[...],[...]] (while rotationParameters=[]) or rotationParameters=[...] (while rotationMatrix=[])
@@ -3352,6 +3348,7 @@ GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffn
 \noindent For examples on AddRevoluteJoint see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py}{\texttt{solutionViewerTest.py}} (Ex)\ei
 
 %
@@ -3574,7 +3571,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \item[]Example: 	see ComputeJointHT for the definition of the 'robot' dictionary.
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L469}{StdDH2HT}{}}}\label{sec:robotics:StdDH2HT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L477}{StdDH2HT}{}}}\label{sec:robotics:StdDH2HT}
 ({\it DHparameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3589,7 +3586,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L575}{SerialRobot2MBS}{}}}\label{sec:robotics:SerialRobot2MBS}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L583}{SerialRobot2MBS}{}}}\label{sec:robotics:SerialRobot2MBS}
 ({\it mbs}, {\it robot}, {\it jointLoadUserFunctionList}, {\it baseMarker}, {\it *args}, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3625,7 +3622,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L778}{ComputeJointHT}{}}}\label{sec:robotics:ComputeJointHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L786}{ComputeJointHT}{}}}\label{sec:robotics:ComputeJointHT}
 ({\it robot}, {\it configuration})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3656,7 +3653,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L806}{ComputeCOMHT}{}}}\label{sec:robotics:ComputeCOMHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L814}{ComputeCOMHT}{}}}\label{sec:robotics:ComputeCOMHT}
 ({\it robot}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3671,7 +3668,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L823}{ComputeStaticTorques}{}}}\label{sec:robotics:ComputeStaticTorques}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L831}{ComputeStaticTorques}{}}}\label{sec:robotics:ComputeStaticTorques}
 ({\it robot}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3686,7 +3683,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L852}{Jacobian}{}}}\label{sec:robotics:Jacobian}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L860}{Jacobian}{}}}\label{sec:robotics:Jacobian}
 ({\it robot}, {\it HT}, {\it toolPosition}= [], {\it mode}= 'all')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3751,7 +3748,25 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L103}{GetBaseHT}{}}}\label{sec:robotics:Robot:GetBaseHT}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L103}{GetLink}{}}}\label{sec:robotics:Robot:GetLink}
+({\it self}, {\it i})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  \textcolor{steelblue}{\bf classFunction}: return Link object of link i\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L107}{NumberOfLinks}{}}}\label{sec:robotics:Robot:NumberOfLinks}
+({\it self})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  \textcolor{steelblue}{\bf classFunction}: return number of links\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L111}{GetBaseHT}{}}}\label{sec:robotics:Robot:GetBaseHT}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3760,7 +3775,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L107}{GetToolHT}{}}}\label{sec:robotics:Robot:GetToolHT}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L115}{GetToolHT}{}}}\label{sec:robotics:Robot:GetToolHT}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3769,7 +3784,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L111}{JointHT}{}}}\label{sec:robotics:Robot:JointHT}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L119}{JointHT}{}}}\label{sec:robotics:Robot:JointHT}
 ({\it self}, {\it q})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3778,7 +3793,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L139}{COMHT}{}}}\label{sec:robotics:Robot:COMHT}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L147}{COMHT}{}}}\label{sec:robotics:Robot:COMHT}
 ({\it self}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3787,7 +3802,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L148}{StaticTorques}{}}}\label{sec:robotics:Robot:StaticTorques}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L156}{StaticTorques}{}}}\label{sec:robotics:Robot:StaticTorques}
 ({\it self}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3796,7 +3811,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L169}{Jacobian}{}}}\label{sec:robotics:Robot:Jacobian}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L177}{Jacobian}{}}}\label{sec:robotics:Robot:Jacobian}
 ({\it self}, {\it HT}, {\it toolPosition}= [], {\it mode}= 'all')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3812,7 +3827,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L230}{CreateRedundantCoordinateMBS}{}}}\label{sec:robotics:Robot:CreateRedundantCoordinateMBS}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L238}{CreateRedundantCoordinateMBS}{}}}\label{sec:robotics:Robot:CreateRedundantCoordinateMBS}
 ({\it self}, {\it mbs}, {\it baseMarker}, {\it jointLoadUserFunctionList}= [], {\it createJointTorqueLoads}= True, {\it *args}, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3838,7 +3853,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L366}{GetLinkGraphicsData}{}}}\label{sec:robotics:Robot:GetLinkGraphicsData}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L374}{GetLinkGraphicsData}{}}}\label{sec:robotics:Robot:GetLinkGraphicsData}
 ({\it self}, {\it i}, {\it p0}, {\it p1}, {\it axis0}, {\it axis1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3847,7 +3862,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L416}{BuildFromDictionary}{}}}\label{sec:robotics:Robot:BuildFromDictionary}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics.py\#L424}{BuildFromDictionary}{}}}\label{sec:robotics:Robot:BuildFromDictionary}
 ({\it self}, {\it robotDict})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4559,8 +4574,8 @@ FindObjectIndex(2, locals() )  #usually sufficient
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py}{\texttt{rigidRotor3Dnutation.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py}{\texttt{SliderCrank.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py}{\texttt{rigidRotor3Dnutation.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py}{\texttt{revoluteJointPrismaticJointTest.py}} (TM), 
@@ -4621,19 +4636,20 @@ FindObjectIndex(2, locals() )  #usually sufficient
     \item[] {\it showLoads}: toggle appearance of loads in mbs
     \item[] {\it    showSensors}: toggle appearance of sensors in mbs
     \item[] {\it    useItemNames}: if True, object names are shown instead of basic object types (Node, Load, ...)
-    \item[] {\it    useItemTypes}: if True, object type names (ObjectMassPoint, ...) are shown instead of basic object types (Node, Load, ...)
+    \item[] {\it    useItemTypes}: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
   \end{itemize}
-  \item[--]  {\bf output}: nothing\vspace{12pt}\end{itemize}
+  \item[--]  {\bf output}: [nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)\vspace{12pt}\end{itemize}
 %
 %
 \noindent For examples on DrawSystemGraph see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial2.py}{\texttt{rigidBodyTutorial2.py}} (Ex)\ei
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial2.py}{\texttt{rigidBodyTutorial2.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L722}{GenerateStraightLineANCFCable2D}{}}}\label{sec:utilities:GenerateStraightLineANCFCable2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L751}{GenerateStraightLineANCFCable2D}{}}}\label{sec:utilities:GenerateStraightLineANCFCable2D}
 ({\it mbs}, {\it positionOfNode0}, {\it positionOfNode1}, {\it numberOfElements}, {\it cableTemplate}, {\it massProportionalLoad}= [0,0,0], {\it fixedConstraintsNode0}= [0,0,0,0], {\it fixedConstraintsNode1}= [0,0,0,0], {\it vALE}= 0, {\it ConstrainAleCoordinate}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4666,7 +4682,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L804}{GenerateSlidingJoint}{}}}\label{sec:utilities:GenerateSlidingJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L833}{GenerateSlidingJoint}{}}}\label{sec:utilities:GenerateSlidingJoint}
 ({\it mbs}, {\it cableObjectList}, {\it markerBodyPositionOfSlidingBody}, {\it localMarkerIndexOfStartCable}= 0, {\it slidingCoordinateStartPosition}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4681,7 +4697,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L830}{GenerateAleSlidingJoint}{}}}\label{sec:utilities:GenerateAleSlidingJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L859}{GenerateAleSlidingJoint}{}}}\label{sec:utilities:GenerateAleSlidingJoint}
 ({\it mbs}, {\it cableObjectList}, {\it markerBodyPositionOfSlidingBody}, {\it AleNode}, {\it localMarkerIndexOfStartCable}= 0, {\it AleSlidingOffset}= 0, {\it activeConnector}= True, {\it penaltyStiffness}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

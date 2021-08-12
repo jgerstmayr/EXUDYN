@@ -132,9 +132,18 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		value.SetVector(9, rot.GetDataPointer());
 		break;
 	}
-	case OutputVariableType::Rotation: {
-		Matrix3D rotMat = GetRotationMatrix(configuration);
-		Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
+	case OutputVariableType::Rotation: 
+	{
+		//old, does not reveal infinite rotations:
+		//Matrix3D rotMat = GetRotationMatrix(configuration);
+		//Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
+
+		Real phi = GetCoordinateVector(configuration)[0];
+		if (configuration != ConfigurationType::Reference) {
+			phi += GetCoordinateVector(ConfigurationType::Reference)[0];
+		}
+		Vector3D rot({0,0,phi});
+
 		value.SetVector(3, rot.GetDataPointer());
 		break;
 	}

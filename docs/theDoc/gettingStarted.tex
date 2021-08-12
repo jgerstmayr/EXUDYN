@@ -1,16 +1,35 @@
-
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%\mysection{Getting Started}
-The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
-as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver').
+\onlyRST{
+*A flexible multibody dynamics systems simulation code with Python and C++*
 
-\codeName\ is hosted on \exuUrl{https://github.com}{GitHub} \cite{EXUDYNgit}:
+This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
+It is auto-generated from .tex files (sorry for some conversion errors!). 
+Due to limitations for complex formulas and tables in .rst files, details of the reference manual and many other parts of the documentation are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !
+
+For license, see LICENSE.txt in the root folder!
+
+In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
+
+Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
+
+}
+
+\mysection{Getting Started}
+\ignoreRST{
+The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
+as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver'). \vspace{6pt} \\
+%
+Tutorial videos can be found in the \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx}{youtube channel of Exudyn} !
+}
+%
+\noindent \codeName\ is hosted on \exuUrl{https://github.com}{GitHub} \cite{EXUDYNgit}:
 \bi
- \item web: \exuUrl{https://github.com/jgerstmayr/EXUDYN}{https://github.com/jgerstmayr/EXUDYN}
+	\item web: \exuUrl{https://github.com/jgerstmayr/EXUDYN}{https://github.com/jgerstmayr/EXUDYN}
 \ei
+%
 For any comments, requests, issues, bug reports, send an email to: 
 \bi
-  \item email: \texttt{reply.exudyn@gmail.com}
+	\item email: \texttt{reply.exudyn@gmail.com}
 \ei
 Thanks for your contribution!
 
@@ -25,9 +44,9 @@ This section will show:
 	\item Run a simple example in Spyder
 	\item FAQ -- Frequently asked questions
 \en
-%
+
 \mysubsubsection{What is \codeName ?}
-\codeName -- {\small (fl{\bf EX}ible m{\bf U}ltibody {\bf DYN}amics  -- {\bf EX}tend yo{\bf U}r {\bf DYN}amics)}\vspace{6pt}\\
+\codeName -- {\small (fl\mybold{EX}ible m\mybold{U}ltibody \mybold{DYN}amics  -- \mybold{EX}tend yo\mybold{U}r \mybold{DYN}amics)}\vspace{6pt}\\
 \noindent \codeName\ is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
 It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
 The open source code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it is outdated regarding programming techniques and the numerical formulation.
@@ -36,22 +55,29 @@ The open source code HOTINT reached limits of further (efficient) development an
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see \refSection{sec:items}.
-%
+
 \mysubsubsection{Developers of \codeName\ and thanks}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
 In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT. 15 years of development led to a lot of lessions learned and after 20 years, a code must be re-designed.
 
-Some specific earlier code parts for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
-For the interoperability between C++ and Python, we extensively use {\bf \texttt{Pybind11}}\cite{pybind11}, originally written by Jakob Wenzel, see \texttt{https://github.com/pybind/pybind11}. Without {\bf \texttt{Pybind11}} we couldn't have made this project.
+Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
+For the interoperability between C++ and Python, we extensively use \mybold{\texttt{Pybind11}}\cite{pybind11}, originally written by Jakob Wenzel, see \texttt{https://github.com/pybind/pybind11}. Without \mybold{\texttt{Pybind11}} we couldn't have made this project -- Thank's a lot!
 
 Important discussions with researchers from the community were important for the design and development of \codeName , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who boosted the design of the code with great concepts. 
 %During a Comet-K2 cooperation project, several discussions with the TMECH/LCM group in Linz influenced the code development.
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
+The following people have contributed to Python and C++ library implementations:
+\bi
+	\item Stefan Holzinger (Lie group solvers in Python)
+	\item Peter Manzl (ConvexRoll Python / C++ implementation)
+	\item Martin Sereinig (special robotics functionality)
+\ei
+
 The following people have contributed to the examples:
 \bi
-	\item Stefan Holzinger, Michael Pieber, Joachim Sch{\"o}berl, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw{\"o}lfer
+	\item Stefan Holzinger, Michael Pieber, Joachim Sch{\"o}berl, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw{\"o}lfer, Peter Manzl
 \ei
 -- thanks a lot! --
 %
@@ -67,22 +93,22 @@ The following people have contributed to the examples:
 In order to run \codeName , you need an appropriate Python installation.
 We currently (2021-07) recommend to use
 \bi
-  \item {\bf Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}} (but Python 3.8 is also working well!)
-	\item {\bf Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are {\bf either} 32bit {\bf or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
+	\item \mybold{Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}} (but Python 3.8 is also working well!)
+	\item \mybold{Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are \mybold{either} 32bit \mybold{or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
 	There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}
 \ei
 Many alternative options exist:
 \bi
-  \item In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5)\footnote{Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
-	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
-	\item Users report successful use of \codeName\ with {\bf Visual Studio Code}. {\bf Jupyter} has been tested with some examples; both environments should work with default settings.
-	\item Anaconda 2020-11 with {\bf Python 3.8} and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since \codeName\ version 1.0.182.
-  \item Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
-	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are {\bf either} 32bit {\bf or} 64bit. 
+	\item In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5)\footnote{Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
+	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are \mybold{either} 32bit \mybold{or} 64bit. 
+	\item Users report successful use of \codeName\ with \mybold{Visual Studio Code}. \mybold{Jupyter} has been tested with some examples; both environments should work with default settings.
+	\item Anaconda 2020-11 with \mybold{Python 3.8} and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since \codeName\ version 1.0.182.
+	\item Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
+	%\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, python and exudyn are \mybold{either} 32bit \mybold{or} 64bit. 
 %Anaconda3-5.2.0-Windows-x86\_64.exe
 \ei
 If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
-Once again, remember that Python versions and the version of the \codeName\ module must be identical (e.g., Python 3.6 32 bit {\bf both} in the \codeName\ module and in Spyder).
+Once again, remember that Python versions and the version of the \codeName\ module must be identical (e.g., Python 3.6 32 bit \mybold{both} in the \codeName\ module and in Spyder).
 
 \paragraph{Installation without Anaconda:}
 If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:
@@ -96,7 +122,7 @@ You can install most of these packages using \texttt{pip install numpy} (Windows
 
 For interaction (right-mouse-click, some key-board commands) you need the python module \texttt{tkinter}. This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
 \bi
-  \item[] \texttt{sudo apt-get install python3-tk}
+	\item[] \texttt{sudo apt-get install python3-tk}
 \ei
 see also common blogs for your operating system.
 
@@ -109,9 +135,9 @@ see also common blogs for your operating system.
 %to your working directory and directly import the modules as described in tutorials and examples.
 %+++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Install with Windows MSI installer}
-The simplest way on Windows 10 (and maybe also Windows 7), which works well {\bf if you installed only one python version} and if you installed Anaconda with the option {\bf 'Register Anaconda as my default Python 3.x'} or similar, then you can use the provided \texttt{.msi} installers in the \texttt{main/dist} directory:
+The simplest way on Windows 10 (and maybe also Windows 7), which works well \mybold{if you installed only one python version} and if you installed Anaconda with the option \mybold{'Register Anaconda as my default Python 3.x'} or similar, then you can use the provided \texttt{.msi} installers in the \texttt{main/dist} directory:
 \bi
-  \item For the 64bits python 3.7 version, double click on (version may differ):\\ \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
+	\item For the 64bits python 3.7 version, double click on (version may differ):\\ \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
 	\item Follow the instructions of the installer
 	\item If python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:\\
 	\texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
@@ -119,49 +145,47 @@ The simplest way on Windows 10 (and maybe also Windows 7), which works well {\bf
 
 %+++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Install from Wheel (UBUNTU and Windows)}
-The {\bf standard way to install} the python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}) provided at the directory wheels in the \codeName\ repository. 
+The \mybold{standard way to install} the python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}) provided at the directory wheels in the \codeName\ repository. 
 \vspace{6pt}\\
 For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
 \bi
-  \item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp36-cp36-linux\_x86\_64.whl
+	\item \texttt{Python 3.6, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp36-cp36-linux\_x86\_64.whl
 \ei
 For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
 \bi
-  \item \texttt{Python 3.8, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp38-cp38-linux\_x86\_64.whl
+	\item \texttt{Python 3.8, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp38-cp38-linux\_x86\_64.whl
 \ei
 NOTE that your installation may have environments with different python versions, so install that \codeName\ version appropriately!
 If the wheel installation does not work on UBUNTU, it is highly recommended to build \codeName\ for your specific system as given in \refSection{sec:build:ubuntu}.
 
-\noindent {\bf Windows}:\vspace{6pt}\\
+\noindent \mybold{Windows}:\vspace{6pt}\\
 First, open an Anaconda prompt:
 \bi
-  \item EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
+	\item EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
 	\item You can check your python version then, by running \texttt{python}\footnote{\texttt{python3} under UBUNTU 18.04}, the output reads like:
 	\bi
-	  \item[] \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
-		\item[] ...
+  	\item[] \texttt{Python 3.6.5 $|$Anaconda, Inc.$|$ (default, Mar 29 2018, 13:32:41) $[$MSC v.1900 64 bit (AMD64)$]$ on win32}
+  	\item[] ...
 	\ei
 	\item $\ra$ type \texttt{exit()} to close python
 \ei
 
-\noindent {\bf Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
+\noindent \mybold{Go to the folder \texttt{Exudyn\_git/main}} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
 
 For Windows the installation commands may read (version number 1.0.20 may be different):
 \bi
-  \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win32.whl
-  \item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win\_amd64.whl
-  \item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp37-cp37m-win\_amd64.whl
+	\item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win32.whl
+	\item \texttt{Python 3.6, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win\_amd64.whl
+	\item \texttt{Python 3.7, 64bit}: pip install dist$\backslash$exudyn-1.0.20-cp37-cp37m-win\_amd64.whl
 \ei
 
 %+++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Work without installation and editing \texttt{sys.path}}
-The {\bf uncommon and old way} ($\ra$ not recommended for \codeName\ versions $\ge$ 1.0.0) is to use Python's \texttt{sys} module to link to your \texttt{exudyn} (previously \texttt{WorkingRelease}) directory, for example:\vspace{6pt}\\
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=1]
+The \mybold{uncommon and old way} ($\ra$ not recommended for \codeName\ versions $\ge$ 1.0.0) is to use Python's \texttt{sys} module to link to your \texttt{exudyn} (previously \texttt{WorkingRelease}) directory, for example:%\vspace{6pt}\\
+\pythonstyle\begin{lstlisting}
   import sys
   sys.path.append('C:/DATA/cpp/EXUDYN_git/bin/EXUDYN32bitsPython36')
 \end{lstlisting}
-%  sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
 %
 The folder \texttt{EXUDYN32bitsPython36} needs to be adapted to the location of the according \codeName\ package.
 %In case of 64bit, it must be changed to \texttt{.... /bin/WorkingRelease64}.
@@ -174,14 +198,14 @@ The folder \texttt{EXUDYN32bitsPython36} needs to be adapted to the location of 
 \label{sec:build:windows}
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 \bi
-  \item install your Anaconda distribution including Spyder
-  \item close all Python programs (e.g. Spyder, Jupyter, ...)
+	\item install your Anaconda distribution including Spyder
+	\item close all Python programs (e.g. Spyder, Jupyter, ...)
 	\item run an Anaconda prompt (may need to be run as administrator)
 	\item if you cannot run Anaconda prompt directly, do:
 	\bi
-	  \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary)
-		\item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts})
-	  \item run 'activate.bat'
+  	\item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary)
+  	\item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts})
+  	\item run 'activate.bat'
 	\ei
 	\item go to 'main' of your cloned github folder of exudyn
 	\item run: \texttt{python setup.py install}
@@ -189,7 +213,7 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 \ei
 You can also create your own wheels, doing the above steps to activate the according python version and then calling (requires installation of Microsoft Visual Studio; recommended: VS2017):
 \bi
-  \item[] \texttt{python setup.py bdist\_wheel}
+	\item[] \texttt{python setup.py bdist\_wheel}
 \ei
 This will add a wheel in the \texttt{dist} folder.
 
@@ -200,10 +224,10 @@ This will add a wheel in the \texttt{dist} folder.
 Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda installation.
 
-\noindent {\bf Tested configuration}:
+\noindent \mybold{Tested configuration}:
 \bi
-  \item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory
-  \item Anaconda Navigator 1.9.7
+	\item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory
+	\item Anaconda Navigator 1.9.7
 	\item Python 3.7.0
 	\item Spyder 3.3.6
 \ei
@@ -214,7 +238,7 @@ For a compatible Mac OS X system, you can install the pre-compiled wheel (go to 
 
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \texttt{main} directory of your repository and type
 \bi
-  \item \texttt{python setup.py bdist\_wheel}
+	\item \texttt{python setup.py bdist\_wheel}
 	\item[] $\ra$ this compiles and takes approx.~5 minutes, depending on your machine
 	\item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Callsing that again will finalize linking; then run again
 	\item[] \texttt{python setup.py bdist\_wheel}
@@ -225,7 +249,7 @@ If you would like to compile from source, just use a bash terminal on your Mac, 
 \ei
 Then just go to the \texttt{pythonDev/Examples} folder and run an example:
 \bi
-  \item[] \texttt{python springDamperUserFunctionTest.py}
+	\item[] \texttt{python springDamperUserFunctionTest.py}
 \ei
 If you have a new system, try to adapt \texttt{setup.py} accordingly, e.g., activating the \texttt{-std=c++17} support.
 If there are other issues, we are happy to receive your detailed bug reports. 
@@ -241,55 +265,60 @@ in order to interact with the render window, as there is only a single-threaded 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under UBUNTU?}
 \label{sec:build:ubuntu}
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python {\bf 3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \texttt{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python \mybold{3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \texttt{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
 
 \noindent First update ...
-\begin{lstlisting}[firstnumber=1]
-sudo apt-get update
+\plainlststyle
+\begin{lstlisting}
+  sudo apt-get update
 \end{lstlisting}
 
-\noindent Install necessary python libraries and pip3; \texttt{matplotlib} and\texttt{scipy} are not required for installation but used in \codeName\ examples:
-\begin{lstlisting}[firstnumber=1]
-sudo dpkg --configure -a
-sudo apt install python3-pip
-pip3 install numpy
-pip3 install matplotlib
-pip3 install scipy
+\noindent 
+Install necessary python libraries and pip3; \texttt{matplotlib} and\texttt{scipy} are not required for installation but used in \codeName\ examples:
+\begin{lstlisting}
+  sudo dpkg --configure -a
+  sudo apt install python3-pip
+  pip3 install numpy
+  pip3 install matplotlib
+  pip3 install scipy
 \end{lstlisting}
 
 \noindent Install pybind11 (needed for running the setup.py file derived from the pybind11 example):
-\begin{lstlisting}[firstnumber=1]
-pip3 install pybind11
+\begin{lstlisting}
+  pip3 install pybind11
 \end{lstlisting}
 
-\noindent If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefinitions.h}), you must install the according GLFW and OpenGL libs:
-\begin{lstlisting}[firstnumber=1]
-sudo apt-get install freeglut3 freeglut3-dev
-sudo apt-get install mesa-common-dev
-sudo apt-get install libglfw3 libglfw3-dev
-sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
+\noindent 
+If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefinitions.h}), you must install the according GLFW and OpenGL libs:
+\begin{lstlisting}
+  sudo apt-get install freeglut3 freeglut3-dev
+  sudo apt-get install mesa-common-dev
+  sudo apt-get install libglfw3 libglfw3-dev
+  sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
 \end{lstlisting}
 
-\noindent With all of these libs, you can run the setup.py installer (go to \texttt{Exudyn\_git/main} folder), which takes some minutes for compilation (the --user option is used to install in local user folder):
-\begin{lstlisting}[firstnumber=1]
-sudo python3 setup.py install --user
+\noindent 
+With all of these libs, you can run the setup.py installer (go to \texttt{Exudyn\_git/main} folder), which takes some minutes for compilation (the --user option is used to install in local user folder):
+\begin{lstlisting}
+  sudo python3 setup.py install --user
 \end{lstlisting}
 
-\noindent Congratulation! {\bf Now, run a test example} (will also open an OpenGL window if successful):
+\noindent 
+Congratulation! \mybold{Now, run a test example} (will also open an OpenGL window if successful):
 \bi
-  \item[] \texttt{python3 pythonDev/Examples/rigid3Dexample.py}
+	\item[] \texttt{python3 pythonDev/Examples/rigid3Dexample.py}
 \ei
 
 \noindent You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same python version (e.g., 3.6):
 \bi
-  \item[] \texttt{sudo pip3 install wheel}
-  \item[] \texttt{sudo python3 setup.py bdist\_wheel}
+	\item[] \texttt{sudo pip3 install wheel}
+	\item[] \texttt{sudo python3 setup.py bdist\_wheel}
 \ei
 
-\noindent {\bf KNOWN issues for linux builds}:
+\noindent \mybold{KNOWN issues for linux builds}:
 \bi
-  \item Using {\bf WSL2} (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
-  \item {\bf compiler (gcc,g++) conflicts}: It seems that \codeName works well on UBUNTU18.04 with the original \texttt{Python 3.6.9} and \texttt{gcc-7.5.0} version as well as with UBUNTU20.04 with \texttt{Python 3.8.5} and \texttt{gcc-9.3.0}. Upgrading \texttt{gcc} on a linux system with Python 3.6 to, e.g., \texttt{gcc-8.2} showed us a linker error when loading the \codeName\ module in python -- there are some common restriction using \texttt{gcc} versions different from those with which the Python version has been built. Starting \texttt{python} or \texttt{python3} on your linux machine shows you the \texttt{gcc} version it had been build with.
+	\item Using \mybold{WSL2} (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
+	\item \mybold{compiler (gcc,g++) conflicts}: It seems that \codeName works well on UBUNTU18.04 with the original \texttt{Python 3.6.9} and \texttt{gcc-7.5.0} version as well as with UBUNTU20.04 with \texttt{Python 3.8.5} and \texttt{gcc-9.3.0}. Upgrading \texttt{gcc} on a linux system with Python 3.6 to, e.g., \texttt{gcc-8.2} showed us a linker error when loading the \codeName\ module in python -- there are some common restriction using \texttt{gcc} versions different from those with which the Python version has been built. Starting \texttt{python} or \texttt{python3} on your linux machine shows you the \texttt{gcc} version it had been build with.
 	Check your current \texttt{gcc} version with: \texttt{gcc --version}
 \ei
 
@@ -298,33 +327,34 @@ sudo python3 setup.py install --user
 
 To uninstall exudyn under Windows, run (may require admin rights):
 \bi
-  \item[] \texttt{pip uninstall exudyn}
+	\item[] \texttt{pip uninstall exudyn}
 \ei
 \noindent To uninstall under UBUNTU, run:
 \bi
-  \item[] \texttt{sudo pip3 uninstall exudyn}
+	\item[] \texttt{sudo pip3 uninstall exudyn}
 \ei
 
 If you upgrade to a newer version, uninstall is usually not necessary!
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{How to install \codeName\ and using the C++ code (advanced)?}
+
+\mysubsubsection{How to install \codeName\ and use the C++ source code (advanced)?}
 \codeName\ is still under intensive development of core modules.
-There are several ways to using the code, but you {\bf cannot} install \codeName\ as compared to other executable programs and apps.
+There are several ways of using the code, but you \mybold{cannot} install \codeName\ as compared to other executable programs and apps.
 \vspace{6pt}\\
-%{\bf Ways to use \codeName }:
+%\mybold{Ways to use \codeName }:
 In order to make full usage of the C++ code and extending it, you can use:
 \bi
 	\item Windows / Microsoft Visual Studio 2017 and above:
 	\bi
-		\item get the files from git
-		\item put them into a local directory (recommended: \texttt{C:/DATA/cpp/EXUDYN\_git})
-		\item start \texttt{main\_sln.sln} with Visual Studio
-		\item compile the code and run \texttt{main/pythonDev/pytest.py} example code
-		\item adapt \texttt{pytest.py} for your applications
-		\item extend the C++ source code
-		\item link it to your own code
-		\item NOTE: on Linux systems, you mostly need to replace '$/$' with '$\backslash$'
+  	\item get the files from git
+  	\item put them into a local directory (recommended: \texttt{C:/DATA/cpp/EXUDYN\_git})
+  	\item start \texttt{main\_sln.sln} with Visual Studio
+  	\item compile the code and run \texttt{main/pythonDev/pytest.py} example code
+  	\item adapt \texttt{pytest.py} for your applications
+  	\item extend the C++ source code
+  	\item link it to your own code
+  	\item NOTE: on Linux systems, you mostly need to replace '$/$' with '$\backslash$'
 	\ei
 	\item Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
 \ei
@@ -335,7 +365,7 @@ In order to make full usage of the C++ code and extending it, you can use:
 \mysubsubsection{Goals of \codeName}
 After the first development phase (2019-2020), it shall
 \bi
-  \item be a small multibody library, which can be easily linked to other projects,
+	\item be a small multibody library, which can be easily linked to other projects,
 	\item allow to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
 	\item allow to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$,
 	\item safe and widely accessible module for Python,
@@ -344,10 +374,10 @@ After the first development phase (2019-2020), it shall
 \ei
 Future goals are:
 \bi
-  \item extend tests,
+	\item extend tests,
 	\item add more multi-threaded parallel computing techniques (first trials implemented, improvements planned: Q3 2021),
 	\item add vectorization,
-  \item add specific and advanced connectors/constraints (3D revolute joint and prismatic joint instead of generic joint, extended wheels,
+	\item add specific and advanced connectors/constraints (3D revolute joint and prismatic joint instead of generic joint, extended wheels,
 	contact, control connector)
 	\item more interfaces for robotics,
 	\item add 3D beams,
@@ -361,34 +391,33 @@ For specific open issues, see \texttt{trackerlog.html}.
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if \codeName\ runs on your computer.
 
 In order to start, run the python interpreter Spyder.
-For the following example, either 
+For the following example, 
 \bi
-	\item open Spyder and copy the example provided in Listing \ref{lst:firstexample} into a new file, or
+\ignoreRST{
+	\item open Spyder and copy the example provided in Listing \ref{lst:firstexample} into a new file, or}
 	\item open \texttt{myFirstExample.py} from your \texttt{EXUDYN32bitsPython36}\footnote{or any other directory according to your python version} directory
 \ei
 Hereafter, press the play button or \texttt{F5} in Spyder.
 %\lstinputlisting[language=Python]{../../main/bin/WorkingRelease/myFirstExample.py}
+\ignoreRST{
 \pythonexternal[language=Python, frame=single, float, label=lst:firstexample, caption=My first example]{../../main/pythonDev/Examples/myFirstExample.py}
+}
 
 If successful, the IPython Console of Spyder will print something like:
-\plainlststyle
-{\ttfamily \footnotesize
 \begin{lstlisting}
-runfile('C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36/myFirstExample.py', 
-  wdir='C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36')
-+++++++++++++++++++++++++++++++
-EXUDYN V1.0.1 solver: implicit second order time integration
-STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
-solver finished after 0.0007824 seconds.
+  runfile('C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36/myFirstExample.py', 
+    wdir='C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36')
+  +++++++++++++++++++++++++++++++
+  EXUDYN V1.0.1 solver: implicit second order time integration
+  STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
+  solver finished after 0.0007824 seconds.
 \end{lstlisting}
   %runfile('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease/myFirstExample.py', 
 	  %wdir='C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease')
-}
 
 If you check your current directory (where \texttt{myFirstExample.py} lies), you will find a new file \texttt{coordinatesSolution.txt}, which contains the results of your computation (with default values for time integration).
 The beginning and end of the file should look like: \vspace{6pt}\\
-{\ttfamily \footnotesize
-\begin{lstlisting}[breaklines=true]
+\begin{lstlisting}
   #Exudyn generalized alpha solver solution file
   #simulation started=2019-11-14,20:35:12
   #columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations, AE coordinates, ODE2 velocities
@@ -413,7 +442,6 @@ The beginning and end of the file should look like: \vspace{6pt}\\
   #simulation finished=2019-11-14,20:35:12
   #Solver Info: errorOccurred=0,converged=1,solutionDiverged=0,total time steps=100,total Newton iterations=100,total Newton jacobians=100
 \end{lstlisting}
-}
 
 Within this file, the first column shows the simulation time and the following columns provide solution of coordinates, their derivatives and Lagrange multipliers on system level. As expected, the $x$-coordinate of the point mass has constant acceleration $a=f/m=0.001/10=0.0001$, the velocity grows up to $0.0001$ after 1 second and the point mass moves $0.00005$ along the $x$-axis.
 %
@@ -423,148 +451,132 @@ Within this file, the first column shows the simulation time and the following c
 \mysubsection{Trouble shooting and FAQ}
 
 \mysubsubsection{Trouble shooting}
-\noindent {\bf Python import errors}:
+\noindent \mybold{Python import errors}:
 \bi
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Sometimes the \codeName\ module cannot be loaded into Python. Typical {\bf error messages if Python versions are not compatible} are: \vspace{1pt}\\
+	\item Sometimes the \codeName\ module cannot be loaded into Python. Typical \mybold{error messages if Python versions are not compatible} are: \vspace{1pt}\\
 \plainlststyle
-{\ttfamily \footnotesize
-\begin{lstlisting}[breaklines=true]
-Traceback (most recent call last):
+\begin{lstlisting}
+  Traceback (most recent call last):
 
-  File "<ipython-input-14-df2a108166a6>", line 1, in <module>
-    import exudynCPP
+    File "<ipython-input-14-df2a108166a6>", line 1, in <module>
+      import exudynCPP
 
-ImportError: Module use of python36.dll conflicts with this version of Python.
+  ImportError: Module use of python36.dll conflicts with this version of Python.
 \end{lstlisting}
-}%\vspace{12pt}\\
-Typical {\bf error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
-{\ttfamily \footnotesize
-\begin{lstlisting}[breaklines=true]
-Traceback (most recent call last):
-
-  File "<ipython-input-2-df2a108166a6>", line 1, in <module>
-    import exudynCPP
-
-ImportError: DLL load failed: \%1 is not a valid Win32 application.
-\end{lstlisting}
-}
 %
-	\item[] {\bf There are several reasons and workarounds}:
-	  \item You mixed up 32 and 64 bits (see below) version
-		\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
-		\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
-		A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors {\bf do not support AVX2}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
-		$\ra$ {\bf workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
-	  \item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
+Typical \mybold{error messages if 32/64 bits versions are mixed}:\vspace{1pt}\\
+\begin{lstlisting}
+  Traceback (most recent call last):
+  
+    File "<ipython-input-2-df2a108166a6>", line 1, in <module>
+      import exudynCPP
+
+  ImportError: DLL load failed: \%1 is not a valid Win32 application.
+\end{lstlisting}
+%
+\item[$\ra$] \mybold{There are several reasons and workarounds}:
+\item You mixed up 32 and 64 bits version (see below) 
+\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
+\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
+    A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors \mybold{do not support AVX2}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
+		$\ra$ \mybold{workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+\item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
 \ei
 \newpage
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\noindent {\bf Typical Python errors}:
+\noindent \mybold{Typical Python errors}:
 \bi
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Python {\bf syntax errors} with missing braces
-%\plainlststyle
-\pythonstyle
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[language=Python, breaklines=true]
+	\item Python \mybold{syntax errors} with missing braces
+\plainlststyle
+\begin{lstlisting}
 File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py", line 42
     nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
            ^
 SyntaxError: invalid syntax
-	\end{lstlisting}
-	}
+\end{lstlisting}
 	\item[] $\ra$ such an error points to the line of your code (line 42), but in fact the error may have
 	been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[language=Python, breaklines=true, firstnumber=38, numbers=left]
-n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-                     initialCoordinates = [u0,0,0], 
-                     initialVelocities= [v0,0,0])	
-#ground node
-nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
-  \end{lstlisting}
-	}
+\pythonstyle\begin{lstlisting}
+  38  n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
+  39                       initialCoordinates = [u0,0,0], 
+  40                       initialVelocities= [v0,0,0])	
+  41  #ground node
+  42  nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
+  43  
+\end{lstlisting}
 %
 %
-  \item Typical Python {\bf import error} message on Linux / UBUNTU if Python modules are missing:
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[breaklines=true]
-Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 
-Error when executing process ShowVisualizationSettingsDialog':
-ModuleNotFoundError: No module named 'tkinter'
-		\end{lstlisting}}
-	$\ra$ see installation instructions to install missing Python modules, \refSection{sec:installationInstructions}.
+	\item Typical Python \mybold{import error} message on Linux / UBUNTU if Python modules are missing:
+\plainlststyle
+\begin{lstlisting}
+  Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 
+  Error when executing process ShowVisualizationSettingsDialog':
+  ModuleNotFoundError: No module named 'tkinter'
+\end{lstlisting}
+$\ra$ see installation instructions to install missing Python modules, \refSection{sec:installationInstructions}.
 \ei 
 
 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\noindent {\bf Typical solver errors}:
+\noindent \mybold{Typical solver errors}:
 \bi
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Typical {\bf solver error due to redundant constraints or missing inertia terms}, could read as follows:
-\plainlststyle
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[language=Python, breaklines=true]
-=========================================
-SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 207]: 
-CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
-  time/load step #1, time = 0.0002
-  causing system equation number (coordinate number) = 42
+	\item Typical \mybold{solver error due to redundant constraints or missing inertia terms}, could read as follows:
+%\plainlststyle
+	%{\ttfamily \footnotesize
+	%\begin{lstlisting}[language=Python, breaklines=true]
+\begin{lstlisting}
+  =========================================
+  SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 207]: 
+  CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
+    time/load step #1, time = 0.0002
+    causing system equation number (coordinate number) = 42
 
-=========================================
-	\end{lstlisting}
-	}
-	\item[] $\ra$ this solver error shows that equation 42 is not solvable. The according coordinate is 
+  =========================================
+\end{lstlisting}
+	\item[$\ra$]  this solver error shows that equation 42 is not solvable. The according coordinate is 
 	shown later in such an error message:
-\plainlststyle
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[breaklines=true]
-...
-The causing system equation 42 belongs to a algebraic variable (Lagrange multiplier)
-Potential object number(s) causing linear solver to fail: [7]
-    object 7, name='object7', type=JointGeneric
-	\end{lstlisting}
-	}
-	\item[] $\ra$ object 7 seems to be the reason, possibly there are too much (joint) constraints applied
+\begin{lstlisting}
+  ...
+  The causing system equation 42 belongs to a algebraic variable (Lagrange multiplier)
+  Potential object number(s) causing linear solver to fail: [7]
+      object 7, name='object7', type=JointGeneric
+\end{lstlisting}
+	\item[$\ra$] object 7 seems to be the reason, possibly there are too much (joint) constraints applied
 	to your system, check this object.
-	\item[] $\ra$ show typical REASONS and SOLUTIONS, by using \texttt{showHints=True} in \texttt{exu.SolveDynamic(...)} or 
+	\item[$\ra$] show typical REASONS and SOLUTIONS, by using \texttt{showHints=True} in \texttt{exu.SolveDynamic(...)} or 
 	\texttt{exu.SolveStatic(...)}
-	\item[] $\ra$ You can also {\bf highlight} object 7 by using the following code in the iPython console:
-\pythonstyle
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[breaklines=true]
-exu.StartRenderer()
-HighlightItem(SC,mbs,7)
-	\end{lstlisting}
-	}
-\plainlststyle
-	\item[] which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the 
-	command's description for further options, e.g., to highlight nodes.
+	\item[$\ra$] You can also \mybold{highlight} object 7 by using the following code in the iPython console:
+\pythonstyle\begin{lstlisting}
+  exu.StartRenderer()
+  HighlightItem(SC,mbs,7)
+\end{lstlisting}
+which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command's description for further options, e.g., to highlight nodes.
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \vspace{12pt}\\
-  \item Typical {\bf solver error if Newton does not converge}:
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[breaklines=true]
-+++++++++++++++++++++++++++++++
-EXUDYN V1.0.200 solver: implicit second order time integration
-  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.079958, time = 2
-  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0707764, time = 1
-  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0185745, time = 0.5
-  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.332953, time = 0.5
-  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0783815, time = 0.375
-  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0879718, time = 0.3125
-  Newton (time/load step #2): convergence failed after 25 iterations; relative error = 2.84704e-06, time = 0.28125
-  Newton (time/load step #3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125
-STEP348, t = 20 sec, timeToGo = 0 sec, Nit/step = 7.00575
-solver finished after 0.258349 seconds.
-	\end{lstlisting}
-	}
+	\item Typical \mybold{solver error if Newton does not converge}:
+\plainlststyle
+\begin{lstlisting}
+  +++++++++++++++++++++++++++++++
+  EXUDYN V1.0.200 solver: implicit second order time integration
+    Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.079958, time = 2
+    Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0707764, time = 1
+    Newton (time/load step #1): convergence failed after 25 iterations; relative error = 0.0185745, time = 0.5
+    Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.332953, time = 0.5
+    Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0783815, time = 0.375
+    Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0879718, time = 0.3125
+    Newton (time/load step #2): convergence failed after 25 iterations; relative error = 2.84704e-06, time = 0.28125
+    Newton (time/load step #3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125
+  STEP348, t = 20 sec, timeToGo = 0 sec, Nit/step = 7.00575
+  solver finished after 0.258349 seconds.
+\end{lstlisting}
 	\item[] $\ra$ this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
 	\item[] $\ra$ The static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
 	\item[] $\ra$ possible reasons are: too large time steps (reduce step size by using more steps/second), 
@@ -573,31 +585,29 @@ solver finished after 0.258349 seconds.
 	Sometimes a system may be just unsolvable in the way you set it up.
 \vspace{12pt}\\
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Typical solver error if (e.g., syntax) {\bf error in user function} (output may be very long, {\bf read always message on top!}):
-	{\ttfamily \footnotesize
-	\begin{lstlisting}[breaklines=true]
-=========================================
-SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 214]: 
-Error in python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
-NameError: name 'sin' is not defined
+	\item Typical solver error if (e.g., syntax) \mybold{error in user function} (output may be very long, \mybold{read always message on top!}):
+\begin{lstlisting}
+  =========================================
+  SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 214]: 
+  Error in python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
+  NameError: name 'sin' is not defined
 
-At:
-  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(48): Sweep
-  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(54): userLoad
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py(214): SolveDynamic
-  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(106): <module>
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(377): exec_code
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(476): runfile
-  <ipython-input-14-323569bebfb4>(1): <module>
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\IPython\core\interactiveshell.py(3331): run_code
-...
-...
-; check your python code!
-=========================================
+  At:
+    C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(48): Sweep
+    C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(54): userLoad
+    C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py(214): SolveDynamic
+    C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(106): <module>
+    C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(377): exec_code
+    C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(476): runfile
+    <ipython-input-14-323569bebfb4>(1): <module>
+    C:\ProgramData\Anaconda3_64b37\lib\site-packages\IPython\core\interactiveshell.py(3331): run_code
+  ...
+  ...
+  ; check your python code!
+  =========================================
 
-Solver stopped! use showHints=True to show helpful information
-	\end{lstlisting}
-	}
+  Solver stopped! use showHints=True to show helpful information
+\end{lstlisting}
 	\item[] $\ra$ this indicates an error in the user function \texttt{LoadCoordinate::loadVectorUserFunction}, because
 	\texttt{sin} function has not been defined (must be imported, e.g., from \texttt{math}).
 	It indicates that the error occurred in line 48 in \texttt{springDamperUserFunctionTest.py} within function \texttt{Sweep},
@@ -606,7 +616,7 @@ Solver stopped! use showHints=True to show helpful information
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{FAQ}
-{\bf Some frequently asked questions}:
+\mybold{Some frequently asked questions}:
 \bn
   %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -615,13 +625,13 @@ Solver stopped! use showHints=True to show helpful information
 	  %\item You mixed up 32 and 64 bits (see below) version
 		%\item You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
 		%\item \texttt{ModuleNotFoundError: No module named 'exudynCPP'}:\\
-		%A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX; however, low-cost Celeron and Pentium processors {\bf will not support AVX}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
-		%$\ra$ {\bf workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+		%A known reason is that your CPU\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, espcially Zen and Zen-2 architectures should have no problems with AVX; however, low-cost Celeron and Pentium processors \mybold{will not support AVX}, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this} does not support AVX2, while exudyn is compiled with the AVX2 option; \\
+		%$\ra$ \mybold{workaround} to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
 	  %\item[] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
 	%\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item When importing \codeName\ in python (windows) I get an error $\ra$ see trouble shooting instructions above!
+	\item When importing \codeName\ in python (windows) I get an error $\ra$ see trouble shooting instructions above!
 %{\ttfamily \footnotesize
 %\begin{lstlisting}[breaklines=true]
 %Traceback (most recent call last):
@@ -629,10 +639,10 @@ Solver stopped! use showHints=True to show helpful information
     %import exudyn as exu
   %ImportError: DLL load failed: %1 is no valid Win32 application.
 %\end{lstlisting}}
-	%$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be {\bf BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have {\bf BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
+	%$\ra$ probably this is a 32/64bit problem. Your Python installation and \codeName\ need to be \mybold{BOTH} either 64bit OR 32bit (Check in your python help; exudyn in WorkingRelease64 is the 64bit version, in WorkingRelease it is the 32bit version) and the Python installation and \codeName\ need to have \mybold{BOTH} the same version and 1$\mathrm{st}$ subversion number (e.g., 3.6.5 should be compatible with 3.6.2).
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item I do not understand the python errors -- how can I find the reason of the error or crash?
+	\item I do not understand the python errors -- how can I find the reason of the error or crash?
 	\bi
 	\item[$\ra$] Read trouble shooting section above!	
 	\item[$\ra$] First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
@@ -641,18 +651,18 @@ Solver stopped! use showHints=True to show helpful information
 	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Spyder console hangs up, does not show error messages, ...:\\
+	\item Spyder console hangs up, does not show error messages, ...:\\
 	$\ra$ very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder); \\
 	$\ra$ restarting the IPython console also brings back all error messages
 	
 \en
-{\bf List of Frequently asked questions}:
+\mybold{List of Frequently asked questions}:
 \bn
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Where do I find the '.exe' file?
+	\item Where do I find the '.exe' file?
 	\bi
-	\item[$\ra$] \codeName\ is only available via the python interface as a module '\texttt{exudyn}', the C++ code being inside of \texttt{exudynCPP.pyd}, which is located in the exudyn folder where you installed the package. This means that you need to {\bf run python} (best: Spyder) and import the \codeName\ module.
+	\item[$\ra$] \codeName\ is only available via the python interface as a module '\texttt{exudyn}', the C++ code being inside of \texttt{exudynCPP.pyd}, which is located in the exudyn folder where you installed the package. This means that you need to \mybold{run python} (best: Spyder) and import the \codeName\ module.
 	\ei
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -672,25 +682,25 @@ Solver stopped! use showHints=True to show helpful information
 	\bi
 	\item[$\ra$] UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
 	\item[$\ra$] most python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \texttt{SC=exu.SystemContainer()} provides full access to SC in the type completion, but \texttt{mbs=SC.AddSystem()} is at the second sub-structure of the module and is not accessible.\\
-	WORKAROUND: type \texttt{mbs=MainSystem()} {\bf before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
+	WORKAROUND: type \texttt{mbs=MainSystem()} \mybold{before} the \texttt{mbs=SC.AddSystem()} command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 	\ei
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item How to add graphics?
+	\item How to add graphics?
 	\bi
 	\item[$\ra$] Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object.
 	Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
 	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item What is the difference between MarkerBodyPosition and MarkerBodyRigid?
+	\item What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 	\bi
 	\item[$\ra$] Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
 	\ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item I get an error in \texttt{exu.SolveDynamic(mbs, ...)} OR in \texttt{exu.SolveStatic(mbs, ...)}
+	\item I get an error in \texttt{exu.SolveDynamic(mbs, ...)} OR in \texttt{exu.SolveStatic(mbs, ...)}
 	%\texttt{SC.TimeIntegrationSolve(mbs, 'GeneralizedAlpha', simulationSettings)} 
 	but no further information -- how can I solve it?
 	\bi
@@ -710,9 +720,9 @@ Solver stopped! use showHints=True to show helpful information
 
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \item Why can't I get the focus of the simulation window on startup (render window hidden)?
+	\item Why can't I get the focus of the simulation window on startup (render window hidden)?
 	\bi
-	\item[$\ra$] Starting \codeName\ out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools$\ra$Preferences$\ra$Editor$\ra$Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \texttt{SC.visualizationSettings.window.alwaysOnTop=True} {\bf before} starting the renderer with \texttt{exu.StartRenderer()}
+	\item[$\ra$] Starting \codeName\ out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools$\ra$Preferences$\ra$Editor$\ra$Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \texttt{SC.visualizationSettings.window.alwaysOnTop=True} \mybold{before} starting the renderer with \texttt{exu.StartRenderer()}
 	\ei
 	%
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

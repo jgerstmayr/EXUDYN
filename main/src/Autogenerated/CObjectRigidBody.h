@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-07-05  23:52:57 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,8 +29,8 @@ class CObjectRigidBodyParameters // AUTO:
 {
 public: // AUTO: 
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of rigid body
-    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to center of mass; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM) relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
+    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \hac{COM}; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, \hac{COM} and mass
+    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0,0], the computation will not consider additional terms for the \hac{COM} and it is faster
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for rigid body node
     //! AUTO: default constructor with parameter initialization
     CObjectRigidBodyParameters()
@@ -45,8 +45,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectRigidBody
-* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{AddRigidBody(...)}, see \refSection{sec:rigidBodyUtilities:AddRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, COM and mass.
- \addExampleImage{ObjectRigidBody}
+* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \texttt{RigidBodyInertia}, see \refSection{sec:rigidBodyUtilities:RigidBodyInertia:__init__} and \texttt{AddRigidBody(...)}, see \refSection{sec:rigidBodyUtilities:AddRigidBody}, of \texttt{exudyn.rigidBodyUtilities} to handle inertia, \hac{COM} and mass. \addExampleImage{ObjectRigidBody}
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -89,7 +88,7 @@ public: // AUTO:
     //! AUTO:  Compute algebraic equations part of rigid body
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
 
-    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2, ODE2_t, ODE1, AE
+    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
@@ -153,10 +152,10 @@ public: // AUTO:
         return 1;
     }
 
-    //! AUTO:  number of ODE2 coordinates; depends on node
+    //! AUTO:  number of \hac{ODE2} coordinates; depends on node
     virtual Index GetODE2Size() const override;
 
-    //! AUTO:  number of AE coordinates; depends on node
+    //! AUTO:  number of \hac{AE} coordinates; depends on node
     virtual Index GetAlgebraicEquationsSize() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

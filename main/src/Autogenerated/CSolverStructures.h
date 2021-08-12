@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,13 +31,13 @@ public: // AUTO:
   Real factorization;                             //!< AUTO: solve or inverse
   Real newtonIncrement;                           //!< AUTO: Jac\f$^{-1}\f$ * RHS; backsubstitution
   Real integrationFormula;                        //!< AUTO: time spent for evaluation of integration formulas
-  Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of ODE2 right-hand-side
-  Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of ODE1 right-hand-side
+  Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE2} right-hand-side
+  Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE1} right-hand-side
   Real AERHS;                                     //!< AUTO: time for residual evaluation of algebraic equations right-hand-side
   Real totalJacobian;                             //!< AUTO: time for all jacobian computations
-  Real jacobianODE1;                              //!< AUTO: jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)
-  Real jacobianODE2;                              //!< AUTO: jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)
-  Real jacobianODE2_t;                            //!< AUTO: jacobian w.r.t. coordinates\_t of ODE2 equations (not counted in sum)
+  Real jacobianODE1;                              //!< AUTO: jacobian w.r.t. coordinates of \hac{ODE1} equations (not counted in sum)
+  Real jacobianODE2;                              //!< AUTO: jacobian w.r.t. coordinates of \hac{ODE2} equations (not counted in sum)
+  Real jacobianODE2_t;                            //!< AUTO: jacobian w.r.t. coordinates\_t of \hac{ODE2} equations (not counted in sum)
   Real jacobianAE;                                //!< AUTO: jacobian of algebraic equations (not counted in sum)
   Real massMatrix;                                //!< AUTO: mass matrix computation
   Real reactionForces;                            //!< AUTO: CqT * lambda
@@ -139,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -165,12 +165,12 @@ public: // AUTO:
   Index startAE;                                  //!< AUTO: start of algebraic coordinates, but set to zero if nAE==0
   ResizableVector systemResidual;                 //!< AUTO: system residual vector (vectors will be linked to this vector!)
   ResizableVector newtonSolution;                 //!< AUTO: Newton decrement (computed from residual and jacobian)
-  ResizableVector tempODE2;                       //!< AUTO: temporary vector for ODE2 quantities; use in initial accelerations and during Newton
-  ResizableVector temp2ODE2;                      //!< AUTO: second temporary vector for ODE2 quantities; use in static computation
-  ResizableVector tempODE2F0;                     //!< AUTO: temporary vector for ODE2 Jacobian
-  ResizableVector tempODE2F1;                     //!< AUTO: temporary vector for ODE2 Jacobian
-  ResizableVector tempODE1F0;                     //!< AUTO: temporary vector for ODE1 Jacobian
-  ResizableVector tempODE1F1;                     //!< AUTO: temporary vector for ODE1 Jacobian
+  ResizableVector tempODE2;                       //!< AUTO: temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton
+  ResizableVector temp2ODE2;                      //!< AUTO: second temporary vector for \hac{ODE2} quantities; use in static computation
+  ResizableVector tempODE2F0;                     //!< AUTO: temporary vector for \hac{ODE2} Jacobian
+  ResizableVector tempODE2F1;                     //!< AUTO: temporary vector for \hac{ODE2} Jacobian
+  ResizableVector tempODE1F0;                     //!< AUTO: temporary vector for \hac{ODE1} Jacobian
+  ResizableVector tempODE1F1;                     //!< AUTO: temporary vector for \hac{ODE1} Jacobian
   ResizableVector startOfStepStateAAlgorithmic;   //!< AUTO: additional term needed for generalized alpha (startOfStep state)
   ResizableVector aAlgorithmic;                   //!< AUTO: additional term needed for generalized alpha (current state)
   GeneralMatrix* systemJacobian;                  //!< AUTO: link to dense or sparse system jacobian
@@ -182,10 +182,10 @@ private: // AUTO:
   LinearSolverType linearSolverType;              //!< AUTO: contains linear solver type value; cannot be accessed directly, because a change requires new linking of system matrices
   GeneralMatrixEXUdense systemJacobianDense;      //!< AUTO: dense system jacobian
   GeneralMatrixEXUdense systemMassMatrixDense;    //!< AUTO: dense mass matrix
-  GeneralMatrixEXUdense jacobianAEdense;          //!< AUTO: dense AE jacobian
+  GeneralMatrixEXUdense jacobianAEdense;          //!< AUTO: dense \hac{AE} jacobian
   GeneralMatrixEigenSparse systemJacobianSparse;  //!< AUTO: sparse system jacobian
   GeneralMatrixEigenSparse systemMassMatrixSparse;//!< AUTO: sparse mass matrix
-  GeneralMatrixEigenSparse jacobianAEsparse;      //!< AUTO: sparse AE jacobian
+  GeneralMatrixEigenSparse jacobianAEsparse;      //!< AUTO: sparse \hac{AE} jacobian
 
 
 public: // AUTO: 
@@ -262,7 +262,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -376,7 +376,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -469,7 +469,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -558,7 +558,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-07-09 (last modfied)
+* @date         AUTO: 2021-08-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

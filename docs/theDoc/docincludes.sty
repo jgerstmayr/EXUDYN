@@ -3,8 +3,26 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{docincludes}
 
+%++++++++++++++++++++++++++++++++++++++++++
+%\newcommand{\codeName}{\textrm{\textsc{EXUDYN}}}
+\newcommand{\codeName}{\textsc{Exudyn}}
+
+\newcommand{\eqDot}{\; .} %dot at end of equations
+\newcommand{\eqComma}{\; ,} %comma at end of equations
+
+\newcommand{\exuUrl}[2]{\href{#1}{\underline{#2}}} %\exuUrl{github.com}{link to github}
+\newcommand{\refSection}[1]{\hyperref[#1]{\underline{Section \ref*{#1}}}} %see \refSection{sec_label}
+\newcommand{\refChapter}[1]{\hyperref[#1]{\underline{Chapter \ref*{#1}}}} %see \refSection{sec_label}
+
+%for acronyms:
+%\newcommand{\hac}[1]{\hyperref[sec:abbreviations]{\ac{#1}}} %acronym with hyperlink
+%\newcommand{\hacs}[1]{\hyperref[sec:abbreviations]{\acs{#1}}} %short acronym with hyperlink
+\newcommand{\hac}[1]{\ac{#1}} %change of ac allows to modify it in future
+\newcommand{\hacs}[1]{\acs{#1}} %short acronym; change of acs allows to modify it in future
+
+%++++++++++++++++++++++++++++++++++++++++++
 %common abbreviations:
-\newcommand{\ba}{\begin{array}{c}} %==>Mechatronische Systeme
+\newcommand{\ba}{\begin{array}{c}}
 \newcommand{\ea}{\end{array}}
 
 \newcommand{\be}{\begin{equation}}
@@ -39,6 +57,7 @@
 \newcommand{\mytab}[1]{Tab.\ \ref{#1}}
 
 \newcommand{\ra}{\rightarrow}
+\newcommand{\mybold}[1]{{\bf #1}} 
 
 \newcommand{\Rcal}{\mathbb{R}}
 \newcommand{\Ccal}{\mathbb{C}}
@@ -107,28 +126,10 @@
 
 \newcommand{\tp}{^\mathrm{T}} %transpose
 
-%++++++++++++++++++++++++++++++++++++
-%for FFRF:
-\newcommand{\indf}{_\mathrm{f}}
-\newcommand{\indt}{_\mathrm{t}}
-\newcommand{\indr}{_\mathrm{r}}
-\newcommand{\indtt}{_\mathrm{tt}}
-\newcommand{\indrr}{_\mathrm{rr}}
-\newcommand{\indff}{_\mathrm{ff}}
-\newcommand{\indtf}{_\mathrm{tf}}
-\newcommand{\indrf}{_\mathrm{rf}}
-\newcommand{\indtr}{_\mathrm{tr}}
-%++++++++++++++++++++++++++++++++++++
-%for FFRFreducedOrder:
-\newcommand{\indrigid}{_\mathrm{rigid}}
-\newcommand{\indred}{_\mathrm{red}}
-\newcommand{\induser}{_\mathrm{user}}
-\newcommand{\indu}{_\mathrm{u}} %undeformed
-%++++++++++++++++++++++++++++++++++++
-
 \newcommand{\Null}{\mathbf{0}}
 
-%griechische Buchstaben immer mit 't' vorgestellt
+%+++++++++++++++++++++++++++++++++++++++++++++
+%bold greek letters, with preceding t for thick
 \newcommand{\talpha}{\mbox{\boldmath $\alpha$ \unboldmath}\!\!}
 \newcommand{\tbeta}{\mbox{\boldmath $\beta$ \unboldmath}\!\!}
 \newcommand{\tgamma}{\mbox{\boldmath $\gamma$ \unboldmath}\!\!}
@@ -178,9 +179,8 @@
 \newcommand{\mysubsubsection}[1]{\subsection{#1}}
 \newcommand{\mysubsubsubsection}[1]{\subsubsection{#1}}
 
-%\newcommand{\codeName}{\textrm{\textsc{EXUDYN}}}
-\newcommand{\codeName}{\textsc{Exudyn}}
 
+%++++++++++++++++++++++++++++++++++++++++++
 \newcommand{\SO}{q}
 \newcommand{\FO}{y}
 \renewcommand{\AE}{\lambda}
@@ -191,9 +191,48 @@
 \newcommand{\AEN}{algebraic equations}
 \newcommand{\SYSN}{system equations}
 
-\newcommand{\eqDot}{\; .} %dot at end of equations
-\newcommand{\eqComma}{\; ,} %comma at end of equations
 
+%++++++++++++++++++++++++++++++++++++++++++
+%configurations subscripts
+\newcommand{\cIni}{_\mathrm{ini}} %initial
+\newcommand{\cRef}{_\mathrm{ref}} %reference
+\newcommand{\cCur}{_\mathrm{cur}} %current
+\newcommand{\cVis}{_\mathrm{vis}} %visualization
+\newcommand{\cSOS}{_\mathrm{start\;of\;step}}
+\newcommand{\cConfig}{_\mathrm{config}} %any configuration
+%needed? \newcommand{\body}{_\mathrm{ini}} %initial
+
+%++++++++++++++++++++++++++++++++++++++++++
+%special vectors
+\newcommand{\pLoc}{\bv}
+\newcommand{\pLocB}{\LU{b}{\bv}}
+\newcommand{\pRef}{\rv}
+\newcommand{\pRefG}{\LU{0}{\rv}}
+%\newcommand{\pRefB}{\LU{b}{\rv}} %not needed
+\newcommand{\ImThree}{\mathbf{I}_{3 \times 3}}
+\newcommand{\ImTwo}{\mathbf{I}_{2 \times 2}}
+
+
+%++++++++++++++++++++++++++++++++++++
+%for FFRF:
+\newcommand{\indf}{_\mathrm{f}}
+\newcommand{\indt}{_\mathrm{t}}
+\newcommand{\indr}{_\mathrm{r}}
+\newcommand{\indtt}{_\mathrm{tt}}
+\newcommand{\indrr}{_\mathrm{rr}}
+\newcommand{\indff}{_\mathrm{ff}}
+\newcommand{\indtf}{_\mathrm{tf}}
+\newcommand{\indrf}{_\mathrm{rf}}
+\newcommand{\indtr}{_\mathrm{tr}}
+%++++++++++++++++++++++++++++++++++++
+%for FFRFreducedOrder:
+\newcommand{\indrigid}{_\mathrm{rigid}}
+\newcommand{\indred}{_\mathrm{red}}
+\newcommand{\induser}{_\mathrm{user}}
+\newcommand{\indu}{_\mathrm{u}} %undeformed
+
+
+%++++++++++++++++++++++++++++++++++++
 \newcommand{\addExampleImage}[1]{
 \begin{figure}[htb]
 	\begin{center}

@@ -1,55 +1,50 @@
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-%\mysubsection{Tutorial}
-
+\mysection{Tutorial}
+%
 This section will show:
 \bi
   \item A basic tutorial for a 1D mass and spring-damper with initial displacements, shortest possible model with practically no special settings
-	\item A more advanced 2D rigid-body model ({\it coming soon})
+	\item A more advanced rigid-body model, including 3D rigid bodies and revolute joints
 	\item Links to examples section
 \ei
 %
-The python source code of this section can be found in the file:
-\bi
-	\item[] \texttt{main/pythonDev/Examples/springDamperTutorial.py}
-\ei
 A large number of examples, some of them quite advanced, can be found in:
 \bi
 	\item[] \texttt{main/pythonDev/Examples}
 	\item[] \texttt{main/pythonDev/TestModels}
 \ei
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsection{Mass-Spring-Damper tutorial}
+The python source code of the first tutorial can be found in the file:
+\bi
+	\item[] \texttt{main/pythonDev/Examples/springDamperTutorial.py}
+\ei
 This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 \vspace{6pt}\\
-%To start up, we set the system path to the directory of the library (needs to be adjusted; can be relative or absolute path):
-%\pythonstyle
-%\begin{lstlisting}[language=Python, firstnumber=1]
-  %import sys 
-  %sys.path.append('../../bin/WorkingRelease') #chose path of WorkingRelease!!!
-%\end{lstlisting}
-%
 We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
-\pythonstyle
-\begin{lstlisting}[language=Python, firstnumber=3]
+\pythonstyle\begin{lstlisting}
   import exudyn as exu
   from exudyn.itemInterface import *
   import numpy as np #for postprocessing
 \end{lstlisting}
 %
-Next, we need a SystemContainer, which contains all computable systems and add a new system.
+Next, we need a \texttt{SystemContainer}, which contains all computable systems and add a new MainSystem \texttt{mbs}.
 Per default, you always should name your system 'mbs' (multibody system), in order to copy/paste code parts from other examples, tutorials and other projects:
-\begin{lstlisting}[language=Python, firstnumber=6]
+\pythonstyle\begin{lstlisting}
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
 \end{lstlisting}
 %
 In order to check, which version you are using, you can printout the current \codeName\ version. This version is in line with the issue tracker and marks the number of open/closed issues added to \codeName :
-\begin{lstlisting}[language=Python, firstnumber=8]
+\pythonstyle\begin{lstlisting}
   print('EXUDYN version='+exu.__version__)
 \end{lstlisting}
 %
 Using the powerful Python language, we can define some variables for our problem, which will also be used for the analytical solution:
-\begin{lstlisting}[language=Python, firstnumber=9]
+\pythonstyle\begin{lstlisting}
   L=0.5               #reference position of mass
   mass = 1.6          #mass in kg
   spring = 4000       #stiffness of spring-damper in N/m
@@ -58,7 +53,7 @@ Using the powerful Python language, we can define some variables for our problem
 \end{lstlisting}
 %
 For the simple spring-mass-damper system, we need initial displacements and velocities:
-\begin{lstlisting}[language=Python, firstnumber=14]
+\pythonstyle\begin{lstlisting}
   u0=-0.08            #initial displacement
   v0=1                #initial velocity
   x0=f/spring         #static displacement
@@ -68,7 +63,7 @@ For the simple spring-mass-damper system, we need initial displacements and velo
 %
 We first need to add nodes, which provide the coordinates (and the degrees of freedom) to the system.
 The following line adds a 3D node for 3D mass point\footnote{Note: Point is an abbreviation for NodePoint, defined in \texttt{itemInterface.py}.}:
-\begin{lstlisting}[language=Python, firstnumber=19]
+\pythonstyle\begin{lstlisting}
   n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
                        initialCoordinates = [u0,0,0], 
                        initialVelocities = [v0,0,0]))
@@ -80,18 +75,18 @@ The command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex n1}, which bas
 While \texttt{Point} adds 3 unknown coordinates to the system, which need to be solved, we also can add ground nodes, which can be used similar to nodes, but they do not have unknown coordinates -- and therefore also have no initial displacements or velocities. The advantage of ground nodes (and ground bodies) is that no constraints are needed to fix these nodes.
 %
 Such a ground node is added via:
-\begin{lstlisting}[language=Python, firstnumber=22]
+\pythonstyle\begin{lstlisting}
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 \end{lstlisting}
 %
 In the next step, we add an object\footnote{For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section \ref{sec:programStructure}.}, which provides equations for coordinates. The \texttt{MassPoint} needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
-\begin{lstlisting}[language=Python, firstnumber=23]
+\pythonstyle\begin{lstlisting}
   massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
 \end{lstlisting}
 %
 In order to apply constraints and loads, we need markers. These markers are used as local positions (and frames), where we can attach a constraint lateron. In this example, we work on the coordinate level, both for forces as well as for constraints.
 Markers are attached to the according ground and regular node number, additionally using a coordinate number (0 ... first coordinate):
-\begin{lstlisting}[language=Python, firstnumber=24]
+\pythonstyle\begin{lstlisting}
   groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, 
                                                   coordinate = 0))
   #marker for springDamper for first (x-)coordinate:
@@ -102,39 +97,39 @@ This means that loads can be applied to the first coordinate of node \texttt{n1}
 which is in fact of type \texttt{MarkerIndex}.
 
 Now we add a spring-damper to the markers with numbers \texttt{groundMarker} and the \texttt{nodeMarker}, providing stiffness and damping parameters:
-\begin{lstlisting}[language=Python, firstnumber=29]
+\pythonstyle\begin{lstlisting}
   nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
                                        stiffness = spring, 
                                        damping = damper)) 
 \end{lstlisting}
 %
 A load is added to marker \texttt{nodeMarker}, with a scalar load with value \texttt{f}:
-\begin{lstlisting}[language=Python, firstnumber=32]
+\pythonstyle\begin{lstlisting}
   nLoad = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                                      load = f))
 \end{lstlisting}
 %
 Finally, a sensor is added to the coordinate constraint object with number \texttt{nC}, requesting the \texttt{outputVariableType} \texttt{Force}:
-\begin{lstlisting}[language=Python, firstnumber=34]
+\pythonstyle\begin{lstlisting}
   mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
                              outputVariableType=exu.OutputVariableType.Force))
 \end{lstlisting}
 Note that sensors can be attached, e.g., to nodes, bodies, objects (constraints) or loads.
 %
 As our system is fully set, we can print the overall information and assemble the system to make it ready for simulation:
-\begin{lstlisting}[language=Python, firstnumber=36]
+\pythonstyle\begin{lstlisting}
   print(mbs)
   mbs.Assemble()
 \end{lstlisting}
 %
 We will use time integration and therefore define a number of steps (fixed step size; must be provided) and the total time span for the simulation:
-\begin{lstlisting}[language=Python, firstnumber=38]
+\pythonstyle\begin{lstlisting}
   steps = 1000  #number of steps to show solution
   tEnd = 1     #end time of simulation
 \end{lstlisting}
 %
 All settings for simulation, see according reference section, can be provided in a structure given from \texttt{exu.SimulationSettings()}. Note that this structure will contain all default values, and only non-default values need to be provided:
-\begin{lstlisting}[language=Python, firstnumber=40]
+\pythonstyle\begin{lstlisting}
   simulationSettings = exu.SimulationSettings()
   simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
   simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
@@ -143,40 +138,40 @@ All settings for simulation, see according reference section, can be provided in
 \end{lstlisting}
 %
 We are using a generalized alpha solver, where numerical damping is needed for index 3 constraints. As we have only spring-dampers, we can set the spectral radius to 1, meaning no numerical damping:
-\begin{lstlisting}[language=Python, firstnumber=45]
+\pythonstyle\begin{lstlisting}
   simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 \end{lstlisting}
 %
 In order to visualize the results online, a renderer can be started. As our computation will be very fast, it is a good idea to wait for the user to press SPACE, before starting the simulation (uncomment second line):
-\begin{lstlisting}[language=Python, firstnumber=46]
+\pythonstyle\begin{lstlisting}
   exu.StartRenderer()              #start graphics visualization
-  #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue
+  #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)
 \end{lstlisting}
 As the simulation is still very fast, we will not see the motion of our node. Using e.g.\ \texttt{steps=10000000} in the lines above allows you online visualize the resulting oscillations.
 
 %
 Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:
-\begin{lstlisting}[language=Python, firstnumber=48]
+\pythonstyle\begin{lstlisting}
   exu.SolveDynamic(mbs, simulationSettings)
 \end{lstlisting}
 %
 
 After simulation, our renderer needs to be stopped (otherwise it would stay in background and prohibit further simulations). 
 Sometimes you would like to wait until closing the render window, using \texttt{WaitForRenderEngineStopFlag()}:
-\begin{lstlisting}[language=Python, firstnumber=49]
+\pythonstyle\begin{lstlisting}
   #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
   exu.StopRenderer()               #safely close rendering window!
 \end{lstlisting}
 %
 There are several ways to evaluate results, see the reference pages. In the following we take the final value of node \texttt{n1} and read its 3D position vector:
-\begin{lstlisting}[language=Python, firstnumber=51]
+\pythonstyle\begin{lstlisting}
   #evaluate final (=current) output values
   u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
   print('displacement=',u)
 \end{lstlisting}
 %
 The following code generates a reference (exact) solution for our example:
-\begin{lstlisting}[language=Python, firstnumber=54]
+\pythonstyle\begin{lstlisting}
   import matplotlib.pyplot as plt
   import matplotlib.ticker as ticker
 
@@ -198,19 +193,19 @@ The following code generates a reference (exact) solution for our example:
 Now we can load our results from the default solution file \texttt{coordinatesSolution.txt}, which is in the same
 directory as your python tutorial file. For convenient reading the file containing commented lines, we use a numpy feature and
 finally plot the displacement of coordinate 0 or our mass point\footnote{\texttt{data[:,0]} contains the simulation time, \texttt{data[:,1]} contains displacement of (global) coordinate 0, \texttt{data[:,2]} contains displacement of (global) coordinate 1, ...)}:
-\begin{lstlisting}[language=Python, firstnumber=73]
+\pythonstyle\begin{lstlisting}
   data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
 \end{lstlisting}
 The sensor result can be loaded in the same way. The sensor output format contains time in the first column and sensor values in the remaining columns. The number of columns depends on the 
 sensor and the output quantity (scalar, vector, ...):
-\begin{lstlisting}[language=Python, firstnumber=75]
+\pythonstyle\begin{lstlisting}
   data = np.loadtxt('groundForce.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)')
 \end{lstlisting}
 %
 In order to get a nice plot within Spyder, the following options can be used\footnote{note, in some environments you need finally the command \texttt{plt.show()}}:
-\begin{lstlisting}[language=Python, firstnumber=77]
+\pythonstyle\begin{lstlisting}
   ax=plt.gca() # get current axes
   ax.grid(True, 'major', 'both')
   ax.xaxis.set_major_locator(ticker.MaxNLocator(10))
@@ -225,11 +220,314 @@ The matplotlib output should look like this:
   \includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}
 \end{center}
 %
-\vspace{24pt}
-Further examples can be found in your copy of exudyn: 
+%\vspace{24pt}
+%Further examples can be found in your copy of exudyn: 
+%\bi
+  %\item[] \texttt{main/pythonDev/Examples}
+  %\item[] \texttt{main/pythonDev/TestModels}
+%\ei
+
+
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsection{Rigid body and joints tutorial}
+The python source code of the first tutorial can be found in the file:
 \bi
-  \item[] \texttt{main/pythonDev/Examples}
-  \item[] \texttt{main/pythonDev/TestModels}
+	\item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3.py}
 \ei
+This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \fig{fig_RigidBodyTutorialView}.
+\begin{figure}[tbph]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{figures/TutorialRigidBody1desc}
+  \end{center}
+  \caption{Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.}
+	\label{fig_RigidBodyTutorialView}
+\end{figure}
+
+\horizontalRuler
+\noindent We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
+\pythonstyle\begin{lstlisting}
+  import exudyn as exu
+  from exudyn.itemInterface import *
+  from exudyn.utilities import * 
+  import numpy as np #for postprocessing
+\end{lstlisting}
+The submodule \texttt{exudyn.utilities} contains helper functions for graphics representation, 3D rigid bodies and joints.
+
+\noindent As in the first tutorial, we need a \texttt{SystemContainer} and add a new MainSystem \texttt{mbs}:
+\pythonstyle\begin{lstlisting}
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+\end{lstlisting}
+
+\noindent We define some geometrical parameters for lateron use.
+\pythonstyle\begin{lstlisting}
+  #physical parameters
+  g =     [0,-9.81,0] #gravity
+  L = 1               #length
+  w = 0.1             #width
+  bodyDim=[L,w,w] #body dimensions
+  p0 =    [0,0,0]     #origin of pendulum
+  pMid0 = np.array([L*0.5,0,0]) #center of mass, body0
+\end{lstlisting}
+
+\noindent We add an empty ground body, using default values. It's origin is at [0,0,0] and here we use no visualization.
+\pythonstyle\begin{lstlisting}
+  #ground body
+  oGround = mbs.AddObject(ObjectGround())
+\end{lstlisting}
+
+\horizontalRuler
+\noindent For physical parameters of the rigid body, we can use the class \texttt{RigidBodyInertia}, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
+The \texttt{RigidBodyInertia} can be used directly to create rigid bodies. Special derived classes can be use to define rigid body inertias for cylinders, cubes, etc., so we use a cube here:
+\pythonstyle\begin{lstlisting}
+  #first link:
+  iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
+  iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
+\end{lstlisting}
+Note that the COM is translated in axial direction, while it would be at the body's local position [0,0,0] by default!
+
+\noindent For visualization, we need to add some graphics for the body defined as a 3D RigidLink object and we additionally draw a basis (three RGB-vectors) at the COM:
+\pythonstyle\begin{lstlisting}
+  #graphics for body
+  graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
+                                       axis0=[0,0,1], axis1=[0,0,0], radius=[0.5*w,0.5*w], 
+                                       thickness = w, width = [1.2*w,1.2*w], color=color4red)
+  graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
+\end{lstlisting}
+
+\noindent Now we have defined all data for the link (rigid body). We could use \texttt{mbs.AddNode(NodeRigidBodyEP(...))} and \texttt{mbs.AddObject(ObjectRigidBody(...))} to create a node and a body, but the \texttt{exudyn.rigidBodyUtilities} offer a much more comfortable function:
+\pythonstyle\begin{lstlisting}
+  [n0,b0]=AddRigidBody(mainSys = mbs,
+                       inertia = iCube0, #includes COM
+                       nodeType = exu.NodeType.RotationEulerParameters,
+                       position = pMid0,
+                       rotationMatrix = np.diag([1,1,1]),
+                       gravity = g,
+                       graphicsDataList = [graphicsBody0, graphicsCOM0])
+\end{lstlisting}
+which also adds a gravity load and could also set initial velocities, if wanted. 
+The \texttt{nodeType} specifies the underlying model for the rigid body node, see \refSection{sec:NodeType}.
+We can use 
+\bi
+\item \texttt{RotationEulerParameters}: for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver
+\item \texttt{RotationRxyz}: contains a singularity if the second angle reaches +/- 90 degrees, but no algebraic equations
+\item \texttt{RotationRotationVector}: basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed
+\ei
+
+\noindent We now add a revolute joint around the (global) z-axis. 
+We have several possibilities, which are shown in the following.
+For the \mybold{first two possibilities only}, we need the following markers
+\pythonstyle\begin{lstlisting}
+  #markers for ground and rigid body (not needed for option 3):
+  markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+  markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*L,0,0]))
+\end{lstlisting}
+
+\noindent The very general option 1 is to use the \texttt{GenericJoint}, that can be used to define any kind of joint with translations and rotations fixed or free,
+\pythonstyle\begin{lstlisting}
+  #revolute joint option 1:
+  mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], 
+                             constrainedAxes=[1,1,1,1,1,0],
+                             visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
+\end{lstlisting}
+In addition, transformation matrices (\texttt{rotationMarker0/1}) can be added, see the joint description.
+
+\noindent Option 2 is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (\texttt{markerGround} in our example)
+\pythonstyle\begin{lstlisting}
+  #revolute joint option 2:
+  mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [markerGround, markerBody0J0], 
+                                     rotationMarker0=np.eye(3),
+                                     rotationMarker1=np.eye(3),
+                                     visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, axisLength=1.4*w)
+                                     )) 
+\end{lstlisting}
+Additional transformation matrices (\texttt{rotationMarker0/1}) can be added in order to chose any rotation axis.
+
+\noindent Note that an error in the definition of markers for the joints can be also detected in the render window (if you completed the example), e.g., if you change the following marker in the lines above,
+\pythonstyle\begin{lstlisting}
+  #example if wrong marker position is chosen:
+  markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.4*L,0,0]))
+\end{lstlisting}
+$\ra$ you will see a misalignment of the two parts of the joint by \texttt{0.1*L}.
+
+\noindent Due to the fact that the definition of markers for general joints is tedious, there is a utility function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:
+\pythonstyle\begin{lstlisting}
+  #revolute joint option 3:
+  AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
+                   axis=[0,0,1], useGlobalFrame=True, showJoint=True,
+                   axisRadius=0.2*w, axisLength=1.4*w)
+\end{lstlisting}
+
+\horizontalRuler
+\noindent The second link and the according joint can be set up in a very similar way:
+\pythonstyle\begin{lstlisting}
+  #second link:
+  graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
+                                       axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
+                                       thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
+
+  iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
+
+  pMid1 = np.array([L,0,0]) + np.array([0,0,0.5*L]) #center of mass, body1
+  [n1,b1]=AddRigidBody(mainSys = mbs,
+                       inertia = iCube1,
+                       nodeType = exu.NodeType.RotationEulerParameters,
+                       position = pMid1,
+                       rotationMatrix = np.diag([1,1,1]),
+                       angularVelocity = [0,0,0],
+                       gravity = g,
+                       graphicsDataList = [graphicsBody1])
+\end{lstlisting}
+
+\noindent The revolute joint in this case has a free rotation around the global x-axis:
+\pythonstyle\begin{lstlisting}
+  #revolute joint (free x-axis)
+  AddRevoluteJoint(mbs, body0=b0, body1=b1, point=[L,0,0], 
+                    axis=[1,0,0], useGlobalFrame=True, showJoint=True,
+                    axisRadius=0.2*w, axisLength=1.4*w)
+\end{lstlisting}
+
+\noindent Finally, we also add a sensor for some output of the double pendulum:
+\pythonstyle\begin{lstlisting}
+  #position sensor at tip of body1
+  sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
+                                 fileName='solution/sensorPos.txt',
+                                 outputVariableType = exu.OutputVariableType.Position))
+\end{lstlisting}
+%
+
+\horizontalRuler
+\noindent Before simulation, we need to call \texttt{Assemble()} for our system, which links objects, nodes, ..., assigns initial values and does further pre-computations and checks:
+\pythonstyle\begin{lstlisting}
+  mbs.Assemble()
+\end{lstlisting}
+After \texttt{Assemble()}, markers, nodes, objects, etc. are linked and we can analyze the internal structure. First, we can print out useful information, either just typing \texttt{mbs} in the iPython console to print out overal information:
+\plainlststyle
+\begin{lstlisting}
+  <systemData: 
+    Number of nodes= 2
+    Number of objects = 5
+    Number of markers = 8
+    Number of loads = 2
+    Number of sensors = 1
+    Number of ODE2 coordinates = 14
+    Number of ODE1 coordinates = 0
+    Number of AE coordinates   = 12
+    Number of data coordinates   = 0
+
+  For details see mbs.systemData, mbs.sys and mbs.variables
+  >
+\end{lstlisting}
+%
+or printing the full internal information as a dictionary using \texttt{mbs.systemData.Info() }:
+\pythonstyle\begin{lstlisting}
+  mbs.systemData.Info() #show detailed information
+\end{lstlisting}
+which results in the following output:
+\plainlststyle
+\begin{lstlisting}
+  node0:
+      {'nodeType': 'RigidBodyEP', 'referenceCoordinates': [0.5, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0], 'addConstraintEquation': True, 'initialCoordinates': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'initialVelocities': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'name': 'node0', 'Vshow': True, 'VdrawSize': -1.0, 'Vcolor': [-1.0, -1.0, -1.0, -1.0]}
+  node1:
+      {'nodeType': 'RigidBodyEP', 'referenceCoordinates': [1.0, 0.0, 0.5, 1.0, 0.0, 0.0, 0.0], 'addConstraintEquation': True, 'initialCoordinates': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'initialVelocities': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'name': 'node1', 'Vshow': True, 'VdrawSize': -1.0, 'Vcolor': [-1.0, -1.0, -1.0, -1.0]}
+  object0:
+      {'objectType': 'Ground', 'referencePosition': [0.0, 0.0, 0.0], 'name': 'object0', 'Vshow': True, 'VgraphicsDataUserFunction': 0, 'Vcolor': [-1.0, -1.0, -1.0, -1.0], 'VgraphicsData': {'TODO': 'Get graphics data to be implemented'}}
+  object1:
+      {'objectType': 'RigidBody', 'physicsMass': 50.0, 'physicsInertia': [0.08333333333333336, 7.333333333333334, 7.333333333333334, 0.0, 0.0, 0.0], 'physicsCenterOfMass': [-0.25, 0.0, 0.0], 'nodeNumber': 0, 'name': 'object1', 'Vshow': True, 'VgraphicsDataUserFunction': 0, 'VgraphicsData': {'TODO': 'Get graphics data to be implemented'}}
+  object2:
+      {'objectType': 'JointRevolute', 'markerNumbers': [3, 4], 'rotationMarker0': [[0.0, 1.0, 0.0], [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0]], 'rotationMarker1': [[0.0, 1.0, 0.0], [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0]], 'activeConnector': True, 'name': 'object2', 'Vshow': True, 'VaxisRadius': 0.019999999552965164, 'VaxisLength': 0.14000000059604645, 'Vcolor': [-1.0, -1.0, -1.0, -1.0]}
+  object3:
+  ...
+\end{lstlisting}
+
+\noindent A graphical representation of the internal structure of the model can be shown use the command \texttt{DrawSystemGraph}, for output see \fig{fig_RigidBodyTutorialGraph}:
+\pythonstyle\begin{lstlisting}
+  DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
+\end{lstlisting}
+%
+\begin{figure}[tbph]
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{figures/DrawSystemGraphExample}
+  \end{center}
+  \caption{System graph for rigid body tutorial. Numbers are always related to the node number, object number, etc.; note that colors are used for nodes, objects, markers, etc. $\ra$ the label names (which do not include \texttt{Object..}, \texttt{Node..}) need to be read with the color information!}
+	\label{fig_RigidBodyTutorialGraph}
+\end{figure}
+%
+
+\horizontalRuler
+\noindent Before starting our simulation, we should adjust the solver parameters, especially the end time, step size (no automatic step size for implicit solvers available!):
+\pythonstyle\begin{lstlisting}
+  simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+
+  tEnd = 4 #simulation time
+  h = 1e-3 #step size
+  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+  simulationSettings.timeIntegration.endTime = tEnd
+  simulationSettings.timeIntegration.verboseMode = 1
+  #simulationSettings.timeIntegration.simulateInRealtime = True
+  simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
+\end{lstlisting}
+The \texttt{verboseMode} tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but may slow down simulation significantly.
+The option \texttt{simulateInRealtime} is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the \texttt{SolutionViewer()}.
+With \texttt{solutionWritePeriod} you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the \texttt{SolutionViewer()} to reload the solution after simulation.
+
+\noindent In order to improve visualization, there are hundreds of options, see Visualization settings in \refSection{sec:VSettingsGeneral}, some of them used here:
+\pythonstyle\begin{lstlisting}
+  SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+  SC.visualizationSettings.openGL.multiSampling = 4  #improved OpenGL rendering
+  SC.visualizationSettings.general.autoFitScene = False
+
+  SC.visualizationSettings.nodes.drawNodesAsPoint=False
+  SC.visualizationSettings.nodes.showBasis=True #shows three RGB (=xyz) lines for node basis
+\end{lstlisting}
+The option \texttt{autoFitScene} is used in order to avoid zooming while loading the last saved render state, see below.
+
+\noindent We can start the 3D visualization (Renderer) now:
+\pythonstyle\begin{lstlisting}
+  exu.StartRenderer()
+\end{lstlisting}
+
+\noindent In order to reload the model view of the last simulation (if there is any), we can use the following commands:
+\pythonstyle\begin{lstlisting}
+  if 'renderState' in exu.sys: #reload old view
+      SC.SetRenderState(exu.sys['renderState'])
+
+  mbs.WaitForUserToContinue() #stop before simulating
+\end{lstlisting}
+the function \texttt{WaitForUserToContinue()} waits with simulation until we press SPACE bar. This allows us to make some pre-checks.
+
+\noindent Finally, implicit time integration (simulation) is started with:
+\pythonstyle\begin{lstlisting}
+  exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
+                   solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+\end{lstlisting}
+
+\noindent After simulation, the library would immediately exit (and jump back to iPython or close the terminal window). In order to avoid this, we can use \texttt{WaitForRenderEngineStopFlag()} to wait until we press key 'Q'.
+\pythonstyle\begin{lstlisting}
+  SC.WaitForRenderEngineStopFlag() #stop before closing
+  exu.StopRenderer() #safely close rendering window!
+\end{lstlisting}
+If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key. 
+If we do not stop the renderer (\texttt{StopRenderer()}), it will stay open for further simulations. However, it is safer to always close the renderer at the end.
+
+\noindent As the simulation will run very fast, if you did not set \texttt{simulateInRealtime} to true. However, you can reload the stored solution and view the stored steps interactively:
+\pythonstyle\begin{lstlisting}
+  sol = LoadSolutionFile('coordinatesSolution.txt')
+  from exudyn.interactive import SolutionViewer
+  SolutionViewer(mbs, sol)
+\end{lstlisting}
+
+\noindent Finally, we can plot our sensor, drawing the y-component of the sensor:
+\pythonstyle\begin{lstlisting}
+  from exudyn.plot import PlotSensor
+  PlotSensor(mbs, [sens1],[1])
+\end{lstlisting}
+
+\noindent \mybold{Congratulations}! You completed the rigid body tutorial, which gives you the ability to model multibody systems. Note that much more complicated models are possible, including feedback control or flexible bodies, see the Examples!
+
+
 
 

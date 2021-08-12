@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  13:31:25 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@
 class CObjectGroundParameters // AUTO: 
 {
 public: // AUTO: 
-    Vector3D referencePosition;                   //!< AUTO: reference position for ground object; local position is added on top of reference position for a ground object
+    Vector3D referencePosition;                   //!< AUTO: reference point = reference position for ground object; local position is added on top of reference position for a ground object
     //! AUTO: default constructor with parameter initialization
     CObjectGroundParameters()
     {
@@ -145,7 +145,7 @@ public: // AUTO:
         return 0;
     }
 
-    //! AUTO:  number of ODE2 coordinates; needed for object?
+    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
         return 0;

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  13:31:26 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ class CObjectRotationalMass1DParameters // AUTO:
 public: // AUTO: 
     Real physicsInertia;                          //!< AUTO: inertia components [SI:kgm\f$^2\f$] of rotor / rotational mass
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) of Node1D, providing rotation coordinate \f$\psi_0 = c_0\f$
-    Vector3D referencePosition;                   //!< AUTO: a constant reference position, used to assign joint constraints accordingly and for drawing
+    Vector3D referencePosition;                   //!< AUTO: a constant reference position = reference point, used to assign joint constraints accordingly and for drawing
     Matrix3D referenceRotation;                   //!< AUTO: an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description
     //! AUTO: default constructor with parameter initialization
     CObjectRotationalMass1DParameters()
@@ -137,7 +137,7 @@ public: // AUTO:
         return 1;
     }
 
-    //! AUTO:  number of ODE2 coordinates; needed for object?
+    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
         return 1;

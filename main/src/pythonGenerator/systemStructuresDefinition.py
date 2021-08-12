@@ -43,8 +43,8 @@ V,  appendToFile,			        ,  	, bool, 					   false,     ,      P	  , "flag (t
 V,  writeFileHeader,			     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)"
 V,  writeFileFooter,			     ,  	, bool, 						true,      ,      P	  , "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics"
 V,  solutionWritePeriod,			,  	, UReal, 						0.01,  		,      P     , "time span (period), determines how often the solution is written during a simulation"
-V,  exportVelocities,			,     , bool, 						   true,  		,      P     , "add ODE2 velocities to solution file"
-V,  exportAccelerations,        ,  	  , bool, 						   true,  		,      P     , "add ODE2 accelerations to solution file"
+V,  exportVelocities,			,     , bool, 						   true,  		,      P     , "add \hac{ODE2} velocities to solution file"
+V,  exportAccelerations,        ,  	  , bool, 						   true,  		,      P     , "add \hac{ODE2} accelerations to solution file"
 V,  exportODE1Velocities,       ,     , bool, 						   true,  		,      P     , "add coordinatesODE1\_t to solution file"
 V,  exportAlgebraicCoordinates,	,     , bool, 						   true,  		,      P     , "add algebraicCoordinates (=Lagrange multipliers) to solution file" 
 V,  exportDataCoordinates,	    ,     , bool, 						   true,  		,      P     , "add DataCoordinates to solution file"
@@ -70,8 +70,8 @@ classDescription = "Settings for numerical differentiation of a function (needed
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
 V,  relativeEpsilon,      ,  		     ,      UReal, 			   1e-7,        ,      P	 , "relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate"
 V,  minimumCoordinateSize,,  		     ,      UReal, 			   1e-2,        ,      P	 , "minimum size of coordinates in relative differentiation parameter"
-V,  doSystemWideDifferentiation,,    ,      bool, 			   false,          ,      P    , "True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation"
-V,  addReferenceCoordinatesToEpsilon,, ,    bool, 			   false,          ,      P    , "True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter"
+V,  doSystemWideDifferentiation,,    ,      bool, 			   false,          ,      P    , "True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation"
+V,  addReferenceCoordinatesToEpsilon,, ,    bool, 			   false,          ,      P    , "True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter"
 #
 writeFile=SimulationSettings.h
 
@@ -100,7 +100,7 @@ V,  useNewtonSolver,	        ,  		    ,     bool, 					true,   , P		, "flag (tru
 V,  relativeTolerance,          ,  		   ,      UReal, 					1e-8,   , P		, "relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)"
 V,  absoluteTolerance,          ,  		   ,      UReal, 					1e-10,  , P		, "absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance"
 V,  weightTolerancePerCoordinate,	,   ,     bool, 					false,  , P		, "flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size"
-V,  newtonResidualMode,	        ,  		    ,     UInt, 					0,      , P		, "0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag"
+V,  newtonResidualMode,	        ,  		    ,     UInt, 					0,      , P		, "0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag"
 V,  adaptInitialResidual,	    ,         ,       bool, 					true,   ,P		, "flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration"
 #
 V,  modifiedNewtonContractivity, ,  	 ,     PReal, 				    0.5,   ,P		, "maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed"
@@ -193,7 +193,7 @@ V,  loadStepStart,                  ,               , UReal,                0,  
 V,  loadStepGeometric,              ,               , bool,                 false,,P    , "if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$"
 V,  loadStepGeometricRange,         ,               , PReal,                1000,,P     , "if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric"
 V,  useLoadFactor,                  ,               , bool,                 true,,P     , "True: compute a load factor $\in [0,1]$ from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 -- use this option if time dependent loads use a userFunction"
-V,  stabilizerODE2term,             ,               , UReal,                0,  ,P      , "add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$"
+V,  stabilizerODE2term,             ,               , UReal,                0,  ,P      , "add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with $stabilizer = (1-loadStepFactor^2)$, and go to zero at the end of all load steps: $loadStepFactor=1$ -> $stabilizer = 0$"
 V,  adaptiveStep,                   ,               , bool,                 true,,P     , "True: use step reduction if step fails; False: fixed step size"
 V,  adaptiveStepRecoverySteps,      ,               , UInt, 			    4,      ,  P,  "Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors"
 V,  adaptiveStepIncrease,           ,               , UReal, 			    2,      ,  P,  "Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors"
@@ -578,13 +578,13 @@ V,      total,                      , 	             ,     Real,         0.,     
 V,      factorization,              , 	             ,     Real,         0.,                     ,   P,    "solve or inverse"
 V,      newtonIncrement,            , 	             ,     Real,         0.,                     ,   P,    "Jac$^{-1}$ * RHS; backsubstitution"
 V,      integrationFormula,         , 	             ,     Real,         0.,                     ,   P,    "time spent for evaluation of integration formulas"
-V,      ODE2RHS,                    , 	             ,     Real,         0.,                     ,   P,    "time for residual evaluation of ODE2 right-hand-side"
-V,      ODE1RHS,                    , 	             ,     Real,         0.,                     ,   P,    "time for residual evaluation of ODE1 right-hand-side"
+V,      ODE2RHS,                    , 	             ,     Real,         0.,                     ,   P,    "time for residual evaluation of \hac{ODE2} right-hand-side"
+V,      ODE1RHS,                    , 	             ,     Real,         0.,                     ,   P,    "time for residual evaluation of \hac{ODE1} right-hand-side"
 V,      AERHS,                      , 	             ,     Real,         0.,                     ,   P,    "time for residual evaluation of algebraic equations right-hand-side"
 V,      totalJacobian,              , 	             ,     Real,         0.,                     ,   P,    "time for all jacobian computations"
-V,      jacobianODE1,               , 	             ,     Real,         0.,                     ,   P,    "jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)"
-V,      jacobianODE2,               , 	             ,     Real,         0.,                     ,   P,    "jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)"
-V,      jacobianODE2_t,             , 	             ,     Real,         0.,                     ,   P,    "jacobian w.r.t. coordinates\_t of ODE2 equations (not counted in sum)"
+V,      jacobianODE1,               , 	             ,     Real,         0.,                     ,   P,    "jacobian w.r.t. coordinates of \hac{ODE1} equations (not counted in sum)"
+V,      jacobianODE2,               , 	             ,     Real,         0.,                     ,   P,    "jacobian w.r.t. coordinates of \hac{ODE2} equations (not counted in sum)"
+V,      jacobianODE2_t,             , 	             ,     Real,         0.,                     ,   P,    "jacobian w.r.t. coordinates\_t of \hac{ODE2} equations (not counted in sum)"
 V,      jacobianAE,                 , 	             ,     Real,         0.,                     ,   P,    "jacobian of algebraic equations (not counted in sum)"
 V,      massMatrix,                 , 	             ,     Real,         0.,                     ,   P,    "mass matrix computation"
 V,      reactionForces,             , 	             ,     Real,         0.,                     ,   P,    "CqT * lambda"
@@ -622,13 +622,13 @@ V,      jacobianAE,                 , 	             ,     GeneralMatrix*, nullpt
 #
 V,      systemResidual,             , 	             ,     ResizableVector, ,                    ,   P,    "system residual vector (vectors will be linked to this vector!)"
 V,      newtonSolution,             , 	             ,     ResizableVector, ,                    ,   P,    "Newton decrement (computed from residual and jacobian)"
-V,      tempODE2,                   , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for ODE2 quantities; use in initial accelerations and during Newton"
-V,      temp2ODE2,                  , 	             ,     ResizableVector, ,                    ,   P,    "second temporary vector for ODE2 quantities; use in static computation"
-V,      tempODE2F0,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for ODE2 Jacobian"
-V,      tempODE2F1,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for ODE2 Jacobian"
-V,      tempODE1F0,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for ODE1 Jacobian"
-V,      tempODE1F1,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for ODE1 Jacobian"
-#V,      tempODE1,                   , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for ODE1 quantities"
+V,      tempODE2,                   , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton"
+V,      temp2ODE2,                  , 	             ,     ResizableVector, ,                    ,   P,    "second temporary vector for \hac{ODE2} quantities; use in static computation"
+V,      tempODE2F0,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE2} Jacobian"
+V,      tempODE2F1,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE2} Jacobian"
+V,      tempODE1F0,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE1} Jacobian"
+V,      tempODE1F1,                 , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE1} Jacobian"
+#V,      tempODE1,                   , 	             ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE1} quantities"
 #
 V,      startOfStepStateAAlgorithmic,, 	             ,     ResizableVector, ,                    ,   P,    "additional term needed for generalized alpha (startOfStep state)"
 V,      aAlgorithmic,               , 	             ,     ResizableVector, ,                    ,   P,    "additional term needed for generalized alpha (current state)"
@@ -639,11 +639,11 @@ Vp,     linearSolverType,           , 	             ,     LinearSolverType,,    
 #DENSE:
 Vp,     systemJacobianDense,        , 	             ,     GeneralMatrixEXUdense,,               ,    ,    "dense system jacobian"
 Vp,     systemMassMatrixDense,      , 	             ,     GeneralMatrixEXUdense,,               ,    ,    "dense mass matrix"
-Vp,     jacobianAEdense,            , 	             ,     GeneralMatrixEXUdense,,               ,    ,    "dense AE jacobian"
+Vp,     jacobianAEdense,            , 	             ,     GeneralMatrixEXUdense,,               ,    ,    "dense \hac{AE} jacobian"
 #SPARSE:
 Vp,     systemJacobianSparse,       , 	             ,     GeneralMatrixEigenSparse,,            ,    ,    "sparse system jacobian"
 Vp,     systemMassMatrixSparse,     , 	             ,     GeneralMatrixEigenSparse,,            ,    ,    "sparse mass matrix"
-Vp,     jacobianAEsparse,           , 	             ,     GeneralMatrixEigenSparse,,            ,    ,    "sparse AE jacobian"
+Vp,     jacobianAEsparse,           , 	             ,     GeneralMatrixEigenSparse,,            ,    ,    "sparse \hac{AE} jacobian"
 #
 #now done with addConstructor flag; F,      SolverLocalData,            ,                ,     ,             "SetLinearSolverType(LinearSolverType::EXUdense);", ,   P,  "for safety, data is linked immediately to dense matrices"
 F,      CleanUpMemory,              ,                ,     void,         ,                       ,    DP,  "if desired, temporary data is cleaned up to safe memory"
@@ -823,8 +823,8 @@ FvL,    IsVerboseCheck,              ,                ,    bool,        ,       
 FvL,    VerboseWrite,                ,                ,    void,        ,                                "Index level, const std::string& str",   GPV,    "write to console and/or file in case of level"
 
 #special functions to access residua and system matrices
-FvL,    GetODE2size,                 ,                ,    Index,       ,                                ,   CGP,    "number of ODE2 equations in solver"
-FvL,    GetODE1size,                 ,                ,    Index,       ,                                ,   CGP,    "number of ODE1 equations in solver (not yet implemented)"
+FvL,    GetODE2size,                 ,                ,    Index,       ,                                ,   CGP,    "number of \hac{ODE2} equations in solver"
+FvL,    GetODE1size,                 ,                ,    Index,       ,                                ,   CGP,    "number of \hac{ODE1} equations in solver (not yet implemented)"
 FvL,    GetAEsize,                   ,                ,    Index,       ,                                ,   CGP,    "number of algebraic equations in solver"
 FvL,    GetDataSize,                 ,                ,    Index,       ,                                ,   CGP,    "number of data (history) variables in solver"
 #
@@ -840,9 +840,9 @@ FvL,    SetSystemResidual,           ,                ,    void,        ,       
 FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix"
 FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver"
 FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
-FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
+FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
 #
-FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)"
+FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)"
 FvL,    ComputeAlgebraicEquations,   ,                ,    void,        ,                       "MainSystem& mainSystem, bool velocityLevel=false",   DGPV,    "compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)"
 #
 #
@@ -958,8 +958,8 @@ FvL,    IsVerboseCheck,              ,                ,    bool,        ,       
 FvL,    VerboseWrite,                ,                ,    void,        ,                                "Index level, const std::string& str",   GPV,    "write to console and/or file in case of level"
 
 #special functions to access residua and system matrices
-FvL,    GetODE2size,                 ,                ,    Index,       ,                                ,   CGP,    "number of ODE2 equations in solver"
-FvL,    GetODE1size,                 ,                ,    Index,       ,                                ,   CGP,    "number of ODE1 equations in solver (not yet implemented)"
+FvL,    GetODE2size,                 ,                ,    Index,       ,                                ,   CGP,    "number of \hac{ODE2} equations in solver"
+FvL,    GetODE1size,                 ,                ,    Index,       ,                                ,   CGP,    "number of \hac{ODE1} equations in solver (not yet implemented)"
 FvL,    GetAEsize,                   ,                ,    Index,       ,                                ,   CGP,    "number of algebraic equations in solver"
 FvL,    GetDataSize,                 ,                ,    Index,       ,                                ,   CGP,    "number of data (history) variables in solver"
 #
@@ -975,10 +975,10 @@ FvL,    SetSystemResidual,           ,                ,    void,        ,       
 FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix"
 FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver"
 FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
-FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
+FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
 #
-FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)"
-FvL,    ComputeODE1RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)"
+FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)"
+FvL,    ComputeODE1RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)"
 FvL,    ComputeAlgebraicEquations,   ,                ,    void,        ,                       "MainSystem& mainSystem, bool velocityLevel=false",   DGPV,    "compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)"
 #
 #
@@ -1054,8 +1054,8 @@ FvL,    IsVerboseCheck,              ,                ,    bool,        ,       
 FvL,    VerboseWrite,                ,                ,    void,        ,                                "Index level, const std::string& str",   GPV,    "write to console and/or file in case of level"
 
 #special functions to access residua and system matrices
-FvL,    GetODE2size,                 ,                ,    Index,       ,                                ,   CGP,    "number of ODE2 equations in solver"
-FvL,    GetODE1size,                 ,                ,    Index,       ,                                ,   CGP,    "number of ODE1 equations in solver (not yet implemented)"
+FvL,    GetODE2size,                 ,                ,    Index,       ,                                ,   CGP,    "number of \hac{ODE2} equations in solver"
+FvL,    GetODE1size,                 ,                ,    Index,       ,                                ,   CGP,    "number of \hac{ODE1} equations in solver (not yet implemented)"
 FvL,    GetAEsize,                   ,                ,    Index,       ,                                ,   CGP,    "number of algebraic equations in solver"
 FvL,    GetDataSize,                 ,                ,    Index,       ,                                ,   CGP,    "number of data (history) variables in solver"
 #
@@ -1071,10 +1071,10 @@ FvL,    SetSystemResidual,           ,                ,    void,        ,       
 FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix"
 #FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver"
 #FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
-#FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
+#FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
 #
-FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)"
-FvL,    ComputeODE1RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)"
+FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)"
+FvL,    ComputeODE1RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)"
 #FvL,    ComputeAlgebraicEquations,   ,                ,    void,        ,                       "MainSystem& mainSystem, bool velocityLevel=false",   DGPV,    "compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)"
 #
 #

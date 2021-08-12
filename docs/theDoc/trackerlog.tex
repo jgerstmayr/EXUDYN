@@ -9,16 +9,104 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.276, 
-  \item last change =  2021-07-12
+  \item EXUDYN version = 1.0.288, 
+  \item last change =  2021-08-10
 
-  \item Number of issues = 725, 
-  \item Number of resolved issues = 644 (276 in current version), 
+  \item Number of issues = 733, 
+  \item Number of resolved issues = 656 (288 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.288}: \vspace{-6pt} 
+  resolved Issue 0313: {\bf Add user node ODE2}
+(extension)
+  \bi
+  \item {description: add user node with getposition, rotation, access functions}
+  \item {\bf notes: not needed: GenericNodes can be used for that}
+  \item   date resolved: {\bf 2021-08-10 12:57},
+date raised: 2020-01-10   \ei
+  \item {\bf Version 1.0.287}: \vspace{-6pt} 
+  resolved Issue 0540: {\bf github}
+(extension)
+  \bi
+  \item {description: update README.rst file and make it similar to other packages (e.g. pydy)}
+  \item   date resolved: {\bf 2021-08-10 12:56},
+date raised: 2021-01-09   \ei
+  \item {\bf Version 1.0.286}: \vspace{-6pt} 
+  resolved Issue 0504: {\bf serialrobot}
+(extension)
+  \bi
+  \item {description: build completely from homogenouos transformations, COMs, inertia tensors, masses, axes, axesTypes}
+  \item   date resolved: {\bf 2021-08-10 12:56},
+date raised: 2020-12-16   \ei
+  \item {\bf Version 1.0.285}: \vspace{-6pt} 
+  resolved Issue 0730: {\bf RigidBody tutorial}
+(docu)
+  \bi
+  \item {description: add tutorial for rigid body with AddRigidBody(...), AddRevoluteJoint(...) functionalities}
+  \item   date resolved: {\bf 2021-08-06 20:05},
+date raised: 2021-08-05   \ei
+  \item {\bf Version 1.0.284}: \vspace{-6pt} 
+  resolved Issue 0729: {\bf README.rst}
+(docu)
+  \bi
+  \item {description: add .rst readme file containing gettingStarted, introduction, tutorial and other information}
+  \item   date resolved: {\bf 2021-08-06 20:05},
+date raised: 2021-08-05   \ei
+  \item {\bf Version 1.0.283}: \vspace{-6pt} 
+  resolved Issue 0732: {\bf DrawSystemGraph}
+(extension)
+  \bi
+  \item {description: improve visualization and return graph and other information}
+  \item   date resolved: {\bf 2021-08-06 17:58},
+date raised: 2021-08-06   \ei
+  \item {\bf Version 1.0.282}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0731}: {\bf AddRevoluteJoint}
+  \bi
+  \item {description: AddRevoluteJoint shows error in axis definition}
+  \item   date resolved: {\bf 2021-08-05 13:40},
+date raised: 2021-08-05   \ei
+  \item {\bf Version 1.0.281}: \vspace{-6pt} 
+  resolved Issue 0704: {\bf Optimization2}
+(optimize)
+  \bi
+  \item {description: add direct function to NodeRigidBody to retrieve essential data for rigid body EOM and MarkerRigidBody; add flag, if rotation matrix and other quantities needed}
+  \item {\bf notes: still no optimization for Lie group nodes, which however have simpler matrices}
+  \item   date resolved: {\bf 2021-07-31 22:33},
+date raised: 2021-07-04   \ei
+  \item {\bf Version 1.0.280}: \vspace{-6pt} 
+  resolved Issue 0514: {\bf general wheel}
+(extension)
+  \bi
+  \item {description: add general wheel model (with general rotation body); for mecanum wheel rolls}
+  \item {\bf notes: implemented ObjectContactConvexRoll for general usage in Mecanum wheels and other applications}
+  \item   date resolved: {\bf 2021-07-31 21:20},
+date raised: 2020-12-19 (resolved by: Peter Manzl)
+  \ei
+  \item {\bf Version 1.0.279}: \vspace{-6pt} 
+  resolved Issue 0727: {\bf NodeRigidBody2D}
+(docu)
+  \bi
+  \item {description: Outputvariable Rotation gives 3D vector, but wrong description in DOCU}
+  \item {\bf notes: additionally: rotation is now directly copied from rotation coordinate and is not recomputed from Tait-Bryan angles of rotation matrix}
+  \item   date resolved: {\bf 2021-07-31 21:18},
+date raised: 2021-07-14   \ei
+  \item {\bf Version 1.0.278}: \vspace{-6pt} 
+  resolved Issue 0726: {\bf description of nodes}
+(docu)
+  \bi
+  \item {description: finish detailed description of 3D nodes and add rotation parameter description for Tait-Bryan in theory part}
+  \item   date resolved: {\bf 2021-07-13 21:17},
+date raised: 2021-07-13   \ei
+  \item {\bf Version 1.0.277}: \vspace{-6pt} 
+  resolved Issue 0725: {\bf unify description}
+(docu)
+  \bi
+  \item {description: unify notation for special vectors, e.g., reference point or local position; add unified abbreviations for ODE2, etc.}
+  \item   date resolved: {\bf 2021-07-13 21:17},
+date raised: 2021-07-13   \ei
   \item {\bf Version 1.0.276}: \vspace{-6pt} 
 {\bf \color{warningRed}  resolved BUG 0724}: {\bf Linux version}
   \bi

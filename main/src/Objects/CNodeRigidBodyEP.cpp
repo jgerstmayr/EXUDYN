@@ -51,7 +51,7 @@ void CNodeRigidBodyEP::CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordi
 Index TSspecial;
 TimerStructureRegistrator TSRspecial("TSspecial", TSspecial, globalTimers);
 
-void CNodeRigidBodyEP::CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
+void CNodeRigidBodyEP::CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
 	Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const
 {
 	//********************************************************************

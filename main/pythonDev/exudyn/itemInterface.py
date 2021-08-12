@@ -1273,6 +1273,52 @@ class ObjectConnectorRollingDiscPenalty:
 RollingDiscPenalty = ObjectConnectorRollingDiscPenalty
 VRollingDiscPenalty = VObjectConnectorRollingDiscPenalty
 
+class VObjectContactConvexRoll:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+class ObjectContactConvexRoll:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., staticFrictionOffset = 0., viscousFriction = 0., exponentialDecayStatic = 1e-3, frictionProportionalZone = 1e-3, rollLength = 0., coefficientsHull =  [], rBoundingSphere = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.nodeNumber = nodeNumber
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactConvexRoll")
+        self.staticFrictionOffset = CheckForValidUReal(staticFrictionOffset,"staticFrictionOffset","ObjectContactConvexRoll")
+        self.viscousFriction = CheckForValidUReal(viscousFriction,"viscousFriction","ObjectContactConvexRoll")
+        self.exponentialDecayStatic = CheckForValidPReal(exponentialDecayStatic,"exponentialDecayStatic","ObjectContactConvexRoll")
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactConvexRoll")
+        self.rollLength = CheckForValidUReal(rollLength,"rollLength","ObjectContactConvexRoll")
+        self.coefficientsHull = coefficientsHull
+        self.rBoundingSphere = CheckForValidUReal(rBoundingSphere,"rBoundingSphere","ObjectContactConvexRoll")
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ContactConvexRoll'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'staticFrictionOffset', self.staticFrictionOffset
+        yield 'viscousFriction', self.viscousFriction
+        yield 'exponentialDecayStatic', self.exponentialDecayStatic
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'rollLength', self.rollLength
+        yield 'coefficientsHull', self.coefficientsHull
+        yield 'rBoundingSphere', self.rBoundingSphere
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
 class VObjectContactCoordinate:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show

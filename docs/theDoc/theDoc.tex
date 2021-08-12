@@ -19,7 +19,10 @@
 \usepackage[T1]{fontenc} %makes problems with quotes '
 
 %\input{docincludes}
+%\usepackage[nohyperlinks]{acronym} %used for abbreviations, does not work with hyperref anymore!
+\usepackage{acronym} %used for abbreviations, does not work with hyperref anymore!
 \usepackage{hyperref} %for pdf bookmarks, \url, \href...; must be included before docincludes
+
 \usepackage{docincludes} %exudyn definitions
 \usepackage{xcolor}
 
@@ -33,21 +36,9 @@
 						%pdfborder = {0 0 0.5 [3 3]}, %does not work
 						%linkbordercolor = {1 0 0} %does not work
 						}
-\newcommand{\exuUrl}[2]{\href{#1}{\underline{#2}}} %\exuUrl{github.com}{link to github}
-\newcommand{\refSection}[1]{\hyperref[#1]{\underline{Section \ref*{#1}}}} %see \refSection{sec_label}
-\newcommand{\refChapter}[1]{\hyperref[#1]{\underline{Chapter \ref*{#1}}}} %see \refSection{sec_label}
 
 \usepackage{enumitem} %for adjustable indentation in itemize (leftmargin=...)
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%configurations subscripts
-\newcommand{\cIni}{_\mathrm{ini}} %initial
-\newcommand{\cRef}{_\mathrm{ref}} %reference
-\newcommand{\cCur}{_\mathrm{cur}} %current
-\newcommand{\cVis}{_\mathrm{vis}} %visualization
-\newcommand{\cSOS}{_\mathrm{start\;of\;step}}
-\newcommand{\cConfig}{_\mathrm{config}} %any configuration
-
-\newcommand{\body}{_\mathrm{ini}} %initial
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %define standard 3-column tables with python name, symbol and description
@@ -144,7 +135,13 @@ emph={AddNode, AddObject, AddMarker, AddLoad, AddSensor, SystemContainer,
 AddSystem, Assemble, SimulationSettings,
 StartRenderer, StopRenderer, GetNodeOutput,
 DynamicSolverType, SolveDynamic, SolveStatic, 
-TimeIntegrationSolve,__init__},          % Custom highlighting
+TimeIntegrationSolve,__init__, NumberOfSystems, Reset,
+%
+InertiaCuboid, Translated, GraphicsDataRigidLink, GraphicsDataBasis,
+AddRigidBody, AddRevoluteJoint, Info, DrawSystemGraph, SetRenderState,
+WaitForRenderEngineStopFlag, WaitForUserToContinue, LoadSolutionFile,
+SolutionViewer, PlotSensor
+},          % Custom highlighting
 emphstyle=\ttfamily\small\bfseries\color{deepred},    % Custom highlighting style
 stringstyle=\color{deepgreen},
 commentstyle=\color{commentgreen},
@@ -190,6 +187,12 @@ columns=flexible, %do not add Phantom spaces at "'"
 
 \newcommand{\bigmr}[9]{\left[\!\! \begin{array}{ccc} \displaystyle #1 & \displaystyle #2 & \displaystyle #3 \vspace{0.3cm}\\ \displaystyle #4 & \displaystyle #5 & \displaystyle #6 \vspace{0.3cm}\\ \displaystyle #7 & \displaystyle #8 & \displaystyle #9  \end{array} \!\!\right]}
 
+
+
+\newcommand{\ignoreRST}[1]{#1} %parts of docu that cannot be converted to .rst
+\newcommand{\onlyRST}[1]{} %parts of docu that are only visible in .rst file
+
+
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %page setup:
 \renewcommand{\baselinestretch}{1.2} %larger linespace
@@ -197,6 +200,7 @@ columns=flexible, %do not add Phantom spaces at "'"
 \topmargin-1.3cm \headheight0cm \headsep1cm \topskip1cm \leftmargini0.5cm \textwidth17cm \textheight24.5cm \footskip1cm   \oddsidemargin-0.5cm \evensidemargin-0.5cm %adjust page size
 
 \newcommand{\tabnewline}{\newline}
+\newcommand{\horizontalRuler}{\par\noindent\rule{\textwidth}{0.4pt}}
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %add numbering for \mysubsubsubsections
@@ -265,14 +269,27 @@ Johannes Gerstmayr\vspace{2cm}
 \pagenumbering{arabic} 
 \setcounter{page}{0}
 
+%++++++++++++++++++++++++++++++++++++++++++
+\section*{List of abbreviations}
+\begin{acronym}[ODE2t] %put here longest acronym for list of acronyms
+\acro{ODE2}{second order ordinary differential equations}
+%unused: \acro{ODE2t}[ODE2\_t]{velocities (or velocity terms) for second order ordinary differential equations}
+\acro{ODE1}{first order ordinary differential equations}
+\acro{AE}{algebraic equations}
+\acro{LHS}{Left-Hand-Side}
+\acro{RHS}{Right-Hand-Side}
+\acro{FFRF}{floating frame of reference formulation}
+\acro{CMS}{component mode synthesis}
+\acro{EOM}{equations of motion}
+\acro{COM}{center of mass}
+\end{acronym}
+%use as: \ac{ODE2} %singular, or \acp for plural, \acf for repeated full name.
+
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysection{Getting Started}
 \input{gettingStarted}
 
-\mysection{Overview on \codeName }
 \input{introduction}
 
-\mysection{Tutorial}
 \input{tutorial}
 
 
@@ -634,5 +651,4 @@ Note, that unicode character codes are shown only for completeness, but they {\b
 \lstinputlisting[breaklines=true, basicstyle=\ttm]{../../LICENSE.txt}
 }
 \end{document}
-
 

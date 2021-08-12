@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  13:31:26 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
     Matrix stiffnessMatrix;                       //!< AUTO: stiffness matrix of object in python numpy format
     Matrix dampingMatrix;                         //!< AUTO: damping matrix of object in python numpy format
     Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the ODE2 equations; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
     std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix; see description below
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     //! AUTO: default constructor with parameter initialization
@@ -58,7 +58,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectGenericODE2
-* @brief        A system of \f$n\f$ second order ordinary differential equations (ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions \f$n\f$ or \f$(n \times n)\f$, or they must be empty \f$(0 \times 0)\f$, except for the mass matrix which always needs to have dimensions \f$(n \times n)\f$.
+* @brief        A system of \f$n\f$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions \f$n\f$ or \f$(n \times n)\f$, or they must be empty \f$(0 \times 0)\f$, except for the mass matrix which always needs to have dimensions \f$(n \times n)\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -169,7 +169,7 @@ public: // AUTO:
         return parameters.nodeNumbers.NumberOfItems();
     }
 
-    //! AUTO:  number of ODE2 coordinates; needed for object?
+    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

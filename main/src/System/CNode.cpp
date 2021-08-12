@@ -198,19 +198,25 @@ const Real& CNodeData::GetCurrentCoordinate(Index i) const
 	return computationalData->currentState.dataCoords[globalDataCoordinateIndex + i];
 }
 
-//! get vector with current coordinates; corresponds to displacements
+//! get vector with current coordinates
 LinkedDataVector CNodeData::GetCurrentCoordinateVector() const
 {
 	return LinkedDataVector(computationalData->currentState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());
 }
 
-//! read globally stored initial coordinates (displacements)
+//! read globally stored initial coordinates
 LinkedDataVector CNodeData::GetInitialCoordinateVector() const
 {
 	return LinkedDataVector(computationalData->initialState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());
 }
 
-//! read visualization coordinates (displacements)
+//! read globally stored start of step coordinates 
+LinkedDataVector CNodeData::GetStartOfStepCoordinateVector() const
+{
+	return LinkedDataVector(computationalData->startOfStepState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());
+}
+
+//! read visualization coordinates
 LinkedDataVector CNodeData::GetVisualizationCoordinateVector() const
 {
 	return LinkedDataVector(computationalData->visualizationState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());

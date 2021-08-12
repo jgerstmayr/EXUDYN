@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-07-09  20:48:45 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix; 
-#include "Pymodules/PyMatrixContainer.h"//for some FFRF matrices
+#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectFFRFreducedOrderParameters
@@ -38,9 +38,9 @@ public: // AUTO:
     PyMatrixContainer massMatrixReduced;          //!< AUTO: body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)
     PyMatrixContainer stiffnessMatrixReduced;     //!< AUTO: body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)
     PyMatrixContainer dampingMatrixReduced;       //!< AUTO: body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the ODE2 equations; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
     std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below
-    bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector
+    bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard \hac{FFRF}/\hac{CMS} terms are computed; use this flag for user-defined definition of \hac{FFRF} terms in mass matrix and quadratic velocity vector
     Matrix modeBasis;                             //!< AUTO: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector \f$[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp\f$
     Matrix outputVariableModeBasis;               //!< AUTO: mode basis, which transforms reduced coordinates to output variables per mode and per node; \f$s_{OV}\f$ is the size of the output variable, e.g., 6 for stress modes (\f$S_{xx},...,S_{xy}\f$)
     OutputVariableType outputVariableTypeModeBasis;//!< AUTO: this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress
@@ -77,7 +77,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectFFRFreducedOrder
-* @brief        This object is used to represent modally reduced flexible bodies using the floating frame of reference formulation (FFRF) and the component mode synthesis (CMS). It can be used to model real-life mechanical systems imported from finite element codes or python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.
+* @brief        This object is used to represent modally reduced flexible bodies using the \hac{FFRF} and the \hac{CMS}. It can be used to model real-life mechanical systems imported from finite element codes or python tools such as NETGEN/NGsolve, see the \texttt{FEMinterface} in \refSection{sec:FEM:FEMinterface:__init__}. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \texttt{ObjectFFRFreducedOrderInterface}, especially the user functions \texttt{UFmassFFRFreducedOrder} and \texttt{UFforceFFRFreducedOrder}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -100,11 +100,11 @@ class CObjectFFRFreducedOrder: public CObjectSuperElement // AUTO:
 {
 protected: // AUTO: 
     CObjectFFRFreducedOrderParameters parameters; //! AUTO: contains all parameters for CObjectFFRFreducedOrder
-    bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble()
+    bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
     Real physicsMass;                             //!< AUTO: total mass [SI:kg] of FFRFreducedOrder object
     Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (COM)
-    Matrix3D physicsCenterOfMassTilde;            //!< AUTO: tilde matrix from local position of COM; autocomputed during initialization
+    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (\hac{COM})
+    Matrix3D physicsCenterOfMassTilde;            //!< AUTO: tilde matrix from local position of \hac{COM}; autocomputed during initialization
     mutable Vector tempUserFunctionForce;         //!< AUTO: temporary vector for UF force
     mutable ResizableVector tempCoordinates;      //!< AUTO: temporary vector containing coordinates
     mutable ResizableVector tempCoordinates_t;    //!< AUTO: temporary vector containing velocity coordinates
@@ -146,11 +146,11 @@ public: // AUTO:
     //! AUTO: Read access to parameters
     virtual const CObjectFFRFreducedOrderParameters& GetParameters() const { return parameters; }
 
-    //! AUTO:  Write (Reference) access to:ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble()
+    //! AUTO:  Write (Reference) access to:ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
     void SetObjectIsInitialized(const bool& value) { objectIsInitialized = value; }
-    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble()
+    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
     const bool& GetObjectIsInitialized() const { return objectIsInitialized; }
-    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble()
+    //! AUTO:  Read (Reference) access to:ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
     bool& GetObjectIsInitialized() { return objectIsInitialized; }
 
     //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of FFRFreducedOrder object
@@ -167,18 +167,18 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
     Matrix3D& GetPhysicsInertia() { return physicsInertia; }
 
-    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM)
+    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (\hac{COM})
     void SetPhysicsCenterOfMass(const Vector3D& value) { physicsCenterOfMass = value; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM)
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (\hac{COM})
     const Vector3D& GetPhysicsCenterOfMass() const { return physicsCenterOfMass; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\pv}_{COM}\f$local position of center of mass (COM)
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (\hac{COM})
     Vector3D& GetPhysicsCenterOfMass() { return physicsCenterOfMass; }
 
-    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\tilde \pv}_{COM}\f$tilde matrix from local position of COM; autocomputed during initialization
+    //! AUTO:  Write (Reference) access to:\f$\LU{b}{\tilde \bv}_{COM}\f$tilde matrix from local position of \hac{COM}; autocomputed during initialization
     void SetPhysicsCenterOfMassTilde(const Matrix3D& value) { physicsCenterOfMassTilde = value; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\tilde \pv}_{COM}\f$tilde matrix from local position of COM; autocomputed during initialization
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\tilde \bv}_{COM}\f$tilde matrix from local position of \hac{COM}; autocomputed during initialization
     const Matrix3D& GetPhysicsCenterOfMassTilde() const { return physicsCenterOfMassTilde; }
-    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\tilde \pv}_{COM}\f$tilde matrix from local position of COM; autocomputed during initialization
+    //! AUTO:  Read (Reference) access to:\f$\LU{b}{\tilde \bv}_{COM}\f$tilde matrix from local position of \hac{COM}; autocomputed during initialization
     Matrix3D& GetPhysicsCenterOfMassTilde() { return physicsCenterOfMassTilde; }
 
     //! AUTO:  Write (Reference) access to:\f$\fv_{temp} \in \Rcal^{n_{ODE2}}\f$temporary vector for UF force
@@ -260,7 +260,7 @@ public: // AUTO:
     //! AUTO:  Compute algebraic equations part of rigid body
     virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const override;
 
-    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2, ODE2_t, ODE1, AE
+    //! AUTO:  Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
@@ -311,10 +311,10 @@ public: // AUTO:
         return parameters.nodeNumbers.NumberOfItems();
     }
 
-    //! AUTO:  number of ODE2 coordinates; needed for object?
+    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override;
 
-    //! AUTO:  number of AE coordinates; depends on node
+    //! AUTO:  number of \hac{AE} coordinates; depends on node
     virtual Index GetAlgebraicEquationsSize() const override;
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
@@ -359,7 +359,7 @@ public: // AUTO:
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
 
-    //! AUTO:  always true, because FFRF-based object; return according LOCAL node number
+    //! AUTO:  always true, because \hac{FFRF}-based object; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override
     {
         localReferenceFrameNode = rigidBodyNodeNumber; return true;

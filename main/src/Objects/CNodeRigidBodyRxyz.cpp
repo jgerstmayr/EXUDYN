@@ -24,19 +24,98 @@
 void CNodeRigidBodyRxyz::CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const
 {
 	//CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): not implemented");
-	GetGlocal(Glocal);
-	angularVelocityLocal = GetAngularVelocityLocal();
+	//GetGlocal(Glocal);
+	//angularVelocityLocal = GetAngularVelocityLocal();
+
+	LinkedDataVector refCoordinates = GetReferenceCoordinateVector();
+	LinkedDataVector coordinates = GetCurrentCoordinateVector();
+	LinkedDataVector coordinates_t = GetCurrentCoordinateVector_t();
+
+	ConstSizeVector<maxRotationCoordinates> rot({
+		refCoordinates[nDisplacementCoordinates + 0] + coordinates[nDisplacementCoordinates + 0],
+		refCoordinates[nDisplacementCoordinates + 1] + coordinates[nDisplacementCoordinates + 1],
+		refCoordinates[nDisplacementCoordinates + 2] + coordinates[nDisplacementCoordinates + 2] });
+
+	//Real c0 = cos(rot[0]);
+	//Real s0 = sin(rot[0]);
+	Real c1 = cos(rot[1]);
+	Real s1 = sin(rot[1]);
+	Real c2 = cos(rot[2]);
+	Real s2 = sin(rot[2]);
+
+	Glocal = ConstSizeMatrix<3 * maxRotationCoordinates>(3, 3,
+		{ c1*c2, s2, 0,
+		  -c1 * s2, c2, 0,
+		  s1, 0, 1 });
+
+	Vector3D rot_t({
+		coordinates_t[nDisplacementCoordinates + 0],
+		coordinates_t[nDisplacementCoordinates + 1],
+		coordinates_t[nDisplacementCoordinates + 2] });
+
+	EXUmath::MultMatrixVector(Glocal, rot_t, angularVelocityLocal);
+
+
 }
 
-void CNodeRigidBodyRxyz::CollectCurrentNodeData2(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, 
+void CNodeRigidBodyRxyz::CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, 
 	Vector3D& pos, Vector3D& vel, Matrix3D& A,	Vector3D& angularVelocityLocal) const 
 {
-	GetGlocal(Glocal);
-	GetG(G);
-	pos = GetPosition();
-	vel = GetVelocity();
-	A = GetRotationMatrix();
-	angularVelocityLocal = GetAngularVelocityLocal();
+	//GetGlocal(Glocal);
+	//GetG(G);
+	//pos = GetPosition();
+	//vel = GetVelocity();
+	//A = GetRotationMatrix();
+	//angularVelocityLocal = GetAngularVelocityLocal();
+
+
+	LinkedDataVector refCoordinates = GetReferenceCoordinateVector();
+	LinkedDataVector coordinates = GetCurrentCoordinateVector();
+	LinkedDataVector coordinates_t = GetCurrentCoordinateVector_t();
+
+	ConstSizeVector<maxRotationCoordinates> rot({ 
+		refCoordinates[nDisplacementCoordinates + 0] + coordinates[nDisplacementCoordinates + 0],
+		refCoordinates[nDisplacementCoordinates + 1] + coordinates[nDisplacementCoordinates + 1],
+		refCoordinates[nDisplacementCoordinates + 2] + coordinates[nDisplacementCoordinates + 2] }); 
+
+	pos = Vector3D({ refCoordinates[0] + coordinates[0],
+		refCoordinates[1] + coordinates[1],
+		refCoordinates[2] + coordinates[2] });
+
+	vel = Vector3D({ coordinates_t[0],
+		coordinates_t[1],
+		coordinates_t[2] });
+
+	G = RigidBodyMath::RotXYZ2GTemplate<CSVector4D>(rot);
+	Real c0 = cos(rot[0]);
+	Real s0 = sin(rot[0]);
+	Real c1 = cos(rot[1]);
+	Real s1 = sin(rot[1]);
+	Real c2 = cos(rot[2]);
+	Real s2 = sin(rot[2]);
+
+	G = ConstSizeMatrix<3 * maxRotationCoordinates>(3, 3,
+			{ 1, 0, s1,
+			  0, c0, -c1 * s0,
+			  0, s0,  c0*c1 });
+
+	Glocal = ConstSizeMatrix<3 * maxRotationCoordinates>(3, 3,
+			{ c1*c2, s2, 0,
+			  -c1 * s2, c2, 0,
+			  s1, 0, 1 });
+
+	Vector3D rot_t({
+		coordinates_t[nDisplacementCoordinates + 0],
+		coordinates_t[nDisplacementCoordinates + 1],
+		coordinates_t[nDisplacementCoordinates + 2] });
+
+	EXUmath::MultMatrixVector(Glocal, rot_t, angularVelocityLocal);
+
+	A = Matrix3D(3, 3, { c1*c2,-c1 * s2,s1,
+					  s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2,-s0 * c1,
+					 -c0 * s1*c2 + s0 * s2,c0*s1*s2 + s0 * c2,c0*c1 });
+
+
 }
 
 // Compute vector to of 3 Euler angles from reference and configuration coordinates

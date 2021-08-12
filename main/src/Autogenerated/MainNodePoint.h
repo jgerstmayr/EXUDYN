@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-12-09  17:44:24 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodePoint
-* @brief        A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for second order differential equations (ODE2).
+* @brief        A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for \acf{ODE2}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

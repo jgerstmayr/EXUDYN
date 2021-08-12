@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-25  12:37:35 (last modfied)
+* @date         2021-08-11  16:20:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectFFRF
-* @brief        This object is used to represent equations modelled by the floating frame of reference formulation (FFRF). It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF. Note that temporary matrices and vectors are subject of change in future.
+* @brief        This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
