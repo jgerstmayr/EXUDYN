@@ -2039,5 +2039,5 @@ Finally, we can plot our sensor, drawing the y-component of the sensor:
 
 
 
- **FOR FURTHER INFORMATION GO TO theDoc.pdf** !!!
+\ **FOR FURTHER INFORMATION GO TO theDoc.pdf**\ !!!
 
