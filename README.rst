@@ -1,7 +1,7 @@
 ======
 Exudyn
 ======
-EXUDYN version = 1.0.288
+EXUDYN version = 1.0.293
 
 *A flexible multibody dynamics systems simulation code with Python and C++*
 
@@ -106,18 +106,17 @@ How to install Exudyn ?
 In order to run Exudyn , you need an appropriate Python installation.
 We currently (2021-07) recommend to use
 
-+  \ **Anaconda, 64bit, Python 3.7.7**\ (Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-2020.02-Windows-x86_64.exe``\ ) (but Python 3.8 is also working well!)
-+  \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation(or 64bit and are compiled up to the same minor version, i.e., 3.7.x. 
-	There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.)
++  \ **Anaconda, 64bit, Python 3.7.7**\  (Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-2020.02-Windows-x86_64.exe``\ ) (but Python 3.8 is also working well!)
++  \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation (or 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.)
 
 Many alternative options exist:
 
-+  In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5)(Anaconda 32bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86.exe``\ .)
++  In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5) (Anaconda 32bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86.exe``\ .)
 +  Users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
 +  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since Exudyn version 1.0.182.
-+  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)(Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
++  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5) (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
 
-If you plan to extend the C++ code, we recommend to use VS2017(previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
+If you plan to extend the C++ code, we recommend to use VS2017 (previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
 Once again, remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.6 32 bit \ **both**\  in the Exudyn module and in Spyder).
 
 \paragraphInstallation without Anaconda:
@@ -148,7 +147,7 @@ The simplest way on Windows 10 (and maybe also Windows 7), which works well \ **
 +  If python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:
 
 
-	\ ``C:\ProgramData\Anaconda3``\ 
+  \ ``C:\ProgramData\Anaconda3``\ 
 
 
 Install from Wheel (UBUNTU and Windows)
@@ -175,12 +174,12 @@ If the wheel installation does not work on UBUNTU, it is highly recommended to b
 First, open an Anaconda prompt:
 
 +  EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-+  You can check your python version then, by running \ ``python``\ (\ ``python3``\  under UBUNTU 18.04), the output reads like:
-	
-     \ ``Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32``\ 
-     ...
-	
-+  -> type \ ``exit()``\  to close python
++  You can check your python version then, by running \ ``python``\  (\ ``python3``\  under UBUNTU 18.04), the output reads like:
+  
+   \ ``Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32``\ 
+   ...
+  
++  => type \ ``exit()``\  to close python
 
 
 \ **Go to the folder \ ``Exudyn_git/main``\ **\  (where \ ``setup.py``\  lies) and choose the wheel in subdirectory \ ``main/dist``\  according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
@@ -195,7 +194,7 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 Work without installation and editing \ ``sys.path``\ 
 ======================================================
 
-The \ **uncommon and old way**\  (-> not recommended for Exudyn versions \ge 1.0.0) is to use Python's \ ``sys``\  module to link to your \ ``exudyn``\  (previously \ ``WorkingRelease``\ ) directory, for example:%
+The \ **uncommon and old way**\  (=> not recommended for Exudyn versions \ge 1.0.0) is to use Python's \ ``sys``\  module to link to your \ ``exudyn``\  (previously \ ``WorkingRelease``\ ) directory, for example:%
 
 
 
@@ -203,7 +202,7 @@ The \ **uncommon and old way**\  (-> not recommended for Exudyn versions \ge 1.0
 
   import sys
   sys.path.append('C:/DATA/cpp/EXUDYN_git/bin/EXUDYN32bitsPython36')
-
+\ 
 
 The folder \ ``EXUDYN32bitsPython36``\  needs to be adapted to the location of the according Exudyn package.
 
@@ -218,11 +217,11 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 +  close all Python programs (e.g. Spyder, Jupyter, ...)
 +  run an Anaconda prompt (may need to be run as administrator)
 +  if you cannot run Anaconda prompt directly, do:
-	
-  +  open windows shell (cmd.exe) as administrator (START -> search for cmd.exe -> right click on app -> 'run as administrator' if necessary)
-  +  go to your Scripts folder inside the Anaconda folder (e.g. \ ``C:\ProgramData\Anaconda\Scripts``\ )
-  +  run 'activate.bat'
-	
+  
++  open windows shell (cmd.exe) as administrator (START => search for cmd.exe => right click on app => 'run as administrator' if necessary)
++  go to your Scripts folder inside the Anaconda folder (e.g. \ ``C:\ProgramData\Anaconda\Scripts``\ )
++  run 'activate.bat'
+  
 +  go to 'main' of your cloned github folder of exudyn
 +  run: \ ``python setup.py install``\ 
 +  read the output; if there are errors, try to solve them by installing appropriate modules
@@ -257,10 +256,10 @@ For a compatible Mac OS X system, you can install the pre-compiled wheel (go to 
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \ ``main``\  directory of your repository and type
 
 +  \ ``python setup.py bdist_wheel``\ 
-   -> this compiles and takes approx.~5 minutes, depending on your machine
-   -> it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\ ``-framework Cocoa' and '-framework OpenGL``\ ', just go back in the terminal and copy everything from '\ ``g++ ...``\ ' until the end of the last command '\ ``-mmacosx-verion-min...``\ ' and paste it into the terminal. Callsing that again will finalize linking; then run again
+   => this compiles and takes approx.~5 minutes, depending on your machine
+   => it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\ ``-framework Cocoa' and '-framework OpenGL``\ ', just go back in the terminal and copy everything from '\ ``g++ ...``\ ' until the end of the last command '\ ``-mmacosx-verion-min...``\ ' and paste it into the terminal. Callsing that again will finalize linking; then run again
    \ ``python setup.py bdist_wheel``\ 
-   -> this now creates the wheel (if you want to distribute) in the \ ``dist``\  folder
+   => this now creates the wheel (if you want to distribute) in the \ ``dist``\  folder
    alternatively just call
 +  \ ``python setup.py install``\ 
    to install exudyn
@@ -283,7 +282,7 @@ Build and install Exudyn under UBUNTU?
 ==========================================
 
 
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ )(see also the youtube video: \ ``https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx``\ ):
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (see also the youtube video: \ ``https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx``\ ):
 
 First update ...
 
@@ -291,7 +290,7 @@ First update ...
 .. code-block::
 
   sudo apt-get update
-
+\ 
 
 
 
@@ -304,7 +303,7 @@ Install necessary python libraries and pip3; \ ``matplotlib``\  and\ ``scipy``\ 
   pip3 install numpy
   pip3 install matplotlib
   pip3 install scipy
-
+\ 
 
 
 Install pybind11 (needed for running the setup.py file derived from the pybind11 example):
@@ -312,7 +311,7 @@ Install pybind11 (needed for running the setup.py file derived from the pybind11
 .. code-block::
 
   pip3 install pybind11
-
+\ 
 
 
 
@@ -324,7 +323,7 @@ If graphics is used (\ ``\#define USE_GLFW_GRAPHICS``\  in \ ``BasicDefinitions.
   sudo apt-get install mesa-common-dev
   sudo apt-get install libglfw3 libglfw3-dev
   sudo apt-get install libx11-dev xorg-dev libglew1.5 libglew1.5-dev libglu1-mesa libglu1-mesa-dev libgl1-mesa-glx libgl1-mesa-dev
-
+\ 
 
 
 
@@ -333,7 +332,7 @@ With all of these libs, you can run the setup.py installer (go to \ ``Exudyn_git
 .. code-block::
 
   sudo python3 setup.py install --user
-
+\ 
 
 
 
@@ -352,7 +351,7 @@ You can also create a UBUNTU wheel which can be easily installed on the same mac
 
 +  Using \ **WSL2**\  (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
 +  \ **compiler (gcc,g++) conflicts**\ : It seems that Exudyn works well on UBUNTU18.04 with the original \ ``Python 3.6.9``\  and \ ``gcc-7.5.0``\  version as well as with UBUNTU20.04 with \ ``Python 3.8.5``\  and \ ``gcc-9.3.0``\ . Upgrading \ ``gcc``\  on a linux system with Python 3.6 to, e.g., \ ``gcc-8.2``\  showed us a linker error when loading the Exudyn module in python -- there are some common restriction using \ ``gcc``\  versions different from those with which the Python version has been built. Starting \ ``python``\  or \ ``python3``\  on your linux machine shows you the \ ``gcc``\  version it had been build with.
-	Check your current \ ``gcc``\  version with: \ ``gcc --version``\ 
+  Check your current \ ``gcc``\  version with: \ ``gcc --version``\ 
 
 
 Uninstall Exudyn 
@@ -381,16 +380,16 @@ There are several ways of using the code, but you \ **cannot**\  install Exudyn 
 In order to make full usage of the C++ code and extending it, you can use:
 
 +  Windows / Microsoft Visual Studio 2017 and above:
-	
-  +  get the files from git
-  +  put them into a local directory (recommended: \ ``C:/DATA/cpp/EXUDYN_git``\ )
-  +  start \ ``main_sln.sln``\  with Visual Studio
-  +  compile the code and run \ ``main/pythonDev/pytest.py``\  example code
-  +  adapt \ ``pytest.py``\  for your applications
-  +  extend the C++ source code
-  +  link it to your own code
-  +  NOTE: on Linux systems, you mostly need to replace '/' with '\'
-	
+  
++  get the files from git
++  put them into a local directory (recommended: \ ``C:/DATA/cpp/EXUDYN_git``\ )
++  start \ ``main_sln.sln``\  with Visual Studio
++  compile the code and run \ ``main/pythonDev/pytest.py``\  example code
++  adapt \ ``pytest.py``\  for your applications
++  extend the C++ source code
++  link it to your own code
++  NOTE: on Linux systems, you mostly need to replace '/' with '\'
+  
 +  Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
 
 
@@ -415,8 +414,7 @@ Future goals are:
 +  extend tests,
 +  add more multi-threaded parallel computing techniques (first trials implemented, improvements planned: Q3 2021),
 +  add vectorization,
-+  add specific and advanced connectors/constraints (3D revolute joint and prismatic joint instead of generic joint, extended wheels,
-	contact, control connector)
++  add specific and advanced connectors/constraints (3D revolute joint and prismatic joint instead of generic joint, extended wheels, contact, control connector)
 +  more interfaces for robotics,
 +  add 3D beams,
 +  extend floating frame of reference formulation with modal reduction
@@ -433,7 +431,7 @@ In order to start, run the python interpreter Spyder.
 For the following example, 
 
 
-+  open \ ``myFirstExample.py``\  from your \ ``EXUDYN32bitsPython36``\ (or any other directory according to your python version) directory
++  open \ ``myFirstExample.py``\  from your \ ``EXUDYN32bitsPython36``\  (or any other directory according to your python version) directory
 
 Hereafter, press the play button or \ ``F5``\  in Spyder.
 
@@ -448,7 +446,7 @@ If successful, the IPython Console of Spyder will print something like:
   EXUDYN V1.0.1 solver: implicit second order time integration
   STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
   solver finished after 0.0007824 seconds.
-
+\ 
 
 
 If you check your current directory (where \ ``myFirstExample.py``\  lies), you will find a new file \ ``coordinatesSolution.txt``\ , which contains the results of your computation (with default values for time integration).
@@ -481,8 +479,7 @@ The beginning and end of the file should look like:
   1,5e-05,0,0.0001,0,0.0001,0
   #simulation finished=2019-11-14,20:35:12
   #Solver Info: errorOccurred=0,converged=1,solutionDiverged=0,total time steps=100,total Newton iterations=100,total Newton jacobians=100
-
-
+\ 
 
 Within this file, the first column shows the simulation time and the following columns provide solution of coordinates, their derivatives and Lagrange multipliers on system level. As expected, the x-coordinate of the point mass has constant acceleration a=f/m=0.001/10=0.0001, the velocity grows up to 0.0001 after 1 second and the point mass moves 0.00005 along the x-axis.
 
@@ -510,9 +507,9 @@ Trouble shooting
       import exudynCPP
 
   ImportError: Module use of python36.dll conflicts with this version of Python.
+\ 
 
-
-Typical \ **error messages if 32/64 bits versions are mixed**\ :
+  Typical \ **error messages if 32/64 bits versions are mixed**\ :
 
 
 
@@ -524,36 +521,37 @@ Typical \ **error messages if 32/64 bits versions are mixed**\ :
       import exudynCPP
 
   ImportError: DLL load failed: \%1 is not a valid Win32 application.
+\ 
+
+  \ **There are several reasons and workarounds**\ :
+
+  |  =>  You mixed up 32 and 64 bits version (see below) 
+  |  =>  You are using an exudyn version for Python x_1.y_1 (e.g., 3.6.z_1) different from the Python x_2.y_2 version in your Anaconda (e.g., 3.7.z_2); note that x_1=x_2 and y_1=y_2 must be obeyed while z_1 and z_2 may be different
+
++  \ **ModuleNotFoundError: No module named 'exudynCPP'**\ :
 
 
-+   -> \ **There are several reasons and workarounds**\ :
-+  You mixed up 32 and 64 bits version (see below) 
-+  You are using an exudyn version for Python x_1.y_1 (e.g., 3.6.z_1) different from the Python x_2.y_2 version in your Anaconda (e.g., 3.7.z_2); note that x_1=x_2 and y_1=y_2 must be obeyed while z_1 and z_2 may be different
-+  \ ``ModuleNotFoundError: No module named 'exudynCPP'``\ :
 
+  |  =>  A known reason is that your CPU (do not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this) does not support AVX2, while Exudyn is compiled with the AVX2 option
+  |  =>  \ **workaround**\  to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
+  |  =>  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) => very often a new installation of Anaconda and Exudyn helps.
 
-    A known reason is that your CPU(do not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this) does not support AVX2, while exudyn is compiled with the AVX2 option; 
-
-
-		-> \ **workaround**\  to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
-   The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) -> very often a new installation of Anaconda and Exudyn helps.
 
 
 \ **Typical Python errors**\ :
 
-+  Python \ **syntax errors**\  with missing braces
++  Typical Python \ **syntax error**\  with missing braces:
 
 
 .. code-block::
 
-File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py", line 42
-    nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
-           ^
-SyntaxError: invalid syntax
+  File "C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py", line 42
+      nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
+             ^
+  SyntaxError: invalid syntax
+\ 
 
-
-   -> such an error points to the line of your code (line 42), but in fact the error may have
-	been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
+  |  =>  such an error points to the line of your code (line 42), but in fact the error may have been caused in previous code, such as in this case there was a missing brace in the line 40, which caused the error:
 
 .. code-block:: python
 
@@ -563,7 +561,7 @@ SyntaxError: invalid syntax
   41  #ground node
   42  nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
   43  
-
+\ 
 
 +  Typical Python \ **import error**\  message on Linux / UBUNTU if Python modules are missing:
 
@@ -573,9 +571,9 @@ SyntaxError: invalid syntax
   Python WARNING [file '/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py', line 236]: 
   Error when executing process ShowVisualizationSettingsDialog':
   ModuleNotFoundError: No module named 'tkinter'
+\ 
 
-
--> see installation instructions to install missing Python modules, theDoc.pdf.
+  |  =>  see installation instructions to install missing Python modules, theDoc.pdf.
  
 
 
@@ -589,14 +587,14 @@ SyntaxError: invalid syntax
   =========================================
   SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 207]: 
   CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
-    time/load step #1, time = 0.0002
-    causing system equation number (coordinate number) = 42
-
+  time/load step #1, time = 0.0002
+  causing system equation number (coordinate number) = 42
   =========================================
+\ 
 
 
-+   ->  this solver error shows that equation 42 is not solvable. The according coordinate is 
-	shown later in such an error message:
+  |  =>  this solver error shows that equation 42 is not solvable. The according coordinate is shown later in such an error message:
+
 
 .. code-block::
 
@@ -604,19 +602,19 @@ SyntaxError: invalid syntax
   The causing system equation 42 belongs to a algebraic variable (Lagrange multiplier)
   Potential object number(s) causing linear solver to fail: [7]
       object 7, name='object7', type=JointGeneric
+\ 
 
 
-+   -> object 7 seems to be the reason, possibly there are too much (joint) constraints applied
-	to your system, check this object.
-+   -> show typical REASONS and SOLUTIONS, by using \ ``showHints=True``\  in \ ``exu.SolveDynamic(...)``\  or 
-	\ ``exu.SolveStatic(...)``\ 
-+   -> You can also \ **highlight**\  object 7 by using the following code in the iPython console:
+  |  =>  object 7 seems to be the reason, possibly there are too much (joint) constraints applied to your system, check this object.
+  |  =>  show typical REASONS and SOLUTIONS, by using \ ``showHints=True``\  in \ ``exu.SolveDynamic(...)``\  or \ ``exu.SolveStatic(...)``\ 
+  |  =>  You can also \ **highlight**\  object 7 by using the following code in the iPython console:
+
 
 .. code-block:: python
 
   exu.StartRenderer()
   HighlightItem(SC,mbs,7)
-
+\ 
 
 which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command's description for further options, e.g., to highlight nodes.
 
@@ -639,16 +637,12 @@ which draws the according object in red and others gray/transparent (but sometim
     Newton (time/load step #3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125
   STEP348, t = 20 sec, timeToGo = 0 sec, Nit/step = 7.00575
   solver finished after 0.258349 seconds.
+\ 
 
 
-   -> this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
-   -> The static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
-   -> possible reasons are: too large time steps (reduce step size by using more steps/second), 
-	inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if the are the reason),
-	usually within a singular configuration.
-	Sometimes a system may be just unsolvable in the way you set it up.
-
-
+  |  =>  this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
+  |  =>  the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
+  |  =>  possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if the are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
 
 +  Typical solver error if (e.g., syntax) \ **error in user function**\  (output may be very long, \ **read always message on top!**\ ):
 
@@ -674,80 +668,79 @@ which draws the according object in red and others gray/transparent (but sometim
   =========================================
 
   Solver stopped! use showHints=True to show helpful information
+\ 
 
 
-   -> this indicates an error in the user function \ ``LoadCoordinate::loadVectorUserFunction``\ , because
-	\ ``sin``\  function has not been defined (must be imported, e.g., from \ ``math``\ ).
-	It indicates that the error occurred in line 48 in \ ``springDamperUserFunctionTest.py``\  within function \ ``Sweep``\ ,
-	which has been called from function \ ``userLoad``\ , etc.
+  |  =>  this indicates an error in the user function \ ``LoadCoordinate::loadVectorUserFunction``\ , because \ ``sin``\  function has not been defined (must be imported, e.g., from \ ``math``\ ). It indicates that the error occurred in line 48 in \ ``springDamperUserFunctionTest.py``\  within function \ ``Sweep``\ , which has been called from function \ ``userLoad``\ , etc.
+
  
 FAQ
 ===
 
 \ **Some frequently asked questions**\ :
 
-+  When importing Exudyn in python (windows) I get an error -> see trouble shooting instructions above!
++  When importing Exudyn in python (windows) I get an error 
+  |  =>  see trouble shooting instructions above!
 +  I do not understand the python errors -- how can I find the reason of the error or crash?
-	
-+   -> Read trouble shooting section above!	
-+   -> First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
-+   -> If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
-+   -> If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \ `` reply.exudyn@gmail.com``\ 
-	
+
+  |  =>  Read trouble shooting section above!	
+  |  =>  First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
+  |  =>  If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
+  |  =>  If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \ `` reply.exudyn@gmail.com``\ 
+
 +  Spyder console hangs up, does not show error messages, ...:
 
-
-	-> very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder); 
-
-
-	-> restarting the IPython console also brings back all error messages
-	
-
-\ **List of Frequently asked questions**\ :
+  |  =>  very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder)
+  |  =>  restarting the IPython console also brings back all error messages
 
 +  Where do I find the '.exe' file?
-	
-+   -> Exudyn is only available via the python interface as a module '\ ``exudyn``\ ', the C++ code being inside of \ ``exudynCPP.pyd``\ , which is located in the exudyn folder where you installed the package. This means that you need to \ **run python**\  (best: Spyder) and import the Exudyn module.
-	
+
+  |  =>  Exudyn is only available via the python interface as a module '\ ``exudyn``\ ', the C++ code being inside of \ ``exudynCPP.pyd``\ , which is located in the exudyn folder where you installed the package. This means that you need to \ **run python**\  (best: Spyder) and import the Exudyn module.
+
 +  I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
-	
-+   -> probably you used wrong item indices, see beginning of theDoc.pdf. 
-+  E.g., an object number \ ``oNum = mbs.AddObject(...)``\  is used at a place where a \ ``NodeIndex``\  is expected:
-	\ ``mbs.AddObject(MassPoint(nodeNumber=oNum, ...))``\ 
-+  Usually, this is an ERROR in your code, it does not make sense to mix up these indices!
-+  In the exceptional case, that you want to convert numbers, see beginning of theDoc.pdf.
-	
+
+  |  =>  probably you used wrong item indexes, see beginning of command interface in theDoc.pdf. 
+  |  =>  E.g., an object number \ ``oNum = mbs.AddObject(...)``\  is used at a place where a \ ``NodeIndex``\  is expected, e.g., \ ``mbs.AddObject(MassPoint(nodeNumber=oNum, ...))``\ 
+  |  =>  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
+  |  =>  In the exceptional case, that you want to convert numbers, see beginning of theDoc.pdf.
+
 +  Why does type auto completion does not work for mbs (Main system)?
-	
-+   -> UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
-+   -> most python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
 
+  |  =>  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
+  |  =>  most python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
+  |  =>  WORKAROUND: type \ ``mbs=MainSystem()``\  \ **before**\  the \ ``mbs=SC.AddSystem()``\  command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 
-	WORKAROUND: type \ ``mbs=MainSystem()``\  \ **before**\  the \ ``mbs=SC.AddSystem()``\  command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
-	
 +  How to add graphics?
-	
-+   -> Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object.
-	Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
-	
+
+  |  =>  Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
+
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
-	
-+   -> Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
-	
-+  I get an error in \ ``exu.SolveDynamic(mbs, ...)``\  OR in \ ``exu.SolveStatic(mbs, ...)``\ 
-	but no further information -- how can I solve it?
-	
-+   -> Typical time integration errors may look like:
 
+  |  =>  Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
 
-	() I do not understand the python errors -- how can I find the cause?
- 	
++  I get an error in \ ``exu.SolveDynamic(mbs, ...)``\  OR in \ ``exu.SolveStatic(mbs, ...)``\  but no further information -- how can I solve it?
+
+  |  =>  Typical time integration errors may look like:
+
+.. code-block::
+
+  File "C:/DATA/cpp/EXUDYN_git/main/pythonDev/...<file name>", line XXX, in <module>
+  solver.SolveSystem(...)
+  SystemError: <built-in method SolveSystem of PyCapsule object at 0x0CC63590> returned a result with an error set
+\ 
+
+  |  =>  The prechecks, which are performed to enable a crash-free simulation are insufficient for your model.
+  |  =>  As a first try, restart the IPython console in order to get all error messages, which may be blocked due to a previous run of Exudyn.
+  |  =>  Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(mbs,~t,~load), which tries to access load[4] will fail internally.
+  |  =>  Use the print(...) command in python at many places to find a possible error in user functions (e.g., put \ ``print("Start user function XYZ")``\  at the beginning of every user function.
+  |  =>  It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
+  |  =>  see also  I do not understand the python errors -- how can I find the cause?
 
 
 +  Why can't I get the focus of the simulation window on startup (render window hidden)?
-	
-+   -> Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools->Preferences->Editor->Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \ ``SC.visualizationSettings.window.alwaysOnTop=True``\  \ **before**\  starting the renderer with \ ``exu.StartRenderer()``\ 
-	
+
+  |  =>  Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools=>Preferences=>Editor=>Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \ ``SC.visualizationSettings.window.alwaysOnTop=True``\  \ **before**\  starting the renderer with \ ``exu.StartRenderer()``\ 
+
 
 
 
@@ -763,10 +756,10 @@ Module structure
  
 This section will show:
 
-  +  Overview of modules
-  +  Conventions: dimension of nodes, objects and vectors
-  +  Coordinates: reference coordinates and displacements
-  +  Nodes, Objects, Markers and Loads
++  Overview of modules
++  Conventions: dimension of nodes, objects and vectors
++  Coordinates: reference coordinates and displacements
++  Nodes, Objects, Markers and Loads
 
 For an introduction to the solvers, see theDoc.pdf.
 
@@ -775,18 +768,18 @@ Overview of modules
 
 Currently, the module structure is simple:
 
-  +  Python parts:
++  Python parts:
   
-     -  \ ``itemInterface``\ : contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
-     -  \ ``exudynUtilities``\ : constains helper classes in Python, which allows simpler working with EXUDYN
+ -  \ ``itemInterface``\ : contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+ -  \ ``exudynUtilities``\ : constains helper classes in Python, which allows simpler working with EXUDYN
   
-  +  C++ parts, see Figs.\ [theDoc.pdf] and [theDoc.pdf]:
++  C++ parts, see Figs.\ [theDoc.pdf] and [theDoc.pdf]:
   
-     -  \ ``exudyn``\ (For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \ ``import exudynFast as exu``\  and can be used same as exudyn. To check the version, just type exu.__doc__ and you will see a note on 'exudynFast' in the exudynFast module.): on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
-     -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
-     -  \ ``mbs``\ : system created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+ -  \ ``exudyn``\  (For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \ ``import exudynFast as exu``\  and can be used same as exudyn. To check the version, just type exu.__doc__ and you will see a note on 'exudynFast' in the exudynFast module.): on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+ -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
+ -  \ ``mbs``\ : system created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see theDoc.pdf;
-     -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see [figure in theDoc.pdf]
+ -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see [figure in theDoc.pdf]
   
 
 
@@ -820,9 +813,9 @@ For that reason, we denote planar nodes, objects, etc.\ with the suffix '2D', bu
 Output and input to objects, markers, loads, etc.\ is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
 As an example, consider a \ ``NodePoint2D``\ :
 
-  +  \ ``referenceCoordinates``\  is a 2D vector (but could be any dimension in general nodes)
-  +  measuring the current position of \ ``NodePoint2D``\  gives a 3D vector
-  +  when attaching a \ ``MarkerNodePosition``\  and a \ ``LoadForceVector``\ , the force will be still a 3D vector
++  \ ``referenceCoordinates``\  is a 2D vector (but could be any dimension in general nodes)
++  measuring the current position of \ ``NodePoint2D``\  gives a 3D vector
++  when attaching a \ ``MarkerNodePosition``\  and a \ ``LoadForceVector``\ , the force will be still a 3D vector
 
 Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
 
@@ -849,18 +842,18 @@ Objects are 'computational objects' and they provide equations to your system. O
 
 Objects can be a:
 
-  +  general object (e.g.\ a controller, user defined object, ...; no example yet)
-  +  body: has a mass or mass distribution; markers can be placed on bodies; loads can be applied; constraints can be attached via markers; bodies can be:
++  general object (e.g.\ a controller, user defined object, ...; no example yet)
++  body: has a mass or mass distribution; markers can be placed on bodies; loads can be applied; constraints can be attached via markers; bodies can be:
   
-     -  ground object: has no nodes
-     -  simple body: has one node (e.g. mass point, rigid body)
-     -  finite element and more complicated body (e.g. FFRF-object): has more than one node
+ -  ground object: has no nodes
+ -  simple body: has one node (e.g. mass point, rigid body)
+ -  finite element and more complicated body (e.g. FFRF-object): has more than one node
   
-  +  connector: uses markers to connect nodes and/or bodies; adds additional terms to system equations either based on stiffness/damping or with constraints (and Lagrange multipliers). Possible connectors:
++  connector: uses markers to connect nodes and/or bodies; adds additional terms to system equations either based on stiffness/damping or with constraints (and Lagrange multipliers). Possible connectors:
   
-     -  algebraic constraint (e.g. constrain two coordinates: q_1 = q_2)
-     -  classical joint
-     -  spring-damper or penalty constraint
+ -  algebraic constraint (e.g. constrain two coordinates: q_1 = q_2)
+ -  classical joint
+ -  spring-damper or penalty constraint
   
 
 
@@ -873,10 +866,10 @@ As a benefit, the constraint or load does not need to know whether it is applied
 
 Typical situations are:
 
-  +  Node -- Marker -- Load
-  +  Node -- Marker -- Constraint (object)
-  +  Body(object) -- Marker -- Load
-  +  Body1 -- Marker1 -- Joint(object) -- Marker2 -- Body2
++  Node -- Marker -- Load
++  Node -- Marker -- Constraint (object)
++  Body(object) -- Marker -- Load
++  Body1 -- Marker1 -- Joint(object) -- Marker2 -- Body2
 
 
 Loads
@@ -907,12 +900,12 @@ Exudyn Basics
  
 This section will show:
 
-  +  Interaction with the Exudyn module
-  +  Simulation settings
-  +  Visualization settings
-  +  Generating output and results
-  +  Graphics pipeline
-  +  Generating animations
++  Interaction with the Exudyn module
++  Simulation settings
++  Visualization settings
++  Generating output and results
++  Graphics pipeline
++  Generating animations
 
 
 
@@ -944,7 +937,7 @@ The simulation settings structure is created with
 .. code-block:: python
 
   simulationSettings = exu.SimulationSettings()
-
+\ 
 
 Hereafter, values of the structure can be modified, e.g.,
 
@@ -962,7 +955,7 @@ Hereafter, values of the structure can be modified, e.g.,
   simulationSettings.solutionSettings.solutionWritePeriod = 0.1      
   #use sparse matrix storage and solver (package Eigen):
   simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse 
-
+\ 
 
 
 Generating output and results
@@ -987,7 +980,7 @@ Typical output settings are:
 
   #do not export certain coordinates:
   simulationSettings.solutionSettings.exportDataCoordinates = False
-
+\ 
 
 
 
@@ -1022,7 +1015,7 @@ The visualization settings structure can be accessed in the system container \ `
   #turn on coloured plot, using y-component of displacements:
   SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
   SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
-
+\ 
 
 
 Storing the model view
@@ -1030,7 +1023,7 @@ Storing the model view
 
 
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ .
-A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation(
+A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
 
 .. code-block:: python
@@ -1047,7 +1040,7 @@ note that \ ``visualizationSettings.general.autoFitScene``\  should be set False
 
   #store model view for next run:
   StopRenderer() #stores render state in exu.sys['renderState']
-
+\ 
 
 
 Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
@@ -1063,7 +1056,7 @@ Alternatively, you can obtain the current model view from the console after a si
    'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
                      [-0.60402274,  0.76604444, 0.21984631],
                      [-0.7198463 , -0.6427876 , 0.26200265]])
-
+\ 
 
 which contains the last state of the renderer.
 Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python code to have a fixed model view in every simulation (\ ``SC.SetRenderState``\  AFTER \ ``exu.StartRenderer()``\ ):
@@ -1081,7 +1074,7 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
                                     [-0.7198463 , -0.6427876 ,  0.26200265]])
   SC.SetRenderState(renderState)
   #.... further code for simulation here
-
+\ 
 
 
 
@@ -1091,18 +1084,18 @@ Graphics pipeline
 There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:
 
-  +  compute new step
-  +  finish computation step; results are in current state
-  +  copy current state to visualization state (thread safe)
-  +  signal graphics pipeline that new visualization data is available
++  compute new step
++  finish computation step; results are in current state
++  copy current state to visualization state (thread safe)
++  signal graphics pipeline that new visualization data is available
 
 The openGL graphics thread (=separate thread) runs the following loop:
 
-  +  render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
-  +  go idle for some milliseconds
-  +  check if openGL rendering needs an update (e.g. due to user interaction)
-     -> if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
-  +  check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
++  render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
++  go idle for some milliseconds
++  check if openGL rendering needs an update (e.g. due to user interaction)
+   => if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
++  check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 
 
 Graphics user Python functions
@@ -1110,9 +1103,9 @@ Graphics user Python functions
 
 There are some user functions in order to customize drawing:
 
-  +  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\ ``GraphicsDataFromSTLfileTxt``\ ).
-  +  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see theDoc.pdf. With this function you can change the shape of the body in every step of the computation.
-  +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
++  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\ ``GraphicsDataFromSTLfileTxt``\ ).
++  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see theDoc.pdf. With this function you can change the shape of the body in every step of the computation.
++  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
 Note that all kinds of graphicsUserPythonFunctions need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
@@ -1121,10 +1114,10 @@ Color and RGBA
 
 Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
 
-  +  red (R) channel 
-  +  green (G) channel  
-  +  blue (B) channel 
-  +  alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
++  red (R) channel 
++  green (G) channel  
++  blue (B) channel 
++  alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
 
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \ ``exudynGraphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well a list of 10 colors \ ``color4list``\ , which is convenient to be used in a loop creating objects.
 
@@ -1154,7 +1147,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
   oGround2 = mbs.AddObject(ObjectGround(visualization=
                  VObjectGround(graphicsDataUserFunction=UFgraphics)))
   #.... further code for simulation here
-
+\ 
 
 
 Solution viewer
@@ -1165,9 +1158,9 @@ Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interf
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 
-  +  \ ``utilities.AnimateSolution``\ , see Section [theDoc.pdf]
-  +  \ ``interactive.SolutionViewer``\ , see Section [theDoc.pdf]
-  +  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see Section [theDoc.pdf]
++  \ ``utilities.AnimateSolution``\ , see Section [theDoc.pdf]
++  \ ``interactive.SolutionViewer``\ , see Section [theDoc.pdf]
++  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see Section [theDoc.pdf]
 
 The function \ ``AnimateSolution``\  allows to directly visualize the stored solution for according stored time frames.
 The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets you interact with the model ('Player').
@@ -1175,7 +1168,7 @@ In both methods \ ``AnimateSolution``\  and \ ``SolutionViewer``\ , the solution
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 
 see 
 
-  +  \ ``exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName``\ 
++  \ ``exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName``\ 
 
 You can call the \ ``SolutionViewer``\  either in the model, or at the command line / IPython to load a previous solution (belonging to the same mbs underlying the solution!):
 
@@ -1184,7 +1177,7 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
   from exudyn.interactive import SolutionViewer
   sol = LoadSolutionFile('coordinatesSolution.txt')
   SolutionViewer(mbs, sol)
-
+\ 
 
 \ **Alternatively**\ , you can just reload the last stored solution (according to your \ ``simulationSettings``\ ):
 
@@ -1192,7 +1185,7 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
 
   from exudyn.interactive import SolutionViewer
   SolutionViewer(mbs)
-
+\ 
 
 An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``\  directory, see \ ``solutionViewerTest.py``\ . 
 
@@ -1205,16 +1198,16 @@ In many dynamics simulations, it is very helpful to create animations in order t
 Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
 To turn on recording of images during solving, set the following flag to a positive value
 
-  +  \ ``simulationSettings.solutionSettings.recordImagesInterval = 0.01``\ 
++  \ ``simulationSettings.solutionSettings.recordImagesInterval = 0.01``\ 
 
 which means, that after every 0.01 seconds of simulation time, an image of the current view is taken and stored in the directory and filename (without filename ending) specified by 
 
-  +  \ ``SC.visualizationSettings.exportImages.saveImageFileName = "myFolder/frame"``\ 
++  \ ``SC.visualizationSettings.exportImages.saveImageFileName = "myFolder/frame"``\ 
 
 By default, a consecutive numbering is generated for the image, e.g., 'frame0000.tga, frame0001.tga,...'. Note that '.tga' files contain raw image data and therefore can become very large.
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
--> see theDoc.pdf !
+=> see theDoc.pdf !
 
 
 
@@ -1232,19 +1225,19 @@ Focus of the C++ code
 
 \ **Four principles**\ : 
 
-  +  developer-friendly
-  +  error minimization
-  +  efficiency
-  +  user-friendliness
++  developer-friendly
++  error minimization
++  efficiency
++  user-friendliness
 
 The focus is therefore on:
 
-    +  A developer-friendly basic structure regarding the C++ class library and the possibility to add new components.
-    +  The basic libraries are slim, but extensively tested; only the necessary components are available
-    +  Complete unit tests are added to new program parts during development; for more complex processes, tests are available in Python
-    +  In order to implement the sometimes difficult formulations and algorithms without errors, error avoidance is always prioritized.
-    +  To generate efficient code, classes for parallelization (vectorization and multithreading) are provided. We live the principle that parallelization takes place on multi-core processors with a central main memory, and thus an increase in efficiency through parallelization is only possible with small systems, as long as the program runs largely in the cache of the processor cores. Vectorization is tailored to SIMD commands as they have Intel processors, but could also be extended to GPGPUs in the future.
-    +  The user interface (Python) provides a 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.
++  A developer-friendly basic structure regarding the C++ class library and the possibility to add new components.
++  The basic libraries are slim, but extensively tested; only the necessary components are available
++  Complete unit tests are added to new program parts during development; for more complex processes, tests are available in Python
++  In order to implement the sometimes difficult formulations and algorithms without errors, error avoidance is always prioritized.
++  To generate efficient code, classes for parallelization (vectorization and multithreading) are provided. We live the principle that parallelization takes place on multi-core processors with a central main memory, and thus an increase in efficiency through parallelization is only possible with small systems, as long as the program runs largely in the cache of the processor cores. Vectorization is tailored to SIMD commands as they have Intel processors, but could also be extended to GPGPUs in the future.
++  The user interface (Python) provides a 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.
 
 
 C++ Code structure
@@ -1252,18 +1245,18 @@ C++ Code structure
 
 The functionality of the code is based on systems (MainSystem/CSystem) representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
 
-  +  CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
-  +  SystemContainer: holds a set of systems; connects to visualization (container)
-  +  node: used to hold coordinates (unknowns)
-  +  (computational) object: leads to equations, using nodes
-  +  marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
-  +  load: acts on an object or node via a marker
-  +  computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
-  +  visualization objects: interface between computational objects and 3D graphics
-  +  main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
-  +  static solver, kinematic solver, time integration
-  +  python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
-  +  interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
++  CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
++  SystemContainer: holds a set of systems; connects to visualization (container)
++  node: used to hold coordinates (unknowns)
++  (computational) object: leads to equations, using nodes
++  marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
++  load: acts on an object or node via a marker
++  computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
++  visualization objects: interface between computational objects and 3D graphics
++  main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
++  static solver, kinematic solver, time integration
++  python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
++  interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
 
 
 
@@ -1272,25 +1265,25 @@ C++ Code: Modules
 
 The following internal modules are used, which are represented by directories in \ ``main/src``\ :
 
-  +  Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
-  +  Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
-    +  Linalg: Linear algebra with vectors and matrices; separate classes for small vectors (SlimVector), large vectors (Vector and ResizableVector), vectors without copying data (LinkedDataVector), and vectors with constant size (ConstVector)
-  +  Main: mainly contains SystemContainer, System and ObjectFactory
-  +  Objects: contains the implementation part of the autogenerated items
-  +  Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
-  +  pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
-  +  Solver: contains all solvers for solving a CSystem
-  +  System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
-  +  Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
-    +  Utilities: array structures for administrative/managing tasks (indices of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
++  Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
++  Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
++  Linalg: Linear algebra with vectors and matrices; separate classes for small vectors (SlimVector), large vectors (Vector and ResizableVector), vectors without copying data (LinkedDataVector), and vectors with constant size (ConstVector)
++  Main: mainly contains SystemContainer, System and ObjectFactory
++  Objects: contains the implementation part of the autogenerated items
++  Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
++  pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
++  Solver: contains all solvers for solving a CSystem
++  System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
++  Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
++  Utilities: array structures for administrative/managing tasks (indices of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
 
 
 The following main external libraries are linked to Exudyn:
 
-  +  LEST: for testing of internal functions (e.g. linalg)
-  +  GLFW: 3D graphics with openGL; cross-platform capabilities
-  +  Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
-  +  pybind11: linking of C++ to python
++  LEST: for testing of internal functions (e.g. linalg)
++  GLFW: 3D graphics with openGL; cross-platform capabilities
++  Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
++  pybind11: linking of C++ to python
 
 
 Code style and conventions
@@ -1298,21 +1291,21 @@ Code style and conventions
 
 This section provides general coding rules and conventions, partly applicable to the C++ and python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
 
-    +  write simple code (no complicated structures or uncommon coding)
-    +  write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
-    +  put a header in every file, according to Doxygen format
-    +  put a comment to every (global) function, member function, data member, template parameter
-    +  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \i += 1;\
-    +  use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
-    +  use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
-    +  USE 4-spaces-tab
-    +  use C++11 standards when appropriate, but not exhaustively
-    +  ONE class ONE file rule (except for some collectors of single implementation functions)
-    +  add complete unit test to every function (every file has link to LEST library)
-    +  avoid large classes (>30 member functions; > 15 data members)
-    +  split up god classes (>60 member functions)
-    +  mark changed code with your name and date
-    +  REPLACE tabs by spaces: Extras->Options->C/C++->Tabstopps: tab stopp size = 4 (=standard) +  KEEP SPACES=YES
++  write simple code (no complicated structures or uncommon coding)
++  write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
++  put a header in every file, according to Doxygen format
++  put a comment to every (global) function, member function, data member, template parameter
++  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \i += 1;\
++  use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
++  use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
++  USE 4-spaces-tab
++  use C++11 standards when appropriate, but not exhaustively
++  ONE class ONE file rule (except for some collectors of single implementation functions)
++  add complete unit test to every function (every file has link to LEST library)
++  avoid large classes (>30 member functions; > 15 data members)
++  split up god classes (>60 member functions)
++  mark changed code with your name and date
++  REPLACE tabs by spaces: Extras->Options->C/C++->Tabstopps: tab stopp size = 4 (=standard) +  KEEP SPACES=YES
 
 
 Notation conventions
@@ -1320,24 +1313,24 @@ Notation conventions
 
 The following notation conventions are applied (\ **no exceptions!**\ ):
 
-    +  use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., f = M*q_tt + K*q, GBar, ...
-    +  use UpperCamelCase for functions, classes, structs, ...
-    +  Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
-    +  '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
-    +  use American English troughout: Visualization, etc.
-    +  for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
-    +  do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
-    +  for functions use \ ``ODEComputeCoords()``\ , for variables avoid 'ODE' at beginning: use nODE or write odeCoords
-    +  do not use '_' within variable or function names; exception: derivatives
-    +  use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
-    +  examples for variable names: secondOrderSize, massMatrix, mThetaTheta
-    +  examples for function/class names: \ ``SecondOrderSize``\ , \ ``EvaluateMassMatrix``\ , \ ``Position(const Vector3D\& localPosition)``\ 
-    +  use the Get/Set...() convention if data is retrieved from a class (Get) or something is set in a class (Set); Use \ ``const T\& Get()/T\& Get``\  if direct access to variables is needed; Use Get/Set for pybind11
-    +  example Get/Set: \ ``Real* GetDataPointer()``\ , \ ``Vector::SetAll(Real)``\ , \ ``GetTransposed()``\ , \ ``SetRotationalParameters(...)``\ , \ ``SetColor(...)``\ , ...
-    +  use 'Real' instead of double or float: for compatibility, also for AVX with SP/DP
-    +  use 'Index' for array/vector size and index instead of size_t or int
-    +  item: object, node, marker, load: anything handled within the computational/visualization systems
-    +  Do not use numbers (3 for 3D or any other number which represents, e.g., the number of rotation parameters). Use const Index or constexpr to define constants.
++  use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., f = M*q_tt + K*q, GBar, ...
++  use UpperCamelCase for functions, classes, structs, ...
++  Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
++  '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
++  use American English troughout: Visualization, etc.
++  for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
++  do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
++  for functions use \ ``ODEComputeCoords()``\ , for variables avoid 'ODE' at beginning: use nODE or write odeCoords
++  do not use '_' within variable or function names; exception: derivatives
++  use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
++  examples for variable names: secondOrderSize, massMatrix, mThetaTheta
++  examples for function/class names: \ ``SecondOrderSize``\ , \ ``EvaluateMassMatrix``\ , \ ``Position(const Vector3D\& localPosition)``\ 
++  use the Get/Set...() convention if data is retrieved from a class (Get) or something is set in a class (Set); Use \ ``const T\& Get()/T\& Get``\  if direct access to variables is needed; Use Get/Set for pybind11
++  example Get/Set: \ ``Real* GetDataPointer()``\ , \ ``Vector::SetAll(Real)``\ , \ ``GetTransposed()``\ , \ ``SetRotationalParameters(...)``\ , \ ``SetColor(...)``\ , ...
++  use 'Real' instead of double or float: for compatibility, also for AVX with SP/DP
++  use 'Index' for array/vector size and index instead of size_t or int
++  item: object, node, marker, load: anything handled within the computational/visualization systems
++  Do not use numbers (3 for 3D or any other number which represents, e.g., the number of rotation parameters). Use const Index or constexpr to define constants.
 
 
 No-abbreviations-rule
@@ -1348,17 +1341,17 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 
 Exceptions to the NO-ABBREVIATIONS-RULE:
 
-    +  ODE ... ordinary differential equations;
-    +  ODE2 ... marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
-    +  ODE1 ... marks parts related to first order differential equations (ES, EvalF in HOTINT)
-    +  AE ... algebraic equations (IS, EvalG in HOTINT); write 'AEcoordinates' for 'algebraicEquationsCoordinates'
-    +  'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
-    +  min, max ... minimum and maximum
-    +  write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, ...
-    +  write space-wise derivatives ith underscore: _x, _xx, _y, ...
-    +  if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)
-    +  for components, elements or entries of vectors, arrays, matrices: use 'item' throughout
-    +  '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
++  ODE ... ordinary differential equations;
++  ODE2 ... marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
++  ODE1 ... marks parts related to first order differential equations (ES, EvalF in HOTINT)
++  AE ... algebraic equations (IS, EvalG in HOTINT); write 'AEcoordinates' for 'algebraicEquationsCoordinates'
++  'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
++  min, max ... minimum and maximum
++  write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, ...
++  write space-wise derivatives ith underscore: _x, _xx, _y, ...
++  if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)
++  for components, elements or entries of vectors, arrays, matrices: use 'item' throughout
++  '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
 
 
 
@@ -1371,7 +1364,7 @@ Tutorial
 
 This section will show:
 
-  +  A basic tutorial for a 1D mass and spring-damper with initial displacements, shortest possible model with practically no special settings
++  A basic tutorial for a 1D mass and spring-damper with initial displacements, shortest possible model with practically no special settings
 +  A more advanced rigid-body model, including 3D rigid bodies and revolute joints
 +  Links to examples section
 
@@ -1401,7 +1394,7 @@ We import the exudyn library and the interface for all nodes, objects, markers, 
   import exudyn as exu
   from exudyn.itemInterface import *
   import numpy as np #for postprocessing
-
+\ 
 
 Next, we need a \ ``SystemContainer``\ , which contains all computable systems and add a new MainSystem \ ``mbs``\ .
 Per default, you always should name your system 'mbs' (multibody system), in order to copy/paste code parts from other examples, tutorials and other projects:
@@ -1410,14 +1403,14 @@ Per default, you always should name your system 'mbs' (multibody system), in ord
 
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
-
+\ 
 
 In order to check, which version you are using, you can printout the current Exudyn version. This version is in line with the issue tracker and marks the number of open/closed issues added to Exudyn :
 
 .. code-block:: python
 
   print('EXUDYN version='+exu.__version__)
-
+\ 
 
 Using the powerful Python language, we can define some variables for our problem, which will also be used for the analytical solution:
 
@@ -1428,7 +1421,7 @@ Using the powerful Python language, we can define some variables for our problem
   spring = 4000       #stiffness of spring-damper in N/m
   damper = 8          #damping constant in N/(m/s)
   f =80               #force on mass
-
+\ 
 
 For the simple spring-mass-damper system, we need initial displacements and velocities:
 
@@ -1439,17 +1432,17 @@ For the simple spring-mass-damper system, we need initial displacements and velo
   x0=f/spring         #static displacement
   print('resonance frequency = '+str(np.sqrt(spring/mass)))
   print('static displacement = '+str(x0))
-
+\ 
 
 We first need to add nodes, which provide the coordinates (and the degrees of freedom) to the system.
-The following line adds a 3D node for 3D mass point(Note: Point is an abbreviation for NodePoint, defined in \ ``itemInterface.py``\ .):
+The following line adds a 3D node for 3D mass point (Note: Point is an abbreviation for NodePoint, defined in \ ``itemInterface.py``\ .):
 
 .. code-block:: python
 
   n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
                        initialCoordinates = [u0,0,0], 
                        initialVelocities = [v0,0,0]))
-
+\ 
 
 Here, \ ``Point``\  (=\ ``NodePoint``\ ) is a Python class, which takes a number of arguments defined in the reference manual. The arguments here are \ ``referenceCoordinates``\ , which are the coordinates for which the system is defined. The initial configuration is given by \ ``referenceCoordinates + initialCoordinates``\ , while the initial state additionally gets \ ``initialVelocities``\ .
 The command \ ``mbs.AddNode(...)``\  returns a \ ``NodeIndex n1``\ , which basically contains an integer, which can only be used as node number. This node number will be used lateron to use the node in the object or in the marker.
@@ -1460,14 +1453,14 @@ Such a ground node is added via:
 .. code-block:: python
 
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
+\ 
 
-
-In the next step, we add an object(sec:programStructure.), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
+In the next step, we add an object (sec:programStructure.), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
 
 .. code-block:: python
 
   massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
-
+\ 
 
 In order to apply constraints and loads, we need markers. These markers are used as local positions (and frames), where we can attach a constraint lateron. In this example, we work on the coordinate level, both for forces as well as for constraints.
 Markers are attached to the according ground and regular node number, additionally using a coordinate number (0 ... first coordinate):
@@ -1479,7 +1472,7 @@ Markers are attached to the according ground and regular node number, additional
   #marker for springDamper for first (x-)coordinate:
   nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, 
                                                   coordinate = 0))
-
+\ 
 
 This means that loads can be applied to the first coordinate of node \ ``n1``\  via marker with number \ ``nodeMarker``\ ,
 which is in fact of type \ ``MarkerIndex``\ .
@@ -1491,7 +1484,7 @@ Now we add a spring-damper to the markers with numbers \ ``groundMarker``\  and 
   nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
                                        stiffness = spring, 
                                        damping = damper)) 
-
+\ 
 
 A load is added to marker \ ``nodeMarker``\ , with a scalar load with value \ ``f``\ :
 
@@ -1499,7 +1492,7 @@ A load is added to marker \ ``nodeMarker``\ , with a scalar load with value \ ``
 
   nLoad = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                                      load = f))
-
+\ 
 
 Finally, a sensor is added to the coordinate constraint object with number \ ``nC``\ , requesting the \ ``outputVariableType``\  \ ``Force``\ :
 
@@ -1507,7 +1500,7 @@ Finally, a sensor is added to the coordinate constraint object with number \ ``n
 
   mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
                              outputVariableType=exu.OutputVariableType.Force))
-
+\ 
 
 Note that sensors can be attached, e.g., to nodes, bodies, objects (constraints) or loads.
 As our system is fully set, we can print the overall information and assemble the system to make it ready for simulation:
@@ -1516,7 +1509,7 @@ As our system is fully set, we can print the overall information and assemble th
 
   print(mbs)
   mbs.Assemble()
-
+\ 
 
 We will use time integration and therefore define a number of steps (fixed step size; must be provided) and the total time span for the simulation:
 
@@ -1524,7 +1517,7 @@ We will use time integration and therefore define a number of steps (fixed step 
 
   steps = 1000  #number of steps to show solution
   tEnd = 1     #end time of simulation
-
+\ 
 
 All settings for simulation, see according reference section, can be provided in a structure given from \ ``exu.SimulationSettings()``\ . Note that this structure will contain all default values, and only non-default values need to be provided:
 
@@ -1535,14 +1528,14 @@ All settings for simulation, see according reference section, can be provided in
   simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
   simulationSettings.timeIntegration.numberOfSteps = steps
   simulationSettings.timeIntegration.endTime = tEnd
-
+\ 
 
 We are using a generalized alpha solver, where numerical damping is needed for index 3 constraints. As we have only spring-dampers, we can set the spectral radius to 1, meaning no numerical damping:
 
 .. code-block:: python
 
   simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-
+\ 
 
 In order to visualize the results online, a renderer can be started. As our computation will be very fast, it is a good idea to wait for the user to press SPACE, before starting the simulation (uncomment second line):
 
@@ -1550,7 +1543,7 @@ In order to visualize the results online, a renderer can be started. As our comp
 
   exu.StartRenderer()              #start graphics visualization
   #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)
-
+\ 
 
 As the simulation is still very fast, we will not see the motion of our node. Using e.g.\ \ ``steps=10000000``\  in the lines above allows you online visualize the resulting oscillations.
 
@@ -1559,7 +1552,7 @@ Finally, we start the solver, by telling which system to be solved, solver type 
 .. code-block:: python
 
   exu.SolveDynamic(mbs, simulationSettings)
-
+\ 
 
 
 After simulation, our renderer needs to be stopped (otherwise it would stay in background and prohibit further simulations). 
@@ -1569,7 +1562,7 @@ Sometimes you would like to wait until closing the render window, using \ ``Wait
 
   #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
   exu.StopRenderer()               #safely close rendering window!
-
+\ 
 
 There are several ways to evaluate results, see the reference pages. In the following we take the final value of node \ ``n1``\  and read its 3D position vector:
 
@@ -1578,7 +1571,7 @@ There are several ways to evaluate results, see the reference pages. In the foll
   #evaluate final (=current) output values
   u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
   print('displacement=',u)
-
+\ 
 
 The following code generates a reference (exact) solution for our example:
 
@@ -1600,17 +1593,17 @@ The following code generates a reference (exact) solution for our example:
     refSol[i,1] = np.exp(-omega0*dRel*t)*(C1*np.cos(omega*t)+C2*np.sin(omega*t))+x0
 
   plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
-
+\ 
 
 Now we can load our results from the default solution file \ ``coordinatesSolution.txt``\ , which is in the same
 directory as your python tutorial file. For convenient reading the file containing commented lines, we use a numpy feature and
-finally plot the displacement of coordinate 0 or our mass point(\ ``data[:,0]``\  contains the simulation time, \ ``data[:,1]``\  contains displacement of (global) coordinate 0, \ ``data[:,2]``\  contains displacement of (global) coordinate 1, ...)):
+finally plot the displacement of coordinate 0 or our mass point (\ ``data[:,0]``\  contains the simulation time, \ ``data[:,1]``\  contains displacement of (global) coordinate 0, \ ``data[:,2]``\  contains displacement of (global) coordinate 1, ...)):
 
 .. code-block:: python
 
   data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
-
+\ 
 
 The sensor result can be loaded in the same way. The sensor output format contains time in the first column and sensor values in the remaining columns. The number of columns depends on the 
 sensor and the output quantity (scalar, vector, ...):
@@ -1619,9 +1612,9 @@ sensor and the output quantity (scalar, vector, ...):
 
   data = np.loadtxt('groundForce.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)')
+\ 
 
-
-In order to get a nice plot within Spyder, the following options can be used(note, in some environments you need finally the command \ ``plt.show()``\ ):
+In order to get a nice plot within Spyder, the following options can be used (note, in some environments you need finally the command \ ``plt.show()``\ ):
 
 .. code-block:: python
 
@@ -1632,11 +1625,15 @@ In order to get a nice plot within Spyder, the following options can be used(not
   plt.legend() #show labels as legend
   plt.tight_layout()
   plt.show() 
-
+\ 
 
 The matplotlib output should look like this:
 
-  see theDoc.pdf
+
+
+.. image:: docs/theDoc/figures/plotSpringDamper.png
+   :width: 400
+
 
 
 
@@ -1650,7 +1647,14 @@ The python source code of the first tutorial can be found in the file:
 
    \ ``main/pythonDev/Examples/rigidBodyTutorial3.py``\ 
 
-This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in [figure in theDoc.pdf].
+This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in  the figure above.
+
+
+
+.. image:: docs/theDoc/figures/TutorialRigidBody1desc.png
+   :width: 400
+
+
 
 
 
@@ -1662,7 +1666,7 @@ We first import the exudyn library and the interface for all nodes, objects, mar
   from exudyn.itemInterface import *
   from exudyn.utilities import * 
   import numpy as np #for postprocessing
-
+\ 
 
 The submodule \ ``exudyn.utilities``\  contains helper functions for graphics representation, 3D rigid bodies and joints.
 
@@ -1672,7 +1676,7 @@ As in the first tutorial, we need a \ ``SystemContainer``\  and add a new MainSy
 
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
-
+\ 
 
 
 We define some geometrical parameters for lateron use.
@@ -1686,7 +1690,7 @@ We define some geometrical parameters for lateron use.
   bodyDim=[L,w,w] #body dimensions
   p0 =    [0,0,0]     #origin of pendulum
   pMid0 = np.array([L*0.5,0,0]) #center of mass, body0
-
+\ 
 
 
 We add an empty ground body, using default values. It's origin is at [0,0,0] and here we use no visualization.
@@ -1695,6 +1699,8 @@ We add an empty ground body, using default values. It's origin is at [0,0,0] and
 
   #ground body
   oGround = mbs.AddObject(ObjectGround())
+\ 
+
 
 
 
@@ -1707,7 +1713,7 @@ The \ ``RigidBodyInertia``\  can be used directly to create rigid bodies. Specia
   #first link:
   iCube0 = InertiaCuboid(density=5000, sideLengths=bodyDim)
   iCube0 = iCube0.Translated([-0.25*L,0,0]) #transform COM, COM not at reference point!
-
+\ 
 
 Note that the COM is translated in axial direction, while it would be at the body's local position [0,0,0] by default!
 
@@ -1718,9 +1724,9 @@ For visualization, we need to add some graphics for the body defined as a 3D Rig
   #graphics for body
   graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                        axis0=[0,0,1], axis1=[0,0,0], radius=[0.5*w,0.5*w], 
-                                       thickness = w, width = [1.2*w,1.2*w], color=color4red)
+                                       thickness=w, width=[1.2*w,1.2*w], color=color4red)
   graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
-
+\ 
 
 
 Now we have defined all data for the link (rigid body). We could use \ ``mbs.AddNode(NodeRigidBodyEP(...))``\  and \ ``mbs.AddObject(ObjectRigidBody(...))``\  to create a node and a body, but the \ ``exudyn.rigidBodyUtilities``\  offer a much more comfortable function:
@@ -1734,7 +1740,7 @@ Now we have defined all data for the link (rigid body). We could use \ ``mbs.Add
                        rotationMatrix = np.diag([1,1,1]),
                        gravity = g,
                        graphicsDataList = [graphicsBody0, graphicsCOM0])
-
+\ 
 
 which also adds a gravity load and could also set initial velocities, if wanted. 
 The \ ``nodeType``\  specifies the underlying model for the rigid body node, see theDoc.pdf.
@@ -1754,7 +1760,7 @@ For the \ **first two possibilities only**\ , we need the following markers
   #markers for ground and rigid body (not needed for option 3):
   markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
   markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*L,0,0]))
-
+\ 
 
 
 The very general option 1 is to use the \ ``GenericJoint``\ , that can be used to define any kind of joint with translations and rotations fixed or free,
@@ -1764,8 +1770,9 @@ The very general option 1 is to use the \ ``GenericJoint``\ , that can be used t
   #revolute joint option 1:
   mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], 
                              constrainedAxes=[1,1,1,1,1,0],
-                             visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
-
+                             visualization=VObjectJointGeneric(axesRadius=0.2*w, 
+                                                               axesLength=1.4*w)))
+\ 
 
 In addition, transformation matrices (\ ``rotationMarker0/1``\ ) can be added, see the joint description.
 
@@ -1777,9 +1784,10 @@ Option 2 is using the revolute joint, which allows a free rotation around the lo
   mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [markerGround, markerBody0J0], 
                                      rotationMarker0=np.eye(3),
                                      rotationMarker1=np.eye(3),
-                                     visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, axisLength=1.4*w)
+                                     visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, 
+                                                                         axisLength=1.4*w)
                                      )) 
-
+\ 
 
 Additional transformation matrices (\ ``rotationMarker0/1``\ ) can be added in order to chose any rotation axis.
 
@@ -1789,9 +1797,9 @@ Note that an error in the definition of markers for the joints can be also detec
 
   #example if wrong marker position is chosen:
   markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.4*L,0,0]))
+\ 
 
-
--> you will see a misalignment of the two parts of the joint by \ ``0.1*L``\ .
+=> you will see a misalignment of the two parts of the joint by \ ``0.1*L``\ .
 
 Due to the fact that the definition of markers for general joints is tedious, there is a utility function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:
 
@@ -1801,6 +1809,8 @@ Due to the fact that the definition of markers for general joints is tedious, th
   AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
                    axis=[0,0,1], useGlobalFrame=True, showJoint=True,
                    axisRadius=0.2*w, axisLength=1.4*w)
+\ 
+
 
 
 
@@ -1811,8 +1821,9 @@ The second link and the according joint can be set up in a very similar way:
 
   #second link:
   graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
-                                       axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
-                                       thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
+                                        axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
+                                        thickness = 0.1, width = [0.12,0.12], 
+                                        color=color4lightgreen)
 
   iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
 
@@ -1825,7 +1836,7 @@ The second link and the according joint can be set up in a very similar way:
                        angularVelocity = [0,0,0],
                        gravity = g,
                        graphicsDataList = [graphicsBody1])
-
+\ 
 
 
 The revolute joint in this case has a free rotation around the global x-axis:
@@ -1834,9 +1845,9 @@ The revolute joint in this case has a free rotation around the global x-axis:
 
   #revolute joint (free x-axis)
   AddRevoluteJoint(mbs, body0=b0, body1=b1, point=[L,0,0], 
-                    axis=[1,0,0], useGlobalFrame=True, showJoint=True,
-                    axisRadius=0.2*w, axisLength=1.4*w)
-
+                   axis=[1,0,0], useGlobalFrame=True, showJoint=True,
+                   axisRadius=0.2*w, axisLength=1.4*w)
+\ 
 
 
 Finally, we also add a sensor for some output of the double pendulum:
@@ -1847,6 +1858,8 @@ Finally, we also add a sensor for some output of the double pendulum:
   sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
                                  fileName='solution/sensorPos.txt',
                                  outputVariableType = exu.OutputVariableType.Position))
+\ 
+
 
 
 
@@ -1856,7 +1869,7 @@ Before simulation, we need to call \ ``Assemble()``\  for our system, which link
 .. code-block:: python
 
   mbs.Assemble()
-
+\ 
 
 After \ ``Assemble()``\ , markers, nodes, objects, etc. are linked and we can analyze the internal structure. First, we can print out useful information, either just typing \ ``mbs``\  in the iPython console to print out overal information:
 
@@ -1876,14 +1889,17 @@ After \ ``Assemble()``\ , markers, nodes, objects, etc. are linked and we can an
 
   For details see mbs.systemData, mbs.sys and mbs.variables
   >
+\ 
 
+Note that there are 2 nodes for the two rigid bodies. The five objects are due to ground object, 2 rigid bodies and 2 revolute joints.
+The meaning of markers can be seen in the graphical representation described below.
 
-or printing the full internal information as a dictionary using \ ``mbs.systemData.Info() ``\ :
+Alternatively we can print the full internal information as a dictionary using \ ``mbs.systemData.Info() ``\ :
 
 .. code-block:: python
 
   mbs.systemData.Info() #show detailed information
-
+\ 
 
 which results in the following output:
 
@@ -1902,15 +1918,24 @@ which results in the following output:
       'objectType': 'JointRevolute', 'markerNumbers': [3, 4], 'rotationMarker0': [[0.0, 1.0, 0.0], [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0]], 'rotationMarker1': [[0.0, 1.0, 0.0], [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0]], 'activeConnector': True, 'name': 'object2', 'Vshow': True, 'VaxisRadius': 0.019999999552965164, 'VaxisLength': 0.14000000059604645, 'Vcolor': [-1.0, -1.0, -1.0, -1.0]
   object3:
   ...
+\ 
 
 
-
-A graphical representation of the internal structure of the model can be shown use the command \ ``DrawSystemGraph``\ , for output see [figure in theDoc.pdf]:
+A graphical representation of the internal structure of the model can be shown using the command \ ``DrawSystemGraph``\ :
 
 .. code-block:: python
 
   DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
+\ 
 
+For the output see the figure below. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
+
+
+
+.. image:: docs/theDoc/figures/DrawSystemGraphExample.png
+   :width: 400
+
+%
 
 
 
@@ -1928,9 +1953,9 @@ Before starting our simulation, we should adjust the solver parameters, especial
   simulationSettings.timeIntegration.verboseMode = 1
   #simulationSettings.timeIntegration.simulateInRealtime = True
   simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
+\ 
 
-
-The \ ``verboseMode``\  tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but may slow down simulation significantly.
+The \ ``verboseMode``\  tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but slow down simulation significantly.
 The option \ ``simulateInRealtime``\  is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the \ ``SolutionViewer()``\ .
 With \ ``solutionWritePeriod``\  you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the \ ``SolutionViewer()``\  to reload the solution after simulation.
 
@@ -1944,7 +1969,7 @@ In order to improve visualization, there are hundreds of options, see Visualizat
 
   SC.visualizationSettings.nodes.drawNodesAsPoint=False
   SC.visualizationSettings.nodes.showBasis=True #shows three RGB (=xyz) lines for node basis
-
+\ 
 
 The option \ ``autoFitScene``\  is used in order to avoid zooming while loading the last saved render state, see below.
 
@@ -1953,7 +1978,7 @@ We can start the 3D visualization (Renderer) now:
 .. code-block:: python
 
   exu.StartRenderer()
-
+\ 
 
 
 In order to reload the model view of the last simulation (if there is any), we can use the following commands:
@@ -1964,7 +1989,7 @@ In order to reload the model view of the last simulation (if there is any), we c
       SC.SetRenderState(exu.sys['renderState'])
 
   mbs.WaitForUserToContinue() #stop before simulating
-
+\ 
 
 the function \ ``WaitForUserToContinue()``\  waits with simulation until we press SPACE bar. This allows us to make some pre-checks.
 
@@ -1974,7 +1999,7 @@ Finally, implicit time integration (simulation) is started with:
 
   exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
                    solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-
+\ 
 
 
 After simulation, the library would immediately exit (and jump back to iPython or close the terminal window). In order to avoid this, we can use \ ``WaitForRenderEngineStopFlag()``\  to wait until we press key 'Q'.
@@ -1983,7 +2008,7 @@ After simulation, the library would immediately exit (and jump back to iPython o
 
   SC.WaitForRenderEngineStopFlag() #stop before closing
   exu.StopRenderer() #safely close rendering window!
-
+\ 
 
 If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key. 
 If we do not stop the renderer (\ ``StopRenderer()``\ ), it will stay open for further simulations. However, it is safer to always close the renderer at the end.
@@ -1995,7 +2020,7 @@ As the simulation will run very fast, if you did not set \ ``simulateInRealtime`
   sol = LoadSolutionFile('coordinatesSolution.txt')
   from exudyn.interactive import SolutionViewer
   SolutionViewer(mbs, sol)
-
+\ 
 
 
 Finally, we can plot our sensor, drawing the y-component of the sensor:
@@ -2004,7 +2029,7 @@ Finally, we can plot our sensor, drawing the y-component of the sensor:
 
   from exudyn.plot import PlotSensor
   PlotSensor(mbs, [sens1],[1])
-
+\ 
 
 
 \ **Congratulations**\ ! You completed the rigid body tutorial, which gives you the ability to model multibody systems. Note that much more complicated models are possible, including feedback control or flexible bodies, see the Examples!

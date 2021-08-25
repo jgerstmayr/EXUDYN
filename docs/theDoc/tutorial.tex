@@ -5,14 +5,14 @@
 This section will show:
 \bi
   \item A basic tutorial for a 1D mass and spring-damper with initial displacements, shortest possible model with practically no special settings
-	\item A more advanced rigid-body model, including 3D rigid bodies and revolute joints
-	\item Links to examples section
+  \item A more advanced rigid-body model, including 3D rigid bodies and revolute joints
+  \item Links to examples section
 \ei
 %
 A large number of examples, some of them quite advanced, can be found in:
 \bi
-	\item[] \texttt{main/pythonDev/Examples}
-	\item[] \texttt{main/pythonDev/TestModels}
+  \item[] \texttt{main/pythonDev/Examples}
+  \item[] \texttt{main/pythonDev/TestModels}
 \ei
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -20,7 +20,7 @@ A large number of examples, some of them quite advanced, can be found in:
 \mysubsection{Mass-Spring-Damper tutorial}
 The python source code of the first tutorial can be found in the file:
 \bi
-	\item[] \texttt{main/pythonDev/Examples/springDamperTutorial.py}
+  \item[] \texttt{main/pythonDev/Examples/springDamperTutorial.py}
 \ei
 This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 \vspace{6pt}\\
@@ -216,9 +216,15 @@ In order to get a nice plot within Spyder, the following options can be used\foo
 \end{lstlisting}
 %
 The matplotlib output should look like this:
-\begin{center}
+\ignoreRST{\begin{center}
   \includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}
-\end{center}
+\end{center}}
+\onlyRST{
+
+.. image:: docs/theDoc/figures/plotSpringDamper.png
+   :width: 400
+
+}
 %
 %\vspace{24pt}
 %Further examples can be found in your copy of exudyn: 
@@ -232,21 +238,27 @@ The matplotlib output should look like this:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\newpage
 \mysubsection{Rigid body and joints tutorial}
 The python source code of the first tutorial can be found in the file:
 \bi
-	\item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3.py}
+  \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3.py}
 \ei
-This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \fig{fig_RigidBodyTutorialView}.
-\begin{figure}[tbph]
+This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in \ignoreRST{\fig{fig_RigidBodyTutorialView}.} \onlyRST{the figure above.}
+\ignoreRST{\begin{figure}[tbph]
   \begin{center}
     \includegraphics[width=0.9\textwidth]{figures/TutorialRigidBody1desc}
   \end{center}
   \caption{Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.}
-	\label{fig_RigidBodyTutorialView}
-\end{figure}
+  \label{fig_RigidBodyTutorialView}
+\end{figure}}
+\onlyRST{
 
-\horizontalRuler
+.. image:: docs/theDoc/figures/TutorialRigidBody1desc.png
+   :width: 400
+
+}
+\horizontalRuler\\
 \noindent We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
 \pythonstyle\begin{lstlisting}
   import exudyn as exu
@@ -279,7 +291,7 @@ The submodule \texttt{exudyn.utilities} contains helper functions for graphics r
   oGround = mbs.AddObject(ObjectGround())
 \end{lstlisting}
 
-\horizontalRuler
+\horizontalRuler\\
 \noindent For physical parameters of the rigid body, we can use the class \texttt{RigidBodyInertia}, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
 The \texttt{RigidBodyInertia} can be used directly to create rigid bodies. Special derived classes can be use to define rigid body inertias for cylinders, cubes, etc., so we use a cube here:
 \pythonstyle\begin{lstlisting}
@@ -294,7 +306,7 @@ Note that the COM is translated in axial direction, while it would be at the bod
   #graphics for body
   graphicsBody0 = GraphicsDataRigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                        axis0=[0,0,1], axis1=[0,0,0], radius=[0.5*w,0.5*w], 
-                                       thickness = w, width = [1.2*w,1.2*w], color=color4red)
+                                       thickness=w, width=[1.2*w,1.2*w], color=color4red)
   graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
 \end{lstlisting}
 
@@ -331,7 +343,8 @@ For the \mybold{first two possibilities only}, we need the following markers
   #revolute joint option 1:
   mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], 
                              constrainedAxes=[1,1,1,1,1,0],
-                             visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
+                             visualization=VObjectJointGeneric(axesRadius=0.2*w, 
+                                                               axesLength=1.4*w)))
 \end{lstlisting}
 In addition, transformation matrices (\texttt{rotationMarker0/1}) can be added, see the joint description.
 
@@ -341,7 +354,8 @@ In addition, transformation matrices (\texttt{rotationMarker0/1}) can be added, 
   mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [markerGround, markerBody0J0], 
                                      rotationMarker0=np.eye(3),
                                      rotationMarker1=np.eye(3),
-                                     visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, axisLength=1.4*w)
+                                     visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, 
+                                                                         axisLength=1.4*w)
                                      )) 
 \end{lstlisting}
 Additional transformation matrices (\texttt{rotationMarker0/1}) can be added in order to chose any rotation axis.
@@ -361,13 +375,14 @@ $\ra$ you will see a misalignment of the two parts of the joint by \texttt{0.1*L
                    axisRadius=0.2*w, axisLength=1.4*w)
 \end{lstlisting}
 
-\horizontalRuler
+\horizontalRuler\\
 \noindent The second link and the according joint can be set up in a very similar way:
 \pythonstyle\begin{lstlisting}
   #second link:
   graphicsBody1 = GraphicsDataRigidLink(p0=[0,0,-0.5*L],p1=[0,0,0.5*L], 
-                                       axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
-                                       thickness = 0.1, width = [0.12,0.12], color=color4lightgreen)
+                                        axis0=[1,0,0], axis1=[0,0,0], radius=[0.06,0.05], 
+                                        thickness = 0.1, width = [0.12,0.12], 
+                                        color=color4lightgreen)
 
   iCube1 = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1])
 
@@ -386,8 +401,8 @@ $\ra$ you will see a misalignment of the two parts of the joint by \texttt{0.1*L
 \pythonstyle\begin{lstlisting}
   #revolute joint (free x-axis)
   AddRevoluteJoint(mbs, body0=b0, body1=b1, point=[L,0,0], 
-                    axis=[1,0,0], useGlobalFrame=True, showJoint=True,
-                    axisRadius=0.2*w, axisLength=1.4*w)
+                   axis=[1,0,0], useGlobalFrame=True, showJoint=True,
+                   axisRadius=0.2*w, axisLength=1.4*w)
 \end{lstlisting}
 
 \noindent Finally, we also add a sensor for some output of the double pendulum:
@@ -399,7 +414,7 @@ $\ra$ you will see a misalignment of the two parts of the joint by \texttt{0.1*L
 \end{lstlisting}
 %
 
-\horizontalRuler
+\horizontalRuler\\
 \noindent Before simulation, we need to call \texttt{Assemble()} for our system, which links objects, nodes, ..., assigns initial values and does further pre-computations and checks:
 \pythonstyle\begin{lstlisting}
   mbs.Assemble()
@@ -422,7 +437,10 @@ After \texttt{Assemble()}, markers, nodes, objects, etc. are linked and we can a
   >
 \end{lstlisting}
 %
-or printing the full internal information as a dictionary using \texttt{mbs.systemData.Info() }:
+Note that there are 2 nodes for the two rigid bodies. The five objects are due to ground object, 2 rigid bodies and 2 revolute joints.
+The meaning of markers can be seen in the graphical representation described below.
+
+Alternatively we can print the full internal information as a dictionary using:
 \pythonstyle\begin{lstlisting}
   mbs.systemData.Info() #show detailed information
 \end{lstlisting}
@@ -443,22 +461,28 @@ which results in the following output:
   ...
 \end{lstlisting}
 
-\noindent A graphical representation of the internal structure of the model can be shown use the command \texttt{DrawSystemGraph}, for output see \fig{fig_RigidBodyTutorialGraph}:
+\noindent A graphical representation of the internal structure of the model can be shown using the command \texttt{DrawSystemGraph}:
 \pythonstyle\begin{lstlisting}
   DrawSystemGraph(mbs, useItemTypes=True) #draw nice graph of system
 \end{lstlisting}
+For the output see \ignoreRST{\fig{fig_DrawSystemGraphExample}}\onlyRST{the figure below}. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
 %
-\begin{figure}[tbph]
+\ignoreRST{\begin{figure}[tbph]
   \begin{center}
     \includegraphics[width=0.9\textwidth]{figures/DrawSystemGraphExample}
   \end{center}
   \caption{System graph for rigid body tutorial. Numbers are always related to the node number, object number, etc.; note that colors are used for nodes, objects, markers, etc. $\ra$ the label names (which do not include \texttt{Object..}, \texttt{Node..}) need to be read with the color information!}
-	\label{fig_RigidBodyTutorialGraph}
-\end{figure}
-%
+  \label{fig_DrawSystemGraphExample}
+\end{figure}}
+\onlyRST{
 
-\horizontalRuler
-\noindent Before starting our simulation, we should adjust the solver parameters, especially the end time, step size (no automatic step size for implicit solvers available!):
+.. image:: docs/theDoc/figures/DrawSystemGraphExample.png
+   :width: 400
+
+}%
+
+\horizontalRuler\\
+\noindent Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):
 \pythonstyle\begin{lstlisting}
   simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
@@ -470,7 +494,7 @@ which results in the following output:
   #simulationSettings.timeIntegration.simulateInRealtime = True
   simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
 \end{lstlisting}
-The \texttt{verboseMode} tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but may slow down simulation significantly.
+The \texttt{verboseMode} tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but slow down simulation significantly.
 The option \texttt{simulateInRealtime} is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the \texttt{SolutionViewer()}.
 With \texttt{solutionWritePeriod} you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the \texttt{SolutionViewer()} to reload the solution after simulation.
 
