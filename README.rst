@@ -1,7 +1,7 @@
 ======
 Exudyn
 ======
-EXUDYN version = 1.0.293
+EXUDYN version = 1.0.288
 
 *A flexible multibody dynamics systems simulation code with Python and C++*
 
@@ -74,7 +74,7 @@ Exudyn is currently  developed at the University of Innsbruck.
 In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT. 15 years of development led to a lot of lessions learned and after 20 years, a code must be re-designed.
 
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
-For the interoperability between C++ and Python, we extensively use \ **\ ``Pybind11``\ **\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without \ **\ ``Pybind11``\ **\  we couldn't have made this project -- Thank's a lot!
+For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thank's a lot!
 
 Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Sch\"oberl from TU-Vienna who boosted the design of the code with great concepts. 
 
