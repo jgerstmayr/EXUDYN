@@ -75,7 +75,26 @@ def MoveGraphicsData(g, pOff, Aoff):
             v = gNew['points'][i*3:i*3+3]
             v = p0 + A0 @ v
             gNew['points'][i*3:i*3+3] = list(v)
-
+        if 'normals' in gNew:
+            n=int(len(g['normals'])/3)
+            for i in range(n):
+                v = gNew['normals'][i*3:i*3+3]
+                v = A0 @ v
+                gNew['normals'][i*3:i*3+3] = list(v)
+    elif gNew['type'] == 'Line':
+        n=int(len(g['data'])/3)
+        for i in range(n):
+            v = gNew['data'][i*3:i*3+3]
+            v = p0 + A0 @ v
+            gNew['data'][i*3:i*3+3] = list(v)
+    elif gNew['type'] == 'Text':
+        v = p0 + A0 @ gNew['position']
+        gNew['position'] = list(v)
+    elif gNew['type'] == 'Circle':
+        v = p0 + A0 @ gNew['position']
+        gNew['position'] = list(v)
+        v = A0 @ gNew['normal']
+        gNew['normal'] = list(v)
     return gNew
 
 #************************************************

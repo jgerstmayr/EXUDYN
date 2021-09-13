@@ -47,24 +47,81 @@ dictJointType2Axis = {
     'Pz':np.array([0,0,1]), #prismatic joint for local Z axis
     }
 
-#**class: class to define a robot
+#RobotLink changes 2021-08-16:
+#localHT->localHT (does not include rotation); this joint to this link HT
+#add preHT: previous link to this joint HT
+#dictJointType2HT[link.jointType](q[i]): defines joint HT
+#localHT in MBS modeling (inertia, etc.) is kept same, while localHT = ID4 for ModDH
+#preHT must be added for joint axes definitions and for currentHT
+#inertia and COM need to be converted by localHT of StdDH into ModDH configuration!!!
+
+#**class: class to define visualization of RobotLink
+class VRobotLink:
+    #**classFunction: initialize robot link with parameters, being self-explaining
+    def __init__(self, jointRadius = 0.06, jointWidth = 0.05, showMBSjoint = True, linkWidth = 0.05, linkColor = [0.4,0.4,0.4,1], showCOM = True ):
+        self.jointRadius = jointRadius
+        self.jointWidth = jointWidth 
+        self.showMBSjoint = showMBSjoint
+        self.linkWidth = linkWidth 
+        self.linkColor = linkColor
+        self.showCOM = showCOM
+
+#**class: class to define one link of a robot
 class RobotLink:
     #**classFunction: initialize robot link
     #**input:
     #  mass: mass of robot link
     #  COM: center of mass in link coordinate system
     #  inertia: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
-    #  localHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous joint to link
+    #  localHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity
+    #  preHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity
     #  jointType: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
     #  parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
-    def __init__(self, mass, COM, inertia, localHT, jointType='Rz', parent=-2):
+    #  visualization: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
+    def __init__(self, mass, COM, inertia, localHT=HT0(), jointType='Rz', parent=-2, preHT=HT0(), visualization=VRobotLink()):
         self.mass = mass
         self.COM = np.array(COM)
         self.inertia = np.array(inertia)
         self.localHT = np.array(localHT)
+        self.preHT = np.array(preHT)
         self.jointType = jointType
         self.parent = parent
+        self.visualization = visualization
         
+#**class: class to define visualization of RobotTool
+class VRobotTool:
+    #**classFunction: initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
+    def __init__(self, graphicsData=[]):
+        self.graphicsData = graphicsData
+
+#**class: define tool of robot: containing graphics and HT (may add features in future)
+class RobotTool:
+    #**classFunction: initialize robot tool
+    #**input:
+    #  HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool
+    #  graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+    def __init__(self, HT=HT0(), visualization=VRobotTool()):
+        self.HT = np.array(HT)
+        self.visualization = visualization
+
+#**class: class to define visualization of RobotBase
+class VRobotBase:
+    #**classFunction: initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
+    def __init__(self, graphicsData=[]):
+        self.graphicsData = graphicsData
+
+    
+#**class: define base of robot: containing graphics and HT (may add features in future)
+class RobotBase:
+    #**classFunction: initialize robot base
+    #**input:
+    #  HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
+    #  graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+    def __init__(self, HT=HT0(), visualization=VRobotBase()):
+        self.HT = np.array(HT)
+        self.visualization = visualization
+    
+
 
 buildFromDictionaryWarned = False #do not use this variable, it is for deprecation warnings!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -77,13 +134,13 @@ class Robot:
     #  asfd: asdf
     def __init__(self, 
                  gravity=[0,0,-9.81],
-                 baseHT = HT0(),
-                 toolHT = HTtranslate([0,0,0]),
-                 referenceConfiguration = [],
+                 base = RobotBase(),
+                 tool = RobotTool(),
+                 referenceConfiguration = []
                  ):
         self.gravity = np.array(gravity)
-        self.baseHT = np.array(baseHT)
-        self.toolHT = np.array(toolHT)
+        self.base = base
+        self.tool = tool
         self.referenceConfiguration = np.array(referenceConfiguration)
         self.links = [] #initialize list of link data
         
@@ -109,15 +166,15 @@ class Robot:
 
     #**classFunction: return base as homogeneous transformation
     def GetBaseHT(self):
-        return self.baseHT
+        return self.base.HT
 
     #**classFunction: return base as homogeneous transformation
     def GetToolHT(self):
-        return self.toolHT
+        return self.tool.HT
     
-    #**classFunction: compute list of homogeneous transformations for every joint, using current joint coordinates q
-    def JointHT(self, q):
-        Tcurrent = self.baseHT
+    #**classFunction: compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
+    def LinkHT(self, q):
+        Tcurrent = self.base.HT
         HT = []
         
         for i in range(len(self.links)):
@@ -126,7 +183,7 @@ class Robot:
             #T01 = return HTrotateZ(theta) @ HTtranslate([0,0,d]) @ HTtranslate([a,0,0]) @ HTrotateX(alpha)
 
             #call function to compute HT for joint rotation/translation:
-            T01 = dictJointType2HT[link.jointType](q[i]) @ link.localHT
+            T01 = link.preHT @ dictJointType2HT[link.jointType](q[i]) @ link.localHT
             #T01 = HTrotateZ(theta) @ link.localHT
             #... translation?
             
@@ -143,16 +200,32 @@ class Robot:
         
         return HT    
 
-    #**classFunction: compute list of  homogeneous transformations HT from base to every COM using HT list from ComputeJointHT
+    #**classFunction: compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
+    def JointHT(self, q):
+        Tcurrent = self.base.HT
+        HT = []
+        
+        for i in range(len(self.links)):
+            link = self.links[i]
+
+            T01 = link.preHT @ dictJointType2HT[link.jointType](q[i])
+            Tcurrent = Tcurrent @ T01
+            HT += [Tcurrent]
+            
+            Tcurrent = Tcurrent @ link.localHT
+        
+        return HT
+
+    #**classFunction: compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
     def COMHT(self, HT):
         HTCOM = []
         
         for i in range(len(self.links)):
-            HTCOM += [HT[i] @ HTtranslate(self.links[i].COM)]
+            HTCOM += [HT[i] @ self.links[i].localHT @ HTtranslate(self.links[i].COM)]
         
         return HTCOM
     
-    #**classFunction: compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot)
+    #**classFunction: compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
     def StaticTorques(self,HT):
         jointTorques = np.zeros(np.size(self.links))
     
@@ -169,10 +242,10 @@ class Robot:
         return jointTorques
     
     
-    #**classFunction: compute jacobian for translation and rotation at toolPosition using joint HT; this is using the available functions, but is highly inefficient, because it repeatedly computes jacobians
+    #**classFunction: compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
     #**input:
-    #  HT: list of homogeneous transformations per joint , as computed by ComputeJointHT(...)
-    #  toolPosition: additional translation to last link (e.g., an additional for tool) at which the jacobian is evaluated
+    #  HT: list of homogeneous transformations per joint , as computed by Robot.JointHT(...)
+    #  toolPosition: global position at which the jacobian is evaluated (e.g., COM); if empty [], it uses the origin of the last link
     #  mode: 'all'...translation and rotation jacobian, 'trans'...only translation part, 'rot': only rotation part
     def Jacobian(self,HT,toolPosition=[],mode='all'):
         n = len(HT)
@@ -181,17 +254,20 @@ class Robot:
     
         Jomega = np.zeros((3,n))#rotation part of jacobian
         Jvel = np.zeros((3,n))  #translation part of jacobian
-        A = HT2rotationMatrix(self.GetBaseHT())
-        vPrevious = HT2translation(self.GetBaseHT())
+        #A = HT2rotationMatrix(self.GetBaseHT())
+        #vPrevious = HT2translation(self.GetBaseHT())
+        
         vn = toolPosition
         if len(vn) == 0:
-            vn = HT2translation(HT[-1]) #tool position, for jacobian (could include tool itself)
+            #vn = HT2translation(HT[-1]) #tool position, for jacobian (could include tool itself)
+            vn = HT2translation(HT[-1] @ self.links[-1].localHT) #last link coordinates
         
         #OLD DH parameter based: rotAxis = np.array([0,0,1]) #robot axis in local coordinates
         for i in range(n):
-            if i > 0:
-                A = HT2rotationMatrix(HT[i-1]) #rotation of joint i
+            #if i > 0:
+            A = HT2rotationMatrix(HT[i]) #rotation of joint i
 
+            # localAxis = HT2rotationMatrix(self.links[i].preHT) @ dictJointType2Axis[self.links[i].jointType]
             localAxis = dictJointType2Axis[self.links[i].jointType]
 
             axis = A @ localAxis #axis in global coordinates
@@ -199,8 +275,8 @@ class Robot:
             if self.links[i].jointType[0] == 'R':
                 Jomega[0:3,i] = axis #only considered, if revolute joint
             
-            if i > 0:
-                vPrevious = HT2translation(HT[i-1])
+            #vPrevious = HT2translation(HT[i] @ self.links[i].preHT)
+            vPrevious = HT2translation(HT[i])
              
             #revolute joint:
             if self.links[i].jointType[0] == 'R': #revolute joint
@@ -232,8 +308,7 @@ class Robot:
     #   baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
     #   jointLoadUserFunctionList: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
     #   createJointTorqueLoads: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
-    #   rotationMarkerBase: used in Generic joint between first joint and base; note, that for moving base, the static compensation does not work (base rotation must be updated)
-    #   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint
+    #   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
     #**output: the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List), and unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List)
     def CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointLoadUserFunctionList=[], 
                                      createJointTorqueLoads=True, *args, **kwargs):
@@ -248,12 +323,27 @@ class Robot:
         unitTorque0List = []    #contains unit torque0 (previous/left link) for joint i, should be multiplied with according factor to represent joint torque
         unitTorque1List = []    #contains unit torque1 (next/right link) for joint i, should be multiplied with according factor to represent joint torque
         
-        Tcurrent = self.baseHT
+        Tcurrent = self.GetBaseHT()
         
         lastMarker = baseMarker
-        
+        lastMarkerRotation = np.identity(3) #base rotation included in marker
+        if 'rotationMarkerBase' in kwargs:
+            lastMarkerRotation = kwargs['rotationMarkerBase']  
+            
         qRef = self.referenceConfiguration
-    
+        
+        baseObject = -1 #if it does not exist
+        if self.base.visualization.graphicsData != []:
+            #add a ground object at base position
+            graphicsDataBase = []
+            pOff = HT2translation(self.base.HT)
+            Aoff = HT2rotationMatrix(self.base.HT)
+            for data in self.base.visualization.graphicsData:
+                graphicsDataBase += [MoveGraphicsData(data, [0,0,0], Aoff)] #only rotated, translation is in ground
+
+            baseObject = mbs.AddObject(ObjectGround(referencePosition=pOff, 
+                                                    visualization=VObjectGround(graphicsData=graphicsDataBase)))
+        
         #create robot nodes and bodies:
         for i in range(len(self.links)):
             link = self.links[i]
@@ -266,13 +356,27 @@ class Robot:
             #     DHparam[1] = robot['referenceConfiguration'][i] #add reference displacement
                 
             # T01 = DH2HT(DHparam) #transformation from last link to this link; it defines the orientation of the body
-            T01 = dictJointType2HT[link.jointType](qRef[i]) @ link.localHT
+            T01 = link.preHT @ dictJointType2HT[link.jointType](qRef[i]) @ link.localHT
             Tcurrent = Tcurrent @ T01
             
-            #the next (distal) joint (joint1) is aligned with the z-axis of the body's frame:
-            p1 = np.array([0,0,0.]) #this defines the reference position for the graphics link and is also the joint position
-            # axis1 = np.array([0,0,1.])
-            axis1 = dictJointType2Axis[link.jointType] 
+            #++++++++++++++++++++++++++++++++++++++++++++++
+            #quantities related to drawing and joints:
+
+            #transformation for marker1 of next joint, needs preHT
+            #Aprev = np.identity(3) #only used for base rotation
+            #if i == 0: #for base we must add a transformation
+            #    if 'rotationMarkerBase' in kwargs:
+            #        Aprev = kwargs['rotationMarkerBase']
+            #else:
+            #    Aprev = HT2rotationMatrix(self.links[i-1].preHT)
+
+            #compute axis1 related to next link (for std DH, this is local z-axis in link coordinates)
+            if i == len(self.links)-1:
+                pNext = np.array([0,0,0.]) #use local position for final link
+                axisNext=np.array([0,0,0]) #no axis to draw for last link
+            else:
+                pNext = HT2translation(self.links[i+1].preHT) #this defines the position for the local of the axis for next link
+                axisNext = HT2rotationMatrix(self.links[i+1].preHT) @ dictJointType2Axis[self.links[i+1].jointType] 
         
             #the previous joint (joint0) axis is rotated back with alpha and translated along -x with a
             # d = link['stdDH'][1]
@@ -283,13 +387,17 @@ class Robot:
             # axis0 = A0T @ np.array([0,0,1.])
 
             localHTinv = InverseHT(link.localHT)
-            A0T = HT2rotationMatrix(localHTinv) #transforms back to joint0
-            p0 =  HT2translation(localHTinv) #A0T @ np.array([-a,0,-d]) #needed for marker of next link
+            AthisT = HT2rotationMatrix(localHTinv) #transforms back to joint0
+            pThis =  HT2translation(localHTinv) #AthisT @ np.array([-a,0,-d]) #needed for marker of next link
             
-            if i == 0:
-                axis0=np.array([0,0,0]) #no axis to draw for last link
-            else:
-                axis0 = A0T @ dictJointType2Axis[self.links[i-1].jointType] #for drawing
+            #compute axis of previous link, for std DH, this is transformed back to previous joint
+            # WRONG: 
+            # if i == 0:
+            #     axis0 = np.array([0,0,0]) #no axis to draw for first link
+            # else:
+            jointAxis = dictJointType2Axis[link.jointType]
+            axis0 = AthisT @ jointAxis #for drawing
+            #++++++++++++++++++++++++++++++++++++++++++++++
             
             
             #rigid body parameters:
@@ -299,7 +407,16 @@ class Robot:
             inertiaLink = inertiaLink.Translated(com) #needs to be recomputed, because inertia in Robot is w.r.t. COM, but ObjectRigidBody needs inertia for reference point
             
             #++++++++++++++++++++++++
-            graphicsList = self.GetLinkGraphicsData(i, p0, p1, axis0, axis1)
+            graphicsList = self.GetLinkGraphicsData(i, pThis, pNext, axis0, axisNext, link.visualization)
+
+            #add transformed graphicsData of tool to link graphics
+            if (i==len(self.links)-1 and #tool
+                self.tool.visualization.graphicsData != []):
+                pOff = HT2translation(self.tool.HT)
+                Aoff = HT2rotationMatrix(self.tool.HT)
+                for data in self.tool.visualization.graphicsData:
+                    graphicsList += [MoveGraphicsData(data, pOff, Aoff)] 
+
             
             #++++++++++++++++++++++++
             #now add body for link:
@@ -315,27 +432,45 @@ class Robot:
         
             #++++++++++++++++++++++++
             #add markers and joints
-            mLink0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bLink, localPosition=p0))
-            mLink1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bLink, localPosition=[0,0,0]))
+            mLink0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bLink, localPosition=pThis))
+            markerPositionLink1 = [0,0,0] #not used in last link!
+            if i < len(self.links)-1:
+                markerPositionLink1 = HT2translation(self.links[i+1].preHT) #this is defined in the next link!
+            mLink1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bLink, localPosition=markerPositionLink1))
+            #print("p0=", pThis,",p1=", markerPositionLink1)
+
             markerList0+=[mLink0]
             markerList1+=[mLink1]
-            
-            rotation1 = np.identity(3) #only used for base rotation
-            if i == 0: #only for base we can add a transformation
-                if 'rotationMarkerBase' in kwargs:
-                    rotation1 = kwargs['rotationMarkerBase']
-                
+
+            if link.jointType != 'Rz':
+                raise ValueError("Robot.CreateRedundantCoordinateMBS(...): joint type other than 'Rz' not implemented!")
+                #would need to change constrainedAxes accordingly!
+
+            r = link.visualization.jointRadius
+            wJ = link.visualization.jointWidth
+            showMBSjoint = link.visualization.showMBSjoint
+
+
+            #change order of markers, to get other definition of joint angles (kinematicTree has different sign!)
+            # jointLink = mbs.AddObject(GenericJoint(markerNumbers=[lastMarker, mLink0],
+            #                                        constrainedAxes=[1,1,1,1,1,0],
+            #                                        rotationMarker0=lastMarkerRotation,
+            #                                        rotationMarker1=AthisT,
+            #                                        visualization=VObjectJointGeneric(show=showMBSjoint, 
+            #                                                                          axesRadius = 0.25*r, 
+            #                                                      axesLength=1.2*wJ, color=color4red)))
             jointLink = mbs.AddObject(GenericJoint(markerNumbers=[mLink0, lastMarker],
-                                                   #constrainedAxes=[1,1,1,1,1,0],
-                                                   constrainedAxes=[1,1,1,1,1,0],
-                                                   rotationMarker0=A0T,
-                                                   rotationMarker1=rotation1,
-                                                   visualization=VObjectJointGeneric(axesRadius = 0.01,axesLength=0.1, color=color4red)))
+                                                    constrainedAxes=[1,1,1,1,1,0],
+                                                    rotationMarker0=AthisT,
+                                                    rotationMarker1=lastMarkerRotation,
+                                                    visualization=VObjectJointGeneric(show=showMBSjoint, axesRadius = 0.25*r, 
+                                                                  axesLength=1.2*wJ, color=color4red)))
+
                     
             #load on previous body, negative sign
             loadSize = 1
-            torque0 = np.array([0,0, -loadSize])
-            torque1 = -A0T @ torque0 #rotated negative torque vector for current link, it is not the z-axis
+            torque0 = lastMarkerRotation @ (-loadSize*jointAxis) #np.array([0,0, -loadSize])
+            torque1 = AthisT @ (loadSize*jointAxis) #rotated negative torque vector for current link, it is not the z-axis
             unitTorque0List += [torque0]
             unitTorque1List += [torque1]
 
@@ -357,6 +492,10 @@ class Robot:
             jointList+=[jointLink]
     
             lastMarker = mLink1
+            if i < len(self.links)-1:
+                lastMarkerRotation = HT2rotationMatrix(self.links[i+1].preHT) #needed for modified DH parameters
+                #lastMarkerRotation = HT2rotationMatrix(link.preHT) #needed for modified DH parameters
+            
             #end loop over links
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -367,33 +506,39 @@ class Robot:
              'jointTorque0List': jointTorque0List,
              'jointTorque1List': jointTorque1List,
              'unitTorque0List': unitTorque0List,
-             'unitTorque1List': unitTorque1List}
+             'unitTorque1List': unitTorque1List,
+             'baseObject':baseObject}
         return d
     
-    #**classFunction: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...)
-    def GetLinkGraphicsData(self, i, p0, p1, axis0, axis1):
-        bodyAlpha = 1 #default value; no transparency
-        toolSize = [0.05,0.02,0.06] #default values
-        drawLinkSize=[0.06,0.05] #default values
+    #**classFunction: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
+    def GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization):
+        #bodyAlpha = 1 #default value; no transparency
         
         com = self.links[i].COM
         graphicsList = []
-        #draw COM:
-        if True:
-            dd = 0.01
-            graphicsList += [GraphicsDataOrthoCubePoint(com, [dd,dd,dd], color4list[i])]
 
-        #draw links:
-        color = list(np.array(color4list[i]))
-        color[3] = bodyAlpha #transparency of bodies
-        r = drawLinkSize[0]
-        w = drawLinkSize[1]
+        r = linkVisualization.jointRadius
+        wJ = linkVisualization.jointWidth
+        wL = linkVisualization.linkWidth
+        color = linkVisualization.linkColor
+        showCOM = linkVisualization.showCOM
+
+        #draw COM:
+        if linkVisualization.showCOM:
+            dd = r*0.2
+            colorCOM = copy(color)
+            colorCOM[0] *= 0.8 #make COM a little darker
+            colorCOM[1] *= 0.8
+            colorCOM[2] *= 0.8
+            graphicsList += [GraphicsDataOrthoCubePoint(com, [dd,dd,dd], colorCOM)]
+
+        #draw link:
         if r != 0:
-            h0 = w   #height of half axis, first joint
-            h1 = w   #height of half axis, second joint
+            h0 = wJ   #height of half axis, first joint
+            h1 = wJ   #height of half axis, second joint
             
             if i == 0: #draw full cylinder for first joint
-                h0 = w*2
+                h0 = wJ*2
             
             graphicsList += [GraphicsDataCylinder(pAxis=p0, vAxis=-h0*axis0, 
                                                  radius=r, color=color)]
@@ -403,20 +548,8 @@ class Robot:
             #draw body as cylinder:
             if NormL2(VSub(p1,p0)) > 1e-15:
                 graphicsList += [GraphicsDataCylinder(pAxis=p1, vAxis=VSub(p0,p1), 
-                                                      radius=w, color=color)]
+                                                      radius=wL, color=color)]
         
-        if i==len(self.links): #tool
-            pTool = HT2translation(self.toolHT)
-            if toolSize[0] != 0:
-                colorTool = color4steelblue
-                colorTool[3] = bodyAlpha #transparency of bodies
-                    
-                if NormL2(pTool) != 0:
-                    graphicsList += [GraphicsDataCylinder(pAxis=p1, vAxis= VSub(pTool,p1), 
-                                                          radius=r*0.75, color=colorTool)]
-                graphicsList += [GraphicsDataOrthoCubePoint(pTool+[0,ty,0.5*tz], toolSize, colorTool)]
-                graphicsList += [GraphicsDataOrthoCubePoint(pTool+[0,-ty,0.5*tz], toolSize, colorTool)]
-
         return graphicsList
 
     
@@ -428,9 +561,9 @@ class Robot:
             print("WARNING: function BuildFromDictionary in class Robot is DEPRECATED; DO NOT USE")
 
         if 'base' in robotDict:
-            self.baseHT = np.array(robotDict['base']['HT'])
+            self.base.HT = np.array(robotDict['base']['HT'])
         if 'tool' in robotDict:
-            self.toolHT = np.array(robotDict['tool']['HT'])
+            self.tool.HT = np.array(robotDict['tool']['HT'])
         if 'gravity' in robotDict:
             self.gravity = np.array(robotDict['gravity'])
         if 'referenceConfiguration' in robotDict:
@@ -456,9 +589,9 @@ class Robot:
                 if i < len(robotDict['links'])-1: #there exists a next link, which we use as additional standard DH-parameters for this link
                     [theta1, d1, a1, alpha1] = link['modDHcraig']
                 if i == 0: #put first two DH parameters to base
-                    baseHT = baseHT @ HTrotateX(alpha) @ HTtranslate([a,0,0]) 
+                    base.HT = base.HT @ HTrotateX(alpha) @ HTtranslate([a,0,0]) 
                 
-                #local HT interpreted as standard DH-parameters, as suggested by Corke 2017, page 219:
+                #local HT re-interpreted as standard DH-parameters, as suggested by Corke 2017, page 219:
                 localHT = HTrotateZ(theta) @ HTtranslate([0,0,d]) @ HTtranslate([a1,0,0]) @ HTrotateX(alpha1)
             else:
                 raise ValueError('BuildFromDictionary in class Robot: only supports links with stdDH parameters')
@@ -472,8 +605,7 @@ class Robot:
 #+++  DH-PARAMETERS  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#compute transformation matrix from standard denavit hartenberg parameters
-#**function: compute homogeneous transformation HT from standard DH-parameters
+#**function: compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
 def StdDH2HT(DHparameters):
 #    [theta, d, a, alpha] = DHparameters
 #    return HTrotateZ(theta) @ HTtranslate([0,0,d]) @ HTtranslate([a,0,0]) @ HTrotateX(alpha)
@@ -494,6 +626,12 @@ def StdDH2HT(DHparameters):
 #														{0 & 0 & 0 & 1}
 #Test (compared with Robotcs, Vision and Control book of P. Corke:
 #print("std. DH =\n", DH2HT([0.5, 0.1, 0.2, np.pi/2]).round(4))
+
+#**function: compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
+def ModDHKK2HT(DHparameters):
+    [alpha, d, theta, r] = DHparameters
+    return [HTrotateX(alpha) @ HTtranslate([d,0,0]) , HTrotateZ(theta) @ HTtranslate([0,0,r]) ] 
+
 
 
 
@@ -765,7 +903,7 @@ def DH2HT(DHparameters):
 
 computeJointHTwarned = False
 #compute HT for every joint, using given configuration
-#**function: compute list of  homogeneous transformations HT from base to every joint for given configuration
+#**function: DEPRECATED: compute list of  homogeneous transformations HT from base to every joint (more precisely of every link!) for given configuration
 #**example:
 #link0={'stdDH':[0,0,0,np.pi/2], 
 #         'mass':20,  #not needed!
@@ -810,7 +948,7 @@ def ComputeJointHT(robot, configuration):
 
 computeCOMHTwarned = False
 #compute HT for every link's COM; takes current jointHT as input
-#**function: compute list of  homogeneous transformations HT from base to every COM using HT list from ComputeJointHT
+#**function: DEPRECATED: compute list of  homogeneous transformations HT from base to every COM using HT list from ComputeJointHT
 def ComputeCOMHT(robot, HT):
     global computeCOMHTwarned
     if not computeCOMHTwarned:
@@ -827,7 +965,7 @@ def ComputeCOMHT(robot, HT):
 
 computeStaticTorqueswarned=False
 #compute static torques for robot defined by DH-parameters and for given HT
-#**function: compute list joint torques for serial robot under gravity (gravity and mass as given in robot)
+#**function: DEPRECATED: compute list joint torques for serial robot under gravity (gravity and mass as given in robot)
 def ComputeStaticTorques(robot,HT):
     global computeStaticTorqueswarned
     if not computeStaticTorqueswarned:
@@ -856,7 +994,7 @@ computeJacobianwarned=False
 #compute jacobian, needs per-link HT in current configuration
 #runs over number of HTs given in HT (may be less than number of links)
 #modes are: 'all', 'trans'...only translation part, 'rot': only rotation part
-#**function: compute jacobian for translation and rotation at toolPosition using joint HT
+#**function: DEPRECATED: compute jacobian for translation and rotation at toolPosition using joint HT
 def Jacobian(robot,HT,toolPosition=[],mode='all'):
     global computeJacobianwarned
     if not computeJacobianwarned:

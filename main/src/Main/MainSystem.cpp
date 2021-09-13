@@ -790,7 +790,7 @@ py::object MainSystem::PyGetMarkerParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'markerNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
 		mainSystemData.GetMainMarkers().GetItem(itemNumber)->SetParameter(parameterName, value);

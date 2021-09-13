@@ -30,7 +30,7 @@ from numpy import linalg as LA
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-# exudynTestGlobals.useGraphics = False
+#exudynTestGlobals.useGraphics = False
 if exudynTestGlobals.useGraphics:
     sensorWriteToFile = True
 else:
@@ -38,60 +38,34 @@ else:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#now in the new structure
-# #define myRobot kinematics, puma560
-# #DH-parameters: [theta, d, a, alpha], according to P. Corke
-# link0={'stdDH':[0,0,0,np.pi/2], 
-#        'mass':20,  #not needed!
-#        'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM!
-#        'COM':[0,0,0]}
 
-# link1={'stdDH':[0,0,0.4318,0],
-#        'mass':17.4, 
-#        'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM!
-#        'COM':[-0.3638, 0.006, 0.2275]}
+#changed to new robot structure July 2021:
+graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.4,0.4,0.1], color4grey)]
+graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
+graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
+graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
 
-# link2={'stdDH':[0,0.15,0.0203,-np.pi/2], 
-#        'mass':4.8, 
-#        'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM!
-#        'COM':[-0.0203,-0.0141,0.07]}
+ty = 0.03
+tz = 0.04
+zOff = -0.05
+toolSize= [0.05,0.5*ty,0.06]
+graphicsToolList = [GraphicsDataCylinder(pAxis=[0,0,zOff], vAxis= [0,0,tz], radius=ty*1.5, color=color4red)]
+graphicsToolList+= [GraphicsDataOrthoCubePoint([0,ty,1.5*tz+zOff], toolSize, color4grey)]
+graphicsToolList+= [GraphicsDataOrthoCubePoint([0,-ty,1.5*tz+zOff], toolSize, color4grey)]
 
-# link3={'stdDH':[0,0.4318,0,np.pi/2], 
-#        'mass':0.82, 
-#        'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM!
-#        'COM':[0,0.019,0]}
-
-# link4={'stdDH':[0,0,0,-np.pi/2], 
-#        'mass':0.34, 
-#        'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM!
-#        'COM':[0,0,0]}
-
-# link5={'stdDH':[0,0,0,0], 
-#        'mass':0.09, 
-#        'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM!
-#        'COM':[0,0,0.032]}
-
-# #this is the global myRobot structure
-# myRobot={'links':[link0, link1, link2, link3, link4, link5],
-#        'jointType':[1,1,1,1,1,1], #1=revolute, 0=prismatic
-#        'base':{'HT':HT0()},
-#        'tool':{'HT':HTtranslate([0,0,0.1])},
-#        'gravity':[0,0,9.81],
-#        'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the myRobot is built
-#        } 
 
 #changed to new robot structure July 2021:
 newRobot = Robot(gravity=[0,0,9.81],
-              baseHT = HT0(),
-              toolHT = HTtranslate([0,0,0.1]),
-             referenceConfiguration = []) #referenceConfiguration created with 0s automatically
+                 base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                 tool = RobotTool(HT=HTtranslate([0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+                 referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
-newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2])))
-newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0])))
-newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2])))
-newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,np.pi/2])))
-newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2])))
-newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0])))
+newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=color4list[0])))
+newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0]), visualization=VRobotLink(linkColor=color4list[1])))
+newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2]), visualization=VRobotLink(linkColor=color4list[2])))
+newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,np.pi/2]), visualization=VRobotLink(linkColor=color4list[3])))
+newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2]), visualization=VRobotLink(linkColor=color4list[4])))
+newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0]), visualization=VRobotLink(linkColor=color4list[5])))
 
 #newRobot.BuildFromDictionary(myRobot) #this allows conversion from old structure
 
@@ -311,13 +285,14 @@ lastRenderState = SC.GetRenderState() #store model view
 #compute final torques:
 measuredTorques=[]
 for sensorNumber in jointTorque0List:
-    measuredTorques += [mbs.GetSensorValues(sensorNumber)[2]]
+    measuredTorques += [1e-2*mbs.GetSensorValues(sensorNumber)[2]]
 exu.Print("torques at tEnd=", VSum(measuredTorques))
 
 #add larger test tolerance for 32/64bits difference
-exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
+exudynTestGlobals.testError = (VSum(measuredTorques) - 0.7680031232088501)  #until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
+exudynTestGlobals.testResult = VSum(measuredTorques)   
 
+#exu.Print('error=', exudynTestGlobals.testError)
 
 if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt

@@ -33,14 +33,20 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
     causingRow = solver.conv.linearSolverCausingRow
     newtonFailed = solver.conv.stepReductionFailed or solver.conv.newtonSolutionDiverged
 
+    
+
     if showHints:
         s += '  POSSIBLE REASONS for solver abort:\n'
         if linearSolverFailed:
             s += '  * unused node or no equations supplied for node\n'
             s += '  * redundant definition of constraints\n'
+        if (solver.conv.stepReductionFailed and (not solver.conv.newtonSolutionDiverged)
+            and solver.conv.residual < 1e-3): #indicates that solution is not very wrong
+            s += '  * your tolerances (in newton) may be too tight, see solutions below\n'
+            
         s += '  * inconsistent or inappropriate initial conditions\n'
         s += '  * system is nearly singular due to high (penalty) stiffness or singularities in your system\n'
-        if (isStatic) :
+        if isStatic:
             s += '  * static problem has unconstrained coordinates (that can move freely)\n'
             if newtonFailed:
                 s += '  * the system is very nonlinear and thus requires smaller (load) steps\n'
@@ -62,6 +68,10 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
         s += '  * check joint axes (using visualization), which may be incompatible\n'
         s += '  * use lower (penalty) stiffness factors\n'
         if newtonFailed:
+            if isStatic:
+                s += '  * adjust your tolerances: the newton solver may not be able to reach the relative or absolute tolerance, so increase them, e.g., staticSolver.newton.absoluteTolerance; if no loads are applied, usually absolute tolerances should be around 1e-5 to 1e-2\n'
+            else:
+                s += '  * adjust your tolerances: the newton solver may not be able to reach the relative or absolute tolerance, so increase them, e.g., timeIntegration.newton.absoluteTolerance; if no loads are applied, usually absolute tolerances should be around 1e-5 to 1e-2\n'
             s += '  * use smaller step size or load steps\n'
             s += '  * use adaptiveStep to reduce step size in static or dynamic simulation\n'
             s += '  * adjust the way you initialize your model and how to apply loads, etc.\n'

@@ -18,6 +18,8 @@ basicLinalg.h:
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#if you use Apple M1 CPUs or MacOS 11, you may need to replace the glfw lib with newer library
+
 #do following steps to compile:
 
 python setup.py bdist_wheel
@@ -35,6 +37,31 @@ pip install dist/exudyn-1.0.215- ... .whl
 
 ==> go to Examples
 python stiffFlyballGovernor2.py
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TRIALS with VirtualBox and MacOS 10.15 Mojave
+#install virtual box and MacOS as described in https://www.wikigain.com/install-macos-mojave-on-virtualbox-windows/
+#does not run on every computer!
+#install Anaconda (used Anaconda3-2021.05 with Python3.8)
+#run:
+python setup.py bdist_wheel
+#may write: gcc requires the command line developer tools: INSTALL, e.g., with command line:
+#xcode-select --install
+#if this does not work, you need to go to developer.apple.com
+#download and install xcode command line tools (Version 11.5 can be installed)
+#follow "steps to compile" as written above! 
+#for MacOS 10.15 you need to go to -std=c++14 and require only 10.9 as minimum OS version, see the respective lines in setup.py
+#==> still, compilation failed due too old compiler!
+
+#for larger screen resolution
+#install guest additions (double click on .iso file in VirtualBox installation dir, execute according .exe file)
+#follow https://www.nakivo.com/blog/make-virtualbox-full-screen/
+#power off virtual machine
+#run CMD as Administrator.
+#cd "c:\Program Files\oracle\virtualbox"
+#VBoxManage setextradata "macOSMojave10-14" VBoxInternal2/EfiGraphicsResolution 1920x1080
+#maybe need to restart computer in between
 
 
 

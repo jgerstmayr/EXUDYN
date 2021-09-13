@@ -165,6 +165,40 @@ in which $\fv^a$ represents applied forces and stiffness matrix $\Km$ and dampin
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysection{Solvers}
 \label{sec:solvers}
+Note that the information on solvers is not as complete as the reference pages for items.
+%general functionality
+\mysubsection{Solvers in \codeName\ }
+The user has a couple of basic solvers available in \codeName\ :
+\bi
+  \item \texttt{exudyn.SolveStatic(...)}: compute static solution for given problem (may also be used to compute kinematic behaviour by prescribing joint motion)
+  \item \texttt{exudyn.SolveDynamic(...)}: time integration of equations of motion
+  \item \texttt{exudyn.ComputeLinearizedSystem(...)}: computes the linearized system of equations and returns mass, stiffness, damping matrices (\mybold{coming SOON})
+  \item \texttt{exudyn.ComputeODE2Eigenvalues(...)}: computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues
+\ei
+There are advanced methods, like in \texttt{exudyn.processing}:
+\bi
+  \item \texttt{GeneticOptimization(...)}: find optimum for given set of parameter ranges; works in parallel
+  \item \texttt{ParameterVariation(...)}: compute a series of simulations for given set(s) of parameters; works in parallel
+  \item \texttt{SensitivityAnalysis(...)}: compute sensitivities for certain parameters; works in parallel (\mybold{coming SOON})
+\ei
+The advanced methods are build upon the basic solvers and essentially run single simulations in the background, see the according examples.
+
+The basic solvers need a \texttt{MainSystem}, usually denoted as \texttt{mbs}, to be solved. Furthermore, a couple of options are usually to be given, which are explained shortly:
+\bi
+  \item \texttt{simulationSettings}: This is a big structure, containing all solver options; note that only the according options for \texttt{staticSolver} or \texttt{timeIntegration} are used. Look at the detailed description of these options in \refSection{sec:settingsStructures}. These settings influence the output rate and output quantity of the solution, solver reporting, accuracy, solver type, etc. Specifically, the \texttt{verboseMode} may be increased (2-4) to see the behavior of the solver and intermediate quantities.
+  \item \texttt{solverType}: Only for \texttt{exudyn.SolveDynamic(...)}: This is a simpler access to the solverType given in the internal structure of 
+  \bi
+  \item[] \texttt{timeIntegration.generalizedAlpha} and 
+  \item[] \texttt{simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType}.
+  \ei
+  The function \texttt{exudyn.SolveDynamic(...)} sets the according variables internally. For available solver types, see the description of \texttt{exudyn.DynamicSolverType} in \refSection{sec:DynamicSolverType}.
+  \item \texttt{storeSolver}: if \texttt{True}, the solver is stored in \texttt{mbs.sys['staticSolver']} or \texttt{mbs.sys['dynamicSolver']} and also solver settings are stored in \texttt{mbs.sys['simulationSettings']}. After the solver has finished, \texttt{mbs.sys['staticSolver']} can be used to retrieve additional information on convergence, system matrices, etc. (see the solver structure).
+  \item \texttt{showHints}: This shows a lot of possible solutions in case of no convergence
+  \item \texttt{showCausingItems}: This shows a potential causing item if the linear solver failed; the item number is computed from the coordinate number that caused problems (e.g., a row that became zero during factorization); note that this item may not be the real cause in your problem
+\ei
+
+\mysubsection{General solver structure}
+%theory
 The description of solvers in this section follows the nomenclature given in \refChapter{sec:notationSystemOfEOM}.
 Both in the static as well as in the dynamic case, the solvers run in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval. Explicit solvers only perform a factorization of the mass matrix, but the \texttt{Newton} loop, see \fig{fig_solver_newton_iteration}, is replaced by an explicit computation of the time step according to a given Runge-Kutta tableau.
 

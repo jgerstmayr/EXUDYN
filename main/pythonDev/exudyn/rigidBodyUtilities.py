@@ -281,7 +281,7 @@ def RotationVector2GLocal(eulerParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: compute rotation matrix from consecutive xyz rotations (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]
+#**function: compute rotation matrix from consecutive xyz \acp{Rot} (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]
 #**input: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 #**output: 3x3 rotation matrix as np.array
 def RotXYZ2RotationMatrix(rot):
@@ -443,8 +443,8 @@ def RotationMatrixZ(angleRad):
 
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#functions for homogeneous transformations
-#**function: compute homogeneous transformation matrix from rotation matrix A and translation vector r
+#functions for homogeneous transformations (HT)
+#**function: compute \ac{HT} matrix from rotation matrix A and translation vector r
 def HomogeneousTransformation(A, r):
     T = np.zeros((4,4))
     T[0:3,0:3] = A
@@ -454,62 +454,62 @@ def HomogeneousTransformation(A, r):
 
 HT = HomogeneousTransformation #shortcut
 
-#**function: homogeneous transformation for translation with vector r
+#**function: \ac{HT} for translation with vector r
 def HTtranslate(r):
     T = np.eye(4)
     T[0:3,3] = r
     return T
 
-#**function: homogeneous transformation for translation along x axis with value x
+#**function: \ac{HT} for translation along x axis with value x
 def HTtranslateX(x):
     T = np.eye(4)
     T[0,3] = x
     return T
 
-#**function: homogeneous transformation for translation along y axis with value y
+#**function: \ac{HT} for translation along y axis with value y
 def HTtranslateY(y):
     T = np.eye(4)
     T[1,3] = y
     return T
 
-#**function: homogeneous transformation for translation along z axis with value z
+#**function: \ac{HT} for translation along z axis with value z
 def HTtranslateZ(z):
     T = np.eye(4)
     T[2,3] = z
     return T
 
-#**function: identity homogeneous transformation:
+#**function: identity \ac{HT}:
 def HT0():
     return np.eye(4)
 
-#**function: homogeneous transformation for rotation around axis X (first axis)
+#**function: \ac{HT} for rotation around axis X (first axis)
 def HTrotateX(angle):
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixX(angle)
     return T
     
-#**function: homogeneous transformation for rotation around axis X (first axis)
+#**function: \ac{HT} for rotation around axis X (first axis)
 def HTrotateY(angle):
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixY(angle)
     return T
     
-#**function: homogeneous transformation for rotation around axis X (first axis)
+#**function: \ac{HT} for rotation around axis X (first axis)
 def HTrotateZ(angle):
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixZ(angle)
     return T
 
-#**function: return translation part of homogeneous transformation
+#**function: return translation part of \ac{HT}
 def HT2translation(T):
     return T[0:3,3]
 
-#**function: return rotation matrix of homogeneous transformation
+#**function: return rotation matrix of \ac{HT}
 def HT2rotationMatrix(T):
     return T[0:3,0:3]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: return inverse homogeneous transformation such that inv(T)*T = np.eye(4)
+#**function: return inverse \ac{HT} such that inv(T)*T = np.eye(4)
 def InverseHT(T):
     Tinv = np.eye(4)
     Ainv = T[0:3,0:3].T #inverse rotation part
@@ -529,8 +529,8 @@ def InverseHT(T):
 ################################################################################
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#functions for 6x6 transformation matrices , see Featherstone / Handbook of robotics \cite{Siciliano2016}
-#**function: compute 6x6 transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics \cite{Siciliano2016}
+#functions for 6x6 coordinate transformation matrices (\ac{T66}), see Featherstone / Handbook of robotics \cite{Siciliano2016}
+#**function: compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics \cite{Siciliano2016}; note that \ac{T66} represents coordinate transforms, which is the transposed of rotation matrices used in Exudyn
 def RotationX2T66(angle):
     c = cos(angle);
     s = sin(angle);
@@ -542,7 +542,7 @@ def RotationX2T66(angle):
          [0,  0,  0,  0,  c,  s],
          [0,  0,  0,  0, -s,  c]])
 
-#**function: compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation!
+#**function: compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation; note that T66 represents coordinate transforms, which is the transposed of rotation matrices used in Exudyn
 def RotationY2T66(angle):
     c = cos(angle);
     s = sin(angle);
@@ -554,7 +554,7 @@ def RotationY2T66(angle):
          [0,  0,  0,  0,  1,  0],
          [0,  0,  0,  s,  0,  c]])
 
-#**function: compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation!
+#**function: compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation; note that T66 represents coordinate transforms, which is the transposed of rotation matrices used in Exudyn
 def RotationZ2T66(angle):
     c = cos(angle);
     s = sin(angle);
@@ -594,8 +594,9 @@ def TranslationZ2T66(translation):
 #**output: [A, v] with 3x3 rotation matrix A and 3D translation vector v
 def T66toRotationTranslation(T66):
     A = T66[0:3,0:3]
-    v = -Skew2Vec(A.T @ T66[3:6,0:3])
-    return [A, v]
+    v = -Skew2Vec(A.T@T66[3:6,0:3]) #gives different results as compared to T66toHT
+    #v = Skew2Vec(T66[3:6,0:3]@A.T) #this would lead to identical backtransformation
+    return [A, v] 
 
 #**function convert rotation and translation int 6x6 coordinate transformation (Pl\"ucker transform)
 #**input:
@@ -604,8 +605,20 @@ def T66toRotationTranslation(T66):
 #**output: return 6x6 transformation matrix 'T66'
 def RotationTranslation2T66(A, v):
     return np.block([
-        [A, np.zeros((3,3))],
-        [-A@Skew(v), A]])
+        [A, np.zeros((3,3))], 
+        [-A@Skew(v), A]]) 
+
+#**compute inverse of 6x6 coordinate transformation (Pl\"ucker transform)
+#**input:
+#  T66: 6x6 coordinate transformation (Pl\"ucker transform)
+#**output: return inverse 6x6 transformation matrix 'T66'
+def T66Inverse(T66):
+    A = T66[0:3,0:3]
+    v = -Skew2Vec(A.T @ T66[3:6,0:3])
+        
+    return np.block([
+        [A.T, np.zeros((3,3))], 
+        [A.T@Skew(A@v), A.T]])
 
 #**function convert 6x6 coordinate transformation (Pl\"ucker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 #**input: T66 given as 6x6 numpy array
@@ -614,7 +627,7 @@ def T66toHT(T66):
     A = T66[0:3,0:3]
     T = np.zeros((4,4))
     T[0:3,0:3] = A
-    T[0:3,3] = -Skew2Vec(A.T @ T66[3:6,0:3])
+    T[0:3,3] = Skew2Vec(T66[3:6,0:3] @ A.T)
     T[3,3] = 1
     return T
 
@@ -622,7 +635,7 @@ def T66toHT(T66):
 #**output: 4x4 homogeneous transformation in numpy array format
 #**outputinput: T66 (6x6 numpy array)
 def HT2T66(T):
-    A = T[0:3,0:3]
+    A = T[0:3,0:3].T 
     v = T[0:3,3]
     return np.block([
         [A, np.zeros((3,3))],

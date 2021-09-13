@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 733, 
-Number of resolved issues = 656 (288 in current version), 
-EXUDYN version = 1.0.288, 
-last change =  2021-08-10
+Number of issues = 752, 
+Number of resolved issues = 664 (296 in current version), 
+Exudyn version = 1.0.296, 
+last change =  2021-09-10
 
 
 <table style = "width:100%">
@@ -39,6 +39,182 @@ last change =  2021-08-10
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
+    <td>0750</td>
+    <td>ANCF/ALE contour plot</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> contour plot not showing displacements or forces</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0747</td>
+    <td>ComputeLinearizedSystem</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add exudyn.ComputeLinearizedSystem similar to what is done in ComputeODEEigenvalues, returning M, K, D, ...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0746</td>
+    <td>ComputeODEEigenvalues</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add possibility to eliminate coordinate constraints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0745</td>
+    <td>SensitivityAnalysis()</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add functionality to processing, evaluating the sensitivities of certain sensor values w.r.t. parameters; same interface as ParameterVariation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0744</td>
+    <td>SerialRobot2MBS     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> interchange joint markers, affecting the sign of the measured joint rotation angle, being now consistent with minimum coordinate formulations / kinematicTree</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-09-01</td>
+    <td>2021-10-31</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0743</td>
+    <td>ComputeODE2Eigenvalues</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add vector of constrained coordinates which are eliminated; also add functionality for complex eigenvalues</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-08-20</td>
+    <td>2021-10-19</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0738</td>
+    <td>ObjectContactCoordinate</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> modified Newton does not work, no Jacobian update computed when switching</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-08-13</td>
+    <td>2021-10-12</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0737</td>
+    <td>ContactCoordinate   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-08-13</td>
+    <td>2021-10-12</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0736</td>
+    <td>include GeomExactBeam3D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> as provided by Jan Tomec</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-08-12</td>
+    <td>2021-10-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0735</td>
+    <td>parallel build      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check parallel build with MSbuild to reduce compilation times</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-08-12</td>
+    <td>2021-10-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0734</td>
+    <td>continuous integration</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test CI capabilities with GitHub and MacOS compilation</td>
+    <td>CODING</td>
+    <td></td>
+    <td>2021-08-12</td>
+    <td>2021-10-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
     <td>0728</td>
     <td>optimize CollectCurrentNodeMarkerData</td>
     <td>JG</td>
@@ -54,7 +230,7 @@ last change =  2021-08-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0720</td>
     <td>AddObjectFFRFreducedOrder</td>
     <td>JG</td>
@@ -70,7 +246,7 @@ last change =  2021-08-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0710</td>
     <td>CollectCurrentNodeData</td>
     <td>JG</td>
@@ -86,7 +262,7 @@ last change =  2021-08-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0707</td>
     <td>LinkedDataVector,ResizableVector</td>
     <td>JG</td>
@@ -102,7 +278,7 @@ last change =  2021-08-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0698</td>
     <td>GetAvailableJacobians</td>
     <td>JG</td>
@@ -118,7 +294,7 @@ last change =  2021-08-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0692</td>
     <td>CSystem             </td>
     <td>JG</td>
@@ -1271,6 +1447,134 @@ last change =  2021-08-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0751</td>
+    <td>SetMarkerParameter  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> causes internal error, because of wrong index check; workaround: use int(..) to cast marker index</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-10</td>
+    <td>2021-11-09</td>
+    <td>2021-09-10 16:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0749</td>
+    <td>ObjectALEANCFCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> precomputed mass terms not computed accordingly; leads to crash if not static solution computed in advance</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td>2021-09-03 15:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0748</td>
+    <td>Extend solver description</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add some description for SolveStatic / SolveDynamic in solver chapter</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td>2021-09-03 13:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0742</td>
+    <td>robotics            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Robot.JointHT computes LinkHT</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-08-18</td>
+    <td>2021-10-17</td>
+    <td>2021-08-18 23:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0741</td>
+    <td>robotics            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add base and tool class to robotics to have more flexibility for future developments; replace toolHT to tool.HT, baseHT to base.HT; add tool.visualization and base.visualization</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-08-18</td>
+    <td>2021-10-17</td>
+    <td>2021-08-18 15:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0740</td>
+    <td>robotics            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend Robot class for Modified DH parameters and general transformations; add transformations before and after joint axis</td>
+    <td>Extension</td>
+    <td></td>
+    <td>2021-08-18</td>
+    <td>2021-10-17</td>
+    <td>2021-08-19 00:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0739</td>
+    <td>robotics            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CreateRedundantCoordinateMBS draws wrong axes</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-08-18</td>
+    <td>2021-10-17</td>
+    <td>2021-08-19 00:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0733</td>
+    <td>ContactCoordinate   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add recommendedStepSize to ContactCoordinate and find optimal solution with data variable from StartOfStep configuration; check if step size is permanently reduced with recommendedStepSize; check a way of an overall recommendedStepSize (with filter) or allow a single event not to change global step size</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-08-12</td>
+    <td>2021-10-11</td>
+    <td>2021-08-13 13:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0732</td>
     <td>DrawSystemGraph     </td>
     <td>JG</td>
@@ -1328,7 +1632,7 @@ last change =  2021-08-10
     <td></td>
     <td>2021-08-05</td>
     <td>2021-10-04</td>
-    <td>2021-08-06 20:05</td>
+    <td>2021-08-22 10:58</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3888,11 +4192,11 @@ last change =  2021-08-10
     <td></td>
     <td>2021-01-09</td>
     <td>2021-03-10</td>
-    <td>2021-08-10 12:56</td>
+    <td>2021-08-22 11:11</td>
     <td>JG</td>
     <td></td>
     <td></td>
-    <td></td>
+    <td>done earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0539</td>
@@ -4432,11 +4736,11 @@ last change =  2021-08-10
     <td></td>
     <td>2020-12-16</td>
     <td>2021-02-14</td>
-    <td>2021-08-10 12:56</td>
+    <td>2021-08-22 11:12</td>
     <td>JG</td>
     <td></td>
     <td></td>
-    <td></td>
+    <td>done earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0502</td>

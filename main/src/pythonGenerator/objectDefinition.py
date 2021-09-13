@@ -34,7 +34,7 @@
 # [V|F[v]]: V...Value (=member variable), Vp ... value used from parent class, F...Function (access via member function); v ... virtual Function; s ... static function
 # Dest=Destination: M ... Main object, C ... computational object, V ... visualization object; P ... parameter structure
 # pythonName: name which is used in python; member variables MUST be lower-case!!!
-# cplusplusName: name which is used on C++ side of EXUDYN (leave empty if it is the same)
+# cplusplusName: name which is used on C++ side of Exudyn (leave empty if it is the same)
 # size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
 # type = Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix (variable type or return type)
 # defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;

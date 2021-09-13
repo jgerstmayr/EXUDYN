@@ -74,10 +74,7 @@ myRobot={'links':[link0, link1, link2, link3, link4, link5],
        'referenceConfiguration':[0]*6 #reference configuration for bodies; at which the myRobot is built
        } 
 
-newRobot = Robot(gravity=[0,0,-9.81],
-              baseHT = HT0(),
-              toolHT = HTtranslate([0,0,0]),
-             referenceConfiguration = [])
+newRobot = Robot(gravity=[0,0,-9.81], referenceConfiguration = [])
 newRobot.BuildFromDictionary(myRobot)
 
 #assumption, as the bodies in the mbs have their COM at the reference position
@@ -280,7 +277,7 @@ if False:
                                 toolGraphicsSize=[0.05,0.02,0.06],
                                 drawLinkSize = [0.06,0.05])
 else:
-    robotDict = newRobot.CreateRedundantCoordinateMBS(mbs, loadJointUserFunctionslist, baseMarker)
+    robotDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, jointLoadUserFunctionList=loadJointUserFunctionslist)
     
 #   !!!!!IMPORTANT!!!!!:
 jointList = robotDict['jointList'] #must be stored there for the load user function

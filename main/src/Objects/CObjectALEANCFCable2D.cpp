@@ -81,6 +81,7 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 //! Computational function: compute mass matrix
 void CObjectALEANCFCable2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
 {
+	PreComputeMassTerms();
 	const int ns = 4; //number of shape functions
 
 	//if (!massMatrixComputed)

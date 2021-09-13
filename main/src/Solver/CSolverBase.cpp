@@ -1298,7 +1298,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	}
 	else
 	{
-		if (IsVerbose(2)) { Verbose(2, "  Newton: convergenced after " + EXUstd::ToString(it.newtonSteps) +
+		if (IsVerbose(2)) { Verbose(2, "  Newton: converged after " + EXUstd::ToString(it.newtonSteps) +
 			" steps; relative error = " + EXUstd::ToString(conv.residual / initialResidual) + "\n"); }
 	}
 

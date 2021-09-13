@@ -124,16 +124,16 @@ As our system is fully set, we can print the overall information and assemble th
 %
 We will use time integration and therefore define a number of steps (fixed step size; must be provided) and the total time span for the simulation:
 \pythonstyle\begin{lstlisting}
-  steps = 1000  #number of steps to show solution
   tEnd = 1     #end time of simulation
+  h = 0.001    #step size; leads to 1000 steps
 \end{lstlisting}
 %
 All settings for simulation, see according reference section, can be provided in a structure given from \texttt{exu.SimulationSettings()}. Note that this structure will contain all default values, and only non-default values need to be provided:
 \pythonstyle\begin{lstlisting}
   simulationSettings = exu.SimulationSettings()
-  simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
+  simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
   simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-  simulationSettings.timeIntegration.numberOfSteps = steps
+  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
   simulationSettings.timeIntegration.endTime = tEnd
 \end{lstlisting}
 %
@@ -175,11 +175,12 @@ The following code generates a reference (exact) solution for our example:
   import matplotlib.pyplot as plt
   import matplotlib.ticker as ticker
 
-  omega0 = np.sqrt(spring/mass)  #eigen frequency of undamped system
+  omega0 = np.sqrt(spring/mass)          #eigen frequency of undamped system
   dRel = damper/(2*np.sqrt(spring*mass)) #dimensionless damping
-  omega = omega0*np.sqrt(1-dRel**2) #eigen freq of damped system
+  omega = omega0*np.sqrt(1-dRel**2)      #eigen freq of damped system
   C1 = u0-x0 #static solution needs to be considered!
-  C2 = (v0+omega0*dRel*C1) / omega #C1, C2 are coeffs for solution
+  C2 = (v0+omega0*dRel*C1) / omega       #C1, C2 are coeffs for solution
+  steps = int(tEnd/h)                    #use same steps for reference solution
 
   refSol = np.zeros((steps+1,2))
   for i in range(0,steps+1):
@@ -479,7 +480,7 @@ For the output see \ignoreRST{\fig{fig_DrawSystemGraphExample}}\onlyRST{the figu
 .. image:: docs/theDoc/figures/DrawSystemGraphExample.png
    :width: 400
 
-}%
+}
 
 \horizontalRuler\\
 \noindent Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):

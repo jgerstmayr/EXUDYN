@@ -1,0 +1,12 @@
+==========================================================
+This document gives some help regarding Python and Jupyter
+==========================================================
+
+Windows:
+1) In order to open notebooks in any directory, open an Anaconda prompt and run
+
+jupyter notebook --notebook-dir C:/
+
+in order to open the notebook in the C:\ root directory, which enables access to all files on C:\
+
+

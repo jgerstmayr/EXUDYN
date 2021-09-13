@@ -16,6 +16,7 @@ filesParsed=[
              'graphicsDataUtilities.py',
              'GUI.py', 
              'interactive.py',
+             'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
              'physics.py',
              'plot.py',
@@ -42,9 +43,9 @@ tagPreamble = '#**' #this must be given at beginning of any tag
 
 def ToLatex(s, replaceCurlyBracket=True): #replace _ and other symbols to fit into latex code
     if replaceCurlyBracket:
-        s = s.replace('{','\{')
-        s = s.replace('}','\}')
-        s = s.replace('_','\_')
+        s = s.replace('{','\\{')
+        s = s.replace('}','\\}')
+        s = s.replace('_','\\_')
 
     # s = s.replace('[','\\[')
     # s = s.replace(']','\\]')
@@ -88,10 +89,11 @@ def SplitStringWithCommas(s):
     bracket1 = 0 #[ brackets
     bracket2 = 0 #" counter (0/1)
     bracket3 = 0 #' counter (0/1)
+    bracket4 = 0 #{ brackets
 
     currentString = ''
     for c in s:
-        if c == ',' and (bracket0+bracket1+bracket2+bracket3) == 0:
+        if c == ',' and (bracket0+bracket1+bracket2+bracket3+bracket4) == 0:
             strList += [currentString]
             #print("add string:",currentString)
             currentString= ''
@@ -109,8 +111,12 @@ def SplitStringWithCommas(s):
             bracket2 = 1-bracket2
         if c == "'":
             bracket3 = 1-bracket3
+        if c == '{':
+            bracket4 += 1
+        if c == '}':
+            bracket4 -= 1
 
-    strList += [currentString]
+    strList += [currentString.replace('{','\\{').replace('}','\\}')]
     return strList
 
 #*****************************************************
@@ -413,6 +419,7 @@ def WriteFunctionDescription2Latex(functionDict, moduleName, isClassFunction = F
 
 #*****************************************************
 #process files:
+print('create documentation for exudyn utilities ...')
 
 
 #parse all files:
@@ -506,5 +513,5 @@ file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 file.write(sLatex)
 file.close()
 
-        
-        
+print('----------- finished ---------------------')
+

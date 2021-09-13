@@ -48,7 +48,7 @@ graphicsCOM0 = GraphicsDataBasis(origin=iCube0.com, length=2*w)
                      position = pMid0,
                      rotationMatrix = np.diag([1,1,1]),
                      gravity = g,
-                     graphicsDataList = [graphicsBody0, graphicsCOM0])
+                     graphicsDataList = [graphicsCOM0, graphicsBody0])
 
 
 #%%++++++++++++++++++++++++++

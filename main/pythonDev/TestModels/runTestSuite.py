@@ -127,6 +127,7 @@ testFileList = [
                 'compareAbaqusAnsysRotorEigenfrequencies.py',
                 'compareFullModifiedNewton.py',
                 'computeODE2EigenvaluesTest.py',
+                'contactCoordinateTest.py',
                 'driveTrainTest.py',
                 'explicitLieGroupIntegratorPythonTest.py',
                 'explicitLieGroupIntegratorTest.py',

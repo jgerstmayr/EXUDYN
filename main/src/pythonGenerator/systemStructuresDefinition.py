@@ -12,7 +12,7 @@
 #
 #[V|F[v]]: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; VL ... linked variable: variable will be linked, but is no member
 #pythonName: name which is used in python
-#cplusplusName: name which is used in C++ side of EXUDYN (leave empty if it is the same)
+#cplusplusName: name which is used in C++ side of Exudyn (leave empty if it is the same)
 #size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
 #type = Bool, Int, Real, UInt, UReal (unsigned Real), PInt (Int > 0), PReal (Real > 0), Vector, Matrix, SymmetricMatrix
 #defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;
@@ -275,7 +275,7 @@ V,      drawCoordinateSystem,           , 	             ,     bool,         true
 V,      drawWorldBasis,                 , 	             ,     bool,         false,                  , P,      "true = draw world basis coordinate system at (0,0,0)"
 V,      worldBasisSize,                 , 	             ,     float,        "1.0f",                 , P,      "size of world basis coordinate system"
 V,      showHelpOnStartup,              , 	             ,     PInt,         5,                      , P,      "seconds to show help message on startup (0=deactivate)"
-V,      showComputationInfo,            , 	             ,     bool,         true,                   , P,      "true = show (hide) all computation information including EXUDYN and version"
+V,      showComputationInfo,            , 	             ,     bool,         true,                   , P,      "true = show (hide) all computation information including Exudyn and version"
 V,      showSolutionInformation,        , 	             ,     bool,         true,                   , P,      "true = show solution information (from simulationSettings.solution)"
 V,      showSolverInformation,          , 	             ,     bool,         true,                   , P,      "true = solver name and further information shown in render window"
 V,      showSolverTime,                 , 	             ,     bool,         true,                   , P,      "true = solver current time shown in render window"

@@ -9,17 +9,92 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item EXUDYN version = 1.0.288, 
-  \item last change =  2021-08-10
+  \item Exudyn version = 1.0.296, 
+  \item last change =  2021-09-10
 
-  \item Number of issues = 733, 
-  \item Number of resolved issues = 656 (288 in current version), 
+  \item Number of issues = 752, 
+  \item Number of resolved issues = 664 (296 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.0.296}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0751}: {\bf SetMarkerParameter}
+  \bi
+  \item {description: causes internal error, because of wrong index check; workaround: use int(..) to cast marker index}
+  \item   date resolved: {\bf 2021-09-10 16:22},
+date raised: 2021-09-10   \ei
+  \item {\bf Version 1.0.295}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0749}: {\bf ObjectALEANCFCable2D}
+  \bi
+  \item {description: precomputed mass terms not computed accordingly; leads to crash if not static solution computed in advance}
+  \item   date resolved: {\bf 2021-09-03 15:12},
+date raised: 2021-09-03   \ei
+  \item {\bf Version 1.0.294}: \vspace{-6pt} 
+  resolved Issue 0748: {\bf Extend solver description}
+(docu)
+  \bi
+  \item {description: add some description for SolveStatic / SolveDynamic in solver chapter}
+  \item   date resolved: {\bf 2021-09-03 13:54},
+date raised: 2021-09-03   \ei
+  \item {\bf Version 1.0.293}: \vspace{-6pt} 
+  resolved Issue 0504: {\bf serialrobot}
+(extension)
+  \bi
+  \item {description: build completely from homogenouos transformations, COMs, inertia tensors, masses, axes, axesTypes}
+  \item {\bf notes: done earlier}
+  \item   date resolved: {\bf 2021-08-22 11:12},
+date raised: 2020-12-16   \ei
+  \item {\bf Version 1.0.292}: \vspace{-6pt} 
+  resolved Issue 0540: {\bf github}
+(extension)
+  \bi
+  \item {description: update README.rst file and make it similar to other packages (e.g. pydy)}
+  \item {\bf notes: done earlier}
+  \item   date resolved: {\bf 2021-08-22 11:11},
+date raised: 2021-01-09   \ei
+  \item {\bf Version 1.0.291}: \vspace{-6pt} 
+  resolved Issue 0729: {\bf README.rst}
+(docu)
+  \bi
+  \item {description: add .rst readme file containing gettingStarted, introduction, tutorial and other information}
+  \item   date resolved: {\bf 2021-08-22 10:58},
+date raised: 2021-08-05   \ei
+  \item {\bf Version 1.0.290}: \vspace{-6pt} 
+  resolved Issue 0740: {\bf robotics}
+(extension)
+  \bi
+  \item {description: extend Robot class for Modified DH parameters and general transformations; add transformations before and after joint axis}
+  \item   date resolved: {\bf 2021-08-19 00:22},
+date raised: 2021-08-18   \ei
+  \item {\bf Version 1.0.289}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0739}: {\bf robotics}
+  \bi
+  \item {description: CreateRedundantCoordinateMBS draws wrong axes}
+  \item   date resolved: {\bf 2021-08-19 00:22},
+date raised: 2021-08-18   \ei
   \item {\bf Version 1.0.288}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0742}: {\bf robotics}
+  \bi
+  \item {description: Robot.JointHT computes LinkHT}
+  \item   date resolved: {\bf 2021-08-18 23:31},
+date raised: 2021-08-18   \ei
+  \item {\bf Version 1.0.287}: \vspace{-6pt} 
+  resolved Issue 0741: {\bf robotics}
+(change)
+  \bi
+  \item {description: add base and tool class to robotics to have more flexibility for future developments; replace toolHT to tool.HT, baseHT to base.HT; add tool.visualization and base.visualization}
+  \item   date resolved: {\bf 2021-08-18 15:07},
+date raised: 2021-08-18   \ei
+  \item {\bf Version 1.0.286}: \vspace{-6pt} 
+  resolved Issue 0733: {\bf ContactCoordinate}
+(extension)
+  \bi
+  \item {description: add recommendedStepSize to ContactCoordinate and find optimal solution with data variable from StartOfStep configuration; check if step size is permanently reduced with recommendedStepSize; check a way of an overall recommendedStepSize (with filter) or allow a single event not to change global step size}
+  \item   date resolved: {\bf 2021-08-13 13:23},
+date raised: 2021-08-12   \ei
+  \item {\bf Version 1.0.285}: \vspace{-6pt} 
   resolved Issue 0313: {\bf Add user node ODE2}
 (extension)
   \bi
@@ -27,32 +102,11 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
   \item {\bf notes: not needed: GenericNodes can be used for that}
   \item   date resolved: {\bf 2021-08-10 12:57},
 date raised: 2020-01-10   \ei
-  \item {\bf Version 1.0.287}: \vspace{-6pt} 
-  resolved Issue 0540: {\bf github}
-(extension)
-  \bi
-  \item {description: update README.rst file and make it similar to other packages (e.g. pydy)}
-  \item   date resolved: {\bf 2021-08-10 12:56},
-date raised: 2021-01-09   \ei
-  \item {\bf Version 1.0.286}: \vspace{-6pt} 
-  resolved Issue 0504: {\bf serialrobot}
-(extension)
-  \bi
-  \item {description: build completely from homogenouos transformations, COMs, inertia tensors, masses, axes, axesTypes}
-  \item   date resolved: {\bf 2021-08-10 12:56},
-date raised: 2020-12-16   \ei
-  \item {\bf Version 1.0.285}: \vspace{-6pt} 
+  \item {\bf Version 1.0.284}: \vspace{-6pt} 
   resolved Issue 0730: {\bf RigidBody tutorial}
 (docu)
   \bi
   \item {description: add tutorial for rigid body with AddRigidBody(...), AddRevoluteJoint(...) functionalities}
-  \item   date resolved: {\bf 2021-08-06 20:05},
-date raised: 2021-08-05   \ei
-  \item {\bf Version 1.0.284}: \vspace{-6pt} 
-  resolved Issue 0729: {\bf README.rst}
-(docu)
-  \bi
-  \item {description: add .rst readme file containing gettingStarted, introduction, tutorial and other information}
   \item   date resolved: {\bf 2021-08-06 20:05},
 date raised: 2021-08-05   \ei
   \item {\bf Version 1.0.283}: \vspace{-6pt} 
@@ -2058,6 +2112,14 @@ date raised: 2020-07-20   \ei
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 0750}:  {\bf ANCF/ALE contour plot}
+  \bi
+  \item {description: contour plot not showing displacements or forces}
+  \item date raised: 2021-09-03   \ei
+  \item open {\bf BUG 0738}:  {\bf ObjectContactCoordinate}
+  \bi
+  \item {description: modified Newton does not work, no Jacobian update computed when switching}
+  \item date raised: 2021-08-13   \ei
   \item open {\bf BUG 0677}:  {\bf single threaded renderer}
   \bi
   \item {description: correct crash with visualization dialog (MacOS)}

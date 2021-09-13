@@ -36,7 +36,7 @@ void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataS
 	//velocity in dynamic computation:
 	Real gap_t = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
 
-	if (gap_t != 0.) { pout << "error: gap_t=" << gap_t << "\n"; }
+	//if (gap_t != 0.) { pout << "error: gap_t=" << gap_t << "\n"; }
 
 	//decision upon contact is not gap, but the dataVariable ==> "active set strategy", needed for Newton solver to converge
 	Real hasContact = 0; //1 for contact, 0 else
@@ -99,7 +99,7 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
 
-	//Real startofStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[0];	//state0
+	Real startofStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[0];	//state0
 	Real& currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0];			//state1
 
 	
@@ -119,11 +119,22 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 	//C			C		<=		no			0
 
 	//delete: Real previousState = currentState;
-	if ((currentGap > 0 && currentState <= 0) || (currentGap <= 0 && currentState > 0)) //action: state1=currentGapState, error = |currentGap*k|
+	Real vGap = markerDataCurrent.GetMarkerData(1).vectorValue_t[0] - markerDataCurrent.GetMarkerData(0).vectorValue_t[0];
+
+	if ((currentGap > 0 && startofStepState <= 0) || (currentGap <= 0 && startofStepState > 0)) //action: state1=currentGapState, error = |currentGap*k|
 	{
 		discontinuousError = fabs(currentGap * parameters.contactStiffness);
-		currentState = currentGap;
+		if (vGap != 0) { recommendedStepSize = fabs(startofStepState / vGap); } //in fact it is (0-startofStepState) which is the part to go in this steps!
+
+		flags = PostNewtonFlags::UpdateJacobian;
 	}
+	//pout << "m1=" << markerDataCurrent.GetMarkerData(1).vectorValue[0] << ", m0=" << markerDataCurrent.GetMarkerData(0).vectorValue[0] << ", o=" << parameters.offset << ", ";
+	//pout << "curGap=" << currentGap << ", startOfStep=" << startofStepState << ", currentState=" << currentState << ", ";
+	//pout << "vGap   =" << vGap << ", ";
+	//pout << "recStep=" << recommendedStepSize << "\n";
+
+
+	currentState = currentGap;
 
 	//pout << "PNS: currentGap=" << currentGap << ", previousState=" << previousState << ", currentState=" << currentState << ", error=" << discontinuousError << "\n";
 	return discontinuousError;

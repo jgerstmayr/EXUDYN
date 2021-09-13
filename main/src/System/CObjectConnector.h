@@ -29,7 +29,8 @@
 namespace PostNewtonFlags {
 	enum Type {
 		_None = 0,
-		UpdateLTGLists = 1 << 0	//!< signals the solver that a change was such that the localToGlobal index list must be updated for the object
+		UpdateLTGLists = 1 << 0,	//!< signals the solver that a change was such that the localToGlobal index list must be updated for the object
+		UpdateJacobian = 1 << 1,	//!< signals the solver that jacobian shall be updated
 	};
 }
 
@@ -101,7 +102,7 @@ public:
 	//! function to initialize discontinuous iterations prior to simulation (e.g. reset contact conditions, etc.)
 	//virtual void InitializeDiscontinuousIteration() {  } ==> use initial conditions of data coordinates?
 
-	//! function called after Newton method; returns a residual error (force); gets marker data for current configuration to achieve the correct behavior; recommendedStepSize = [< 0 for no recommendation, 0 for min step size, > 0 for reduction of step size to given value]
+	//! function called after Newton method; returns a residual error (force); input: marker data for current configuration to achieve the correct behavior; flags are modified, e.g. to recompute jacobian; recommendedStepSize = [< 0 for no recommendation, 0 for min step size, > 0 for reduction of step size to given value]
 	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize) { return 0; };
 	//virtual Real PostNewtonStep(const MarkerDataStructure& markerDataStartOfStep, const MarkerDataStructure& markerDataCurrent) { return 0; };
 

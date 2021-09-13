@@ -484,11 +484,12 @@ class InteractiveDialog:
 #    renderWindowText: additional text written into renderwindow before 'Mode X' (use $\backslash$n to add line breaks)
 #    runOnStart: immediately go into 'Run' mode
 #    runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
+#    scaleAmplitude: additional scaling for amplitude if necessary
 #**output: opens interactive dialog with further settings
 #**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. 
 #    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{secGeneratingAnimations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
 def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, 
-                 renderWindowText = '', runOnStart = False, runMode=0):
+                 renderWindowText = '', runOnStart = False, runMode=0, scaleAmplitude = 1):
 
     SC = systemContainer
     mbs = mainSystem
@@ -521,7 +522,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
                    {'type':'label', 'text':'Contour Component (use -1 for norm):', 'grid':(4,0)},
                    {'type':'slider', 'range':(-1, 5), 'value':0, 'steps':7, 'variable':'modeShapeComponent', 'grid':(4,1)},
                    {'type':'label', 'text':'Amplitude:', 'grid':(5,0)},
-                   {'type':'slider', 'range':(0, 0.5), 'value':0.05, 'steps':501, 'variable':'modeShapeAmplitude', 'grid':(5,1)},
+                   {'type':'slider', 'range':(0, 1), 'value':0.05, 'steps':501, 'variable':'modeShapeAmplitude', 'grid':(5,1)},
                    {'type':'label', 'text':'update period:', 'grid':(6,0)},
                    {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1)},
                    {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2)]},
@@ -534,6 +535,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     mbs.variables['modeShapeTimeIndex'] = 0
     mbs.variables['modeShapeLastSetting'] = [-1,0,0,0]
     mbs.variables['modeShapeNodeCoordIndex'] = coordIndex
+    mbs.variables['modeShapeScaleAmplitude'] = scaleAmplitude
 
     def UFshowModes(mbs, dialog):
         i = mbs.variables['modeShapeTimeIndex']
@@ -558,7 +560,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
         selectedMode = int(mbs.variables['modeShapeModeNumber'])
         outputVariable = exudyn.OutputVariableType(int(mbs.variables['modeShapeOutputVariable']))
        
-        ode2Coords[mbs.variables['modeShapeNodeCoordIndex']+selectedMode] = amplitude
+        ode2Coords[mbs.variables['modeShapeNodeCoordIndex']+selectedMode] = amplitude * mbs.variables['modeShapeScaleAmplitude']
         
         mbs.systemData.SetODE2Coordinates(ode2Coords, exudyn.ConfigurationType.Visualization)
 

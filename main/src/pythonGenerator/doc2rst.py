@@ -20,15 +20,16 @@ filesParsed=[
 
 
 convWords={'(\\the\\month-\\the\\year)':'',
-           '	\item':'\item',
+           '    \item':'\item',
+           '  \item':'\item',
+           '\item[$\\ra$]':'  |  => ', #'+ ->', #this is always a sublist
            '\\item[]':'  ', 
            '\\item[--]':' - ',  #one additional whitespace at beginning for alignment of sub-lists!
            '\\item':'+ ',
            '\\small':'',
            '\\noindent ':'',
            '\\noindent':'',
-           '[$\\ra$]':'  ->',
-           '$\\ra$':'->',
+           '$\\ra$':'=>',
            '\\newpage':'',
            '\\horizontalRuler':'',
            '\\\\':'\n\n',
@@ -38,7 +39,7 @@ convWords={'(\\the\\month-\\the\\year)':'',
            '\\codeName':'Exudyn',
            '\\pythonstyle\\begin{lstlisting}':'\n.. code-block:: python\n',
            '\\begin{lstlisting}':'\n.. code-block::\n',
-           '\\end{lstlisting}':'\n',
+           '\\end{lstlisting}':'\ \n',
            '\\begin{center}':'',
            '\\end{center}':'',
            '\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
@@ -60,6 +61,7 @@ convWords={'(\\the\\month-\\the\\year)':'',
            '$':'',
            }
 convCommands={#(precommand,'_USE'/'',postcommand)
+    '\\ignoreRST':('','',''),
     '\\texttt':('\\ ``','_USE','``\\ '),
     '\\mysection':('','',''),
     '\\mysubsection':('','',''),
@@ -71,11 +73,10 @@ convCommands={#(precommand,'_USE'/'',postcommand)
     '\\myListing':('','',''),
     '\\label':('','',''),
     '\\vspace':('','',''),
-    '\\footnote':('(','_USE',')'),
+    '\\footnote':(' (','_USE',')'),
     '\\mybold':('\\ **','_USE','**\\ '),
     '\\mathrm':('','_USE',''),
     '\\cite':('','',''),
-    '\\ignoreRST':('','',''),
     '\\onlyRST':('','_USE',''),
     '\\refSection':('theDoc.pdf','',''),
     '\\fig':('[figure in theDoc.pdf]','',''),
@@ -219,6 +220,9 @@ def ConvertFile(s):
     
     return s
 
+print('------------------------------------------')
+print('converting latex docu into README.rst file...')
+
 sRST = '======\nExudyn\n======\n' #add header for .rst file
 
 for fileName in filesParsed:
@@ -237,7 +241,7 @@ for fileName in filesParsed:
     #print(sFile)
     sRST += ConvertFile(sFile)
     
-sRST += '\n\n ** FOR FURTHER INFORMATION GO TO theDoc.pdf ** !!!\n\n'
+sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'
 
 if True:
     rstFile = 'README.rst'
@@ -249,5 +253,6 @@ if True:
     file.write(sRST)
     file.close()
 
+print('----------- finished ---------------------')
         
         

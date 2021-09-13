@@ -16,11 +16,13 @@ Currently, the module structure is simple:
   \item Python parts:
   \bi
     \item[--] \texttt{itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
-    \item[--] \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with EXUDYN
+    \item[--] \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with \codeName\ 
   \ei
   \item C++ parts, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
   \bi
-    \item[--] \texttt{exudyn}\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}: on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+    \item[--] \texttt{exudyn}:
+    %\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}:
+    on this level, there are just very few functions: \texttt{SystemContainer()}, \texttt{StartRenderer()}, \texttt{StopRenderer()}, \texttt{GetVersionString()}, \texttt{SolveStatic(...)}, \texttt{SolveDynamic(...)}, ... as well as system and user variable dictionaries \texttt{exudyn.variables} and \texttt{exudyn.sys}
     \item[--] \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
     \item[--] \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see \refSection{sec:item:reference:manual};
@@ -108,19 +110,20 @@ Currently, the module structure is simple:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-\mysubsubsection{Conventions: items, indices, coordinates}
-In this documentation, we will use the term \mybold{item} to identify nodes, objects, markers and loads:
+\mysubsubsection{Conventions: items, indexes, coordinates}
+In this documentation, we will use the term \mybold{item} to identify nodes, objects, markers, loads and sensors:
 \be
-  \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load} \}
+  \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load}, \mathrm{sensor} \}
 \ee
 \vspace{12pt}\\
-\mybold{Indices: arrays and vector starting with 0:} \vspace{6pt}\\
-As known from Python, all \mybold{indices} of arrays, vectors, etc.\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
+\mybold{Indexes: arrays and vector starting with 0:} \vspace{6pt}\\
+As known from Python, all \mybold{indexes} of arrays, vectors, matrices, ...\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
 %
 \vspace{12pt}\\
-\mybold{Dimensionality of objects and vectors:}\vspace{6pt}\\ 
+\mybold{Dimensionality of objects and vectors: } \vspace{6pt}\\ 
+\ac{2D} vs.\ \ac{3D}\vspace{6pt}\\ 
 As a convention, quantities in \codeName\ are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
-For that reason, we denote planar nodes, objects, etc.\ with the suffix '2D', but 3D objects do not get this suffix.
+For that reason, we denote planar nodes, objects, etc.\ with the suffix 2D, but 3D objects do not get this suffix.
 
 Output and input to objects, markers, loads, etc.\ is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
 As an example, consider a \texttt{NodePoint2D}:
@@ -170,7 +173,7 @@ In this section, the most important part of \codeName\ are provided. An overview
       %\path [line] (systemData) |- (loads);
 
   \end{tikzpicture}
-  \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indices) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.}
+  \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.}
   \label{fig_items_interaction}
 
 \end{figure}
@@ -182,7 +185,7 @@ Without nodes, the system has no unknown coordinates.
 Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate -- otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).
 
 \mysubsubsection{Objects}
-Objects are 'computational objects' and they provide equations to your system. Objects additionally often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces.
+Objects are 'computational objects' and they provide equations to your system. Objects often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces. Some of this functionality is only available in C++, but not in Python.
 
 Objects can be a:
 \bi
@@ -246,7 +249,7 @@ It is important that the \codeName\ module is basically a state machine, where y
 \vspace{12pt}\\
 \mybold{Where do objects live?}\vspace{6pt}\\
 %(where do objects live? state machine; graphics interaction)
-Whenever a system container is created with \texttt{SC = exu.SystemContainer()}, the structure \texttt{SC} lives in C++ and will be modified via the python interface.
+Whenever a system container is created with \texttt{SC = exu.SystemContainer()}, the structure \texttt{SC} becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
 Usually, the system container will hold at least one system, usually called \texttt{mbs}.
 Commands such as \texttt{mbs.AddNode(...)} add objects to the system \texttt{mbs}. 
 The system will be prepared for simulation by \texttt{mbs.Assemble()} and can be solved (e.g., using \texttt{exu.SolveDynamic(...)}) and evaluated hereafter using the results files.
@@ -258,17 +261,18 @@ The simulation settings consists of a couple of substructures, e.g., for \texttt
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
-The simulation settings structure is created with 
+\noindent The simulation settings structure is created with 
 \pythonstyle\begin{lstlisting}
   simulationSettings = exu.SimulationSettings()
 \end{lstlisting}
 %
 Hereafter, values of the structure can be modified, e.g.,
 \pythonstyle\begin{lstlisting}
-  #10 seconds of simulation time:
-  simulationSettings.timeIntegration.endTime = 10                    
-  #1000 steps for time integration:
-  simulationSettings.timeIntegration.numberOfSteps = 1000            
+  tEnd = 10 #10 seconds of simulation time:
+  h = 0.01  #step size (gives 1000 steps)
+  simulationSettings.timeIntegration.endTime = tEnd
+  #steps for time integration must be integer:
+  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
   #assigns a new tolerance for Newton's method:
   simulationSettings.timeIntegration.newton.relativeTolerance = 1e-9 
   #write some output while the solver is active (SLOWER):
@@ -283,7 +287,7 @@ Hereafter, values of the structure can be modified, e.g.,
 %
 The solvers provide a number of options in \texttt{solutionSettings} to generate a solution file. As a default, exporting solution to the solution file is activated with a writing period of 0.01 seconds.
 
-Typical output settings are:
+\noindent Typical output settings are:
 \pythonstyle\begin{lstlisting}
   #create a new simulationSettings structure:
   simulationSettings = exu.SimulationSettings()
@@ -563,7 +567,7 @@ The following internal modules are used, which are represented by directories in
   \item Solver: contains all solvers for solving a CSystem
   \item System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
   \item Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
-    \item Utilities: array structures for administrative/managing tasks (indices of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
+    \item Utilities: array structures for administrative/managing tasks (indexes of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
 \ei
 
 The following main external libraries are linked to Exudyn:
@@ -730,7 +734,7 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 1.0.8 $\ra$ Version 1.0.9}
-  %\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indices' (issue: 333):
+  %\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indexes' (issue: 333):
   %\bi %\ttfamily
   %\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
   %\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
@@ -739,12 +743,12 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
   %\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
   %\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
     %\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
-    %to avoid mistakes due to wrong types of indices.
+    %to avoid mistakes due to wrong types of indexes.
   %\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
   %%\item \mybold{NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
   %%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
   %%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
-  %%\item You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default
+  %%\item You can also print item indexes, e.g., \texttt{print(ni)} as it converts to string by default
   %%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
   %\ei
   %\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)

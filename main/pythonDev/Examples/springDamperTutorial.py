@@ -64,13 +64,13 @@ mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt',
 print(mbs)
 mbs.Assemble()
 
-steps = 1000  #number of steps to show solution
 tEnd = 1     #end time of simulation
+h = 0.001    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
 simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-simulationSettings.timeIntegration.numberOfSteps = steps
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
@@ -98,6 +98,7 @@ dRel = damper/(2*np.sqrt(spring*mass)) #dimensionless damping
 omega = omega0*np.sqrt(1-dRel**2) #eigen frequency of damped system
 C1 = u0-x0 #static solution needs to be considered!
 C2 = (v0+omega0*dRel*C1) / omega #C1, C2 are coeffs for solution
+steps = int(tEnd/h)
 
 refSol = np.zeros((steps+1,2))
 for i in range(0,steps+1):
