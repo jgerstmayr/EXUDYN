@@ -1,9 +1,12 @@
 ======
 Exudyn
 ======
-EXUDYN version = 1.0.288
+Exudyn version = 1.1.0
 
-*A flexible multibody dynamics systems simulation code with Python and C++*
+
+  + *A flexible multibody dynamics systems simulation code with Python and C++*
+  + *free, open source and with plenty of documentation and examples*
+  + **NOTE**: for pure installation, just go to \ ``main/dist``\ and install your preferred Microsoft installer (\ ``.msi``\ ) or wheel (\ ``.whl``\ ) in your according Python environment (win=Windows, py3.7 = Python3.7, ...)
 
 .. image:: docs/theDoc/intro2.jpg
    :width: 400
@@ -18,6 +21,7 @@ In addition to the tutorial in the documentation, many ( **100+** ) examples can
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
 
+Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
 
 
 
@@ -60,9 +64,9 @@ Exudyn --  (fl\ **EX**\ ible m\ **U**\ ltibody \ **DYN**\ amics  -- \ **EX**\ te
 
 Exudyn is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
 It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
-The open source code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it is outdated regarding programming techniques and the numerical formulation.
+It seemed that the previous code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it was outdated regarding programming techniques and the numerical formulation at the time Exudyn was started.
 
-Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
+Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see theDoc.pdf.
@@ -129,7 +133,7 @@ If you do not install Anaconda (e.g., under Linux), make sure that you have the 
 
 You can install most of these packages using \ ``pip install numpy``\  (Windows) or \ ``pip3 install numpy``\  (Linux).
 
-For interaction (right-mouse-click, some key-board commands) you need the python module \ ``tkinter``\ . This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
+For interaction (right-mouse-click, some key-board commands) you need the Python module \ ``tkinter``\ . This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
 
    \ ``sudo apt-get install python3-tk``\ 
 
@@ -138,13 +142,13 @@ see also common blogs for your operating system.
 Install with Windows MSI installer
 ==================================
 
-The simplest way on Windows 10 (and maybe also Windows 7), which works well \ **if you installed only one python version**\  and if you installed Anaconda with the option \ **'Register Anaconda as my default Python 3.x'**\  or similar, then you can use the provided \ ``.msi``\  installers in the \ ``main/dist``\  directory:
+The simplest way on Windows 10 (and maybe also Windows 7), which works well \ **if you installed only one Python version**\  and if you installed Anaconda with the option \ **'Register Anaconda as my default Python 3.x'**\  or similar, then you can use the provided \ ``.msi``\  installers in the \ ``main/dist``\  directory:
 
-+  For the 64bits python 3.7 version, double click on (version may differ):
++  For the 64bits Python 3.7 version, double click on (version may differ):
 
  \ ``exudyn-1.0.248.win-amd64-py3.7.msi``\ 
 +  Follow the instructions of the installer
-+  If python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:
++  If Python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:
 
 
   \ ``C:\ProgramData\Anaconda3``\ 
@@ -153,7 +157,7 @@ The simplest way on Windows 10 (and maybe also Windows 7), which works well \ **
 Install from Wheel (UBUNTU and Windows)
 =======================================
 
-The \ **standard way to install**\  the python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ) provided at the directory wheels in the Exudyn repository. 
+The \ **standard way to install**\  the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ) provided at the directory wheels in the Exudyn repository. 
 
 
 
@@ -165,7 +169,7 @@ For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number
 
 +  \ ``Python 3.8, 64bit``\ : pip3 install dist\exudyn-1.0.20-cp38-cp38-linux_x86_64.whl
 
-NOTE that your installation may have environments with different python versions, so install that Exudyn version appropriately!
+NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
 If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in theDoc.pdf.
 
 \ **Windows**\ :
@@ -174,15 +178,15 @@ If the wheel installation does not work on UBUNTU, it is highly recommended to b
 First, open an Anaconda prompt:
 
 +  EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-+  You can check your python version then, by running \ ``python``\  (\ ``python3``\  under UBUNTU 18.04), the output reads like:
++  You can check your Python version then, by running \ ``Python``\  (\ ``python3``\  under UBUNTU 18.04), the output reads like:
   
    \ ``Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32``\ 
    ...
   
-+  => type \ ``exit()``\  to close python
++  => type \ ``exit()``\  to close Python
 
 
-\ **Go to the folder \ ``Exudyn_git/main``\ **\  (where \ ``setup.py``\  lies) and choose the wheel in subdirectory \ ``main/dist``\  according to your system (windows/UBUNTU), python version (3.6 or 3.7) and 32 or 64 bits.
+\ **Go to the folder \ ``Exudyn_git/main``\ **\  (where \ ``setup.py``\  lies) and choose the wheel in subdirectory \ ``main/dist``\  according to your system (windows/UBUNTU), Python version (3.6 or 3.7) and 32 or 64 bits.
 
 For Windows the installation commands may read (version number 1.0.20 may be different):
 
@@ -194,9 +198,7 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 Work without installation and editing \ ``sys.path``\ 
 ======================================================
 
-The \ **uncommon and old way**\  (=> not recommended for Exudyn versions \ge 1.0.0) is to use Python's \ ``sys``\  module to link to your \ ``exudyn``\  (previously \ ``WorkingRelease``\ ) directory, for example:%
-
-
+The \ **uncommon and old way**\  (=> not recommended for Exudyn versions \ge 1.0.0) is to use Python's \ ``sys``\  module to link to your \ ``exudyn``\  (previously \ ``WorkingRelease``\ ) directory, for example:
 
 .. code-block:: python
 
@@ -226,7 +228,7 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 +  run: \ ``python setup.py install``\ 
 +  read the output; if there are errors, try to solve them by installing appropriate modules
 
-You can also create your own wheels, doing the above steps to activate the according python version and then calling (requires installation of Microsoft Visual Studio; recommended: VS2017):
+You can also create your own wheels, doing the above steps to activate the according Python version and then calling (requires installation of Microsoft Visual Studio; recommended: VS2017):
 
    \ ``python setup.py bdist_wheel``\ 
 
@@ -282,7 +284,7 @@ Build and install Exudyn under UBUNTU?
 ==========================================
 
 
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (see also the youtube video: \ ``https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx``\ ):
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (see also the youtube video: \ ``https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx``\ ):
 
 First update ...
 
@@ -294,7 +296,7 @@ First update ...
 
 
 
-Install necessary python libraries and pip3; \ ``matplotlib``\  and\ ``scipy``\  are not required for installation but used in Exudyn examples:
+Install necessary Python libraries and pip3; \ ``matplotlib``\  and\ ``scipy``\  are not required for installation but used in Exudyn examples:
 
 .. code-block::
 
@@ -341,7 +343,7 @@ Congratulation! \ **Now, run a test example**\  (will also open an OpenGL window
    \ ``python3 pythonDev/Examples/rigid3Dexample.py``\ 
 
 
-You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same python version (e.g., 3.6):
+You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same Python version (e.g., 3.6):
 
    \ ``sudo pip3 install wheel``\ 
    \ ``sudo python3 setup.py bdist_wheel``\ 
@@ -350,7 +352,7 @@ You can also create a UBUNTU wheel which can be easily installed on the same mac
 \ **KNOWN issues for linux builds**\ :
 
 +  Using \ **WSL2**\  (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
-+  \ **compiler (gcc,g++) conflicts**\ : It seems that Exudyn works well on UBUNTU18.04 with the original \ ``Python 3.6.9``\  and \ ``gcc-7.5.0``\  version as well as with UBUNTU20.04 with \ ``Python 3.8.5``\  and \ ``gcc-9.3.0``\ . Upgrading \ ``gcc``\  on a linux system with Python 3.6 to, e.g., \ ``gcc-8.2``\  showed us a linker error when loading the Exudyn module in python -- there are some common restriction using \ ``gcc``\  versions different from those with which the Python version has been built. Starting \ ``python``\  or \ ``python3``\  on your linux machine shows you the \ ``gcc``\  version it had been build with.
++  \ **compiler (gcc,g++) conflicts**\ : It seems that Exudyn works well on UBUNTU18.04 with the original \ ``Python 3.6.9``\  and \ ``gcc-7.5.0``\  version as well as with UBUNTU20.04 with \ ``Python 3.8.5``\  and \ ``gcc-9.3.0``\ . Upgrading \ ``gcc``\  on a linux system with Python 3.6 to, e.g., \ ``gcc-8.2``\  showed us a linker error when loading the Exudyn module in Python -- there are some common restriction using \ ``gcc``\  versions different from those with which the Python version has been built. Starting \ ``python``\  or \ ``python3``\  on your linux machine shows you the \ ``gcc``\  version it had been build with.
   Check your current \ ``gcc``\  version with: \ ``gcc --version``\ 
 
 
@@ -427,11 +429,11 @@ Run a simple example in Spyder
 
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.
 
-In order to start, run the python interpreter Spyder.
+In order to start, run the Python interpreter Spyder.
 For the following example, 
 
 
-+  open \ ``myFirstExample.py``\  from your \ ``EXUDYN32bitsPython36``\  (or any other directory according to your python version) directory
++  open \ ``myFirstExample.py``\  from your \ ``EXUDYN32bitsPython36``\  (or any other directory according to your Python version) directory
 
 Hereafter, press the play button or \ ``F5``\  in Spyder.
 
@@ -532,10 +534,9 @@ Trouble shooting
 
 
 
-  |  =>  A known reason is that your CPU (do not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this) does not support AVX2, while Exudyn is compiled with the AVX2 option
+  |  =>  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
   |  =>  \ **workaround**\  to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
   |  =>  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) => very often a new installation of Anaconda and Exudyn helps.
-
 
 
 \ **Typical Python errors**\ :
@@ -579,6 +580,14 @@ Trouble shooting
 
 
 \ **Typical solver errors**\ :
+
++  \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
+
+  |  =>  use flag \ ``showHints = True``\  in \ ``SolveDynamic``\  or \ ``SolveStatic``\ 
+
++  Very simple example \ **without loads**\  leads to error: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
+
+  |  =>  if you do not add loads to the system and if there are no forces, the residual nearly gives 0 (due to round off errors). The Newton solver tries to reduce the error by the factor given in \ ``simulationSettings.staticSolver.newton.relativeTolerance``\  (for static solver), which is not possible for 0 residual. The absolute tolerance is helping out as a lower bound for the error, given in \ ``simulationSettings.staticSolver.newton.absoluteTolerance``\  (for static solver), which is by default rather low (1e-10). Increasing this value helps to solve unloaded problems. Nevertheless, you should usually set this tolerance as low as possible because otherwise, your solution may become inaccurate.
 
 +  Typical \ **solver error due to redundant constraints or missing inertia terms**\ , could read as follows:
 
@@ -642,7 +651,7 @@ which draws the according object in red and others gray/transparent (but sometim
 
   |  =>  this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
   |  =>  the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
-  |  =>  possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if the are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
+  |  =>  possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if they are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
 
 +  Typical solver error if (e.g., syntax) \ **error in user function**\  (output may be very long, \ **read always message on top!**\ ):
 
@@ -679,23 +688,23 @@ FAQ
 
 \ **Some frequently asked questions**\ :
 
-+  When importing Exudyn in python (windows) I get an error 
++  When \ **importing**\  Exudyn in Python (windows) I get an error 
   |  =>  see trouble shooting instructions above!
-+  I do not understand the python errors -- how can I find the reason of the error or crash?
++  I do not understand the \ **Python errors**\  -- how can I find the reason of the error or crash?
 
   |  =>  Read trouble shooting section above!	
-  |  =>  First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a python code, the line numbers refer to the local line number inside the script or module.
+  |  =>  First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a Python code, the line numbers refer to the local line number inside the script or module.
   |  =>  If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.
   |  =>  If you think, it is a bug: send an email with a representative code snippet, version, etc.\ to \ `` reply.exudyn@gmail.com``\ 
 
-+  Spyder console hangs up, does not show error messages, ...:
++  Spyder \ **console hangs**\  up, does not show error messages, ...:
 
   |  =>  very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the 'x' in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder)
   |  =>  restarting the IPython console also brings back all error messages
 
-+  Where do I find the '.exe' file?
++  Where do I find the \ **'.exe' file**\ ?
 
-  |  =>  Exudyn is only available via the python interface as a module '\ ``exudyn``\ ', the C++ code being inside of \ ``exudynCPP.pyd``\ , which is located in the exudyn folder where you installed the package. This means that you need to \ **run python**\  (best: Spyder) and import the Exudyn module.
+  |  =>  Exudyn is only available via the Python interface as a module '\ ``exudyn``\ ', the C++ code being inside of \ ``exudynCPP.pyd``\ , which is located in the exudyn folder where you installed the package. This means that you need to \ **run Python**\  (best: Spyder) and import the Exudyn module.
 
 +  I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
 
@@ -704,15 +713,20 @@ FAQ
   |  =>  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
   |  =>  In the exceptional case, that you want to convert numbers, see beginning of theDoc.pdf.
 
-+  Why does type auto completion does not work for mbs (Main system)?
++  Why does \ **type auto completion**\  not work for mbs (MainSystem)?
 
   |  =>  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.
-  |  =>  most python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
+  |  =>  most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., \ ``SC=exu.SystemContainer()``\  provides full access to SC in the type completion, but \ ``mbs=SC.AddSystem()``\  is at the second sub-structure of the module and is not accessible.
   |  =>  WORKAROUND: type \ ``mbs=MainSystem()``\  \ **before**\  the \ ``mbs=SC.AddSystem()``\  command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings 'Newton'.
 
 +  How to add graphics?
 
   |  =>  Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
+
++  In \ ``GenerateStraightLineANCFCable2D``\  
+
+  |  =>  coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
+  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
 
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 
@@ -720,7 +734,7 @@ FAQ
 
 +  I get an error in \ ``exu.SolveDynamic(mbs, ...)``\  OR in \ ``exu.SolveStatic(mbs, ...)``\  but no further information -- how can I solve it?
 
-  |  =>  Typical time integration errors may look like:
+  |  =>  Typical \ **time integration errors**\  may look like:
 
 .. code-block::
 
@@ -729,12 +743,12 @@ FAQ
   SystemError: <built-in method SolveSystem of PyCapsule object at 0x0CC63590> returned a result with an error set
 \ 
 
-  |  =>  The prechecks, which are performed to enable a crash-free simulation are insufficient for your model.
-  |  =>  As a first try, restart the IPython console in order to get all error messages, which may be blocked due to a previous run of Exudyn.
-  |  =>  Very likely, you are using python user functions inside EXUDYN: They lead to an internal python error, which is not catched by EXUDYN. However, you can just check all your user functions, if they will run without EXUDYN. E.g., a load user function UFload(mbs,~t,~load), which tries to access load[4] will fail internally.
-  |  =>  Use the print(...) command in python at many places to find a possible error in user functions (e.g., put \ ``print("Start user function XYZ")``\  at the beginning of every user function.
+  |  =>  The pre-checks, which are performed to enable a crash-free simulation are insufficient for your model
+  |  =>  As a first try, \ **restart the IPython console**\  in order to get all error messages, which may be blocked due to a previous run of Exudyn.
+  |  =>  Very likely, you are using Python user functions inside Exudyn : They lead to an internal Python error, which is not always catched by Exudyn ; e.g., a load user function UFload(mbs,~t,~load), which tries to access component load[3] of a load vector with 3 components will fail internally;
+  |  =>  Use the print(...) command in Python at many places to find a possible error in user functions (e.g., put \ ``print("Start user function XYZ")``\  at the beginning of every user function; test user functions from iPython console
   |  =>  It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
-  |  =>  see also  I do not understand the python errors -- how can I find the cause?
+  |  =>  see also \ **I do not understand the Python errors -- how can I find the cause?**\ 
 
 
 +  Why can't I get the focus of the simulation window on startup (render window hidden)?
@@ -771,11 +785,12 @@ Currently, the module structure is simple:
 +  Python parts:
   
  -  \ ``itemInterface``\ : contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
- -  \ ``exudynUtilities``\ : constains helper classes in Python, which allows simpler working with EXUDYN
+ -  \ ``exudynUtilities``\ : constains helper classes in Python, which allows simpler working with Exudyn 
   
 +  C++ parts, see Figs.\ [theDoc.pdf] and [theDoc.pdf]:
   
- -  \ ``exudyn``\  (For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \ ``import exudynFast as exu``\  and can be used same as exudyn. To check the version, just type exu.__doc__ and you will see a note on 'exudynFast' in the exudynFast module.): on this level, there are just very few functions: SystemContainer(), StartRenderer(), StopRenderer()
+ -  \ ``exudyn``\ :
+    on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``StartRenderer()``\ , \ ``StopRenderer()``\ , \ ``GetVersionString()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
  -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
  -  \ ``mbs``\ : system created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see theDoc.pdf;
@@ -787,28 +802,31 @@ Currently, the module structure is simple:
 
 
 
-Conventions: items, indices, coordinates
+Conventions: items, indexes, coordinates
 ========================================
 
-In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers and loads:
+In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers, loads and sensors:
 
-  item \in \node, object, marker, load \
-
-
-
-
-\ **Indices: arrays and vector starting with 0:**\  
-
-
-As known from Python, all \ **indices**\  of arrays, vectors, etc.\ are starting with 0. This means that the first component of the vector \ ``v=[1,2,3]``\  is accessed with \ ``v[0]``\  in Python (and also in the C++ part of Exudyn ). The range is usually defined as \ ``range(0,3)``\ , in which '3' marks the index after the last valid component of an array or vector.
+  item \in \node, object, marker, load, sensor \
 
 
 
-\ **Dimensionality of objects and vectors:**\ 
+
+\ **Indexes: arrays and vector starting with 0:**\  
+
+
+As known from Python, all \ **indexes**\  of arrays, vectors, matrices, ...\ are starting with 0. This means that the first component of the vector \ ``v=[1,2,3]``\  is accessed with \ ``v[0]``\  in Python (and also in the C++ part of Exudyn ). The range is usually defined as \ ``range(0,3)``\ , in which '3' marks the index after the last valid component of an array or vector.
+
+
+
+\ **Dimensionality of objects and vectors: **\  
+
+ 
+\ac2D vs.\ \ac3D
 
  
 As a convention, quantities in Exudyn are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
-For that reason, we denote planar nodes, objects, etc.\ with the suffix '2D', but 3D objects do not get this suffix.
+For that reason, we denote planar nodes, objects, etc.\ with the suffix 2D, but 3D objects do not get this suffix.
 
 Output and input to objects, markers, loads, etc.\ is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
 As an example, consider a \ ``NodePoint2D``\ :
@@ -838,7 +856,7 @@ Adding a node provides (for the system unknown) coordinates. In addition we also
 Objects
 =======
 
-Objects are 'computational objects' and they provide equations to your system. Objects additionally often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces.
+Objects are 'computational objects' and they provide equations to your system. Objects often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces. Some of this functionality is only available in C++, but not in Python.
 
 Objects can be a:
 
@@ -919,7 +937,7 @@ It is important that the Exudyn module is basically a state machine, where you c
 \ **Where do objects live?**\ 
 
 
-Whenever a system container is created with \ ``SC = exu.SystemContainer()``\ , the structure \ ``SC``\  lives in C++ and will be modified via the python interface.
+Whenever a system container is created with \ ``SC = exu.SystemContainer()``\ , the structure \ ``SC``\  becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
 Usually, the system container will hold at least one system, usually called \ ``mbs``\ .
 Commands such as \ ``mbs.AddNode(...)``\  add objects to the system \ ``mbs``\ . 
 The system will be prepared for simulation by \ ``mbs.Assemble()``\  and can be solved (e.g., using \ ``exu.SolveDynamic(...)``\ ) and evaluated hereafter using the results files.
@@ -943,10 +961,11 @@ Hereafter, values of the structure can be modified, e.g.,
 
 .. code-block:: python
 
-  #10 seconds of simulation time:
-  simulationSettings.timeIntegration.endTime = 10                    
-  #1000 steps for time integration:
-  simulationSettings.timeIntegration.numberOfSteps = 1000            
+  tEnd = 10 #10 seconds of simulation time:
+  h = 0.01  #step size (gives 1000 steps)
+  simulationSettings.timeIntegration.endTime = tEnd
+  #steps for time integration must be integer:
+  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
   #assigns a new tolerance for Newton's method:
   simulationSettings.timeIntegration.newton.relativeTolerance = 1e-9 
   #write some output while the solver is active (SLOWER):
@@ -1275,7 +1294,7 @@ The following internal modules are used, which are represented by directories in
 +  Solver: contains all solvers for solving a CSystem
 +  System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
 +  Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
-+  Utilities: array structures for administrative/managing tasks (indices of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
++  Utilities: array structures for administrative/managing tasks (indexes of objects ... bodies, forces, connectors, ...); basic classes with templates and definitions
 
 
 The following main external libraries are linked to Exudyn:
@@ -1515,8 +1534,8 @@ We will use time integration and therefore define a number of steps (fixed step 
 
 .. code-block:: python
 
-  steps = 1000  #number of steps to show solution
   tEnd = 1     #end time of simulation
+  h = 0.001    #step size; leads to 1000 steps
 \ 
 
 All settings for simulation, see according reference section, can be provided in a structure given from \ ``exu.SimulationSettings()``\ . Note that this structure will contain all default values, and only non-default values need to be provided:
@@ -1524,9 +1543,9 @@ All settings for simulation, see according reference section, can be provided in
 .. code-block:: python
 
   simulationSettings = exu.SimulationSettings()
-  simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
+  simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
   simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-  simulationSettings.timeIntegration.numberOfSteps = steps
+  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
   simulationSettings.timeIntegration.endTime = tEnd
 \ 
 
@@ -1580,11 +1599,12 @@ The following code generates a reference (exact) solution for our example:
   import matplotlib.pyplot as plt
   import matplotlib.ticker as ticker
 
-  omega0 = np.sqrt(spring/mass)  #eigen frequency of undamped system
+  omega0 = np.sqrt(spring/mass)          #eigen frequency of undamped system
   dRel = damper/(2*np.sqrt(spring*mass)) #dimensionless damping
-  omega = omega0*np.sqrt(1-dRel**2) #eigen freq of damped system
+  omega = omega0*np.sqrt(1-dRel**2)      #eigen freq of damped system
   C1 = u0-x0 #static solution needs to be considered!
-  C2 = (v0+omega0*dRel*C1) / omega #C1, C2 are coeffs for solution
+  C2 = (v0+omega0*dRel*C1) / omega       #C1, C2 are coeffs for solution
+  steps = int(tEnd/h)                    #use same steps for reference solution
 
   refSol = np.zeros((steps+1,2))
   for i in range(0,steps+1):
@@ -1633,6 +1653,7 @@ The matplotlib output should look like this:
 
 .. image:: docs/theDoc/figures/plotSpringDamper.png
    :width: 400
+
 
 
 
@@ -1894,7 +1915,7 @@ After \ ``Assemble()``\ , markers, nodes, objects, etc. are linked and we can an
 Note that there are 2 nodes for the two rigid bodies. The five objects are due to ground object, 2 rigid bodies and 2 revolute joints.
 The meaning of markers can be seen in the graphical representation described below.
 
-Alternatively we can print the full internal information as a dictionary using \ ``mbs.systemData.Info() ``\ :
+Alternatively we can print the full internal information as a dictionary using:
 
 .. code-block:: python
 
@@ -1935,12 +1956,12 @@ For the output see the figure below. Note that obviously, markers are always nee
 .. image:: docs/theDoc/figures/DrawSystemGraphExample.png
    :width: 400
 
-%
 
 
 
 
-Before starting our simulation, we should adjust the solver parameters, especially the end time, step size (no automatic step size for implicit solvers available!):
+
+Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):
 
 .. code-block:: python
 
@@ -2039,5 +2060,5 @@ Finally, we can plot our sensor, drawing the y-component of the sensor:
 
 
 
-\ **FOR FURTHER INFORMATION GO TO theDoc.pdf**\ !!!
+\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ 
 
