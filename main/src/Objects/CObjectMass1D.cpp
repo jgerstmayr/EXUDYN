@@ -17,8 +17,9 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectMass1D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
+	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	massMatrix.SetScalarMatrix(1, parameters.physicsMass);
 }
 

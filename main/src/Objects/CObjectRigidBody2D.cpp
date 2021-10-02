@@ -16,12 +16,27 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
-	massMatrix.SetMatrix(nODE2Coordinates, nODE2Coordinates, 
-		{ parameters.physicsMass,0.,0., 
-		  0.,parameters.physicsMass,0., 
-		  0.,0.,parameters.physicsInertia });
+	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
+	//massMatrix.SetMatrix(nODE2Coordinates, nODE2Coordinates,
+	//	{ parameters.physicsMass,0.,0., 
+	//	  0.,parameters.physicsMass,0., 
+	//	  0.,0.,parameters.physicsInertia });
+
+	massMatrixC.SetUseDenseMatrix(false);
+	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
+	
+	if (parameters.physicsMass != 0.)
+	{
+		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], parameters.physicsMass));
+		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], parameters.physicsMass));
+	}
+	if (parameters.physicsInertia != 0.)
+	{
+		triplets.AppendPure(EXUmath::Triplet(ltg[2], ltg[2], parameters.physicsInertia));
+	}
+
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"

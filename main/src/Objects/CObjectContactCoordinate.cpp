@@ -72,10 +72,6 @@ void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataS
 
 }
 
-void CObjectContactCoordinate::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
-{
-	CHECKandTHROWstring("ERROR: illegal call to CObjectContactCoordinate::ComputeODE2LHSJacobian");
-}
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectContactCoordinate::GetOutputVariableTypes() const

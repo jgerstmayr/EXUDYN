@@ -79,8 +79,9 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectALEANCFCable2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
+	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
 	const int ns = 4; //number of shape functions
 

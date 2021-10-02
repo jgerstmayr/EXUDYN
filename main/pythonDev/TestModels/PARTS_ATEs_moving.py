@@ -503,8 +503,6 @@ if computeDynamic:
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8
     simulationSettings.timeIntegration.verboseMode = 1
     #simulationSettings.timeIntegration.verboseModeFile = 1
-    #simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
-    #simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = True
     
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints =  simulationSettings.timeIntegration.generalizedAlpha.useNewmark

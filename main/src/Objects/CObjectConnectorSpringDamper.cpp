@@ -93,17 +93,6 @@ void CObjectConnectorSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerD
 	}
 }
 
-void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
-{
-	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorSpringDamper::ComputeODE2LHSJacobian");
-}
-
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CObjectConnectorSpringDamper::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)((Index)OutputVariableType::Distance + (Index)OutputVariableType::Displacement +
-//		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Force);
-//}
 
 //! provide according output variable in "value"
 void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const

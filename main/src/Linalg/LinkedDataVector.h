@@ -253,10 +253,11 @@ public:
         return *this;
     }
 
-	//! SetNumberOfItems is doing nothing, but for safety add assertion; needed for some matrix vector operation templates
+	//! SetNumberOfItems is only allowed to make size smaller or keep equal; this helps a lot when linking with ConstSizeVector, knowing maximum size
 	virtual void SetNumberOfItems(Index numberOfItemsInit) override
 	{
-		CHECKandTHROW((this->numberOfItems == numberOfItemsInit), "ERROR: call to LinkedDataVectorBase::SetNumberOfItems only allowed if sizes match");
+		CHECKandTHROW((numberOfItemsInit <= this->numberOfItems), "ERROR: call to LinkedDataVectorBase::SetNumberOfItems only allowed if new size smaller/equal original size");
+		this->numberOfItems = numberOfItemsInit;
 	}
 
 protected: //functions cannot be called from outside 

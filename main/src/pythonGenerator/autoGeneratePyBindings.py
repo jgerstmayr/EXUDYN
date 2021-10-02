@@ -432,7 +432,7 @@ s+=s1; sL+=sL1
                                 description="assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleLTGLists', cName='AssembleLTGLists', 
-                                description="build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)"); s+=s1; sL+=sL1
+                                description="build \\ac{LTG} coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleInitializeSystemCoordinates', cName='AssembleInitializeSystemCoordinates', 
                                 description="initialize all system-wide coordinates based on initial values given in nodes"); s+=s1; sL+=sL1
@@ -626,7 +626,7 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputBody', cName='PyGetObjectOutputVariableBody', 
-                                description="get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition $\pLocB$ similar to MarkerBody and SensorBody",
+                                description="get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody",
                                 argList=['objectNumber', 'variableType', 'localPosition', 'configuration'],
                                 defaultArgs=['','','','ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)"
@@ -1054,7 +1054,7 @@ sL += DefLatexFinishClass()
 #+++++++++++++++++++++++++++++++++
 #LTG-functions:
 s += "\n//        LTG readout functions:\n"
-sL += DefLatexStartClass(pyClassStr+': Get object local-to-global (LTG) coordinate mappings', 'This section provides access functions the LTG-lists for every object (body, constraint, ...) in the system.', subSection=True)
+sL += DefLatexStartClass(pyClassStr+': Get object LTG coordinate mappings', 'This section provides access functions the \\ac{LTG}-lists for every object (body, constraint, ...) in the system.', subSection=True)
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectLTGODE2', cName='PyGetObjectLocalToGlobalODE2', 
                                 description="get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()",

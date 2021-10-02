@@ -53,8 +53,10 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
                             'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
                             'PyFunctionVector6DmbsScalarIndexVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>', #GenericJoint
                             'PyFunctionVector3DmbsScalarIndexScalar4Vector3D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
-                            'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2
-                            'PyFunctionMatrixMbsScalarIndex2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2
+                            'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
+                            'PyFunctionMatrixMbsScalarIndex2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
+                            'PyFunctionMatrixContainerMbsScalarIndex2Vector': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2 #changed from PyFunctionMatrixMbsScalarIndex2Vector 2021-09-27
+                            'PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)>', #ObjectGenericODE2 #Jacobian
                             'PyFunctionVectorMbsScalarIndexVector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector)>', #ObjectGenericODE1
                             'PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper
                             'PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
@@ -353,11 +355,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 parameterTypeStr = parameter['type']
                 parameterSizeStr = parameter['size']
                 parameterDefaultValueStr = parameter['defaultValue']
+                if len(parameterTypeStr) > 35 or len(parameterDefaultValueStr) > 17:
+                    parameterDescription = '\\tabnewline ' + parameterDescription 
+
                 if len(parameterTypeStr) > 15:
                     parameterSizeStr = '\\tabnewline ' + parameterSizeStr 
                 if len(parameterTypeStr) > 18:
                     parameterDefaultValueStr = '\\tabnewline ' + parameterDefaultValueStr 
-                
+
                 sTemp   = space4 + Str2Latex(parameter['pythonName']) + ' & '
                 sTemp  += space4 + Str2Latex(parameterTypeStr) + ' & '
                 sTemp  += space4 + Str2Latex(parameterSizeStr) + ' & '

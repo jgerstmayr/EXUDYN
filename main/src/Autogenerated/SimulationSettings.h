@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,7 +125,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -147,6 +147,8 @@ public: // AUTO:
   Real minimumCoordinateSize;                     //!< AUTO: minimum size of coordinates in relative differentiation parameter
   bool doSystemWideDifferentiation;               //!< AUTO: True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation
   bool addReferenceCoordinatesToEpsilon;          //!< AUTO: True: for the size estimation of the differentiation parameter, the reference coordinate \f$q^{Ref}_i\f$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
+  bool forAE;                                     //!< AUTO: flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification
+  bool forODE2;                                   //!< AUTO: flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification
 
 
 public: // AUTO: 
@@ -157,6 +159,8 @@ public: // AUTO:
     minimumCoordinateSize = 1e-2;
     doSystemWideDifferentiation = false;
     addReferenceCoordinatesToEpsilon = false;
+    forAE = false;
+    forODE2 = false;
   };
 
   // AUTO: access functions
@@ -178,6 +182,8 @@ public: // AUTO:
     os << "  minimumCoordinateSize = " << minimumCoordinateSize << "\n";
     os << "  doSystemWideDifferentiation = " << doSystemWideDifferentiation << "\n";
     os << "  addReferenceCoordinatesToEpsilon = " << addReferenceCoordinatesToEpsilon << "\n";
+    os << "  forAE = " << forAE << "\n";
+    os << "  forODE2 = " << forODE2 << "\n";
     os << "\n";
   }
 
@@ -196,7 +202,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -264,7 +270,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -283,7 +289,6 @@ class NewtonSettings // AUTO:
 {
 public: // AUTO: 
   NumericalDifferentiationSettings numericalDifferentiation;//!< AUTO: numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)
-  bool useNumericalDifferentiation;               //!< AUTO: flag (true/false); false = perform direct computation of jacobian, true = use numerical differentiation for jacobian
   bool useNewtonSolver;                           //!< AUTO: flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution
   Real relativeTolerance;                         //!< AUTO: relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
   Real absoluteTolerance;                         //!< AUTO: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
@@ -303,7 +308,6 @@ public: // AUTO:
   //! AUTO: default constructor with parameter initialization
   NewtonSettings()
   {
-    useNumericalDifferentiation = false;
     useNewtonSolver = true;
     relativeTolerance = 1e-8;
     absoluteTolerance = 1e-10;
@@ -365,7 +369,6 @@ public: // AUTO:
   {
     os << "NewtonSettings" << ":\n";
     os << "  numericalDifferentiation = " << numericalDifferentiation << "\n";
-    os << "  useNumericalDifferentiation = " << useNumericalDifferentiation << "\n";
     os << "  useNewtonSolver = " << useNewtonSolver << "\n";
     os << "  relativeTolerance = " << relativeTolerance << "\n";
     os << "  absoluteTolerance = " << absoluteTolerance << "\n";
@@ -397,7 +400,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -479,7 +482,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -537,7 +540,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -733,7 +736,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -893,7 +896,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -959,7 +962,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-08-26 (last modfied)
+* @date         AUTO: 2021-09-27 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

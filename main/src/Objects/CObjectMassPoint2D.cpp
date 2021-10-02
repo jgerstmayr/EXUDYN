@@ -16,9 +16,18 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectMassPoint2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
-	massMatrix.SetScalarMatrix(nODE2Coordinates, parameters.physicsMass);
+	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
+	//massMatrix.SetScalarMatrix(nODE2Coordinates, parameters.physicsMass);
+
+	massMatrixC.SetUseDenseMatrix(false);
+	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
+	if (parameters.physicsMass != 0.)
+	{
+		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], parameters.physicsMass));
+		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], parameters.physicsMass));
+	}
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"

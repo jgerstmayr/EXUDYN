@@ -12,7 +12,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import numpy as np
-from numpy import sign
+import numpy as np
 from math import exp
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -30,7 +30,7 @@ def StribeckFunction(vel, muDynamic, muStaticOffset, muViscous=0, expVel=1e-3, r
     if abs(vel) <= regVel:
         return (muDynamic + muStaticOffset)*vel/regVel
     else:
-        s = sign(vel)
+        s = np.sign(vel)
         v = abs(vel)-regVel
         return s*(muDynamic + muStaticOffset*exp(-v/expVel) + muViscous*v)
 
@@ -62,10 +62,47 @@ def RegularizedFriction(vel, muDynamic, muStaticOffset, velStatic, velDynamic, m
     mud = muDynamic
     mus = muDynamic + muStaticOffset
     if abs(vel) > vd:
-        return sign(vel)*(muDynamic + (abs(vel)-velDynamic)*muViscous)
+        return np.sign(vel)*(muDynamic + (abs(vel)-velDynamic)*muViscous)
     elif vs <= abs(vel) and abs(vel) <= vd:
-        return sign(vel)*RegularizedFrictionStep(abs(vel), vs, mus, vd, mud) #error in paper of Qian, Zhang and Jin: vs, mus sitched with vd, mud
+        return np.sign(vel)*RegularizedFrictionStep(abs(vel), vs, mus, vd, mud) #error in paper of Qian, Zhang and Jin: vs, mus sitched with vd, mud
     else:
         return RegularizedFrictionStep(vel, -vs, -mus, vs, mus)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: compute equivalent von-Mises stress given 6 stress components or list of stress6D (or stress6D in rows of np.array)
+#**input:
+#  stress6D: 6 stress components as list or np.array, using ordering $[\sigma_{xx}$, $[\sigma_{yy}$, $[\sigma_{zz}$, $[\sigma_{yz}$, $[\sigma_{xz}$, $[\sigma_{xy}]$
+#**output: returns scalar equivalent von-Mises stress or np.array of von-Mises stresses for all stress6D
+def VonMisesStress(stress6D):
+    s = np.array(stress6D)
+    if s.ndim == 1:
+        return np.sqrt(0.5*((s[0]-s[1])**2 + 
+                         (s[1]-s[2])**2 + 
+                         (s[2]-s[0])**2 + 
+                         6*(s[3]**2+s[4]**2+s[5]**2 )))
+    else: #numpy sqrt does the job:
+        return np.sqrt(0.5*((s[:,0]-s[:,1])**2 + 
+                         (s[:,1]-s[:,2])**2 + 
+                         (s[:,2]-s[:,0])**2 + 
+                         6*(s[:,3]**2+s[:,4]**2+s[:,5]**2 )))
+        
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Sensor user function to compute equivalent von-Mises stress from sensor with Stress or StressLocal OutputVariableType; if more than 1 sensor is given in sensorNumbers, then the maximum stress is computed
+#**input: arguments according to \texttt{SensorUserFunction}; factors are ignored
+#**output: returns scalar (maximum) equivalent von-Mises stress
+#**example:
+##assuming s0, s1, s2 being sensor numbers with StressLocal components
+#sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[s0,s1,s2], 
+#                                         fileName='solution/sensorMisesStress.txt',
+#                                         sensorUserFunction=UFvonMisesStress))
+def UFvonMisesStress(mbs, t, sensorNumbers, factors, configuration):
+    maxStress = 0
+    for sensor in sensorNumbers:
+        maxStress = max(maxStress,
+                        mbs.GetSensorValues(sensor, configuration))
+    return [maxStress]
+
 
 

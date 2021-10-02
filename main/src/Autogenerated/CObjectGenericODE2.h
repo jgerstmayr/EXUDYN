@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2021-09-30  10:19:41 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,6 +27,7 @@
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
 typedef py::array_t<Real> NumpyMatrix; 
+#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectGenericODE2Parameters
@@ -34,23 +35,25 @@ class CObjectGenericODE2Parameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list)
-    Matrix massMatrix;                            //!< AUTO: mass matrix of object in python numpy format
-    Matrix stiffnessMatrix;                       //!< AUTO: stiffness matrix of object in python numpy format
-    Matrix dampingMatrix;                         //!< AUTO: damping matrix of object in python numpy format
+    PyMatrixContainer massMatrix;                 //!< AUTO: mass matrix of object as MatrixContainer (or numpy array / list of lists)
+    PyMatrixContainer stiffnessMatrix;            //!< AUTO: stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction
+    PyMatrixContainer dampingMatrix;              //!< AUTO: damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction
     Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
     std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
-    std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix; see description below
+    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix given in \f$\Mm\f$; return numpy array or MatrixContainer; see description below
+    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)> jacobianUserFunction;//!< AUTO: A python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times \f$f_{ODE2}\f$) and w.r.t.\ the velocities (times \f$f_{ODE2_t}\f$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE2Parameters()
     {
         nodeNumbers = ArrayIndex();
-        massMatrix = Matrix();
-        stiffnessMatrix = Matrix();
-        dampingMatrix = Matrix();
+        massMatrix = PyMatrixContainer();
+        stiffnessMatrix = PyMatrixContainer();
+        dampingMatrix = PyMatrixContainer();
         forceVector = Vector();
         forceUserFunction = 0;
         massMatrixUserFunction = 0;
+        jacobianUserFunction = 0;
         coordinateIndexPerNode = ArrayIndex();
     };
 };
@@ -122,16 +125,16 @@ public: // AUTO:
     Vector& GetTempCoordinates_tt() { return tempCoordinates_tt; }
 
     //! AUTO:  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const override;
+    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
 
+    //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const override;
+
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return JacobianType::_None;
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override;
@@ -209,7 +212,10 @@ public: // AUTO:
     void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
+    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override

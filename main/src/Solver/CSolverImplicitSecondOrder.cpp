@@ -494,17 +494,25 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	STARTTIMER(timer.jacobianODE2);
 	//Tangent stiffness
 	//K-Matrix; has no factor
-	computationalSystem.NumericalJacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, 
-		data.tempODE2F0, data.tempODE2F1, *(data.systemJacobian), -1. * scalODE2); //RHS ==> -K
+	computationalSystem.JacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, *(data.systemJacobian), -1. * scalODE2, -gammaPrime * scalODE2); //RHS ==> -K
 	STOPTIMER(timer.jacobianODE2);
 
-	//+++++++++++++++++++++++++++++
-	//'Damping' and gyroscopic terms
-	STARTTIMER(timer.jacobianODE2_t);
-	//Arnold/Bruls: C_t*gammaPrime
-	computationalSystem.NumericalJacobianODE2RHS_t(data.tempCompData, newton.numericalDifferentiation, data.tempODE2F0, 
-		data.tempODE2F1, *(data.systemJacobian), -gammaPrime * scalODE2); //d(ODE2)/dq_t for damping terms; //RHS ==> -D
-	STOPTIMER(timer.jacobianODE2_t);
+	////+++++++++++++++++++++++++++++
+	////compute jacobian (w.r.t. U ==> also add V)
+	//STARTTIMER(timer.jacobianODE2);
+	////Tangent stiffness
+	////K-Matrix; has no factor
+	//computationalSystem.NumericalJacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, 
+	//	data.tempODE2F0, data.tempODE2F1, *(data.systemJacobian), -1. * scalODE2); //RHS ==> -K
+	//STOPTIMER(timer.jacobianODE2);
+
+	////+++++++++++++++++++++++++++++
+	////'Damping' and gyroscopic terms
+	//STARTTIMER(timer.jacobianODE2_t);
+	////Arnold/Bruls: C_t*gammaPrime
+	//computationalSystem.NumericalJacobianODE2RHS_t(data.tempCompData, newton.numericalDifferentiation, data.tempODE2F0, 
+	//	data.tempODE2F1, *(data.systemJacobian), -gammaPrime * scalODE2); //d(ODE2)/dq_t for damping terms; //RHS ==> -D
+	//STOPTIMER(timer.jacobianODE2_t);
 
 	//+++++++++++++++++++++++++++++
 	//compute ODE1 jacobian

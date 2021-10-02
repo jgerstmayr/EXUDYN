@@ -616,13 +616,18 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		py::class_<PyMatrixContainer>(m, "MatrixContainer", "MatrixContainer: holds a dense or sparse matrix")
 		.def(py::init<>())
-		//+++++++++++++++++++++++++++++++++++++++++++
+		.def(py::init<const py::object&>(), py::arg("matrix"))
+		//.def(py::init<const py::array_t<Real>&>(), py::arg("pyArray"))
+		//.def(py::init<>(const py::object& matrix), py::arg("matrix") = py::list())
+			//+++++++++++++++++++++++++++++++++++++++++++
 		.def("SetWithDenseMatrix", &PyMatrixContainer::SetWithDenseMatrix, 
 			"set with dense numpy array; array (=matrix) contains values and size information", py::arg("pyArray"), py::arg("useDenseMatrix") = true)
 		.def("SetWithSparseMatrixCSR", &PyMatrixContainer::SetWithSparseMatrixCSR, 
 			"set with sparse CSR matrix format: numpy array contains in every row [row, col, value]; numberOfRows and numberOfColumns given extra", 
 			py::arg("numberOfRowsInit"), py::arg("numberOfColumnsInit"), py::arg("pyArrayCSR"), py::arg("useDenseMatrix") = false)
 		.def("GetPythonObject", &PyMatrixContainer::GetPythonObject, "convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing #rows, #columns, numpy matrix with triplets")
+		.def("Convert2DenseMatrix", &PyMatrixContainer::Convert2DenseMatrix, "convert MatrixContainer to dense numpy array (SLOW)")
+		.def("UseDenseMatrix", &PyMatrixContainer::UseDenseMatrix, "gives True if dense matrix is used, otherwise False")
 			;
 	//+++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++

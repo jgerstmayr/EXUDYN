@@ -1644,13 +1644,18 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		float maxVal = 1;
 		if (graphicsDataList)
 		{
-			if (graphicsDataList->NumberOfItems() > 1) { pout << "WARNING: contour plot color bar only works for one single system\n"; }
+			if (graphicsDataList->NumberOfItems() > 1) 
+			{
+				ShowMessage("WARNING: contour plot color bar only works for one single system");
+				//pout << "WARNING: contour plot color bar only works for one single system\n"; 
+			}
 
 			minVal = graphicsDataList->GetItem(0)->GetContourCurrentMinValue();
 			maxVal = graphicsDataList->GetItem(0)->GetContourCurrentMaxValue();
 		}
 		//DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
-		STDstring contourStr = STDstring("contour plot: ")+GetOutputVariableTypeString(visSettings->contour.outputVariable) + "\ncomponent=" + EXUstd::ToString(visSettings->contour.outputVariableComponent) +
+		STDstring contourStr = STDstring("contour plot: ")+GetOutputVariableTypeString(visSettings->contour.outputVariable) +
+			"\ncomponent=" + EXUstd::ToString(visSettings->contour.outputVariableComponent) +
 			"\nmin=" + EXUstd::ToString(minVal) + ",max=" + EXUstd::ToString(maxVal);
 		DrawString(contourStr.c_str(), fontSize, p0, textColor);
 		p0 += Float3({0.f,-3.2f*scale,0.f});

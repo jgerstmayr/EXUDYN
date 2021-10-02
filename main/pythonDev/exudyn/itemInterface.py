@@ -631,7 +631,7 @@ class VObjectGenericODE2:
         yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
 
 class ObjectGenericODE2:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, jacobianUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.massMatrix = massMatrix
@@ -640,6 +640,7 @@ class ObjectGenericODE2:
         self.forceVector = forceVector
         self.forceUserFunction = forceUserFunction
         self.massMatrixUserFunction = massMatrixUserFunction
+        self.jacobianUserFunction = jacobianUserFunction
         self.visualization = visualization
 
     def __iter__(self):
@@ -652,6 +653,7 @@ class ObjectGenericODE2:
         yield 'forceVector', self.forceVector
         yield 'forceUserFunction', self.forceUserFunction
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'jacobianUserFunction', self.jacobianUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
@@ -1066,6 +1068,53 @@ class ObjectConnectorRigidBodySpringDamper:
 #add typedef for short usage:
 RigidBodySpringDamper = ObjectConnectorRigidBodySpringDamper
 VRigidBodySpringDamper = VObjectConnectorRigidBodySpringDamper
+
+class VObjectConnectorTorsionalSpringDamper:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+class ObjectConnectorTorsionalSpringDamper:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., torque = 0., activeConnector = True, springTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.nodeNumber = nodeNumber
+        self.stiffness = stiffness
+        self.damping = damping
+        self.rotationMarker0 = rotationMarker0
+        self.rotationMarker1 = rotationMarker1
+        self.offset = offset
+        self.torque = torque
+        self.activeConnector = activeConnector
+        self.springTorqueUserFunction = springTorqueUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorTorsionalSpringDamper'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'stiffness', self.stiffness
+        yield 'damping', self.damping
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'rotationMarker1', self.rotationMarker1
+        yield 'offset', self.offset
+        yield 'torque', self.torque
+        yield 'activeConnector', self.activeConnector
+        yield 'springTorqueUserFunction', self.springTorqueUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+#add typedef for short usage:
+TorsionalSpringDamper = ObjectConnectorTorsionalSpringDamper
+VTorsionalSpringDamper = VObjectConnectorTorsionalSpringDamper
 
 class VObjectConnectorCoordinateSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):

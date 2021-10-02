@@ -59,7 +59,6 @@ simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-4
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
 #simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True

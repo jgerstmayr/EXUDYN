@@ -85,8 +85,9 @@ void CObjectFFRFreducedOrder::InitializeObject()
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! Computational function: compute mass matrix
-void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
+	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	if (!objectIsInitialized) { PyError("CObjectFFRFreducedOrder::ComputeMassMatrix: objectIsInitialized = false: run Assemble() before computation."); }
 
 	Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
@@ -102,11 +103,6 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(Matrix& massMatrix, Index object
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
 		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
-		//UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-		//{
-		//	//user function args:(t, coordinates, coordinates_t)
-		//	EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction(t, tempCoordinates, tempCoordinates_t), massMatrix);
-		//}, "ObjectFFRFreducedOrder::massMatrixUserFunction");
 	}
 	else //initialize with zero
 	{
@@ -485,93 +481,93 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 
 }
 
-//! number of AE coordinates; depends on node
-Index CObjectFFRFreducedOrder::GetAlgebraicEquationsSize() const
-{
-	if (((Index)((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & (Index)Node::RotationEulerParameters) != 0) 
-	{
-		return 1;
-	}
-	return 0;
-}
-
-//! return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-JacobianType::Type CObjectFFRFreducedOrder::GetAvailableJacobians() const
-{
-	if (GetAlgebraicEquationsSize() != 0)
-	{
-		return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);
-	}
-	else
-	{
-		return JacobianType::_None;
-	}
-}
-
-//! Compute algebraic equations part of rigid body
-void CObjectFFRFreducedOrder::ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2) const
-{
-	algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
-
-	if (GetAlgebraicEquationsSize() != 0)
-	{
-		if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
-		{
-			algebraicEquations.SetNumberOfItems(1);
-			if (!useIndex2)
-			{
-				//position level constraint:
-				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
-				algebraicEquations[0] = ep * ep - 1.;
-			}
-			else
-			{
-				//velocity level constraint:
-				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
-				LinkedDataVector ep_t = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters_t();
-
-				algebraicEquations[0] = 2. * (ep * ep_t);
-			}
-		}
-	}
-
-}
-
-//! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
-void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, 
-	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const
-{
-	//Index offset = 0;
-	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
-	{
-		Index nODE2 = GetODE2Size(); //total number of coordinates
-		//Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
-		//Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
-
-		jacobian_ODE2.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
-		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
-		jacobian_ODE1.SetNumberOfRowsAndColumns(0, 0); //for safety!
-		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
-		jacobian_ODE2.SetAll(0.); //only few rigid body entries zero ==> for simplicity
-
-		if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
-		{
-			ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
-
-			//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
-			for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); i++)
-			{
-				jacobian_ODE2(0, ffrfNodeDim + i) = 2.*ep[i];
-			}
-		}
-	}
-	else
-	{
-		jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0);
-		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
-		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
-	}
-}
+////! number of AE coordinates; depends on node
+//Index CObjectFFRFreducedOrder::GetAlgebraicEquationsSize() const
+//{
+//	if (((Index)((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & (Index)Node::RotationEulerParameters) != 0) 
+//	{
+//		return 1;
+//	}
+//	return 0;
+//}
+//
+////! return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+//JacobianType::Type CObjectFFRFreducedOrder::GetAvailableJacobians() const
+//{
+//	if (GetAlgebraicEquationsSize() != 0)
+//	{
+//		return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);
+//	}
+//	else
+//	{
+//		return JacobianType::_None;
+//	}
+//}
+//
+////! Compute algebraic equations part of rigid body
+//void CObjectFFRFreducedOrder::ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2) const
+//{
+//	algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
+//
+//	if (GetAlgebraicEquationsSize() != 0)
+//	{
+//		if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
+//		{
+//			algebraicEquations.SetNumberOfItems(1);
+//			if (!useIndex2)
+//			{
+//				//position level constraint:
+//				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+//				algebraicEquations[0] = ep * ep - 1.;
+//			}
+//			else
+//			{
+//				//velocity level constraint:
+//				ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+//				LinkedDataVector ep_t = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters_t();
+//
+//				algebraicEquations[0] = 2. * (ep * ep_t);
+//			}
+//		}
+//	}
+//
+//}
+//
+////! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
+//void CObjectFFRFreducedOrder::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, 
+//	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const
+//{
+//	//Index offset = 0;
+//	if (GetCNode(rigidBodyNodeNumber)->GetNumberOfAECoordinates() != 0)
+//	{
+//		Index nODE2 = GetODE2Size(); //total number of coordinates
+//		//Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
+//		//Index nODE2Rigid = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+//
+//		jacobian_ODE2.SetNumberOfRowsAndColumns(GetAlgebraicEquationsSize(), nODE2);
+//		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+//		jacobian_ODE1.SetNumberOfRowsAndColumns(0, 0); //for safety!
+//		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+//		jacobian_ODE2.SetAll(0.); //only few rigid body entries zero ==> for simplicity
+//
+//		if (((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetType() & Node::RotationEulerParameters)
+//		{
+//			ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
+//
+//			//jacobian = [0 0 0 2*ep0 2*ep1 2*ep2 2*ep3]
+//			for (Index i = 0; i < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); i++)
+//			{
+//				jacobian_ODE2(0, ffrfNodeDim + i) = 2.*ep[i];
+//			}
+//		}
+//	}
+//	else
+//	{
+//		jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0);
+//		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
+//		jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+//	}
+//}
 
 
 

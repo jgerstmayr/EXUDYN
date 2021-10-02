@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 752, 
-Number of resolved issues = 664 (296 in current version), 
-Exudyn version = 1.0.296, 
-last change =  2021-09-10
+Number of issues = 775, 
+Number of resolved issues = 687 (23 in current minor version), 
+Exudyn version = 1.1.23, 
+last change =  2021-10-01
 
 
 <table style = "width:100%">
@@ -39,15 +39,63 @@ last change =  2021-09-10
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0750</td>
-    <td>ANCF/ALE contour plot</td>
+    <td>0770</td>
+    <td>Marker jacobian derivative2</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> contour plot not showing displacements or forces</td>
+    <td> add jacobian derivative to most important connector markers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-28</td>
+    <td>2021-11-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0767</td>
+    <td>sparse ObjectJacobianODE2</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add dense and sparse interface to ObjectJacobianODE2</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-27</td>
+    <td>2021-11-26</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0753</td>
+    <td>autodiff for Connectors</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add autodiff for connectors using spezial sizes like 6 for 2 position nodes, 14 for 2 rigid bodies and 40 for most objects (ObjectFFRFreducedOrder) + 100? as extreme case, falling back to numerical diff for any larger case</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-21</td>
+    <td>2021-11-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0752</td>
+    <td>tkinter MacOS       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)</td>
     <td>BUG</td>
     <td></td>
-    <td>2021-09-03</td>
-    <td>2021-11-02</td>
+    <td>2021-09-20</td>
+    <td>2021-11-19</td>
     <td></td>
     <td></td>
     <td></td>
@@ -75,7 +123,7 @@ last change =  2021-09-10
     <td>ComputeODEEigenvalues</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add possibility to eliminate coordinate constraints</td>
+    <td> add possibility to eliminate coordinate constraints, possibly to use SVD/ null space matrix for projection</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2021-09-03</td>
@@ -214,7 +262,7 @@ last change =  2021-09-10
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0728</td>
     <td>optimize CollectCurrentNodeMarkerData</td>
     <td>JG</td>
@@ -304,22 +352,6 @@ last change =  2021-09-10
     <td></td>
     <td>2021-06-28</td>
     <td>2021-08-27</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0679</td>
-    <td>Renderer tkinter    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add flag to disable calls to tkinter from Renderer, which is not possible if tkinter is already used for interactive dialogs</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-05-14</td>
-    <td>2021-07-13</td>
     <td></td>
     <td></td>
     <td></td>
@@ -455,22 +487,6 @@ last change =  2021-09-10
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0620</td>
-    <td>TorsionalSpringDamper</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add torsional spring damper similar to SpringDamper, fixed on a single local axis of marker0, allowing to realize controllers and torques</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-04-06</td>
-    <td>2021-06-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0618</td>
     <td>robotics submodule  </td>
     <td>JG</td>
@@ -525,22 +541,6 @@ last change =  2021-09-10
     <td>RAISED  </td>
     <td> add simple test into TestModels</td>
     <td>TEST</td>
-    <td></td>
-    <td>2021-03-21</td>
-    <td>2021-05-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0612</td>
-    <td>sparse object matrices</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add sparse matrix computation mode for ComputeMassMatrix and for ObjectJacobianODE2; consider Lie algebra derivatives</td>
-    <td>EXTENSION</td>
     <td></td>
     <td>2021-03-21</td>
     <td>2021-05-20</td>
@@ -1447,6 +1447,310 @@ last change =  2021-09-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0774</td>
+    <td>ComputePostProcessingModesNGsolve</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added improved functionality for ComputePostProcessingModes using NGsolve, speeding up computations by factor of 10</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-01</td>
+    <td>2021-11-30</td>
+    <td>2021-10-01 14:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0773</td>
+    <td>ImportMeshFromNGsolve</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added option meshOrder which allows to use second order elements with meshOrder=2, leading to much higher accuracy of displacements and stresses</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-01</td>
+    <td>2021-11-30</td>
+    <td>2021-10-01 14:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0772</td>
+    <td>compute HCB modes with NGsolve</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add much faster computation function ComputeHurtyCraigBamptonModesNGsolve for computation of eigenmodes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-01</td>
+    <td>2021-11-30</td>
+    <td>2021-10-01 14:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0771</td>
+    <td>GeneticOptimization </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add normal distribution and distanceFactorGenerations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-29</td>
+    <td>2021-11-28</td>
+    <td>2021-09-29 17:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0769</td>
+    <td>Marker jacobian derivative</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add jacobian derivative to markers to allow analytical differentiation of connectors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-28</td>
+    <td>2021-11-27</td>
+    <td>2021-09-28 18:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0768</td>
+    <td>Newton.useNumericalDifferentiation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change to Newton.numericalDifferentiation.forAE and Newton.numericalDifferentiation.forODE2; previous Newton.useNumericalDifferentiation only affected AE (algebraic equations) and should be changed now to  Newton.numericalDifferentiation.forAE; default is False</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-09-27</td>
+    <td>2021-11-26</td>
+    <td>2021-09-27 15:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0766</td>
+    <td>ObjectGenericODE2   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change mass matrix, stiffnessmatrix, etc. types to PyMatrixContainer in order to accept dense and sparse matrices</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-09-26</td>
+    <td>2021-11-25</td>
+    <td>2021-09-27 14:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0765</td>
+    <td>describe Python types</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> describe Python types such as NumpyMatrix or PyMatrixContainer in intro to objects, nodes, ...</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-09-26</td>
+    <td>2021-11-25</td>
+    <td>2021-09-27 14:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0764</td>
+    <td>PyMatrixContainer   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend PyMatrixContainer to accept numpy.array or list of lists as input</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-26</td>
+    <td>2021-11-25</td>
+    <td>2021-09-26 23:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0763</td>
+    <td>ComputeMassMatrix   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add sparse mode with MatrixContainer</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-26</td>
+    <td>2021-11-25</td>
+    <td>2021-09-26 18:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0762</td>
+    <td>MatrixBase          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove virtual from begin/end operators</td>
+    <td>PERFORMANCE</td>
+    <td></td>
+    <td>2021-09-26</td>
+    <td>2021-11-25</td>
+    <td>2021-09-26 17:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0761</td>
+    <td>LinkedDataVectorBase</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> allowing SetNumberOfItems to make LinkedDataVectors smaller after linking</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-24</td>
+    <td>2021-11-23</td>
+    <td>2021-09-24 08:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0760</td>
+    <td>contour plot        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> nodes in contour plot leading to exudyn crash due to ConstSizeVector decoupled from Vector</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-24</td>
+    <td>2021-11-23</td>
+    <td>2021-09-24 08:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0759</td>
+    <td>contour plot        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> equivalent stress showing negative color bar values in contour plot</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-23</td>
+    <td>2021-11-22</td>
+    <td>2021-09-23 17:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>contour plot with norm (component -1) showing only positive min and max values when tested</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0758</td>
+    <td>FEM CMSObjectComputeNorm</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function into FEM to compute maximum stress / strain / etc for CMSObject (ObjectFFRFreducedOrder), using only the objectNumber as an input; options are outputVariableType=StressLocal, norm="" (Mises, L2norm, none), nodeNumbers=[] ... providing optional list of nodes to restrict the computation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-22</td>
+    <td>2021-11-21</td>
+    <td>2021-09-23 19:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0757</td>
+    <td>FEM GetNodePositionsMean</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function into FEMinterface to compute mean (average) position based on nodeNumbers (as list)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-22</td>
+    <td>2021-11-21</td>
+    <td>2021-09-23 17:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0756</td>
+    <td>FEM MisesStress     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function that computes Mises stress from 6 stress components as obtained in stress sensor</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-22</td>
+    <td>2021-11-21</td>
+    <td>2021-09-23 16:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>put into exudyn.physics module</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0755</td>
+    <td>GetKinematicTree66 in robotics</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function to export KinematicTree66 from Robotic class</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-22</td>
+    <td>2021-11-21</td>
+    <td>2021-09-22 18:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0754</td>
+    <td>performance tests   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add automated performance tests for solver speed to determine significant drop of performance</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2021-09-22</td>
+    <td>2021-11-21</td>
+    <td>2021-09-22 10:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0751</td>
     <td>SetMarkerParameter  </td>
     <td>JG</td>
@@ -1461,6 +1765,22 @@ last change =  2021-09-10
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0750</td>
+    <td>ANCF/ALE contour plot</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> contour plot not showing displacements or forces</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td>2021-09-24 08:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>bug due to issue 760, which has been resolved now!</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0749</td>
@@ -2327,6 +2647,22 @@ last change =  2021-09-10
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0679</td>
+    <td>Renderer tkinter    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag to disable calls to tkinter from Renderer, which is not possible if tkinter is already used for interactive dialogs. This allows to open visualizationSettings in AnimateModes and SolutionViewer</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-14</td>
+    <td>2021-07-13</td>
+    <td>2021-09-14 10:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0678</td>
     <td>mouseInteractiveExample</td>
     <td>JG</td>
@@ -3127,6 +3463,22 @@ last change =  2021-09-10
     <td>added correct type check in MainSystem::PyGetNodeODE2Index</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0620</td>
+    <td>TorsionalSpringDamper</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add torsional spring damper similar to SpringDamper, fixed on a single local axis of marker0, allowing to realize controllers and torques</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-04-06</td>
+    <td>2021-06-05</td>
+    <td>2021-09-16 10:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0619</td>
     <td>Eigenmode visualizer</td>
     <td>JG</td>
@@ -3173,6 +3525,22 @@ last change =  2021-09-10
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0612</td>
+    <td>sparse object matrices</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add sparse matrix computation mode for ComputeMassMatrix and for ObjectJacobianODE2; consider Lie algebra derivatives</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-21</td>
+    <td>2021-05-20</td>
+    <td>2021-09-27 14:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>sparse ObjectJacobianODE2 computation not yet implemented and moved to issue767</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0611</td>

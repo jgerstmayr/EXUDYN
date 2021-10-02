@@ -699,6 +699,22 @@ class RigidBodyInertia:
                                 inertiaTensor=inertia,
                                 com=newCOM)
 
+    #**classFunction: returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
+    def Inertia(self):
+        return self.inertiaTensor
+
+    #**classFunction: returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
+    def InertiaCOM(self):
+        return self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+
+    #**classFunction: returns center of mass (COM) w.r.t. chosen reference point
+    def COM(self):
+        return self.com
+
+    #**classFunction: returns mass
+    def Mass(self):
+        return self.mass
+
     #**classFunction: returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot*J*rot.T
     #**notes: only allowed if COM=0 !
     def Rotated(self, rot):

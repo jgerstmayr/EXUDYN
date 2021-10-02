@@ -14,10 +14,18 @@
 #include "PyMatrixContainer.h"	
 #include "PybindUtilities.h"
 
+////! initialize container with py::array_t or with emtpy list (default value)
+//PyMatrixContainer::PyMatrixContainer(const py::array_t<Real>& pyArray)
+//{
+//	useDenseMatrix = true;
+//	denseMatrix = EPyUtils::NumPy2Matrix(pyArray);
+//}
+//
+
 //! initialize container with py::array_t or with emtpy list (default value)
 PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 {
-	//pout << "PyMatrixContainer::PyMatrixContainer:";
+	//pout << "PyMatrixContainer::PyMatrixContainer:\n";
 	//py::print(matrix);
 	if (py::isinstance<PyMatrixContainer>(matrix))
 	{
@@ -26,20 +34,65 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 		//pout << "  denseFlag=" << useDenseMatrix << "\n";
 		//pout << "  matrix=" << GetEXUdenseMatrix() << "\n";
 	}
-	else if (py::isinstance<py::list>(matrix) || py::isinstance<py::array>(matrix)) //process empty list, which is default in python constructor
+	else if (py::isinstance<py::list>(matrix)) //process list, which is default in python constructor
 	{
-		std::vector<Real> stdlist = py::cast<std::vector<Real>>(matrix); //! # read out dictionary and cast to C++ type
-		if (stdlist.size() != 0)
+		//std::vector<Real> stdlist = py::cast<std::vector<Real>>(matrix); 
+
+		//pout << "  is list\n";
+		py::list pylist = py::cast<py::list>(matrix); 
+		//pout << "list.size()==" << pylist.size() << "\n";
+		
+		if  (pylist.size() == 0)
 		{
-			CHECKandTHROWstring("MatrixContainer::Constructor list must be empty or numpy array");
+			useDenseMatrix = true;
+			denseMatrix = ResizableMatrix();
 		}
+		else 
+		{
+			bool isInitialized = false;
+			Index nRows = (Index)pylist.size();
+			Index nCols = -1;
+			Index iRow = 0;
+			for (auto item : pylist)
+			{
+				py::print(item);
+				Index iCol = 0;
+				if (!py::isinstance<py::list>(item)) //process list, which is default in python constructor
+				{
+					CHECKandTHROWstring("MatrixContainer: list must be either empty or list of lists");
+				}
+				py::list pylist2 = py::cast<py::list>(item);
+
+				if (!isInitialized)
+				{
+					nCols = (Index)pylist2.size();
+					denseMatrix = ResizableMatrix(nRows, nCols);
+					isInitialized = true;
+				}
+				else if (nCols != pylist2.size())
+				{
+					CHECKandTHROWstring("MatrixContainer: list of lists: number of floats must be same in all sub-lists");
+				}
+
+				for (auto value : pylist2)
+				{
+					denseMatrix(iRow, iCol) = py::cast<Real>(value);
+					iCol++;
+				}
+				iRow++;
+			}
+		}
+	}
+	else if (py::isinstance<py::array>(matrix)) //process empty list, which is default in python constructor
+	{
 		useDenseMatrix = true;
 		denseMatrix = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(matrix));
 	}
 	else
 	{
-		CHECKandTHROWstring("MatrixContainer: can only initialize with empty list or with 2D numpy array");
+		CHECKandTHROWstring("MatrixContainer: can only initialize with empty list [], list of lists or with 2D numpy array");
 	}
+	//pout << "PyMatrixContainer::PyMatrixContainer:READY\n";
 
 }
 

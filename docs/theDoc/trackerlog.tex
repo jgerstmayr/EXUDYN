@@ -9,17 +9,179 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.0.296, 
-  \item last change =  2021-09-10
+  \item Exudyn version = 1.1.23, 
+  \item last change =  2021-10-01
 
-  \item Number of issues = 752, 
-  \item Number of resolved issues = 664 (296 in current version), 
+  \item Number of issues = 775, 
+  \item Number of resolved issues = 687 (23 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
-  \item {\bf Version 1.0.296}: \vspace{-6pt} 
+  \item {\bf Version 1.1.23}: \vspace{-6pt} 
+  resolved Issue 0773: {\bf ImportMeshFromNGsolve}
+(extension)
+  \bi
+  \item {description: added option meshOrder which allows to use second order elements with meshOrder=2, leading to much higher accuracy of displacements and stresses}
+  \item   date resolved: {\bf 2021-10-01 14:04},
+date raised: 2021-10-01   \ei
+  \item {\bf Version 1.1.22}: \vspace{-6pt} 
+  resolved Issue 0774: {\bf ComputePostProcessingModesNGsolve}
+(extension)
+  \bi
+  \item {description: added improved functionality for ComputePostProcessingModes using NGsolve, speeding up computations by factor of 10}
+  \item   date resolved: {\bf 2021-10-01 14:03},
+date raised: 2021-10-01   \ei
+  \item {\bf Version 1.1.21}: \vspace{-6pt} 
+  resolved Issue 0772: {\bf compute HCB modes with NGsolve}
+(extension)
+  \bi
+  \item {description: add much faster computation function ComputeHurtyCraigBamptonModesNGsolve for computation of eigenmodes}
+  \item   date resolved: {\bf 2021-10-01 14:03},
+date raised: 2021-10-01   \ei
+  \item {\bf Version 1.1.20}: \vspace{-6pt} 
+  resolved Issue 0771: {\bf GeneticOptimization}
+(extension)
+  \bi
+  \item {description: add normal distribution and distanceFactorGenerations}
+  \item   date resolved: {\bf 2021-09-29 17:38},
+date raised: 2021-09-29   \ei
+  \item {\bf Version 1.1.19}: \vspace{-6pt} 
+  resolved Issue 0769: {\bf Marker jacobian derivative}
+(extension)
+  \bi
+  \item {description: add jacobian derivative to markers to allow analytical differentiation of connectors}
+  \item   date resolved: {\bf 2021-09-28 18:57},
+date raised: 2021-09-28   \ei
+  \item {\bf Version 1.1.18}: \vspace{-6pt} 
+  resolved Issue 0768: {\bf Newton.useNumericalDifferentiation}
+(change)
+  \bi
+  \item {description: change to Newton.numericalDifferentiation.forAE and Newton.numericalDifferentiation.forODE2; previous Newton.useNumericalDifferentiation only affected AE (algebraic equations) and should be changed now to  Newton.numericalDifferentiation.forAE; default is False}
+  \item   date resolved: {\bf 2021-09-27 15:11},
+date raised: 2021-09-27   \ei
+  \item {\bf Version 1.1.17}: \vspace{-6pt} 
+  resolved Issue 0612: {\bf sparse object matrices}
+(extension)
+  \bi
+  \item {description: add sparse matrix computation mode for ComputeMassMatrix and for ObjectJacobianODE2; consider Lie algebra derivatives}
+  \item {\bf notes: sparse ObjectJacobianODE2 computation not yet implemented and moved to issue767}
+  \item   date resolved: {\bf 2021-09-27 14:35},
+date raised: 2021-03-21   \ei
+  \item {\bf Version 1.1.16}: \vspace{-6pt} 
+  resolved Issue 0766: {\bf ObjectGenericODE2}
+(change)
+  \bi
+  \item {description: change mass matrix, stiffnessmatrix, etc. types to PyMatrixContainer in order to accept dense and sparse matrices}
+  \item   date resolved: {\bf 2021-09-27 14:32},
+date raised: 2021-09-26   \ei
+  \item {\bf Version 1.1.15}: \vspace{-6pt} 
+  resolved Issue 0765: {\bf describe Python types}
+(docu)
+  \bi
+  \item {description: describe Python types such as NumpyMatrix or PyMatrixContainer in intro to objects, nodes, ...}
+  \item   date resolved: {\bf 2021-09-27 14:32},
+date raised: 2021-09-26   \ei
+  \item {\bf Version 1.1.14}: \vspace{-6pt} 
+  resolved Issue 0764: {\bf PyMatrixContainer}
+(extension)
+  \bi
+  \item {description: extend PyMatrixContainer to accept numpy.array or list of lists as input}
+  \item   date resolved: {\bf 2021-09-26 23:35},
+date raised: 2021-09-26   \ei
+  \item {\bf Version 1.1.13}: \vspace{-6pt} 
+  resolved Issue 0763: {\bf ComputeMassMatrix}
+(extension)
+  \bi
+  \item {description: add sparse mode with MatrixContainer}
+  \item   date resolved: {\bf 2021-09-26 18:01},
+date raised: 2021-09-26   \ei
+  \item {\bf Version 1.1.12}: \vspace{-6pt} 
+  resolved Issue 0762: {\bf MatrixBase}
+(performance)
+  \bi
+  \item {description: remove virtual from begin/end operators}
+  \item   date resolved: {\bf 2021-09-26 17:36},
+date raised: 2021-09-26   \ei
+  \item {\bf Version 1.1.11}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0750}: {\bf ANCF/ALE contour plot}
+  \bi
+  \item {description: contour plot not showing displacements or forces}
+  \item {\bf notes: bug due to issue 760, which has been resolved now!}
+  \item   date resolved: {\bf 2021-09-24 08:48},
+date raised: 2021-09-03   \ei
+  \item {\bf Version 1.1.10}: \vspace{-6pt} 
+  resolved Issue 0761: {\bf LinkedDataVectorBase}
+(extension)
+  \bi
+  \item {description: allowing SetNumberOfItems to make LinkedDataVectors smaller after linking}
+  \item   date resolved: {\bf 2021-09-24 08:47},
+date raised: 2021-09-24   \ei
+  \item {\bf Version 1.1.9}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0760}: {\bf contour plot}
+  \bi
+  \item {description: nodes in contour plot leading to exudyn crash due to ConstSizeVector decoupled from Vector}
+  \item   date resolved: {\bf 2021-09-24 08:47},
+date raised: 2021-09-24   \ei
+  \item {\bf Version 1.1.8}: \vspace{-6pt} 
+  resolved Issue 0758: {\bf FEM CMSObjectComputeNorm}
+(extension)
+  \bi
+  \item {description: add function into FEM to compute maximum stress / strain / etc for CMSObject (ObjectFFRFreducedOrder), using only the objectNumber as an input; options are outputVariableType=StressLocal, norm="" (Mises, L2norm, none), nodeNumbers=[] ... providing optional list of nodes to restrict the computation}
+  \item   date resolved: {\bf 2021-09-23 19:25},
+date raised: 2021-09-22   \ei
+  \item {\bf Version 1.1.7}: \vspace{-6pt} 
+  resolved Issue 0757: {\bf FEM GetNodePositionsMean}
+(extension)
+  \bi
+  \item {description: add function into FEMinterface to compute mean (average) position based on nodeNumbers (as list)}
+  \item   date resolved: {\bf 2021-09-23 17:38},
+date raised: 2021-09-22   \ei
+  \item {\bf Version 1.1.6}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0759}: {\bf contour plot}
+  \bi
+  \item {description: equivalent stress showing negative color bar values in contour plot}
+  \item {\bf notes: contour plot with norm (component -1) showing only positive min and max values when tested}
+  \item   date resolved: {\bf 2021-09-23 17:19},
+date raised: 2021-09-23   \ei
+  \item {\bf Version 1.1.5}: \vspace{-6pt} 
+  resolved Issue 0756: {\bf FEM MisesStress}
+(extension)
+  \bi
+  \item {description: add function that computes Mises stress from 6 stress components as obtained in stress sensor}
+  \item {\bf notes: put into exudyn.physics module}
+  \item   date resolved: {\bf 2021-09-23 16:02},
+date raised: 2021-09-22   \ei
+  \item {\bf Version 1.1.4}: \vspace{-6pt} 
+  resolved Issue 0755: {\bf GetKinematicTree66 in robotics}
+(extension)
+  \bi
+  \item {description: add function to export KinematicTree66 from Robotic class}
+  \item   date resolved: {\bf 2021-09-22 18:06},
+date raised: 2021-09-22   \ei
+  \item {\bf Version 1.1.3}: \vspace{-6pt} 
+  resolved Issue 0754: {\bf performance tests}
+(test)
+  \bi
+  \item {description: add automated performance tests for solver speed to determine significant drop of performance}
+  \item   date resolved: {\bf 2021-09-22 10:10},
+date raised: 2021-09-22   \ei
+  \item {\bf Version 1.1.2}: \vspace{-6pt} 
+  resolved Issue 0620: {\bf TorsionalSpringDamper}
+(extension)
+  \bi
+  \item {description: add torsional spring damper similar to SpringDamper, fixed on a single local axis of marker0, allowing to realize controllers and torques}
+  \item   date resolved: {\bf 2021-09-16 10:45},
+date raised: 2021-04-06   \ei
+  \item {\bf Version 1.1.1}: \vspace{-6pt} 
+  resolved Issue 0679: {\bf Renderer tkinter}
+(extension)
+  \bi
+  \item {description: add flag to disable calls to tkinter from Renderer, which is not possible if tkinter is already used for interactive dialogs. This allows to open visualizationSettings in AnimateModes and SolutionViewer}
+  \item   date resolved: {\bf 2021-09-14 10:21},
+date raised: 2021-05-14   \ei
+  \item {\bf Version 1.1.0}: \vspace{-6pt} 
 {\bf \color{warningRed}  resolved BUG 0751}: {\bf SetMarkerParameter}
   \bi
   \item {description: causes internal error, because of wrong index check; workaround: use int(..) to cast marker index}
@@ -2112,10 +2274,10 @@ date raised: 2020-07-20   \ei
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 0750}:  {\bf ANCF/ALE contour plot}
+  \item open {\bf BUG 0752}:  {\bf tkinter MacOS}
   \bi
-  \item {description: contour plot not showing displacements or forces}
-  \item date raised: 2021-09-03   \ei
+  \item {description: tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)}
+  \item date raised: 2021-09-20   \ei
   \item open {\bf BUG 0738}:  {\bf ObjectContactCoordinate}
   \bi
   \item {description: modified Newton does not work, no Jacobian update computed when switching}

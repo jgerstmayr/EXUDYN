@@ -59,6 +59,7 @@ void CObjectConnectorCartesianSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, cons
 	{
 		Vector3D vPos, vVel, fVec;
 		ComputeSpringForce(markerData, objectNumber, vPos, vVel, fVec);
+		//markerData.GetConnectorForceJac() = fVec;
 
 		//now link ode2Lhs Vector to partial result using the two jacobians
 		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
@@ -82,10 +83,99 @@ void CObjectConnectorCartesianSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, cons
 
 }
 
-void CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
+void CObjectConnectorCartesianSpringDamper::ComputeJacobianForce(const MarkerDataStructure& markerData, Index objectNumber, Vector& force) const
 {
-	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2");
+	if (parameters.activeConnector) 
+	{
+		Vector3D vPos, vVel, fVec;
+		ComputeSpringForce(markerData, objectNumber, vPos, vVel, fVec);
+		force = fVec;
+	}
 }
+
+void CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
+	Real factorODE2, Real factorODE2_t,
+	Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const
+{
+	//CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2");
+	Index n0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
+	Index n1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns();
+
+	jacobianODE2.SetUseDenseMatrix();
+	jacobianODE2.GetInternalDenseMatrix().SetNumberOfRowsAndColumns(n0+n1, n0+n1);
+	if (parameters.activeConnector)
+	{
+		//compute inner jacobian: f_ODE2 * d(F)/(dq) + f_ODE2_t * d(F)/(dq_t)
+		Matrix3D K(3,3,0.);
+		for (Index i = 0; i < 3; i++)
+		{
+			K(i, i) = parameters.stiffness[i] * factorODE2 + parameters.damping[i] * factorODE2_t;
+		}
+
+		//jacobian part 1:
+		//[-Jpos0.T*F,pos0*Jpos0 , -Jpos0.T*F,pos1*Jpos1]
+		//[+Jpos1.T*F,pos0*Jpos0 , +Jpos1.T*F,pos1*Jpos1]
+		//F,pos0 = -K, F,pos1=K
+		//[ Jpos0.T*K*Jpos0 , -Jpos0.T*K*Jpos1]
+		//[-Jpos1.T*K*Jpos0 , +Jpos1.T*K*Jpos1]
+
+		if (n0)
+		{
+			//J_pos0.T*K 
+			EXUmath::MultMatrixTransposedMatrixTemplate<ResizableMatrix, Matrix3D, ResizableMatrix>(markerData.GetMarkerData(0).positionJacobian, K, temp.matrix0);
+			//J_pos0.T*K*Jpos0
+			//EXUmath::MultMatrixMatrixTemplate<ResizableMatrix, ResizableMatrix, ResizableMatrix>(temp.matrix0, markerData.GetMarkerData(0).positionJacobian, temp.matrix1);
+			EXUmath::MultMatrixMatrix2SubmatrixTemplate<ResizableMatrix, ResizableMatrix, ResizableMatrix>(temp.matrix0,
+				markerData.GetMarkerData(0).positionJacobian, jacobianODE2.GetInternalDenseMatrix(), 0, 0);
+		}
+		if (n1)
+		{
+			//J_pos1.T*K*Jpos1
+			EXUmath::MultMatrixTransposedMatrixTemplate<ResizableMatrix, Matrix3D, ResizableMatrix>(markerData.GetMarkerData(1).positionJacobian, K, temp.matrix0);
+			EXUmath::MultMatrixMatrix2SubmatrixTemplate<ResizableMatrix, ResizableMatrix, ResizableMatrix>(temp.matrix0,
+				markerData.GetMarkerData(1).positionJacobian, jacobianODE2.GetInternalDenseMatrix(), n0, n0);
+		}
+		if (n0 != 0 && n1 != 0)
+		{
+			K *= -1.;
+			//-J_pos0.T*K*Jpos1
+			EXUmath::MultMatrixTransposedMatrixTemplate<ResizableMatrix, Matrix3D, ResizableMatrix>(markerData.GetMarkerData(0).positionJacobian, K, temp.matrix0);
+			EXUmath::MultMatrixMatrix2SubmatrixTemplate<ResizableMatrix, ResizableMatrix, ResizableMatrix>(temp.matrix0,
+				markerData.GetMarkerData(1).positionJacobian, jacobianODE2.GetInternalDenseMatrix(), 0, n0);
+
+			//-J_pos1.T*K*Jpos0
+			EXUmath::MultMatrixTransposedMatrixTemplate<ResizableMatrix, Matrix3D, ResizableMatrix>(markerData.GetMarkerData(1).positionJacobian, K, temp.matrix0);
+			EXUmath::MultMatrixMatrix2SubmatrixTemplate<ResizableMatrix, ResizableMatrix, ResizableMatrix>(temp.matrix0,
+				markerData.GetMarkerData(0).positionJacobian, jacobianODE2.GetInternalDenseMatrix(), n0, 0);
+		}
+
+		//add jacobian derivative:
+		if (markerData.GetMarkerData(0).positionJacobianDerivative.NumberOfRows() != 0)
+		{
+			jacobianODE2.GetInternalDenseMatrix().AddSubmatrixWithFactor(markerData.GetMarkerData(0).positionJacobianDerivative, -factorODE2, 0, 0);
+		}
+		if (markerData.GetMarkerData(0).positionJacobianDerivative.NumberOfRows() != 0)
+		{
+			jacobianODE2.GetInternalDenseMatrix().AddSubmatrixWithFactor(markerData.GetMarkerData(1).positionJacobianDerivative, factorODE2, n0, n0);
+		}
+	}
+	else
+	{
+		jacobianODE2.GetInternalDenseMatrix().SetAll(0.);
+	}
+}
+
+//! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+JacobianType::Type CObjectConnectorCartesianSpringDamper::GetAvailableJacobians() const
+{
+	if (!parameters.springForceUserFunction) {
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	else {
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	}
+}
+
 
 //! provide according output variable in "value"
 void CObjectConnectorCartesianSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const

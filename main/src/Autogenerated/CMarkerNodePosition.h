@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2021-09-28  18:57:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -96,6 +96,15 @@ public: // AUTO:
 
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
+
+    //! AUTO:  fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
+    virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const override;
+
+    //! AUTO:  true = signal that analytical jacobian derivative is available
+    virtual bool ProvidesJacobianDerivative() const override
+    {
+        return true;
+    }
 
 };
 

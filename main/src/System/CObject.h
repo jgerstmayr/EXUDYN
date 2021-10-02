@@ -64,7 +64,7 @@ namespace JacobianType {
 		AE_AE = 1 << 7,			//derivative of AE (algebraic) equations with respect to AE variables
 		//
 		ODE2_ODE2_function = 1 << 8,	//function available for derivative of ODE2 equations with respect to ODE2 variables
-		ODE2_ODE2_t_function = 1 << 9,	//function available for derivative of ODE2 equations with respect to ODE2_t (velocity) variables
+		ODE2_ODE2_t_function = 1 << 9,	//function available for derivative of ODE2 equations with respect to ODE2_t (velocity) variables; MUST exist, if ODE2_ODE2_function exists!
 		ODE1_ODE1_function = 1 << 10,	//function available for derivative of ODE1 equations with respect to ODE1 variables
 		AE_ODE2_function = 1 << 11,		//function available for derivative of AE (algebraic) equations with respect to ODE2 variables
 		AE_ODE2_t_function = 1 << 12,	//function available for derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
@@ -72,6 +72,13 @@ namespace JacobianType {
 		AE_AE_function = 1 << 14,		//function available for derivative of AE (algebraic) equations with respect to AE variables
 	};
 }
+
+//! temporary structure for computation of jacobian (e.g. temporary matrices or vectors)
+class JacobianTemp {
+public:
+	ResizableMatrix matrix0;
+	ResizableMatrix matrix1;
+};
 
 class CObject;
 class CSystemData;
@@ -184,8 +191,15 @@ public:
 	//! return the available jacobian types (can be combined with 2^i enum flags); default: no jacobians ==> computed numerically
 	virtual JacobianType::Type GetAvailableJacobians() const { return JacobianType::_None; }
 
-    //! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
-    virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHSJacobian"); }
+    // compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
+    //OLD: virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHSJacobian"); }
+
+	//! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) 
+	//! combined computation w.r.t. ODE2 and ODE2\_t variables jacobian has dimension GetODE2Size() x GetODE2Size(); 
+	//! in sparse mode, the jacobianODE2 MUST include the ltg transformation for (row/column) indices!
+	//! this is the local tangent stiffness matrix;
+	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
+		Index objectNumber, const ArrayIndex& ltg) const {CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianODE2_ODE2");}
 
     //! compute derivative of algebraic equations w.r.t. ODE2 in jacobian_ODE2 [and w.r.t. ODE2_t coordinates in jacobian_ODE2_t if flag ODE2_t_AE_function is set] [and w.r.t. ODE1 coordinates in jacobian_ODE1 if flag ODE1_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size(); q are the system coordinates
     virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }

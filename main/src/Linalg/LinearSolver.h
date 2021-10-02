@@ -14,6 +14,7 @@
 //BasicLinalg provides consistent includes for BasicDefinitions, arrays, vectors and matrices
 #include "Linalg/BasicLinalg.h"	
 #include "Main/OutputVariable.h"
+#include "Linalg/MatrixContainer.h"	
 #include <vector> //for eigen triplets
 #include <iostream>
 
@@ -31,9 +32,15 @@
     #include <omp.h> //for eigen omp support
 #endif // EIGEN_HAS_OPENMP
 
-	typedef Eigen::Triplet<Real> EigenTriplet;				//! this is a simple (row,col,value) structure for sparse matrix non zero entries
-	typedef std::vector<EigenTriplet> EigenTripletVector;	//! this vector stores (dynamically!) the triplets
-	typedef Eigen::SparseMatrix<Real> EigenSparseMatrix;	//! declares a column-major sparse matrix type of double
+//#define useMatrixContainerTriplets
+//#ifdef useMatrixContainerTriplets
+//	typedef EXUmath::Triplet SparseTriplet;						//! this is a simple (row,col,value) structure for sparse matrix non zero entries
+//	typedef ResizableArray<SparseTriplet> SparseTripletVector;	//! this vector stores (dynamically!) the triplets
+//#else
+//	typedef Eigen::Triplet<Real> SparseTriplet;				//! this is a simple (row,col,value) structure for sparse matrix non zero entries
+//	typedef std::vector<SparseTriplet> SparseTripletVector;		//! this vector stores (dynamically!) the triplets
+//#endif
+	typedef Eigen::SparseMatrix<Real> EigenSparseMatrix;		//! declares a column-major sparse matrix type of double
 	typedef Eigen::SparseMatrix<Real>::StorageIndex StorageIndex;	//! conversion to Index necessary
 #endif
 
@@ -86,6 +93,9 @@ public:
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
 	virtual void AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0) = 0;
+
+	//! add sparse triplets to dense or sparse matrix
+	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets) = 0;
 
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
@@ -212,6 +222,16 @@ public:
 		matrix.AddSubmatrix(submatrix, factor, LTGrows, LTGcolumns, rowOffset, columnOffset);
 	}
 
+	//! add sparse triplets to dense matrix
+	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets)
+	{
+		SetMatrixIsFactorized(false);
+		for (const SparseTriplet& triplet : otherTriplets)
+		{
+			matrix(triplet.row(), triplet.col()) += triplet.value();
+		}
+	}
+
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
@@ -334,7 +354,7 @@ private:
 	//data for Eigen sparse matrix storage:
 #ifdef USE_EIGEN_SPARSE_SOLVER
 	EigenSparseMatrix matrix;	 //this is the sparse matrix built from triplets
-	EigenTripletVector triplets; //this contains a redundant set of matrix entries
+	SparseTripletVector triplets; //this contains a redundant set of matrix entries
 	Eigen::SparseLU<Eigen::SparseMatrix<Real>, Eigen::COLAMDOrdering<int> >   solver; //this is the solver for the matrix
 #endif
 
@@ -355,11 +375,11 @@ public:
 	virtual bool IsMatrixBuiltFromTriplets() const { return matrixBuiltFromTriplets; }
 
 	//! get (read) matrix as dense exudyn Matrix
-	const EigenTripletVector& GetEigenTriplets() const { return triplets; }
+	const SparseTripletVector& GetSparseTriplets() const { return triplets; }
 
 	//! get (write) matrix as dense exudyn Matrix; also in this case, solvability may be lost; sparse matrix is invalid
 	//! however, we never know what else is done with the matrix afterwards ...
-	EigenTripletVector& GetEigenTriplets() { 
+	SparseTripletVector& GetSparseTriplets() { 
 		SetMatrixIsFactorized(false); 
 		SetMatrixBuiltFromTriplets(false);  
 		return triplets; 
@@ -399,6 +419,9 @@ public:
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
 	virtual void AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0);
+
+	//! add sparse triplets to sparse matrix
+	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets);
 
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)

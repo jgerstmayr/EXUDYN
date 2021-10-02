@@ -93,6 +93,14 @@ public: //
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerData");
 	}
 
+	//! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
+	virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const {
+		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
+	}
+
+	//! true = signal that analytical jacobian derivative is available
+	virtual bool ProvidesJacobianDerivative() const { return false; } 
+
 	//! dimension, which an according connector would have
 	virtual Index GetDimension(const CSystemData& cSystemData) const {
 		CHECKandTHROWstring("Invalid call to CMarker::Dimension");

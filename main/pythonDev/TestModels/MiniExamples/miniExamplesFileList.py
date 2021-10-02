@@ -10,9 +10,11 @@ miniExamplesFileList = ['ObjectMassPoint.py',
 'ObjectConnectorSpringDamper.py',
 'ObjectConnectorCartesianSpringDamper.py',
 'ObjectConnectorRigidBodySpringDamper.py',
+'ObjectConnectorTorsionalSpringDamper.py',
 'ObjectConnectorCoordinateSpringDamper.py',
 'ObjectConnectorDistance.py',
 'ObjectConnectorCoordinate.py',
+'ObjectJointRevoluteZ.py',
 'MarkerSuperElementPosition.py',
 'LoadMassProportional.py']
 

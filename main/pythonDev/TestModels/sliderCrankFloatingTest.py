@@ -201,7 +201,6 @@ for testCases in rangeTests:
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-    #simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
     
     #++++++++++++++++++++++++++++++++++++++++++
     #solve index 2 / trapezoidal rule:

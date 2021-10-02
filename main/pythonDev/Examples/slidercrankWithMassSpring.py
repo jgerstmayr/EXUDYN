@@ -178,7 +178,6 @@ simulationSettings.timeIntegration.verboseMode = 1 #10000
 simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
 #simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.7 in paper of Arnold and Bruls
-#simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
 
 #++++++++++++++++++++++++++++++++++++++++++
 #solve index 2 / trapezoidal rule:

@@ -190,8 +190,6 @@ else:
     simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
 
     simulationSettings.staticSolver.discontinuous.iterationTolerance = 1e-3
-    #simulationSettings.staticSolver.discontinuous.maxIterations = 5
-    #simulationSettings.staticSolver.newton.useNumericalDifferentiation = False
     simulationSettings.staticSolver.stabilizerODE2term = 2 #may only act on position degrees of freedom
 
     exu.StartRenderer()

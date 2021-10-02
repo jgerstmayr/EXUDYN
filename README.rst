@@ -1,7 +1,7 @@
 ======
 Exudyn
 ======
-Exudyn version = 1.1.0
+Exudyn version = 1.1.23
 
 
   + *A flexible multibody dynamics systems simulation code with Python and C++*
@@ -88,12 +88,13 @@ The following people have contributed to Python and C++ library implementations:
 
 +  Stefan Holzinger (Lie group solvers in Python)
 +  Peter Manzl (ConvexRoll Python / C++ implementation)
++  Joachim Sch\"oberl (NGsolve mesh and FE-matrices import, highly efficient eigenvector computations)
 +  Martin Sereinig (special robotics functionality)
 
 
 The following people have contributed to the examples:
 
-+  Stefan Holzinger, Michael Pieber, Joachim Sch\"oberl, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw\"olfer, Peter Manzl
++  Stefan Holzinger, Michael Pieber, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw\"olfer, Peter Manzl
 
 -- thanks a lot! --
 
@@ -250,16 +251,26 @@ Requirements are an according Anaconda installation.
 
 For a compatible Mac OS X system, you can install the pre-compiled wheel (go to local directory). Go to the \ ``main/dist``\  directory in your back terminal and type, e.g.,
 
-   \ ``pip install exudyn-1.0.218-cp37-cp37m-macosx_10_9_x86_64.whl``\  
+   \ ``pip install exudyn-1.0.218-cp37-cp37m-macosx_10_9_x86_64.whl``\  %
 
 
+
+Alternatively, we tested on:
+
++  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
++  Anaconda (i368 based with Rosetta 2) with Python 3.8
++  this configuration is currently evaluated but showed general compatibility
+   => pre-compiled wheel: \ ``exudyn-1.1.0-cp38-cp38-macosx_11_0_x86_64.whl``\ 
+
+
+\bf Compile from source:
 
 
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \ ``main``\  directory of your repository and type
 
 +  \ ``python setup.py bdist_wheel``\ 
    => this compiles and takes approx.~5 minutes, depending on your machine
-   => it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\ ``-framework Cocoa' and '-framework OpenGL``\ ', just go back in the terminal and copy everything from '\ ``g++ ...``\ ' until the end of the last command '\ ``-mmacosx-verion-min...``\ ' and paste it into the terminal. Callsing that again will finalize linking; then run again
+   => it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\ ``-framework Cocoa' and '-framework OpenGL``\ ', just go back in the terminal and copy everything from '\ ``g++ ...``\ ' until the end of the last command '\ ``-mmacosx-verion-min...``\ ' and paste it into the terminal. Calling that again will finalize linking; then run again
    \ ``python setup.py bdist_wheel``\ 
    => this now creates the wheel (if you want to distribute) in the \ ``dist``\  folder
    alternatively just call

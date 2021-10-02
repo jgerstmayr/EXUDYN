@@ -30,10 +30,14 @@ class PyMatrixContainer: public EXUmath::MatrixContainer
 
 public:
 	//! create empty (dense) container
+	//?remove default constructor to enable conversion from py::object in constructor?
 	PyMatrixContainer():MatrixContainer() {}
 	
 	//! initialize container with py::array_t or with emtpy list (default value)
 	PyMatrixContainer(const py::object& matrix);
+	//PyMatrixContainer(const py::object& matrix = py::list());
+
+	//PyMatrixContainer(const py::array_t<Real>& pyArray);
 
 	//! set with dense numpy array; array (=matrix) contains values and size information
 	void SetWithDenseMatrix(const py::array_t<Real>& pyArray, bool useDenseMatrixInit = true);
@@ -61,60 +65,12 @@ public:
 		}
 	}
 
-	////! get number of columns
-	//Index NumberOfRows() const {}
+	//! return a dense matrix from any other matrix: requires a copy - SLOW!
+	py::array_t<Real> Convert2DenseMatrix() const
+	{
+		return EPyUtils::Matrix2NumPy(GetEXUdenseMatrix());
+	}
 
-	////! get number of rows
-	//Index NumberOfColumns() const {	}
-
-	////! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-	//void SetAllZero() {	}
-
-	////! reset matrices and free memory
-	//void Reset() {};
-
-	////! multiply either triplets or matrix entries with factor
-	//void MultiplyWithFactor(Real factor)
-	//{
-	//	if (useDenseMatrix) { denseMatrix *= factor; }
-	//	else { sparseTripletMatrix.MultiplyWithFactor(factor); }
-	//}
-
-	//////! set the matrix with a dense matrix; do not use this function for computational tasks, as it will drop performance significantly
-	////void SetMatrix(const Matrix& otherMatrix);
-
-	////! multiply matrix with vector: solution = A*x
-	////! this leads to memory allocation in case that the matrix is built from triplets
-	//void MultMatrixVector(const Vector& x, Vector& solution)
-	//{
-	//	if (useDenseMatrix) { MultMatrixVectorTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
-	//	else { sparseTripletMatrix.MultMatrixVector(x, solution); }
-	//}
-
-	////! multiply matrix with vector and add to solution: solution += A*x
-	////! this leads to memory allocation in case that the matrix is built from triplets
-	//void MultMatrixVectorAdd(const Vector& x, Vector& solution)
-	//{
-	//	if (useDenseMatrix) { MultMatrixVectorAddTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
-	//	else { sparseTripletMatrix.MultMatrixVectorAdd(x, solution); }
-	//}
-
-	//////! multiply transposed(matrix) with vector: solution = A^T*x
-	//////! this leads to memory allocation in case that the matrix is built from triplets
-	////virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution);
-
-	////! return a dense matrix from any other matrix: requires a copy - SLOW!
-	//ResizableMatrix GetEXUdenseMatrix() const
-	//{
-	//	if (useDenseMatrix) { return denseMatrix; }
-	//	else { return sparseTripletMatrix.GetEXUdenseMatrix(); }
-	//}
-
-	////! function to print matrix
-	//void PrintMatrix(std::ostream& os) const
-	//{
-	//	os << GetEXUdenseMatrix();
-	//}
 
 };
 

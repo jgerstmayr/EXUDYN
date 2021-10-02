@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2021-09-27  18:50:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -80,7 +80,7 @@ public: // AUTO:
     virtual const CObjectRigidBodyParameters& GetParameters() const { return parameters; }
 
     //! AUTO:  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const override;
+    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
@@ -94,7 +94,7 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
-        return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);
+        return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
     }
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible

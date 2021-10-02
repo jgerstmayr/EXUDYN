@@ -164,10 +164,6 @@ void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const M
 
 }
 
-void CObjectConnectorRollingDiscPenalty::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
-{
-	CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorRollingDiscPenalty::ComputeODE2LHSJacobian");
-}
 
 //! provide according output variable in "value"
 void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const

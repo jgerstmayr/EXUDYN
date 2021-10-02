@@ -5,6 +5,7 @@
 #           mass-spring-damper system; varying mass, spring, ...
 #           The objective function is the error compared to 
 #           a reference solution using reference/nominal values (which are known here, but could originate from a measurement)
+#           NOTE: this example uses some newer features of GeneticOptimization and converges to more accurate results
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-11-18
@@ -21,8 +22,6 @@ import numpy as np #for postprocessing
 import os
 from time import sleep
 
-#additional trial for version using FFT, which does not improve convergence for this example!
-useFFTfitness = False #use fft of signal for computation of fitness
 
 #this is the function which is repeatedly called from ParameterVariation
 #parameterSet contains dictinary with varied parameters
@@ -51,16 +50,12 @@ def ParameterFunction(parameterSet):
     iCalc = 'Ref' #needed for parallel computation ==> output files are different for every computation
     if 'computationIndex' in parameterSet:
         iCalc = str(parameterSet['computationIndex'])
-        #print("computation index=",iCalc, flush=True)
-    # else:
-    #     print("***********************\nfailed: computationIndex\n***********************\n")
 
 
     #mass-spring-damper system
     L=0.5               #spring length (for drawing)
     
     # x0=force/spring         #static displacement
-    
     # print('resonance frequency = '+str(np.sqrt(spring/mass)))
     # print('static displacement = '+str(x0))
     
@@ -108,95 +103,41 @@ def ParameterFunction(parameterSet):
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #no damping
     
-    #exu.StartRenderer()              #start graphics visualization
-    #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
-    
-    #start solver:
     exu.SolveDynamic(mbs, simulationSettings)
     
-    #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-    #exu.StopRenderer()               #safely close rendering window!
-    
-    # #evaluate final (=current) output values
-    # u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
-    # print('displacement=',u)
-
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #evaluate difference between reference and optimized solution
     #reference solution:
     dataRef = np.loadtxt('solution/paramVarDisplacementRef.txt', comments='#', delimiter=',')
     data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
 
-    # s = 50 #shift, for testing what happens if signal has phase-shift
-    # dataRef[0:-s] = dataRef[s:]
+    diff = data[:,1]-dataRef[:,1]
     
-    if not useFFTfitness:
-        diff = data[:,1]-dataRef[:,1]
-        
-        errorNorm = np.sqrt(np.dot(diff,diff))/steps*tEnd
+    errorNorm = np.sqrt(np.dot(diff,diff))/steps*tEnd
+    #errorNorm = np.sum(abs(diff))/steps*tEnd
+
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-        #draw solution (not during optimization!):
-        if False:
-            import matplotlib.pyplot as plt
-            from matplotlib import ticker
-            
-            #plt.close('all')
-            plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m)')
-                    
-            ax=plt.gca() # get current axes
-            ax.grid(True, 'major', 'both')
-            ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-            ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-            plt.legend() #show labels as legend
-            plt.tight_layout()
-            plt.show() 
-
-    else:
-        from exudyn.signal import ComputeFFT
-
-        tvec = data[:,0]
-        uvec = data[:,1]
-        tvecRef = dataRef[:,0]
-        uvecRef = dataRef[:,1]
-        [freq, mag, phase] = ComputeFFT(tvec, uvec)
-        [freqRef, magRef, phaseRef] = ComputeFFT(tvecRef, uvecRef)
+    #draw solution (not during optimization!):
+    if 'plot' in parameterSet:
         
-        diff = mag-magRef
-        #diff = np.log(abs(mag)) - np.log(abs(magRef)) #does not improve convergence
-        nMag = len(mag)
-        fRange = freq[-1]-freq[0] #use frequency range for better reference value
+        print('parameters=',parameterSet)
+        print('file=', sensorFileName)
+        print('error=', errorNorm)
+        import matplotlib.pyplot as plt
+        from matplotlib import ticker
         
-        # avrgLength  = 51
-        # def runningMeanFast(x, N):
-        #     return np.convolve(x, np.ones((N,))/N)[(N-1):]
+        plt.close('all')
+        plt.plot(dataRef[:,0], dataRef[:,1], 'b-', label='Ref, u (m)')
+        plt.plot(data[:,0], data[:,1], 'r-', label='u (m)')
+                
+        ax=plt.gca() # get current axes
+        ax.grid(True, 'major', 'both')
+        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+        plt.legend() #show labels as legend
+        plt.tight_layout()
+        plt.show() 
 
-        # mag = runningMeanFast(mag, avrgLength)
-        # magRef = runningMeanFast(magRef, avrgLength)
-
-        errorNorm = np.sqrt(np.dot(diff,diff))/nMag*fRange 
-        # sumV = 0
-        # p = 2 #higher coefficient has no effect
-        # for v in diff:
-        #     sumV += v**p
-        
-        # errorNorm = (sumV**(1/p))/nMag*fRange  #higher weight to peaks
-
-        # #convolution does not work well:
-        # sumV = 0
-        # for i in range(20,len(mag)-5):
-        #     #sumV += -mag[i]*magRef[i]
-        #     sumV += -np.log(abs(mag[i])) * np.log(abs(magRef[i]))
-        
-        # errorNorm = sumV/nMag*fRange  #higher weight to peaks
-        
-    
-        #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-        #draw solution (not during optimization!):
-        if False:
-            from exudyn.plot import PlotFFT
-            
-            PlotFFT(freq, mag, label = 'freq')#, logScaleY=False)
-            PlotFFT(freqRef, magRef, label = 'freqRef')#, logScaleY=False)
             
     if True: #delete files; does not work for parallel, consecutive operation
         if iCalc != 'Ref':
@@ -216,25 +157,29 @@ if __name__ == '__main__': #include this to enable parallel processing
 
     refval = ParameterFunction({}) # compute reference solution
     print("refval =", refval)
-    #val2 = ParameterFunction({'mass':1.6, 'spring':4000, 'force':80, 'computationIndex':0}) # compute reference solution
-    #val2 = ParameterFunction({'mass': 1.0018195727935817, 'spring': 3066.4507829396744, 'force': 59.226672433534354}, 'computationIndex':1}) # compute reference solution
-    #val2 = ParameterFunction({'mass': 1.0018195727935817, 'spring': 3066.4507829396744, 'force': 59.226672433534354, 'computationIndex':1}) # compute reference solution
+    if False:
+        #val2 = ParameterFunction({'mass':1.6, 'spring':4000, 'force':80, 'computationIndex':0, 'plot':''}) # compute reference solution
+        val2 = ParameterFunction({'mass': 1.7022816582583309, 'spring': 4244.882757974497, 'force': 82.62761337061548, 'computationIndex':0, 'plot':''}) # compute reference solution
+        #val2 = ParameterFunction({, 'computationIndex':0, 'plot':''}) # compute reference solution
     
     if True:
         start_time = time.time()
         [pOpt, vOpt, pList, values] = GeneticOptimization(objectiveFunction = ParameterFunction, 
-                                             parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,1000)}, #parameters provide search range
-                                             numberOfGenerations = 20,
-                                             populationSize = 100,
-                                             elitistRatio = 0.1,
-                                             crossoverProbability = 0.1*0,
-                                             rangeReductionFactor = 0.7,
+                                             parameters = {'mass':(1,10), 'spring':(100,10000), 'force':(1,250)}, #parameters provide search range
+                                             numberOfGenerations = 15,
+                                             populationSize = 100,         #larger would be more reproducible, but slower
+                                             elitistRatio = 0.05,
+                                             crossoverProbability = 0.1*0, #does not make sense in this example
+                                             rangeReductionFactor = 0.7,   #larger would be more reproducible, but slower
                                              addComputationIndex=True,
-                                             randomizerInitialization=1, #for reproducible results
-                                             distanceFactor = 0.1, #for this example only one significant minimum
+                                             randomizerInitialization=1,   #for reproducible results, 2 or 3 gives similar results
+                                             distanceFactor = 0.02,        #low is better for this application
+                                             distanceFactorGenerations = 12,
+                                             childDistribution = 'normal',
                                              debugMode=False,
                                              useMultiProcessing=True,
                                              showProgress=True,
+                                             #resultsFile = 'solution/genopt.txt',
                                              )
         print("--- %s seconds ---" % (time.time() - start_time))
     
@@ -255,19 +200,3 @@ if __name__ == '__main__': #include this to enable parallel processing
         plt.close('all')
         [figList, axList] = PlotOptimizationResults2D(pList, values, yLogScale=True)
         
-        #add 3D visualization of searched parameters
-        if False:
-            fig = plt.figure()
-            ax = fig.gca(projection='3d') #not compatible with log scale!
-            
-            #plt.scatter(pDict['mass'], pDict['spring'], values, c='b', marker='o')
-            #ps = ax.scatter(pList['mass'], pList['spring'], pList['force'], c=values, marker='o', cmap = colorMap)
-            ps = ax.scatter(pList['mass'], pList['spring'], pList['force'], c=np.log(values), marker='o', cmap = colorMap)
-    
-            ax.set_xlabel('mass')
-            ax.set_ylabel('spring')
-            ax.set_zlabel('force')
-    
-            plt.colorbar(ps)
-            plt.tight_layout()
-            plt.show()

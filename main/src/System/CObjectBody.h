@@ -24,11 +24,22 @@
 #include <initializer_list>
 #include "Utilities/BasicDefinitions.h" //defines Real
 #include "Utilities/ResizableArray.h" 
+#include "Linalg/MatrixContainer.h" 
 
 #include "Main/OutputVariable.h" 
 #include "System/CObject.h" 
 
 #include "Main/MarkerData.h"
+
+////! flags that are transferred during mass matrix computation
+//namespace MassMatrixFlags {
+//	//! used mainly to show which jacobians are available analytically in objects; can be combined binary to see, which jacobian is available
+//	enum Type {
+//		_None = 0,						//marks that no flag is added
+//		PREFER_DENSE_MATRIX = 1 << 1,	//dense matrix computation preferred; otherwise sparse matrix is preferred
+//	};
+//}
+//
 
 class CNode;
 
@@ -137,8 +148,9 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// Computation FUNCTIONS
 
-	//! compute object massmatrix to massMatrix ==> only possible for bodies!!!
-	virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
+	//! compute object massmatrix to massMatrix; offers interface to dense and sparse mass matrix computation; standard is dense mode; ltg only used in sparse mode; only possible for bodies
+	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
+	//old: virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
 
 	//! return true if object has time and coordinate independent (=constant) mass matrix; used by solver
 	virtual bool HasConstantMassMatrix() const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::HasConstantMassMatrix"); return false; }

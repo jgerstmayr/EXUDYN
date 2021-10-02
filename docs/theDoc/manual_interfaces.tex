@@ -82,7 +82,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
 {\bf function/structure name} & {\bf description}\\ \hline
   Assemble() & assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), and AssembleInitializeSystemCoordinates()\\ \hline 
   AssembleCoordinates() & assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)\\ \hline 
-  AssembleLTGLists() & build local-to-global (ltg) coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)\\ \hline 
+  AssembleLTGLists() & build \ac{LTG} coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)\\ \hline 
   AssembleInitializeSystemCoordinates() & initialize all system-wide coordinates based on initial values given in nodes\\ \hline 
   Reset() & reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory\\ \hline 
   GetSystemContainer() & return the systemContainer where the mainSystem (mbs) was created\\ \hline 
@@ -194,7 +194,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \texttt{objectType = {\textquotesingle}MassPoint{\textquotesingle}\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
   GetObjectOutput(objectNumber, variableType) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
-  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition $\pLocB$ similar to MarkerBody and SensorBody\tabnewline 
+  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
@@ -427,8 +427,8 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
 \end{center}
 
 %++++++++++++++++++++
-\mysubsubsection{SystemData: Get object local-to-global (LTG) coordinate mappings}
-This section provides access functions the LTG-lists for every object (body, constraint, ...) in the system.
+\mysubsubsection{SystemData: Get object LTG coordinate mappings}
+This section provides access functions the \ac{LTG}-lists for every object (body, constraint, ...) in the system.
 
 \begin{center}
 \footnotesize

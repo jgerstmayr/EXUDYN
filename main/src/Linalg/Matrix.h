@@ -164,11 +164,6 @@ private:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 protected:
-	////! allocate memory if numberOfRealsInit!=0; set data to allocated array of Reals or to nullptr; return false if failed
-	//virtual bool AllocateMemory(Index numberOfRowsInit, Index numberOfColumnsInit);
-
-	////! free memory if data!=nullptr
-	//virtual void FreeMemory();
 
 	//! allocate memory if numberOfRealsInit!=0; set data to allocated array of Reals or to nullptr; return false if failed
 	virtual bool AllocateMemory(Index numberOfRowsInit, Index numberOfColumnsInit)
@@ -226,11 +221,19 @@ protected:
 		AllocateMemory(numberOfRowsInit, numberOfColumnsInit);
 	}
 
+	//! swap content of this and other matrix without copying
+	void Swap(MatrixBase& other)
+	{
+		std::swap(data, other.data);
+		std::swap(numberOfRows, other.numberOfRows);
+		std::swap(numberOfColumns, other.numberOfColumns);
+	}
+
 public:
 
-	virtual T* begin() const { return data; }							            //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	T* begin() const { return data; }							            //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
 	//virtual const T* begin() const { return data; }				                //!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
-	virtual T* end() const { return &data[numberOfRows*numberOfColumns]; }			//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
+	T* end() const { return &data[numberOfRows*numberOfColumns]; }			//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
 	//virtual const T* end() const { return &data[numberOfRows*numberOfColumns]; }	//!< C++11 std::end() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
 
 	Index NumberOfRows() const { return numberOfRows; };                            //!< number of columns (currently used)

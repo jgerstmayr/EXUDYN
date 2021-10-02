@@ -144,10 +144,6 @@ void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDa
 
 }
 
-void CObjectContactCircleCable2D::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const
-{
-	CHECKandTHROWstring("ERROR: illegal call to ObjectContactCircleCable2D::ComputeODE2LHSJacobian");
-}
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectContactCircleCable2D::GetOutputVariableTypes() const

@@ -159,14 +159,6 @@ simulationSettings.timeIntegration.verboseMode = 1
 # simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10*100
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-#simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
-simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
-# simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon = False
-# simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1.e-3
-# simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-8 #6.055454452393343e-06*0.0001 #eps^(1/3)
-# simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
-# simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
-# simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 simulationSettings.pauseAfterEachStep = False
 simulationSettings.displayStatistics = True

@@ -243,6 +243,9 @@ public: //
 	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.; implemented in CSystem.cpp
 	void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const;
 
+	//! compute MarkerDataStructure for computation of Connector Jacobians (no AE, diff of Jacobian needed)
+	//! jacobian derivative times constant vector v, e.g.: d(Jpos.T @ v)/dq
+	void ComputeMarkerDataStructureJacobianODE2(const CObjectConnector* connector, const Vector& v, MarkerDataStructure& markerDataStructure) const;
 
 	void Print(std::ostream& os) const
 	{
@@ -273,7 +276,8 @@ public: //
 
 };
 
-//markerdata computed in CSystemData because needed for sensors
+//!markerdata computed in CSystemData because needed for sensors
+//!synchronize with ComputeMarkerDataStructureJacobianODE2 function!
 inline void CSystemData::ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
 {
 	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
@@ -288,9 +292,23 @@ inline void CSystemData::ComputeMarkerDataStructure(const CObjectConnector* conn
 		Index nAEcoords = constraint->GetAlgebraicEquationsSize();
 		markerDataStructure.GetLagrangeMultipliers().LinkDataTo(GetCData().currentState.AECoords, AEindex, nAEcoords);
 	}
-	for (Index k = 0; k < 2; k++)
+	for (Index k = 0; k < nMarkers; k++)
 	{
 		GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(*this, computeJacobian, markerDataStructure.GetMarkerData(k));
+	}
+}
+
+//!synchronize with ComputeMarkerDataStructure function!
+//!compute jacobian derivative times constant vector v, e.g.: d(Jpos.T @ v)/dq
+inline void CSystemData::ComputeMarkerDataStructureJacobianODE2(const CObjectConnector* connector, const Vector& v, MarkerDataStructure& markerDataStructure) const
+{
+	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
+	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
+	markerDataStructure.SetTime(GetCData().currentState.GetTime()); //only needed for user functions, but kept for future
+
+	for (Index k = 0; k < nMarkers; k++)
+	{
+		GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(*this, v, markerDataStructure.GetMarkerData(k));
 	}
 }
 

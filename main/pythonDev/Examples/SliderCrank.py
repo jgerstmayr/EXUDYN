@@ -57,7 +57,7 @@ oRigid0 = mbs.AddObject(RigidBody2D(physicsMass=massRigid0,
                                     nodeNumber=nRigid0,
                                     visualization=VObjectRigidBody2D(graphicsData= [graphics0])))
 
-nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[2*a0+a1+100,0,0], initialVelocities=[0,0,0]));
+nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[2*a0+a1,0,0], initialVelocities=[0,0,0]));
 oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=massRigid1, physicsInertia=inertiaRigid1,nodeNumber=nRigid1,visualization=VObjectRigidBody2D(graphicsData= [graphics1])))
 
 c=0.05 #dimension of mass
@@ -110,20 +110,20 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.timeIntegration.numberOfSteps = 2*100000 #1000 steps for test suite/error
 simulationSettings.timeIntegration.endTime = 2              #1s for test suite / error
-simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10 #10000
+#simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10 #10000
 simulationSettings.timeIntegration.verboseMode = 1 #10000
 
 simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
 
-#simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-#simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+# simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
+# simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 
 
 exu.StartRenderer()
+mbs.WaitForUserToContinue()
 
 #++++++++++++++++++++++++++++++++++++++++++
 #solve generalized alpha / index3:

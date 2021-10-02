@@ -53,7 +53,7 @@ extern Index array_delete_counts; //global counter of item deallocations; is inc
 template <class T>
 class ResizableArray
 {
-protected:
+private: //make protected if derived class shall be created
 	T * data;				//!<container for stored items
 	Index maxNumberOfItems;	//!<maximum number of items currently storable
 	Index numberOfItems;	//!<current number of items stored; this is the size which is operated at
@@ -158,7 +158,7 @@ public:
 	//}
 
 	//! destructor to handle dynamically allocated data
-	virtual ~ResizableArray() {
+	~ResizableArray() {
 		if (data)
 		{
 			delete[] data;
@@ -173,7 +173,7 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for handling in ObjectContainer
-	virtual ResizableArray<T>* GetClone() const { return new ResizableArray<T>(*this); }
+	ResizableArray<T>* GetClone() const { return new ResizableArray<T>(*this); }
 
 	T* begin() const { return &data[0]; }						//!< C++11 std::begin() for iterators
 	T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators
@@ -205,9 +205,17 @@ public:
 		return data[numberOfItems - 1];
 	}
 
+	//! swap content of this and other matrix without copying
+	void Swap(ResizableArray& other)
+	{
+		std::swap(data, other.data);
+		std::swap(numberOfItems, other.numberOfItems);
+		std::swap(maxNumberOfItems, other.maxNumberOfItems);
+	}
+
 protected:
 	//! unified initialization of member variables; protected, because call from outside is dangerous (no data deleted); use SetNumberOfItems(0) or Flush() to reset ResizableArray
-	void Init() { data = NULL; maxNumberOfItems = 0; numberOfItems = 0; }
+	void Init() { data = nullptr; maxNumberOfItems = 0; numberOfItems = 0; }
 
 public:
 	//! set number of items to 'n'; used to reset array with 'SetNumberOfItems(0)', does not allocated memory/delete if newNumberOfItems<=maxNumberOfItems; copies data if array is enlarged
@@ -331,15 +339,19 @@ public:
     {
         (*this)[numberOfItems] = item;  //numberOfItems increased by one
         return numberOfItems - 1;       //Index of last element
-
-        //numberOfItems++;
-        //if (numberOfItems > maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(numberOfItems); }
-
-        //data[numberOfItems - 1] = t;
-        //return numberOfItems;
     }
 
-    //! search for item; return array index of FIRST item (if found), otherwise return; different return value from HOTINT1 tarray::find(...): FindIndexOfItem(...) returns EXUstd::InvalidIndex in case it is not found!!!
+	 //! @brief append an item after last element (*this[numberOfItems]);
+	 //! increases automatically the array size if necessary
+	 //! no return; faster than Append()
+	 void AppendPure(const T& item) //== > push_back in std::vector
+	 {
+		 EnlargeMaxNumberOfItemsTo(numberOfItems + 1);
+		 data[numberOfItems] = item;
+		 numberOfItems++;
+	 }
+
+	 //! search for item; return array index of FIRST item (if found), otherwise return; different return value from HOTINT1 tarray::find(...): FindIndexOfItem(...) returns EXUstd::InvalidIndex in case it is not found!!!
      Index GetIndexOfItem(const T& item) const
     {
         for (Index j = 0; j < numberOfItems; j++)

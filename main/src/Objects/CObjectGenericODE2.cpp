@@ -71,7 +71,7 @@ void CObjectGenericODE2::ComputeObjectCoordinates_tt(Vector& coordinates_tt, Con
 }
 
 //! Computational function: compute mass matrix
-void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
 	if (parameters.massMatrixUserFunction)
 	{
@@ -84,19 +84,28 @@ void CObjectGenericODE2::ComputeMassMatrix(Matrix& massMatrix, Index objectNumbe
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
+		//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
+
+		//massMatrixC is set with user function, chosing the correct type of matrix
+		//massMatrixC sparse/dense matrix type is set in user function!
+		EvaluateUserFunctionMassMatrix(massMatrixC, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t, ltg);
+
 	}
 	else //standard constant matrix
 	{
 		if (parameters.massMatrix.NumberOfRows() != 0)
 		{
-			massMatrix = parameters.massMatrix;
+			massMatrixC.CopyOrAddTriplets(parameters.massMatrix, ltg);
 		}
 		else //set zero mass matrix, e.g. for static computation
 		{
-			Index nODE2 = GetODE2Size();
-			massMatrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
-			massMatrix.SetAll(0.);
+			massMatrixC.SetUseDenseMatrix(false); //uses sparse matrix with no entries.
+
+			//OLD, DELETE:
+			//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
+			//Index nODE2 = GetODE2Size();
+			//massMatrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
+			//massMatrix.SetAll(0.);
 		}
 	}
 }
@@ -119,12 +128,14 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 
 	if (parameters.stiffnessMatrix.NumberOfRows() != 0)
 	{
-		EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, tempCoordinates, ode2Lhs);
+		//EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, tempCoordinates, ode2Lhs);
+		parameters.stiffnessMatrix.MultMatrixVectorAdd(tempCoordinates, ode2Lhs);
 	}
 
 	if (parameters.dampingMatrix.NumberOfRows() != 0)
 	{
-		EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, tempCoordinates_t, ode2Lhs);
+		//EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, tempCoordinates_t, ode2Lhs);
+		parameters.dampingMatrix.MultMatrixVectorAdd(tempCoordinates_t, ode2Lhs);
 	}
 
 	if (parameters.forceVector.NumberOfItems() != 0)
@@ -142,6 +153,115 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 		ode2Lhs -= userForce;
 	}
 
+}
+
+//! Computational function: compute mass matrix
+void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
+	Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const
+{
+	Index columnsStiff = parameters.stiffnessMatrix.NumberOfColumns();
+	Index rowsStiff = parameters.stiffnessMatrix.NumberOfRows();
+	Index columnsDamp = parameters.dampingMatrix.NumberOfColumns();
+	Index rowsDamp = parameters.dampingMatrix.NumberOfRows();
+	bool addStiffnessMatrix = true;
+	bool addDampingMatrix = true;
+
+	if (parameters.jacobianUserFunction)
+	{
+		Index nODE2 = GetODE2Size();
+		//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
+		//Vector coordinates_t(nODE2);
+		tempCoordinates.SetNumberOfItems(nODE2);
+		tempCoordinates_t.SetNumberOfItems(nODE2);
+		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
+
+		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
+
+		//massMatrixC is set with user function, chosing the correct type of matrix
+		//massMatrixC sparse/dense matrix type is set in user function!
+		EvaluateUserFunctionJacobian(jacobianODE2, cSystemData->GetMainSystemBacklink(), t, objectNumber, 
+			tempCoordinates, tempCoordinates_t, factorODE2, factorODE2_t, ltg);
+
+
+		if (rowsStiff != 0 && jacobianODE2.NumberOfRows() != rowsStiff ||
+			jacobianODE2.NumberOfRows() != columnsStiff)
+		{
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same size as stiffnessMatrix!");
+		}
+
+		if (rowsDamp != 0 && jacobianODE2.NumberOfRows() != rowsDamp ||
+			jacobianODE2.NumberOfRows() != columnsDamp)
+		{
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same size as dampingMatrix!");
+		}
+
+	}
+	else
+	{
+		//add stiffness matrix as first matrix and set type with it:
+		//jacobianODE2.SetUseDenseMatrix(parameters.stiffnessMatrix.UseDenseMatrix()); //use just type of stiffnessMatrix
+		if (rowsStiff)
+		{ 
+			jacobianODE2.CopyOrAddTripletsWithFactor(parameters.stiffnessMatrix, ltg, factorODE2); 		
+			addStiffnessMatrix = false;
+		}
+		else if (rowsDamp) 
+		{
+			jacobianODE2.CopyOrAddTripletsWithFactor(parameters.dampingMatrix, ltg, factorODE2_t);
+			addStiffnessMatrix = false; //not needed, because rowsStiff = 0
+			addDampingMatrix = false;
+		}
+	}
+
+	if (jacobianODE2.UseDenseMatrix())
+	{
+		if (!parameters.stiffnessMatrix.UseDenseMatrix())
+		{
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!");
+		}
+		if (rowsStiff && addStiffnessMatrix) { jacobianODE2.GetInternalDenseMatrix() += factorODE2 * parameters.stiffnessMatrix.GetInternalDenseMatrix(); }
+		if (rowsDamp && addDampingMatrix) { jacobianODE2.GetInternalDenseMatrix() += factorODE2_t * parameters.dampingMatrix.GetInternalDenseMatrix(); }
+	}
+	else
+	{
+		if (parameters.stiffnessMatrix.UseDenseMatrix())
+		{
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!");
+		}
+		if (rowsStiff && addStiffnessMatrix)
+		{
+			SparseTripletVector& triplets = jacobianODE2.GetInternalSparseTripletMatrix().GetTriplets();
+			for (const SparseTriplet& item : parameters.stiffnessMatrix.GetInternalSparseTripletMatrix().GetTriplets())
+			{
+				triplets.AppendPure(SparseTriplet(ltg[item.row()], ltg[item.col()], factorODE2*item.value()));
+			}
+		}
+		if (rowsDamp && addDampingMatrix)
+		{
+			SparseTripletVector& triplets = jacobianODE2.GetInternalSparseTripletMatrix().GetTriplets();
+			for (const SparseTriplet& item : parameters.dampingMatrix.GetInternalSparseTripletMatrix().GetTriplets())
+			{
+				triplets.AppendPure(SparseTriplet(ltg[item.row()], ltg[item.col()], factorODE2_t*item.value()));
+			}
+		}
+
+	}
+
+
+}
+
+//! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+JacobianType::Type CObjectGenericODE2::GetAvailableJacobians() const
+{
+	//if user function is supplied, then the analytical (function) jacobian is available
+	if (parameters.jacobianUserFunction) 
+	{
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	else 
+	{
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	}
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible

@@ -114,6 +114,7 @@ class InteractiveDialog:
 
         #create tkinter instance
         root = self.root = tkinter.Tk()
+        exudyn.sys['tkinterRoot'] = root
         root.protocol("WM_DELETE_WINDOW", self.OnQuit) #always leave app with OnQuit
         root.title(title)
         systemScaling = root.call('tk', 'scaling') #obtains current scaling?
@@ -292,6 +293,7 @@ class InteractiveDialog:
         self.simulationStopped = True
         self.RunButtonText.set('Stop')
         self.FinalizeSolver()
+        del exudyn.sys['tkinterRoot'] #this is not thread safe, but interuption should not happen ...
         self.root.quit()
         self.root.destroy()
 
@@ -318,7 +320,8 @@ class InteractiveDialog:
     def ContinuousRunFunction(self, event=None):
         if not self.simulationStopped:
             self.ProcessWidgetStates()
-            
+            exudyn.DoRendererIdleTasks() #for MacOS, but also to open visualization dialog, etc.
+            #print(".")
             t = self.RunSimulationPeriod()
             if self.showTime:
                 self.currentTime.set('t = '+str(round(t,6)))

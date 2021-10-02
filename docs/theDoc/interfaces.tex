@@ -51,6 +51,8 @@ NumericalDifferentiationSettings has the following items:
     minimumCoordinateSize &     UReal &      &     1e-2 &     minimum size of coordinates in relative differentiation parameter\\ \hline
     doSystemWideDifferentiation &     bool &      &     False &     True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation\\ \hline
     addReferenceCoordinatesToEpsilon &     \tabnewline bool &      &     False &     True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter\\ \hline
+    forAE &     bool &      &     False &     flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification\\ \hline
+    forODE2 &     bool &      &     False &     flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -83,7 +85,6 @@ NewtonSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     numericalDifferentiation &     NumericalDifferentiationSettings &      &      &     numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)\\ \hline
-    useNumericalDifferentiation &     bool &      &     False &     flag (true/false); false = perform direct computation of jacobian, true = use numerical differentiation for jacobian\\ \hline
     useNewtonSolver &     bool &      &     True &     flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution\\ \hline
     relativeTolerance &     UReal &      &     1e-8 &     relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)\\ \hline
     absoluteTolerance &     UReal &      &     1e-10 &     absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance\\ \hline

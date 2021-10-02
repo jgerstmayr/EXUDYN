@@ -22,9 +22,10 @@ namespace EXUmath {
 	class Triplet
 	{
 	public:
-		Triplet() : m_row(0), m_col(0), m_value(0) {}
+		//Triplet() : m_row(0), m_col(0), m_value(0) {}
+		Triplet() {}
 
-		Triplet(const Index& i, const Index& j, const Real& v = 0) : m_row(i), m_col(j), m_value(v) {}
+		Triplet(const Index& row, const Index& col, const Real& value = 0) : m_row(row), m_col(col), m_value(value) {}
 
 		const Index& row() const { return m_row; }
 		const Index& col() const { return m_col; }
@@ -32,7 +33,7 @@ namespace EXUmath {
 
 		//! in addition to Eigen, we also allow write access to value!
 		Real& value() { return m_value; }
-	protected:
+	private: //change to protected if derived class wanted (and also set destructor to virtual ...)
 		Index m_row, m_col;
 		Real m_value;
 	};
@@ -40,7 +41,7 @@ namespace EXUmath {
 	//! simple sparse matrix container for simplistic operations
 	class SparseTripletMatrix
 	{
-	private:
+	private: //change to protected if derived class wanted (and also set destructor to virtual ...)
 		ResizableArray<Triplet> sparseTriplets;
 		Index numberOfRows;
 		Index numberOfColumns;
@@ -59,6 +60,12 @@ namespace EXUmath {
 			numberOfRows = numberOfRowsInit;
 			numberOfColumns = numberOfColumnsInit;
 		}
+
+		//! const access to triplet list ==> can be used in Eigen::SparseMatrix
+		const ResizableArray<Triplet>& GetTriplets() const { return sparseTriplets; }
+
+		//! for swap with GeneralMatrix
+		ResizableArray<Triplet>& GetTriplets() { return sparseTriplets; }
 
 		//! add triplet
 		void AddTriplet(const Triplet& triplet) { sparseTriplets.Append(triplet); }
@@ -183,18 +190,31 @@ namespace EXUmath {
 		//! return a dense matrix from any other matrix: requires a copy - SLOW!
 		ResizableMatrix GetEXUdenseMatrix() const
 		{
-			ResizableMatrix denseMatrix(NumberOfRows(), NumberOfColumns());
+			ResizableMatrix denseMatrix; // (NumberOfRows(), NumberOfColumns());
+			Convert2DenseMatrix(denseMatrix);
+			//denseMatrix.SetAll(0.);
+
+			//for (auto& item : sparseTriplets)
+			//{
+			//	denseMatrix(item.row(), item.col()) += item.value();
+			//}
+			return denseMatrix;
+		}
+
+		//! convert to dense matrix without copying (but may create large matrices!)
+		void Convert2DenseMatrix(ResizableMatrix& denseMatrix) const
+		{
+			denseMatrix.SetNumberOfRowsAndColumns(NumberOfRows(), NumberOfColumns());
 			denseMatrix.SetAll(0.);
 
 			for (auto& item : sparseTriplets)
 			{
 				denseMatrix(item.row(), item.col()) += item.value();
 			}
-			return denseMatrix;
 		}
 
 		//! function to print matrix
-		virtual void PrintMatrix(std::ostream& os) const
+		void PrintMatrix(std::ostream& os) const
 		{
 			os << GetEXUdenseMatrix();
 		}
@@ -213,53 +233,103 @@ namespace EXUmath {
 		MatrixContainer(const Matrix& matrix) { denseMatrix = matrix; useDenseMatrix = true; }
 		MatrixContainer(const SparseTripletMatrix& matrix) { sparseTripletMatrix = matrix; useDenseMatrix = false; }
 
-		virtual ~MatrixContainer() {} //added for correct deletion of derived classes
+		~MatrixContainer() {} //added for correct deletion of derived classes
 
 		//! returns true, if matrix container uses dense matrix mode
-		virtual bool UseDenseMatrix() const { return useDenseMatrix; }
+		bool UseDenseMatrix() const { return useDenseMatrix; }
 
 		//! get number of columns
-		virtual Index NumberOfRows() const { 
+		Index NumberOfRows() const { 
 			if (useDenseMatrix) { return denseMatrix.NumberOfRows(); } 
 			else { return sparseTripletMatrix.NumberOfRows(); } }
 
 		//! get number of rows
-		virtual Index NumberOfColumns() const {
+		Index NumberOfColumns() const {
 			if (useDenseMatrix) { return denseMatrix.NumberOfColumns(); } 
 			else { return sparseTripletMatrix.NumberOfColumns(); } 
 		}
 
+		//! copy dense matrix or add triplets from other dense/sparse matrix converting rows/columns according to ltg-mapping; used in mass matrix user functions
+		void CopyOrAddTriplets(const MatrixContainer& other, const ArrayIndex& ltg)
+		{
+			if (other.UseDenseMatrix())
+			{
+				SetUseDenseMatrix(true);
+				denseMatrix = other.GetInternalDenseMatrix();
+			}
+			else
+			{
+				SetUseDenseMatrix(false);
+				ResizableArray<Triplet>& triplets = GetInternalSparseTripletMatrix().GetTriplets();
+				for (const Triplet& item : other.GetInternalSparseTripletMatrix().GetTriplets())
+				{
+					triplets.AppendPure(Triplet(ltg[item.row()], ltg[item.col()], item.value()));
+				}
+			}
+		}
+
+		//! copy dense matrix or add triplets from other dense/sparse matrix converting rows/columns according to ltg-mapping; used in mass matrix user functions
+		void CopyOrAddTripletsWithFactor(const MatrixContainer& other, const ArrayIndex& ltg, Real factor)
+		{
+			if (other.UseDenseMatrix())
+			{
+				SetUseDenseMatrix(true);
+				denseMatrix = other.GetInternalDenseMatrix();
+				denseMatrix *= factor;
+			}
+			else
+			{
+				SetUseDenseMatrix(false);
+				if (factor != 0.)
+				{
+					ResizableArray<Triplet>& triplets = GetInternalSparseTripletMatrix().GetTriplets();
+					for (const Triplet& item : other.GetInternalSparseTripletMatrix().GetTriplets())
+					{
+						triplets.AppendPure(Triplet(ltg[item.row()], ltg[item.col()], factor*item.value()));
+					}
+				}
+			}
+		}
+
 		//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-		virtual void SetAllZero() {
-			if (useDenseMatrix) { return denseMatrix.SetAll(0); }
+		void SetAllZero() {
+			if (useDenseMatrix) { denseMatrix.SetAll(0); }
 			else { sparseTripletMatrix.SetAllZero(); }
 		}
 
+		//! set both matrices to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
+		void SetAllMatricesZero() {
+			denseMatrix.SetAll(0);
+			sparseTripletMatrix.SetAllZero();
+		}
+
 		//! reset matrices and free memory
-		virtual void Reset() {
+		void Reset() {
 			if (useDenseMatrix) { denseMatrix = ResizableMatrix(); }
 			else { sparseTripletMatrix.Reset(); }
 		};
 
+		//! note that a switch to the other matrix may lead to undefined state ...
+		void SetUseDenseMatrix(bool useDenseMatrixInit = true) {
+			useDenseMatrix = useDenseMatrixInit;
+		};
+
 		//! multiply either triplets or matrix entries with factor
-		virtual void MultiplyWithFactor(Real factor)
+		void MultiplyWithFactor(Real factor)
 		{
 			if (useDenseMatrix) { denseMatrix *= factor; }
 			else { sparseTripletMatrix.MultiplyWithFactor(factor); }
 		}
 
-		////! set the matrix with a dense matrix; do not use this function for computational tasks, as it will drop performance significantly
-		//virtual void SetMatrix(const Matrix& otherMatrix);
-
 		//! multiply matrix with vector: solution = A*x
-		virtual void MultMatrixVector(const Vector& x, Vector& solution) const
+		void MultMatrixVector(const Vector& x, Vector& solution) const
 		{
 			if (useDenseMatrix) { MultMatrixVectorTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
 			else { sparseTripletMatrix.MultMatrixVector(x, solution); }
 		}
 
 		//! multiply matrix with vector and add to solution: solution += A*x
-		virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
+		void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
 		{
 			if (useDenseMatrix) { MultMatrixVectorAddTemplate<ResizableMatrix, Vector, Vector>(denseMatrix, x, solution); }
 			else { sparseTripletMatrix.MultMatrixVectorAdd(x, solution); }
@@ -269,58 +339,73 @@ namespace EXUmath {
 		//virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution) const;
 
 		//! multiply matrixContainer with matrix: solution = *this * matrix
-		virtual void MultMatrixDenseMatrix(const Matrix& matrix, Matrix& solution) const
+		void MultMatrixDenseMatrix(const Matrix& matrix, Matrix& solution) const
 		{
 			if (useDenseMatrix) { MultMatrixMatrixTemplate<ResizableMatrix, Matrix, Matrix>(denseMatrix, matrix, solution); }
 			else { sparseTripletMatrix.MultMatrixDenseMatrix(matrix, solution); }
 		}
 
 		//! multiply matrixContainer with matrix: solution = matrix^T * *this
-		virtual void MultDenseMatrixTransposedMatrix(const Matrix& matrix, Matrix& solution) const
+		void MultDenseMatrixTransposedMatrix(const Matrix& matrix, Matrix& solution) const
 		{
 			if (useDenseMatrix) { MultMatrixTransposedMatrixTemplate<Matrix, ResizableMatrix, Matrix>(matrix, denseMatrix, solution); }
 			else { sparseTripletMatrix.MultDenseMatrixTransposedMatrix(matrix, solution); }
 		}
 
 		//! return a dense matrix from any other matrix: requires a copy - SLOW!
-		virtual ResizableMatrix GetEXUdenseMatrix() const
+		ResizableMatrix GetEXUdenseMatrix() const
 		{
 			if (useDenseMatrix) { return denseMatrix; }
 			else { return sparseTripletMatrix.GetEXUdenseMatrix(); }
 		}
 
 		//! this function fails in sparse matrix mode!
-		virtual const ResizableMatrix& GetInternalDenseMatrix() const
+		const ResizableMatrix& GetInternalDenseMatrix() const
 		{
-			CHECKandTHROW(useDenseMatrix, "MatrixContainer::GetInternalDenseMatrix failed"); 
-			return denseMatrix; 
+			CHECKandTHROW(useDenseMatrix, "MatrixContainer::GetInternalDenseMatrix failed");
+			return denseMatrix;
+		}
+
+		//! this function fails in sparse matrix mode!
+		ResizableMatrix& GetInternalDenseMatrix()
+		{
+			CHECKandTHROW(useDenseMatrix, "MatrixContainer::GetInternalDenseMatrix failed");
+			return denseMatrix;
 		}
 
 		//! this function fails in dense matrix mode! implementation is slow!
-		virtual const SparseTripletMatrix& GetInternalSparseTripletMatrix() const
+		const SparseTripletMatrix& GetInternalSparseTripletMatrix() const
+		{
+			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletMatrix (const) failed"); return sparseTripletMatrix; }
+			else { return sparseTripletMatrix; }
+		}
+
+		//! this function fails in dense matrix mode! implementation is slow!
+		SparseTripletMatrix& GetInternalSparseTripletMatrix()
 		{
 			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletMatrix failed"); return sparseTripletMatrix; }
 			else { return sparseTripletMatrix; }
 		}
 
 		//! this function fails in dense matrix mode! implementation is slow!
-		virtual Matrix GetInternalSparseTripletsAsMatrix() const
+		Matrix GetInternalSparseTripletsAsMatrix() const
 		{
 			if (useDenseMatrix) { CHECKandTHROWstring("MatrixContainer::GetInternalSparseTripletsAsMatrix failed"); return sparseTripletMatrix.GetTripletsAsMatrix(); }
 			else { return sparseTripletMatrix.GetTripletsAsMatrix(); }
 		}
 
 		//! function to print matrix
-		virtual void PrintMatrix(std::ostream& os) const
+		void PrintMatrix(std::ostream& os) const
 		{
 			os << GetEXUdenseMatrix();
 		}
 
 	};
 
-
-
 }
+
+typedef EXUmath::Triplet SparseTriplet;						//! this is a simple (row,col,value) structure for sparse matrix non zero entries
+typedef ResizableArray<SparseTriplet> SparseTripletVector;	//! this vector stores (dynamically!) the triplets
 
 
 #endif

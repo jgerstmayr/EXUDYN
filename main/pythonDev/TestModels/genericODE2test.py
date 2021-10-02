@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test model for rigid bodies sliding on cables
+# Details:  Test model for GenericODE2
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-03-09
@@ -10,9 +10,14 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
 
+import sys
+sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
+
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

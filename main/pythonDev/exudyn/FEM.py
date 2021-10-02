@@ -3,7 +3,7 @@
 #
 # Details:  Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
 #
-# Author:   Johannes Gerstmayr, Stefan Holzinger (Abaqus and Ansys import utilities)
+# Author:   Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for NGsolve import and eigen computations)
 # Date:     2020-03-10 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -135,7 +135,25 @@ def ResortIndicesOfNGvector(vXXYYZZ):
     
     for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
         vNew[r[i]] = v[i]
-        #vNew[i] = v[r[i]]
+
+    return vNew
+    
+#**function: resort indices of given Exudyun vector XYZXYZXYZ to NGsolve vector in XXXYYYZZZ format
+def ResortIndicesExudyn2NGvector(vXYZXYZ):
+    #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
+    v = np.array(vXYZXYZ)
+    numberOfRows = len(v)
+    if numberOfRows%3 != 0:
+        raise ValueError("ResortIndicesOfNGvector: length must be multiple of 3")
+
+    vNew = np.zeros(numberOfRows)
+
+    #compute transformation of indices:
+    r = np.arange(numberOfRows).reshape((int(numberOfRows/3),3))
+    r = r.T.flatten()
+    
+    for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
+        vNew[i] = v[r[i]]
 
     return vNew
     
@@ -570,7 +588,7 @@ class MaterialBaseClass:
         self.density = density
 
 #**class: class for representation of Kirchhoff (linear elastic, 3D and 2D) material
-# use planeStress=False for plane strain
+#**notes: use planeStress=False for plane strain
 class KirchhoffMaterial(MaterialBaseClass):
     def __init__(self, youngsModulus, poissonsRatio, density = 0, planeStress = True):
         super().__init__(youngsModulus, poissonsRatio, density)
@@ -598,7 +616,7 @@ class KirchhoffMaterial(MaterialBaseClass):
                                                 [0, 0, mu]])
 
 
-    #convert strain tensor into stress tensor using elasticity tensor
+    #**classFunction: convert strain tensor into stress tensor using elasticity tensor
     def Strain2Stress(self, strain):
         E = strain
         strainVector = np.array([  E[0,0],   E[1,1],   E[2,2],
@@ -609,10 +627,11 @@ class KirchhoffMaterial(MaterialBaseClass):
                       [SV[4], SV[3], SV[2]]])
         return S
 
-    #convert strain vector into stress vector
+    #**classFunction: convert strain vector into stress vector
     def StrainVector2StressVector(self, strainVector):
         return self.elasticityTensor @ strainVector
 
+    #**classFunction: compute 2D stress vector from strain vector
     def StrainVector2StressVector2D(self, strainVector2D):
         #E=strain
         #strainVector2D = np.array([E[0,0], E[1,1], 2*E[0,1]])
@@ -620,6 +639,14 @@ class KirchhoffMaterial(MaterialBaseClass):
         #S = np.array([[SV[0], SV[2]], [SV[2], SV[1]]])
         return SV
 
+    #**classFunction: compute Lame parameters from internal Young's modulus and Poisson ratio
+    #**output: return vector [mu, lam] of Lame parameters
+    def LameParameters(self):
+        E = self.youngsModulus
+        nu = self.poissonsRatio
+        mu  = E / 2 / (1+nu) #Lame parameters
+        lam = E * nu / ((1+nu)*(1-2*nu))
+        return [mu, lam]
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: finite element base class for lateron implementations of other finite elements
@@ -895,7 +922,70 @@ class ObjectFFRFinterface:
 
 
 
+#**function: compute current (max, min, ...) value for chosen ObjectFFRFreducedOrder object (CMSobject) with exu.OutputVariableType. The function operates on nodal values. This is a helper function, which can be used to conveniently compute output quantities of the CMSobject efficiently and to use it in sensors
+#**input: 
+#  mbs: MainSystem of objectNumber
+#  objectNumber: number of ObjectFFRFreducedOrder in mbs
+#  outputVariableType: a exu.OutputVariableType out of [StressLocal, DisplacementLocal, VelocityLocal]
+#  norm: string containing chosen norm to be computed, out of 'Mises', 'maxNorm', 'min', 'max'; 'max' will return maximum of all components (component wise), 'min' does same but for minimum; 'maxNorm' computes np.linalg.norm for every node and then takes maximum of all norms; Mises computes von-Mises stress for every node and then takes maximum of all nodes
+#  nodeNumberList: list of mesh node numbers (from FEMinterface); if empty [], all nodes are used; otherwise, only given nodes are evaluated
+#**output: return value or list of values according to chosen norm as np.array
+def CMSObjectComputeNorm(mbs, objectNumber, outputVariableType, norm='max', nodeNumberList=[]):
+    import exudyn as exu
+    #get generic node number containing current coordinates:
+    nGeneric = mbs.GetObjectParameter(objectNumber,'nodeNumbers')[1]
+    #problem with rigid body coordinates:
+    #c = mbs.GetObjectOutputBody(objectNumber,variableType=exu.OutputVariableType.Coordinates,localPosition=[0,0,0])
+    #c_t = mbs.GetObjectOutputBody(objectNumber,variableType=exu.OutputVariableType.Coordinates_t,localPosition=[0,0,0])
+    
+    #see which outputvariable to compute:
+    if (mbs.GetObjectParameter(objectNumber,'outputVariableTypeModeBasis') == outputVariableType):
+        #get current coordinates:
+        c = mbs.GetNodeOutput(nGeneric,variableType=exu.OutputVariableType.Coordinates)
+        X = mbs.GetObjectParameter(objectNumber,'outputVariableModeBasis')
+        values = np.zeros((X.shape[0], 6))
+        #compute stresses in nodes
+        nc = len(c)
+        for i in range(len(c)):
+            for j in range(6): #6 stress components
+                values[:,j] += X[:,6*i+j] * c[i] #
+                
+    elif outputVariableType == exu.OutputVariableType.DisplacementLocal:
+        c = mbs.GetNodeOutput(nGeneric,variableType=exu.OutputVariableType.Coordinates)
+        X = mbs.GetObjectParameter(objectNumber,'modeBasis')
+        nn = int(X.shape[0]/3)
+        values = (X@c).reshape((nn,3))
+    elif outputVariableType == exu.OutputVariableType.VelocityLocal:
+        c_t = mbs.GetNodeOutput(nGeneric,variableType=exu.OutputVariableType.Coordinates_t)
+        X = mbs.GetObjectParameter(objectNumber,'modeBasis')
+        nn = int(X.shape[0]/3)
+        values = (X@c_t).reshape((nn,3))
+    #elif outputVariableType == exu.OutputVariableType.AccelerationLocal:
+    #    c_tt = mbs.GetNodeOutput(nGeneric,variableType=exu.OutputVariableType.Coordinates_tt)
+    #    X = mbs.GetObjectParameter(objectNumber,'modeBasis')
+    #    nn = int(X.shape[0]/3)
+    #    values = (X@c_tt).reshape((nn,3))
+    else:
+        raise ValueError("CMSObjectComputeNorm: illegal outputVariableType")
 
+    #restrict evaluation to given nodes
+    if nodeNumberList != []:
+        values = values[nodeNumberList]
+
+    if norm == 'max':
+        return np.max(values, axis=0)
+    elif norm == 'min':
+        return np.min(values, axis=0)
+    elif norm == 'maxNorm':
+        return np.max(np.linalg.norm(values,axis=1))
+    elif norm == 'Mises':
+        from exudyn.physics import VonMisesStress
+        if outputVariableType != exu.OutputVariableType.StressLocal:
+            raise ValueError("CMSObjectComputeMaximum: norm = 'Mises' only possible for outputVariableType == StressLocal")
+        return np.max(VonMisesStress(values))
+
+    raise ValueError("CMSObjectComputeMaximum: unknown norm")
+    return 0
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1570,24 +1660,36 @@ class FEMinterface:
     #    youngsModulus: Young's modulus used for mechanical model
     #    poissonsRatio: Poisson's ratio used for mechanical model
     #    density: density used for mechanical model
+    #    meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
     #    verbose: set True to print out some status information
-    #    computeEigenmodes: set True to use NGsolve for eigenmode computation instead of ComputeEigenmodes
-    #    numberOfModes: if computeEigenmodes==True: number of eigen modes computed with NGsolve; default=10
-    #    maxEigensolveIterations: if computeEigenmodes==True: maximum number of iterations for iterative eigensolver; default=40
-    #    excludeRigidBodyModes: if computeEigenmodes==True: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+    #**notes: setting ngsolve.SetNumThreads(nt) you can select the number of treads that are used for assemble or other functionality with NGsolve functionality 
+    #**output: creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
+    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
     def ImportMeshFromNGsolve(self, mesh, density, youngsModulus, poissonsRatio, verbose = False, 
-                              computeEigenmodes = False, **kwargs):
+                              computeEigenmodes = False, meshOrder = 1, **kwargs):
+        #OLD, DELETE 2022-01-01:
+        #    computeEigenmodes: set True to use NGsolve for eigenmode computation instead of ComputeEigenmodes
+        #    numberOfModes: if computeEigenmodes==True: number of eigen modes computed with NGsolve; default=10
+        #    maxEigensolveIterations: if computeEigenmodes==True: maximum number of iterations for iterative eigensolver; default=40
+        #    excludeRigidBodyModes: if computeEigenmodes==True: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
         import ngsolve as ngs
-        meshOrder = 1#currently only order 1 possible, but will change!
+        if meshOrder < 1 or meshOrder > 2:
+            raise ValueError('mesh order > 1 or mesh order < 2 not supported!')
+            
+        if meshOrder == 2:
+            mesh.ngmesh.SecondOrder()
 
         if verbose: print("NGsolve create mechanics FE space ...")
-        fes = ngs.VectorH1(mesh, order=meshOrder)
-
+        if meshOrder == 1:
+            fes = ngs.VectorH1(mesh, order=meshOrder) #add interleaved = True to get xyzxyz sorting
+        else:
+            fes = ngs.NodalFESpace(mesh, order=meshOrder)**3
+            
         #create finite element spaces for mass matrix and stiffness matrix    
         u = fes.TrialFunction()
         v = fes.TestFunction()
-        fesK = ngs.BilinearForm(fes)
-        fesM = ngs.BilinearForm(fes)
+        bfK = ngs.BilinearForm(fes)
+        bfM = ngs.BilinearForm(fes)
 
         def sigma(eps, mu, lam):
             return 2*mu*eps + lam*ngs.Trace(eps) * ngs.Id(eps.dims[0])
@@ -1600,20 +1702,25 @@ class FEMinterface:
         lam = E * nu / ((1+nu)*(1-2*nu))
 
         #setup (linear) mechanical FE-space
-        fesK += ngs.InnerProduct(sigma(ngs.Sym(ngs.Grad(u)),mu,lam), ngs.Sym(ngs.Grad(v)))*ngs.dx
-        fesM += rho*u*v * ngs.dx
+        bfK += ngs.InnerProduct(sigma(ngs.Sym(ngs.Grad(u)),mu,lam), ngs.Sym(ngs.Grad(v)))*ngs.dx
+        # bfK += ngs.InnerProduct(sigma(0.5*(ngs.Grad(u)+ngs.Grad(u).trans + ngs.Grad(u).trans * ngs.Grad(u)),mu,lam), 
+        #                         ngs.Sym(ngs.Grad(v)))*ngs.dx
+        #==> use variation of Elasticity test problem, based on energy
+        #a.AssembleLinearization(...)
+        #a.Apply() ==> gives nonlinear elastic forces
+        bfM += rho*u*v * ngs.dx
 
         with ngs.TaskManager():
             if verbose: print ("NGsolve assemble M and K")
-            fesK.Assemble()
-            fesM.Assemble()
+            bfK.Assemble()
+            bfM.Assemble()
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #export to scipy sparse matrices:
         from scipy.sparse import csr_matrix
         if verbose: print ("NGsolve convert system matrices to scipy csr_matrix format")
-        K = csr_matrix( fesK.mat.CSR(), copy=True )
-        M = csr_matrix( fesM.mat.CSR(), copy=True )
+        K = csr_matrix( bfK.mat.CSR(), copy=True )
+        M = csr_matrix( bfM.mat.CSR(), copy=True )
         if verbose: print("K.shape=",K.shape)
 
 
@@ -1631,10 +1738,10 @@ class FEMinterface:
             for n in mesh.vertices: 
                 nodeList+=[list(n.point)]
         else:
-            NP = len(ngmesh.Points())
+            NP = len(mesh.ngmesh.Points())
             if verbose: print("number of points=", NP)
     
-            for n in ngmesh.Points(): 
+            for n in mesh.ngmesh.Points(): 
                 nodeList+=[list(n)]
 
     
@@ -1651,15 +1758,32 @@ class FEMinterface:
                 print("ERROR in ImportMeshFromNGsolve: invalid element in ngmesh, elementNr=", cnt, "linear tet elements required!")
             cnt+=1
 
+        #function to flip surface elements:
+        def Flip3D(v):
+            return [v[0], v[2], v[1]]
+        
         surface = mesh.ngmesh.Elements2D() #surface mesh
-        for st in surface: 
-            vertices = []
-            for v in st.vertices:
-                vertices += [v.nr-1] #convert to 0-based indices
-            x=vertices[2] #flip vertices for correct orientation in EXUDYN
-            vertices[2] = vertices[1]
-            vertices[1] = x
-            surfaceTriangleList += [vertices]
+        if meshOrder == 1:
+            for st in surface: 
+                vertices = []
+                for v in st.vertices: #st.points gives all nodes (for order>1), vertices only vertex points (always 4 per tet)
+                    vertices += [v.nr-1] #convert to 0-based indices
+                if len(vertices) != 3:
+                    raise ValueError('ImportMeshFromNGsolve: expected linear 3-node surface elements')
+
+                surfaceTriangleList += [Flip3D(vertices)]
+        else: #order 2
+            for st in surface: 
+                w = []
+                for v in st.points: #st.points gives all nodes (for order>1), vertices only vertex points (always 4 per tet)
+                    w += [v.nr-1] #convert to 0-based indices
+                if len(w) != 6:
+                    raise ValueError('ImportMeshFromNGsolve: expected second order 6-node surface elements')
+
+                surfaceTriangleList += [Flip3D([w[0],w[5],w[4]])]
+                surfaceTriangleList += [Flip3D([w[5],w[1],w[3]])]
+                surfaceTriangleList += [Flip3D([w[5],w[3],w[4]])]
+                surfaceTriangleList += [Flip3D([w[4],w[3],w[2]])]
 
         nodes = np.array(nodeList)
         elements=np.array(tetList) #unused
@@ -1682,6 +1806,7 @@ class FEMinterface:
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if computeEigenmodes:
+            print('**********\nWARNING!**********\nNGsolve eigenmode computation deprecated: USE FEM.ComputeEigenmodesNGsolve(...)')
             if verbose: print ("NGsolve: compute eigenmodes")
             excludeRigidBodyModes = 0
             if 'excludeRigidBodyModes' in kwargs:
@@ -1697,11 +1822,11 @@ class FEMinterface:
             from ngsolve.eigenvalues import PINVIT
 
             with ngs.TaskManager():
-                KM = fesK.mat.CreateMatrix()
-                KM.AsVector().data = fesK.mat.AsVector() + 1e6* fesM.mat.AsVector()
+                KM = bfK.mat.CreateMatrix()
+                KM.AsVector().data = bfK.mat.AsVector() + 1e6* bfM.mat.AsVector()
             
                 inv = KM.Inverse(inverse='sparsecholesky')
-                res = PINVIT(fesK.mat, fesM.mat, inv, num=nModes+excludeRigidBodyModes, maxit=maxIt, \
+                res = PINVIT(bfK.mat, bfM.mat, inv, num=nModes+excludeRigidBodyModes, maxit=maxIt, \
                                 printrates=verbose, GramSchmidt=True)
 
             #self.res = res
@@ -1715,6 +1840,308 @@ class FEMinterface:
             self.eigenValues = np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])
                              
             if verbose: print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])))
+
+        return [bfM, bfK, fes]
+
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
+    #**input: 
+    #  nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
+    #  excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+    #  maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40
+    #  verbose: if True, output some relevant information during solving
+    #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
+    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    def ComputeEigenmodesNGsolve(self, bfM, bfK,
+                                 nModes, 
+                                 maxEigensolveIterations = 40,
+                                 excludeRigidBodyModes = 0,
+                                 verbose = False):
+        import ngsolve as ngs
+
+        maxIt = maxEigensolveIterations
+
+        from ngsolve.eigenvalues import PINVIT
+
+        with ngs.TaskManager():
+            KM = bfK.mat.CreateMatrix()
+            KM.AsVector().data = bfK.mat.AsVector() + 1e6* bfM.mat.AsVector()
+        
+            inv = KM.Inverse(inverse='sparsecholesky')
+            res = PINVIT(bfK.mat, bfM.mat, inv, num=nModes+excludeRigidBodyModes, maxit=maxIt, \
+                            printrates=verbose, GramSchmidt=True)
+
+        #nDOF = K.shape[0]
+        nDOF = bfK.space.ndof
+        eigVecs = np.zeros((nDOF, nModes))
+        for i in range(nModes):
+            #eigVecs[:,i] = np.array(res[1][excludeRigidBodyModes+i])
+            eigVecs[:,i] = ResortIndicesOfNGvector(np.array(res[1][excludeRigidBodyModes+i]))
+        
+        self.modeBasis = {'matrix':eigVecs, 'type':'NormalModes'}
+        self.eigenValues = np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])
+                         
+        if verbose: print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])))
+
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
+    #**input:
+    #  bfM: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...)
+    #  bfK: bilinearform for stiffness matrix as retured in ImportMeshFromNGsolve(...)
+    #  boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
+    #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
+    #  maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40
+    #  verbose: if True, output some relevant information during solving
+    #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
+    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    def ComputeHurtyCraigBamptonModesNGsolve(self,
+                                      bfM, bfK,
+                                      boundaryNodesList,
+                                      nEigenModes, 
+                                      maxEigensolveIterations = 40,
+                                      verbose = False):
+
+        import ngsolve as ngs
+        import time
+        start_time = time.time()
+        #from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+        
+        nNodeLists = len(boundaryNodesList)
+        #sizes of internal and boundary nodes:
+        M = bfM.mat
+        K = bfK.mat
+        n = K.height
+        nNodes = int(n/3)
+        nodesPos = self.GetNodePositionsAsArray()
+
+        bndDOFsAll = ngs.BitArray(n) #fill in all boundaries later
+        bndDOFsAll[:] = False        
+        
+        #+++++++++++++++++++++++++++
+        #compute static rigid body modes:
+        addRotationModes = 1
+        rbSize = 3 + 3*addRotationModes #size of rigid body coordinates (3 for translation, 6 for translation+rotation)
+        nbRBE2 = (nNodeLists-1)*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
+        DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
+
+        modeBasis = np.zeros((n, nbRBE2+nEigenModes))
+
+        #all rigid body modes
+        mvAll = ngs.MultiVector(K.CreateColVector(),0)
+        
+        #1 rigid body modes
+        mvRB = ngs.MultiVector(K.CreateColVector(),6)
+        for v in mvRB: v[:]=0 #initialize!
+
+        #rigid body displacements
+        for i in range(3):
+            mvRB[i][nNodes*i:nNodes*(i+1)] = 1
+                        
+        #create list of mappings between average rigid body motion and boundary DOF matrix
+        rigidBodyMappings = [[]]*nNodeLists #list of mappings
+        cntBoundary = 0 #counter for boundaryNodeLists / number of interfaces
+        for cntBoundary, boundaryNodes in enumerate(boundaryNodesList):
+            nbn = len(boundaryNodes)
+            
+            bndDOFs = ngs.BitArray(n)
+            bndDOFs[:] = False
+    
+            DOFb = np.zeros(nbn*3, dtype=np.int)
+            for i in range(len(boundaryNodes)):
+                node = boundaryNodes[i]
+                #DOFb[i*3:i*3+3] = [node*3,node*3+1,node*3+2] #interleaved xyzxyz
+                DOFb[i*3:i*3+3] = [node,node+nNodes,node+2*nNodes] #xxxx yyyy zzzz
+                
+            for i, d in enumerate(DOFb):
+                bndDOFs[d] = True
+
+            bndDOFsAll |= bndDOFs
+            
+            #compute midpoints of boundary nodes:
+            p0 = np.zeros(3)
+            for node in boundaryNodes:
+                p0 += nodesPos[node]
+            
+            p0 = p0*(1./len(boundaryNodes))
+
+            #compute rigid body modes for this boundary:
+            for i in range(3): #iterate about 3 rotation axes
+                rot = np.zeros(3) #rotation vector, unit rotation
+                rot[i] = 1
+                rotTilde = Skew(rot)
+                for bj in boundaryNodes:
+                    p = nodesPos[bj]-p0
+                    qRot = rotTilde@p
+
+                    for k in range(3):
+                        mvRB[i+3][bj+k*nNodes] = qRot[k]
+            
+            proj = ngs.Projector(bndDOFs, True)
+            for v in mvRB:
+                hv = v.CreateVector()
+                hv.data = proj * v
+                mvAll.Append(hv)
+        
+        if verbose: print('solve...')
+        KiiInv = K.Inverse(~bndDOFsAll,inverse='sparsecholesky')
+        if verbose: print('...ready')
+
+        #compute static modes for all rigid body boundaries
+        mvAll.data = mvAll - KiiInv @ K * mvAll
+            
+        for i in range(len(mvAll)-1*rbSize):
+            modeBasis[:,i] = ResortIndicesOfNGvector(mvAll[i+1*rbSize])
+   
+        #++++++++++++++++++++++++++++++++++++++
+        #compute modes for free inner nodes:    
+        from ngsolve.eigenvalues import PINVIT
+
+        if nEigenModes != 0:
+            if verbose: print('compute eigenvectors of inner nodes...')
+            maxIt = maxEigensolveIterations
+            with ngs.TaskManager():#pajetrace=10**8):
+                #with shift strategy, but not necessary for inner nodes (no rigid-body-modes)
+                # KM = bfK.mat.CreateMatrix()
+                # KM.AsVector().data = bfK.mat.AsVector() + 1e6* bfM.mat.AsVector()
+                # KMinv = KM.Inverse(~bndDOFsAll,inverse='sparsecholesky')
+                KMinv = KiiInv
+                res = PINVIT(bfK.mat, bfM.mat, KMinv, 
+                             num=nEigenModes, maxit=maxIt, \
+                             printrates=verbose, GramSchmidt=True)
+    
+            if verbose: print('...ready')
+    
+            for i in range(nEigenModes):
+                modeBasis[:,i+nbRBE2] = ResortIndicesOfNGvector(np.array(res[1][i]))
+
+            self.eigenValues = np.abs(res[0][0:nEigenModes])
+        else:
+            self.eigenValues = np.array([])
+
+        self.modeBasis = {'matrix':modeBasis, 'type':'HCBmodes'}
+                         
+        if verbose: 
+            print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(self.eigenValues)))
+            print("HCB NGsolve modes needed %.3f seconds" % (time.time() - start_time))
+
+
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder; takes a NGsolve fes as input and uses internal NGsolve methods to efficiently compute stresses or strains
+    #**input: 
+    #  fes: finite element space as retured in ImportMeshFromNGsolve(...)
+    #  material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains (material = 0)
+    #  outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+    #**notes: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
+    #**output: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
+    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    def ComputePostProcessingModesNGsolve(self, fes, material = 0, 
+                                          outputVariableType = 'OutputVariableType.StressLocal', 
+                                          verbose = False):
+
+        import ngsolve as ngs
+        #++++++++++++++++++++++++++++++++++++
+        #special ngsolve functions which are put into expression trees:
+        def Strain2Stress(eps, mu, lam):
+            return 2*mu*eps + lam*ngs.Trace(eps) * ngs.Id(eps.dims[0])
+    
+        def Strain2Strain(eps, mu, lam):
+            return eps
+        #++++++++++++++++++++++++++++++++++++
+        #print("t=",outputVariableType)
+        if str(outputVariableType) == 'OutputVariableType.StressLocal':
+            computeStrains = False
+            StressFunction = Strain2Stress
+        elif str(outputVariableType) == 'OutputVariableType.StrainLocal':
+            computeStrains = True
+            StressFunction = Strain2Strain
+        else:
+            raise ValueError('ComputePostProcessingModes invoked with invalid outputVariableType')
+
+        # if material == 0:
+        #     material=KirchhoffMaterial(1, 0, 1)
+        #     if not computeStrains:
+        #         raise ValueError('ComputePostProcessingModes: if material=0, outputVariableType must be StrainLocal')
+
+        # nNodes = int(fes.ndof/3)
+        # modeBasis = self.modeBasis['matrix']
+        # [mu, lam] = material.LameParameters()
+                
+        # nModeVectors = modeBasis.shape[1]
+        # stressModesMatrix = np.zeros((nNodes,6*nModeVectors))
+    
+        # fesStress = ngs.MatrixValued(ngs.H1(fes.mesh, order=fes.globalorder), symmetric=True)
+        # #order of stresses (per node) = xx,xy,xz,yy,yz,zz (in order xx xx xx xy xy xy...)
+        # gfStress = ngs.GridFunction(fesStress)
+        # gfu = ngs.GridFunction(fes)
+    
+        # #map ngsolve stress components xx,xy,yy,xz,yz,zz to Exudyn xx,yy,zz,yz,xz,xy
+        # ngsStressMap = [0,2,5,4,3,1] #stressModeExu[i] = stressModeNGS[ngsStressMap[i]]
+    
+        # with ngs.TaskManager():
+        #     for i in range(nModeVectors):
+        #         if verbose: print('compute stress mode ', i, 'of', nModeVectors)
+        #         v = modeBasis[:,i]
+        #         gfu.vec.FV()[:] = ResortIndicesExudyn2NGvector(v)
+        #         # print(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
+        #         # t1 = time.time()
+        #         # gfStress.Interpolate(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
+        #         gfStress.Interpolate(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam).Compile())
+        #         #gfStress.Set(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
+        #         # print(time.time() - t1)
+                
+        #         sv = gfStress.vec.FV()
+        #         for j in range(6):
+        #             stressModesMatrix[:,i*6+j] = sv[ngsStressMap[j]*nNodes:(ngsStressMap[j]+1)*nNodes]
+        
+        # self.postProcessingModes = {'matrix': stressModesMatrix, 
+        #                            'outputVariableType': outputVariableType}
+        if material == 0:
+            material=KirchhoffMaterial(1, 0, 1)
+            if not computeStrains:
+                raise ValueError('ComputePostProcessingModes: if material=0, outputVariableType must be StrainLocal')
+
+        nNodes = int(fes.ndof/3)
+        modeBasis = self.modeBasis['matrix']
+        [mu, lam] = material.LameParameters()
+                
+        nModeVectors = modeBasis.shape[1]
+        stressModesMatrix = np.zeros((nNodes,6*nModeVectors))
+    
+        meshOrder = fes.components[0].globalorder
+        if verbose: print('ORDER of fes=',meshOrder)
+        # meshOrder = 2
+        if meshOrder == 1:
+            fesStress = ngs.MatrixValued(ngs.H1(fes.mesh, order=meshOrder), symmetric=True)
+        else:
+            fesStress = ngs.MatrixValued(ngs.NodalFESpace(fes.mesh, order=meshOrder), symmetric=True)
+
+        #order of stresses (per node) = xx,xy,xz,yy,yz,zz (in order xx xx xx xy xy xy...)
+        gfStress = ngs.GridFunction(fesStress)
+        gfu = ngs.GridFunction(fes)
+    
+        #map ngsolve stress components xx,xy,yy,xz,yz,zz to Exudyn xx,yy,zz,yz,xz,xy
+        ngsStressMap = [0,2,5,4,3,1] #stressModeExu[i] = stressModeNGS[ngsStressMap[i]]
+    
+        with ngs.TaskManager():
+            for i in range(nModeVectors):
+                if verbose: print('compute stress mode ', i, 'of', nModeVectors)
+                v = modeBasis[:,i]
+                gfu.vec.FV()[:] = ResortIndicesExudyn2NGvector(v)
+                #gfStress.Interpolate(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam).Compile())
+                gfStress.Set(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
+                
+                sv = gfStress.vec.FV()
+                for j in range(6):
+                    stressModesMatrix[:,i*6+j] = sv[ngsStressMap[j]*nNodes:(ngsStressMap[j]+1)*nNodes]
+        
+        self.postProcessingModes = {'matrix': stressModesMatrix, 
+                                    'outputVariableType': outputVariableType}
+        
+
 
 
 
@@ -1745,12 +2172,24 @@ class FEMinterface:
         return nNodes
 
     #**classFunction: get node points as array; only possible, if there exists only one type of Position nodes
+    #**notes: in order to obtain a list of certain node positions, see example
+    #**example:
+    #p=GetNodePositionsAsArray(self)[42] #get node 42 position
+    #nodeList=[1,13,42]
+    #pArray=GetNodePositionsAsArray(self)[nodeList] #get np.array with positions of node indices
     def GetNodePositionsAsArray(self):
         if len(self.nodes) != 1:
             raise ValueError("ERROR: GetNodePositionsAsArray() only possible for one type of Position nodes!")
 
         nodeTypeName = list(self.nodes)[0]
         return self.nodes[nodeTypeName]
+
+    #**classFunction: get mean (average) position of nodes defined by list of node numbers
+    def GetNodePositionsMean(self,nodeNumberList):
+        if len(self.nodes) != 1:
+            raise ValueError("ERROR: GetNodesMeanPositions(...) only possible for one type of Position nodes!")
+
+        return np.mean(self.GetNodePositionsAsArray()[nodeNumberList], axis=0)
 
     #**classFunction: get number of total nodal coordinates
     def NumberOfCoordinates(self):
@@ -2068,6 +2507,7 @@ class FEMinterface:
     #  nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
     #  excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
     #  useSparseSolver: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+    #**notes: for NGsolve / Netgen meshes, see the according ComputeEigenmodesNGsolve function, which is usually much faster
     #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
     def ComputeEigenmodes(self, nModes, excludeRigidBodyModes = 0, useSparseSolver = True):
         if not useSparseSolver:
@@ -2191,6 +2631,7 @@ class FEMinterface:
     #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
     #  useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver
     #  computationMode: see class HCBstaticModeSelection for available modes; select RBE2 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary
+    #**notes: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster
     #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
     def ComputeHurtyCraigBamptonModes(self,
                                       boundaryNodesList,
@@ -2285,12 +2726,12 @@ class FEMinterface:
                 if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
     
             #print("assemble matrices ...")
-            
+
             if computationMode == HCBstaticModeSelection.allBoundaryNodes: #quite inefficient, because it 
                 modeBasis = np.zeros((n, nb+nEigenModes))
                 DOFstatic = np.arange(nb) #for final mapping of boundary coordinates
-                DOFeig = np.arange(nb,nb+nEigenModes) #for final mapping of eigenmode coordinates
                 if nEigenModes != 0:
+                    DOFeig = np.arange(nb,nb+nEigenModes) #for final mapping of eigenmode coordinates
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
                 modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
@@ -2307,10 +2748,10 @@ class FEMinterface:
                 addRotationModes = 1
                 rbSize = 3 + 3*addRotationModes #size of rigid body coordinates (3 for translation, 6 for translation+rotation)
                 nbRBE2 = (nNodeLists-1)*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
-                DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
     
                 modeBasis = np.zeros((n, nbRBE2+nEigenModes))
                 if nEigenModes != 0:
+                    DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
                 #create list of mappings between average rigid body motion and boundary DOF matrix
@@ -2427,21 +2868,26 @@ class FEMinterface:
                 #         stressModes[ind,6*iMode+j] += Ev4[cnt, j]
                 #     else:
                 #         stressModes[ind,6*iMode+j] += Sv4[cnt, j]
-
+        nodeWarned = False
         for ind in range(nNodes):
-            if stressModesCnt[ind] == 0:
-                raise ValueError('Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements')
-            stressModesMatrix[ind,:] *= 1/stressModesCnt[ind]
+            elPerNode = stressModesCnt[ind]
+            if elPerNode == 0:
+                if not nodeWarned:
+                    nodeWarned = True
+                    print('********\nWARNING:\n********\n Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements; this function only works for linear elements!')
+                elPerNode = 1 #does not matter because no element attached, no stress computed
+            stressModesMatrix[ind,:] *= 1/elPerNode
 
         return stressModesMatrix
 
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder
+    #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
     #**input: 
     #  material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
     #  outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
     #  numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
+    #**notes: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
     #**output: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
     def ComputePostProcessingModes(self, material=0, 
                                    outputVariableType='OutputVariableType.StressLocal',
@@ -2471,6 +2917,8 @@ class FEMinterface:
 
         if material == 0:
             material=KirchhoffMaterial(1, 0, 1)
+            if not computeStrains:
+                raise ValueError('ComputePostProcessingModes: if material=0, outputVariableType must be StrainLocal')
 
         showProgress = False
         if nModes*nNodes > 10000:

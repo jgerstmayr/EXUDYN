@@ -72,6 +72,8 @@ V,  relativeEpsilon,      ,  		     ,      UReal, 			   1e-7,        ,      P	 ,
 V,  minimumCoordinateSize,,  		     ,      UReal, 			   1e-2,        ,      P	 , "minimum size of coordinates in relative differentiation parameter"
 V,  doSystemWideDifferentiation,,    ,      bool, 			   false,          ,      P    , "True: system wide differentiation (e.g. all \hac{ODE2} equations w.r.t. all \hac{ODE2} coordinates); False: only local (object) differentiation"
 V,  addReferenceCoordinatesToEpsilon,, ,    bool, 			   false,          ,      P    , "True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter"
+V,  forAE,                ,  	         ,     bool, 					false,  , P		, "flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification"
+V,  forODE2,              ,  	         ,     bool, 				    false,  , P		, "flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification"
 #
 writeFile=SimulationSettings.h
 
@@ -95,7 +97,8 @@ writePybindIncludes = True
 classDescription = "Settings for Newton method used in static or dynamic simulation."
 #V|F, pythonName, 		cplusplusName,   size, type,					defaultValue,args, cFlags, parameterDescription
 V,  numericalDifferentiation,, , NumericalDifferentiationSettings,      ,,        PS		, "numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)"
-V,  useNumericalDifferentiation, ,  	,      bool, 					   false,  , P		, "flag (true/false); false = perform direct computation of jacobian, true = use numerical differentiation for jacobian"
+#V,  useNumericalDifferentiationAE, ,  	,      bool, 					   false,  , P		, "flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification"
+#V,  useNumericalDifferentiationODE2, ,  	,     bool, 				   false,  , P		, "flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification"
 V,  useNewtonSolver,	        ,  		    ,     bool, 					true,   , P		, "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution"
 V,  relativeTolerance,          ,  		   ,      UReal, 					1e-8,   , P		, "relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)"
 V,  absoluteTolerance,          ,  		   ,      UReal, 					1e-10,  , P		, "absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance"

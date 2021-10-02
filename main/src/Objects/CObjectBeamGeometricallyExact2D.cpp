@@ -43,8 +43,9 @@ Matrix2D CObjectBeamGeometricallyExact2D::GetRotationMatrix2D(Real theta) const
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! Computational function: compute mass matrix
-void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
+	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	if (massMatrixComputed) //advantage due to precomputed mass matrix comparatively small (will improve in case of sparse matrices)
 	{
 		massMatrix.CopyFrom(precomputedMassMatrix); //just assignement; ConstSizeMatrix is directly assigned to Matrix (no double copy)
@@ -391,35 +392,4 @@ Vector3D CObjectBeamGeometricallyExact2D::GetAngularVelocity(const Vector3D& loc
 
 
 
-////! jacobian of LHS, w.r.t. position AND velocity level coordinates
-//void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
-//{
-//	const Index ns = 4;   //number of shape functions
-//	ConstSizeVector<2*ns> qANCF0;
-//	ConstSizeVector<2*ns> qANCF0_t;
-//	ConstSizeVectorBase<DReal16, 2*ns> qANCF;
-//	ConstSizeVectorBase<DReal16, 2*ns> qANCF_t;
-//	ComputeCurrentObjectCoordinates(qANCF0);
-//	ComputeCurrentObjectVelocities(qANCF0_t);
-//	for (Index i = 0; i < 2 * ns; i++)
-//	{
-//		qANCF[i] = qANCF0[i];
-//		qANCF_t[i] = qANCF0_t[i];
-//		qANCF[i].DValue((int)i) = 1; //mark that this is the corresponding derivative
-//		qANCF_t[i].DValue((int)(i+2*ns)) = 1; //mark that this is the corresponding derivative; velocity derivatives are in second block
-//	}
-//	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
-//
-//	ComputeODE2LHStemplate<DReal16>(ode2Lhs, qANCF, qANCF_t);
-//	//now copy autodifferentiated result:
-//	for (Index i = 0; i < 2 * ns; i++)
-//	{
-//		for (Index j = 0; j < 2 * ns; j++)
-//		{
-//			jacobian(i, j) = ode2Lhs[i].DValue((int)j);
-//			jacobian_ODE2_t(i, j) = ode2Lhs[i].DValue((int)(j+2*ns));
-//		}
-//	}
-//}
-//
-//
+

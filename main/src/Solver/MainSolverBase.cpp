@@ -211,8 +211,11 @@ void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem/*, const Simu
 	GetCSolver().data.systemJacobian->SetNumberOfRowsAndColumns(nSys, nSys);
 	GetCSolver().data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 
-	mainSystem.cSystem->NumericalJacobianODE2RHS(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation/*simulationSettings.staticSolver.newton.numericalDifferentiation*/,
-		GetCSolver().data.tempODE2F0, GetCSolver().data.tempODE2F1, *(GetCSolver().data.systemJacobian), scalarFactor);
+	//mainSystem.cSystem->NumericalJacobianODE2RHS(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation/*simulationSettings.staticSolver.newton.numericalDifferentiation*/,
+	//	GetCSolver().data.tempODE2F0, GetCSolver().data.tempODE2F1, *(GetCSolver().data.systemJacobian), scalarFactor);
+
+	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation,
+		*(GetCSolver().data.systemJacobian), scalarFactor, 0.); //only ODE2 part computed
 }
 
 //! add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver
@@ -221,8 +224,10 @@ void MainSolverBase::ComputeJacobianODE2RHS_t(MainSystem& mainSystem/*, const Si
 	CheckInitialized(mainSystem);
 
 	//only add terms!
-	mainSystem.cSystem->NumericalJacobianODE2RHS_t(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation,
-		GetCSolver().data.tempODE2F0, GetCSolver().data.tempODE2F1, *(GetCSolver().data.systemJacobian), scalarFactor);
+	//mainSystem.cSystem->NumericalJacobianODE2RHS_t(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation,
+	//	GetCSolver().data.tempODE2F0, GetCSolver().data.tempODE2F1, *(GetCSolver().data.systemJacobian), scalarFactor);
+	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation,
+		*(GetCSolver().data.systemJacobian), 0., scalarFactor); //only ODE2_t part computed
 }
 
 //! add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver

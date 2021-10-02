@@ -289,9 +289,11 @@ def ParameterVariation(parameterFunction, parameters,
 #    numberOfGenerations: number of generations; NOTE: it is required that elitistRatio*populationSize >= 1
 #    elitistRatio: the number of surviving individuals in every generation is equal to the previous population times the elitistRatio
 #    crossoverProbability: if > 0: children are generated from two (randomly selected) parents by gene-crossover; if 0, no crossover is used
-#    crossoverAmount: if crossoverProbability > 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50% of genes cross
+#    crossoverAmount: if crossoverProbability > 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50\% of genes cross
 #    rangeReductionFactor: reduction of mutation range (boundary) relative to range of last generation; helps algorithm to converge to more accurate values
 #    distanceFactor: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
+#    childDistribution: string with name of distribution for producing childs: "normal" (Gaussian, with sigma defining range), "uniform" (exactly in range of childs)
+#    distanceFactorGenerations: number of generations (populations) at which the distance factor is active; the distance factor is used to find several local minima; finally, convergence is speed up without the distance factor
 #    randomizerInitialization: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)
 #
 #    debugMode: if True, additional print out is done
@@ -316,12 +318,29 @@ def GeneticOptimization(objectiveFunction, parameters,
                         crossoverAmount=0.5,
                         rangeReductionFactor=0.7,
                         distanceFactor=0.1,
+                        childDistribution="uniform",  
+                        distanceFactorGenerations=-1,
                         debugMode=False, 
                         addComputationIndex=False,
                         useMultiProcessing=False, 
                         showProgress = True,
                         **kwargs):
 
+    def RandomNumber(distribution, rangeBegin, rangeEnd, vMin, vMax):
+        a = rangeBegin
+        b = rangeEnd
+        value = vMax + 1
+        while (value < vMin or value > vMax):
+            if distribution == 'uniform':
+                value = np.random.uniform(a, b)
+            elif distribution == 'normal':
+                value = np.random.normal(loc = 0.5*(a+b), scale = 0.5*(b-a))
+            else:
+                raise ValueError('GeneticOptimization: invalid childDistribution "'+childDistribution+'"')
+        
+        return value
+        
+    
     #get number of threads:
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
@@ -374,6 +393,8 @@ def GeneticOptimization(objectiveFunction, parameters,
         distanceFactor = 0.5
         print("WARNING: distanceFactor >= 1, setting distanceFactor = 0.5\n")
 
+    if distanceFactorGenerations < 0:
+        distanceFactorGenerations = numberOfGenerations+1 #will be never active
 
     dim = 0
     ranges = []                 #list containing the ranges of each dimension
@@ -403,7 +424,8 @@ def GeneticOptimization(objectiveFunction, parameters,
     #+++++++++++++++++++++++++++++++++++++++++++++++
 
     if debugMode:
-        print("initial population =", currentGeneration)
+        if initialPopulationSize <= 50:
+            print("initial population =", currentGeneration)
         print("rangesDict =", rangesDict)
 
     parametersAll = []
@@ -420,6 +442,7 @@ def GeneticOptimization(objectiveFunction, parameters,
 
         totalEvaluations += len(currentGeneration)
         values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
+        if (showProgress and useMultiProcessing and popCnt < numberOfGenerations-1): print("            #"+str(popCnt+1), end='')
         #print("values=",values)
         resultsFileCnt = WriteToFile(resultsFile, parameters, currentGeneration, values, resultsFileCnt, writeHeader = (popCnt == 0))
 
@@ -454,13 +477,20 @@ def GeneticOptimization(objectiveFunction, parameters,
 
         if popCnt < numberOfGenerations-1: #go on for next population
             relativeRange = rangeReductionFactor**(popCnt+1) #this is the relative range for the next population
+
+            if debugMode:
+                print("Child ranges in population",popCnt)
+                for (key,value) in parameters.items():
+                    r = value[1]-value[0]
+                    r *= relativeRange #reduce range
+                    print('  '+key+':', r)
             
             #selection: chose best surviving individuals
             newGeneration = []
             newGenerationValues = []
             cnt = 0
 
-            if distanceFactor == 0: #distance not important
+            if distanceFactor == 0 or popCnt >= distanceFactorGenerations: #distance not important
                 for i in range(min(survivingIndividuals,len(sortedValues))):
                     ind = currentGeneration[int(sortedValues[i][1])] #dictionary for individual
                     if addComputationIndex:
@@ -557,8 +587,10 @@ def GeneticOptimization(objectiveFunction, parameters,
                             if pEnd > value[1]: pEnd = value[1]
     
                             #print("new range=",pBegin,pEnd)
-                            
-                            value = np.random.uniform(pBegin, pEnd)
+                            #value = np.random.uniform(pBegin, pEnd)
+                            value = RandomNumber(childDistribution, 
+                                                 pBegin, pEnd, 
+                                                 value[0], value[1])
                             indList[pi][key] = value
     
                         if addComputationIndex:

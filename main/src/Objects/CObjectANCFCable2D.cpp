@@ -150,206 +150,22 @@ void CObjectANCFCable2DBase::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectANCFCable2DBase::ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const
+void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
+	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
-	massMatrix.CopyFrom(precomputedMassMatrix); //just assignement; ConstSizeMatrix is directly assigned to Matrix (no double copy)
-
-	//if (massMatrixComputed)
-	//{
-	//	massMatrix.CopyFrom(precomputedMassMatrix); //just assignement; ConstSizeMatrix is directly assigned to Matrix (no double copy)
-	//}
-	//else
-	//{
-	//	massMatrix.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-	//	Real L = GetLength();
-	//	Real rhoA = GetMassPerLength();
-	//	const Index ns = 4;   //number of shape functions
-
-	//	Index cnt = 0;
-	//	Real a = 0; //integration interval [a,b]
-	//	Real b = L;
-	//	for (auto item : EXUmath::gaussRuleOrder7Points)
-	//	{
-	//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-	//		Vector4D SV = ComputeShapeFunctions(x, L);
-	//		Vector4D SVint = SV;
-	//		SVint *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder7Weights[cnt++]);
-
-	//		for (Index i = 0; i < ns; i++)
-	//		{
-	//			for (Index j = 0; j < ns; j++)
-	//			{
-	//				massMatrix(i * 2, j * 2)		 += SV[i] * SVint[j];
-	//				massMatrix(i * 2 + 1, j * 2 + 1) += SV[i] * SVint[j];
-	//			}
-	//		}
-	//	}
-	//	precomputedMassMatrix.CopyFrom(massMatrix); //assignement operator would cause double copy!
-	//	massMatrixComputed = true;
-
-	//}
-
-	////pout << "Mass=" << massMatrix << "\n";
-		
+	massMatrix.CopyFrom(precomputedMassMatrix); //copy
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
-	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
-	ode2Lhs.SetAll(0.);
-	//compute work of elastic forces:
-
-	const Index dim = 2;  //2D finite element
 	const Index ns = 4;   //number of shape functions
-
-	Real L = GetLength();
-	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping;
-	GetMaterialParameters(EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0);
-
-	Index cnt;
-	Real a = 0; //integration interval [a,b]
-	Real b = L;
-
-	ConstSizeVector<ns> q0; 
-	ConstSizeVector<ns> q1;
-	ComputeCurrentNodeCoordinates(q0, q1);
-
-	ConstSizeVector<ns> q0_t;
-	ConstSizeVector<ns> q1_t;
-	if (axialDamping != 0. || bendingDamping != 0.)
-	{
-		ComputeCurrentNodeVelocities(q0_t, q1_t);
-	}
-
-
-	ConstSizeVector<ns*dim> elasticForces;
-
-	//numerical integration:
-	//high accuracy: axialStrain = order9, curvature = order5
-	//low accuracy : axialStrain = order7, curvature = order3 (lower order not possible, becomes unstable or very inaccurate ...
-
-	const Index maxIntegrationPoints = 5;
-	ConstSizeVector<maxIntegrationPoints> integrationPoints;
-	ConstSizeVector<maxIntegrationPoints> integrationWeights;
-
-	if (UseReducedOrderIntegration())
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder7Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder7Weights);
-	} else
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder9Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder9Weights);
-	}
-
-	//axial strain:
-	cnt = 0;
-	for (auto item : integrationPoints)
-	{
-		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-		Vector4D SVx = ComputeShapeFunctions_x(x, L);
-		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
-
-		Vector2D rx = MapCoordinates(SVx, q0, q1);
-
-		Real rxNorm2 = rx.GetL2NormSquared();
-		Real rxNorm = sqrt(rxNorm2);
-		Real axialStrain = rxNorm - 1.; // axial strain
-		Real axialStrain_t = 0.; //rate of axial strain
-
-		if (axialDamping != 0.)
-		{
-			Vector2D rx_t = MapCoordinates(SVx, q0_t, q1_t);
-			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
-		}
-
-		for (Index i = 0; i < dim; i++)
-		{
-			for (Index j = 0; j < ns; j++)
-			{
-				elasticForces[j*dim + i] = 1. / rxNorm * SVx[j] * rx[i];
-			}
-		}
-		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
-		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrain0) + axialDamping * axialStrain_t);
-
-		ode2Lhs += elasticForces;  //add to element elastic forces
-	}
-
-	//++++++++++++++++++++++++++++++
-	//curvature:
-	if (UseReducedOrderIntegration())
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points);
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-	}
-	else
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder5Points);
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder5Weights);
-	}
-
-	cnt = 0;
-	for (auto item : integrationPoints)
-	{
-		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-		Vector4D SVx = ComputeShapeFunctions_x(x, L);
-		Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
-		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
-
-		Vector2D rx = MapCoordinates(SVx, q0, q1);
-		Vector2D rxx = MapCoordinates(SVxx, q0, q1);
-
-		Real rxNorm2 = rx.GetL2NormSquared();				//g
-		//Real rxNorm = sqrt(rxNorm2);				
-		Real rxCrossRxx = rx.CrossProduct2D(rxx);			//f
-		Real curvature = rxCrossRxx / rxNorm2;				//kappa = (rx x rxx)/rx^2       //WRONG (Andreas/Matlab?): kappa = sqrt(cross2d(rp, rpp) ^ 2) / (rp'*rp);        // material measure of curvature
-
-		Real inv2RxNorm2 = 1. / (rxNorm2*rxNorm2);			//g2inv
-		Real tempF = 2. * rxCrossRxx*inv2RxNorm2;			//fn; f ... fraction numerator
-		Real tempG = rxNorm2 * inv2RxNorm2;					//gn; g ... fraction denominator
-		Real df;
-
-		Real curvature_t = 0.; //rate of curvature
-		if (bendingDamping != 0.)
-		{
-			Vector2D rx_t = MapCoordinates(SVx, q0_t, q1_t);
-			Vector2D rxx_t = MapCoordinates(SVxx, q0_t, q1_t);
-
-			Real rxCrossRxx_t = rx_t.CrossProduct2D(rxx) + rx.CrossProduct2D(rxx_t);	//f_t
-			Real rxNorm2_t = 2.*(rx*rx_t);												//g_t
-
-			curvature_t = (rxCrossRxx_t * rxNorm2 - rxCrossRxx * rxNorm2_t) / EXUstd::Square(rxNorm2); //rate of bending strain; (f_t*g - f*g_t)/g^2
-		}
-
-		for (Index i = 0; i < dim; i++)
-		{
-			for (Index j = 0; j < ns; j++)
-			{
-				switch (i) {
-				case 0:
-				{
-					df = SVx[j]*rxx.Y() - SVxx[j]*rx.Y(); break; 
-				}
-				case 1:
-				{
-					df = -SVx[j]*rxx.X() + SVxx[j]*rx.X(); break; 
-				}
-				default:;
-				}
-				Real dg = rx[i]*SVx[j]; //derivative of denominator
-				elasticForces[j*dim + i] = df * tempG - tempF * dg;
-			}
-		}
-		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
-		elasticForces *= integrationFactor * (EI * (curvature - curvature0) + bendingDamping * curvature_t );
-
-		ode2Lhs += elasticForces;  //add to element elastic forces
-	}
-
-
+	ConstSizeVector<2 * ns> qANCF;
+	ConstSizeVector<2 * ns> qANCF_t;
+	ComputeCurrentObjectCoordinates(qANCF);
+	ComputeCurrentObjectVelocities(qANCF_t);
+	ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
 }
 
 
@@ -372,6 +188,16 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 	Real a = 0; //integration interval [a,b]
 	Real b = L;
 
+	//ConstSizeVector<ns> q0;
+	//ConstSizeVector<ns> q1;
+	//ComputeCurrentNodeCoordinates(q0, q1);
+
+	//ConstSizeVector<ns> q0_t;
+	//ConstSizeVector<ns> q1_t;
+	//if (axialDamping != 0. || bendingDamping != 0.)
+	//{
+	//	ComputeCurrentNodeVelocities(q0_t, q1_t);
+	//}
 
 	ConstSizeVectorBase<TReal, ns*dim> elasticForces;
 
@@ -402,7 +228,9 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 		Vector4D SVx = ComputeShapeFunctions_x(x, L);
 		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
 
-		SlimVectorBase<TReal, 2> rx = MapCoordinates<TReal>(SVx, qANCF);
+		//Vector2D rx = MapCoordinates(SVx, q0, q1);
+		SlimVectorBase<TReal, dim> rx = MapCoordinates<TReal>(SVx, qANCF);
+
 
 		TReal rxNorm2 = rx.GetL2NormSquared();
 		TReal rxNorm = sqrt(rxNorm2);
@@ -411,7 +239,8 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 
 		if (axialDamping != 0.)
 		{
-			SlimVectorBase<TReal, 2> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
+			//Vector2D rx_t = MapCoordinates(SVx, q0_t, q1_t);
+			SlimVectorBase<TReal, dim> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
 			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
 		}
 
@@ -449,11 +278,13 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 		Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
 		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
 
-		SlimVectorBase<TReal, 2> rx = MapCoordinates<TReal>(SVx, qANCF);
-		SlimVectorBase<TReal, 2> rxx = MapCoordinates<TReal>(SVxx, qANCF);
+		//Vector2D rx = MapCoordinates(SVx, q0, q1);
+		//Vector2D rxx = MapCoordinates(SVxx, q0, q1);
+		SlimVectorBase<TReal, dim> rx = MapCoordinates<TReal>(SVx, qANCF);
+		SlimVectorBase<TReal, dim> rxx = MapCoordinates<TReal>(SVxx, qANCF);
 
 		TReal rxNorm2 = rx.GetL2NormSquared();				//g
-		//TReal rxNorm = sqrt(rxNorm2);
+		//TReal rxNorm = sqrt(rxNorm2);				
 		TReal rxCrossRxx = rx.CrossProduct2D(rxx);			//f
 		TReal curvature = rxCrossRxx / rxNorm2;				//kappa = (rx x rxx)/rx^2       //WRONG (Andreas/Matlab?): kappa = sqrt(cross2d(rp, rpp) ^ 2) / (rp'*rp);        // material measure of curvature
 
@@ -465,8 +296,10 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 		TReal curvature_t = 0.; //rate of curvature
 		if (bendingDamping != 0.)
 		{
-			SlimVectorBase<TReal, 2> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
-			SlimVectorBase<TReal, 2> rxx_t = MapCoordinates<TReal>(SVxx, qANCF_t);
+			//Vector2D rx_t = MapCoordinates(SVx, q0_t, q1_t);
+			//Vector2D rxx_t = MapCoordinates(SVxx, q0_t, q1_t);
+			SlimVectorBase<TReal, dim> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
+			SlimVectorBase<TReal, dim> rxx_t = MapCoordinates<TReal>(SVxx, qANCF_t);
 
 			TReal rxCrossRxx_t = rx_t.CrossProduct2D(rxx) + rx.CrossProduct2D(rxx_t);	//f_t
 			TReal rxNorm2_t = 2.*(rx*rx_t);												//g_t
@@ -498,10 +331,14 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
 
 		ode2Lhs += elasticForces;  //add to element elastic forces
 	}
+
 }
 
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
-void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
+//void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
+void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
+	Real factorODE2, Real factorODE2_t,
+	Index objectNumber, const ArrayIndex& ltg) const
 {
 	const Index ns = 4;   //number of shape functions
 	ConstSizeVector<2*ns> qANCF0;
@@ -521,15 +358,33 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian,
 	LinkedDataVectorBase<DReal16> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 
 	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t);
+
+
+	jacobianODE2.SetUseDenseMatrix(true);
+	ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();
+	jac.SetNumberOfRowsAndColumns(2 * ns, 2 * ns);
+
 	//now copy autodifferentiated result:
 	for (Index i = 0; i < 2 * ns; i++)
 	{
 		for (Index j = 0; j < 2 * ns; j++)
 		{
-			jacobian(i, j) = ode2Lhs[i].DValue((int)j);
-			jacobian_ODE2_t(i, j) = ode2Lhs[i].DValue((int)(j+2*ns));
+			jac(i, j) = factorODE2*ode2Lhs[i].DValue((int)j) + factorODE2_t*ode2Lhs[i].DValue((int)(j + 2 * ns));
 		}
 	}
+
+	//jacobian.SetNumberOfRowsAndColumns(2 * ns, 2 * ns);
+	//jacobian_ODE2_t.SetNumberOfRowsAndColumns(2 * ns, 2 * ns);
+
+	////now copy autodifferentiated result:
+	//for (Index i = 0; i < 2 * ns; i++)
+	//{
+	//	for (Index j = 0; j < 2 * ns; j++)
+	//	{
+	//		jacobian(i, j) = ode2Lhs[i].DValue((int)j);
+	//		jacobian_ODE2_t(i, j) = ode2Lhs[i].DValue((int)(j+2*ns));
+	//	}
+	//}
 }
 
 
@@ -926,4 +781,152 @@ Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, ConfigurationType config
 
 
 
+//OLD AUTODIFF:
+////! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+//template<class TReal>
+//void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const
+//{
+//	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+//	ode2Lhs.SetAll(0.);
+//	//compute work of elastic forces:
+//
+//	const Index dim = 2;  //2D finite element
+//	const Index ns = 4;   //number of shape functions
+//
+//	Real L = GetLength();
+//	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping;
+//	GetMaterialParameters(EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0);
+//
+//	Index cnt;
+//	Real a = 0; //integration interval [a,b]
+//	Real b = L;
+//
+//
+//	ConstSizeVectorBase<TReal, ns*dim> elasticForces;
+//
+//	//numerical integration:
+//	//high accuracy: axialStrain = order9, curvature = order5
+//	//low accuracy : axialStrain = order7, curvature = order3 (lower order not possible, becomes unstable or very inaccurate ...
+//
+//	const Index maxIntegrationPoints = 5;
+//	ConstSizeVector<maxIntegrationPoints> integrationPoints;
+//	ConstSizeVector<maxIntegrationPoints> integrationWeights;
+//
+//	if (UseReducedOrderIntegration())
+//	{
+//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder7Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
+//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder7Weights);
+//	}
+//	else
+//	{
+//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder9Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
+//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder9Weights);
+//	}
+//
+//	//axial strain:
+//	cnt = 0;
+//	for (auto item : integrationPoints)
+//	{
+//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+//		Vector4D SVx = ComputeShapeFunctions_x(x, L);
+//		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
+//
+//		SlimVectorBase<TReal, 2> rx = MapCoordinates<TReal>(SVx, qANCF);
+//
+//		TReal rxNorm2 = rx.GetL2NormSquared();
+//		TReal rxNorm = sqrt(rxNorm2);
+//		TReal axialStrain = rxNorm - 1.; // axial strain
+//		TReal axialStrain_t = 0.; //rate of axial strain
+//
+//		if (axialDamping != 0.)
+//		{
+//			SlimVectorBase<TReal, 2> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
+//			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
+//		}
+//
+//		for (Index i = 0; i < dim; i++)
+//		{
+//			for (Index j = 0; j < ns; j++)
+//			{
+//				elasticForces[j*dim + i] = 1. / rxNorm * SVx[j] * rx[i];
+//			}
+//		}
+//		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
+//		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrain0) + axialDamping * axialStrain_t);
+//
+//		ode2Lhs += elasticForces;  //add to element elastic forces
+//	}
+//
+//	//++++++++++++++++++++++++++++++
+//	//curvature:
+//	if (UseReducedOrderIntegration())
+//	{
+//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points);
+//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
+//	}
+//	else
+//	{
+//		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder5Points);
+//		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder5Weights);
+//	}
+//
+//	cnt = 0;
+//	for (auto item : integrationPoints)
+//	{
+//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+//		Vector4D SVx = ComputeShapeFunctions_x(x, L);
+//		Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
+//		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
+//
+//		SlimVectorBase<TReal, 2> rx = MapCoordinates<TReal>(SVx, qANCF);
+//		SlimVectorBase<TReal, 2> rxx = MapCoordinates<TReal>(SVxx, qANCF);
+//
+//		TReal rxNorm2 = rx.GetL2NormSquared();				//g
+//		//TReal rxNorm = sqrt(rxNorm2);
+//		TReal rxCrossRxx = rx.CrossProduct2D(rxx);			//f
+//		TReal curvature = rxCrossRxx / rxNorm2;				//kappa = (rx x rxx)/rx^2       //WRONG (Andreas/Matlab?): kappa = sqrt(cross2d(rp, rpp) ^ 2) / (rp'*rp);        // material measure of curvature
+//
+//		TReal inv2RxNorm2 = 1. / (rxNorm2*rxNorm2);			//g2inv
+//		TReal tempF = 2. * rxCrossRxx*inv2RxNorm2;			//fn; f ... fraction numerator
+//		TReal tempG = rxNorm2 * inv2RxNorm2;					//gn; g ... fraction denominator
+//		TReal df;
+//
+//		TReal curvature_t = 0.; //rate of curvature
+//		if (bendingDamping != 0.)
+//		{
+//			SlimVectorBase<TReal, 2> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
+//			SlimVectorBase<TReal, 2> rxx_t = MapCoordinates<TReal>(SVxx, qANCF_t);
+//
+//			TReal rxCrossRxx_t = rx_t.CrossProduct2D(rxx) + rx.CrossProduct2D(rxx_t);	//f_t
+//			TReal rxNorm2_t = 2.*(rx*rx_t);												//g_t
+//
+//			curvature_t = (rxCrossRxx_t * rxNorm2 - rxCrossRxx * rxNorm2_t) / EXUstd::Square(rxNorm2); //rate of bending strain; (f_t*g - f*g_t)/g^2
+//		}
+//
+//		for (Index i = 0; i < dim; i++)
+//		{
+//			for (Index j = 0; j < ns; j++)
+//			{
+//				switch (i) {
+//				case 0:
+//				{
+//					df = SVx[j] * rxx.Y() - SVxx[j] * rx.Y(); break;
+//				}
+//				case 1:
+//				{
+//					df = -SVx[j] * rxx.X() + SVxx[j] * rx.X(); break;
+//				}
+//				default:;
+//				}
+//				TReal dg = rx[i] * SVx[j]; //derivative of denominator
+//				elasticForces[j*dim + i] = df * tempG - tempF * dg;
+//			}
+//		}
+//		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
+//		elasticForces *= integrationFactor * (EI * (curvature - curvature0) + bendingDamping * curvature_t);
+//
+//		ode2Lhs += elasticForces;  //add to element elastic forces
+//	}
+//}
+//
 

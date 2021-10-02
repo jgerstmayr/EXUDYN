@@ -15,6 +15,13 @@
 #include "Linalg/LinearSolver.h"	
 #include "Utilities/TimerStructure.h" //for local CPU time measurement
 
+#include "Linalg/MatrixContainer.h"	
+
+#ifdef useMatrixContainerTriplets
+	#define APPEND_TO_TRIPLETS AppendPure
+#else
+	#define APPEND_TO_TRIPLETS push_back
+#endif
 
 //! factorize matrix (invert, SparseLU, etc.); -1=success
 Index GeneralMatrixEXUdense::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
@@ -58,23 +65,36 @@ void GeneralMatrixEigenSparse::SetAllZero()
 	SetMatrixIsFactorized(false);
 	SetMatrixBuiltFromTriplets(false);
 
-	triplets.resize(0); //this removes all entries!
+	triplets.SetNumberOfItems(0); //this removes all entries!
+
+//#ifdef useMatrixContainerTriplets
+//	triplets.SetNumberOfItems(0); //this removes all entries!
+//#else
+//	triplets.resize(0); //this removes all entries!
+//#endif
 	matrix.setZero();	//flush the Eigen sparse matrix
 }
 
 //! reset matrices and free memory
 void GeneralMatrixEigenSparse::Reset()
 {
-	//no easy way to do free memory: create simplistic problem to reduce memory
 	SetAllZero();
-	SetNumberOfRowsAndColumns(1, 1);
-	triplets.push_back(EigenTriplet(0, 0, 1.));
-	FinalizeMatrix();
-	FactorizeNew(); //now solver should be reset to much smaller size ==> test!
-
-	SetAllZero();
-	triplets.shrink_to_fit(); //this erases the data if it has zero entries
-	matrix.data().squeeze();
+	triplets.Flush();
+//#ifdef useMatrixContainerTriplets
+//	SetAllZero();
+//	triplets.Flush();
+//#else
+//	//no easy way to do free memory: create simplistic problem to reduce memory
+//	SetAllZero();
+//	SetNumberOfRowsAndColumns(1, 1);
+//	triplets.push_back(SparseTriplet(0, 0, 1.));
+//	FinalizeMatrix();
+//	FactorizeNew(); //now solver should be reset to much smaller size ==> test!
+//
+//	SetAllZero();
+//	triplets.shrink_to_fit(); //this erases the data if it has zero entries
+//	matrix.data().squeeze();
+//#endif
 }
 
 //! multiply either triplets or matrix entries with factor
@@ -89,7 +109,7 @@ void GeneralMatrixEigenSparse::MultiplyWithFactor(Real factor)
 	{
 		for (auto& item : triplets)
 		{
-			item = EigenTriplet(item.row(), item.col(), factor*item.value());
+			item = SparseTriplet(item.row(), item.col(), factor*item.value());
 		}
 	}
 
@@ -101,7 +121,12 @@ void GeneralMatrixEigenSparse::SetMatrix(const Matrix& otherMatrix)
 	SetMatrixIsFactorized(false);
 	SetMatrixBuiltFromTriplets(false);
 
-	triplets.resize(0); //this removes all entries!
+	triplets.SetNumberOfItems(0); //this removes all entries!
+//#ifdef useMatrixContainerTriplets
+//	triplets.SetNumberOfItems(0); //this removes all entries!
+//#else
+//	triplets.resize(0); //this removes all entries!
+//#endif
 	matrix.setZero();	//flush the Eigen sparse matrix
 
 	for (Index i = 0; i < otherMatrix.NumberOfRows(); i++)
@@ -111,7 +136,7 @@ void GeneralMatrixEigenSparse::SetMatrix(const Matrix& otherMatrix)
 			Real value = otherMatrix(i, j);
 			if (value != 0.)
 			{
-				triplets.push_back(EigenTriplet((StorageIndex)i, (StorageIndex)j, value));
+				triplets.AppendPure(SparseTriplet((StorageIndex)i, (StorageIndex)j, value));
 			}
 		}
 	}
@@ -128,7 +153,7 @@ void GeneralMatrixEigenSparse::AddDiagonalMatrix(Real diagValue, Index numberOfR
 	{
 		for (Index i = 0; i < numberOfRowsColumns; i++)
 		{
-			triplets.push_back(EigenTriplet((StorageIndex)(rowOffset + i), (StorageIndex)(columnOffset + i), diagValue));
+			triplets.AppendPure(SparseTriplet((StorageIndex)(rowOffset + i), (StorageIndex)(columnOffset + i), diagValue));
 		}
 	}
 }
@@ -151,7 +176,8 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 				Real value = submatrix(i, j);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
+					//triplets.APPEND_TO_TRIPLETS(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
+					triplets.AppendPure(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
 				}
 			}
 		}
@@ -165,12 +191,25 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 				Real value = submatrix(i, j);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
+					triplets.AppendPure(SparseTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
 				}
 			}
 		}
 	}
 }
+
+//! add sparse triplets to dense or sparse matrix
+void GeneralMatrixEigenSparse::AddSparseTriplets(const SparseTripletVector& otherTriplets)
+{
+	//only allowed in triplet mode:
+	CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddSparseTriplets(...): only possible in triplet mode!");
+
+	for (const SparseTriplet& triplet : otherTriplets)
+	{
+		triplets.AppendPure(triplet);
+	}
+}
+
 
 //! add (possibly) smaller factor*Transposed(Matrix) to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 //! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
@@ -189,7 +228,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, R
 				Real value = submatrix(j, i);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
+					triplets.AppendPure(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
 				}
 			}
 		}
@@ -203,7 +242,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposed(const Matrix& submatrix, R
 				Real value = submatrix(j, i);
 				if (value != 0.)
 				{
-					triplets.push_back(EigenTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
+					triplets.AppendPure(SparseTriplet((StorageIndex)(LTGrows[i] + rowOffset), (StorageIndex)(LTGcolumns[j] + columnOffset), factor*value));
 				}
 			}
 		}
@@ -223,7 +262,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixWithFactor(const Matrix& submatrix, R
 			Real value = submatrix(i, j);
 			if (value != 0.)
 			{
-				triplets.push_back(EigenTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
+				triplets.AppendPure(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
 			}
 		}
 	}
@@ -243,7 +282,8 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(const Matrix& su
 			Real value = submatrix(j, i);
 			if (value != 0.)
 			{
-				triplets.push_back(EigenTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
+				//triplets.APPEND_TO_TRIPLETS(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
+				triplets.AppendPure(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
 			}
 		}
 	}
@@ -265,21 +305,21 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix& submatrix, Inde
 
 	if ((rowOffset != 0) || (columnOffset != 0))
 	{
-		for (const EigenTriplet& item : m.GetEigenTriplets())
+		for (const SparseTriplet& item : m.GetSparseTriplets())
 		{
 			if (item.value() != 0.)
 			{
-				triplets.push_back(EigenTriplet(item.row() + (StorageIndex)rowOffset, item.col() + (StorageIndex)columnOffset, item.value()));
+				triplets.AppendPure(SparseTriplet(item.row() + (StorageIndex)rowOffset, item.col() + (StorageIndex)columnOffset, item.value()));
 			}
 		}
 	}
 	else //faster mode, no offsets ...
 	{
-		for (const EigenTriplet& item : m.GetEigenTriplets())
+		for (const SparseTriplet& item : m.GetSparseTriplets())
 		{
 			if (item.value() != 0.)
 			{
-				triplets.push_back(item); //in this case, just add the items of submatrix
+				triplets.AppendPure(item); //in this case, just add the items of submatrix
 			}
 		}
 	}
@@ -297,7 +337,7 @@ void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec, 
 			Real value = vec[i];
 			if (value != 0.)
 			{
-				triplets.push_back(EigenTriplet((StorageIndex)i, (StorageIndex)column, value));
+				triplets.AppendPure(SparseTriplet((StorageIndex)i, (StorageIndex)column, value));
 			}
 		}
 	}
@@ -308,7 +348,7 @@ void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec, 
 			Real value = vec[i];
 			if (value != 0.)
 			{
-				triplets.push_back(EigenTriplet((StorageIndex)(i+rowOffset), (StorageIndex)column, value));
+				triplets.AppendPure(SparseTriplet((StorageIndex)(i+rowOffset), (StorageIndex)column, value));
 			}
 		}
 	}
@@ -321,6 +361,18 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 
 	if (matrix.nonZeros() != 0) { matrix.setZero(); } //this should be already done in matrix.resize - could be omitted ...?
 	matrix.resize(NumberOfRows(), NumberOfColumns());
+	
+	////+++++++++++++++++++++++++++++++++++++++
+	////EXUmath::SparseTripletMatrix stm;
+	//ResizableArray<EXUmath::Triplet> sparseTriplets;
+	////pout << "here\n";
+	//for (auto t : triplets)
+	//{
+	//	sparseTriplets.Append(EXUmath::Triplet(t.row(), t.col(), t.value()));
+	//}
+	//matrix.setFromTriplets(sparseTriplets.begin(), sparseTriplets.end()); //sums up duplicates by default... (@TODO: what happens in EigenSparseMatrix::setFromTriplets(...) with (+1) + (-1) ? )
+	////+++++++++++++++++++++++++++++++++++++++
+
 	matrix.setFromTriplets(triplets.begin(), triplets.end()); //sums up duplicates by default... (@TODO: what happens in EigenSparseMatrix::setFromTriplets(...) with (+1) + (-1) ? )
 
 	SetMatrixBuiltFromTriplets(); //now the sparse matrix is finally set and ready for multiplication and factorization

@@ -14,6 +14,7 @@ solvers are described in \refSection{sec:solvers}.
 \label{sec:itemnotation}
 %
 \mysubsubsection{Common types in item descriptions}
+\label{sec:typesDescriptions}
 %
 There are certain types, which are heavily used in the description of items:
 \bi
@@ -25,7 +26,7 @@ There are certain types, which are heavily used in the description of items:
   \item \texttt{Int} $\ldots$ a (signed) integer number, which converts to '\texttt{int}' in Python, '\texttt{int}' in C++
   \item \texttt{UInt} $\ldots$ an unsigned integer number, which converts to '\texttt{int}' in Python
   \item \texttt{PInt} $\ldots$ an positive integer number (> 0), which converts to '\texttt{int}' in Python
-  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special (non-negative) integer type to represent indices of nodes, markers, ...; specifically, an unintentional conversion from one index type to the other is not possible (e.g., to convert \texttt{NodeIndex} to \texttt{MarkerIndex})
+  \item \texttt{NodeIndex, MarkerIndex, ...} $\ldots$ a special (non-negative) integer type to represent indices of nodes, markers, ...; specifically, an unintentional conversion from one index type to the other is not possible (e.g., to convert \texttt{NodeIndex} to \texttt{MarkerIndex}); see \refSection{sec:itemIndex}
   \item \texttt{String} $\ldots$ a string
   \item \texttt{ArrayIndex} $\ldots$ a list of integer numbers (either list or in some cases \texttt{numpy} arrays may be allowed)
   \item \texttt{ArrayNodeIndex} $\ldots$ a list of node indices
@@ -42,9 +43,33 @@ There are certain types, which are heavily used in the description of items:
 	\item \texttt{NumpyVector} $\ldots$ a 1D \texttt{numpy} array with real numbers (size given by according object); similar as Vector, but not accepting list
 
 	\item \texttt{Matrix3D} $\ldots$ a list of lists or \texttt{numpy} array with $3 \times 3$ real numbers
+	\item \texttt{Matrix6D} $\ldots$ a list of lists or \texttt{numpy} array with $6 \times 6$ real numbers
 	\item \texttt{NumpyMatrix} $\ldots$ a 2D \texttt{numpy} array (matrix) with real numbers (size given by according object)
 	\item \texttt{NumpyMatrixI} $\ldots$ a 2D \texttt{numpy} array (matrix) with integer numbers (size given by according object)
+	\item \texttt{MatrixContainer} $\ldots$ a versatile representation for dense and sparse matrices, see \refSection{sec:MatrixContainer} below
+  \item \texttt{PyFunctionGraphicsData} $\ldots$ a user function providing GraphicsData, see the user function description of the according object
+  \item \texttt{PyFunctionMbsScalar...} $\ldots$ a user function for the according object; the name is chosen according to the interface (arguments containing scalars, vectors, etc.); see the according user function description
+  %
 \ei
+
+\mysubsubsection{MatrixContainer} 
+\label{sec:MatrixContainer}
+The \texttt{MatrixContainer} is a versatile representation for dense and sparse matrices.
+Some functionality:
+\bi
+  \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()}
+  \item Set with dense \text{pyArray} (a numpy array) (if \texttt{useDenseMatrix} is set False, it converts into a sparse matrix, which may speed up further computations for sparse matrices!): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
+  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix; Use \texttt{CSRtoScipySparseCSR(...)} and \texttt{ ScipySparseCSRtoCSR(...)} to convert between this format and the scipy csr format; if \texttt{useDenseMatrix} is set True, it converts into a dense matrix, which may slow down computations: \texttt{mc.SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArray, useDenseMatrix = False)}
+  \item Convert matrix into dense format (slow, but helpful for debug): \texttt{mc.Convert2DenseMatrix()}
+  \item Get internal stored object: \texttt{mc.GetPythonObject()}
+  \item \mybold{Automatic type conversion}: if a function or class requests a \texttt{MatrixContainer}, such as \texttt{ObjectGenericODE2}, there are automatic type conversions from:
+  \bi
+    \item empty list: \texttt{[]}
+    \item numpy array, e.g.: \texttt{np.array([[1,2],[3,4]])}
+    \item list of lists describing matrix, e.g. (slow for larger matrices!): \texttt{[[1,2],[3,4]]}
+  \ei
+\ei
+
 %
 \mysubsubsection{States and coordinate attributes}
 The following subscripts are used to define configurations of a quantity, e.g., for a vector of displacement coordinates $\qv$:

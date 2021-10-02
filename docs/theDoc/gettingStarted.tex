@@ -79,12 +79,14 @@ The following people have contributed to Python and C++ library implementations:
 \bi
   \item Stefan Holzinger (Lie group solvers in Python)
   \item Peter Manzl (ConvexRoll Python / C++ implementation)
+  \item Joachim Sch{\"o}berl (NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
   \item Martin Sereinig (special robotics functionality)
 \ei
 
 The following people have contributed to the examples:
 \bi
-  \item Stefan Holzinger, Michael Pieber, Joachim Sch{\"o}berl, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw{\"o}lfer, Peter Manzl
+  \item Stefan Holzinger, Michael Pieber, Manuel Schieferle, Martin Knapp, Lukas March, 
+  Dominik Sponring, David Wibmer, Andreas Zw{\"o}lfer, Peter Manzl
 \ei
 -- thanks a lot! --
 %
@@ -239,14 +241,23 @@ Requirements are an according Anaconda installation.
 \ei
 For a compatible Mac OS X system, you can install the pre-compiled wheel (go to local directory). Go to the \texttt{main/dist} directory in your back terminal and type, e.g.,
 \bi
-\item[] \texttt{pip install exudyn-1.0.218-cp37-cp37m-macosx\_10\_9\_x86\_64.whl} \vspace{9pt}\\
+\item[] \texttt{pip install exudyn-1.0.218-cp37-cp37m-macosx\_10\_9\_x86\_64.whl} %\vspace{9pt}\\
 \ei
-
+%
+Alternatively, we tested on:
+\bi
+  \item Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
+  \item Anaconda (i368 based with Rosetta 2) with Python 3.8
+  \item this configuration is currently evaluated but showed general compatibility
+  \item[] $\ra$ pre-compiled wheel: \texttt{exudyn-1.1.0-cp38-cp38-macosx\_11\_0\_x86\_64.whl}
+\ei
+\vspace{9pt}
+{\bf Compile from source}:\vspace{3pt}\\
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \texttt{main} directory of your repository and type
 \bi
   \item \texttt{python setup.py bdist\_wheel}
   \item[] $\ra$ this compiles and takes approx.~5 minutes, depending on your machine
-  \item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Callsing that again will finalize linking; then run again
+  \item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Calling that again will finalize linking; then run again
   \item[] \texttt{python setup.py bdist\_wheel}
   \item[] $\ra$ this now creates the wheel (if you want to distribute) in the \texttt{dist} folder
   \item[] alternatively just call

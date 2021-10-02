@@ -216,7 +216,7 @@ simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10*100
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 8
-simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
+simulationSettings.timeIntegration.newton.numericalDifferentiation.forAE = True #True should not be used in general, slow&inaccurate!
 simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon = False
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1.e-3
 simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-8*10 #6.055454452393343e-06*0.0001 #eps^(1/3)
@@ -249,8 +249,6 @@ if solveDynamic:
 
 else:
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-8 #*100 #can be quite small; WHY?
-    simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation = False
-    simulationSettings.staticSolver.newton.useNumericalDifferentiation = False
     simulationSettings.staticSolver.verboseMode = 2
     simulationSettings.staticSolver.numberOfLoadSteps  = 20#20*2
     simulationSettings.staticSolver.loadStepGeometric = True;

@@ -1,0 +1,95 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  This is the file for the EXUDYN first tutorial example showing a simple masspoint with coordinateSpringDamper connector
+#
+# Author:   Johannes Gerstmayr
+# Date:     2019-11-15
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.itemInterface import *
+
+import numpy as np #for postprocessing
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+import sys
+sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
+
+L=0.5
+mass = 1.6          #mass in kg
+spring = 4000       #stiffness of spring-damper in N/m
+damper = 8          #damping constant in N/(m/s)
+
+u0=-0.08            #initial displacement
+v0=1                #initial velocity
+f =80               #force on mass
+x0=f/spring         #static displacement
+
+#node for 3D mass point:
+n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
+                     initialCoordinates = [u0,0,0], 
+                     initialVelocities= [v0,0,0]))
+
+#ground node
+nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
+
+#add mass point (this is a 3D object with 3 coordinates):
+massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+
+#marker for ground (=fixed):
+groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+#marker for springDamper for first (x-)coordinate:
+nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 0))
+
+#spring-damper between two marker coordinates
+nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
+                                          stiffness = spring, damping = damper)) 
+
+#add load:
+mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
+                                         load = f))
+
+# #add sensor:
+# mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
+#                            outputVariableType=exu.OutputVariableType.Force))
+
+mbs.Assemble()
+
+tEnd = 500     #end time of simulation
+h = 0.0001    #step size; leads to 1000 steps
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
+simulationSettings.timeIntegration.endTime = tEnd
+
+simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.timeIntegration.verboseMode = 1
+# simulationSettings.displayStatistics = True
+# simulationSettings.displayComputationTime = True
+
+exu.Print("Run perfSpringDamperExplicit WITHOUT CPU timing:")
+#Solve twice (with/without computation time!)
+exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+
+exu.Print("Run perfSpringDamperExplicit WITH CPU timing:")
+simulationSettings.displayStatistics = True
+simulationSettings.displayComputationTime = True
+exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+
+#evaluate final (=current) output values
+pos = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
+result = abs(pos).sum()
+exu.Print('solution of perfSpringDamperExplicit=',result)
+
+exudynTestGlobals.testResult = result
+
+
+

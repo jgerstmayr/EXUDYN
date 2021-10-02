@@ -387,7 +387,7 @@ if useGraphics:
     mbs.WaitForUserToContinue()
 
 exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
- exu.SolveDynamic(mbs, simulationSettings, showHints=True)
+#exu.SolveDynamic(mbs, simulationSettings, showHints=True)
 
 
 #%%+++++++++++++++++++++++++++++

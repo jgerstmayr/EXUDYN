@@ -313,9 +313,16 @@ oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround, 
                                         localPosition = pLeft))
 
+#add marker
+#NOTE: offset is added in order to compensate for small errors in average node position
+#      because mesh is not fully symmetric and the average node position does not match 
+#      the desired (body-fixed) joint position [0,0,0]; if not used, a small initial jump
+#      happens during simulation when the body moves to the constrained position
 mLeft = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF['oFFRFreducedOrder'], 
                                               meshNodeNumbers=np.array(nodesLeft), #these are the meshNodeNumbers
-                                              weightingFactors=weightsNodesLeft))
+                                              weightingFactors=weightsNodesLeft,
+                                              offset=-femInterface.GetNodePositionsMean(nodesLeft),
+                                             ))
 oJoint = mbs.AddObject(GenericJoint(markerNumbers=[mGround, mLeft], 
                            constrainedAxes = [1,1,1,1,1,0],
                            visualization=VGenericJoint(axesRadius=0.05*ri, axesLength=1.5*t)))

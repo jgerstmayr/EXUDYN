@@ -202,12 +202,8 @@ else:
     else:
         simulationSettings.staticSolver.numberOfLoadSteps  = 8
         simulationSettings.staticSolver.newton.relativeTolerance = 1e-7
-#        simulationSettings.staticSolver.newton.absoluteTolerance = 1e-4
-#        simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-8
-#        simulationSettings.staticSolver.newton.useNumericalDifferentiation = True
         simulationSettings.staticSolver.verboseMode = 1
         simulationSettings.displayStatistics = True
-#        simulationSettings.staticSolver.newton.newtonResidualMode = 1
         exu.SolveStatic(mbs, simulationSettings)
 
 

@@ -2,7 +2,7 @@
 # This is an EXUDYN helper file
 #
 # Details:  Use this script to continuously visualize results;
-#           command line Usage (cmd): python results.txt -updateTime=0.2 -plotMode=lines -logx -logy
+#           command line Usage (cmd): python resultsMonitor.py results.txt -updateTime=0.2 -plotMode=lines -logx -logy
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2021-01-14
@@ -53,12 +53,12 @@ fileName = '' #must be set
 runLoader = True
 nArgs = len(argList) #first argument = python file
 if nArgs < 2:
-    print("ERROR in resultsLoader: filename missing\nuse option -h for help")
+    print("ERROR in resultsMonitor: filename missing\nuse option -h for help")
     runLoader = False
 else:
     if argList[1] == '-h':
-        print('usage for resultsLoader:')
-        print('  python resultsLoader.py file.txt')
+        print('usage for resultsMonitor:')
+        print('  python resultsMonitor.py file.txt')
         print('options:')
         print('  -xcols i,j,..: comma-separated columns (NO SPACES!) to be plotted on x-axis')
         print('  -ycols i,j,..: comma-separated columns (NO SPACES!) to be plotted on y-axis')
@@ -67,7 +67,7 @@ else:
         print('  -addMarker: add marker (filled red circle) to last point in plot')
         print('  -sizex float: float = x-size of one subplot in inches (default=5)')
         print('  -sizey float: float = y-size of one subplot in inches (default=5)')
-        print('  -update float: float = update period in seconds')
+        print('  -update float: float = update period in seconds (default: 1)')
         print('  -color char: char = line color code according to pyplot, default=b (blue)')
         print('  -style char: char = line symbol according to pyplot, default="-"')
         print('example: (to be called from windows Anaconda prompt or in linux terminal in the directory where file.txt lies)')

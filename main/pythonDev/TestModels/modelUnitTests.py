@@ -27,10 +27,11 @@ class TestInterface:
 
 #this class is for interaction of test suite with examples given as (autonomous) .py file
 class ExudynTestStructure:
-    def __init__(self, useGraphics = True, performTests = False, testError = 0, testResult = 0):
+    def __init__(self, useGraphics = True, performTests = False, testError = 0, testResult = 0, testTolFact = 1):
         self.useGraphics = useGraphics
         self.testError = testError      #for regular test models (store reference solution inside)
-        self.testResult = testResult    #mini examples
+        self.testError = testError      #for regular test models (store reference solution inside)
+        self.testTolFact = testTolFact  #additional factor to raise tolerance
         self.performTests = performTests #this variable is only used for testing if example is calculated outside test mode
         self.useCorrectedAccGenAlpha = True  #always corrected
         self.useNewGenAlphaSolver = True    #active by default
@@ -133,7 +134,8 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     #tip displacements:
     u = sol[n-4];v = sol[n-3] #15.12.2019:(-1.040678127615946 -1.444419986874761); 20.10.2019: (-1.0406781266430292 -1.4444199866881322); 17.10.2019: sol= -1.040678126647053 -1.4444199866858678; #28.7.2009: -1.040678126643273, -1.444419986688082
     if testInterface.useCorrectedAccGenAlpha:
-        totalError += u+v - (-1.0611305415779122 -1.4396907464583975)  #2021-02-04: (-1.0611305415779122 -1.4396907464583975)
+        totalError += u+v - (-1.0611305415798655 -1.4396907464589017)  #2021-09-27: new JacobianODE2RHS
+        #totalError += u+v -(-1.0611305415779122 -1.4396907464583975)  #2021-02-04: (-1.0611305415779122 -1.4396907464583975)
     else:
         totalError += u+v - (-1.0391620828192676 -1.4443521331339881)  #2019-12-26: (-1.0391620828192676 -1.4443521331339881) old (before correct initial accelerations): (-1.040678127615946 -1.444419986874761)
     testInterface.exu.Print('sol dynamic=',u,v)
@@ -144,7 +146,8 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     sol = mbs.systemData.GetODE2Coordinates(); n = len(sol)
     u = sol[n-4]; v = sol[n-3]; #20.10.2019: -0.3622447299987188 -0.9941447593196007; 17.10.2019: sol= -0.3622447299990847 -0.9941447593206921; #28.7.2019: -0.3622447300008477, -0.994144759326213
     testInterface.exu.Print('sol static (standardTol)=',u,v)
-    totalError += u+v - (-0.3622447299987188 -0.9941447593196007)
+    totalError += u+v - (-0.36224473018839665 -0.9941447595447153) #2021-09-27: new JacobianODE2RHS
+    # totalError += u+v-(-0.3622447299987188 -0.9941447593196007)
 
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-14 #in order to converge to MATLAB results
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-14
@@ -155,7 +158,8 @@ def ANCFCable2DBendingTest(mbs, testInterface):
     #tip displacements: paper GerstmIschrik2008: 1Element: u=-0.362244729891,  v=-0.994144758725; 4 Elements: 0.507428715119 1.205533702233
     u = sol[n-4]; v = sol[n-3];                 #2019-12-17: -0.3622447298904951 -0.9941447587249616
     testInterface.exu.Print('sol static (tol=1e-14)=',u,v)
-    totalError += u+v - (-0.3622447298904951 -0.9941447587249616)
+    totalError += u+v - (-0.36224472989050654 -0.9941447587249747) #2021-09-27: new JacobianODE2RHS
+    # totalError += u+v-(-0.3622447298904951 -0.9941447587249616)
 
     
     #totalError -= -1.3563894893270607-2.4850981133313548 #reference solution with one element and standard settings except: gen-alpha=0.6, useModifiedNewton = False
@@ -387,7 +391,6 @@ def RigidPendulumTest(mbs, testInterface):
     simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
-    #simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
 
     #simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
     #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -652,7 +655,6 @@ def SlidingJoint2DTest(mbs, testInterface):
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
-    simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1.e-3
     simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-8 #6.055454452393343e-06*0.0001 #eps^(1/3)
@@ -669,8 +671,9 @@ def SlidingJoint2DTest(mbs, testInterface):
     error = 0
     if nRigid != -1:
         u = mbs.GetNodeOutput(nRigid, testInterface.exu.OutputVariableType.Position) #tip node
-        if testInterface.useNewGenAlphaSolver:
-            error = u[1] - (-0.14920182499994944 ) #2021-02-06: -0.14920182499994944 (1e-9 different from old solver) 
+        if testInterface.useNewGenAlphaSolver: 
+            error = u[1] - (-0.14920183348514676 ) #2021-09-27: new JacobianODE2RHS
+            #error = u[1] -(-0.14920182499994944 ) #2021-02-06: -0.14920182499994944 (1e-9 different from old solver) 
         elif testInterface.useCorrectedAccGenAlpha:
             error = u[1] - (-0.14920182666080586) #2021-02-04: -0.14920182666080586
         else:
@@ -732,7 +735,8 @@ def CartesianSpringDamperTest(mbs, testInterface):
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCartesianSpringDamper= u[0] - L
     if testInterface.useCorrectedAccGenAlpha:
-        errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407364412 #2021-02-04: 0.011834933407364412 
+        errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933406052683 #2021-09-27: new JacobianODE2RHS
+        #errorCartesianSpringDamper = uCartesianSpringDamper -0.011834933407364412 #2021-02-04: 0.011834933407364412 
     else:
         errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407594783 #15.12.2019: 0.011834933407594783; beofre 15.12.2019: 0.011834933407038783 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution
     testInterface.exu.Print('solution cartesianSpringDamper=',uCartesianSpringDamper)
@@ -801,7 +805,8 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCoordinateSpringDamper= u[0] - L
     if testInterface.useCorrectedAccGenAlpha:
-        errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933407368853 #2021-02-04: 0.011834933407368853
+        errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.01183493340619235 #2021-09-27: new JacobianODE2RHS
+        #errorCoordinateSpringDamper = uCoordinateSpringDamper -0.011834933407368853 #2021-02-04: 0.011834933407368853
     else:
         errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933406690284 #15.12.2019: 0.011834933406690284; beofre 15.12.2019: 0.011834933407047 #for 1000 steps, endtime=1; this is different from CartesianSpringDamper because of offset L (rounding errors around 1e-14)
     
@@ -871,7 +876,6 @@ def SwitchingConstraintsTest(mbs, testInterface):
     #simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
-    simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
     #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True

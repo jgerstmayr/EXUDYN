@@ -510,6 +510,36 @@ class Robot:
              'baseObject':baseObject}
         return d
     
+    #**classFunction: export kinematicTree
+    def GetKinematicTree66(self):
+        from exudyn.kinematicTree import KinematicTree66, Inertia2T66
+        
+        jointTypes = []
+        transformations = []
+        inertias = []
+        n = len(self.links)
+        for i in range(n):
+            link = self.links[i]
+            jointTypes += [link.jointType]
+            #X=RotationTranslation2T66(A=Amat[i].T, v=vVec[i])
+            preHT = link.preHT
+            Amat = HT2rotationMatrix(preHT).T #.T because of Featherstone coordinate system transformation
+            vVec = HT2translation(preHT)
+            X=RotationTranslation2T66(A=Amat, v=vVec)
+            if np.linalg.norm(link.localHT - HT0()) > 1e-15:
+                raise ValueError('GetKinematicTree66(): not implemented for links with localHT != HT0()')
+            
+            transformations += [X] #defines transformation to joint in parent link
+            J = RigidBodyInertia(mass=link.mass, inertiaTensor=link.inertia) #link.inertia around COM
+            J = J.Translated(link.COM)
+            inertias += [Inertia2T66(J)]
+        
+        KT=KinematicTree66(listOfJointTypes=jointTypes, 
+                           listOfTransformations=transformations, 
+                           listOfInertias=inertias, 
+                           gravity=self.gravity)
+        return KT
+    
     #**classFunction: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
     def GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization):
         #bodyAlpha = 1 #default value; no transparency

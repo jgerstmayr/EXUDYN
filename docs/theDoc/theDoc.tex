@@ -287,6 +287,7 @@ Johannes Gerstmayr\vspace{2cm}
 \acro{Rot}{rotation}
 \acro{2D}{two dimensions or planar}
 \acro{3D}{three dimensions or spatial}
+\acro{LTG}{local-to-global coordinate mappings (containing transformation from local object coordinate indices to global (system) coordinate indices)}
 \end{acronym}
 %use as: \ac{ODE2} %singular, or \acp for plural, \acf for repeated full name.
 
@@ -302,8 +303,11 @@ Johannes Gerstmayr\vspace{2cm}
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 \mysection{Python-C++ command interface} \label{sec:PCpp:command:interface}
-This section lists the basic interface functions which can be used to set up a \codeName\ model in Python.
+This chapter lists the basic interface functions which can be used to set up a \codeName\ model in Python.
 
+\mysubsection{General information on Python interface}
+\label{sec:generalPythonInterface}
+%
 To import the module, just include the \codeName\ module in Python (for compatibility with examples and other users, we recommend to use the 'exu' abbreviation throughout)\footnote{note that there is a second module, called exudynFast, which does deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases). To check which version you have, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}:
 \bi
   \item[] \texttt{import exudyn as exu}
@@ -344,6 +348,8 @@ Understanding the usage of functions for python object '\texttt{SystemContainer}
 %
 If you run a parameter variation (check \texttt{Examples/parameterVariationExample.py}), you may delete the created \texttt{MainSystem} \texttt{mbs} and the \texttt{SystemContainer} \texttt{SC} before creating new instances in order to avoid memory growth.
 
+\mysubsubsection{Item index}
+\label{sec:itemIndex}
 Many functions will work with node numbers ('\texttt{NodeIndex}'), object numbers ('\texttt{ObjectIndex}'), marker numbers ('\texttt{MarkerIndex}') and others. These numbers are special objects, which have been introduced in order to avoid mixing up, e.g., node and object numbers.
 For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}. For these indices, the following rules apply:
 \bi
@@ -408,6 +414,7 @@ example: (to be called from windows Anaconda prompt or in linux terminal in the 
 
 \mysection{Objects, nodes, markers, loads and sensors reference manual} \label{sec:item:reference:manual}
 This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors ({=\bf items}).
+For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{NumpyMatrix}), see \refSection{sec:typesDescriptions}.
 
 %rather large section on all items [MAIN part of the docu]:
 \input{itemDefinition}

@@ -81,8 +81,6 @@ mbs.SetPreStepUserFunction(UFswitchConnector)
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
-simulationSettings.timeIntegration.newton.useNumericalDifferentiation = False
-#simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum with switching constraints"

@@ -481,7 +481,15 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 #   dictionaryName: name displayed in dialog
 #**output: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
 def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
-    master = tk.Tk()
+    tkinterAlreadyRunning = False
+    root = -1
+    if 'tkinterRoot' in exudyn.sys:
+        root = exudyn.sys['tkinterRoot']
+        master = tk.Toplevel(root)
+        #print('EditDictionaryWithTypeInfo: tkinter already running, using toplevel')
+        tkinterAlreadyRunning = True
+    else:
+        master = tk.Tk()
     master.geometry("1024x800")
     master.lift() #brings it to front of other; not always "strong" enough
     master.attributes("-topmost", True) #puts window topmost (permanent)
@@ -489,8 +497,11 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
     master.title(dictionaryName)
     master.focus_force() #window has focus
 
-    systemScaling = master.call('tk', 'scaling') #obtains current scaling?
-    #print('display scaling=',systemScaling)
+    if tkinterAlreadyRunning:
+        systemScaling = root.tk.call('tk', 'scaling') #obtains current scaling?
+        #print('display scaling=',systemScaling)
+    else:
+        systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling
     textHeight = TkTextHeight(systemScaling)
     
     style = ttk.Style(master)
@@ -503,8 +514,11 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
     ex=TkinterEditDictionaryWithTypeInfo(parent=master, dictionaryData=dictionaryData, dictionaryTypesT=comboListsT, treeOpen=True)
     ex.pack(fill="both", expand=True)
 
-    master.mainloop()
-    
+    if not tkinterAlreadyRunning:
+        master.mainloop() #run second main loop? will crash
+    else:
+        root.wait_window(master)
+        
     return ex.modifiedDictionary
 
 
@@ -711,13 +725,26 @@ class TkinterEditDictionary(tk.Frame):
 
 #edit dictionaryData and return modified (new) dictionary
 def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
-    master = tk.Tk()
+    tkinterAlreadyRunning = False
+    root = -1
+    if 'tkinterRoot' in exudyn.sys:
+        root = exudyn.sys['tkinterRoot']
+        master = tk.Toplevel(root)
+        #print('EditDictionary: tkinter already running, using toplevel')
+        tkinterAlreadyRunning = True
+    else:
+        master = tk.Tk()
+    # master = tk.Tk()
+
     master.geometry("600x600")
     master.lift() #brings it to front of other; is not always strong enough
     master.attributes("-topmost", True) #puts window topmost (permanent)
     #master.attributes("-topmost", False) #puts window topmost (remove permanent)
-    systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling?
-    #print('display scaling=',systemScaling)
+    if tkinterAlreadyRunning:
+        systemScaling = exudyn.sys['tkinterRoot'].tk.call('tk', 'scaling') #obtains current scaling?
+        #print('display scaling=',systemScaling)
+    else:
+        systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling
     textHeight = TkTextHeight(systemScaling)
     master.title(dialogName)
     master.focus_force() #window has focus
@@ -731,7 +758,10 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     ex=TkinterEditDictionary(master, dictionaryData, dictionaryIsEditable)
     ex.pack(fill="both", expand=True)
 
-    master.mainloop()
+    if not tkinterAlreadyRunning:
+        master.mainloop() #run second main loop? will crash
+    else:
+        root.wait_window(master)
     
     if dictionaryIsEditable:
         return ex.modifiedDictionary

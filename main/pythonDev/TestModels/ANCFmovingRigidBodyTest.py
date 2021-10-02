@@ -231,7 +231,6 @@ if solveDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.3
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
-    #simulationSettings.timeIntegration.newton.useNumericalDifferentiation = True
 
     simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.timeIntegration.verboseModeFile = 0

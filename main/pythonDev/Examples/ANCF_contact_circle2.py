@@ -187,7 +187,6 @@ if solveDynamic:
 else:
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-10*100 #can be quite small; WHY?
     simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation = False
-    simulationSettings.staticSolver.newton.useNumericalDifferentiation = False
     simulationSettings.staticSolver.verboseMode = 1
     simulationSettings.staticSolver.numberOfLoadSteps  = 20*2
     simulationSettings.staticSolver.loadStepGeometric = True;

@@ -33,6 +33,11 @@ public:
 
 	ResizableMatrix positionJacobian;	//d(pos)/dq
 	ResizableMatrix rotationJacobian;	//d(omega)/dq_t
+	ResizableMatrix jacobian;	//general jacobian, e.g. for coordinate marker; ?d(Rotv123)/dq for rigid bodies?
+
+	ResizableMatrix positionJacobianDerivative;	//d(d(pos)/dq*v)/dq //depends on connector configuration!!!
+	ResizableMatrix rotationJacobianDerivative;	//d(d(omega)/dq_t*v)/dq //depends on connector configuration!!!
+	ResizableMatrix jacobianDerivative;	//general d(jacobian*v)/dq, e.g. for coordinate marker; 
 
 	//removed and replaced by vectorValue! Real value;					//general value, e.g. for coordinate marker
 	//removed and replaced by vectorValue_t! Real value_t;				//general value at velocity level, e.g. for coordinate marker
@@ -40,8 +45,6 @@ public:
 	ResizableVector vectorValue_t;		//general vector value at velocity level, e.g. for ANCF shape marker; changed from Vector to ResizableVector to avoid memory allocation
 
 	bool velocityAvailable;		//used for value/value_t, vectorValue/vectorValue_t, position/velocity, ... to determine, if velocities are available
-
-	ResizableMatrix jacobian;	//general jacobian, e.g. for coordinate marker; ?d(Rotv123)/dq for rigid bodies?
 
 	//! helper function for e.g. CMarkerBodyCable2DCoordinates:
 	const Real& GetHelper() const { return angularVelocityLocal[0]; }
@@ -51,11 +54,14 @@ public:
 //this class contains several MarkerData structures ==> derive from this class for special connectors
 class MarkerDataStructure
 {
-private:
+public:
 	static const Index numberOfMarkerData = 2;
+private:
 	MarkerData markerData[numberOfMarkerData];
 	Real t; //!< add time for user functions or time in constraints, because they do not have nodes
 	LinkedDataVector lagrangeMultipliers; //for constraint equation evaluation; WORKAROUND, in order not to access system coordinates in ComputeAlgebraicEquations
+	//ResizableVector connectorForceJac; //for computation of connector jacobian; WORKAROUND; needs to be filled by connector on ComputeODE2LHS
+
 public:
 	//! get number of marker Data structures ==> for conventional connectors it is 2, but could be different for complex joints (e.g. sliding joint)
 	Index GetNumberOfMarkerData() const { return numberOfMarkerData; }
@@ -73,6 +79,11 @@ public:
 	const LinkedDataVector& GetLagrangeMultipliers() const { return lagrangeMultipliers; }
 	//! write access to lagrangeMultipliers
 	LinkedDataVector& GetLagrangeMultipliers() { return lagrangeMultipliers; }
+
+	////! read access to connectorForceJac
+	//const ResizableVector& GetConnectorForceJac() const { return connectorForceJac; }
+	////! write access to connectorForceJac
+	//ResizableVector& GetConnectorForceJac() { return connectorForceJac; }
 };
 
 #endif

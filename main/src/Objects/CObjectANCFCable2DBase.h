@@ -43,7 +43,7 @@ public:
 	virtual bool UseReducedOrderIntegration() const { return false; }
 
 	//!  Computational function: compute mass matrix
-	virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const override;
+	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;
 
 	//!  precompute mass terms if it has not been done yet
 	virtual void PreComputeMassTerms() const;
@@ -82,8 +82,13 @@ public:
     //    return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
     //}
 
-	//! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
-	virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const;
+	//OLD: compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
+	//virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const;
+	
+	//! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) 
+	//! combined computation w.r.t. ODE2 and ODE2\_t variables jacobian has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
+	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
+		Index objectNumber, const ArrayIndex& ltg) const;
 
     //!  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override;

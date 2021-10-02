@@ -8,7 +8,9 @@ import sys
 import platform
 import setuptools
 
-from src.pythonGenerator.exudynVersion import exudynVersionString
+#from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
+file='src/pythonGenerator/exudynVersion.py'
+exec(open(file).read(), globals())
 
 
 #os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux; does not work on windows
@@ -45,6 +47,8 @@ if platform.system() == 'Linux':
 if sys.platform == 'darwin':
     isMacOS = True
     print("platform == MacOS")
+    #platform.architecture() returns '64bit'
+    #platform.processor() returns 'arm' in M1 mode and 'i386' under rosetta 2 (Intel mode)
 
 is64bits = False
 is32bits = False
@@ -165,6 +169,7 @@ ext_modules = [
                  'src/Objects/CObjectConnectorRigidBodySpringDamper.cpp',
                  'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
                  'src/Objects/CObjectConnectorSpringDamper.cpp',
+                 'src/Objects/CObjectConnectorTorsionalSpringDamper.cpp',
                  'src/Objects/CObjectContactCircleCable2D.cpp',
                  'src/Objects/CObjectContactConvexRoll.cpp',
                  'src/Objects/CObjectContactCoordinate.cpp',
@@ -356,7 +361,10 @@ class BuildExt(build_ext):
         # darwin_opts += ['-Wno-unused-variable','-Wno-missing-braces','-Wno-return-stack-address']
         darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=11.0'] #for c++17 support (not working on older MacOSX)
         c_opts['unix'] += darwin_opts + ['-Wno-inconsistent-missing-override', 
-        '-Wno-overloaded-virtual' #avoid too many warnings
+        '-Wno-overloaded-virtual', #avoid too many warnings
+        '-Wno-deprecated-declarations', #avoid too many OpenGL warnings on Big Sur
+        '-Wno-unreachable-code', #avoid too many warnings on Big Sur
+        '-Wno-unused-variable', #avoid too many warnings on Big Sur
         ]+commonCopts
         l_opts['unix'] += darwin_opts
     else:

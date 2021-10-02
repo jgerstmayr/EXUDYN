@@ -760,7 +760,7 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     referencePosition,              ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\pRefG$reference point = reference position for ground object; local position is added on top of reference position for a ground object"
 #add referenceOrientation Rotation matrix lateron!
 #
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::_None);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
@@ -866,9 +866,9 @@ V,      CP,     physicsMass,                    ,               ,       UReal,  
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,  "EXUstd::InvalidIndex",      ,       I,      "$n0$node number (type NodeIndex) for mass point"
 #
 # add dict interface for functions in a different way!
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "Jacobian is zero! return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -957,9 +957,9 @@ V,      CP,     physicsMass,                    ,               ,       UReal,  
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,  "EXUstd::InvalidIndex",      ,       I,      "$n0$node number (type NodeIndex) for mass point"
 #
 # add dict interface for functions in a different way!
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "Jacobian is zero; return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -1053,9 +1053,9 @@ V,      CP,     referencePosition,              ,               3,      Vector3D
 V,      CP,     referenceRotation,              ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       IO,     "$\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates"
 #
 # add dict interface for functions in a different way!
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "Jacobian is zero; return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -1091,7 +1091,7 @@ cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 pythonShortName = Rotor1D
-outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig= pRefG$global position vector; for interpretation see intermediate variables', 'Displacement':'$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables', 'Velocity':'$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables', 'RotationMatrix':'$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix $\LU{0b}{\Rot}$', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig= pRefG$global position vector; for interpretation see intermediate variables', 'Displacement':'$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables', 'Velocity':'$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables', 'RotationMatrix':'$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'$\theta$scalar rotation angle obtained from underlying node', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'}"
 classType = Object
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
@@ -1154,9 +1154,9 @@ V,      CP,     referencePosition,              ,               3,      Vector3D
 V,      CP,     referenceRotation,              ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       IO,     "$\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description"
 #
 # add dict interface for functions in a different way!
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "Jacobian is zero; return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -1359,11 +1359,11 @@ V,      CP,     physicsCenterOfMass,            ,               3,      Vector3D
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,  "EXUstd::InvalidIndex",     ,       I,      "$n0$node number (type NodeIndex) for rigid body node"
 #
 # add dict interface for functions in a different way!
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, bool useIndex2 = false",          CDI,    "Compute algebraic equations part of rigid body" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE",          CDI,    "Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);", , CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);", , CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 #Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
@@ -1491,9 +1491,9 @@ V,      CP,     physicsInertia,                 ,               ,       UReal,  
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,  "EXUstd::InvalidIndex",      ,       I,      "$n_0$node number (type NodeIndex) for 2D rigid body node"
 #
 # add dict interface for functions in a different way!
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "Jacobian is zero; return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -1535,7 +1535,7 @@ classDescription = "A system of $n$ second order ordinary differential equations
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
-addIncludesC = '#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11/stl.h>//for NumpyMatrix\n#include <pybind11/pybind11.h>\ntypedef py::array_t<Real> NumpyMatrix; \nclass MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+addIncludesC = '#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11/stl.h>//for NumpyMatrix\n#include <pybind11/pybind11.h>\ntypedef py::array_t<Real> NumpyMatrix; \n#include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices\nclass MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
 outputVariables = "{'Coordinates':'all \hac{ODE2} coordinates', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Coordinates_tt':'all \hac{ODE2} acceleration coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}"
 classType = Object
 equations =
@@ -1558,13 +1558,30 @@ equations =
     \mysubsubsubsection{Equations of motion}
     The equations of motion read,
     \be \label{eq_ObjectGenericODE2_EOM}
-      \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, iN,\qv,\dot \qv)
+      \Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
     \ee
-    Note that the user function $\fv_{user}(mbs, t, iN,\qv,\dot \qv)$ may be empty (=0), and \texttt{iN} represents the itemNumber (=objectNumber). 
+    Note that the user function $\fv_{user}(mbs, t, i_N,\qv,\dot \qv)$ may be empty (=0), and \texttt{iN} represents the itemNumber (=objectNumber). 
     
     In case that a user mass matrix is specified, \eq{eq_ObjectGenericODE2_EOM} is replaced with
     \be
-      \Mm_{user}(mbs, t,\qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, iN, \qv,\dot \qv)
+      \Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
+    \ee
+
+    The (internal) Jacobian $\Jm$ of \label{eq_ObjectGenericODE2_EOM} (assuming $\fv$ to be constant!) reads
+    \be
+      \Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) + 
+            f_{ODE2_t} \left(\Dm - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right) + 
+    \ee
+    Chosing $f_{ODE2} = 1$ and $f_{ODE2_t}=0$ would immediately give the jacobian of position quantities.
+    
+    If no \texttt{jacobianUserFunction} is specified, the jacobian is -- as with many objects in \codeName\ -- computed 
+    by means of numerical differentiation.
+    In case that a \texttt{jacobianUserFunction} is specified, it must represent the jacobian of the \ac{LHS} of \label{eq_ObjectGenericODE2_EOM} 
+    without $\Km$ and $\Dm$ (these matrices are added internally),
+    \be \label{eq_ObjectGenericODE2_Jac}
+      \Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
+            -f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) - 
+             f_{ODE2_t} \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right)
     \ee
     CoordinateLoads are added for the respective \hac{ODE2} coordinate on the RHS of the latter equation.
     %
@@ -1578,7 +1595,7 @@ equations =
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
@@ -1589,10 +1606,30 @@ equations =
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
       \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
-      \rowTable{\returnValue}{NumpyMatrix $\in \Rcal^{n \times n}$}{returns mass matrix for object}
+      \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{n \times n}$}{returns mass matrix for object, as exu.MatrixContainer, 
+                              numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations.}
+    \finishTable
+    \vspace{12pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{jacobianUserFunction(mbs, t, itemNumber, q, q\_t, fODE2, fODE2\_t)}
+    A user function, which computes the jacobian of the \ac{LHS} of the equations of motion, depending on current time, states of object and two
+    factors which are used to distinguish between position level and velocity level derivatives. 
+    Can be used to create any kind of mechanical system by using the object states.
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
+      \rowTable{\texttt{fODE2}}{Real}{factor to be multiplied with the position level jacobian, see \eq{eq_ObjectGenericODE2_Jac}}
+      \rowTable{\texttt{fODE2\_t}}{Real}{factor to be multiplied with the velocity level jacobian, see \eq{eq_ObjectGenericODE2_Jac}}
+      \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{n \times n}$}{returns special jacobian for object, as exu.MatrixContainer, 
+                              numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations;
+                              NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix;
+                              sparse triplets MAY NOT contain zero values!}
     \finishTable
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1622,7 +1659,7 @@ equations =
     
     #non-constant mass matrix:
     def UFmass(mbs, t, itemNumber, q, q_t): 
-        return return (q[0]+1)*M #uses mass matrix from mini example
+        return (q[0]+1)*M #uses mass matrix from mini example
     
     #non-constant mass matrix:
     def UFgraphics(mbs, itemNumber):
@@ -1678,20 +1715,24 @@ miniExample =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
 V,      CP,     nodeNumbers,                    ,               ,       ArrayNodeIndex, "ArrayIndex()",       ,       I,      "$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$node numbers which provide the coordinates for the object (consecutively as provided in this list)"
-V,      CP,     massMatrix,                     ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Mm \in \Rcal^{n \times n}$mass matrix of object in python numpy format"
-V,      CP,     stiffnessMatrix,                ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Km \in \Rcal^{n \times n}$stiffness matrix of object in python numpy format"
-V,      CP,     dampingMatrix,                  ,               ,       NumpyMatrix,"Matrix()",                       ,       I,      "$\Dm \in \Rcal^{n \times n}$damping matrix of object in python numpy format"
+V,      CP,     massMatrix,                     ,               ,       PyMatrixContainer,"PyMatrixContainer()", ,    I,      "$\Mm \in \Rcal^{n \times n}$mass matrix of object as MatrixContainer (or numpy array / list of lists)"
+V,      CP,     stiffnessMatrix,                ,               ,       PyMatrixContainer,"PyMatrixContainer()", ,    I,      "$\Km \in \Rcal^{n \times n}$stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction"
+V,      CP,     dampingMatrix,                  ,               ,       PyMatrixContainer,"PyMatrixContainer()", ,    I,      "$\Dm \in \Rcal^{n \times n}$damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction"
 V,      CP,     forceVector,                    ,               ,       NumpyVector,"Vector()",                       ,       I,      "$\fv \in \Rcal^{n}$generalized force vector added to RHS"
 V,      CP,     forceUserFunction,              ,               ,       PyFunctionVectorMbsScalarIndex2Vector, 0,     ,       IO,     "$\fv_{user} \in \Rcal^{n}$A python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below"
-V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixMbsScalarIndex2Vector, 0,     ,       IO,     "$\Mm_{user} \in \Rcal^{n\times n}$A python user function which computes the mass matrix instead of the constant mass matrix; see description below"
+V,      CP,     massMatrixUserFunction,         ,               ,       PyFunctionMatrixContainerMbsScalarIndex2Vector, 0, ,  IO,     "$\Mm_{user} \in \Rcal^{n\times n}$A python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below"
+V,      CP,     jacobianUserFunction,           ,               ,       PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar, 0, ,  IO,     "$\Jm_{user} \in \Rcal^{n\times n}$A python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times $f_{ODE2}$) and w.r.t.\ the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"
 V,      CP,     coordinateIndexPerNode,         ,               ,       ArrayIndex, "ArrayIndex()",                   ,       IR,     "this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed"
 #
 V,      C,      tempCoordinates,                ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\cv_{temp} \in \Rcal^{n}$temporary vector containing coordinates"
 V,      C,      tempCoordinates_t,              ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\dot \cv_{temp} \in \Rcal^{n}$temporary vector containing velocity coordinates"
 V,      C,      tempCoordinates_tt,             ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\ddot \cv_{temp} \in \Rcal^{n}$temporary vector containing acceleration coordinates"
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg",       CDI,    "Computational function: compute jacobian (dense or sparse mode, see parent CObject function)" 
+#
+#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type,  ,                  ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -1716,7 +1757,8 @@ F,      C,      ComputeObjectCoordinates,       ,               ,       void,   
 F,      C,      ComputeObjectCoordinates_tt,    ,               ,       void,       ,                           "Vector& coordinates_tt, ConfigurationType configuration = ConfigurationType::Current",          CDI,    "compute object acceleration coordinates composed from all nodal coordinates" 
 F,      C,      InitializeCoordinateIndices,    ,               ,       void,       ,                           ,          DI,    "initialize coordinateIndexPerNode array" 
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       ,                           "Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
-F,      C,      EvaluateUserFunctionMassMatrix, ,               ,       void,       ,                           "Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+F,      C,      EvaluateUserFunctionMassMatrix, ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+F,      C,      EvaluateUserFunctionJacobian,   ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 #superelement functions:
 Fv,     C,      HasReferenceFrame,              ,               ,       Bool,       "localReferenceFrameNode = 0; return false;", "Index& localReferenceFrameNode", CI,    "return true, if object has reference frame; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return GetNumberOfNodes();", , IC, "return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used" 
@@ -1766,9 +1808,9 @@ equations =
     %
     \mysubsubsubsection{Equations of motion}
     \be \label{eq_ObjectGenericODE1_EOM}
-      \dot \qv = \fv + \fv_{user}(mbs, t, iN, \qv)
+      \dot \qv = \fv + \fv_{user}(mbs, t, i_N, \qv)
     \ee
-    Note that the user function $\fv_{user}(mbs, t, iN, \qv)$ may be empty (=0), and that \texttt{iN} represents the itemNumber (=objectNumber). 
+    Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), and that \texttt{iN} represents the itemNumber (=objectNumber). 
 
     CoordinateLoads are added for the respective \hac{ODE1} coordinate on the RHS of the latter equation.
     %
@@ -1782,7 +1824,7 @@ equations =
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (composed from \hac{ODE1} nodal coordinates) in current configuration, without reference values}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
     \finishTable
@@ -1797,7 +1839,7 @@ equations =
     %For an example for \texttt{graphicsDataUserFunction} see ObjectGround, \refSection{sec:item:ObjectGround}.
     %\startTable{arguments /  return}{type or size}{description}
     %  \rowTable{\texttt{mbs}}{MainSystem}{provides reference to mbs, which can be used in user function to access all data of the object}
-    %  \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access}
+    %  \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access}
     % \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
     %\finishTable
     %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1856,7 +1898,7 @@ V,      CP,     coordinateIndexPerNode,         ,               ,       ArrayInd
 V,      C,      tempCoordinates,                ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\cv_{temp} \in \Rcal^{n}$temporary vector containing coordinates"
 V,      C,      tempCoordinates_t,              ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\dot \cv_{temp} \in \Rcal^{n}$temporary vector containing velocity coordinates"
 Fv,     C,      ComputeODE1RHS,                 ,               ,       void,       ,                           "Vector& ode1Rhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode1Rhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type,                     "return JacobianType::_None;", , CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE1_ODE1);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunction,              ,               ,       void,       ,                           "AccessFunctionType accessType, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
@@ -2048,10 +2090,10 @@ equations =
     
     In case that \texttt{computeFFRFterms = True}, the equations \ref{eq:ObjectFFRF:Leq} can be transformed into the equations of motion,
     \be \label{eq:ObjectFFRF:eom}
-    	\left(\Mm_{user}(mbs, t, iN, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
+    	\left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
                     {\mathrm{sym.}}{}{\LU{b}{\Mm}} \right) \ddot \qv + 
     				\mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Dm}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Km}} \qv = 
-    				\fv_{v}(\qv,\dot \qv) + \vp{\fv\indr}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv\indf} + \fv_{user}(mbs, t, iN, \qv, \dot \qv)
+    				\fv_{v}(\qv,\dot \qv) + \vp{\fv\indr}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv\indf} + \fv_{user}(mbs, t, i_N, \qv, \dot \qv)
     \ee
     in which \texttt{iN} represents the itemNumber (=objectNumber of ObjectFFRF in mbs) in the user function.
     The mass terms are given as
@@ -2065,7 +2107,7 @@ equations =
     In case that \texttt{computeFFRFterms = False}, the mass terms $\Mm\indtt, \Mm\indtr, \Mm\indtf, \Mm\indrr, 
     \Mm\indrf, \LU{b}{\Mm}$ in \eq{eq:ObjectFFRF:eom} are set to zero (and not computed) and
     the quadratic velocity vector $\fv_{v} = \Null$.
-    Note that the user functions $\fv_{user}(mbs, t, iN, \qv,\dot \qv)$ and $\Mm_{user}(mbs, t, iN, \qv,\dot \qv)$ may be empty (=0). 
+    Note that the user functions $\fv_{user}(mbs, t, i_N, \qv,\dot \qv)$ and $\Mm_{user}(mbs, t, i_N, \qv,\dot \qv)$ may be empty (=0). 
     The detailed equations of motion for this element can be found in \cite{ZwoelferGerstmayr2020}.
 
     The quadratic velocity vector follows as
@@ -2165,12 +2207,13 @@ V,      C,      tempMatrix2,                    ,               ,       Resizabl
 #for CMS: V,      CP,     modeBasis,                      ,               ,       NumpyMatrix,"Matrix()",                       ,       IO,      "$\tPhi \in \Rcal^{n \times m}$if this matrix is defined, the number of coordinates in the equations of motion is $m$ and this the mode basis matrix transforms $m$ modal displacement coordinates to $n$ nodal displacement coordinates; note that the range of $m$ is restricted to $m \in [1,m]$"
 #for CMS: V,      CP,     nodesReferencePosition,         ,               ,       NumpyMatrix,"Matrix()",                       ,       IO,      "$\Rm_f \in \Rcal^{n_r \times 3}$body-fixed 3D positions of reference nodes, stored row-by-row in the matrix; needed together with modeBasis"
 #
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, bool useIndex2 = false",          CDI,    "Compute algebraic equations part of rigid body" 
-Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE",          CDI,    "Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);", , CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return JacobianType::_None;",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#AE now in node:
+#Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, bool useIndex2 = false",          CDI,    "Compute algebraic equations part of rigid body" 
+#Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE",          CDI,    "Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}" 
+#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function);", , CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -2186,7 +2229,7 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems();",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      ,                ,       CDI,     "number of \hac{ODE2} coordinates; needed for object?" 
-Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      ,                ,       CDI,     "number of \hac{AE} coordinates; depends on node" 
+#Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      ,                ,       CDI,     "number of \hac{AE} coordinates; depends on node" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::_None;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
@@ -2568,11 +2611,12 @@ V,      C,      tempVector2,                    ,               ,       Resizabl
 #for CMS: V,      CP,     modeBasis,                      ,               ,       NumpyMatrix,"Matrix()",                       ,       IO,      "$\tPhi \in \Rcal^{n \times m}$if this matrix is defined, the number of coordinates in the equations of motion is $m$ and this the mode basis matrix transforms $m$ modal displacement coordinates to $n$ nodal displacement coordinates; note that the range of $m$ is restricted to $m \in [1,m]$"
 #for CMS: V,      CP,     nodesReferencePosition,         ,               ,       NumpyMatrix,"Matrix()",                       ,       IO,      "$\Rm\indf \in \Rcal^{n_r \times 3}$body-fixed 3D positions of reference nodes, stored row-by-row in the matrix; needed together with modeBasis"
 #
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, bool useIndex2 = false",          CDI,    "Compute algebraic equations part of rigid body" 
-Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE",          CDI,    "Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, bool useIndex2 = false",          CDI,    "Compute algebraic equations part of rigid body" 
+#Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE",          CDI,    "Compute jacobians of algebraic equations part of rigid body w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1}, \hac{AE}" 
+#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,       CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -2588,7 +2632,7 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems();",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      ,                ,       CDI,     "number of \hac{ODE2} coordinates; needed for object?" 
-Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      ,                ,       CDI,     "number of \hac{AE} coordinates; depends on node" 
+#Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      ,                ,       CDI,     "number of \hac{AE} coordinates; depends on node" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::_None;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
@@ -2796,7 +2840,7 @@ Fv,     C,      GetMassPerLength,               ,               ,       Real,   
 Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature", IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      UseReducedOrderIntegration,     ,               ,       Bool,       "return parameters.useReducedOrderIntegration;", , IC,  "access to useReducedOrderIntegration from derived class" 
 #
-#Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+#Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 #Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 #Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
@@ -2888,7 +2932,7 @@ Fv,     C,      GetMassPerLength,               ,               ,       Real,   
 Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature", IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      UseReducedOrderIntegration,     ,               ,       Bool,       "return parameters.useReducedOrderIntegration;", , IC,  "access to useReducedOrderIntegration from derived class" 
 #
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 #Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
@@ -2962,9 +3006,10 @@ V,      CP,     physicsShearStiffness,          ,               ,       UReal,  
 #V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"
 #default: V,      CP,     useReducedOrderIntegration,     ,               ,       Bool,       false,                      ,       I,      "false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 #
-Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "Matrix& massMatrix, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
+Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
 Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
@@ -3052,7 +3097,7 @@ equations =
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(mbs, t, iN, L-L_0, \Delta\! \LU{0}{\vv}\tp \vv_{f}, k, d, f_{a})
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, L-L_0, \Delta\! \LU{0}{\vv}\tp \vv_{f}, k, d, f_{a})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
@@ -3072,7 +3117,7 @@ equations =
     \startTable{arguments /  return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{deltaL}}{Real}{$L-L_0$, spring elongation}
       \rowTable{\texttt{deltaL\_t}}{Real}{$\Delta\! \LU{0}{\vv}\tp \vv_{f}$, spring velocity}
       \rowTable{\texttt{stiffness}}{Real}{copied from object}
@@ -3131,9 +3176,7 @@ V,      CP,     springForceUserFunction,        ,               ,       PyFuncti
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2+JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::_None);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Position;", ,   CI,     "provide requested markerType for connector" 
@@ -3186,7 +3229,7 @@ equations =
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      \fv_{SD} = \mathrm{UF}(mbs, t, iN, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
+      \fv_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     If \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.:
@@ -3201,7 +3244,7 @@ equations =
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{displacement}}{Vector3D}{$\Delta\! \LU{0}{\pv}$}
       \rowTable{\texttt{velocity}}{Vector3D}{$\Delta\! \LU{0}{\vv}$}
       %
@@ -3258,12 +3301,14 @@ V,      CP,     springForceUserFunction,        ,               ,       PyFuncti
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,      "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      IsPenaltyConnector,            ,               ,        Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-#Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
+Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"
+Fv,     C,      ComputeJacobianForce,           ,               ,       void,       ,                           "const MarkerDataStructure& markerData, Index objectNumber, Vector& force",          CDI,     "compute 'force' which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2" 
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                    ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Position;", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
 F,      C,      ComputeSpringForce,             ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Vector3D& vPos, Vector3D& vVel, Vector3D& fVec", CDI,    "compute spring damper force helper function" 
@@ -3310,8 +3355,8 @@ equations =
 %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-    \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
-    \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
+    \rowTable{marker m0 velocity}{$\LU{m0}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{m1}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
     \rowTable{Displacement}{$\LU{0}{\Delta\pv}$} {$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
     \rowTable{Velocity}{$\LU{0}{\Delta\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
 %definition how output variables are computed:
@@ -3336,8 +3381,8 @@ equations =
     If the springForceTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
 	$\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      \fv_{SD} = \mathrm{UF}(mbs, t, iN, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\omega}, 
-	                         stiffness, damping, rotationMarker0, rotationMarker1, offset)
+      \fv_{SD} = \mathrm{UF}(mbs, t, i_N, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\tomega}, 
+	                         \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3356,7 +3401,7 @@ equations =
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{displacement}}{Vector3D}{$\LU{J0}{\Delta\pv}$}
       \rowTable{\texttt{rotation}}{Vector3D}{$\LU{J0}{\ttheta}$}
       \rowTable{\texttt{velocity}}{Vector3D}{$\LU{J0}{\Delta\vv}$}
@@ -3453,8 +3498,8 @@ Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Ty
 #++++++++++++++
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-#Fv,     C,      GetAvailableJacobians,         ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2+JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
@@ -3469,6 +3514,164 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 F,      C,      ComputeSpringForceTorque,       ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0all, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D", CDI,    "compute spring damper force-torque helper function" 
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector6D& uLoc6D, Vector6D& vLoc6D", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 F,      C,      EvaluateUserFunctionPostNewtonStep,,            ,       void,       , "Vector& returnValue, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector& dataCoordinates, Vector6D& uLoc6D, Vector6D& vLoc6D", CDI,  "call to post Newton step user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = diameter of spring; size == -1.f means that default connector size is used"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectConnectorTorsionalSpringDamper
+classDescription = "An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system; connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (OutputVariableType.Rotation)."
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = TorsionalSpringDamper
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+outputVariables = "{'Rotation':'$\Delta\theta$relative rotation around the joint Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added', 'AngularVelocityLocal':'$\Delta\omega$scalar relative angular velocity around joint0 Z-axis', 'TorqueLocal':'$\tau$scalar joint torque around the local joint0 Z-axis'}"
+classType = Object
+equations =
+    \mysubsubsubsection{Definition of quantities}
+    \startTable{input parameter}{symbol}{description}
+    \rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
+    \rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
+    \rowTable{markerNumbers[0]}{$m0$}{global marker number m0}
+    \rowTable{markerNumbers[1]}{$m1$}{global marker number m1}
+    \rowTable{nodeNumber}{$n0$}{optional node number of a generic node (otherwise exu.InvalidIndex())}
+    \finishTable
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
+    \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
+%
+    \rowTable{marker m0 ang.\ velocity}{$\LU{m0}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
+    \rowTable{marker m1 ang.\ velocity}{$\LU{m1}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
+%definition how output variables are computed:
+    \rowTable{AngularVelocityLocal}{$\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$}{angular velocity around joint0 Z-axis}
+    \finishTable
+
+    \mysubsubsubsection{Connector forces}
+    If \texttt{activeConnector = True}, the vector spring force is computed as
+    \be
+      \tau_{SD} = k \left(\Delta\theta - v_\mathrm{off} \right) + d \,\Delta\omega + \tau_c
+    \ee
+    if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
+
+    If the springTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
+	$\tau_{SD}$ instead becomes ($t$ is current time)
+    \be
+      \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
+    \ee
+    and \texttt{iN} represents the itemNumber (=objectNumber).
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)}
+    A user function, which computes the scalar torque depending on mbs, time, local quantities 
+	(relative rotation, relative angularVelocity), which are evaluated at current time. 
+	Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+    
+	Detailed description of the arguments and local quantities:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{rotation}}{Real}{$\Delta \theta$}
+      \rowTable{\texttt{angularVelocity}}{Real}{$\Delta \omega$}
+      %
+      \rowTable{\texttt{stiffness}}{Real}{copied from object}
+      \rowTable{\texttt{damping}}{Real}{copied from object}
+      \rowTable{\texttt{offset}}{Real}{copied from object}
+      \rowTable{\returnValue}{Real}{computed torque}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #define simple cubic force for spring-damper:
+    def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
+        k = stiffness #passed as list
+        u = rotation
+        return k*u + 0.1*k*u**3
+    
+    #markerNumbers and parameters taken from mini example
+    mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                        stiffness = k, 
+                                        damping = k*0.01, 
+                                        offset = 0,
+                                        springTorqueUserFunction = UFforce))
+    \end{lstlisting}
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+miniExample =
+    #example with rigid body at [0,0,0], with torsional load
+    k=2e3
+    nBody = mbs.AddNode(RigidRxyz())
+    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+                                    nodeNumber=nBody))
+    
+    mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
+                                            localPosition = [0,0,0]))
+    mbs.AddObject(RevoluteJointZ(markerNumbers = [mGround, mBody])) #rotation around ground Z-axis
+    mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                        stiffness = k, damping = k*0.01, offset = 0))
+
+    #torque around z-axis; expect approx. phiZ = 1/k=0.0005
+    mbs.AddLoad(Torque(markerNumber = mBody, loadVector=[0,0,1])) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    
+    #check result at default integration time
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
+V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex", ,     IO,     "$n_d$node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used"
+V,      CP,     stiffness,                      ,               ,       Real,   "0.",       ,       I,      "$k$torsional stiffness [SI:Nm/rad] against relative rotation"
+V,      CP,     damping,                        ,               ,       Real,   "0.",       ,       I,      "$d$torsional damping [SI:Nm/(rad/s)]"
+V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 0; transforms joint into marker coordinates"
+V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 1; transforms joint into marker coordinates"
+V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$rotational offset considered in the spring torque calculation"
+V,      CP,     torque,                         ,               ,       Real,   "0.", ,   IO,     "$\tau_c$additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     springTorqueUserFunction,       ,               ,       PyFunctionMbsScalarIndexScalar5, 0, , IO,"A python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below"
+#V,      CP,     postNewtonStepUserFunction,     ,               ,       PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D, 0, , IO,"A python function which computes the error of the PostNewtonStep; see description below"
+#
+#++++++++++++++ for discontinuities:
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return (Index)(parameters.nodeNumber != EXUstd::InvalidIndex);",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+#unused: Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not)" 
+#++++++++++++++
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
+#Fv,     C,      GetODE2Size,                   ,               ,       Index,      ,                           ,       CDI,    "NEEDED? should be done during preprocessing ==> written in global list; number of \hac{ODE2} coordinates the connector is related to; depends on coordinates of marker objects/nodes" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorTorsionalSpringDamper';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+#for discontinuities:
+Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return (parameters.nodeNumber != EXUstd::InvalidIndex);",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",             				  ,       I,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+#non-derived functions:
+F,      C,      ComputeSpringTorque,            ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0all, Real& angle, Real& omega, Real& torque", CDI,    "compute spring damper force-torque helper function" 
+F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& angle, Real& omega", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
@@ -3521,7 +3724,7 @@ equations =
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(mbs, t, iN, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
@@ -3538,7 +3741,7 @@ equations =
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
       \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
       %
@@ -3597,8 +3800,8 @@ V,      CP,     springForceUserFunction,        ,               ,       PyFuncti
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,            ,               ,        Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2+JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
@@ -3737,7 +3940,7 @@ equations =
     \ee
     If the offsetUserFunction $\mathrm{UF}$ is defined, $\cv$ instead becomes ($t$ is current time)
     \be
-      \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(mbs, t, iN, l_\mathrm{off}) = 0
+      \cv(q_{m0}, q_{m1}) = k_{m1} \cdot q_{m1} - q_{m0} -  \mathrm{UF}(mbs, t, i_N, l_\mathrm{off}) = 0
     \ee
     The \texttt{activeConnector = True}, index 2 (velocity level) algebraic equation reads
     \be
@@ -3746,7 +3949,7 @@ equations =
     The factor $d$ in velocity level equations is zero, except if parameters.velocityLevel = True, then $d=l_\mathrm{off}$.
     If velocity level constraints are active and the velocity level offsetUserFunction\_t $\mathrm{UF}_t$ is defined, $\dot \cv$ instead becomes ($t$ is current time)
     \be
-      \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(mbs, t, iN, l_\mathrm{off}) = 0
+      \dot \cv(\dot q_{m0}, \dot q_{m1}) = k_{m1} \cdot \dot q_{m1} - \dot q_{m0} - \mathrm{UF}_t(mbs, t, i_N, l_\mathrm{off}) = 0
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     Note that the index 2 equations are used, if the solver uses index 2 formulation OR if the flag parameters.velocityLevel = True (or both).
@@ -3775,7 +3978,7 @@ equations =
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
       \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with python time
-      \rowTable{\texttt{itemNumber}}{Index}{integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
       \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
       \rowTable{\returnValue}{Real}{computed offset for given time}
     \finishTable
@@ -3891,7 +4094,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCoordinateVector
-classDescription = "A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects LTG-lists to build the according coordinate mappings."
+classDescription = "A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects \ac{LTG}-lists to build the according coordinate mappings."
 # The constraint must fulfill the condition: \be factorValue1*marker[1].value-marker[0].value - offset = 0 \ee
 cParentClass = CObjectConstraint
 mainParentClass = MainObjectConnector
@@ -4184,14 +4387,14 @@ Fv,     C,      GetNodeNumber,                  ,               ,       Index,  
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",                 ,       CI,     "data (history) variable simplifies contact switching for implicit time integration and Newton method" 
 #
-#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
 Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
 Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,      CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 F,      C,      ComputeContactForces,           ,               ,       void,       , "const MarkerDataStructure& markerData, const CObjectConnectorRollingDiscPenaltyParameters& parameters, bool computeCurrent, Vector3D& pC, Vector3D& vC, Vector3D& wLateral, Vector3D& w2, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity", CDI,    "compute contact kinematics and contact forces" 
 F,      C,      ComputeSlipForce,               ,               ,       Vector2D,   , "const CObjectConnectorRollingDiscPenaltyParameters& parameters, 	const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce", CDI,    "compute slip force vector for specific states" 
@@ -4294,7 +4497,8 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,      CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 F,      C,      ComputeContactForces,           ,               ,       void,       , "const MarkerDataStructure& markerData, const CObjectContactConvexRollParameters& parameters, Vector3D& pC, Vector3D& vC, Vector3D& fContact, Vector3D& mContact, bool allowSwitching", CDI,    "compute contact kinematics and contact forces; allowSwitching set false for Newton" 
 #
@@ -4353,8 +4557,9 @@ Fv,     C,      IsActive,                       ,               ,       Bool,   
 #computation functions:
 F,      C,      ComputeGap,                     ,               ,       Real,       ,                           "const MarkerDataStructure& markerData",       CDI,     "compute gap for given MarkerData --> done for different configurations (current, start of step, ...)" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#DELETE: Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
 Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
 Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
@@ -4412,8 +4617,8 @@ Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,   
 #computation functions:
 F,      C,      ComputeGap,                     ,               ,       void,       ,           "const MarkerDataStructure& markerData, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& gapPerSegment, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& xDirectionGap, ConstSizeVector<CObjectContactCircleCable2DmaxNumberOfSegments>& yDirectionGap",       CDI,     "compute gap for given MarkerData; done for every contact point (numberOfSegments+1) --> in order to decide contact state for every segment; in case of positive gap, the area is distance*segment_length" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
 Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
 Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
@@ -4563,7 +4768,7 @@ equations =
     which leads to the friction force due to limitation by the friction coefficient,
     \be
       f_t = \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
-          |f_t^{(lin)}| \le \mu \cdot |f_c| \\ 
+          |f_t^{(lin)}| \le \mu \cdot |f_n| \\ 
           \mu \cdot |f_n| \cdot \mathrm{Sign}(f_t^{(lin)}), \quad \mathrm{else}
           \end{cases}
     \ee
@@ -4588,11 +4793,11 @@ equations =
     The forces on the circle marker $m0$ are computed as the total sum of all
     segment contact forces, 
     \be
-      \fv_{m0} = \sum_{s_i} \fv_{s_i} 
+      \fv_{m0} = -\sum_{s_i} \fv_{s_i} 
     \ee
     and additional torques on the circle's rotation simply follow from
     \be
-      \tau_{m0} = \sum_{s_i} r \cdot f_{t_{s_i}} \eqDot
+      \tau_{m0} = -\sum_{s_i} r \cdot f_{t_{s_i}} \eqDot
     \ee
         
     During Newton iterations, the contact forces for segment $s_i$ are considered only, if 
@@ -4651,8 +4856,8 @@ Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,   
 #computation functions:
 F,      C,      ComputeGap,                     ,               ,       void,       ,           "const MarkerDataStructure& markerData, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& gapPerSegment, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& referenceCoordinatePerSegment, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& xDirectionGap, ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments>& yDirectionGap",       CDI,     "compute gap for given MarkerData; done for every contact point (numberOfSegments+1) --> in order to decide contact state for every segment; in case of positive gap, the area is distance*segment_length" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
-#Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
 Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
 Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
@@ -4724,23 +4929,23 @@ equations =
     If $[j_0,\,\ldots,\,j_2] = [1,1,1]\tp$, meaning that all translational coordinates are fixed,
     the translational index 3 constraints read ($UF_{0,1,2}(mbs, t, \pv_{par})$ is the translational part of the user function $UF$),
     \be
-      \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, iN, \pv_{par}) = \Null
+      \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} - UF_{0,1,2}(mbs, t, i_N, \pv_{par}) = \Null
     \ee
     and the translational index 2 constraints read
     \be
-      \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, iN, \pv_{par})= \Null    
+      \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} - UF_{t;0,1,2}(mbs, t, i_N, \pv_{par})= \Null    
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     If $[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp$, meaning that at least one translational coordinate is free,
     the translational index 3 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\pv}$
     \bea
-      \LU{J0}{\Delta p_k} - UF_{k}(mbs, t, iN, \pv_{par}) &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta p_k} - UF_{k}(mbs, t, i_N, \pv_{par}) &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
     and the translational index 2 constraints read for every component $k \in [0,1,2]$ of the vector $\LU{J0}{\Delta\vv}$
     \bea
-      \LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, iN, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+      \LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, i_N, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
 %
@@ -4942,6 +5147,28 @@ equations =
     \be
       \zv = \Null
     \ee
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+miniExample =
+    #example with rigid body at [0,0,0], with torsional load
+    nBody = mbs.AddNode(RigidRxyz())
+    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+                                    nodeNumber=nBody))
+    
+    mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
+                                            localPosition = [0,0,0]))
+    mbs.AddObject(RevoluteJointZ(markerNumbers = [mGround, mBody])) #rotation around ground Z-axis
+
+    #torque around z-axis; 
+    mbs.AddLoad(Torque(markerNumber = mBody, loadVector=[0,0,1])) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    
+    #check result at default integration time
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -5851,9 +6078,11 @@ V,      CP,     nodeNumber,                     ,               ,       NodeInde
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "general access to node number" 
 Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Node + Marker::Position);", ,       CI,     "return marker type (for node treatment in computation)" 
 Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
-Fv,     C,      GetPosition,                    ,               ,      void,   ,                               "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
-Fv,     C,      GetVelocity,                    ,               ,      void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
+Fv,     C,      GetPosition,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
+Fv,     C,      GetVelocity,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
 Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
+Fv,     C,      ComputeMarkerDataJacobianDerivative, ,          ,       void,       ,  "const CSystemData& cSystemData, const Vector& v, MarkerData& markerData", CDI,     "fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq" 
+Fv,     C,      ProvidesJacobianDerivative,     ,               ,       bool,       "return true;",             ,       CI,   "true = signal that analytical jacobian derivative is available"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'NodePosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,      Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"

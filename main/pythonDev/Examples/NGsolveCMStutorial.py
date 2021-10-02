@@ -160,7 +160,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #compute stress modes for postprocessing (inaccurate for coarse meshes, just for visualization):
-    if False:
+    if True:
         mat = KirchhoffMaterial(Emodulus, nu, rho)
         varType = exu.OutputVariableType.StressLocal
         #varType = exu.OutputVariableType.StrainLocal
@@ -169,10 +169,11 @@ if True: #now import mesh as mechanical model to EXUDYN
         fem.ComputePostProcessingModes(material=mat, 
                                        outputVariableType=varType)
         print("   ... needed %.3f seconds" % (time.time() - start_time))
-        SC.visualizationSettings.contour.reduceRange=False
+        SC.visualizationSettings.contour.reduceRange=True
         SC.visualizationSettings.contour.outputVariable = varType
         SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
     else:
+        varType = exu.OutputVariableType.DisplacementLocal
         SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
         SC.visualizationSettings.contour.outputVariableComponent = 0
     
@@ -326,7 +327,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solutionSettings.writeSolutionToFile = True
     simulationSettings.timeIntegration.verboseMode = 1
     #simulationSettings.timeIntegration.verboseModeFile = 3
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -363,7 +364,11 @@ if True: #now import mesh as mechanical model to EXUDYN
 
         # uTip = mbs.GetSensorValues(sensTipDispl)[1]
         # print("nModes=", nModes, ", tip displacement=", uTip)
-            
+        
+        if varType == exu.OutputVariableType.StressLocal:
+            mises = CMSObjectComputeNorm(mbs, 0, exu.OutputVariableType.StressLocal, 'Mises')
+            print('max von-Mises stress=',mises)
+        
         if useGraphics:
             SC.WaitForRenderEngineStopFlag()
             exu.StopRenderer() #safely close rendering window!

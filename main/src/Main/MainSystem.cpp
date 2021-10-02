@@ -542,7 +542,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 			MarkerDataStructure markerDataStructure;
 			const bool computeJacobian = false; //not needed for OutputVariables
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
-			GetCSystem()->ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
+			GetCSystem()->GetSystemData().ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
 
 			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableConnector(variableType, markerDataStructure, itemNumber);
 

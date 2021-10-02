@@ -134,6 +134,14 @@ protected:
 		}
 	}
 
+	//swap not really needed: same as MatrixBase
+	//! swap content of this and other matrix without copying
+	void Swap(LinkedDataMatrixBase& other)
+	{
+		std::swap(data, other.data);
+		std::swap(numberOfRows, other.numberOfRows);
+		std::swap(numberOfColumns, other.numberOfColumns);
+	}
 
 public:
 

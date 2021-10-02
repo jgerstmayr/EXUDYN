@@ -34,7 +34,6 @@ namespace PostNewtonFlags {
 	};
 }
 
-
 class CMarker;
 
 class CObjectConnector : public CObject
@@ -77,7 +76,14 @@ public:
 	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeAlgebraicEquations"); }
 
 	//! compute derivative of right-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
-	virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
+	//OLD: virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
+	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
+		Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }
+
+	//! compute 'force' which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2
+	virtual void ComputeJacobianForce(const MarkerDataStructure& markerData, Index objectNumber, Vector& force) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianForce");
+	}
 
 	//! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
 	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }

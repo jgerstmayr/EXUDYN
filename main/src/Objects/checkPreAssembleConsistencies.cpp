@@ -1125,14 +1125,21 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 
 	Index rowsStiffness = cObject->GetParameters().stiffnessMatrix.NumberOfRows();
 	Index columnsStiffness = cObject->GetParameters().stiffnessMatrix.NumberOfColumns();
+	Index rowsDamping = cObject->GetParameters().dampingMatrix.NumberOfRows();
+	Index columnsDamping = cObject->GetParameters().dampingMatrix.NumberOfColumns();
+
+	if (rowsStiffness && rowsDamping && (cObject->GetParameters().stiffnessMatrix.UseDenseMatrix() !=
+		cObject->GetParameters().dampingMatrix.UseDenseMatrix()))
+	{
+		errorString = "ObjectGenericODE2: stiffnessMatrix and dampingMatrix must be both in dense or sparse mode";
+		return false;
+	}
 	if (!(rowsStiffness == nODE2 && columnsStiffness == nODE2) && !((rowsStiffness == 0 && columnsStiffness == 0)))
 	{
 		errorString = "ObjectGenericODE2: total ODE2 coordinates of nodes is " + EXUstd::ToString(nODE2) + ", but stiffness matrix has size (" + EXUstd::ToString(rowsStiffness) + " x " + EXUstd::ToString(columnsStiffness) + ")";
 		return false;
 	}
 
-	Index rowsDamping = cObject->GetParameters().dampingMatrix.NumberOfRows();
-	Index columnsDamping = cObject->GetParameters().dampingMatrix.NumberOfColumns();
 	if (!(rowsDamping == nODE2 && columnsDamping == nODE2) && !((rowsDamping == 0 && columnsDamping == 0)))
 	{
 		errorString = "ObjectGenericODE2: total ODE2 coordinates of nodes is " + EXUstd::ToString(nODE2) + ", but damping matrix has size (" + EXUstd::ToString(rowsDamping) + " x " + EXUstd::ToString(columnsDamping) + ")";

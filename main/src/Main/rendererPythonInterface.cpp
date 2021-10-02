@@ -322,8 +322,9 @@ try:
         if guiSC != 0: #this would mean that renderer is detached
             vis=guiSC.visualizationSettings.GetDictionaryWithTypeInfo()
             guiSC.visualizationSettings.SetDictionary(exudyn.GUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))
-except:
+except Exception as exceptionVariable:
     print("edit dialog for visualizationSettings failed")
+    print(exceptionVariable) #not necessary, but can help to identify reason
 )";
 	PyProcessExecuteStringAsPython(str);
 }
@@ -332,21 +333,24 @@ except:
 
 void PyProcessShowHelpDialog()
 {
-	std::string str = R"(import tkinter as tk
-root = tk.Tk()
-root.attributes("-topmost", True) #puts window topmost (permanent)
-root.title("Help on keyboard commands and mouse")
-root.lift() #window has focus
-root.bind("<Escape>", lambda x: root.destroy())
-root.focus_force() #window has focus
-scrollW = tk.Scrollbar(root)
-textW = tk.Text(root, height = 30, width = 90)
-textW.focus_set()
-scrollW.pack(side = tk.RIGHT, fill = tk.Y)
-textW.pack(side = tk.LEFT, fill = tk.Y)
-scrollW.config(command = textW.yview)
-textW.config(yscrollcommand = scrollW.set)
-msg = """
+	std::string str = R"(
+import tkinter as tk
+import exudyn
+if 'tkinterRoot' not in exudyn.sys: #avoid crash if tkinter running
+	root = tk.Tk()
+	root.attributes("-topmost", True) #puts window topmost (permanent)
+	root.title("Help on keyboard commands and mouse")
+	root.lift() #window has focus
+	root.bind("<Escape>", lambda x: root.destroy())
+	root.focus_force() #window has focus
+	scrollW = tk.Scrollbar(root)
+	textW = tk.Text(root, height = 30, width = 90)
+	textW.focus_set()
+	scrollW.pack(side = tk.RIGHT, fill = tk.Y)
+	textW.pack(side = tk.LEFT, fill = tk.Y)
+	scrollW.config(command = textW.yview)
+	textW.config(yscrollcommand = scrollW.set)
+	msg = """
 Mouse action:
 left mouse button     ... hold and drag: move model
 left mouse button     ... click: select item
@@ -388,9 +392,9 @@ X      ... execute command; dialog may appear behind the visualization window! m
 V      ... visualization settings; dialog may appear behind the visualization window!
 ESCAPE ... close render window
 SPACE ... continue simulation
-"""
-textW.insert(tk.END, msg)
-tk.mainloop()
+	"""
+	textW.insert(tk.END, msg)
+	tk.mainloop()
 )";
 	PyProcessExecuteStringAsPython(str);
 
@@ -405,33 +409,33 @@ void PyProcessShowPythonCommandDialog()
 import exudyn
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
+if 'tkinterRoot' not in exudyn.sys: #avoid crash if tkinter running
+	commandString = ''
+	commandSet = False
+	singleCommandMainwin = tk.Tk()
+	singleCommandMainwin.focus_force() #window has focus
+	#singleCommandMainwin.lift() #brings it to front of other
+	singleCommandMainwin.attributes("-topmost", True) #puts window topmost (permanent)
+	#singleCommandMainwin.attributes("-topmost", False)#keeps window topmost, but not permanent
+	singleCommandMainwin.bind("<Escape>", lambda x: singleCommandMainwin.destroy())
 
-commandString = ''
-commandSet = False
-singleCommandMainwin = tk.Tk()
-singleCommandMainwin.focus_force() #window has focus
-#singleCommandMainwin.lift() #brings it to front of other
-singleCommandMainwin.attributes("-topmost", True) #puts window topmost (permanent)
-#singleCommandMainwin.attributes("-topmost", False)#keeps window topmost, but not permanent
-singleCommandMainwin.bind("<Escape>", lambda x: singleCommandMainwin.destroy())
+	def OnSingleCommandReturn(event): #set command string, but do not execute
+		commandString = singleCommandEntry.get()
+		print(commandString) #printout the command
+		#exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
+		try:
+			exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
+			if locals()['tempEXUDYNexecute']!=None:
+				print(locals()['tempEXUDYNexecute'])
+			singleCommandMainwin.destroy()
+		except:
+			print("Execution of command failed. check your code!")
 
-def OnSingleCommandReturn(event): #set command string, but do not execute
-    commandString = singleCommandEntry.get()
-    print(commandString) #printout the command
-    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
-    try:
-        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
-        if locals()['tempEXUDYNexecute']!=None:
-            print(locals()['tempEXUDYNexecute'])
-        singleCommandMainwin.destroy()
-    except:
-        print("Execution of command failed. check your code!")
-
-tk.Label(singleCommandMainwin, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
-singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
-singleCommandEntry.grid(row=1, column=0)
-singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
-singleCommandMainwin.mainloop()
+	tk.Label(singleCommandMainwin, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
+	singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
+	singleCommandEntry.grid(row=1, column=0)
+	singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
+	singleCommandMainwin.mainloop()
 )";
 	PyProcessExecuteStringAsPython(str);
 }
