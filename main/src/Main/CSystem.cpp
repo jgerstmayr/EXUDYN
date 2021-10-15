@@ -1883,6 +1883,8 @@ void CSystem::PostDiscontinuousIterationStep()
 void CSystem::JacobianODE2RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
 	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t)
 {
+	temp.jacobianODE2Container.SetAllMatricesZero();
+
 	ResizableVector& f0 = temp.numericalJacobianf0;
 	ResizableVector& f1 = temp.numericalJacobianf1;
 
@@ -1924,8 +1926,9 @@ void CSystem::JacobianODE2RHS(TemporaryComputationData& temp, const NumericalDif
 						if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
 						{   //*** compute object jacobian, e.g., finite element or rigid body
 							jacobianComputed = true;
-							//size set inside object
-							object->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, 
+
+							//matrix size set inside object
+							object->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp,
 								-factorODE2, -factorODE2_t, j, ltgODE2); //minus (-) because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
 							if (temp.jacobianODE2Container.UseDenseMatrix())
 							{
@@ -1934,6 +1937,9 @@ void CSystem::JacobianODE2RHS(TemporaryComputationData& temp, const NumericalDif
 							else
 							{
 								jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
+								//sparse matrix container cannot be reset in jacobian function for future implementations
+								//==>replace this by directly adding values to jacobianGM sparse triplets in object jacobian
+								temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
 							}
 
 

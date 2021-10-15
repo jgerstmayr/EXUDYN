@@ -292,6 +292,50 @@ def SolveDynamic(mbs,
 
     return success
 
+#**function: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints
+#**input:    
+#   mbs: the MainSystem containing the assembled system
+#   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
+#   useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
+#**output: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D
+#**example:
+#  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
+#  #then execute the following commands in the console (or add it to the file):
+#  [M, K, D] = exu.ComputeODE2Eigenvalues(mbs)
+#  print("M=", M)
+#  print("K=", K)
+def ComputeLinearizedSystem(mbs, 
+                            simulationSettings = exudyn.SimulationSettings(),
+                            useSparseSolver = False):
+    import numpy as np
+    #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
+    staticSolver = exudyn.MainSolverStatic()
+
+    #initialize solver with initial values
+    staticSolver.InitializeSolver(mbs, simulationSettings)
+
+    staticSolver.ComputeMassMatrix(mbs)
+    M = staticSolver.GetSystemMassMatrix()
+
+    staticSolver.ComputeJacobianODE2RHS(mbs)    #compute ODE2 part of jacobian ==> stored internally in solver
+    #staticSolver.ComputeJacobianAE(mbs)         #compute algebraic part of jacobian (not needed here...)
+    jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian
+
+    nODE2 = staticSolver.GetODE2size()
+
+    #obtain ODE2 part from jacobian == stiffness matrix
+    K = jacobian[0:nODE2,0:nODE2]
+
+    staticSolver.ComputeJacobianODE2RHS(mbs, scalarFactor=0)    #reset jacobian
+    staticSolver.ComputeJacobianODE2RHS_t(mbs)                  #compute ODE2_t part of jacobian ==> stored internally in solver
+    jacobian_t = staticSolver.GetSystemJacobian() #read out stored jacobian
+    
+    #obtain ODE2_t part from jacobian == damping matrix
+    D = jacobian[0:nODE2,0:nODE2]
+
+    return [M, K, D]
+
+
 #**function: compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see \refSection{sec:mbs:systemData}).
 #**input:    
 #   mbs: the MainSystem containing the assembled system

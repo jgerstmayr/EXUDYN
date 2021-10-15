@@ -114,10 +114,13 @@ def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
     r = np.arange(numberOfRows).reshape((int(numberOfRows/3),3))
     r = r.T.flatten()
     
-    nSparse = len(mXXYYZZ)
-    for i in range(nSparse): #for loop is slow, but works ok for 100.000 DOF
-        mXXYYZZ[i,0] = r[int(mXXYYZZ[i,0])]
-        mXXYYZZ[i,1] = r[int(mXXYYZZ[i,1])]
+    mXXYYZZ[:,0] = r[mXXYYZZ[:,0].astype(int)]
+    mXXYYZZ[:,1] = r[mXXYYZZ[:,1].astype(int)]
+
+    # nSparse = len(mXXYYZZ)
+    # for i in range(nSparse): #for loop is slow, but works ok for 100.000 DOF
+    #     mXXYYZZ[i,0] = r[int(mXXYYZZ[i,0])]
+    #     mXXYYZZ[i,1] = r[int(mXXYYZZ[i,1])]
     
 #**function: resort indices of given NGsolve vector in XXXYYYZZZ format to XYZXYZXYZ format
 def ResortIndicesOfNGvector(vXXYYZZ):
@@ -133,8 +136,9 @@ def ResortIndicesOfNGvector(vXXYYZZ):
     r = np.arange(numberOfRows).reshape((int(numberOfRows/3),3))
     r = r.T.flatten()
     
-    for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
-        vNew[r[i]] = v[i]
+    # for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
+    #     vNew[r[i]] = v[i]
+    vNew[r[:]] = v[:]
 
     return vNew
     
@@ -152,8 +156,9 @@ def ResortIndicesExudyn2NGvector(vXYZXYZ):
     r = np.arange(numberOfRows).reshape((int(numberOfRows/3),3))
     r = r.T.flatten()
     
-    for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
-        vNew[i] = v[r[i]]
+    # for i in range(numberOfRows): #for loop is slow, but works ok for 100.000 DOF
+    #     vNew[i] = v[r[i]]
+    vNew[:] = v[r[:]]
 
     return vNew
     
@@ -1647,7 +1652,7 @@ class FEMinterface:
 
 
 
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
     #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
@@ -1703,11 +1708,6 @@ class FEMinterface:
 
         #setup (linear) mechanical FE-space
         bfK += ngs.InnerProduct(sigma(ngs.Sym(ngs.Grad(u)),mu,lam), ngs.Sym(ngs.Grad(v)))*ngs.dx
-        # bfK += ngs.InnerProduct(sigma(0.5*(ngs.Grad(u)+ngs.Grad(u).trans + ngs.Grad(u).trans * ngs.Grad(u)),mu,lam), 
-        #                         ngs.Sym(ngs.Grad(v)))*ngs.dx
-        #==> use variation of Elasticity test problem, based on energy
-        #a.AssembleLinearization(...)
-        #a.Apply() ==> gives nonlinear elastic forces
         bfM += rho*u*v * ngs.dx
 
         with ngs.TaskManager():
@@ -1722,6 +1722,15 @@ class FEMinterface:
         K = csr_matrix( bfK.mat.CSR(), copy=True )
         M = csr_matrix( bfM.mat.CSR(), copy=True )
         if verbose: print("K.shape=",K.shape)
+
+        #convert csr_matrix in NGsolve to exudyn sparse CSR np.array:
+        M1 = ScipySparseCSRtoCSR(M)
+        K1 = ScipySparseCSRtoCSR(K)
+
+        nMK = M.shape[0] #get size of mass matrix; assume square matrix!
+        #NGsolve sorts indices as x0x1x2...y0y1y2...z0z1z2...., but is needed as x0y0z0x1y1z1...
+        ResortIndicesOfCSRmatrix(M1, nMK)
+        ResortIndicesOfCSRmatrix(K1, nMK)
 
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1788,15 +1797,6 @@ class FEMinterface:
         nodes = np.array(nodeList)
         elements=np.array(tetList) #unused
         trigList = surfaceTriangleList
-
-        #convert csr_matrix in NGsolve to exudyn sparse CSR np.array:
-        M1 = ScipySparseCSRtoCSR(M)
-        K1 = ScipySparseCSRtoCSR(K)
-
-        nMK = M.shape[0] #get size of mass matrix; assume square matrix!
-        #NGsolve sorts indices as x0x1x2...y0y1y2...z0z1z2...., but is needed as x0y0z0x1y1z1...
-        ResortIndicesOfCSRmatrix(M1, nMK)
-        ResortIndicesOfCSRmatrix(K1, nMK)
 
         self.nodes = {'Position':nodes}
         self.elements = [{'Name':'NGsolve','Tet4':elements}]
@@ -2502,6 +2502,149 @@ class FEMinterface:
         #np.vstack((self.massMatrix, np.array(supports))) #append supports to sparse matrix
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: create GenericODE2 object out of (linear) FEM model; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic FEM subsystem undergoing small deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
+    #**input:
+    #  mbs: multibody system to which the GenericODE2 is added
+    #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
+    def CreateLinearFEMObjectGenericODE2(self, mbs):
+        femNodes = fem.GetNodePositionsAsArray()
+        
+        #add nodes:
+        allNodeList = [] #create node list
+        for node in femNodes:
+            allNodeList += [mbs.AddNode(NodePoint(referenceCoordinates=node))]
+        
+        nRows = fem.NumberOfCoordinates()
+        Mcsr = exu.MatrixContainer()
+        Mcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetMassMatrix(sparse=True), useDenseMatrix=False)
+        # Mcsr.SetWithDenseMatrix(fem.GetMassMatrix(sparse=False), useDenseMatrix=True)
+        Kcsr = exu.MatrixContainer()
+        Kcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
+        # Kcsr.SetWithDenseMatrix(fem.GetStiffnessMatrix(sparse=False), useDenseMatrix=True)
+        
+        #now add generic body built from FEM model with mass and stiffness matrix (optional damping could be added):
+        oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = allNodeList, 
+                                                        massMatrix=Mcsr, 
+                                                        stiffnessMatrix=Kcsr,
+                                                        #forceVector=np.zeros(nRows), 
+                                                        #forceUserFunction=UFforce,
+                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color4lightred)
+                                                        ))
+        return [oGenericODE2, allNodeList]
+        
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
+    #**classFunction: create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
+    #**input:
+    #    mbs: multibody system to which the GenericODE2 is added
+    #    mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+    #    youngsModulus: Young's modulus used for mechanical model
+    #    poissonsRatio: Poisson's ratio used for mechanical model
+    #    density: density used for mechanical model
+    #    meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
+    #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
+    #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
+    #  of NETGEN/NGsolve; Thank's a lot!
+    #  download NGsolve at: https://ngsolve.org/
+    #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
+    #  note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
+    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    def CreateNonlinearFEMObjectGenericODE2NGsolve(self, mbs, mesh, 
+                                                   density, youngsModulus, poissonsRatio, 
+                                                   meshOrder = 1):
+        import ngsolve as ngs
+        if meshOrder < 1 or meshOrder > 2:
+            raise ValueError('mesh order > 1 or mesh order < 2 not supported!')
+            
+        if meshOrder == 2:
+            mesh.ngmesh.SecondOrder()
+
+        nu = poissonsRatio
+        mu  = youngsModulus / 2 / (1+nu)
+        lam = youngsModulus * nu / ((1+nu)*(1-2*nu))
+        
+        #compute Green-Lagrange (nonlinear) strain tensor from displacement field
+        def GLstrain(u):
+            #F = ngs.Id(3) + ngs.Grad(u)
+            #return 0.5*(F.trans * F - ngs.Id(3))
+            return ngs.Sym(ngs.Grad(u)) + 0.5*(ngs.Grad(u).trans * ngs.Grad(u))
+        
+        #compute 2nd PK-stress from strain
+        def Strain2Stress(eps, mu, lam):
+            return 2*mu*eps + lam*ngs.Trace(eps) * ngs.Id(eps.dims[0])
+        
+        #deformation energy acc. to St. Venant-Kirchhoff material
+        def DeformationEnergy (GLstrain, mu, lam):
+            #return 0.5*lam*(ngs.Trace(GLstrain))**2 + mu * ngs.Trace(GLstrain*GLstrain) #2*mu/lam*Det(C)**(-lam/2/mu)-1)
+            return 0.5*ngs.Trace(Strain2Stress(GLstrain,mu,lam).trans*GLstrain)
+        
+        #do not add boundary conditions here, otherwise stiffness matrix cannot be exported!
+        fes = ngs.NodalFESpace(mesh, order=meshOrder)**3
+        uu = fes.TrialFunction()
+        v = fes.TestFunction()
+    
+        a = ngs.BilinearForm(fes)
+        a += ngs.Variation(DeformationEnergy(GLstrain(uu), mu, lam).Compile()*ngs.dx)
+        #linear:
+        #a += ngs.InnerProduct(Strain2Stress(ngs.Sym(ngs.Grad(uu)),mu,lam), ngs.Sym(ngs.Grad(v)))*ngs.dx
+        
+        #define grid function to work with in nonlinear solver:
+        u = ngs.GridFunction(fes)
+        u.vec[:] = 0
+            
+        fem=FEMinterface()
+        #this is mainly needed for triangleMesh, but also creates the linearized matrices, but ok:
+        fem.ImportMeshFromNGsolve(mesh, density=density, 
+                                  youngsModulus=youngsModulus, poissonsRatio=poissonsRatio, 
+                                  meshOrder=meshOrder)
+
+        #create nodes:
+        femNodes = fem.GetNodePositionsAsArray()
+        
+        #add nodes:
+        allNodeList = [] #create node list
+        for node in femNodes:
+            allNodeList += [mbs.AddNode(NodePoint(referenceCoordinates=node))]
+        
+        nRows = fem.NumberOfCoordinates()
+        Mcsr = exu.MatrixContainer()
+        Mcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetMassMatrix(sparse=True), useDenseMatrix=False)
+        Kcsr = exu.MatrixContainer()
+        Kcsr.SetWithDenseMatrix(fem.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
+        
+        res = u.vec.CreateVector() #temporary vector
+        
+        #compute RHS of FEM object
+        def UFforce(mbs, t, itemIndex, q, q_t):
+            u.vec[:] = ResortIndicesExudyn2NGvector(np.array(q))
+            a.Apply(u.vec, res)
+            resNonlin = ResortIndicesOfNGvector(-res.FV().NumPy())
+            return resNonlin
+
+        #jacobian function for FEM object:
+        #put some of the following functions into PyMatrixContainer for higher efficiency
+        def UFjacobian(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t):
+            u.vec[:] = ResortIndicesExudyn2NGvector(np.array(q))
+            a.AssembleLinearization(u.vec)
+            Knonlinear = fODE2*csr_matrix( a.mat.CSR())#, copy=True )
+            Kexu = ScipySparseCSRtoCSR(Knonlinear)
+            nMK = Knonlinear.shape[0] #get size of mass matrix; assume square matrix!
+            ResortIndicesOfCSRmatrix(Kexu, nMK)
+            MCK = exu.MatrixContainer()
+            MCK.SetWithSparseMatrixCSR(nMK,nMK,Kexu)
+            return MCK
+        
+        #now add generic body built from FEM model with mass and stiffness matrix (optional damping could be added):
+        oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = allNodeList, 
+                                                        massMatrix=Mcsr, 
+                                                        forceUserFunction=UFforce,
+                                                        jacobianUserFunction=UFjacobian,
+                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color4lightred)
+                                                        ))
+
+        return [oGenericODE2, allNodeList]
+        
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
     #**input: 
     #  nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
@@ -3002,11 +3145,12 @@ class FEMinterface:
     #  rotationAxis:[0,1,2] = [x,y,z] provides rotation axis
     #  plotDiagram: if True, plots diagram for nEigenfrequencies befor terminating
     #  verbose: if True, shows progress of computation
+    #  useCorotationalFrame: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well
     #**output: [listFrequencies, campbellFrequencies]
     #  listFrequencies: list of computed frequencies
     #  campbellFrequencies: array of campbell frequencies per eigenfrequency of system
     def ComputeCampbellDiagram(self, terminalFrequency, nEigenfrequencies=10, frequencySteps=25, 
-                               rotationAxis=2, plotDiagram=False, verbose=False):
+                               rotationAxis=2, plotDiagram=False, verbose=False, useCorotationalFrame=False):
         from scipy.linalg import eig #eigh for symmetric matrices, positive definite
         
         #create gyroscopic terms
@@ -3025,6 +3169,9 @@ class FEMinterface:
         B = np.block([[                    K, np.zeros((nODE,nODE))],
                       [np.zeros((nODE,nODE)), -M                   ]])
     
+        factorGyro = 1
+        if useCorotationalFrame:
+            factorGyro = 2 #this is the only difference to between fixed and corotational frame
 #        terminalFrequencyCampbell = 2*np.pi*225 #rad/s
         campbellFrequencies = []
         listFrequencies = []
@@ -3034,8 +3181,8 @@ class FEMinterface:
             omega = val * terminalFrequency * 2*np.pi / frequencySteps
             if verbose:
                 print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
-            A = np.block([[omega * G, M                    ],
-                          [        M, np.zeros((nODE,nODE))]])
+            A = np.block([[factorGyro*omega * G, M                    ],
+                          [                   M, np.zeros((nODE,nODE))]])
     
         
             Amod = -np.dot(np.linalg.inv(A),B)

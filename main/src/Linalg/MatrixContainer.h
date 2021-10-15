@@ -76,7 +76,7 @@ namespace EXUmath {
 		Index NumberOfColumns() const { return numberOfColumns; }
 
 		//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-		void SetAllZero() { SetNumberOfRowsAndColumns(0, 0); sparseTriplets.SetNumberOfItems(0); }
+		void SetAllZero() {sparseTriplets.SetNumberOfItems(0); }
 
 		//! reset matrices and free memory
 		void Reset() { SetNumberOfRowsAndColumns(0, 0); sparseTriplets.SetMaxNumberOfItems(0); };
@@ -291,11 +291,12 @@ namespace EXUmath {
 			}
 		}
 
-		//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-		void SetAllZero() {
-			if (useDenseMatrix) { denseMatrix.SetAll(0); }
-			else { sparseTripletMatrix.SetAllZero(); }
-		}
+		//unused:
+		////! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
+		//void SetAllZero() {
+		//	if (useDenseMatrix) { denseMatrix.SetAll(0); }
+		//	else { sparseTripletMatrix.SetAllZero(); }
+		//}
 
 		//! set both matrices to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
 		void SetAllMatricesZero() {

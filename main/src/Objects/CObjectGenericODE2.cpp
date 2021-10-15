@@ -163,6 +163,7 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 	Index rowsStiff = parameters.stiffnessMatrix.NumberOfRows();
 	Index columnsDamp = parameters.dampingMatrix.NumberOfColumns();
 	Index rowsDamp = parameters.dampingMatrix.NumberOfRows();
+	Index nODE2 = GetNumberOfCoordinates();
 	bool addStiffnessMatrix = true;
 	bool addDampingMatrix = true;
 
@@ -177,24 +178,18 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		//massMatrixC is set with user function, chosing the correct type of matrix
-		//massMatrixC sparse/dense matrix type is set in user function!
+		//jacobian is computed in user function, chosing the correct type of matrix
+		//EvaluateUserFunctionJacobian does the correct adding to jacobianODE2 depending on sparse/dense mode
 		EvaluateUserFunctionJacobian(jacobianODE2, cSystemData->GetMainSystemBacklink(), t, objectNumber, 
 			tempCoordinates, tempCoordinates_t, factorODE2, factorODE2_t, ltg);
+		//pout << "nODE2=" << nODE2 << ", rows=" << jacobianODE2.NumberOfRows() << ", cols=" << jacobianODE2.NumberOfColumns() << "\n";
 
-
-		if (rowsStiff != 0 && jacobianODE2.NumberOfRows() != rowsStiff ||
-			jacobianODE2.NumberOfRows() != columnsStiff)
+		//checks performed only in dense mode :
+		//(in sparse mode the jacobianODE2 is a link to the sparseTriplets of the system matrix and has size 0):
+		if (jacobianODE2.UseDenseMatrix() && (jacobianODE2.NumberOfRows() != nODE2 || jacobianODE2.NumberOfColumns() != nODE2))
 		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same size as stiffnessMatrix!");
+			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return square matrix with size according to ObjectGenericODE2 coordinates!");
 		}
-
-		if (rowsDamp != 0 && jacobianODE2.NumberOfRows() != rowsDamp ||
-			jacobianODE2.NumberOfRows() != columnsDamp)
-		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same size as dampingMatrix!");
-		}
-
 	}
 	else
 	{
@@ -215,16 +210,26 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 
 	if (jacobianODE2.UseDenseMatrix())
 	{
-		if (!parameters.stiffnessMatrix.UseDenseMatrix())
+		if (!parameters.stiffnessMatrix.UseDenseMatrix() && parameters.stiffnessMatrix.NumberOfRows() != 0)
 		{
 			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!");
 		}
-		if (rowsStiff && addStiffnessMatrix) { jacobianODE2.GetInternalDenseMatrix() += factorODE2 * parameters.stiffnessMatrix.GetInternalDenseMatrix(); }
-		if (rowsDamp && addDampingMatrix) { jacobianODE2.GetInternalDenseMatrix() += factorODE2_t * parameters.dampingMatrix.GetInternalDenseMatrix(); }
+		if (rowsStiff && addStiffnessMatrix) 
+		{ 
+			//jacobianODE2.GetInternalDenseMatrix() += factorODE2 * parameters.stiffnessMatrix.GetInternalDenseMatrix(); 
+			EXUmath::FactorTimesMatrixAddTemplate< ResizableMatrix, ResizableMatrix>(factorODE2, 
+				parameters.stiffnessMatrix.GetInternalDenseMatrix(), jacobianODE2.GetInternalDenseMatrix());
+		}
+		if (rowsDamp && addDampingMatrix) 
+		{ 
+			//jacobianODE2.GetInternalDenseMatrix() += factorODE2_t * parameters.dampingMatrix.GetInternalDenseMatrix(); 
+			EXUmath::FactorTimesMatrixAddTemplate< ResizableMatrix, ResizableMatrix>(factorODE2_t, 
+				parameters.dampingMatrix.GetInternalDenseMatrix(), jacobianODE2.GetInternalDenseMatrix());
+		}
 	}
 	else
 	{
-		if (parameters.stiffnessMatrix.UseDenseMatrix())
+		if (parameters.stiffnessMatrix.UseDenseMatrix() && parameters.stiffnessMatrix.NumberOfRows() != 0)
 		{
 			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!");
 		}

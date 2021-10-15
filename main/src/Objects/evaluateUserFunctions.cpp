@@ -192,6 +192,7 @@ void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& 
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
+		//factorODE2 / factorODE2_t must be added in user function, ltg-transformation done by CopyOrAddTriplets
 		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(parameters.jacobianUserFunction((const MainSystem&)mainSystem, t, objectNumber, 
 			coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
 	}, "ObjectGenericODE2::jacobianUserFunction");

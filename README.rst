@@ -1,7 +1,7 @@
 ======
 Exudyn
 ======
-Exudyn version = 1.1.23
+Exudyn version = 1.1.26
 
 
   + *A flexible multibody dynamics systems simulation code with Python and C++*
@@ -88,13 +88,14 @@ The following people have contributed to Python and C++ library implementations:
 
 +  Stefan Holzinger (Lie group solvers in Python)
 +  Peter Manzl (ConvexRoll Python / C++ implementation)
-+  Joachim Sch\"oberl (NGsolve mesh and FE-matrices import, highly efficient eigenvector computations)
++  Joachim Sch\"oberl (NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Martin Sereinig (special robotics functionality)
 
 
 The following people have contributed to the examples:
 
-+  Stefan Holzinger, Michael Pieber, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw\"olfer, Peter Manzl
++  Stefan Holzinger, Michael Pieber, Manuel Schieferle, Martin Knapp, Lukas March, 
+  Dominik Sponring, David Wibmer, Andreas Zw\"olfer, Peter Manzl
 
 -- thanks a lot! --
 

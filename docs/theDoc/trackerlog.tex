@@ -9,16 +9,35 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.1.23, 
-  \item last change =  2021-10-01
+  \item Exudyn version = 1.1.26, 
+  \item last change =  2021-10-09
 
-  \item Number of issues = 775, 
-  \item Number of resolved issues = 687 (23 in current version), 
+  \item Number of issues = 778, 
+  \item Number of resolved issues = 690 (26 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.1.26}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0776}: {\bf MatrixContainer::SetWithSparseMatrixCSR}
+  \bi
+  \item {description: does not set number of columns and rows due to error in MatrixContainer::SetAllZero()}
+  \item   date resolved: {\bf 2021-10-09 16:53},
+date raised: 2021-10-08   \ei
+  \item {\bf Version 1.1.25}: \vspace{-6pt} 
+  resolved Issue 0767: {\bf sparse ObjectJacobianODE2}
+(extension)
+  \bi
+  \item {description: add dense and sparse interface to ObjectJacobianODE2}
+  \item   date resolved: {\bf 2021-10-09 16:53},
+date raised: 2021-09-27   \ei
+  \item {\bf Version 1.1.24}: \vspace{-6pt} 
+{\bf \color{warningRed}  resolved BUG 0775}: {\bf ObjectGenericODE2, ObjectFFRFreducedOrder}
+  \bi
+  \item {description: visualization fails if outputVariable = None}
+  \item   date resolved: {\bf 2021-10-08 17:26},
+date raised: 2021-10-08   \ei
   \item {\bf Version 1.1.23}: \vspace{-6pt} 
   resolved Issue 0773: {\bf ImportMeshFromNGsolve}
 (extension)

@@ -73,7 +73,15 @@ Real CObjectConstraint::GetCurrentAEcoordinate(Index localIndex) const
 void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
 	const ArrayIndex& meshNodeNumbers, Matrix& value) const
 { 
-	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode)) { accessType = (AccessFunctionType)((Index)accessType - (Index)AccessFunctionType::SuperElementAlternativeRotationMode); }
+	bool useAlternativeApproach = false;
+	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode))
+	{
+		useAlternativeApproach = true; //must be same as in CMarkerSuperElementRigid! alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
+		accessType = (AccessFunctionType)((Index)accessType - (Index)AccessFunctionType::SuperElementAlternativeRotationMode);
+	}
+	Index localReferenceNodeIndex; //local node number!!!
+	bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
+
 	//CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetAccessFunctionSuperElement"); 
 	switch ((Index)accessType)
 	{
@@ -84,8 +92,6 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 		value.SetAll(0.);
 
 		Matrix3D A;
-		Index localReferenceNodeIndex; //local node number!!!
-		bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
 		Index refFrameOffset = 0;
 
 		if (hasReferenceFrame)
@@ -188,8 +194,81 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 	}
 	case (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
 	{
-		CHECKandTHROWstring("CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity_qt not implemented; cannot compute jacobian for orientation");
+		//[0, A * Glocal, A*(0, ..., 0, w0*pRefTilde0*nodeJac0, 0, ..., 0, w1*pRefTilde1*nodeJac1, ...)]
+		//CHECKandTHROWstring("CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity_qt not implemented; cannot compute jacobian for orientation");
+		//break;
+
+		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, weightingMatrix must have 1 row!");
+		CHECKandTHROW(!hasReferenceFrame, "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder!");
+		CHECKandTHROW(GetODE2Size() == 3*GetNumberOfMeshNodes(), "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible if all mesh nodes have dimensionality 3!");
+		
+
+		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+		value.SetAll(0.);
+
+		//++++++++++++++++++++++++++++++++++++++
+		//compute global factor
+		Real factor = 0; //sum w_i * |pRef_i|^2
+		Matrix3D factorMatrix(3, 3, 0.);  //W in docu
+		Vector3D pRef; //mesh node local reference position
+
+		Vector3D pRef0(0);			 //this is the midpoint of the Marker, computed from reference positions
+
+		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+		{
+			pRef0 += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference);
+		}
+
+		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+		{
+			pRef = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - pRef0;
+			if (useAlternativeApproach)
+			{
+				factorMatrix -= weightingMatrix(i, 0) * RigidBodyMath::Vector2SkewMatrix(pRef) * RigidBodyMath::Vector2SkewMatrix(pRef); //negative sign!
+			}
+			else
+			{
+				factor += weightingMatrix(i, 0) * pRef.GetL2NormSquared();
+			}
+		}
+
+		if (useAlternativeApproach)
+		{
+			factorMatrix = factorMatrix.GetInverse();
+		}
+		else
+		{
+			factor = 1. / factor; //factor is now inverted
+		}
+
+		//++++++++++++++++++++++++++++++++++++++
+		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
+		{
+			//assume that the first 3 coordinates of the node are the displacement coordinates!!!
+			pRef = GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference) - pRef0;
+			//Matrix3D jac = A * RigidBodyMath::Vector2SkewMatrix(pRef);  //A must be multiplied from left!
+			Matrix3D jac = RigidBodyMath::Vector2SkewMatrix(pRef);
+			if (useAlternativeApproach)
+			{
+				jac = weightingMatrix(i, 0) * factorMatrix * jac;
+			}
+			else
+			{
+				jac = factor * weightingMatrix(i, 0) * jac;
+			}
+
+			Index offset = meshNodeNumbers[i] * 3;
+			for (Index j = 0; j < 3; j++)
+			{
+				for (Index k = 0; k < 3; k++)
+				{
+					value(j, offset + k) += jac(j, k);
+				}
+			}
+		}
+
 		break;
+
 	}
 	default:
 		CHECKandTHROWstring("CObjectSuperElement:GetAccessFunctionSuperElement illegal accessType");

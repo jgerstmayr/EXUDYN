@@ -81,10 +81,12 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 				}
 				iRow++;
 			}
+			//pout << "denseMatrix=" << denseMatrix << "\n";
 		}
 	}
-	else if (py::isinstance<py::array>(matrix)) //process empty list, which is default in python constructor
+	else if (py::isinstance<py::array>(matrix)) //process numpy array
 	{
+		//pout << "array\n";
 		useDenseMatrix = true;
 		denseMatrix = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(matrix));
 	}
@@ -107,9 +109,10 @@ void PyMatrixContainer::SetWithDenseMatrix(const py::array_t<Real>& pyArray, boo
 	else
 	{
 		useDenseMatrix = false;
-		if (pyArray.size() == 0) //process empty arrays, which leads to empty matrix, but has no dimension 2
+		if (pyArray.size() == 0) //process empty arrays, which leads to empty matrix, but has no dimension too
 		{
 			sparseTripletMatrix.SetAllZero(); //empty matrix
+			sparseTripletMatrix.SetNumberOfRowsAndColumns(0, 0);
 		}
 		else if (pyArray.ndim() == 2)
 		{
@@ -162,8 +165,9 @@ void PyMatrixContainer::SetWithSparseMatrixCSR(Index numberOfRowsInit, Index num
 			}
 			else
 			{
+				//sparseTripletMatrix.SetAllZero(); //empty matrix, but also rows and columns...
+				sparseTripletMatrix.Reset(); //empty matrix, but also rows and columns...
 				sparseTripletMatrix.SetNumberOfRowsAndColumns(numberOfRowsInit, numberOfColumnsInit);
-				sparseTripletMatrix.SetAllZero(); //empty matrix
 
 				for (Index i = 0; i < nrows; i++)
 				{
@@ -172,5 +176,25 @@ void PyMatrixContainer::SetWithSparseMatrixCSR(Index numberOfRowsInit, Index num
 			}
 		}
 		else { CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrixCSR: illegal array format!"); }
+	}
+	else 
+	{ 
+		if (useDenseMatrixInit)
+		{
+			if (numberOfColumnsInit == 0 && numberOfRowsInit == 0)
+			{
+				denseMatrix.SetNumberOfRowsAndColumns(0, 0);
+			}
+			else
+			{
+				CHECKandTHROWstring("MatrixContainer::SetWithSparseMatrixCSR: when useDenseMatrix=true, array can only be empty if number of columns=rows=0!");
+			}
+		}
+		else
+		{
+			//defines a certain matrix size, but with no triplets
+			sparseTripletMatrix.SetNumberOfRowsAndColumns(numberOfRowsInit, numberOfColumnsInit);
+			sparseTripletMatrix.SetAllZero(); //empty matrix
+		}
 	}
 }

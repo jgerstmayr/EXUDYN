@@ -374,6 +374,18 @@ public:
 		return data[row*numberOfColumns + column];
 	};
 
+	//Referencing access-operator UNCHECKED on item with index
+	T& GetUnsafe(Index index)
+	{
+		return data[index];
+	}
+
+	//Referencing const access-operator UNCHECKED on item with index
+	const T& GetUnsafe(Index index) const
+	{
+		return data[index];
+	};
+
 	//void CopyFrom(const Matrix& m, Index row1, Index col1, Index row2, Index col2, const IVector& r);
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1305,6 +1317,23 @@ namespace EXUmath {
 				}
 				result(j, i) += value;
 			}
+		}
+	}
+
+	//! generic factor times matrix computation: result += factor*matrix:
+	//! both matrices must have same shape; result must be initialized
+	template<class TMatrix, class TMatrixResult>
+	inline void FactorTimesMatrixAddTemplate(Real factor, const TMatrix& matrix, TMatrixResult& result)
+	{
+		CHECKandTHROW((matrix.NumberOfRows() == result.NumberOfRows()) &&
+			(matrix.NumberOfColumns() == result.NumberOfColumns()),
+			"FactorTimesMatrixAddTemplate(TMatrix,TMatrixResult): Size mismatch");
+
+		Real* matrixData = matrix.GetDataPointer();
+		Real* resultData = result.GetDataPointer();
+		for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++)
+		{
+			resultData[i] += factor*matrixData[i];
 		}
 	}
 

@@ -407,7 +407,8 @@ For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=['exudyn'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
     ext_modules=ext_modules,
-    setup_requires=['pybind11>=2.5.0'],
+    #setup_requires=['pybind11>=2.5.0'],
+    setup_requires=['pybind11==2.6.0'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
     license = 'BSD',

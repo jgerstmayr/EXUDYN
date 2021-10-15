@@ -186,6 +186,7 @@ def ComputeSkewMatrix(v):
 nNodesFFRF = nNodes
 nODE2FFRF = nNodes*3
 
+#the following is only working for useFFRFobject = True; with False, it represents an old mode, deactivated with newer ObjectGenericODE2! 
 useFFRFobject = True #uses ObjectFFRF instead of ObjectGenericODE2 ==> mesh nodes are indexed from 0 .. n_meshNodes-1
 decFFRFobject = 0    #adapt node numbers if useFFRFobject=True
 if useFFRFobject: decFFRFobject = 1
@@ -401,7 +402,7 @@ else:
                                                     stiffnessMatrix=Knew, 
                                                     dampingMatrix=Dnew, 
                                                     forceVector=fNew, forceUserFunction=UFforce,
-                                                    useFirstNodeAsReferenceFrame=True,
+                                                    useFirstNodeAsReferenceFrame=True, #does not exist anymore
                                                     massMatrixUserFunction=UFmassGenericODE2,
                                                     visualization=VObjectGenericODE2(triangleMesh = trigList, 
                                                                                      color=color4lightred,

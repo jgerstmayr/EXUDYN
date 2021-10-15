@@ -788,8 +788,8 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 					nodes[j] = refPos + refRot * nodes[j];
 				}
 
-				//add contour plot values to color:
-				if (EXUstd::IsOfType(cObject->GetOutputVariableTypesSuperElement(meshNodeIndex), visualizationSettings.contour.outputVariable))
+				//add contour plot values to color; may NOT be called if contour.outputVariable == None (GetOutputVariable(...) fails!)
+				if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypesSuperElement(meshNodeIndex), visualizationSettings.contour.outputVariable))
 				{
 					//Vector value;
 					cObject->GetOutputVariableSuperElement(visualizationSettings.contour.outputVariable, meshNodeIndex, ConfigurationType::Visualization, contourValue); //memory allocation!
