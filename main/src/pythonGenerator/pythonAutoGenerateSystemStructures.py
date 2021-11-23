@@ -449,7 +449,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         
     #output each parameter
     for parameter in parameterList:
-        if (parameter['lineType'].find('V') != -1) and (parameter['lineType'].find('L') == -1) and (parameter['type']!='TemporaryComputationData') and (parameter['type'].find('std::ofstream')==-1) and (parameter['type'].find('userFunction')==-1) and (parameter['type'].find('UserFunction')==-1): #only if it is a member variable; some types not printable
+        if (parameter['lineType'].find('V') != -1) and (parameter['lineType'].find('L') == -1) and (parameter['type']!='TemporaryComputationData') and (parameter['type']!='TemporaryComputationDataArray') and (parameter['type'].find('std::ofstream')==-1) and (parameter['type'].find('userFunction')==-1) and (parameter['type'].find('UserFunction')==-1): #only if it is a member variable; some types not printable
             paramStr = parameter['cplusplusName']
             typeStr = TypeConversion(parameter['type'], typeConversion)
             refChar = ''

@@ -23,6 +23,8 @@
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
 
+#include <stdio.h>
+
 //! class used to define standard colors
 namespace EXUvis {
 
@@ -414,9 +416,9 @@ namespace EXUvis {
 				//triangle1: 0A, 1B, 1A
 				if (drawSmooth)
 				{
-					normals[0] = -v0A;
-					normals[1] = -v1A;
-					normals[2] = -v1B;
+					normals[0] = v0A;
+					normals[1] = v1A;
+					normals[2] = v1B;
 					normals[0].Normalize();
 					normals[1].Normalize();
 					normals[2].Normalize();
@@ -660,11 +662,13 @@ namespace EXUvis {
 	{
 		if (nTiles == 0)
 		{
-			graphicsData.AddPoint(p, color, itemID);
+			graphicsData.AddSphere(p, color, itemID);
 		}
 		else if (draw3D)
 		{
-			DrawSphere(p, radius, color, graphicsData, itemID, nTiles);
+			Index bitTiling = TilingToBitResolution(nTiles);
+			graphicsData.AddSphere(p, color, itemID, (float)radius, bitTiling);
+			//DrawSphere(p, radius, color, graphicsData, itemID, nTiles); //slow!
 		}
 		else
 		{

@@ -128,6 +128,18 @@ void VisualizationSystemContainer::StopSimulation()
 
 }
 
+//! Renderer reports to simulation that simulation shall be interrupted
+void VisualizationSystemContainer::ForceQuitSimulation(bool flag)
+{
+	//as we do not know, which simulation is executed, all system computations are interrupted
+	for (auto item : visualizationSystems)
+	{
+		item->postProcessData->forceQuitSimulation = flag;
+	}
+
+}
+
+
 //! Renderer reports to simulation that simulation can be continued
 void VisualizationSystemContainer::ContinueSimulation()
 {

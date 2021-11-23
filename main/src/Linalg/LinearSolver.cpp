@@ -509,6 +509,9 @@ void GeneralMatrixEigenSparse::MultMatrixTransposedVector(const Vector& x, Vecto
 	}
 }
 
+//Index TStimer1;
+//TimerStructureRegistrator TSRtimer1("timer1", TStimer1, globalTimers);
+
 //! after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
 void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 {
@@ -536,10 +539,12 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 	Eigen::VectorXd x;
 	x = solver.solve(b);
 
+	//STARTGLOBALTIMER(TStimer1);
 	for (Index i = 0; i < n; i++)
 	{
 		solution[i] = x[i];
 	}
+	//STOPGLOBALTIMER(TStimer1);
 }
 
 //! return a dense matrix from any other matrix: requires a copy - SLOW!

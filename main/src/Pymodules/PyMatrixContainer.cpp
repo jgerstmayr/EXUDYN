@@ -69,7 +69,7 @@ PyMatrixContainer::PyMatrixContainer(const py::object& matrix)
 					denseMatrix = ResizableMatrix(nRows, nCols);
 					isInitialized = true;
 				}
-				else if (nCols != pylist2.size())
+				else if (nCols != (Index)pylist2.size())
 				{
 					CHECKandTHROWstring("MatrixContainer: list of lists: number of floats must be same in all sub-lists");
 				}

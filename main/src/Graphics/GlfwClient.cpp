@@ -83,6 +83,9 @@ GLuint GlfwRenderer::bitmapFontListBase;			//!< starting index for GLlists for f
 ResizableArray<GLubyte> GlfwRenderer::charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 #endif
 
+GLuint GlfwRenderer::spheresListBase;			//!< starting index for GLlists for spheres
+
+
 ResizableArray<GraphicsData*>* GlfwRenderer::graphicsDataList = nullptr;
 //GraphicsData* GlfwRenderer::data = nullptr;
 VisualizationSettings* GlfwRenderer::visSettings = nullptr;
@@ -133,6 +136,24 @@ void GlfwRenderer::ShowMessage(const STDstring& str, Real timeout)
 	EXUstd::ReleaseSemaphore(showMessageSemaphore); 
 }
 
+void GlfwRenderer::window_close_callback(GLFWwindow* window)
+{
+	if (PyGetRendererCallbackLock()) { return; }
+
+	basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
+	basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
+
+	//glfwSetWindowShouldClose(window, GL_TRUE);
+	glfwSetWindowShouldClose(window, GL_FALSE);
+	stopRenderer = true;
+	//FinishRunLoop(); //shut down similar to StopRenderer(), but called from renderer thread ...
+
+	//OLD
+	//glfwSetWindowShouldClose(window, GLFW_FALSE); //do not close ....
+	//if (PyGetRendererCallbackLock()) { return; }
+	//ShowMessage("PRESS ESC or Q to close window!", 5);
+
+}
 
 void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -146,13 +167,15 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
-		basicVisualizationSystemContainer->StopSimulation();
+		basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
+		basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
 		
 		//this leads to problems when closing:
 		//std::this_thread::sleep_for(std::chrono::milliseconds(200)); //give thread time to finish the stop simulation command
 		//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 
-		glfwSetWindowShouldClose(window, GL_TRUE);
+		stopRenderer = true;
+		//glfwSetWindowShouldClose(window, GL_TRUE);
 
 		return; //don't process keys or call user function
 	}
@@ -592,7 +615,7 @@ void GlfwRenderer::ZoomAll()
 					pmin[i] = EXUstd::Minimum(item.point[i], pmin[i]);
 				}
 			}
-			for (auto item : data->glPoints)
+			for (auto item : data->glSpheres)
 			{
 				for (Index i = 0; i < 3; i++)
 				{
@@ -628,7 +651,7 @@ void GlfwRenderer::ZoomAll()
 
 		if (graphicsDataList->NumberOfItems() == 0 ||
 			((*graphicsDataList)[0]->glCirclesXY.NumberOfItems() == 0 && (*graphicsDataList)[0]->glLines.NumberOfItems() == 0
-				&& (*graphicsDataList)[0]->glPoints.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0
+				&& (*graphicsDataList)[0]->glSpheres.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0
 			&& (*graphicsDataList)[0]->glTriangles.NumberOfItems() == 0))
 		{
 			maxSceneSize = 1;
@@ -1045,6 +1068,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 		PySetRendererCallbackLock(false); //reset callback lock if still set from earlier run (for safety ...)
 
 		basicVisualizationSystemContainer->UpdateMaximumSceneCoordinates(); //this is done to make OpenGL zoom and maxSceneCoordinates work
+		basicVisualizationSystemContainer->ForceQuitSimulation(false); //reset flag if set from earlier simulations
 
 		rendererError = 0; 
 
@@ -1140,7 +1164,7 @@ void GlfwRenderer::StopRenderer()
 		//not needed as called via backlink to GLFWrenderer : basicVisualizationSystemContainer->SetVisualizationIsRunning(false); //no further WaitForUserToContinue or GraphicsDataUpdates
 
 		stopRenderer = true;
-		glfwSetWindowShouldClose(window, 1);
+		glfwSetWindowShouldClose(window, GL_TRUE);
 
 		if (useMultiThreadedRendering)
 		{
@@ -1287,6 +1311,9 @@ void GlfwRenderer::InitCreateWindow()
 
 	InitFontBitmap(fontSize);
 	if (verboseRenderer) { PrintDelayed("InitFontBitmap(...) successful"); }
+
+	InitGLlists();
+	if (verboseRenderer) { PrintDelayed("InitGLlists(...) successful"); }
 
 	//+++++++++++++++++++++++++++++++++
 	//depending on flags, do some changes to window
@@ -1925,28 +1952,63 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 			glLineWidth(visSettings->openGL.lineWidth);
 			if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
 
-			for (const GLPoint& item : data->glPoints)
+			if (visSettings->openGL.showFaces)
+			{
+				if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
+				glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+			}
+
+			for (const GLSphere& item : data->glSpheres)
 			{
 				if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
-				glBegin(GL_LINES);
-				if (!highlight)
+
+				if (!visSettings->openGL.showFaces || item.resolution < 1 || item.radius <= 0.f)
 				{
-					glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+					glBegin(GL_LINES);
+					if (!highlight)
+					{
+						glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+					}
+					else
+					{
+						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+					}
+					//plot point as 3D cross
+					glVertex3f(item.point[0] + d, item.point[1], item.point[2]);
+					glVertex3f(item.point[0] - d, item.point[1], item.point[2]);
+					glVertex3f(item.point[0], item.point[1] + d, item.point[2]);
+					glVertex3f(item.point[0], item.point[1] - d, item.point[2]);
+					glVertex3f(item.point[0], item.point[1], item.point[2] + d);
+					glVertex3f(item.point[0], item.point[1], item.point[2] - d);
+
+					glEnd();
 				}
 				else
 				{
-					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-					else { glColor4fv(highlightColor2.GetDataPointer()); }
-				}
-				//plot point as 3D cross
-				glVertex3f(item.point[0] + d, item.point[1], item.point[2]);
-				glVertex3f(item.point[0] - d, item.point[1], item.point[2]);
-				glVertex3f(item.point[0], item.point[1] + d, item.point[2]);
-				glVertex3f(item.point[0], item.point[1] - d, item.point[2]);
-				glVertex3f(item.point[0], item.point[1], item.point[2] + d);
-				glVertex3f(item.point[0], item.point[1], item.point[2] - d);
+					//use GLlists based spheres
+					if (!highlight)
+					{
+						glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+					}
+					else
+					{
+						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+					}
 
-				glEnd();
+					glPushMatrix();
+					glTranslatef(item.point[0], item.point[1], item.point[2]);
+					glScalef(item.radius, item.radius, item.radius);
+
+					//glListBase(spheresListBase + EXUstd::Minimum(item.resolution, maxSpheresLists-1); //assign base of string list, 32 MUST be smallest value
+					glCallList(spheresListBase + EXUstd::Minimum(item.resolution, maxSpheresLists - 1));
+					glPopMatrix();
+				}
+			}
+			if (visSettings->openGL.showFaces) //now turn off lighting for lines and texts
+			{
+				if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces
 			}
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

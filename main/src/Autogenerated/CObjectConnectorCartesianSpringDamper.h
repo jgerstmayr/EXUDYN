@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-30  09:50:28 (last modified)
+* @date         2021-11-14  14:42:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -81,6 +81,12 @@ public: // AUTO:
     virtual CObjectConnectorCartesianSpringDamperParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CObjectConnectorCartesianSpringDamperParameters& GetParameters() const { return parameters; }
+
+    //! AUTO:  return true, if object has a computation user function
+    virtual bool HasUserFunction() const override
+    {
+        return (parameters.springForceUserFunction!=0);
+    }
 
     //! AUTO:  default function to return Marker numbers
     virtual const ArrayIndex& GetMarkerNumbers() const override

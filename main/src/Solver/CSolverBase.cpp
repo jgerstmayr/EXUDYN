@@ -40,7 +40,7 @@ namespace py = pybind11;	//for py::object
 #include "ngs-core-master/ngs_core.hpp"
 #include <thread>         // std::thread
 #include <mutex>          // std::mutex, std::unique_lock, std::defer_lock
-using namespace ngstd;
+//using namespace ngstd;
 #endif
 
 //! initialize all data,it,conv; set/compute initial conditions (solver-specific!); initialize output files
@@ -256,8 +256,6 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	data.tempODE1F1.SetNumberOfItems(data.nODE1);		//temporary vector for ODE1 Jacobian
 	//data.tempODE1.SetNumberOfItems(data.nODE1);			//temporary vector for ODE1 quantities
 
-	data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
-
 	//temp. structure to store start of discontinous iteration state:
 	//  done in CleanUpMemory(): data.startOfDiscIteration.Reset();
 	data.startOfStepStateAAlgorithmic.SetNumberOfItems(data.nODE2);
@@ -279,8 +277,44 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 		PyError("MainSolverBase::InitializeSolverData: NewtonSettings.newtonResidualMode: unsupported mode"); 
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//parallelization started
+	Index taskmanagerNumthreads = 1;
 
+#ifdef USE_NGSOLVE_TASKMANAGER
+	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
+	Index nThreads = simulationSettings.numberOfThreads;
+	//pout << "numThreads before init=" << ngstd::TaskManager::GetNumThreads() << "\n";
+	if (nThreads > 1)
+	{
+		//verboseMode not defined at this point ==> this part needs to move to initialization of solver!
+		//VerboseWrite(1, STDstring("TaskManager::SetNumThreads = ") + EXUstd::ToString(simulationSettings.numberOfThreads) + "\n");
+		ngstd::TaskManager::SetNumThreads(simulationSettings.numberOfThreads);
+
+		//for checking where time is lost
+		//TaskManager::SetPajeTrace(true);
+		//PajeTrace::SetMaxTracefileSize(100000000);
+
+		taskmanagerNumthreads = ngstd::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+		//VerboseWrite(1, "EnterTaskManager with " + EXUstd::ToString(taskmanagerNumthreads) + " threads\n");
+		VerboseWrite(0, STDstring("Enter TaskManager with ") + EXUstd::ToString(ngstd::TaskManager::GetNumThreads()) + " threads\n");
+	}
+	else
+	{
+		//this is needed to set back number of threads to 0, which otherwise causes that CSystem functions are still using parallel mode if there was a parallel run before
+		ngstd::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
+		taskmanagerNumthreads = ngstd::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+		ngstd::ExitTaskManager(taskmanagerNumthreads);
+	}
+	//pout << "numThreads after init=" << ngstd::TaskManager::GetNumThreads() << "\n";
+
+#endif
+	data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
+	data.tempCompDataArray.EraseData();		//totally reset; for safety for now!
+	data.tempCompDataArray.SetNumberOfItems(taskmanagerNumthreads);
 }
+
+
 
 //! set/compute initial conditions (solver-specific!); called from InitializeSolver()
 void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -372,39 +406,19 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 
 }
 
-//! specific call to the start solver
-bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+void CSolverBase::NGsolveMTtest()
 {
-
-#ifdef USE_NGSOLVE_TASKMANAGER
-	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
-	Index nThreads = simulationSettings.numberOfThreads;
-	if (nThreads > MAX_NUMBER_OF_THREADS)
-	{
-		pout << "\nmaximum number of threads=" << MAX_NUMBER_OF_THREADS << "\n"; //always printed, as it anyway leads to an exception
-		CHECKandTHROW(nThreads <= MAX_NUMBER_OF_THREADS,
-			"Solver::SolveSteps(...): number of threads must be smaller or equal to maximum number of threads");
-	}
-	TaskManager::SetNumThreads(simulationSettings.numberOfThreads);
-	//std::cout << "TaskManager::SetNumThreads = " << simulationSettings.numberOfThreads << "\n";
-	Index taskmanagerNumthreads = 0;
-
-	//TaskManager::SetPajeTrace(true);
-	//PajeTrace::SetMaxTracefileSize(100000000);
-
-	taskmanagerNumthreads = EnterTaskManager();
-	//std::cout << "EnterTaskManager = " << taskmanagerNumthreads << "\n";
-
+	/*
 	size_t n = 100;
 	const int m = 10;
 	int loop = (int)(1e7 / m);
 	double gflop = (1.*n*m*loop) / 1.e9; //number of operations in 10^9 units
 
 							   //for (size_t n = 10; n <= 10000; n *= 10)
-	Array<double> res(n);
+	ngstd::Array<double> res(n);
 	std::mutex mtx;           // mutex for critical section
 
-	ngstd::ParallelFor(n, [&res,&m,&mtx,this](size_t i)
+	ngstd::ParallelFor(n, [&res, &m, &mtx, this](size_t i)
 		//for (i=1; i <= n; i++)
 	{
 		//std::unique_lock<std::mutex> lck(mtx, std::defer_lock);
@@ -438,9 +452,20 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 		}
 		res[8] += prod + sum + sum2;
 	}); //ParallelFor
+	*/
+}
 
-#endif
 
+//! specific call to the start solver
+bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+
+	if (computationalSystem.GetPostProcessData()->forceQuitSimulation)
+	{
+		pout << "NOTE: Simulation stopped by user\n";
+		pout << "      (to deactivate stop flag, re-start renderer or SetRenderEngineStopFlag(False)\n";
+		return false; //no success because stopped
+	}
 	bool success = true; //local success variable
 	SolverExceptionHandling([&]
 	{
@@ -450,8 +475,6 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 	globalTimers.Reset();
 	timer.Reset(simulationSettings.displayComputationTime);
 	timer.total = -EXUstd::GetTimeInSeconds();
-//#define maxThreads 16 //leads to crash. Why? atomic variables, visualization/prostprocessdata? python?
-//#pragma omp parallel num_threads(maxThreads)
 
 	if (success)
 	{
@@ -469,11 +492,6 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 
 	output.finishedSuccessfully = success;
 
-#ifdef USE_NGSOLVE_TASKMANAGER
-	//std::cout << "ExitTaskManager\n";
-	ExitTaskManager(taskmanagerNumthreads);
-#endif
-
 	return success;
 }
 
@@ -482,6 +500,15 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 //! main solver part: calls multiple InitializeStep(...)/PerformStep(...); do step reduction if necessary; return true if success, false else
 void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+#ifdef USE_NGSOLVE_TASKMANAGER
+	Index nThreads = simulationSettings.numberOfThreads;
+	if (nThreads > 1 && ngstd::TaskManager::GetNumThreads() > 1)
+	{
+		VerboseWrite(1, "Exit TaskManager\n");
+		ngstd::ExitTaskManager(ngstd::TaskManager::GetNumThreads());
+	}
+#endif
+
 	if (IsVerboseCheck(1))
 	{
 		if (computationalSystem.GetPostProcessData()->stopSimulation)
@@ -497,15 +524,16 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		if (simulationSettings.displayComputationTime) //computation statistics
 		{
 			VerboseWrite(1, timer.ToString());
-#ifdef USEGLOBALTIMERS
+		}
+		if (simulationSettings.displayGlobalTimers) //contact, etc.
+		{
 			STDstring sGlobal;
 			sGlobal = globalTimers.ToString();
 			if (sGlobal.size())
 			{
-				sGlobal = "global timings:\n" + sGlobal + "\n";
+				sGlobal = "special timers:\n" + sGlobal + "\n";
 				VerboseWrite(1, sGlobal);
 			}
-#endif
 		}
 		if (simulationSettings.displayStatistics)
 		{
@@ -743,12 +771,15 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	Real t = computationalSystem.GetSystemData().GetCData().GetCurrent().GetTime();
+	Real tCPU = EXUstd::GetTimeInSeconds();
+	Real timeDelay = 2.; //print output every 2 seconds
+	if (tCPU - output.cpuStartTime > 3600) { timeDelay = 30; }
 
 	//output step information to console and solverFile
-	bool printFile = ((output.verboseModeFile == 1) && ((EXUstd::GetTimeInSeconds() - output.cpuLastTimePrinted >= 2)
-		|| it.currentTime + 1e-10>=it.endTime )) || (output.verboseModeFile >= 2);
-	bool printConsole = ((output.verboseMode == 1) && ((EXUstd::GetTimeInSeconds() - output.cpuLastTimePrinted >= 2)
-		|| it.currentTime + 1e-10 >= it.endTime)) || (output.verboseMode >= 2);
+	bool printFile = ((output.verboseModeFile == 1) && ((tCPU - output.cpuLastTimePrinted >= timeDelay)
+		|| it.currentTime + 1e-10>=it.endTime )) || (output.verboseModeFile >= timeDelay);
+	bool printConsole = ((output.verboseMode == 1) && ((tCPU - output.cpuLastTimePrinted >= timeDelay)
+		|| it.currentTime + 1e-10 >= it.endTime)) || (output.verboseMode >= timeDelay);
 
 	if (simulationSettings.timeIntegration.simulateInRealtime)
 	{
@@ -766,7 +797,11 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	if (printFile || printConsole)
 	{
 		STARTTIMER(timer.overhead);
-		output.cpuLastTimePrinted += 2;
+		output.cpuLastTimePrinted += timeDelay;
+		
+		//avoid large deviations between cpuLastTimePrinted and CPU time:
+		if (tCPU - output.cpuLastTimePrinted > timeDelay*0.5) { output.cpuLastTimePrinted = EXUstd::GetTimeInSeconds();}
+
 		Real timeToGo = 0;
 		Real cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
 		Real simTotalTime = it.endTime - it.startTime;
@@ -784,7 +819,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		else { str += ", factor = " + EXUstd::ToString(ComputeLoadFactor(simulationSettings)); }
 
 		if (output.stepInformation >= 1) {
-			str += ", timeToGo = " + EXUstd::ToString(timeToGo); 
+			str += ", timeToGo = " + EXUstd::ToString(timeToGo) + ", tCPU=" + EXUstd::ToString(tCPU);
 		}
 		if (output.stepInformation >= 2 && it.currentStepIndex != 0) {
 			str += " sec, Nit/step = " + EXUstd::ToString(it.newtonStepsCount / (Real)(it.currentStepIndex));
@@ -1327,7 +1362,7 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 	}
 	STOPTIMER(timer.python);
 
-	discontinuousError += computationalSystem.PostNewtonStep(data.tempCompData, it.recommendedStepSize);
+	discontinuousError += computationalSystem.PostNewtonStep(data.tempCompDataArray, it.recommendedStepSize);
 
 	return discontinuousError;
 }
@@ -1507,6 +1542,11 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
 			(*sFile) << "#\n";
 		}
+		else
+		{
+			//evaluate sensors, especially for UserSensors, which may do some tricky (recording) things internally, but which are not written
+			item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used
+		}
 		cnt++;
 	}
 }
@@ -1542,6 +1582,11 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 					(*sFile) << "," << value;
 				}
 				(*sFile) << "\n";
+			}
+			else
+			{
+				//evaluate sensors, especially for UserSensors, which may do some tricky (recording) things internally, but which are not written
+				item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used
 			}
 			cnt++;
 		}

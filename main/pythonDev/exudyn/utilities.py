@@ -283,7 +283,7 @@ def FindNodeIndex(i, globalVariables):
 #  objectNumbers: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
 #  showOthers: if True, then all other objects are shown again
 #**output: changes all colors in mbs, which is NOT reversible
-def ShowOnlyObjects(mbs, objectNumbers=[]):
+def ShowOnlyObjects(mbs, objectNumbers=[], showOthers=False):
     if not isinstance(objectNumbers,list):
         listObjects = [objectNumbers]
     else:
@@ -294,12 +294,17 @@ def ShowOnlyObjects(mbs, objectNumbers=[]):
         oDict = mbs.GetObject(objectIndex)
         flag = showOthers
         if objectIndex in listObjects or isEmpty: #if no objects to show,  
-            flag = True
+            flag = not showOthers
         if 'Vshow' in oDict:
             mbs.SetObjectParameter(objectIndex,'Vshow', flag)
     mbs.SendRedrawSignal()
 
-#**function to highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
+#**function: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
+#**input: 
+#  mbs: mbs containing object
+#  itemNumbers: integer object/node/etc number to be highlighted
+#  itemType: type of items to be highlighted
+#  showNumbers: if True, then the numbers of these items are shown
 def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumbers=True):
     SC.visualizationSettings.interactive.highlightItemIndex = itemNumber
     SC.visualizationSettings.interactive.highlightItemType = itemType
@@ -335,6 +340,38 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
     mbs.SendRedrawSignal()
 
 
+#**function: Internal SensorUserFunction, used in function AddSensorRecorder
+def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
+    iSensor = sensorNumbers[0]
+    val = mbs.GetSensorValues(iSensor, configuration=configuration) #get all values
+    ti = int((t+1e-9)/factors[0]) #add 1e-10 safety factor due to rounding errors when adding time steps (may lead to small errors after 1e7 steps)
+    if ti >= 0 and ti < len(mbs.variables['sensorRecord'+str(iSensor)]):
+        mbs.variables['sensorRecord'+str(iSensor)][ti,0] = t
+        mbs.variables['sensorRecord'+str(iSensor)][ti,1:] = val
+        
+    return val #return value usually not used further
+
+#**function: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecorder'+str(iSensor)] where iSensor is the mbs sensor number
+#**input: 
+#  mbs: mbs containing object
+#  sensorNumber: integer sensor number to be recorded
+#  endTime: end time of simulation, as given in simulationSettings.timeIntegration.endTime 
+#  sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+#  sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
+#**output: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(iSensor)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
+#**notes: This sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
+    nSteps = int(endTime/sensorsWritePeriod)
+    mbs.variables['sensorRecord'+str(sensorNumber)] = np.zeros((nSteps+1,1+sensorOutputSize)) #time+3 sensor values
+
+    sUserRecord = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sensorNumber], 
+                                                   factors=[sensorsWritePeriod],
+                                                   writeToFile=False,
+                                                   sensorUserFunction=UFsensorRecord))
+    
+    return sUserRecord    
+    
+    
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   LOAD SOLUTION AND ANIMATION   ++++++++++++++++++++++++++++++++++++
@@ -342,17 +379,37 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
 
 #++++++++++++++++++++++++++++++++++++++++++++
 #**function: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
-#**input: fileName: string containing directory and filename of stored coordinatesSolutionFile
+#**input: 
+#  fileName: string containing directory and filename of stored coordinatesSolutionFile
+#  saveMode: if true, it uses the numpy genfromtxt function to load inconsistent lines as well
 #**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with binary values showing the exported columns [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData],'nColumns': the number of data columns and 'nRows': the number of data rows
-def LoadSolutionFile(fileName):
-    data = np.loadtxt(fileName, comments='#', delimiter=',')
+def LoadSolutionFile(fileName, safeMode=False):
+    if not safeMode:
+        data = np.loadtxt(fileName, comments='#', delimiter=',')
+    else:
+        data = np.genfromtxt(fileName,comments='#',delimiter=',',invalid_raise=False)
+
+    # fileRead=open(fileName,'r') 
+    # fileLines = fileRead.readlines()
+    # fileRead.close()
+    # leftStr=fileLines[4].split('=')[0]
+    # if leftStr[0:30] != '#number of written coordinates': 
+        # print('ERROR in LoadSolution: file header corrupted')
 
     fileRead=open(fileName,'r') 
-    fileLines = fileRead.readlines()
+    fileLines = []
+    fileLines += [fileRead.readline()]
+    fileLines += [fileRead.readline()]
+    fileLines += [fileRead.readline()]
+    fileLines += [fileRead.readline()]
+    fileLines += [fileRead.readline()]
     fileRead.close()
+    if len(fileLines[4]) == 0:
+        raise ValueError('ERROR in LoadSolution: file empty or header missing')
+        
     leftStr=fileLines[4].split('=')[0]
     if leftStr[0:30] != '#number of written coordinates': 
-        print('ERROR in LoadSolution: file header corrupted')
+        raise ValueError('ERROR in LoadSolution: file header corrupted')
 
     columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
     print('columns imported =', columnsExported)
@@ -733,8 +790,128 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
 #                              SPECIAL FUNCTIONS FOR EXUDYN
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TCP/IP functionality
+#**class: helper class for CreateTCPIPconnection and for TCPIPsendReceive
+class TCPIPdata:
+    def __init__(self, sendSize, receiveSize, packerSend, packerReceive, 
+                  socketTCP, connection, address, lastReceiveTime):
+        self.sendSize = sendSize
+        self.receiveSize = receiveSize
+        self.packerSend = packerSend
+        self.packerReceive = packerReceive
+        self.socket = socketTCP
+        self.connection = connection
+        self.address = address
+        self.lastReceiveTime = lastReceiveTime #usually zero; used to make substeps in mbs
+        
+        
+#**function: function which has to be called before simulation to setup TCP/IP socket (server) for 
+#  sending and receiving data; can be used to communicate with other Python interpreters
+#  or for communication with MATLAB/Simulink
+#**input:
+#  sendSize: number of double values to be sent to TCPIP client
+#  receiveSize: number of double values to be received from TCPIP client
+#  IPaddress: string containing IP address of client (e.g., '127.0.0.1')
+#  port: port for communication with client
+#  bigEndian: if True, it uses bigEndian, otherwise littleEndian is used for byte order
+#**output: returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
+#**example:
+# mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2, 
+#                                                bigEndian=True, verbose=True)
+# sampleTime = 0.01 #sample time in MATLAB! must be same!
+# mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+
+# def PreStepUserFunction(mbs, t):
+#     if t >= mbs.variables['tLast'] + sampleTime:
+#         mbs.variables['tLast'] += sampleTime
+
+#         tcp = mbs.sys['TCPIPobject']
+#         y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+#         tau = y[1]
+#         print('tau=',tau)
+#     return True
+
+
+# try:
+#     mbs.SetPreStepUserFunction(PreStepUserFunction)
     
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#     #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+#     mbs.Assemble()
+#     [...] #start renderer; simulate model
+# finally: #use this to always close connection, even in case of errors
+#     CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+def CreateTCPIPconnection(sendSize, receiveSize, IPaddress='127.0.0.1', port=52421, 
+                          bigEndian=False, verbose=False):
+    import socket
+    import struct
+    s = ''
+    if bigEndian:
+        s = '>' #signals bigEndian format
+    packerSend = struct.Struct(s+'d '*sendSize) #'>' for big endian in matlab, I=unsigned int, i=int, d=double
+    packerReceive = struct.Struct(s+'d '*receiveSize) #'>' for big endian in matlab, I=unsigned int, i=int, d=double
+    if verbose:
+        print('setup TCP/IP socket ...')
+    socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socketTCP.bind((IPaddress, port))
+    socketTCP.listen()
+    connection, address = socketTCP.accept()
+
+    if verbose:
+        print('TCP/IP connection running!')
+
+    return TCPIPdata(sendSize, receiveSize, packerSend, packerReceive, 
+                     socketTCP, connection, address, 0.)
+
+#**function: call this function at every simulation step at which you intend to communicate with
+#  other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+#**input:
+#  TCPIPobject: the object returned by CreateTCPIPconnection(...)
+#  sendData: numpy array containing data (double array) to be sent; must agree with sendSize
+#**output: returns array as received from TCPIP
+#**example:
+#mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+#y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+#print(y)
+#
+def TCPIPsendReceive(TCPIPobject, sendData):
+    #first send data (no other way in MATLAB):
+    TCPIPobject.connection.sendall(TCPIPobject.packerSend.pack(*sendData))
+
+    #now receive data:
+    data = TCPIPobject.connection.recv(TCPIPobject.packerReceive.size) #data size in bytes
+    if not data:
+        print('WARNING: TCPIPsendReceive: loss of data') #usually does not happen!
+        return np.zeros(TCPIPobject.receiveSize)
+    else:
+        return TCPIPobject.packerReceive.unpack(data)
+
+#**function: close a previously created TCPIP connection
+def CloseTCPIPconnection(TCPIPobject):
+    TCPIPobject.connection.close()
+    TCPIPobject.socket.close()
+    
+
+
+#the following way works between Python and MATLAB-Simulink (client),
+#and gives stable results(with only delay of one step):
+#
+# TCP/IP Client Send:
+#   priority = 2 (in properties)
+#   blocking = false
+#   Transfer Delay on (but off also works)
+# TCP/IP Client Receive:
+#   priority = 1 (in properties)
+#   blocking = true
+#   Sourec Data type = double
+#   data size = number of double in packer
+#   Byte order = BigEndian
+#   timeout = 10
+
+
+
+    
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate cable elements along straight line with certain discretization
 #**input:
 #  mbs: the system where ANCF cables are added

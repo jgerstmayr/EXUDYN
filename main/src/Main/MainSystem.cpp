@@ -28,6 +28,8 @@
 #include "Main/MainSystem.h"
 #include "Pymodules/PybindUtilities.h"
 
+#include "Pymodules/PyGeneralContact.h"
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -37,20 +39,15 @@
 //! reset all lists and deallocate memory
 void MainSystem::Reset()
 {
-	//pout << "  MainSystem::Reset():1" << "\n";
-	//clear all data, prepare for removal (why not delete?)
 	mainSystemData.Reset(); //
-	//pout << "  MainSystem::Reset():2" << "\n";
 	GetCSystem()->GetSystemData().Reset();
-	//pout << "  MainSystem::Reset():3" << "\n";
 	GetCSystem()->GetPythonUserFunctions().Reset();
-	//pout << "  MainSystem::Reset():4" << "\n";
 	GetCSystem()->Initialize();
-	//pout << "  MainSystem::Reset():5" << "\n";
 	GetCSystem()->GetPostProcessData()->Reset();
-	//pout << "  MainSystem::Reset():6" << "\n";
+	GetCSystem()->ResetGeneralContacts();
+
 	visualizationSystem.Reset();
-	//pout << "  MainSystem::Reset():7" << "\n";
+
 	interactiveMode = false;
 	//mainSystemIndex = -1; //... check if this is correctly set? test several SC.Reset and similar operations ==> this MainSystem would not be usable any more, as it is not linked to SystemContainer
 }
@@ -87,6 +84,44 @@ void MainSystem::PySetPostNewtonUserFunction(const py::object& value)
 	cSystem->GetPythonUserFunctions().postNewtonFunction = py::cast<std::function <StdVector2D(const MainSystem& mainSystem, Real t)>>(value);
 	cSystem->GetPythonUserFunctions().mainSystem = this;
 }
+
+//create a new general contact and add to system
+PyGeneralContact& MainSystem::AddGeneralContact()
+{
+	PyGeneralContact* gContact = new PyGeneralContact();
+	cSystem->GetGeneralContacts().Append((GeneralContact*)(gContact)); //(GeneralContact*)
+	return (PyGeneralContact&)*cSystem->GetGeneralContacts().Last();
+}
+
+//obtain read/write access to general contact
+PyGeneralContact& MainSystem::GetGeneralContact(Index generalContactNumber)
+{
+	if (generalContactNumber >= 0 && generalContactNumber < cSystem->GetGeneralContacts().NumberOfItems())
+	{
+		return (PyGeneralContact&)*cSystem->GetGeneralContacts().Last();
+	}
+	else
+	{
+		PyError("MainSystem::GeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber));
+		return (PyGeneralContact&)*cSystem->GetGeneralContacts().Last(); //code not reached ...
+	}
+}
+
+//delete general contact, resort indices
+void MainSystem::DeleteGeneralContact(Index generalContactNumber)
+{
+	if (generalContactNumber >= 0 && generalContactNumber < cSystem->GetGeneralContacts().NumberOfItems())
+	{
+		delete cSystem->GetGeneralContacts()[generalContactNumber];
+		cSystem->GetGeneralContacts().Remove(generalContactNumber); //rearrange array
+	}
+	else
+	{
+		PyError("MainSystem::DeleteGeneralContact: access to invalid index " + EXUstd::ToString(generalContactNumber));
+	}
+
+}
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -34,9 +34,11 @@
 
 #include "Utilities/BasicFunctions.h"
 #include "Utilities/SlimArray.h"
-#include <algorithm> //for std::min / std::max
+
+#include <algorithm> //for std::min / std::max, for_each
 #include <cstring>
 #include <array>
+#include <cstring>
 
 typedef ResizableArray<Real> ArrayReal;
 typedef ResizableArray<Index> ArrayIndex;
@@ -174,6 +176,8 @@ public:
 
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for handling in ObjectContainer
 	ResizableArray<T>* GetClone() const { return new ResizableArray<T>(*this); }
+	//! helper access function which just returns class itself
+	const ResizableArray<T>& This() const { return *this; }
 
 	T* begin() const { return &data[0]; }						//!< C++11 std::begin() for iterators
 	T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators
@@ -224,6 +228,9 @@ public:
 		if (numberOfItems > maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(numberOfItems); };
 	}
 
+	void SetNumberOfItems0() {
+		numberOfItems = 0;
+	}
 	//! if maxNumberOfItems is smaller than minSize, enlarge array to fit at least 'minSize'; NOTE(different from HOTINT1): only 'numberOfItems' copied; this function corresponds to old TArray::ReSize(); NOTE: numberOfItems stays UNCHANGED; copies data if array is enlarged
 	void EnlargeMaxNumberOfItemsTo(Index minSize);
 
@@ -320,7 +327,19 @@ public:
         return data[index];
     }
 
-    //! const (read) CYCLIC access of item with index 'i' 
+	 //! const (read) access of item with index 'i'; no index checks
+	 const T& GetItemUnsafe(Index index) const
+	 {
+		 return data[index];
+	 }
+
+	 //! by reference (write) access of item with index 'i'; no index checks
+	 T& GetItemUnsafe(Index index)
+	 {
+		 return data[index];
+	 }
+
+	 //! const (read) CYCLIC access of item with index 'i' 
      const T& GetItemCyclic(Index index) const
     {
         return data[index%numberOfItems]; //access is safe, always inside array range!
@@ -335,13 +354,27 @@ public:
     //! @brief append an item after last element (*this[numberOfItems]);
     //! increases automatically the array size if necessary
     //! returns index of item which has been appended
-     Index Append(const T& item) //== > push_back in std::vector
-    {
-        (*this)[numberOfItems] = item;  //numberOfItems increased by one
-        return numberOfItems - 1;       //Index of last element
-    }
+    Index Append(const T& item) //== > push_back in std::vector
+	{
+		(*this)[numberOfItems] = item;  //numberOfItems increased by one
+		return numberOfItems - 1;       //Index of last element
+	}
 
-	 //! @brief append an item after last element (*this[numberOfItems]);
+	//! @brief append an array after last element (*this[numberOfItems]);
+	//! increases automatically the array size if necessary
+	//! internally no checks on otherArray
+	void AppendArray(const ResizableArray<T>& otherArray)
+	{
+		Index n = this->NumberOfItems();
+		//this->EnlargeMaxNumberOfItemsTo(n + otherArray.NumberOfItems());
+		this->SetNumberOfItems(n + otherArray.NumberOfItems());
+		for (Index i = 0; i < otherArray.NumberOfItems(); i++)
+		{
+			data[i + n] = otherArray.GetItemUnsafe(i);
+		}
+	}
+
+	//! @brief append an item after last element (*this[numberOfItems]);
 	 //! increases automatically the array size if necessary
 	 //! no return; faster than Append()
 	 void AppendPure(const T& item) //== > push_back in std::vector
@@ -497,5 +530,25 @@ void ResizableArray<T>::SetMaxNumberOfItems(Index newNumberOfItems)
     maxNumberOfItems = newNumberOfItems;
     numberOfItems = (std::min)(newNumberOfItems, numberOfItems); //in case of size reduction, numberOfItems is decreased
 }
+
+
+
+namespace EXUstd {
+	//! set all arrays to zero size
+	template <class T>
+	inline void ArrayOfArraysSetNumberOfItems0(ResizableArray<T*> & arrayOfArrays)
+	{
+		std::for_each(arrayOfArrays.begin(), arrayOfArrays.end(), [](T* item) { item->SetNumberOfItems0(); });
+		
+		//std::for_each(arrayOfArrays.begin(), arrayOfArrays.end(), T::SetNumberOfItems0);
+		//std::for_each(arrayOfArrays.begin(), arrayOfArrays.end(), std::bind2nd(std::mem_fun_ref(&T::SetNumberOfItems),0));
+		//for (T* a : arrayOfArrays)
+		//{
+		//	a->SetNumberOfItems(0);
+		//}
+	}
+};
+
+
 
 #endif

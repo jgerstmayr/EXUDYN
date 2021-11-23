@@ -301,7 +301,7 @@ def SolveDynamic(mbs,
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
 #  #then execute the following commands in the console (or add it to the file):
-#  [M, K, D] = exu.ComputeODE2Eigenvalues(mbs)
+#  [M, K, D] = exu.ComputeLinearizedSystem(mbs)
 #  print("M=", M)
 #  print("K=", K)
 def ComputeLinearizedSystem(mbs, 
@@ -331,7 +331,7 @@ def ComputeLinearizedSystem(mbs,
     jacobian_t = staticSolver.GetSystemJacobian() #read out stored jacobian
     
     #obtain ODE2_t part from jacobian == damping matrix
-    D = jacobian[0:nODE2,0:nODE2]
+    D = jacobian_t[0:nODE2,0:nODE2]
 
     return [M, K, D]
 

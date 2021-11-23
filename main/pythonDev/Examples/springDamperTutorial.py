@@ -75,13 +75,17 @@ simulationSettings.timeIntegration.endTime = tEnd
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
+#add some drawing parameters for this example
+SC.visualizationSettings.nodes.drawNodesAsPoint=False
+SC.visualizationSettings.nodes.defaultSize=0.1
+
 exu.StartRenderer()              #start graphics visualization
-#mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
 #start solver:
 exu.SolveDynamic(mbs, simulationSettings)
 
-#SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
+SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
 exu.StopRenderer()               #safely close rendering window!
 
 #evaluate final (=current) output values

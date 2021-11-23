@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-30  10:19:41 (last modified)
+* @date         2021-11-14  14:42:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,6 +123,12 @@ public: // AUTO:
     const Vector& GetTempCoordinates_tt() const { return tempCoordinates_tt; }
     //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
     Vector& GetTempCoordinates_tt() { return tempCoordinates_tt; }
+
+    //! AUTO:  return true, if object has a computation user function
+    virtual bool HasUserFunction() const override
+    {
+        return (parameters.forceUserFunction!=0) || (parameters.massMatrixUserFunction!=0) || (parameters.jacobianUserFunction!=0);
+    }
 
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;

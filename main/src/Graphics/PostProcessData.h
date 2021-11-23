@@ -42,6 +42,7 @@ public:
 	uint64_t recordImageCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
 	bool simulationFinished;			//!< shows that computation has been finished ==> visualize last step
 	bool stopSimulation;				//!< renderer or GUI sends signal that simulation shall be interrupted
+	bool forceQuitSimulation;			//!< flag is set if user closes simulation window (but not if Escape pressed)
 	bool simulationPaused;				//!< true: simulation sends renderer or GUI that simulation is paused, waiting for user-input (SPACE)
 	Real visualizationTime;				//!< this value is set as soon as the computation date is generated from visualization; needed to synchronize text message and visualization state
 	
@@ -63,6 +64,7 @@ public:
 		recordImageCounter = 0;
 		simulationFinished = false;
 		stopSimulation = false;
+		forceQuitSimulation = false;
 		simulationPaused = false;
 		visualizationTime = 0;
 

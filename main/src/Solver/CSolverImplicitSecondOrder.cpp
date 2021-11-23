@@ -103,8 +103,11 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, velocityLevel);// , fillIntoSystemMatrix);
 
 		//Mass matrix - may also be directly filled into data.systemJacobian?
-		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		if (!hasConstantMassMatrix)
+		{
+			data.systemMassMatrix->SetAllZero();
+			computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		}
 		data.systemJacobian->AddSubmatrix(*(data.systemMassMatrix));
 
 		//add unit matrix for ODE1 components (nothing to be solved for)
@@ -124,7 +127,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		LinkedDataVector aeRHS(systemRHS, data.startAE, data.nAE);
 
 		//compute system RHS for initial conditions:
-		computationalSystem.ComputeSystemODE2RHS(data.tempCompData, ode2RHS);
+		computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, ode2RHS);
 		ode1RHS.SetAll(0); //nothing to be computed for ODE1
 		aeRHS.SetAll(0);
 
@@ -292,6 +295,20 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 				", factJacA=" + EXUstd::ToString(factJacAlgorithmic) + "\n");
 		}
 	}
+	//++++++++++++++++++++++++++++++++++++++
+	//initialize special for implicit solver:
+	hasConstantMassMatrix = computationalSystem.HasConstantMassMatrix(); //this should not be called all time, because it costs some time
+
+	if (!simulationSettings.timeIntegration.reuseConstantMassMatrix) { hasConstantMassMatrix = false; }
+
+	if (hasConstantMassMatrix)
+	{
+		//compute mass matrix
+		STARTTIMER(timer.massMatrix);
+		data.systemMassMatrix->SetAllZero();
+		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		STOPTIMER(timer.massMatrix);
+	}
 }
 
 
@@ -324,13 +341,16 @@ Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//ODE2:
 	//now compute the new residual with updated system vectors:
-	STARTTIMER(timer.massMatrix);
-	data.systemMassMatrix->SetAllZero();
-	computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
-	STOPTIMER(timer.massMatrix);
+	if (!hasConstantMassMatrix)
+	{
+		STARTTIMER(timer.massMatrix);
+		data.systemMassMatrix->SetAllZero();
+		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		STOPTIMER(timer.massMatrix);
+	}
 
 	STARTTIMER(timer.ODE2RHS);
-	computationalSystem.ComputeSystemODE2RHS(data.tempCompData, data.tempODE2); //tempODE2 contains ODE2 RHS (linear case: tempODE2 = F_applied - K*u - D*v)
+	computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, data.tempODE2); //tempODE2 contains ODE2 RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 	STOPTIMER(timer.ODE2RHS);
 	//systemMassMatrix.FinalizeMatrix(); //MultMatrixVector is faster? if directly applied to triplets ...
 	data.systemMassMatrix->MultMatrixVector(solutionODE2_tt, ode2Residual);
@@ -494,7 +514,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	STARTTIMER(timer.jacobianODE2);
 	//Tangent stiffness
 	//K-Matrix; has no factor
-	computationalSystem.JacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, *(data.systemJacobian), -1. * scalODE2, -gammaPrime * scalODE2); //RHS ==> -K
+	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), -1. * scalODE2, -gammaPrime * scalODE2); //RHS ==> -K
 	STOPTIMER(timer.jacobianODE2);
 
 	////+++++++++++++++++++++++++++++

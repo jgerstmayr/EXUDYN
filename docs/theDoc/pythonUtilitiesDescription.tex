@@ -1085,7 +1085,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2463}{ScaleMassMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleMassMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2466}{ScaleMassMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleMassMatrix}
 ({\it self}, {\it factor})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1094,7 +1094,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2467}{ScaleStiffnessMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleStiffnessMatrix}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2470}{ScaleStiffnessMatrix}{}}}\label{sec:FEM:FEMinterface:ScaleStiffnessMatrix}
 ({\it self}, {\it factor})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1103,7 +1103,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2473}{AddElasticSupportAtNode}{}}}\label{sec:FEM:FEMinterface:AddElasticSupportAtNode}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2476}{AddElasticSupportAtNode}{}}}\label{sec:FEM:FEMinterface:AddElasticSupportAtNode}
 ({\it self}, {\it nodeNumber}, {\it springStiffness}= [1e8,1e8,1e8])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1118,7 +1118,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2489}{AddNodeMass}{}}}\label{sec:FEM:FEMinterface:AddNodeMass}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2492}{AddNodeMass}{}}}\label{sec:FEM:FEMinterface:AddNodeMass}
 ({\it self}, {\it nodeNumber}, {\it addedMass})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1127,8 +1127,8 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2509}{CreateLinearFEMObjectGenericODE2}{}}}\label{sec:FEM:FEMinterface:CreateLinearFEMObjectGenericODE2}
-({\it self}, {\it mbs})
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2512}{CreateLinearFEMObjectGenericODE2}{}}}\label{sec:FEM:FEMinterface:CreateLinearFEMObjectGenericODE2}
+({\it self}, {\it mbs}, {\it color}= [0.9,0.4,0.4,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -1136,8 +1136,8 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2552}{CreateNonlinearFEMObjectGenericODE2NGsolve}{}}}\label{sec:FEM:FEMinterface:CreateNonlinearFEMObjectGenericODE2NGsolve}
-({\it self}, {\it mbs}, {\it mesh}, {\it density}, {\it youngsModulus}, {\it poissonsRatio}, {\it meshOrder}= 1)
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2556}{CreateNonlinearFEMObjectGenericODE2NGsolve}{}}}\label{sec:FEM:FEMinterface:CreateNonlinearFEMObjectGenericODE2NGsolve}
+({\it self}, {\it mbs}, {\it mesh}, {\it density}, {\it youngsModulus}, {\it poissonsRatio}, {\it meshOrder}= 1, {\it color}= [0.9,0.4,0.4,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -1164,7 +1164,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2655}{ComputeEigenmodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2662}{ComputeEigenmodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodes}
 ({\it self}, {\it nModes}, {\it excludeRigidBodyModes}= 0, {\it useSparseSolver}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1180,7 +1180,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2699}{ComputeEigenModesWithBoundaryNodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenModesWithBoundaryNodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2706}{ComputeEigenModesWithBoundaryNodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenModesWithBoundaryNodes}
 ({\it self}, {\it boundaryNodes}, {\it nEigenModes}, {\it useSparseSolver}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1196,7 +1196,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2779}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2786}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
 ({\it self}, {\it boundaryNodesList}, {\it nEigenModes}, {\it useSparseSolver}= True, {\it computationMode}= HCBstaticModeSelection.RBE2)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1213,7 +1213,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2970}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2977}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1222,7 +1222,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3035}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3042}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
 ({\it self}, {\it material}= 0, {\it outputVariableType}= 'OutputVariableType.StressLocal', {\it numberOfThreads}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1238,8 +1238,8 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3152}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
-({\it self}, {\it terminalFrequency}, {\it nEigenfrequencies}= 10, {\it frequencySteps}= 25, {\it rotationAxis}= 2, {\it plotDiagram}= False, {\it verbose}= False, {\it useCorotationalFrame}= False)
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3160}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
+({\it self}, {\it terminalFrequency}, {\it nEigenfrequencies}= 10, {\it frequencySteps}= 25, {\it rotationAxis}= 2, {\it plotDiagram}= False, {\it verbose}= False, {\it useCorotationalFrame}= False, {\it useSparseSolver}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -1259,8 +1259,9 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
     \item[] {\it   frequencySteps}: gives the number of increments (gives frequencySteps+1 total points in campbell diagram)
     \item[] {\it   rotationAxis}:[0,1,2] = [x,y,z] provides rotation axis
     \item[] {\it   plotDiagram}: if True, plots diagram for nEigenfrequencies befor terminating
-    \item[] {\it   verbose}: if True, shows progress of computation
+    \item[] {\it   verbose}: if True, shows progress of computation; if verbose=2, prints also eigenfrequencies
     \item[] {\it   useCorotationalFrame}: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well
+    \item[] {\it   useSparseSolver}: for larger systems, the sparse solver needs to be used for creation of system matrices and for the eigenvalue solver (uses a random number generator internally in ARPACK, therefore, results are not fully repeatable!!!)
   \end{itemize}
   \item[--]  \textcolor{steelblue}{\bf output}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
@@ -1273,7 +1274,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3234}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3322}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1282,7 +1283,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3258}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3346}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1291,7 +1292,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3272}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3360}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1300,7 +1301,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3286}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3374}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1309,7 +1310,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3291}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3379}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1396,9 +1397,9 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_switchingSlidingJoint2D.py}{\texttt{ANCF\_switchingSlidingJoint2D.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lavalRotor2Dtest.py}{\texttt{lavalRotor2Dtest.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulum2Dconstraint.py}{\texttt{pendulum2Dconstraint.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D.py}{\texttt{particlesTest3D.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D2.py}{\texttt{particlesTest3D2.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM), 
@@ -1515,13 +1516,15 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 \noindent For examples on GraphicsDataSphere see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D.py}{\texttt{particlesTest3D.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D2.py}{\texttt{particlesTest3D2.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulum2Dconstraint.py}{\texttt{pendulum2Dconstraint.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py}{\texttt{contactCoordinateTest.py}} (TM), 
+ ...
+, 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py}{\texttt{contactCoordinateTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py}{\texttt{pendulumFriction.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/postNewtonStepContactTest.py}{\texttt{postNewtonStepContactTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}} (TM), 
  ...
 \ei
 
@@ -1554,8 +1557,8 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/flexibleRotor3Dtest.py}{\texttt{flexibleRotor3Dtest.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DbasicBehaviour.py}{\texttt{rigidRotor3DbasicBehaviour.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D.py}{\texttt{particlesTest3D.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TM), 
@@ -1735,6 +1738,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
 \noindent For examples on GraphicsDataQuad see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Ex)\ei
 
 %
@@ -1873,7 +1877,7 @@ points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
 \item[]Date:      2021-01-17 (created)
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L494}{AnimateModes}{}}}\label{sec:interactive:AnimateModes}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L507}{AnimateModes}{}}}\label{sec:interactive:AnimateModes}
 ({\it systemContainer}, {\it mainSystem}, {\it nodeNumber}, {\it period}= 0.04, {\it stepsPerPeriod}= 30, {\it showTime}= True, {\it renderWindowText}= '', {\it runOnStart}= False, {\it runMode}= 0, {\it scaleAmplitude}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1915,7 +1919,7 @@ points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L644}{SolutionViewer}{}}}\label{sec:interactive:SolutionViewer}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L667}{SolutionViewer}{}}}\label{sec:interactive:SolutionViewer}
 ({\it mainSystem}, {\it solution}= [], {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it runOnStart}= True, {\it runMode}= 2)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1930,7 +1934,13 @@ points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
     \item[] {\it   runOnStart}: immediately go into 'Run' mode
     \item[] {\it   runMode}: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
   \end{itemize}
-  \item[--]  {\bf output}: updates current visualization state, renders the scene continuously (after pressing button 'Run')\vspace{12pt}\end{itemize}
+  \item[--]  {\bf output}: updates current visualization state, renders the scene continuously (after pressing button 'Run')  \item[--]  {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+#HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
+#adjust autoFitScence, otherwise it may lead to unwanted fit to scene
+SC.visualizationSettings.general.autoFitScene = False
+from exudyn.interactive import SolutionViewer #import function
+sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
+SolutionViewer(mbs, sol)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 %
 \noindent For examples on SolutionViewer see Examples (Ex) and TestModels (TM):
@@ -1939,7 +1949,7 @@ points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py}{\texttt{revoluteJointPrismaticJointTest.py}} (TM), 
@@ -1990,18 +2000,20 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
                 {'type':'label', 'text':'stiffness:', 'grid':(7,0)},
                 {'type':'slider', 'range':(0, 10000), 'value':spring, 'steps':800, 'variable':'stiffness', 'grid':(7,1)}]
  #plots structure:
- plots={'nPoints':500,               #number of stored points in subplots (higher means slower drawing)
-        'subplots':(2,1),           #(rows, columns) arrangement of subplots
+ plots={'nPoints':500,              #number of stored points in subplots (higher means slower drawing)
+        'subplots':(2,1),           #(rows, columns) arrangement of subplots (for every sensor)
         #sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:
         'sensors':[[(sensPos,0),(sensPos,1),'time','mass position'],
                    [(sensFreq,0),(sensFreq,1),'time','excitation frequency']],
         'limitsX':[(0,2),(-5,5)],   #x-range per subplot; if not provided, autoscale is applied
         'limitsY':[(-5,5),(0,10),], #y-range per subplot; if not provided, autoscale is applied
         'fontSize':16,              #custom font size for figure
-        'sizeInches':(12,12)}        #specific x and y size of figure in inches (using 100 dpi)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
+        'subplots':False,           #if not specified, subplots are created; if False, all plots go into one window
+        'lineStyles':['r-','b-'],    #if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor
+        'sizeInches':(12,12)}       #specific x and y size of figure in inches (using 100 dpi)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L93}{\_\_init\_\_}{}}}\label{sec:interactive:InteractiveDialog:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L95}{\_\_init\_\_}{}}}\label{sec:interactive:InteractiveDialog:__init__}
 ({\it self}, {\it mbs}, {\it simulationSettings}, {\it simulationFunction}, {\it dialogItems}, {\it plots}= [], {\it period}= 0.04, {\it realtimeFactor}= 1, {\it userStartSimulation}= False, {\it title}= '', {\it showTime}= False, {\it fontSize}= 12, {\it doTimeIntegration}= True, {\it runOnStart}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2027,7 +2039,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L292}{OnQuit}{}}}\label{sec:interactive:InteractiveDialog:OnQuit}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L294}{OnQuit}{}}}\label{sec:interactive:InteractiveDialog:OnQuit}
 ({\it self}, {\it event}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2036,7 +2048,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L301}{StartSimulation}{}}}\label{sec:interactive:InteractiveDialog:StartSimulation}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L303}{StartSimulation}{}}}\label{sec:interactive:InteractiveDialog:StartSimulation}
 ({\it self}, {\it event}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2045,7 +2057,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L314}{ProcessWidgetStates}{}}}\label{sec:interactive:InteractiveDialog:ProcessWidgetStates}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L316}{ProcessWidgetStates}{}}}\label{sec:interactive:InteractiveDialog:ProcessWidgetStates}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2054,7 +2066,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L320}{ContinuousRunFunction}{}}}\label{sec:interactive:InteractiveDialog:ContinuousRunFunction}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L322}{ContinuousRunFunction}{}}}\label{sec:interactive:InteractiveDialog:ContinuousRunFunction}
 ({\it self}, {\it event}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2063,7 +2075,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L334}{InitializePlots}{}}}\label{sec:interactive:InteractiveDialog:InitializePlots}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L336}{InitializePlots}{}}}\label{sec:interactive:InteractiveDialog:InitializePlots}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2072,7 +2084,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L369}{UpdatePlots}{}}}\label{sec:interactive:InteractiveDialog:UpdatePlots}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L382}{UpdatePlots}{}}}\label{sec:interactive:InteractiveDialog:UpdatePlots}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2081,7 +2093,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L425}{InitializeSolver}{}}}\label{sec:interactive:InteractiveDialog:InitializeSolver}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L438}{InitializeSolver}{}}}\label{sec:interactive:InteractiveDialog:InitializeSolver}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2090,7 +2102,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L431}{FinalizeSolver}{}}}\label{sec:interactive:InteractiveDialog:FinalizeSolver}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L444}{FinalizeSolver}{}}}\label{sec:interactive:InteractiveDialog:FinalizeSolver}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2099,7 +2111,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L437}{RunSimulationPeriod}{}}}\label{sec:interactive:InteractiveDialog:RunSimulationPeriod}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L450}{RunSimulationPeriod}{}}}\label{sec:interactive:InteractiveDialog:RunSimulationPeriod}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2110,6 +2122,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \noindent For examples on InteractiveDialog see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Ex)\ei
 
 %
@@ -4914,7 +4927,7 @@ import exudyn as exu
   \item[--]  {\bf output}: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D  \item[--]  {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
 #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
   #then execute the following commands in the console (or add it to the file):
-  [M, K, D] = exu.ComputeODE2Eigenvalues(mbs)
+  [M, K, D] = exu.ComputeLinearizedSystem(mbs)
   print("M=", M)
   print("K=", K)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
@@ -4944,7 +4957,8 @@ import exudyn as exu
 %
 \noindent For examples on ComputeODE2Eigenvalues see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}} (TM)\ei
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -5226,7 +5240,7 @@ FindObjectIndex(2, locals() )  #usually sufficient
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
 \noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L286}{ShowOnlyObjects}{}}}\label{sec:utilities:ShowOnlyObjects}
-({\it mbs}, {\it objectNumbers}= [])
+({\it mbs}, {\it objectNumbers}= [], {\it showOthers}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -5241,21 +5255,62 @@ FindObjectIndex(2, locals() )  #usually sufficient
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L303}{HighlightItem}{}}}\label{sec:utilities:HighlightItem}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L308}{HighlightItem}{}}}\label{sec:utilities:HighlightItem}
 ({\it SC}, {\it mbs}, {\it itemNumber}, {\it itemType}= exudyn.ItemType.Object, {\it showNumbers}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: to highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects  \item[--]  {\bf input}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] {\it mbs}: mbs containing object
+    \item[] {\it   itemNumbers}: integer object/node/etc number to be highlighted
+    \item[] {\it   itemType}: type of items to be highlighted
+    \item[] {\it   showNumbers}: if True, then the numbers of these items are shown
+  \end{itemize}
+\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L347}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
-({\it fileName})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L344}{UFsensorRecord}{}}}\label{sec:utilities:UFsensorRecord}
+({\it mbs}, {\it t}, {\it sensorNumbers}, {\it factors}, {\it configuration})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:  \item[--]  {\bf input}: fileName: string containing directory and filename of stored coordinatesSolutionFile  \item[--]  {\bf output}: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with binary values showing the exported columns [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData],'nColumns': the number of data columns and 'nRows': the number of data rows\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: Internal SensorUserFunction, used in function AddSensorRecorder\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L363}{AddSensorRecorder}{}}}\label{sec:utilities:AddSensorRecorder}
+({\it mbs}, {\it sensorNumber}, {\it endTime}, {\it sensorsWritePeriod}, {\it sensorOutputSize}= 3)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecorder'+str(iSensor)] where iSensor is the mbs sensor number  \item[--]  {\bf input}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] {\it mbs}: mbs containing object
+    \item[] {\it   sensorNumber}: integer sensor number to be recorded
+    \item[] {\it   endTime}: end time of simulation, as given in simulationSettings.timeIntegration.endTime
+    \item[] {\it   sensorsWritePeriod}: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+    \item[] {\it   sensorOutputSize}: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
+  \end{itemize}
+  \item[--]  {\bf output}: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(iSensor)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]  \item[--]  {\bf notes}: This sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L386}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
+({\it fileName}, {\it safeMode}= False)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:  \item[--]  {\bf input}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] {\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
+    \item[] {\it   saveMode}: if true, it uses the numpy genfromtxt function to load inconsistent lines as well
+  \end{itemize}
+  \item[--]  {\bf output}: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with binary values showing the exported columns [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData],'nColumns': the number of data columns and 'nRows': the number of data rows\vspace{12pt}\end{itemize}
 %
 %
 \noindent For examples on LoadSolutionFile see Examples (Ex) and TestModels (TM):
@@ -5263,8 +5318,8 @@ FindObjectIndex(2, locals() )  #usually sufficient
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py}{\texttt{rigidBodyTutorial3.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py}{\texttt{rigidRotor3Dnutation.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest3D.py}{\texttt{particlesTest3D.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py}{\texttt{revoluteJointPrismaticJointTest.py}} (TM), 
@@ -5273,7 +5328,7 @@ FindObjectIndex(2, locals() )  #usually sufficient
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L371}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L428}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
 ({\it mbs}, {\it solution}, {\it row}, {\it configuration}= exudyn.ConfigurationType.Current, {\it sendRedrawSignal}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5282,7 +5337,7 @@ FindObjectIndex(2, locals() )  #usually sufficient
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L403}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L460}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
 ({\it mbs}, {\it solution}, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it createImages}= False, {\it runLoop}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5314,7 +5369,7 @@ FindObjectIndex(2, locals() )  #usually sufficient
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L438}{DrawSystemGraph}{}}}\label{sec:utilities:DrawSystemGraph}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L495}{DrawSystemGraph}{}}}\label{sec:utilities:DrawSystemGraph}
 ({\it mbs}, {\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5338,7 +5393,84 @@ FindObjectIndex(2, locals() )  #usually sufficient
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L751}{GenerateStraightLineANCFCable2D}{}}}\label{sec:utilities:GenerateStraightLineANCFCable2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L844}{CreateTCPIPconnection}{}}}\label{sec:utilities:CreateTCPIPconnection}
+({\it sendSize}, {\it receiveSize}, {\it IPaddress}= '127.0.0.1', {\it port}= 52421, {\it bigEndian}= False, {\it verbose}= False)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] function which has to be called before simulation to setup TCP/IP socket (server) for
+    \item[]   sending and receiving data; can be used to communicate with other Python interpreters
+    \item[]   or for communication with MATLAB/Simulink
+  \end{itemize}
+  \item[--]  {\bf input}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] {\it sendSize}: number of double values to be sent to TCPIP client
+    \item[] {\it   receiveSize}: number of double values to be received from TCPIP client
+    \item[] {\it   IPaddress}: string containing IP address of client (e.g., '127.0.0.1')
+    \item[] {\it   port}: port for communication with client
+    \item[] {\it   bigEndian}: if True, it uses bigEndian, otherwise littleEndian is used for byte order
+  \end{itemize}
+  \item[--]  {\bf output}: returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']  \item[--]  {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
+                                                bigEndian=True, verbose=True)
+ sampleTime = 0.01 #sample time in MATLAB! must be same!
+ mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+ def PreStepUserFunction(mbs, t):
+     if t >= mbs.variables['tLast'] + sampleTime:
+         mbs.variables['tLast'] += sampleTime
+         tcp = mbs.sys['TCPIPobject']
+         y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+         tau = y[1]
+         print('tau=',tau)
+     return True
+ try:
+     mbs.SetPreStepUserFunction(PreStepUserFunction)
+     #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+     mbs.Assemble()
+     [...] #start renderer; simulate model
+ finally: #use this to always close connection, even in case of errors
+     CloseTCPIPconnection(mbs.sys['TCPIPobject'])\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L877}{TCPIPsendReceive}{}}}\label{sec:utilities:TCPIPsendReceive}
+({\it TCPIPobject}, {\it sendData})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] call this function at every simulation step at which you intend to communicate with
+    \item[]   other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+  \end{itemize}
+  \item[--]  {\bf input}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] {\it TCPIPobject}: the object returned by CreateTCPIPconnection(...)
+    \item[] {\it   sendData}: numpy array containing data (double array) to be sent; must agree with sendSize
+  \end{itemize}
+  \item[--]  {\bf output}: returns array as received from TCPIP  \item[--]  {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+print(y)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L890}{CloseTCPIPconnection}{}}}\label{sec:utilities:CloseTCPIPconnection}
+({\it TCPIPobject})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: close a previously created TCPIP connection\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L928}{GenerateStraightLineANCFCable2D}{}}}\label{sec:utilities:GenerateStraightLineANCFCable2D}
 ({\it mbs}, {\it positionOfNode0}, {\it positionOfNode1}, {\it numberOfElements}, {\it cableTemplate}, {\it massProportionalLoad}= [0,0,0], {\it fixedConstraintsNode0}= [0,0,0,0], {\it fixedConstraintsNode1}= [0,0,0,0], {\it vALE}= 0, {\it ConstrainAleCoordinate}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5371,7 +5503,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L833}{GenerateSlidingJoint}{}}}\label{sec:utilities:GenerateSlidingJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1010}{GenerateSlidingJoint}{}}}\label{sec:utilities:GenerateSlidingJoint}
 ({\it mbs}, {\it cableObjectList}, {\it markerBodyPositionOfSlidingBody}, {\it localMarkerIndexOfStartCable}= 0, {\it slidingCoordinateStartPosition}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5386,7 +5518,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L859}{GenerateAleSlidingJoint}{}}}\label{sec:utilities:GenerateAleSlidingJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1036}{GenerateAleSlidingJoint}{}}}\label{sec:utilities:GenerateAleSlidingJoint}
 ({\it mbs}, {\it cableObjectList}, {\it markerBodyPositionOfSlidingBody}, {\it AleNode}, {\it localMarkerIndexOfStartCable}= 0, {\it AleSlidingOffset}= 0, {\it activeConnector}= True, {\it penaltyStiffness}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5399,3 +5531,6 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM)\ei
 
 %
+\mysubsubsection{CLASS TCPIPdata (in module utilities)}
+\noindent\textcolor{steelblue}{{\bf class description}}:  helper class for CreateTCPIPconnection and for TCPIPsendReceive
+\vspace{3pt} \\ 

@@ -159,11 +159,11 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
 	Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const
 {
-	Index columnsStiff = parameters.stiffnessMatrix.NumberOfColumns();
+	//Index columnsStiff = parameters.stiffnessMatrix.NumberOfColumns();
 	Index rowsStiff = parameters.stiffnessMatrix.NumberOfRows();
-	Index columnsDamp = parameters.dampingMatrix.NumberOfColumns();
+	//Index columnsDamp = parameters.dampingMatrix.NumberOfColumns();
 	Index rowsDamp = parameters.dampingMatrix.NumberOfRows();
-	Index nODE2 = GetNumberOfCoordinates();
+	//Index nODE2 = GetNumberOfCoordinates();
 	bool addStiffnessMatrix = true;
 	bool addDampingMatrix = true;
 

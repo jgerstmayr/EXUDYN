@@ -1,7 +1,7 @@
 ======
 Exudyn
 ======
-Exudyn version = 1.1.26
+Exudyn version = 1.1.42
 
 
   + *A flexible multibody dynamics systems simulation code with Python and C++*
@@ -25,9 +25,9 @@ Enjoy the Python library for multibody dynamics modeling, simulation, creating l
 
 
 
-===============
-Getting Started
-===============
+================================
+Installation and Getting Started
+================================
 
 
 Exudyn is hosted on `GitHub <https://github.com>`_ :
@@ -86,9 +86,9 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 
++  Joachim Sch\"oberl (Providing specialized NGsolve core library with \ ``taskmanager``\  for \bf multithreaded parallelization; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger (Lie group solvers in Python)
 +  Peter Manzl (ConvexRoll Python / C++ implementation)
-+  Joachim Sch\"oberl (NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Martin Sereinig (special robotics functionality)
 
 
@@ -738,7 +738,8 @@ FAQ
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 
   |  =>  coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
-  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
+  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g.,
+ 45\textdegree. Use a GenericJoint with a rotationMarker instead.
 
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 

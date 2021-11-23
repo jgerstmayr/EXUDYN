@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,7 +125,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -202,7 +202,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -270,7 +270,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -400,7 +400,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -482,7 +482,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -540,7 +540,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -574,10 +574,11 @@ public: // AUTO:
   Real relativeTolerance;                         //!< AUTO: \f$r_{tol}\f$: if automaticStepSize=True, relative tolerance for the error control; must fulfill \f$r_{tol} \ge 0\f$; see \refSection{sec:ExplicitSolver}
   Real stepSizeSafety;                            //!< AUTO: \f$r_{sfty}\f$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.
   Real stepSizeMaxIncrease;                       //!< AUTO: \f$f_{maxInc}\f$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but \f$> 1\f$) if too many rejected steps
+  bool reuseConstantMassMatrix;                   //!< AUTO: True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)
   std::string preStepPyExecute;                   //!< AUTO: DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing
   bool simulateInRealtime;                        //!< AUTO: True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues
   Real realtimeFactor;                            //!< AUTO: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
-  Index verboseMode;                              //!< AUTO: 0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
+  Index verboseMode;                              //!< AUTO: 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   Index verboseModeFile;                          //!< AUTO: same behaviour as verboseMode, but outputs all solver information to file
   Index stepInformation;                          //!< AUTO: 0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step
   GeneralizedAlphaSettings generalizedAlpha;      //!< AUTO: parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)
@@ -602,6 +603,7 @@ public: // AUTO:
     relativeTolerance = 1e-8;
     stepSizeSafety = 0.90;
     stepSizeMaxIncrease = 2;
+    reuseConstantMassMatrix = true;
     simulateInRealtime = false;
     realtimeFactor = 1;
     verboseMode = 0;
@@ -675,9 +677,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
   Real PyGetRealtimeFactor() const { return (Real)(realtimeFactor); }
 
-  //! AUTO: Set function (needed in pybind) for: 0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
+  //! AUTO: Set function (needed in pybind) for: 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   void PySetVerboseMode(const Index& verboseModeInit) { verboseMode = EXUstd::GetSafelyUInt(verboseModeInit,"verboseMode"); }
-  //! AUTO: Read (Copy) access to: 0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
+  //! AUTO: Read (Copy) access to: 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   Index PyGetVerboseMode() const { return (Index)(verboseMode); }
 
   //! AUTO: Set function (needed in pybind) for: same behaviour as verboseMode, but outputs all solver information to file
@@ -710,6 +712,7 @@ public: // AUTO:
     os << "  relativeTolerance = " << relativeTolerance << "\n";
     os << "  stepSizeSafety = " << stepSizeSafety << "\n";
     os << "  stepSizeMaxIncrease = " << stepSizeMaxIncrease << "\n";
+    os << "  reuseConstantMassMatrix = " << reuseConstantMassMatrix << "\n";
     os << "  preStepPyExecute = " << preStepPyExecute << "\n";
     os << "  simulateInRealtime = " << simulateInRealtime << "\n";
     os << "  realtimeFactor = " << realtimeFactor << "\n";
@@ -736,7 +739,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -896,7 +899,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -962,7 +965,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -988,6 +991,7 @@ public: // AUTO:
   bool cleanUpMemory;                             //!< AUTO: True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance
   bool displayStatistics;                         //!< AUTO: display general computation information at end of time step (steps, iterations, function calls, step rejections, ...
   bool displayComputationTime;                    //!< AUTO: display computation time statistics at end of solving
+  bool displayGlobalTimers;                       //!< AUTO: display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)
   bool pauseAfterEachStep;                        //!< AUTO: pause after every time step or static load step(user press SPACE)
   Index outputPrecision;                          //!< AUTO: precision for floating point numbers written to console; e.g. values written by solver
   Index numberOfThreads;                          //!< AUTO: number of threads used for parallel computation (1 == scalar processing); not yet implemented (status: Nov 2019)
@@ -1001,6 +1005,7 @@ public: // AUTO:
     cleanUpMemory = false;
     displayStatistics = false;
     displayComputationTime = false;
+    displayGlobalTimers = false;
     pauseAfterEachStep = false;
     outputPrecision = 6;
     numberOfThreads = 1;
@@ -1029,6 +1034,7 @@ public: // AUTO:
     os << "  cleanUpMemory = " << cleanUpMemory << "\n";
     os << "  displayStatistics = " << displayStatistics << "\n";
     os << "  displayComputationTime = " << displayComputationTime << "\n";
+    os << "  displayGlobalTimers = " << displayGlobalTimers << "\n";
     os << "  pauseAfterEachStep = " << pauseAfterEachStep << "\n";
     os << "  outputPrecision = " << outputPrecision << "\n";
     os << "  numberOfThreads = " << numberOfThreads << "\n";

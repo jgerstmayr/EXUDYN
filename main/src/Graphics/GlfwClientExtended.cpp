@@ -15,6 +15,11 @@
 #include "Utilities/BasicDefinitions.h"
 #include "Utilities/SlimArray.h"
 //#include <string>
+#include "Utilities/SlimArray.h"
+
+//the following is used for Sphere generation, could be replaced!
+#include "Graphics/VisualizationSystemContainer.h"
+#include "Graphics/VisualizationPrimitives.h"
 
 #ifdef USE_GLFW_GRAPHICS
 
@@ -287,8 +292,38 @@ Float2 GlfwRenderer::PixelToVertexCoordinates(float x, float y)
 }
 
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! initialize some GLlists, e.g., for spheres
 
+void GlfwRenderer::InitGLlists()
+{
+	spheresListBase = glGenLists(maxSpheresLists);
+	float radius = 1.f;
+	Index itemID = 0;
+	GraphicsData graphicsData; //temporary
+	for (guint loop = 0; loop < maxSpheresLists; loop++)
+	{
+		Index nTiles = Index(pow(2, loop));
+		graphicsData.FlushData();
+		EXUvis::DrawSphere(Vector3D(0.), radius, EXUvis::grey2, graphicsData, itemID, nTiles, true);
 
+		glNewList(spheresListBase + loop, GL_COMPILE);
+
+		for (const GLTriangle& trig : graphicsData.glTriangles)
+		{ //draw faces
+			glBegin(GL_TRIANGLES);
+			for (Index i = 0; i < 3; i++)
+			{
+				glNormal3fv(trig.normals[i].GetDataPointer());
+				glVertex3fv(trig.points[i].GetDataPointer());
+			}
+			glEnd();
+		}
+
+		glEndList();
+	}
+
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++                         FONTS                              +++++++++++++++++++++++++++++++++

@@ -54,7 +54,7 @@ public:
 			delete[] item.text; //must be allocated by procedure which generates the texts;
 		}
 		glLines.SetNumberOfItems(0);
-		//glPoints.SetNumberOfItems(0);
+		//glSpheres.SetNumberOfItems(0);
 		glCirclesXY.SetNumberOfItems(0);
 		glTexts.SetNumberOfItems(0);
 		glTriangles.SetNumberOfItems(0);
@@ -154,16 +154,6 @@ public:
 		//after MainSystem has been deleted, this pointer is invalid and item->Reset() fails
 		//VisualizationSystem.Reset() must be done in MainSystem, because needed when calling mbs.Reset() in Python!
 
-		//for (auto item : visualizationSystems)
-		//{
-		//	item->Reset();
-		//}
-		//anyway done in item->Reset()
-		//for (auto item : graphicsDataList)
-		//{
-		//	item->FlushData();
-		//}
-		//********************************************
 		visualizationSystems.Flush();
 		graphicsDataList.Flush();
 
@@ -176,8 +166,11 @@ public:
 	//  update is sent to all attached visualization systems
 	virtual void UpdateGraphicsData() override;
 	
-	//! Renderer reports to CSystem that simulation shall be interrupted
-	virtual void StopSimulation() override;		
+	//! renderer reports to CSystem that simulation shall be interrupted
+	virtual void StopSimulation() override;
+
+	//! renderer reports that render window is closed and simulation shall be shut down
+	virtual void ForceQuitSimulation(bool flag = true) override;
 
 	//! renderer reports to simulation that simulation can be continued
 	virtual void ContinueSimulation() override;

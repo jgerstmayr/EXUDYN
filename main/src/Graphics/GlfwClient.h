@@ -127,6 +127,10 @@ private:
 	static GLuint bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
 	static ResizableArray<GLubyte> charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 #endif
+
+	static GLuint spheresListBase;			//!< starting index for GLlists for spheres
+	static constexpr Index maxSpheresLists = 8; //!< max. number of GLlists for spheres (with resolution 2,4,8,16, etc.
+
 	//+++++++++++++++++++++++++++++++++++++++++
 	//link to GraphicsData and Settings:
 	static ResizableArray<GraphicsData*>* graphicsDataList;					//!< link to graphics data; only works for one MainSystem, but could also be realized for several systems
@@ -276,19 +280,8 @@ private: //to be called internally only!
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-	static void window_close_callback(GLFWwindow* window)
-	{
-		//StopRenderer();
-		//rendererActive = false;
-		//basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
-		//stopRenderer = false;	//if stopped by user
+	static void window_close_callback(GLFWwindow* window);
 
-		glfwSetWindowShouldClose(window, GLFW_FALSE); //do not close ....
-		if (PyGetRendererCallbackLock()) { return; }
-
-		ShowMessage("PRESS ESC or Q to close window!",5);
-	
-	}
 	//! if callback function like mousemove is called, immediately refresh graphics independently of graphicsUpdateInterval
 	static void SetCallBackSignal(bool flag = true) { callBackSignal = flag; }
 	static bool GetCallBackSignal() { return callBackSignal; }
@@ -341,6 +334,9 @@ private: //to be called internally only!
 	//FONTS
 	//! initialize bitmap for bitmap font (loaded from characterBitmap.h
 	static void InitFontBitmap(guint fontSize);// , guint fontSizeSmall, guint fontSizeLarge, guint fontSizeHuge);
+
+	//! initialize some GLlists, e.g., for spheres
+	static void InitGLlists();
 
 	//! draw a 0-terminated text string with fontSize, including monitor scaling factor; (for line-characters: size=1: height=1; width=0.5 for one character; distance = 0.25)
 	//! switches to strings drawn by textures (default) or lines

@@ -2435,27 +2435,30 @@ class FEMinterface:
             
     #**classFunction: get gyroscopic matrix in according format; rotationAxis=[0,1,2] = [x,y,z]
     def GetGyroscopicMatrix(self, rotationAxis=2, sparse=True):
+        #create gyroscopic terms
+        nNodes = self.NumberOfNodes()
+        if rotationAxis == 0:
+            X=np.array([[ 0.,  0.,  0.],
+                        [ 0.,  0., -1.],
+                        [ 0.,  1.,  0.]])
+        elif rotationAxis == 1:
+            X=np.array([[ 0.,  0.,  1.],
+                        [ 0.,  0.,  0.],
+                        [-1.,  0.,  0.]])
+        elif rotationAxis == 2:
+            X=np.array([[ 0., -1.,  0.],
+                        [ 1.,  0.,  0.],
+                        [ 0.,  0.,  0.]])
+            
         if sparse:
-            raise ValueError("GetGyroscopicMatrix: not implemented for sparse matrices!")
+            from scipy import sparse
+            xBlock = sparse.kron(sparse.eye(nNodes), X) #create big block-diagonal matrix
+            G=np.dot(xBlock,CSRtoScipySparseCSR(self.massMatrix))
         else:
-            #create gyroscopic terms
-            nNodes = self.NumberOfNodes()
-            if rotationAxis == 0:
-                X=np.array([[ 0.,  0.,  0.],
-                            [ 0.,  0., -1.],
-                            [ 0.,  1.,  0.]])
-            elif rotationAxis == 1:
-                X=np.array([[ 0.,  0.,  1.],
-                            [ 0.,  0.,  0.],
-                            [-1.,  0.,  0.]])
-            elif rotationAxis == 2:
-                X=np.array([[ 0., -1.,  0.],
-                            [ 1.,  0.,  0.],
-                            [ 0.,  0.,  0.]])
             xBlock = np.kron(np.eye(nNodes), X) #create big block-diagonal matrix
             G=np.dot(xBlock,CompressedRowSparseToDenseMatrix(self.massMatrix))
 
-            return G
+        return G
 
 
 
@@ -2506,7 +2509,8 @@ class FEMinterface:
     #**input:
     #  mbs: multibody system to which the GenericODE2 is added
     #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
-    def CreateLinearFEMObjectGenericODE2(self, mbs):
+    def CreateLinearFEMObjectGenericODE2(self, mbs, color=[0.9,0.4,0.4,1.]):
+        import exudyn as exu
         femNodes = fem.GetNodePositionsAsArray()
         
         #add nodes:
@@ -2528,7 +2532,7 @@ class FEMinterface:
                                                         stiffnessMatrix=Kcsr,
                                                         #forceVector=np.zeros(nRows), 
                                                         #forceUserFunction=UFforce,
-                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color4lightred)
+                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color)
                                                         ))
         return [oGenericODE2, allNodeList]
         
@@ -2551,8 +2555,11 @@ class FEMinterface:
     #**author: Johannes Gerstmayr, Joachim Sch\"oberl
     def CreateNonlinearFEMObjectGenericODE2NGsolve(self, mbs, mesh, 
                                                    density, youngsModulus, poissonsRatio, 
-                                                   meshOrder = 1):
+                                                   meshOrder=1, color=[0.9,0.4,0.4,1.]):
         import ngsolve as ngs
+        import exudyn as exu
+        from scipy.sparse import csr_matrix
+        
         if meshOrder < 1 or meshOrder > 2:
             raise ValueError('mesh order > 1 or mesh order < 2 not supported!')
             
@@ -2639,7 +2646,7 @@ class FEMinterface:
                                                         massMatrix=Mcsr, 
                                                         forceUserFunction=UFforce,
                                                         jacobianUserFunction=UFjacobian,
-                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color4lightred)
+                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color)
                                                         ))
 
         return [oGenericODE2, allNodeList]
@@ -3144,13 +3151,15 @@ class FEMinterface:
     #  frequencySteps: gives the number of increments (gives frequencySteps+1 total points in campbell diagram)
     #  rotationAxis:[0,1,2] = [x,y,z] provides rotation axis
     #  plotDiagram: if True, plots diagram for nEigenfrequencies befor terminating
-    #  verbose: if True, shows progress of computation
+    #  verbose: if True, shows progress of computation; if verbose=2, prints also eigenfrequencies
     #  useCorotationalFrame: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well
+    #  useSparseSolver: for larger systems, the sparse solver needs to be used for creation of system matrices and for the eigenvalue solver (uses a random number generator internally in ARPACK, therefore, results are not fully repeatable!!!)
     #**output: [listFrequencies, campbellFrequencies]
     #  listFrequencies: list of computed frequencies
     #  campbellFrequencies: array of campbell frequencies per eigenfrequency of system
     def ComputeCampbellDiagram(self, terminalFrequency, nEigenfrequencies=10, frequencySteps=25, 
-                               rotationAxis=2, plotDiagram=False, verbose=False, useCorotationalFrame=False):
+                               rotationAxis=2, plotDiagram=False, verbose=False, 
+                               useCorotationalFrame=False, useSparseSolver=False):
         from scipy.linalg import eig #eigh for symmetric matrices, positive definite
         
         #create gyroscopic terms
@@ -3160,48 +3169,127 @@ class FEMinterface:
 #        xBlock = np.kron(np.eye(nNodes), X) #create big block-diagonal matrix
 #        G=np.dot(xBlock,M)
         
-        M = self.GetMassMatrix(sparse=False)
-        K = self.GetStiffnessMatrix(sparse=False)
-        G = self.GetGyroscopicMatrix(rotationAxis=2, sparse=False)
+        if self.NumberOfCoordinates() > 1000:
+            print('WARNING: ComputeCampbellDiagram(...): system has more than 1000 coordinates, set useSparseSolver=True')
+            if self.NumberOfCoordinates() > 5000:
+                raise ValueError('ComputeCampbellDiagram(...): system has more than 5000 coordinates, MUST set useSparseSolver=True')
 
-        nODE = self.NumberOfCoordinates()
-        #nNodes = self.NumberOfNodes()
-        B = np.block([[                    K, np.zeros((nODE,nODE))],
-                      [np.zeros((nODE,nODE)), -M                   ]])
+        #dense matrix version:
+        if not useSparseSolver:        
+            M = self.GetMassMatrix(sparse=False)
+            K = self.GetStiffnessMatrix(sparse=False)
+            G = self.GetGyroscopicMatrix(rotationAxis=rotationAxis, sparse=False)
     
-        factorGyro = 1
-        if useCorotationalFrame:
-            factorGyro = 2 #this is the only difference to between fixed and corotational frame
-#        terminalFrequencyCampbell = 2*np.pi*225 #rad/s
-        campbellFrequencies = []
-        listFrequencies = []
-
-        for val in range(frequencySteps+1):
+            #create system:
+            #A*x_t + B*x=0
+            nODE = self.NumberOfCoordinates()
+            B = np.block([[                    K, np.zeros((nODE,nODE))],
+                          [np.zeros((nODE,nODE)), -M                   ]])
+        
+            factorGyro = 1
+            if useCorotationalFrame:
+                factorGyro = 2 #this is the only difference to between fixed and corotational frame
+    #        terminalFrequencyCampbell = 2*np.pi*225 #rad/s
+            campbellFrequencies = []
+            listFrequencies = []
+    
+            for val in range(frequencySteps+1):
+                
+                omega = val * terminalFrequency * 2*np.pi / frequencySteps
+                if verbose:
+                    print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
+                A = np.block([[factorGyro*omega * G, M                    ],
+                              [                   M, np.zeros((nODE,nODE))]])
+        
             
-            omega = val * terminalFrequency * 2*np.pi / frequencySteps
-            if verbose:
-                print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
-            A = np.block([[factorGyro*omega * G, M                    ],
-                          [                   M, np.zeros((nODE,nODE))]])
+                Amod = -np.dot(np.linalg.inv(A),B)
+                #print("Amod =", Amod)
+                [eigVals, eigVecs] = eig(Amod) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            
+                ev = np.sort(eigVals)
+            
+                listEigAbs = []
+                for i in range(len(ev)):
+                    v=abs(ev[i].imag/(2*np.pi))
+                    if not (v in listEigAbs):
+                        listEigAbs += [v]
     
-        
-            Amod = -np.dot(np.linalg.inv(A),B)
-            #print("Amod =", Amod)
-            [eigValues, eigVector] = eig(Amod) #this gives omega^2 ... squared eigen frequencies (rad/s)
-        
-            ev = np.sort(eigValues)
-        
-            listEigImag = []
-            for i in range(len(ev)):
-                v=abs(ev[i].imag/(2*np.pi))
-                if not (v in listEigImag):
-                    listEigImag += [v]
+                listEigAbs = np.sort(listEigAbs)
+                if verbose == 2:
+                    print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
+            
+                campbellFrequencies += [list(listEigAbs[0:nEigenfrequencies+1])] #+1 for rigid body mode 0
+                listFrequencies += [omega/(2*np.pi)]
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #SPARSE version:
+        else: 
+            from scipy import sparse
+            from scipy.sparse.linalg import factorized, eigs
+            #[M, 0][q_tt] + [omega*G, 0] [q_t] = [0]
+            #[0, 0][q_t ] + [       , K] [q  ] = [0]
+ 
+            #M*d(q_t) + omega*G*q_t + K * q = 0
+            #d(q) = q_t
+            #d(q_t) = -Minv*(omega*G*q_t+K*q)
+            
+            #       [0      , I      ]
+            #d(x) = [                ] * x
+            #       [-Minv*K, -omega*Minv*G] 
+ 
+            M = CSRtoScipySparseCSR(self.GetMassMatrix(sparse=True))
+            K = CSRtoScipySparseCSR(self.GetStiffnessMatrix(sparse=True))
+            G = self.GetGyroscopicMatrix(rotationAxis=rotationAxis, sparse=True) #already in scypi sparse format
+    
+            nODE = self.NumberOfCoordinates()
 
-            listEigImag = np.sort(listEigImag)
-        
-            campbellFrequencies += [list(listEigImag[0:nEigenfrequencies+1])] #+1 for rigid body mode 0
-            listFrequencies += [omega/(2*np.pi)]
+            # Minv = factorized(M.tocsc()) #factorized expects csc format, otherwise warning
+            # MinvK = sparse.csr_matrix(Minv(-K.toarray())) #slow, but no other way right now
+            # MinvG = sparse.csr_matrix(Minv((-G).toarray())) #this is for omega=1, multiplied with factor hereafter!
 
+            #twice as large mass-matrix:
+            M2 = sparse.bmat([[M   , None],
+                              [None, M   ]]) 
+            #M2inv = factorized(M2.tocsc()) 
+        
+            factorGyro = 1
+            if useCorotationalFrame:
+                factorGyro = 2 #this is the only difference to between fixed and corotational frame
+
+            campbellFrequencies = []
+            listFrequencies = []
+    
+            for val in range(frequencySteps+1):
+                
+                omega = val * terminalFrequency * 2*np.pi / frequencySteps
+                if verbose:
+                    print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
+                # print('nEig:',nEigenfrequencies)
+                # A = sparse.bmat([[None , sparse.eye(nODE)        ],
+                #                  [MinvK, (factorGyro*omega)*MinvG]]) #in fact negative sign included in MinvK and MinvG!!!
+                
+                # [eigVals, eigVecs] = eigs(A=A, k=2*(nEigenfrequencies+1), #M=Mii, 
+                #                           which='LM', sigma=0)
+                A = sparse.bmat([[None , M        ],
+                                  [-K, -(factorGyro*omega)*G]]) #in fact negative sign included in MinvK and MinvG!!!
+                [eigVals, eigVecs] = eigs(A=A, k=2*(nEigenfrequencies+1), M=M2, #Minv=M2inv,
+                                          which='LM', sigma=0)
+            
+                ev = np.sort(eigVals)
+            
+                listEigAbs = []
+                for i in range(len(ev)):
+                    v=abs(ev[i].imag/(2*np.pi))
+                    if not (v in listEigAbs):
+                        listEigAbs += [v]
+    
+                listEigAbs = np.sort(listEigAbs)
+                if verbose == 2:
+                    print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
+            
+                campbellFrequencies += [list(listEigAbs[0:nEigenfrequencies+1])] #+1 for rigid body mode 0
+                listFrequencies += [omega/(2*np.pi)]
+
+            
         if plotDiagram:
             import matplotlib.pyplot as plt
             import matplotlib.ticker as ticker

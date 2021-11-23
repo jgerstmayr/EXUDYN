@@ -50,6 +50,7 @@ void CSolverExplicitTimeInt::PreInitializeSolverSpecific(CSystem& computationalS
 	eliminateConstraints = timeint.explicitIntegration.eliminateConstraints;
 	useLieGroupIntegration = timeint.explicitIntegration.useLieGroupIntegration;
 	minStepSizeWarned = false;
+
 }
 
 ////! set/compute initial conditions (solver-specific!); called from InitializeSolver()
@@ -142,66 +143,75 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	rk.startOfStepODE2.SetNumberOfItems(data.nODE2);
 	rk.startOfStepODE2_t.SetNumberOfItems(data.nODE2);
 	rk.startOfStepODE1.SetNumberOfItems(data.nODE1);
+
+	computationalSystem.GetSolverData().doPostNewtonIteration = false; //no PostNewton step necessary for explicit solver; do this directly in contact iteration
 }
 
 //! initialize all data,it,conv; called from InitializeSolver()
 void CSolverExplicitTimeInt::InitializeSolverData(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-	//UPDATE: system size is the size of first order variables
-	data.nSys = data.nODE2 + data.nODE2 + data.nODE1;
-	data.newtonSolution.SetNumberOfItems(data.nSys);
+	CSolverBase::InitializeSolverData(computationalSystem, simulationSettings);
 
-	conv.InitializeData();
-
-	if (simulationSettings.linearSolverType == LinearSolverType::EXUdense)
-	{
-		data.SetLinearSolverType(LinearSolverType::EXUdense);
-	}
-	else
-	{
-		data.SetLinearSolverType(LinearSolverType::EigenSparse);
-	}
-
-	data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
-	
-	//not needed, but done to have them here:
+	//these sizes are different from implicit solvers:
 	data.systemJacobian->SetNumberOfRowsAndColumns(0, 0);
 	data.jacobianAE->SetNumberOfRowsAndColumns(0, 0);
-
-	data.systemResidual.SetNumberOfItems(0);
-	data.newtonSolution.SetNumberOfItems(0);	//temporary vector for Newton
-	data.tempODE2F0.SetNumberOfItems(0);		//temporary vector for ODE2 Jacobian; not needed in explicit solver
-	data.tempODE2F1.SetNumberOfItems(0);		//temporary vector for ODE2 Jacobian; not needed in explicit solver
-	data.tempODE1F0.SetNumberOfItems(0);		//temporary vector for ODE1 Jacobian; not needed in explicit solver
-	data.tempODE1F1.SetNumberOfItems(0);		//temporary vector for ODE1 Jacobian; not needed in explicit solver
-
-	data.tempODE2.SetNumberOfItems(data.nODE2);			//temporary vector for ODE2 quantities
-	//data.tempODE1.SetNumberOfItems(data.nODE1);			//temporary vector for ODE2 quantities
-
-	data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
-
-	//temp. structure to store start of discontinous iteration state:
-	//  done in CleanUpMemory(): data.startOfDiscIteration.Reset();
 	data.startOfStepStateAAlgorithmic.SetNumberOfItems(0);
 
-	//for Newton, not used here:
-	it.newtonStepsCount = 0;				//count total number of Newton iterations
-	it.newtonJacobiCount = 0;				//count total number of Jacobian computations and factorizations
-	it.rejectedModifiedNewtonSteps = 0;		//count number of rejections of modifiedNewtonMethod
-	it.newtonSteps = 0;						//consistently initialize
-	conv.errorCoordinateFactor = 1.;
+	//DELETE:
+	//due to error, this function was a duplicate of CSolverBase:
+
+	////UPDATE: system size is the size of first order variables
+	//data.newtonSolution.SetNumberOfItems(data.nSys);
+
+	//conv.InitializeData();
+	//if (simulationSettings.linearSolverType == LinearSolverType::EXUdense)
+	//{
+	//	data.SetLinearSolverType(LinearSolverType::EXUdense);
+	//}
+	//else
+	//{
+	//	data.SetLinearSolverType(LinearSolverType::EigenSparse);
+	//}
+
+	//data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
+	
+	//not needed, but done to have them here:
+	//data.systemJacobian->SetNumberOfRowsAndColumns(0, 0);
+	//data.jacobianAE->SetNumberOfRowsAndColumns(0, 0);
+
+	//data.systemResidual.SetNumberOfItems(0);
+	//data.newtonSolution.SetNumberOfItems(0);	//temporary vector for Newton
+	//data.tempODE2F0.SetNumberOfItems(0);		//temporary vector for ODE2 Jacobian; not needed in explicit solver
+	//data.tempODE2F1.SetNumberOfItems(0);		//temporary vector for ODE2 Jacobian; not needed in explicit solver
+	//data.tempODE1F0.SetNumberOfItems(0);		//temporary vector for ODE1 Jacobian; not needed in explicit solver
+	//data.tempODE1F1.SetNumberOfItems(0);		//temporary vector for ODE1 Jacobian; not needed in explicit solver
+
+	//data.tempODE2.SetNumberOfItems(data.nODE2);			//temporary vector for ODE2 quantities
+	//data.tempODE1.SetNumberOfItems(data.nODE1);			//temporary vector for ODE2 quantities
+
+	//data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
+
+	////temp. structure to store start of discontinous iteration state:
+	////  done in CleanUpMemory(): data.startOfDiscIteration.Reset();
+	//data.startOfStepStateAAlgorithmic.SetNumberOfItems(0);
+
+	////for Newton, not used here:
+	//it.newtonStepsCount = 0;				//count total number of Newton iterations
+	//it.newtonJacobiCount = 0;				//count total number of Jacobian computations and factorizations
+	//it.rejectedModifiedNewtonSteps = 0;		//count number of rejections of modifiedNewtonMethod
+	//it.newtonSteps = 0;						//consistently initialize
+	//conv.errorCoordinateFactor = 1.;
 
 	//used for discontinuous problems:
-	it.discontinuousIterationsCount = 0;	//count total number of discontinuous iterations
-	it.discontinuousIteration = 0;			//consistently initialize
+	//it.discontinuousIterationsCount = 0;	//count total number of discontinuous iterations
+	//it.discontinuousIteration = 0;			//consistently initialize
 
 	//initialize some of the variables, which are usually defined in Newton, but not used in explicit integrator
-	data.newtonSolution.SetAll(0.);
-	it.newtonSteps = 0;
-	conv.residual = 0;
-	conv.lastResidual = 0;
-	conv.contractivity = 0;
-
+	//data.newtonSolution.SetAll(0.);
+	//it.newtonSteps = 0;
+	//conv.residual = 0;
+	//conv.lastResidual = 0;
+	//conv.contractivity = 0;
 }
 
 
@@ -610,7 +620,7 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 		STOPTIMER(timer.massMatrix);
 	}
 	STARTTIMER(timer.ODE2RHS);
-	computationalSystem.ComputeSystemODE2RHS(data.tempCompData, ode2Rhs); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
+	computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, ode2Rhs); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 	STOPTIMER(timer.ODE2RHS);
 
 	if (doDebug)

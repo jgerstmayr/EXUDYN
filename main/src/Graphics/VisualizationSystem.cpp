@@ -170,6 +170,17 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		postProcessData->visualizationTime = systemData->GetCData().GetVisualization().GetTime(); //update time, synchronized with the state shown 
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
+		//visualize contact:
+		//if (visualizationSystemContainer.settings.contact.showSearchTree)
+		//{
+		//	CSystem* cSystem = GetMainSystemBacklink()->GetCSystem();
+		//	for (auto gContact : cSystem->GetGeneralContacts())
+		//	{
+
+		//	}
+		//}
+
+		//++++++++++++++++++++++++++++++++++++++++++++++
 		//visualize nodes:
 		//pout << "UpdateGraphicsData nodes1\n";
 		if (visualizationSystemContainer.settings.nodes.show)
@@ -251,7 +262,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 						maxVal = EXUstd::Maximum(maxVal, item.color[0]); //contour plot value is given in RED channel
 					}
 				}
-				for (auto item : graphicsData.glPoints)
+				for (auto item : graphicsData.glSpheres)
 				{
 					if (item.color[3] == contourPlotFlag)
 					{
@@ -302,7 +313,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 					item.color = VisualizationSystemContainerBase::ColorBarColor(minVal, maxVal, item.color[0]);
 				}
 			}
-			for (auto& item : graphicsData.glPoints)
+			for (auto& item : graphicsData.glSpheres)
 			{
 				if (item.color[3] == contourPlotFlag)
 				{

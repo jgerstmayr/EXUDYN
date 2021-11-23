@@ -30,6 +30,7 @@ public:
 	virtual void UpdateGraphicsData() = 0;		//!< renderer reports to simulation to update the graphics data
 	virtual void UpdateMaximumSceneCoordinates() = 0;	//!< renderer reports to update the maximum scene coordinates (on initialization)
 	virtual void StopSimulation() = 0;			//!< renderer reports to simulation that simulation shall be interrupted
+	virtual void ForceQuitSimulation(bool flag = true) = 0;		//!< renderer reports that render window is closed and simulation shall be shut down
 	virtual void ContinueSimulation() = 0;		//!< renderer reports to simulation that simulation can be continued
 	virtual void UpdateGraphicsDataNow() = 0;	//! renderer signals to update the graphics data, e.g. if settings have changed
 	//virtual void SetVisualizationIsRunning(bool flag = true) = 0;	//! renderer signals that visualizationIsRunning flag should be set to "flag"

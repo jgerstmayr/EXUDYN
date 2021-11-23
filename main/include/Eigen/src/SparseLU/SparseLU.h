@@ -212,7 +212,7 @@ class SparseLU : public SparseSolverBase<SparseLU<_MatrixType,_OrderingType> >, 
     {
       return m_lastError; 
     }
-
+	//called by Exudyn LinearSolver:
     template<typename Rhs, typename Dest>
     bool _solve_impl(const MatrixBase<Rhs> &B, MatrixBase<Dest> &X_base) const
     {

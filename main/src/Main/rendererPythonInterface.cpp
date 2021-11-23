@@ -387,10 +387,10 @@ CTRL+N ... show/hide node numbers
 S      ... show/hide sensors
 CTRL+S ... show/hide sensor numbers
 T      ... switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces
-Q      ... stop simulation
+Q      ... stop current solver and proceed to next simulation (or end of file)
 X      ... execute command; dialog may appear behind the visualization window! may crash!
 V      ... visualization settings; dialog may appear behind the visualization window!
-ESCAPE ... close render window
+ESCAPE ... close render window and stop all simulations (same as close window button)
 SPACE ... continue simulation
 	"""
 	textW.insert(tk.END, msg)

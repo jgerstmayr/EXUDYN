@@ -58,9 +58,13 @@ protected: //
 public:
 	//use lists that are directly accessible for now; performance?
 	ResizableArray<Index> objectsBodyWithODE2Coords;//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects)
-	ResizableArray<Index> listComputeObjectODE2Lhs;		//!< list of objects that need to evaluate ComputeObjectODE2Lhs
+	ResizableArray<Index> listComputeObjectODE2Lhs;		//!< list of objects that need to evaluate ComputeObjectODE2Lhs (ALL)
+	ResizableArray<Index> listComputeObjectODE2LhsNoUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs, but have no user function
+	ResizableArray<Index> listComputeObjectODE2LhsUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs with user functions
 	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
+	ResizableArray<Index> listOfLoads;					//!< list of loads without user functions (can be processes multithreaded)
+	ResizableArray<Index> listOfLoadsUF;				//!< list of loads WITH user functions (must be processed serially)
 
 	ResizableArray<Index> objectsBodyWithAE;			//!< list of objects that are bodies and have AE
 	ResizableArray<Index> nodesODE2WithAE;					//!< list of nodes that have AE (Euler parameters)
@@ -110,6 +114,7 @@ public: //
 
 		objectsBodyWithODE2Coords.Flush();
 		listComputeObjectODE2Lhs.Flush();
+		listComputeObjectODE2LhsUF.Flush();
 		listComputeObjectODE1Rhs.Flush();
 		listDiscontinuousIteration.Flush();
 
@@ -240,6 +245,12 @@ public: //
 	//! Read (Reference) access to:global number of Data variable (sum of all node Data variable)
 	const Index& GetNumberOfCoordinatesData() const { return numberOfCoordinatesData; }
 
+	//! compute ODE2 ltg indices for marker (which either composes the ltg of a connector using two markers, or may be used e.g. for markers in CContact)
+	void ComputeMarkerODE2LTGarray(Index markerNumber, ArrayIndex& ltgListODE2, bool resetFlag = true) const;
+
+	//! compute ODE1+Data ltg indices for marker (which either composes the ltg of a connector using two markers, or may be used e.g. for markers in CContact)
+	void ComputeMarkerODE1DataLTGarray(Index markerNumber, ArrayIndex& ltgListODE1, ArrayIndex& ltgListData, bool resetFlag = true) const;
+
 	//! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.; implemented in CSystem.cpp
 	void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const;
 
@@ -275,6 +286,139 @@ public: //
 	}
 
 };
+
+//! compute ltg indices for marker (which either composes the ltg of a connector using two markers, or may be used e.g. for markers in CContact)
+inline void CSystemData::ComputeMarkerODE2LTGarray(Index markerNumber, ArrayIndex& ltgListODE2, bool resetFlag) const
+{
+	if (resetFlag) { ltgListODE2.SetNumberOfItems(0); }
+
+	//moved here from CSystem:
+
+	//pout << "build LTG for " << objectIndex << " (=connector), marker " << markerNumber << "\n";
+	CMarker* marker = GetCMarkers()[markerNumber];
+	if (marker->GetType() & Marker::Object) //was before::Object
+	{
+		Index objectNumber = marker->GetObjectNumber();
+		const CObject& object = *(GetCObjects()[objectNumber]);
+
+		//object2 can't be a connector, so must have nodes
+		for (Index j = 0; j < object.GetNumberOfNodes(); j++)
+		{
+			const CNode* node = object.GetCNode(j);
+			//pout << "  node ODE2=" << node->GetNumberOfODE2Coordinates() << "\n";
+			if (node->GetNumberOfODE2Coordinates())
+			{
+				Index gIndex = node->GetGlobalODE2CoordinateIndex();
+				for (Index i = 0; i < node->GetNumberOfODE2Coordinates(); i++)
+				{
+					ltgListODE2.Append(gIndex + i);
+				}
+			}
+		}
+	}
+	if (marker->GetType() & Marker::Node) //marker can be object + node ==> sliding joing
+	{
+		Index nodeNumber = marker->GetNodeNumber();
+		CNode* node = GetCNodes()[nodeNumber];
+
+		if (node->GetNumberOfODE2Coordinates())
+		{
+			Index gIndex = node->GetGlobalODE2CoordinateIndex();
+			for (Index i = 0; i < node->GetNumberOfODE2Coordinates(); i++)
+			{
+				ltgListODE2.Append(gIndex + i);
+			}
+		}
+	}
+	else if (!(marker->GetType() & Marker::Node) && !(marker->GetType() & Marker::Object))
+	{
+		pout << "ComputeMarkerODE2LTGarray: ERROR: invalid MarkerType: not implemented in CSystem::AssembleLTGLists\n";
+	}
+
+}
+
+//! compute ODE1+Data ltg indices for marker (which either composes the ltg of a connector using two markers, or may be used e.g. for markers in CContact)
+inline void CSystemData::ComputeMarkerODE1DataLTGarray(Index markerNumber, ArrayIndex& ltgListODE1, ArrayIndex& ltgListData, bool resetFlag) const
+{
+	CMarker* marker = GetCMarkers()[markerNumber];
+	if (marker->GetType() & Marker::Object) //was before::Object
+	{
+		Index objectNumber = marker->GetObjectNumber();
+		const CObject& object = *(GetCObjects()[objectNumber]);
+
+		//pout << "  nNodes=" << object.GetNumberOfNodes() << "\n";
+
+		//object2 can't be a connector, so must have nodes
+		for (Index j = 0; j < object.GetNumberOfNodes(); j++)
+		{
+			const CNode* node = object.GetCNode(j);
+			//pout << "  node ODE2=" << node->GetNumberOfODE2Coordinates() << "\n";
+			if (node->GetNumberOfODE1Coordinates())
+			{
+				Index gIndex = node->GetGlobalODE1CoordinateIndex();
+				for (Index i = 0; i < node->GetNumberOfODE1Coordinates(); i++)
+				{
+					ltgListODE1.Append(gIndex + i);
+				}
+			}
+			//exclude AE-coordinates, because markers should not act on algebraic coordinates (e.g. rigid body nodes with Euler parameters)
+			//if (node->GetNumberOfAECoordinates())
+			//{
+			//	Index gIndex = node->GetGlobalAECoordinateIndex();
+			//	for (Index i = 0; i < node->GetNumberOfAECoordinates(); i++)
+			//	{
+			//		ltgListAE.Append(gIndex + i);
+			//	}
+			//}
+			if (node->GetNumberOfDataCoordinates())
+			{
+				Index gIndex = node->GetGlobalDataCoordinateIndex();
+				for (Index i = 0; i < node->GetNumberOfDataCoordinates(); i++)
+				{
+					ltgListData.Append(gIndex + i);
+				}
+			}
+		}
+	}
+	if (marker->GetType() & Marker::Node) //marker can be object + node ==> sliding joing
+	{
+		Index nodeNumber = marker->GetNodeNumber();
+		CNode* node = GetCNodes()[nodeNumber];
+
+		if (node->GetNumberOfODE1Coordinates())
+		{
+			Index gIndex = node->GetGlobalODE1CoordinateIndex();
+			for (Index i = 0; i < node->GetNumberOfODE1Coordinates(); i++)
+			{
+				ltgListODE1.Append(gIndex + i);
+			}
+		}
+		//exclude AE-coordinates, because markers should not act on algebraic coordinates (e.g. rigid body nodes with Euler parameters)
+		//if (node->GetNumberOfAECoordinates())
+		//{
+		//	Index gIndex = node->GetGlobalAECoordinateIndex();
+		//	for (Index i = 0; i < node->GetNumberOfAECoordinates(); i++)
+		//	{
+		//		ltgListAE.Append(gIndex + i);
+		//	}
+		//}
+		if (node->GetNumberOfDataCoordinates())
+		{
+			Index gIndex = node->GetGlobalDataCoordinateIndex();
+			for (Index i = 0; i < node->GetNumberOfDataCoordinates(); i++)
+			{
+				ltgListData.Append(gIndex + i);
+			}
+		}
+	}
+	else if (!(marker->GetType() & Marker::Node) && !(marker->GetType() & Marker::Object))
+	{
+		pout << "ComputeMarkerODE1DataLTGarray: ERROR: invalid MarkerType: not implemented in CSystem::AssembleLTGLists\n";
+	}
+
+
+}
+
 
 //!markerdata computed in CSystemData because needed for sensors
 //!synchronize with ComputeMarkerDataStructureJacobianODE2 function!

@@ -395,6 +395,7 @@
     <ClCompile Include="..\src\Solver\CSolverStatic.cpp" />
     <ClCompile Include="..\src\Solver\MainSolver.cpp" />
     <ClCompile Include="..\src\Solver\MainSolverBase.cpp" />
+    <ClCompile Include="..\src\System\CContact.cpp" />
     <ClCompile Include="..\src\System\CLoad.cpp" />
     <ClCompile Include="..\src\System\CNode.cpp" />
     <ClCompile Include="..\src\System\CObjectBody.cpp" />
@@ -650,6 +651,7 @@
     <ClInclude Include="..\src\Linalg\MatrixContainer.h" />
     <ClInclude Include="..\src\Linalg\ResizableMatrix.h" />
     <ClInclude Include="..\src\linalg\ResizableVector.h" />
+    <ClInclude Include="..\src\Linalg\SearchTree.h" />
     <ClInclude Include="..\src\linalg\SlimVector.h" />
     <ClInclude Include="..\src\Linalg\Use_avx.h" />
     <ClInclude Include="..\src\linalg\Vector.h" />
@@ -666,9 +668,11 @@
     <ClInclude Include="..\src\Main\OutputVariable.h" />
     <ClInclude Include="..\src\Main\rendererPythonInterface.h" />
     <ClInclude Include="..\src\Main\Stdoutput.h" />
+    <ClInclude Include="..\src\Main\TemporaryComputationData.h" />
     <ClInclude Include="..\src\Objects\CObjectANCFCable2DBase.h" />
     <ClInclude Include="..\src\Pymodules\PybindTests.h" />
     <ClInclude Include="..\src\Pymodules\PybindUtilities.h" />
+    <ClInclude Include="..\src\Pymodules\PyGeneralContact.h" />
     <ClInclude Include="..\src\Pymodules\PyMatrixContainer.h" />
     <ClInclude Include="..\src\Pymodules\PythonUserFunctions.h" />
     <ClInclude Include="..\src\Solver\CSolver.h" />
@@ -677,6 +681,7 @@
     <ClInclude Include="..\src\Solver\CSolverImplicitSecondOrder.h" />
     <ClInclude Include="..\src\Solver\CSolverStatic.h" />
     <ClInclude Include="..\src\Solver\MainSolverBase.h" />
+    <ClInclude Include="..\src\System\CContact.h" />
     <ClInclude Include="..\src\System\CLoad.h" />
     <ClInclude Include="..\src\System\CMarker.h" />
     <ClInclude Include="..\src\system\CMaterial.h" />

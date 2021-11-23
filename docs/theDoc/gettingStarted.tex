@@ -21,7 +21,7 @@ Tutorial videos can be found in the `youtube channel of Exudyn <https://www.yout
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
 }
 
-\mysection{Getting Started}
+\mysection{Installation and Getting Started}
 \ignoreRST{
 The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
 as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver'). \vspace{6pt} \\
@@ -77,9 +77,9 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 \bi
+  \item Joachim Sch{\"o}berl (Providing specialized NGsolve core library with \texttt{taskmanager} for {\bf multithreaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
   \item Stefan Holzinger (Lie group solvers in Python)
   \item Peter Manzl (ConvexRoll Python / C++ implementation)
-  \item Joachim Sch{\"o}berl (NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
   \item Martin Sereinig (special robotics functionality)
 \ei
 
@@ -703,7 +703,8 @@ which draws the according object in red and others gray/transparent (but sometim
 \item In \texttt{GenerateStraightLineANCFCable2D} 
 \bi
 \item[$\ra$] coordinate constraints can be used to constrain position and rotation, e.g., \texttt{fixedConstraintsNode0 = [1,1,0,1]} for a beam aligned along the global x-axis; 
-\item[$\ra$] this \mybold{does not work} for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
+\item[$\ra$] this \mybold{does not work} for beams with arbitrary rotation in reference configuration, e.g.,
+ 45\textdegree. Use a GenericJoint with a rotationMarker instead.
 \ei
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

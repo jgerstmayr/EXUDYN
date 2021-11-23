@@ -204,6 +204,9 @@ public:
 		os << "CSolverBase";
 		return os;
 	}
+
+	//! this function is used for performance tests during development and will be erased in future; do not use
+	void NGsolveMTtest();
 };
 
 

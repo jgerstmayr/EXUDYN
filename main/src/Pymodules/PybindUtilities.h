@@ -344,15 +344,15 @@ namespace EPyUtils {
 		//pout << d << "\n\n";
 		//return false;
 	}
-	template<Index size>
-	inline bool SetVectorTemplateSafely(const py::dict& d, const char* item, SlimVector<size>& destination)
+	template<typename T, Index size>
+	inline bool SetSlimVectorTemplateSafely(const py::dict& d, const char* item, SlimVectorBase<T, size>& destination)
 	{
 		if (d.contains(item))
 		{
 			py::object other = d[item]; //this is necessary to make isinstance work
 			if (py::isinstance<py::list>(other) || py::isinstance<py::array>(other))
 			{
-				std::vector<Real> stdlist = py::cast<std::vector<Real>>(other); //! # read out dictionary and cast to C++ type
+				std::vector<T> stdlist = py::cast<std::vector<T>>(other); //! # read out dictionary and cast to C++ type
 				if ((Index)stdlist.size() == size)
 				{
 					destination = stdlist;
@@ -369,25 +369,25 @@ namespace EPyUtils {
 	}
 
 	inline bool SetVector2DSafely(const py::dict& d, const char* item, Vector2D& destination) {
-		return SetVectorTemplateSafely<2>(d, item, destination); }
+		return SetSlimVectorTemplateSafely<Real, 2>(d, item, destination); }
 
 	inline bool SetVector3DSafely(const py::dict& d, const char* item, Vector3D& destination) {
-		return SetVectorTemplateSafely<3>(d, item, destination);}
+		return SetSlimVectorTemplateSafely<Real, 3>(d, item, destination);}
 
 	inline bool SetVector4DSafely(const py::dict& d, const char* item, Vector4D& destination) {
-		return SetVectorTemplateSafely<4>(d, item, destination);}
+		return SetSlimVectorTemplateSafely<Real, 4>(d, item, destination);}
 
 	inline bool SetVector6DSafely(const py::dict& d, const char* item, Vector6D& destination) {
-		return SetVectorTemplateSafely<6>(d, item, destination);}
+		return SetSlimVectorTemplateSafely<Real, 6>(d, item, destination);}
 
 	inline bool SetVector7DSafely(const py::dict& d, const char* item, Vector7D& destination) {
-		return SetVectorTemplateSafely<7>(d, item, destination);}
+		return SetSlimVectorTemplateSafely<Real, 7>(d, item, destination);}
 
 
 
 	//! Set a Matrix6D from a py::object safely and return false (if failed) and true if value has been set
 	template<Index rows, Index columns>
-	inline bool SetMatrixTemplateSafely(const py::object& value, ConstSizeMatrix<rows*columns>& destination)
+	inline bool SetConstMatrixTemplateSafely(const py::object& value, ConstSizeMatrix<rows*columns>& destination)
 	{
 		if (py::isinstance<py::list>(value))
 		{
@@ -453,13 +453,13 @@ namespace EPyUtils {
 	}
 
 	template<Index rows, Index columns>
-	inline bool SetMatrixTemplateSafely(const py::dict& d, const char* item, ConstSizeMatrix<rows*columns>& destination)
+	inline bool SetConstMatrixTemplateSafely(const py::dict& d, const char* item, ConstSizeMatrix<rows*columns>& destination)
 	{
 
 		if (d.contains(item))
 		{
 			py::object other = d[item]; //this is necessary to make isinstance work
-			return SetMatrixTemplateSafely<rows,columns>(other, destination);
+			return SetConstMatrixTemplateSafely<rows,columns>(other, destination);
 		}
 		PyError(STDstring("ERROR: failed to convert '") + item + "' into Matrix; dictionary:\n" + EXUstd::ToString(d));
 
@@ -468,24 +468,92 @@ namespace EPyUtils {
 
 	inline bool SetMatrix6DSafely(const py::object& value, Matrix6D& destination) 
 	{
-		return SetMatrixTemplateSafely<6, 6>(value, destination);
+		return SetConstMatrixTemplateSafely<6, 6>(value, destination);
 	}
 
 	inline bool SetMatrix6DSafely(const py::dict& d, const char* item, Matrix6D& destination) 
 	{
-		return SetMatrixTemplateSafely<6, 6>(d, item, destination);
+		return SetConstMatrixTemplateSafely<6, 6>(d, item, destination);
 	}
 
 	inline bool SetMatrix3DSafely(const py::object& value, Matrix3D& destination) 
 	{
-		return SetMatrixTemplateSafely<3, 3>(value, destination);
+		return SetConstMatrixTemplateSafely<3, 3>(value, destination);
 	}
 
 	inline bool SetMatrix3DSafely(const py::dict& d, const char* item, Matrix3D& destination) 
 	{
-		return SetMatrixTemplateSafely<3, 3>(d, item, destination);
+		return SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! Set a general sized Matrix from a py::object safely and return false (if failed) and true if value has been set
+	inline bool SetMatrixSafely(const py::object& value, Matrix& destination)
+	{
+		if (py::isinstance<py::list>(value))
+		{
+			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # read out dictionary and cast to C++ type
+			Index rows = (Index)stdlist.size();
+			Index columns;
+			for (Index i = 0; i < rows; i++)
+			{
+				if (py::isinstance<py::list>(stdlist[i]))
+				{
+					std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
+					if (i == 0) 
+					{ 
+						columns = (Index)rowVector.size();
+						destination.SetNumberOfRowsAndColumns(rows, columns);
+					}
+					if ((Index)rowVector.size() == columns)
+					{
+						for (Index j = 0; j < columns; j++)
+						{
+							destination(i, j) = rowVector[j];
+						}
+					}
+					else
+					{
+						PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+					}
+				}
+				else
+				{
+					PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+				}
+			}
+			return true;
+		}
+		else if (py::isinstance<py::array>(value))
+		{
+			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # read out dictionary and cast to C++ type
+			Index rows = (Index)stdlist.size();
+			Index columns;
+			for (Index i = 0; i < rows; i++)
+			{
+				std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
+				if (i == 0) 
+				{ 
+					columns = (Index)rowVector.size(); 
+					destination.SetNumberOfRowsAndColumns(rows, columns);
+				}
+				if ((Index)rowVector.size() == columns)
+				{
+					for (Index j = 0; j < columns; j++)
+					{
+						destination(i, j) = rowVector[j];
+					}
+				}
+				else
+				{
+					PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+				}
+			}
+			return true;
+		}
+		PyError(STDstring("failed to convert to Matrix: " + py::cast<std::string>(value)));
+		return false;
+	}
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//functions for py::object safe conversion:
 
@@ -503,9 +571,9 @@ namespace EPyUtils {
 	}
 
 	template<class T, Index size>
-	inline bool SetVectorTemplateSafely(const py::object& value, SlimVectorBase<T, size>& destination)
+	inline bool SetSlimVectorTemplateSafely(const py::object& value, SlimVectorBase<T, size>& destination)
 	{
-		if (py::isinstance<py::list>(value))
+		if (py::isinstance<py::list>(value) || py::isinstance<py::array>(value))
 		{
 			std::vector<T> stdlist = py::cast<std::vector<T>>(value); //! # read out dictionary and cast to C++ type
 			if ((Index)stdlist.size() == size)
@@ -518,25 +586,59 @@ namespace EPyUtils {
 				PyError("Vector" + EXUstd::ToString(size) + "D size mismatch: expected " + EXUstd::ToString(size) + " items in list!");
 			}
 		}
-		PyError(STDstring("failed to convert Vector" + EXUstd::ToString(size) + ": " + py::cast<std::string>(value)));
+		PyError(STDstring("failed to convert SlimVector" + EXUstd::ToString(size) + ": " + py::cast<std::string>(value)));
 		return false;
 	}
 
 	inline bool SetVector2DSafely(const py::object& value, Vector2D& destination) {
-		return SetVectorTemplateSafely<Real,2>(value, destination);
+		return SetSlimVectorTemplateSafely<Real,2>(value, destination);
 	}
 	inline bool SetVector3DSafely(const py::object& value, Vector3D& destination) {
-		return SetVectorTemplateSafely<Real, 3>(value, destination);
+		return SetSlimVectorTemplateSafely<Real, 3>(value, destination);
 	}
 	inline bool SetVector4DSafely(const py::object& value, Vector4D& destination) {
-		return SetVectorTemplateSafely<Real, 4>(value, destination);
+		return SetSlimVectorTemplateSafely<Real, 4>(value, destination);
 	}
 	inline bool SetVector6DSafely(const py::object& value, Vector6D& destination) {
-		return SetVectorTemplateSafely<Real, 6>(value, destination);
+		return SetSlimVectorTemplateSafely<Real, 6>(value, destination);
 	}
 	inline bool SetVector7DSafely(const py::object& value, Vector7D& destination) {
-		return SetVectorTemplateSafely<Real, 7>(value, destination);
+		return SetSlimVectorTemplateSafely<Real, 7>(value, destination);
 	}
+
+	template<class T>
+	inline bool SetResizableArraySafely(const py::object& value, ResizableArray<T>& destination)
+	{
+		if (py::isinstance<py::list>(value) || py::isinstance<py::array>(value))
+		{
+			std::vector<T> stdlist = py::cast<std::vector<T>>(value); //! # read out dictionary and cast to C++ type
+			destination = stdlist;
+			return true;
+		}
+		PyError(STDstring("failed to convert array to ResizableArray: " + py::cast<std::string>(value)));
+		return false;
+	}
+
+	template<class T, Index size>
+	inline bool SetSlimArraySafely(const py::object& value, SlimArray<T, size>& destination)
+	{
+		if (py::isinstance<py::list>(value) || py::isinstance<py::array>(value))
+		{
+			std::vector<T> stdlist = py::cast<std::vector<T>>(value); //! # read out dictionary and cast to C++ type
+			if ((Index)stdlist.size() == size)
+			{
+				destination = stdlist;
+				return true;
+			}
+			else
+			{
+				PyError("SlimArray" + EXUstd::ToString(size) + " size mismatch: expected " + EXUstd::ToString(size) + " items in list or numpy array!");
+			}
+		}
+		PyError(STDstring("failed to convert to SlimArray" + EXUstd::ToString(size) + ": " + py::cast<std::string>(value)));
+		return false;
+	}
+
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -548,10 +650,26 @@ namespace EPyUtils {
 	}
 
 	//!convert SlimVector to numpy vector
-	inline py::array_t<Real> SlimVector2NumPy(const SlimVector<3>& v)
+	template<Index dataSize>
+	inline py::array_t<Real> SlimVector2NumPy(const SlimVector<dataSize>& v)
 	{
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
+		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); 
 	}
+
+	//!convert ArrayIndex to numpy vector
+	inline py::array_t<Real> ArrayIndex2NumPy(const ArrayIndex& v)
+	{
+		return py::array_t<Index>(v.NumberOfItems(), v.GetDataPointer()); 
+	}
+
+
+	//!convert general SlimVector to numpy vector
+	//unused, therefore commented
+	//template<class T, Index size>
+	//inline py::array_t<T> SlimVector2NumPyTemplate(const SlimVectorBase<T, size>& v)
+	//{
+	//	return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
+	//}
 
 	//!convert Matrix to numpy matrix
 	inline py::array_t<Real> Matrix2NumPy(const Matrix& matrix)

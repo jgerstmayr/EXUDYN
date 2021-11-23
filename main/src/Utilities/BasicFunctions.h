@@ -295,6 +295,19 @@ namespace EXUstd {
 	//this calculates an average offset for the function GetTimeInSeconds() and sets it into a global variable 
 	double SetTimerOffset();
 
+
+	//! compute total size of array of arrays
+	template <class T>
+	inline Index ArrayOfArraysTotalCount(const T & arrayOfArrays)
+	{
+		Index cnt = 0;
+		for (const auto* a : arrayOfArrays)
+		{
+			cnt += a->NumberOfItems();
+		}
+		return cnt;
+	}
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//checker functions for simulationSettings and visualizationSettings
 

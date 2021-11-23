@@ -49,6 +49,11 @@ namespace py = pybind11;
 
 void PyTest()
 {
+	//contact testing
+	if (0)
+	{
+
+	}
 	//add testing here
 	if (0)
 	{
@@ -109,7 +114,7 @@ void PyTest()
 		//	pout << "test\n";
 		//}
 	}
-	if (1)
+	if (0)
 	{
 		//SlimArray<Real, 3> a({ 3,5,1 });
 		//pout << "a=" << a << "\n";

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -176,7 +176,8 @@ public: // AUTO:
   GeneralMatrix* systemJacobian;                  //!< AUTO: link to dense or sparse system jacobian
   GeneralMatrix* systemMassMatrix;                //!< AUTO: link to dense or sparse system mass matrix; in explicit solver, after a step, this will contain the factorized mass matrix
   GeneralMatrix* jacobianAE;                      //!< AUTO: link to dense or sparse algebraic equations jacobian
-  TemporaryComputationData tempCompData;          //!< AUTO: temporary data used during item-related residual and jacobian computation; duplicated for parallel computation
+  TemporaryComputationData tempCompData;          //!< AUTO: temporary data used during item-related residual and jacobian computation; duplicated for serial computation, will be removed in future
+  TemporaryComputationDataArray tempCompDataArray;//!< AUTO: temporary data per thread, used during item-related residual and jacobian computation; for parallel computation
 
 private: // AUTO: 
   LinearSolverType linearSolverType;              //!< AUTO: contains linear solver type value; cannot be accessed directly, because a change requires new linking of system matrices
@@ -262,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -376,7 +377,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -469,7 +470,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -558,7 +559,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2021-09-27 (last modfied)
+* @date         AUTO: 2021-11-16 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

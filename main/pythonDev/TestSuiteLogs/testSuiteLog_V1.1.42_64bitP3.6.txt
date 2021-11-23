@@ -1,0 +1,93 @@
+
++++++++++++++++++++++++++++++++++++++++++++ 
++++++        EXUDYN TEST SUITE        +++++ 
++++++++++++++++++++++++++++++++++++++++++++ 
+EXUDYN version      = 1.1.42 
+EXUDYN build date   = 2021-11-23 11:04:27 
+platform            = 64bit 
+python version      = 3.6.9 
+test tolerance      =  5e-14 
+testsuite date (now)= 2021-11-23 11:05:48 
++++++++++++++++++++++++++++++++++++++++++++ 
+
+*********************** 
+  RUN MODEL UNIT TESTS  
+***********************
+ 
+
+
+****************
+ GraphicsDataTest:[TEST 1]
+****************
+ 
+error in GraphicsDataTest =  0 
+
+
+****************
+ ANCFCable2DBendingTest:[TEST 2]
+****************
+ 
+sol dynamic= -1.0611305415798655 -1.4396907464589017 
++++++++++++++++++++++++++++++++
+EXUDYN V1.1.42 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0, tCPU=0.858111 sec, Nit/step = 15
+solver finished after 0.0006421 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 15
+total number of Newton Jacobians:  15
+sol static (standardTol)= -0.36224473018839665 -0.9941447595447153 
++++++++++++++++++++++++++++++++
+EXUDYN V1.1.42 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0, tCPU=0.887297 sec, Nit/step = 16
+solver finished after 0.0011406 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 16
+total number of Newton Jacobians:  16
+sol static (tol=1e-14)= -0.36224472989050654 -0.9941447587249747 
+error in ANCFCable2DBendingTest =  0.0 
+
+
+****************
+ SpringDamperMesh:[TEST 3]
+****************
+ 
+dynamic tip displacement (y)= -0.6385807469187302 
++++++++++++++++++++++++++++++++
+EXUDYN V1.1.42 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0, tCPU=0.97003 sec, Nit/step = 4
+solver finished after 0.0019723 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 4
+total number of Newton Jacobians:  4
+static tip displacement (y)= -0.44056224799446486 
+error in SpringDamperMesh =  4.440892098500626e-16 
+
+
+****************
+ MathematicalPendulumTest:[TEST 4]
+****************
+ 
+solution mathematicalPendulum Constraint= -0.06808284314701593 
+solution mathematicalPendulum SpringDamper= -0.07148800507819011 
+error in MathematicalPendulumTest =  3.899658373995862e-15 
+
+
+****************
+ RigidPendulumTest:[TEST 5]
+****************
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.1.42 solver: implicit second order time integration
+STEP1000, t = 0.5 sec, timeToGo = 0, tCPU=1.10097 sec, Nit/step = 6.556
+solver finished after 0.0370717 seconds.
+solution rigid pendulum= -0.4978242727025759 
+error in RigidPendulumTest =  0.00013640027835382096 
+
+
+****************
+ SliderCrank2DTest:[TEST 6]
+****************
+ 

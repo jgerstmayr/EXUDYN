@@ -133,7 +133,7 @@ namespace ngstd
           if(!trace_threads && !trace_thread_counter) return -1;
 	  if(unlikely(tasks[thread_id].Size() == max_num_events_per_thread))
             StopTracing();
-          int task_num = tasks[thread_id].Size();
+          int task_num = (int)tasks[thread_id].Size();
           tasks[thread_id].Append( Task{thread_id, id, id_type, additional_value, GetTime()} );
           return task_num;
         }

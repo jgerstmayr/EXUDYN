@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-27  18:50:22 (last modified)
+* @date         2021-11-14  14:42:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -250,6 +250,12 @@ public: // AUTO:
     const ResizableVector& GetTempVector2() const { return tempVector2; }
     //! AUTO:  Read (Reference) access to:\f$\vv_{temp2}\f$second temporary vector at computation of ODE2Lhs
     ResizableVector& GetTempVector2() { return tempVector2; }
+
+    //! AUTO:  return true, if object has a computation user function
+    virtual bool HasUserFunction() const override
+    {
+        return (parameters.forceUserFunction!=0) || (parameters.massMatrixUserFunction!=0);
+    }
 
     //! AUTO:  Computational function: compute mass matrix
     virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;

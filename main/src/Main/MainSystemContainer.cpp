@@ -85,7 +85,7 @@ void MainSystemContainer::PySetRenderState(py::dict renderState)
 		RenderState& state = visualizationSystems.renderState;
 			
 		//Vector3D centerPoint;
-		EPyUtils::SetVectorTemplateSafely<float,3>(renderState["centerPoint"], state.centerPoint);
+		EPyUtils::SetSlimVectorTemplateSafely<float,3>(renderState["centerPoint"], state.centerPoint);
 
 		state.maxSceneSize = py::cast<float>(renderState["maxSceneSize"]);
 		state.zoom = py::cast<float>(renderState["zoom"]);
@@ -187,13 +187,10 @@ void MainSystemContainer::Reset()
 	for (auto item : mainSystems)
 	{
 		item->UnlinkVisualizationSystem();
-		//pout << "MainSystemContainer::Reset():2" << "\n";
 		item->Reset();
-		//pout << "MainSystemContainer::Reset():3" << "\n";
-		delete item->cSystem; //allocated in AddMainSystem; C-Items are deleted in SystemData.Reset()
-		//pout << "MainSystemContainer::Reset():4" << "\n";
+
+		//now done in MainSystem: delete item->cSystem; //allocated in AddMainSystem; C-Items are deleted in SystemData.Reset()
 		delete item; //allocated in AddMainSystem; MainItems are deleted in MainSystemData.Reset()
-		//pout << "MainSystemContainer::Reset():5" << "\n";
 	}
 	mainSystems.Flush();
 	//pout << "MainSystemContainer::Reset() finished" << "\n";

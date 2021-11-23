@@ -168,10 +168,10 @@ protected:
 	//! swap content of this and other matrix without copying
 	void Swap(ResizableMatrixBase& other)
 	{
-		std::swap(data, other.data);
-		std::swap(numberOfRows, other.numberOfRows);
-		std::swap(numberOfColumns, other.numberOfColumns);
-		std::swap(allocatedSize, other.allocatedSize);
+		std::swap(this->data, other.data);
+		std::swap(this->numberOfRows, other.numberOfRows);
+		std::swap(this->numberOfColumns, other.numberOfColumns);
+		std::swap(this->allocatedSize, other.allocatedSize);
 	}
 
 

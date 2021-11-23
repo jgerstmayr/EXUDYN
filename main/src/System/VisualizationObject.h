@@ -40,7 +40,7 @@ public:
 	virtual void CallUserFunction(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber) {};
 
 	//! this function needs to be overwritten, if the object has a graphics user function
-	virtual bool HasUserFunction() { return false; };
+	virtual bool HasUserFunction() const { return false; };
 
 	//! decides whether to draw the item
 	virtual bool GetShow() const { return show; }

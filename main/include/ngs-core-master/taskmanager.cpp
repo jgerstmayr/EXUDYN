@@ -260,7 +260,7 @@ namespace ngstd
             int mytask = mynode_data.start_cnt++;
             if (mytask >= mytasks.Size()) break;
             
-            ti.task_nr = mytasks.First()+mytask;
+            ti.task_nr = (int)mytasks.First()+mytask;
             ti.ntasks = ntasks;
 
               {
@@ -281,7 +281,7 @@ namespace ngstd
           lock_guard<mutex> guard(copyex_mutex);
           delete ex;
           ex = new Exception (e);
-          mynode_data.start_cnt = mytasks.Size();
+          mynode_data.start_cnt = (int)mytasks.Size();
           // complete[mynode] = true;
         }
       }
@@ -453,7 +453,7 @@ namespace ngstd
 		int mytask = mynode_data.start_cnt.fetch_add(1, memory_order_relaxed);
                 if (mytask >= mytasks.Size()) break;
                 
-                ti.task_nr = mytasks.First()+mytask;
+                ti.task_nr = (int)mytasks.First()+mytask;
                 ti.ntasks = ntasks;
                 
                   {
@@ -473,7 +473,7 @@ namespace ngstd
               lock_guard<mutex> guard(copyex_mutex);
               delete ex;
               ex = new Exception (e);
-              mynode_data.start_cnt = mytasks.Size();
+              mynode_data.start_cnt = (int)mytasks.Size();
               // complete[mynode] = true;
             }
           }

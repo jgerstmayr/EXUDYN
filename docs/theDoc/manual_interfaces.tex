@@ -106,6 +106,9 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
      \phantom{XXXX} \phantom{XXXX} return [0, 1e-6] \tabnewline
      \phantom{XXXX} return [0,0] \tabnewline
      mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)}}\\ \hline 
+  AddGeneralContact() & add a new general contact, used to enable efficient contact computation between objects (nodes or markers)\\ \hline 
+  GetGeneralContact(generalContactNumber) & get read/write access to GeneralContact with index 'generalContactNumber' stored in mbs\\ \hline 
+  DeleteGeneralContact(generalContactNumber) & delete GeneralContact with index 'generalContactNumber' in mbs; other general contacts are resorted (index changes!)\\ \hline 
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{print(mbs)}}\\ \hline 
@@ -447,6 +450,68 @@ This section provides access functions the \ac{LTG}-lists for every object (body
   GetObjectLTGData(objectNumber) & get local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{ltgObject4 = mbs.systemData.GetObjectLTGData(4)}}\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{MatrixContainer}
+The MatrixContainer is a versatile representation for dense and sparse matrices. \\ \\ Usage: \bi
+  \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()} 
+  \item Create \texttt{MatrixContainer} with dense matrix \texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array 
+  \item Set with dense \text{pyArray} (a numpy array): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
+  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix 
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  SetWithDenseMatrix(pyArray, useDenseMatrix = false) & set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)\\ \hline 
+  SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArrayCSR, useDenseMatrix = true) & set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix\\ \hline 
+  GetPythonObject() & convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets\\ \hline 
+  Convert2DenseMatrix() & convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)\\ \hline 
+  UseDenseMatrix() & returns True if dense matrix is used, otherwise False\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{GeneralContact}
+[{\bf NOTE: For internal use only! GeneralContact is currently developed and must be used with care; interfaces may change significantly in upcoming versions}] Structure to define general and highly efficient contact functionality in multibody systems. \\ \\ Usage: \bi
+  \item Add \texttt{GeneralContact} to mbs \texttt{gContact = mbs.AddGeneralContact()} 
+  \item Add contact elements, e.g., \texttt{gContact.AddSphereWithMarker(...)}, using appropriate arguments 
+  \item After all contact elements have been added, call \texttt{gContact.FinalizeContact(...)} before assemble.
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  GetPythonObject() & convert member variables of GeneralContact into dictionary; use this for debug only!\\ \hline 
+  Reset(freeMemory = true) & remove all contact objects and reset contact parameters\\ \hline 
+  isActive & default = True (compute contact); if isActive=False, no contact computation is performed for this contact set \\ \hline  
+  verboseMode & default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation \\ \hline  
+  visualization & access visualization data structure \\ \hline  
+  FinalizeContact(mainSystem, searchTreeSize, frictionPairingsInit, searchTreeBoxMin = (std.vector<Real>)Vector3D( EXUstd.MAXREAL ), searchTreeBoxMax = (std.vector<Real>)Vector3D( EXUstd.LOWESTREAL )) & WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!\\ \hline 
+  AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters; contact is possible between spheres (circles in 2D) (if intraSphereContact = true) and between sphere (=circle) and ANCFCable2D\\ \hline 
+  \_\_repr\_\_() & return the string representation of the GeneralContact, containing basic information and statistics\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{VisuGeneralContact}
+Data structure for visualization inside GeneralContact. \\ \\ Usage: \bi
+  \item \texttt{gContact.visualization.drawSpheres = True} 
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Reset() & reset visualization parameters to default values\\ \hline 
 \end{longtable}
 \end{center}
 \section{Type definitions}

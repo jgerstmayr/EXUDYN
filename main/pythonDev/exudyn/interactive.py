@@ -64,15 +64,17 @@ import exudyn
 #                {'type':'slider', 'range':(0, 10000), 'value':spring, 'steps':800, 'variable':'stiffness', 'grid':(7,1)}]
 #
 # #plots structure:
-# plots={'nPoints':500,               #number of stored points in subplots (higher means slower drawing)
-#        'subplots':(2,1),           #(rows, columns) arrangement of subplots
+# plots={'nPoints':500,              #number of stored points in subplots (higher means slower drawing)
+#        'subplots':(2,1),           #(rows, columns) arrangement of subplots (for every sensor)
 #        #sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:
 #        'sensors':[[(sensPos,0),(sensPos,1),'time','mass position'], 
 #                   [(sensFreq,0),(sensFreq,1),'time','excitation frequency']],
 #        'limitsX':[(0,2),(-5,5)],   #x-range per subplot; if not provided, autoscale is applied
 #        'limitsY':[(-5,5),(0,10),], #y-range per subplot; if not provided, autoscale is applied
 #        'fontSize':16,              #custom font size for figure
-#        'sizeInches':(12,12)}        #specific x and y size of figure in inches (using 100 dpi)
+#        'subplots':False,           #if not specified, subplots are created; if False, all plots go into one window 
+#        'lineStyles':['r-','b-'],    #if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor
+#        'sizeInches':(12,12)}       #specific x and y size of figure in inches (using 100 dpi)
 class InteractiveDialog:
     #**classFunction: initialize an InteractiveDialog
     #**input: 
@@ -348,9 +350,18 @@ class InteractiveDialog:
             self.plots['line'] = [0]*nSensors
             self.plots['marker'] = [0]*nSensors
             self.plots['ax'] = [0]*nSensors
+            lineStyle = 'b-'
+            doSubplots = True
+            if 'subplots' in self.plots:
+                doSubplots = self.plots['subplots']
+            if not doSubplots:
+                axPlot = fig.add_subplot(1,1,1)
         
             for j in range(nSensors):
-                self.plots['ax'][j] = fig.add_subplot(self.plots['subplots'][0],self.plots['subplots'][1],j+1)
+                if doSubplots:
+                    self.plots['ax'][j] = fig.add_subplot(self.plots['subplots'][0],self.plots['subplots'][1],j+1)
+                else:
+                    self.plots['ax'][j] = axPlot
                 self.plots['ax'][j].grid(True, 'major', 'both')
                 self.plots['ax'][j].set_xlabel(self.plots['sensors'][j][2])
                 self.plots['ax'][j].set_ylabel(self.plots['sensors'][j][3])
@@ -361,7 +372,9 @@ class InteractiveDialog:
                 #data[:,1] = 0 #not needed
                 self.plots['data'][j] = copy.deepcopy(data)
                 
-                self.plots['line'][j], = self.plots['ax'][j].plot(data[:,0],data[:,1], 'b-')
+                if 'lineStyles' in self.plots:
+                    lineStyle = self.plots['lineStyles'][j]
+                self.plots['line'][j], = self.plots['ax'][j].plot(data[:,0],data[:,1], lineStyle)
                 self.plots['marker'][j], = self.plots['ax'][j].plot(0,0, 'ro') #red circle
                 self.plots['ax'][j].set_xlim(min(data[:,0]), max(data[:,0]))
 
@@ -446,7 +459,7 @@ class InteractiveDialog:
         #+++++++++++++++++++++++++++++++++++++++++
     
         if self.doTimeIntegration and False: #slow way, always start/stop simulation:
-            self.simulationSettings.timeIntegration.numberOfSteps = int(deltaT/h)
+            self.simulationSettings.timeIntegration.numberOfSteps = max(int(deltaT/h),1)
             self.simulationSettings.timeIntegration.endTime = self.simulationSettings.timeIntegration.startTime+deltaT
             exudyn.SolveDynamic(mbs, self.simulationSettings, updateInitialValues=True)
             self.simulationSettings.timeIntegration.startTime += deltaT
@@ -459,7 +472,7 @@ class InteractiveDialog:
         #TIME STEPPING PART
         if self.doTimeIntegration and True:
         
-            self.simulationSettings.timeIntegration.numberOfSteps = int(deltaT/h)
+            self.simulationSettings.timeIntegration.numberOfSteps = max(int(deltaT/h),1)
             self.simulationSettings.timeIntegration.endTime = self.simulationSettings.timeIntegration.startTime+deltaT
         
         
@@ -641,6 +654,16 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #  runOnStart: immediately go into 'Run' mode
 #  runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
 #**output: updates current visualization state, renders the scene continuously (after pressing button 'Run')
+#**example:
+##HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
+#
+##adjust autoFitScence, otherwise it may lead to unwanted fit to scene
+#SC.visualizationSettings.general.autoFitScene = False
+#
+#from exudyn.interactive import SolutionViewer #import function
+#sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
+#SolutionViewer(mbs, sol)
+
 def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2):
     from exudyn.utilities import SetSolutionState, LoadSolutionFile
     

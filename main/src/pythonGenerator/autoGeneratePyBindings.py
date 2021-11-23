@@ -22,6 +22,7 @@ sLenum = '\section{Type definitions}\nThis section defines a couple of structure
 sLenum+= 'Conversion to integer is possible: \n \\bi \n \\item[] \\texttt{x = int(exu.OutputVariableType.Displacement)} \n\\ei and also conversion from integer: \n \\bi \n \\item[] \\texttt{varType = exu.OutputVariableType(8)}\n \\ei\n'
 s += '\n//        pybinding to enum classes:\n'
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'OutputVariableType'
 
@@ -223,6 +224,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Access functions to EXUDYN
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -321,6 +323,7 @@ s+=s1; sL+=sL1
 
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #currently, only latex binding:
 pyClassStr = 'SystemContainer'
@@ -415,7 +418,7 @@ sL += DefLatexFinishClass()#only finalize latex table
 
 
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 classStr = 'MainSystem'
 [s1,sL1] = DefPyStartClass(classStr, classStr, "This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to python) and a System (computational part). For that reason, the name is MainSystem on the python side, but it is often just called 'system'. It can be created, visualized and computed. " + "Use the following functions for system manipulation." +
@@ -467,7 +470,18 @@ s+=s1; sL+=sL1
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
                                 description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables",
                                 example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\ mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)'); s+=s1; sL+=sL1
-                                                      
+
+#contact:                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddGeneralContact', cName='AddGeneralContact', 
+                                description="add a new general contact, used to enable efficient contact computation between objects (nodes or markers)", options='py::return_value_policy::reference'); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetGeneralContact', cName='GetGeneralContact', 
+                                description="get read/write access to GeneralContact with index 'generalContactNumber' stored in mbs",
+                                argList=['generalContactNumber']); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='DeleteGeneralContact', cName='DeleteGeneralContact', 
+                                description="delete GeneralContact with index 'generalContactNumber' in mbs; other general contacts are resorted (index changes!)",
+                                argList=['generalContactNumber']); s+=s1; sL+=sL1
 
 #++++++++++++++++
 
@@ -498,7 +512,8 @@ sL += '  systemData & Access to SystemData structure; enables access to number o
 
 sL += DefLatexFinishClass()#only finalize latex table
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #NODE
 s += "\n//        NODES:\n"
 sL+=DefLatexStartClass(classStr+': Node', '\label{sec:mainsystem:node}\n This section provides functions for adding, reading and modifying nodes. Nodes are used to define coordinates (unknowns to the static system and degrees of freedom if constraints are not present). Nodes can provide various types of coordinates for second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data (history) variables -- which are not providing unknowns in the nonlinear solver but will be solved in an additional nonlinear iteration for e.g. contact, friction or plasticity.', subSection=True)
@@ -833,6 +848,7 @@ sL += DefLatexFinishClass() #Sensors
 
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClassStr = 'SystemData'
 classStr = 'Main'+pyClassStr
@@ -942,6 +958,7 @@ s += "\n//        General functions:\n"
 
 sL += DefLatexFinishClass()
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 s += "\n//        Coordinate access:\n"
 sL += DefLatexStartClass(pyClassStr+': Access coordinates', '\label{sec:mbs:systemData}This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.', subSection=True)
 #+++++++++++++++++++++++++++++++++
@@ -1086,14 +1103,128 @@ sL += DefLatexFinishClass()
 [s1,sL1] = DefPyFinishClass('SystemData'); s+=s1 #; sL+=sL1
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for MatrixContainer
+classStr = 'PyMatrixContainer'
+pyClassStr = 'MatrixContainer'
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "The MatrixContainer is a versatile representation for dense and sparse matrices." +
+        ' \\\\ \\\\ Usage: \\bi\n'+
+        '  \\item Create empty \\texttt{MatrixContainer} with \\texttt{mc = MatrixContainer()} \n'+
+        '  \\item Create \\texttt{MatrixContainer} with dense matrix \\texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array \n'+
+        '  \\item Set with dense \\text{pyArray} (a numpy array): \\texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}\n'+
+        '  \\item Set with sparse \\text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \\texttt{(row, col, value)} describing the sparse matrix ')
+s+=s1; sL+=sL1
 
-#[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='', cName='', 
-#                                description='',
-#                                argList=[]); s+=s1; sL+=sL1
+s+= '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #constructor with numpy array or list of lists
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetWithDenseMatrix', cName='SetWithDenseMatrix', 
+                                argList=['pyArray','useDenseMatrix'],
+                                defaultArgs=['','false'],
+                                description="set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)"); s+=s1; sL+=sL1
+                                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrixCSR', cName='SetWithSparseMatrixCSR', 
+                                argList=['numberOfRowsInit', 'numberOfColumnsInit', 'pyArrayCSR','useDenseMatrix'],
+                                defaultArgs=['','','','true'],
+                                description="set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix"); s+=s1; sL+=sL1
+                                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
+                                description="convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Convert2DenseMatrix', cName='Convert2DenseMatrix', 
+                                description="convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='UseDenseMatrix', cName='UseDenseMatrix', 
+                                description="returns True if dense matrix is used, otherwise False"); s+=s1; sL+=sL1
 
 
+#++++++++++++++++
+[s1,sL1] = DefPyFinishClass('MatrixContainer'); s+=s1; sL+=sL1
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for MatrixContainer
+classStr = 'PyGeneralContact'
+pyClassStr = 'GeneralContact'
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "[{\\bf NOTE: For internal use only! GeneralContact is currently developed and must be used with care; interfaces may change significantly in upcoming versions}] Structure to define general and highly efficient contact functionality in multibody systems." +
+        ' \\\\ \\\\ Usage: \\bi\n'+
+        '  \\item Add \\texttt{GeneralContact} to mbs \\texttt{gContact = mbs.AddGeneralContact()} \n'+
+        '  \\item Add contact elements, e.g., \\texttt{gContact.AddSphereWithMarker(...)}, using appropriate arguments \n'+
+        '  \\item After all contact elements have been added, call \\texttt{gContact.FinalizeContact(...)} before assemble.\n'+
+        '\\ei\n')
+s+=s1; sL+=sL1
+
+#already included: s+= '        .def(py::init<>())\n' #empty constructor 
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
+                                description="convert member variables of GeneralContact into dictionary; use this for debug only!"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
+                                argList=['freeMemory'],
+                                defaultArgs=['true'],
+                                description="remove all contact objects and reset contact parameters"); s+=s1; sL+=sL1
+
+s +=  '        .def_readwrite("isActive", &PyGeneralContact::isActive, py::return_value_policy::reference)\n' 
+sL += '  isActive & default = True (compute contact); if isActive=False, no contact computation is performed for this contact set \\\\ \\hline  \n'
+
+s +=  '        .def_readwrite("verboseMode", &PyGeneralContact::verboseMode, py::return_value_policy::reference)\n' 
+sL += '  verboseMode & default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation \\\\ \\hline  \n'
+
+s +=  '        .def_readwrite("visualization", &PyGeneralContact::visualization, py::return_value_policy::reference)\n' 
+sL += '  visualization & access visualization data structure \\\\ \\hline  \n'
+
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='FinalizeContact', cName='PyFinalizeContact', 
+                                argList=['mainSystem','searchTreeSize','frictionPairingsInit','searchTreeBoxMin','searchTreeBoxMax'],
+                                defaultArgs=['','','', '(std::vector<Real>)Vector3D( EXUstd::MAXREAL )','(std::vector<Real>)Vector3D( EXUstd::LOWESTREAL )'],
+                                description="WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!"); s+=s1; sL+=sL1
+                                                      
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSphereWithMarker', cName='AddSphereWithMarker', 
+                                argList=['markerIndex','radius','contactStiffness','contactDamping','frictionMaterialIndex'],
+                                description="add contact object using a marker (Position or Rigid), radius and contact/friction parameters; contact is possible between spheres (circles in 2D) (if intraSphereContact = true) and between sphere (=circle) and ANCFCable2D"); s+=s1; sL+=sL1
+                                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyGeneralContact &item) {\n            return EXUstd::ToString(item); }', 
+                                description="return the string representation of the GeneralContact, containing basic information and statistics",
+                                isLambdaFunction = True); s+=s1; sL+=sL1
+
+
+#++++++++++++++++
+[s1,sL1] = DefPyFinishClass('GeneralContact'); s+=s1; sL+=sL1
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for VisuGeneralContact
+classStr = 'VisuGeneralContact'
+pyClassStr = 'VisuGeneralContact'
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "Data structure for visualization inside GeneralContact." +
+        ' \\\\ \\\\ Usage: \\bi\n'+
+        '  \\item \\texttt{gContact.visualization.drawSpheres = True} \n'+
+        '\\ei\n')
+s+=s1; sL+=sL1
+
+#already included; s+= '        .def(py::init<>())\n' #empty constructor 
+
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
+                                description="reset visualization parameters to default values"); s+=s1; sL+=sL1
+
+# s +=  '        .def_readwrite("spheresMarkerBasedDraw", &VisuGeneralContact::spheresMarkerBasedDraw, py::return_value_policy::reference)\n' 
+# sL += '  spheresMarkerBasedDraw & default = False; if True, markerBased spheres are drawn with given resolution and color \\\\ \\hline  \n'
+
+# s +=  '        .def_readwrite("spheresMarkerBasedResolution", &VisuGeneralContact::spheresMarkerBasedResolution, py::return_value_policy::reference)\n' 
+# sL += '  spheresMarkerBasedResolution & default = 4; integer value for number of triangles per circumference of markerBased spheres; higher values leading to smoother spheres but higher graphics costs \\\\ \\hline  \n'
+
+# s +=  '        .def_readwrite("spheresMarkerBasedColor", &VisuGeneralContact::spheresMarkerBasedColor, py::return_value_policy::reference)\n' 
+# sL += '  spheresMarkerBasedColor & vector with 4 floats (Float4) for color of markerBased spheres \\\\ \\hline  \n'
+
+#++++++++++++++++
+[s1,sL1] = DefPyFinishClass('GeneralContact'); s+=s1; sL+=sL1
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#now finalize files:
 
 sL += sLenum #put latex description of enums after the systemData section
 

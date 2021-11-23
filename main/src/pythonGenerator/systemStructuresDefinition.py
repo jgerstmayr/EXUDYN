@@ -167,11 +167,12 @@ V,  relativeTolerance,	 ,      , UReal, 		            1e-8,   ,  P,  "$r_{tol}$:
 V,  stepSizeSafety,	     ,      , UReal, 		            0.90,   ,  P,  "$r_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected."
 V,  stepSizeMaxIncrease, ,      , UReal, 		               2,   ,  P,  "$f_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but $> 1$) if too many rejected steps"
 # special:
+V,  reuseConstantMassMatrix,   ,, bool, 			        true,   ,  P,  "True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)"
 V,  preStepPyExecute,    , 	 	, String, 			        ""	,   ,  P,  "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing"
 V,  simulateInRealtime,	 , 	    , bool,                    false,   ,  P,  "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues"
 V,  realtimeFactor,		 , 	    , PReal,                   1    ,   ,  P,  "if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)"
 # information and output:
-V,  verboseMode,	     ,  	, UInt, 			        0   ,   ,  P,  "0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
+V,  verboseMode,	     ,  	, UInt, 			        0   ,   ,  P,  "0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
 V,  verboseModeFile,	 ,  	, UInt, 			        0   ,   ,  P,  "same behaviour as verboseMode, but outputs all solver information to file"
 V,  stepInformation,	 ,  	, UInt, 			        2   ,   ,  P,  "0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step"
 # solver specific
@@ -238,6 +239,7 @@ V,  linearSolverType,				, 	 	        , LinearSolverType,    "LinearSolverType::
 V,  cleanUpMemory,                  , 	            , bool,                false   , , P		, "True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance"
 V,  displayStatistics,              , 	            , bool,                false   , , P		, "display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."
 V,  displayComputationTime,         , 	            , bool,                false   , , P		, "display computation time statistics at end of solving"
+V,  displayGlobalTimers,            , 	            , bool,                false   , , P		, "display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)"
 V,  pauseAfterEachStep,             ,  		        , bool, 	             false   , , P		, "pause after every time step or static load step(user press SPACE)"
 V,  outputPrecision,                , 	            , UInt,                6       , , P		, "precision for floating point numbers written to console; e.g. values written by solver"
 V,  numberOfThreads,                , 	            , PInt,                1       , , P		, "number of threads used for parallel computation (1 == scalar processing); not yet implemented (status: Nov 2019)"
@@ -325,7 +327,7 @@ V,      showBasis,                  , 	             ,     bool,         false,  
 V,      basisSize,                  , 	             ,     float,        "0.2f",                   , P,      "size of basis for nodes"
 V,      tiling,                     , 	             ,     PInt,         "4",                      , P,      "tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                   , P,      "global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for nodes; 4th value is alpha-transparency"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB color for nodes; 4th value is alpha-transparency"
 V,      showNodalSlopes,            , 	             ,     UInt,         false,                    , P,       "draw nodal slope vectors, e.g. in ANCF beam finite elements"
 #
 writeFile=VisualizationSettings.h
@@ -350,7 +352,7 @@ classDescription = "Visualization settings for bodies."
 V,      show,                       , 	             ,     bool,         true,                       , P,    "flag to decide, whether the bodies are shown"
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the body(=object) number is shown"
 V,      defaultSize,                , 	             3,    Float3,       "Float3({1.f,1.f,1.f})",    , P,    "global body size of xyz-cube"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default cRGB olor for bodies; 4th value is "
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default cRGB color for bodies; 4th value is "
 V,      deformationScaleFactor,     , 	             ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc."
 V,      beams,                      , 	             ,     VSettingsBeams,   ,                       , PS,   "visualization settings for beams (e.g. ANCFCable or other beam elements)"
 #
@@ -373,7 +375,7 @@ V,      jointAxesRadius,            , 	             ,     float,        "0.02f",
 V,      showContact,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether contact points, lines, etc. are shown"
 V,      springNumberOfWindings,     , 	             ,     PInt,         8,                          , P,    "number of windings for springs drawn as helical spring"
 V,      contactPointsDefaultSize,   , 	             ,     float,        "0.02f",                      , P,    "global contact points size; if -1.f, connector size is relative to maxSceneSize"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB olor for connectors; 4th value is alpha-transparency"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,    "default cRGB color for connectors; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
@@ -387,7 +389,7 @@ V,      show,                       , 	             ,     bool,         true,   
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the marker numbers are shown"
 V,      drawSimplified,             , 	             ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                     , P,    "global marker size; if -1.f, marker size is relative to maxSceneSize"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.1f,0.5f,0.1f,1.f})",, P,    "default cRGB olor for markers; 4th value is alpha-transparency"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.1f,0.5f,0.1f,1.f})",, P,    "default cRGB color for markers; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
@@ -404,7 +406,7 @@ V,      defaultRadius,              , 	             ,     float,        "0.005f"
 V,      fixedLoadSize,              , 	             ,     bool,         true,                       , P,    "if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size"
 V,      drawSimplified,             , 	             ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      loadSizeFactor,             , 	             ,     float,        "0.1f",                     , P,    "if fixedLoadSize=false, then this scaling factor is used to draw the load vector"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default cRGB olor for loads; 4th value is alpha-transparency"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default cRGB color for loads; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
 
@@ -418,7 +420,21 @@ V,      show,                       , 	             ,     bool,         true,   
 V,      showNumbers,                , 	             ,     bool,         false,                      , P,    "flag to decide, whether the sensor numbers are shown"
 V,      drawSimplified,             , 	             ,     bool,         true,                       , P,    "draw sensors with simplified symbols"
 V,      defaultSize,                , 	             ,     float,        "-1.f",                     , P,    "global sensor size; if -1.f, sensor size is relative to maxSceneSize"
-V,      defaultColor,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P,    "default cRGB olor for sensors; 4th value is alpha-transparency"
+V,      defaultColor,               , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P,    "default cRGB color for sensors; 4th value is alpha-transparency"
+#
+writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsContact
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization"
+#V|F,   pythonName, 		          cplusplusName,      size, type,	      defaultValue,args,           cFlags, parameterDescription
+#V,      showContactObjects,         , 	             ,     bool,         true,                       , P,    "show or hide contact objects in all GeneralContacts"
+V,      showSearchTree,             , 	             ,     bool,         true,                       , P,    "show search tree of all GeneralContacts"
+V,      showBoundingBoxes,          , 	             ,     bool,         true,                       , P,    "show bounding boxes of all GeneralContacts"
+V,      colorSearchTree,            , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P, "cRGB color"
+V,      colorBoundingBoxes,         , 	             4,    Float4,       "Float4({0.6f,0.6f,0.1f,1.f})",, P, "cRGB color"
 #
 writeFile=VisualizationSettings.h
 
@@ -551,6 +567,7 @@ V,      connectors,                 , 	             ,     VSettingsConnectors,, 
 V,      markers,                    , 	             ,     VSettingsMarkers,  ,                 , PS,      "marker visualization settings"
 V,      loads,                      , 	             ,     VSettingsLoads,    ,                 , PS,      "load visualization settings"
 V,      sensors,                    , 	             ,     VSettingsSensors,  ,                 , PS,      "sensor visualization settings"
+V,      contact,                    , 	             ,     VSettingsContact,  ,                 , PS,      "contact visualization settings"
 #
 V,      window,                     , 	             ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
 V,      openGL,                     , 	             ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
@@ -636,7 +653,8 @@ V,      tempODE1F1,                 , 	             ,     ResizableVector, ,    
 V,      startOfStepStateAAlgorithmic,, 	             ,     ResizableVector, ,                    ,   P,    "additional term needed for generalized alpha (startOfStep state)"
 V,      aAlgorithmic,               , 	             ,     ResizableVector, ,                    ,   P,    "additional term needed for generalized alpha (current state)"
 #
-V,      tempCompData,               , 	             ,     TemporaryComputationData, ,           ,    ,    "temporary data used during item-related residual and jacobian computation; duplicated for parallel computation"
+V,      tempCompData,               , 	             ,     TemporaryComputationData, ,           ,    ,    "temporary data used during item-related residual and jacobian computation; duplicated for serial computation, will be removed in future"
+V,      tempCompDataArray,          , 	             ,     TemporaryComputationDataArray, ,      ,    ,    "temporary data per thread, used during item-related residual and jacobian computation; for parallel computation"
 #private members:
 Vp,     linearSolverType,           , 	             ,     LinearSolverType,,                    ,    ,    "contains linear solver type value; cannot be accessed directly, because a change requires new linking of system matrices"
 #DENSE:

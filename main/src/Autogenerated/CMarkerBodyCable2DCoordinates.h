@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2021-11-16  08:25:45 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -79,7 +79,7 @@ public: // AUTO:
     //! AUTO:  return marker type (for node treatment in computation)
     virtual Marker::Type GetType() const override
     {
-        return (Marker::Type)(Marker::Body + Marker::Object + Marker::Coordinate);
+        return (Marker::Type)(Marker::Body + Marker::Object + Marker::Coordinate + Marker::JacobianDerivativeAvailable);
     }
 
     //! AUTO:  return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker
@@ -93,6 +93,9 @@ public: // AUTO:
 
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
+
+    //! AUTO:  fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
+    virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const override;
 
 };
 

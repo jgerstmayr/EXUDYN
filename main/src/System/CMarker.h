@@ -98,8 +98,9 @@ public: //
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
 	}
 
-	//! true = signal that analytical jacobian derivative is available
-	virtual bool ProvidesJacobianDerivative() const { return false; } 
+	//DELETE (replaced by Marker::JacobianDerivativeAvailable)
+	////! true = signal that analytical jacobian derivative is available
+	//virtual bool ProvidesJacobianDerivative() const { return false; } 
 
 	//! dimension, which an according connector would have
 	virtual Index GetDimension(const CSystemData& cSystemData) const {

@@ -553,11 +553,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = visualization\n\n'
         sPythonClass += sIndent+'def __iter__(self):\n'
         sPythonClass += sPythonIter + '\n'
+        sPythonClass += sIndent+'def __repr__(self):\n'
+        sPythonClass += sIndent+space4+'return str(dict(self))\n'
 
         vPythonClass += '):\n'
         vPythonClass += vPythonClassInit + '\n'
         vPythonClass += sIndent+'def __iter__(self):\n'
         vPythonClass += vPythonIter + '\n'
+        vPythonClass += sIndent+'def __repr__(self):\n'
+        vPythonClass += sIndent+space4+'return str(dict(self))\n'
 
         sPythonClass = vPythonClass + sPythonClass #visualization class must be first, otherwise the main class cannot be initialized
         if (len(parseInfo['pythonShortName'])):

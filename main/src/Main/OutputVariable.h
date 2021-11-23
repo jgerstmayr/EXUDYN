@@ -63,7 +63,11 @@ namespace Marker { //==>put into pybindings file in future!
 
 		ODE1 = 1 << 15,						//!< marker addresses ODE1 coordinates (otherwise, standard is ODE2)
 		//NOTE that SuperElementAlternativeRotationMode = (1 << 31) ==> do not use this value here!
-		EndOfEnumList = 1 << 16				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+
+		JacobianDerivativeNonZero = 1 << 16,//!< flag which informs that there is a derivative of the marker jacobian, being non-zero (e.g. for rotations)
+		JacobianDerivativeAvailable = 1 << 17,//!< flag which informs that derivative of the marker jacobian is implemented
+
+		EndOfEnumList = 1 << 18				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 		//available Types are, e.g.
 		//Node: 2+4+16, 2+4+8, 2+16
 		//Body: 1+4+16, 1+4+8, 1+16, 1+4+128, ...
@@ -90,6 +94,7 @@ namespace Marker { //==>put into pybindings file in future!
 		if (var & MultiNodal) { t += "MultiNodal"; }
 		if (var & ReducedCoordinates) { t += "ReducedCoordinates"; }
 		if (var & ODE1) { t += "ODE1"; } //'Body' already added via (var & Body)
+		//JacobianDerivativeNonZero and JacobianDerivativeAvailable not included here!
 		if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
 
 		return t;

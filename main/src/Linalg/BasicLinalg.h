@@ -411,7 +411,340 @@ namespace EXUmath {
 	}
 
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//for sparse matrices:
+
+	//!Triplets for simple sparse matrix
+	//!very much like Eigen, to be compatible in future!
+	class Triplet
+	{
+	public:
+		//Triplet() : m_row(0), m_col(0), m_value(0) {}
+		Triplet() {}
+
+		Triplet(const Index& row, const Index& col, const Real& value = 0) : m_row(row), m_col(col), m_value(value) {}
+
+		const Index& row() const { return m_row; }
+		const Index& col() const { return m_col; }
+		const Real& value() const { return m_value; }
+
+		//! in addition to Eigen, we also allow write access to value!
+		Real& value() { return m_value; }
+	private: //change to protected if derived class wanted (and also set destructor to virtual ...)
+		Index m_row, m_col;
+		Real m_value;
+	};
+
+	//! simple sparse matrix container for simplistic operations
+	class SparseTripletMatrix
+	{
+	private: //change to protected if derived class wanted (and also set destructor to virtual ...)
+		ResizableArray<Triplet> sparseTriplets;
+		Index numberOfRows;
+		Index numberOfColumns;
+	public:
+		SparseTripletMatrix() : numberOfRows(0), numberOfColumns(0) {}
+		SparseTripletMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, const ResizableArray<Triplet>& sparseTripletsInit)
+		{
+			for (const Triplet& triplet : sparseTripletsInit)
+			{
+				sparseTriplets.Append(triplet);
+			}
+		}
+		//! set number of rows and columns
+		void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit)
+		{
+			numberOfRows = numberOfRowsInit;
+			numberOfColumns = numberOfColumnsInit;
+		}
+
+		//! const access to triplet list ==> can be used in Eigen::SparseMatrix
+		const ResizableArray<Triplet>& GetTriplets() const { return sparseTriplets; }
+
+		//! for swap with GeneralMatrix
+		ResizableArray<Triplet>& GetTriplets() { return sparseTriplets; }
+
+		//! add triplet
+		void AddTriplet(const Triplet& triplet) { sparseTriplets.Append(triplet); }
+
+		//! get number of columns
+		Index NumberOfRows() const { return numberOfRows; }
+		//! get number of rows
+		Index NumberOfColumns() const { return numberOfColumns; }
+
+		//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
+		void SetAllZero() { sparseTriplets.SetNumberOfItems(0); }
+
+		//! reset matrices and free memory
+		void Reset() { SetNumberOfRowsAndColumns(0, 0); sparseTriplets.SetMaxNumberOfItems(0); };
+
+		//! multiply either triplets or matrix entries with factor
+		void MultiplyWithFactor(Real factor)
+		{
+			for (auto& item : sparseTriplets)
+			{
+				item.value() *= factor;
+			}
+		}
+
+		////! set the matrix with a dense matrix; do not use this function for computational tasks, as it will drop performance significantly
+		//void SetMatrix(const Matrix& otherMatrix);
+
+		//! multiply matrix with vector: solution = A*x
+		//! this leads to memory allocation in case that the matrix is built from triplets
+		void MultMatrixVector(const Vector& x, Vector& solution) const
+		{
+			solution.SetAll(0.); //! because some values may not be touched, others may be written several times ...
+
+			for (const auto& item : sparseTriplets)
+			{
+				solution[item.row()] += x[item.col()] * item.value(); //must be "+=", becaues several values may be added!!!!
+			}
+		}
+
+		//! multiply matrix with vector and add to solution: solution += A*x
+		//! this leads to memory allocation in case that the matrix is built from triplets
+		void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
+		{
+			for (const auto& item : sparseTriplets)
+			{
+				solution[item.row()] += x[item.col()] * item.value();
+			}
+		}
+
+		////! multiply transposed(matrix) with vector: solution = A^T*x
+		////! this leads to memory allocation in case that the matrix is built from triplets
+		//virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution);
+
+		//! multiply matrix with vector: solution = *this * matrix
+		void MultMatrixDenseMatrix(const Matrix& matrix, Matrix& solution) const
+		{
+			CHECKandTHROW(NumberOfColumns() == matrix.NumberOfRows(), "SparseTripletMatrix::MultMatrixDenseMatrix: inconsistent matrices!");
+			solution.SetNumberOfRowsAndColumns(NumberOfRows(), matrix.NumberOfColumns());
+			solution.SetAll(0);
+
+			Index mColumns = matrix.NumberOfColumns();
+			for (const auto& item : sparseTriplets)
+			{
+				for (Index i = 0; i < mColumns; i++)
+				{
+					solution(item.row(), i) += item.value() * matrix(item.col(), i);
+				}
+			}
+		}
+
+		//! multiply matrix with vector: solution = matrix^T * *this
+		void MultDenseMatrixTransposedMatrix(const Matrix& matrix, Matrix& solution) const
+		{
+			CHECKandTHROW(NumberOfRows() == matrix.NumberOfRows(), "SparseTripletMatrix::MultDenseMatrixTransposedMatrix: inconsistent matrices!");
+			solution.SetNumberOfRowsAndColumns(matrix.NumberOfColumns(), NumberOfColumns());
+			solution.SetAll(0);
+
+			Index mColumns = matrix.NumberOfColumns();
+			for (const auto& item : sparseTriplets)
+			{
+				for (Index i = 0; i < mColumns; i++)
+				{
+					solution(i, item.col()) += item.value() * matrix(item.row(), i);
+				}
+			}
+		}
+
+		//! add triplets to given dense matrix, using row and column offset and factor
+		void AddToDenseMatrix(Matrix& denseMatrix, Index rowOffset = 0, Index colOffset = 0, Real factor = 1.) const
+		{
+			if (rowOffset == 0 and colOffset == 0 and factor == 1.)
+			{
+				for (auto& item : sparseTriplets)
+				{
+					denseMatrix(item.row(), item.col()) += item.value();
+				}
+			}
+			else
+			{
+				for (auto& item : sparseTriplets)
+				{
+					denseMatrix(item.row() + rowOffset, item.col() + colOffset) += factor * item.value();
+				}
+			}
+		}
+
+		//! slow function which returns triplets as matrix
+		Matrix GetTripletsAsMatrix() const
+		{
+			Matrix triplets(sparseTriplets.NumberOfItems(), 3);
+			Index cnt = 0;
+			for (const Triplet& item : sparseTriplets)
+			{
+				triplets(cnt, 0) = (Real)item.row();
+				triplets(cnt, 1) = (Real)item.col();
+				triplets(cnt, 2) = item.value();
+				cnt++;
+			}
+			return triplets;
+		}
+
+		//! return a dense matrix from any other matrix: requires a copy - SLOW!
+		ResizableMatrix GetEXUdenseMatrix() const
+		{
+			ResizableMatrix denseMatrix; // (NumberOfRows(), NumberOfColumns());
+			Convert2DenseMatrix(denseMatrix);
+			//denseMatrix.SetAll(0.);
+
+			//for (auto& item : sparseTriplets)
+			//{
+			//	denseMatrix(item.row(), item.col()) += item.value();
+			//}
+			return denseMatrix;
+		}
+
+		//! convert to dense matrix without copying (but may create large matrices!)
+		void Convert2DenseMatrix(ResizableMatrix& denseMatrix) const
+		{
+			denseMatrix.SetNumberOfRowsAndColumns(NumberOfRows(), NumberOfColumns());
+			denseMatrix.SetAll(0.);
+
+			for (auto& item : sparseTriplets)
+			{
+				denseMatrix(item.row(), item.col()) += item.value();
+			}
+		}
+
+		//! function to print matrix
+		void PrintMatrix(std::ostream& os) const
+		{
+			os << GetEXUdenseMatrix();
+		}
+	};
+
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//for sparse vectors:
+
+	//!(index,value) tuplets for simple sparse vector
+	class IndexValue
+	{
+	public:
+		IndexValue() {}
+
+		IndexValue(const Index& index, const Real& value = 0.) : m_index(index), m_value(value) {}
+
+		const Index& GetIndex() const { return m_index; }
+		const Real& GetValue() const { return m_value; }
+
+		//! also allow write access to value:
+		Real& GetValue() { return m_value; }
+
+	private: //change to protected if derived class wanted (and also set destructor to virtual ...)
+		Index m_index;
+		Real m_value;
+	};
+
+	//! simple sparse matrix container for simplistic operations
+	class SparseVector
+	{
+	private: //change to protected if derived class wanted (and also set destructor to virtual ...)
+		ResizableArray<IndexValue> data;
+		Index vectorSize;  //original vector size, if needed
+	public:
+		SparseVector() : vectorSize(0) {}
+		SparseVector(Index vectorSizeInit)
+		{
+			vectorSize = vectorSizeInit;
+		}
+		SparseVector(Index vectorSizeInit, const ResizableArray<IndexValue>& sparseIndexValueInit)
+		{
+			vectorSize = vectorSizeInit;
+			data.SetNumberOfItems(sparseIndexValueInit.NumberOfItems());
+			for (Index i=0; i < sparseIndexValueInit.NumberOfItems(); i++)
+			{
+				data[i]=sparseIndexValueInit[i];
+			}
+		}
+		//! set number of rows and columns
+		void SetVectorSize(Index vectorSizeInit)
+		{
+			vectorSize = vectorSizeInit;
+		}
+
+		//! const access to triplet list ==> can be used in Eigen::SparseMatrix
+		const ResizableArray<IndexValue>& GetSparseIndexValues() const { return data; }
+
+		//! for swap with GeneralMatrix
+		ResizableArray<IndexValue>& GetSparseIndexValues() { return data; }
+
+		//! add tuple
+		void AddIndexValue(const IndexValue& item) { data.AppendPure(item); }
+
+		//! add tuple
+		void AddIndexAndValue(Index index, Real value) { data.AppendPure(IndexValue(index, value)); }
+
+		//! get size of full vector
+		Index VectorSize() const { return vectorSize; }
+
+		//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
+		void SetAllZero() { data.SetNumberOfItems(0); }
+
+		//! reset matrices and free memory
+		void Reset() { SetVectorSize(0); data.SetMaxNumberOfItems(0); };
+
+		//! multiply either triplets or matrix entries with factor
+		void MultiplyWithFactor(Real factor)
+		{
+			for (auto& item : data)
+			{
+				item.GetValue() *= factor;
+			}
+		}
+
+		//! add triplets to given dense matrix, using row and column offset and factor
+		void AddToDenseVector(Vector& denseVector, Index rowOffset = 0, Real factor = 1.) const
+		{
+			if (rowOffset == 0 && factor == 1.)
+			{
+				for (auto& item : data)
+				{
+					denseVector[item.GetIndex()] += item.GetValue();
+				}
+			}
+			else
+			{
+				for (auto& item : data)
+				{
+					denseVector[item.GetIndex() + rowOffset] += factor*item.GetValue();
+				}
+			}
+		}
+
+		//! slow function which returns triplets converted into dense vector
+		Vector GetDenseVector() const
+		{
+			Vector denseVector(VectorSize(), 0.); //zero vector!
+			for (const IndexValue& item : data)
+			{
+				denseVector[item.GetIndex()] += item.GetValue(); //add, because possibly double indices
+			}
+			return denseVector;
+		}
+
+
+		//! function to print matrix
+		void PrintMatrix(std::ostream& os) const
+		{
+			os << GetDenseVector() << "\n";
+		}
+	};
+
+
 }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//sparse triplets moved here to simplify usage
+typedef EXUmath::Triplet SparseTriplet;						//! this is a simple (row,col,value) structure for sparse matrix non zero entries
+typedef ResizableArray<SparseTriplet> SparseTripletVector;	//! this vector stores (dynamically!) the triplets
+
 
 
 #endif

@@ -29,11 +29,14 @@
 //#include "Graphics/VisualizationSystemData.h"
 #include "Graphics/VisualizationSystemContainer.h"
 
+//#include "Pymodules/PyGeneralContact.h"
+
 #include <pybind11/functional.h> //! AUTO: for function handling ... otherwise gives a python error (no compilation error in C++ !)
 
 //#include "Utilities/BasicFunctions.h"
 
 class MainSystemContainer;
+class PyGeneralContact;
 
 //!Interface to a CSystem, used in Python
 // This class mirrors all functionality accessible in Python
@@ -57,7 +60,11 @@ private:
 
 public:
 	//MainSystem() {};
-	virtual ~MainSystem() {} //added for correct deletion of derived classes
+	//! destructor for correct deletion of derived classes
+	virtual ~MainSystem() 
+	{
+		delete cSystem;
+	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   MEMBER VARIABLE ACCESS
@@ -80,6 +87,13 @@ public:
 	const VisualizationSystem& GetVisualizationSystem() const { return visualizationSystem; }
 
 	MainObjectFactory& GetMainObjectFactory() { return mainObjectFactory; }
+
+	//create a new general contact and add to system
+	PyGeneralContact& AddGeneralContact();
+	//obtain read/write access to general contact
+	PyGeneralContact& GetGeneralContact(Index generalContactNumber);
+	//delete general contact, resort indices
+	void DeleteGeneralContact(Index generalContactNumber);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   SYSTEM FUNCTIONS
@@ -122,7 +136,14 @@ public:
 	bool GetRenderEngineStopFlag() const { return GetCSystem()->GetPostProcessData()->stopSimulation; }
 
 	//! return the render engine stop flag (e.g. in order to interrupt animation or postprocessing)
-	void SetRenderEngineStopFlag(bool stopFlag) { GetCSystem()->GetPostProcessData()->stopSimulation = stopFlag; }
+	void SetRenderEngineStopFlag(bool stopFlag) 
+	{ 
+		GetCSystem()->GetPostProcessData()->stopSimulation = stopFlag; 
+		if (!stopFlag)
+		{
+			GetCSystem()->GetPostProcessData()->forceQuitSimulation = stopFlag; //this allows to proceed after a render engine has been stopped
+		}
+	}
 
 	////! this function waits for the stop flag in the render engine;
 	//bool WaitForRenderEngineStopFlag();

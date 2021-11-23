@@ -36,7 +36,7 @@
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MULTITHREADED computation CURRENTLY IN TRIAL STATE, only works for special cases!
-//#define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
+#define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -44,6 +44,7 @@
 //#define __STDC_WANT_LIB_EXT1__ 1 //==> according to cppreference this shall enable strcpy_s, but does not work in gcc
 #include <string> //std::string
 #include <cstdint> //for uint32_t
+#include <limits>  //not tested if works with MAC or linux
 
 //#include "System/versionCpp.h" //exclude here, in order to avoid re-compile when version changes
 
@@ -78,18 +79,19 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 	#endif
 #endif
 
-constexpr Index MAX_NUMBER_OF_THREADS = 16;   //!< maximum number of threads, e.g., for predefined structures with fixed size
+//not needed any more, as all structures are dynamic: constexpr Index MAX_NUMBER_OF_THREADS = 16;   //!< maximum number of threads, e.g., for predefined structures with fixed size
 
 
 #include "Main/Stdoutput.h"		//for pout and error/warning messages
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//#define USE_OPENMP //needs omp.h, not available on MacOS; currently only used in CSystem.cpp for some tests
-
-#ifdef USE_OPENMP
-const int maxThreads = 12; //adjust this for supercomputers, if necessary
-#endif
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//DELETE: (openmp is much less performant than manual multithreading)
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////#define USE_OPENMP //needs omp.h, not available on MacOS; currently only used in CSystem.cpp for some tests
+//
+//#ifdef USE_OPENMP
+//const int maxThreads = 12; //adjust this for supercomputers, if necessary
+//#endif
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
@@ -113,6 +115,16 @@ namespace EXUstd {
 	const Index InvalidIndex = -1; //!< invalid index used e.g. in GetIndexOfItem, etc.
 	const float _MINFLOAT = -1e38f; //!< largest negative value to be on the safe side; @TODO use std lib constants instead
 	const float _MAXFLOAT =  1e38f; //!< largest positive value to be on the safe side
+
+	//not tested if works with MAC or linux
+	constexpr double LOWESTREAL = std::numeric_limits<Real>::lowest(); //lowest (neg) Real number
+	constexpr double MAXREAL = std::numeric_limits<Real>::lowest();  //highest (pos) Real number
+
+	//empty class for default initialization, cannot be converted from e.g. Real, Index, etc.
+	class Dummy
+	{
+	};
+
 } //EXUstd
 
 extern bool linalgPrintUsePythonFormat; //!< defined in Vector.cpp; true: use python format for output of vectors and matrices; false: use matlab format

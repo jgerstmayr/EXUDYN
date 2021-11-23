@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 778, 
-Number of resolved issues = 690 (26 in current minor version), 
-Exudyn version = 1.1.26, 
-last change =  2021-10-09
+Number of issues = 802, 
+Number of resolved issues = 706 (42 in current minor version), 
+Exudyn version = 1.1.42, 
+last change =  2021-11-23
 
 
 <table style = "width:100%">
@@ -38,6 +38,150 @@ last change =  2021-10-09
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0801</td>
+    <td>Box3D               </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check Ubuntu20 warnings; replace Vector3D pmin with Real pmin[3] to avoid warnings and gain speedup</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-11-23</td>
+    <td>2022-01-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0800</td>
+    <td>GeneralContact ANCFCable</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add ANCFCable2D to GeneralContact, enabling contact with planar spheres (cylinders)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-19</td>
+    <td>2022-01-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0799</td>
+    <td>GeneralContact description</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add general section in theDoc for description of GeneralContact</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-11-19</td>
+    <td>2022-01-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0793</td>
+    <td>performance section </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add performance and speedup section to theDoc, explaining most useful settings like modifiedNewton, EigenSparse, writeToFile, step size, numberOfThreads, constant mass matrix, etc.</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0792</td>
+    <td>test Pardiso integration</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> VS2017 settings with Intel Performance Libraries and test interface via Eigen</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0791</td>
+    <td>test Eigen SimplicialLDLT</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> use systemMatricesArePD to enable LDLT solver</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0783</td>
+    <td>SetObjectParameter  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend functionality of Set[Item]Parameter functions to accept lists AND numpy arrays for vectors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-29</td>
+    <td>2021-12-28</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0782</td>
+    <td>MatrixContainer     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add SetWithNGsolveSparseMatrix</td>
+    <td>adding an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz</td>
+    <td></td>
+    <td>2021-10-27</td>
+    <td>2021-12-26</td>
+    <td></td>
+    <td></td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0779</td>
+    <td>sensor recorder     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add utilities function for recording signals internally in mbs; avoids writing to sensor files, which helps reducing overhead in ParameterVariation and GeneticOptimization</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-17</td>
+    <td>2021-12-16</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>0777</td>
     <td>GenericODE2         </td>
@@ -70,7 +214,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0753</td>
     <td>autodiff for Connectors</td>
     <td>JG</td>
@@ -86,7 +230,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0752</td>
     <td>tkinter MacOS       </td>
     <td>JG</td>
@@ -102,23 +246,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0747</td>
-    <td>ComputeLinearizedSystem</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add exudyn.ComputeLinearizedSystem similar to what is done in ComputeODEEigenvalues, returning M, K, D, ...</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-09-03</td>
-    <td>2021-11-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0746</td>
     <td>ComputeODEEigenvalues</td>
     <td>JG</td>
@@ -134,7 +262,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0745</td>
     <td>SensitivityAnalysis()</td>
     <td>JG</td>
@@ -150,7 +278,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0744</td>
     <td>SerialRobot2MBS     </td>
     <td>JG</td>
@@ -166,7 +294,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0743</td>
     <td>ComputeODE2Eigenvalues</td>
     <td>JG</td>
@@ -182,7 +310,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0738</td>
     <td>ObjectContactCoordinate</td>
     <td>JG</td>
@@ -198,7 +326,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0737</td>
     <td>ContactCoordinate   </td>
     <td>JG</td>
@@ -214,7 +342,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0736</td>
     <td>include GeomExactBeam3D</td>
     <td>JG</td>
@@ -230,7 +358,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0735</td>
     <td>parallel build      </td>
     <td>JG</td>
@@ -246,7 +374,7 @@ last change =  2021-10-09
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0734</td>
     <td>continuous integration</td>
     <td>JG</td>
@@ -1447,6 +1575,246 @@ last change =  2021-10-09
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0798</td>
+    <td>Implicit GeneralContact</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ODE2RHS jacobian and PostNewton to GeneralContact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-19</td>
+    <td>2022-01-18</td>
+    <td>2021-11-19 16:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0797</td>
+    <td>itemInterface       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add representation for item interface classes, using __repr__() = dict(self)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-10</td>
+    <td>2022-01-09</td>
+    <td>2021-11-10 08:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0796</td>
+    <td>GL list GeneralContact</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> speed up visualization with GL list for spheres in GeneralContact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-10</td>
+    <td>2022-01-09</td>
+    <td>2021-11-13 23:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0795</td>
+    <td>add TCP/IP interface</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add CreateTCPIPconnection and other functions to utilities for interconnection with other programs via TCP/IP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-08</td>
+    <td>2022-01-07</td>
+    <td>2021-11-08 10:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0794</td>
+    <td>error when switching from n to 1 threads</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> RuntimeError: TemporaryComputationDataArray::operator[]: index out of range caused when switching from numberOfThreads>1 to 1 thread</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-11-04</td>
+    <td>2022-01-03</td>
+    <td>2021-11-13 23:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0790</td>
+    <td>multithreading fails for user functions</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> build separate lists for objects and loads with user functions, excluded in MT evaluation</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td>2021-11-14 23:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0789</td>
+    <td>constant mass matrix</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> do not recompute mass matrix if it is totally constant in implicit solver; add flag to solver options to force recompute</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td>2021-11-08 10:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0788</td>
+    <td>multithreaded ODE2RHS and compute loads</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use multithreaded computation for ODE2 RHS and for loads computation; use simulationSettings.numberOfThreads > 1 for multithreaded computation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-01</td>
+    <td>2021-12-31</td>
+    <td>2021-11-13 23:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0787</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add contact object, directly in mbs, which allows different types of contact with efficient computation and search trees; start with simple spherical contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-01</td>
+    <td>2021-12-31</td>
+    <td>2021-11-19 16:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0786</td>
+    <td>TemporaryComputationDataArray</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add array of TemporaryCompData for multithreaded computation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-01</td>
+    <td>2021-12-31</td>
+    <td>2021-11-01 23:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0785</td>
+    <td>ComputeSystemODE1RHS</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add list of loads with ODE1 relevancy, otherwise all loads are computed even if there are no ODE1 coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-01</td>
+    <td>2021-12-31</td>
+    <td>2021-11-01 21:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added simple flag to avoid computation if no ODE1 coordinates available</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0784</td>
+    <td>verboseMode         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> output of every step in verboseMode=1 after long time or if there are some very long lasting steps</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-10-31</td>
+    <td>2021-12-30</td>
+    <td>2021-11-14 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not fully clarified, but modified time when data is output; may occur in case of very long running iPython?</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0781</td>
+    <td>add n-mass-oscillator</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add interactive example based on simulateInteractively for n-mass-oscillator with step and frequency excitation</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2021-10-25</td>
+    <td>2021-12-24</td>
+    <td>2021-10-28 16:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0780</td>
+    <td>enable close window button</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> close window button is now enabled, which stops current and following simulations until render window is restarted or SetRenderEngineStopFlag(False)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-21</td>
+    <td>2021-12-20</td>
+    <td>2021-10-21 09:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>if a simulation with renderer is quit (also ESCAPE button), then a further call to solver will be ignored until the simulation is reset, or SetRenderEngineStopFlag(False)</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0778</td>
+    <td>GenericODE2 FEM     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add FEMinterface function for creation of ObjectGenericODE2 with linear FEM model and nonlinear FEM model (using NGsolve)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-16</td>
+    <td>2021-12-15</td>
+    <td>2021-10-16 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0776</td>
     <td>MatrixContainer::SetWithSparseMatrixCSR</td>
     <td>JG</td>
@@ -1857,6 +2225,22 @@ last change =  2021-10-09
     <td>2021-09-03</td>
     <td>2021-11-02</td>
     <td>2021-09-03 13:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0747</td>
+    <td>ComputeLinearizedSystem</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add exudyn.ComputeLinearizedSystem similar to what is done in ComputeODEEigenvalues, returning M, K, D, ...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td>2021-10-27 18:40</td>
     <td>JG</td>
     <td></td>
     <td></td>

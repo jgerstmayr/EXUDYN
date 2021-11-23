@@ -137,6 +137,9 @@ public:
 	//! function which is called, if parameters have changed; this should e.g. tell if precomputed values need to be re-computed; is called in MainObject::SetWithDictionary(...)
 	virtual void ParametersHaveChanged() {} //default: do nothing
 
+	//! function to be overwritten, if object has user function
+	virtual bool HasUserFunction() const { return false; }
+
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // SYSTEM FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -35,6 +35,7 @@ public: //made public for access via pybind
 	Real factJacAlgorithmic;
 
 	bool useScaling; //scaling for ODE2 and AE part to ensure good conditioning of Jacobian
+	bool hasConstantMassMatrix; //!< avoid recomputation of mass matrix, if constant
 
 
 	//bool useIndex2Constraints; ==> directly linked to simulationSettings

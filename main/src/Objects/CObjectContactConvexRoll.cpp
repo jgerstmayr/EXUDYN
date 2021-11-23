@@ -150,7 +150,7 @@ void CObjectContactConvexRoll::InitializeObject(const CObjectContactConvexRollPa
 */
 bool CObjectContactConvexRoll::PreContactCheckRoller(const Matrix3D& Rotm, const Vector3D& displacement, Real lRoller, Real R, Vector3D& pC) const
 {
-	bool contact = true; // init possible contact
+	//bool contact = true; // init possible contact
 	Vector3D rx = Rotm * EXUmath::unitVecX * (lRoller / 2); // Get local x-Axis and go to the end of the Roller
 	Vector3D rx1 = displacement + rx;
 	Vector3D rx2 = displacement - rx;
@@ -189,8 +189,8 @@ void CObjectContactConvexRoll::ComputeContactForces(const MarkerDataStructure& m
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;		// global velocity of the roller
 
 
-	const Vector& poly = GetCoefficientsHullDerivative();
-	const Vector& dpoly = GetCoefficientsHullDDerivative();
+	//const Vector& poly = GetCoefficientsHullDerivative();
+	//const Vector& dpoly = GetCoefficientsHullDDerivative();
 	const Real& dataGap = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0]; 
 
 	//contact only considered, if switched in PostNewton
@@ -286,9 +286,9 @@ void CObjectContactConvexRoll::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataS
 //! provide according output variable in "value"
 void CObjectContactConvexRoll::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
-	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
-	Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
+	//const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
+	//const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
+	//Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
 
 	Vector3D pC; //deviation of contact conditions
 	Vector3D vC; //deviation of velocity at contact point

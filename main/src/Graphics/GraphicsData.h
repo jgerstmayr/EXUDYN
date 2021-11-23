@@ -25,6 +25,21 @@
 
 typedef SlimArray<float, 16> hMatrix4f; //introduce this typedef to enable switch to other matrix representations
 
+//! convert tiling (e.g., 100) for circles or spheres into bit-based tiling using i interpreted as 2^i numbers for tiling
+inline Index TilingToBitResolution(Index tiling)
+{
+	//if (tiling <= 1) { return 0; }
+
+	Index bitTiling = 0;
+	while (tiling > 1) //
+	{
+		bitTiling++;
+		tiling >>= 1; //divide by 2
+	}
+	return bitTiling;
+}
+
+
 //! structure for colored line
 class GLLine
 {
@@ -38,12 +53,14 @@ public:
 };
 
 //! structure for a point (node); drawing might be realized as point, circle or sphere
-class GLPoint
+class GLSphere
 {
 public:
 	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	Float3 point;			//!< 3D point coordinates
 	Float4 color;			//!< RGBA color in range 0.f - 1.f; A ... alpha
+	float radius;			//!< when drawn as sphere
+	Index resolution;		//!< resolution when drawn as sphere, indicates 2^i number of triangles along halfcircle, currently limited between i=0 and i=7; if i=-1, default is used
 };
 
 //! structure for a circle in XY-plane with radius
@@ -94,7 +111,7 @@ class GraphicsData
 {
 public:
 	ResizableArray<GLLine> glLines;				//!< lines to be displayed
-	ResizableArray<GLPoint> glPoints;			//!< points to be displayed
+	ResizableArray<GLSphere> glSpheres;			//!< points to be displayed
 	ResizableArray<GLCircleXY> glCirclesXY;		//!< circles to be displayed
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
 	ResizableArray<GLTriangle> glTriangles;		//!< triangles to be displayed
@@ -156,7 +173,7 @@ public:
 			delete[] item.text;
 		}
 		glLines.SetNumberOfItems(0);
-		glPoints.SetNumberOfItems(0);
+		glSpheres.SetNumberOfItems(0);
 		glCirclesXY.SetNumberOfItems(0);
 		glTexts.SetNumberOfItems(0);
 		glTriangles.SetNumberOfItems(0);
@@ -176,14 +193,17 @@ public:
 		return glLines.Append(line);
 	}
 
-	Index AddPoint(const Vector3D& point, const Float4& color, Index itemID)
+	Index AddSphere(const Vector3D& point, const Float4& color, Index itemID, 
+		float radius=-1.f, Index resolution=-1)
 	{
-		GLPoint glPoint;
-		glPoint.itemID = itemID;
-		glPoint.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
-		glPoint.color = color;
+		GLSphere glSphere;
+		glSphere.itemID = itemID;
+		glSphere.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
+		glSphere.color = color;
+		glSphere.radius = radius;
+		glSphere.resolution = resolution;
 
-		return glPoints.Append(glPoint);
+		return glSpheres.Append(glSphere);
 	}
 
 	//! create circle i XY-plane with centerPoint, radius, color and numberOfSegments (0 ... use default value)
@@ -258,7 +278,7 @@ public:
 	{
 		os << "GraphicsData:\n";
 		os << "  number of lines  = " << glLines.NumberOfItems() << "\n";
-		os << "  number of points = " << glPoints.NumberOfItems() << "\n";
+		os << "  number of points = " << glSpheres.NumberOfItems() << "\n";
 		os << "  number of circles= " << glCirclesXY.NumberOfItems() << "\n";
 		os << "  number of texts  = " << glTexts.NumberOfItems() << "\n";
 		os << "  number of trigs  = " << glTriangles.NumberOfItems() << "\n";

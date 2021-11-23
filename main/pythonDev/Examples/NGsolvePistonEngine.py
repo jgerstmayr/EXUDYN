@@ -389,7 +389,7 @@ if True:
                           # computeEigenmodes=eigenModesNGsolve, excludeRigidBodyModes = 6,
                           # numberOfModes = nModes, maxEigensolveIterations=20)
 
-    nModes = 40
+    nModes = 20
     excludeRigidBodyModes = 6
     if verbose: print("number of coordinates crank =", femCrank.NumberOfCoordinates())
     if verbose: print("Compute eigenmodes crank ....")
@@ -401,7 +401,8 @@ if True:
         print("\ncrank eigen analysis time=", stopCrank-startCrank)
     else:
         start_time = time.time()
-        femCrank.ComputeEigenmodesNGsolve(bfM, bfK, nModes=nModes, excludeRigidBodyModes=excludeRigidBodyModes)
+        femCrank.ComputeEigenmodesNGsolve(bfM, bfK, nModes=nModes, 
+                                          excludeRigidBodyModes=excludeRigidBodyModes,  maxEigensolveIterations=20)
         print("NGsolve mode computation needed %.3f seconds" % (time.time() - start_time))
     
     totalFEcoordinates+=femCrank.NumberOfCoordinates()

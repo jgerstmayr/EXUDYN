@@ -43,6 +43,7 @@ template <class T> class ResizableArray;
 typedef SlimArray<Index, 2> Index2; //!< a pair of integer values
 typedef SlimArray<Index, 3> Index3; //!< a triple of integer values
 typedef SlimArray<Index, 4> Index4; //!< 4 integer values
+typedef SlimArray<Index, 6> Index6; //!< 6 integer values for SearchTree
 
 template <class T, Index dataSize>
 class SlimArray 
@@ -55,8 +56,12 @@ public:
     // CONSTRUCTOR, DESTRUCTOR
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    //! default constructor: no initialization.
-    SlimArray() {};
+	//not needed
+    //!default constructor: no initialization.
+    SlimArray() {}; 
+
+	//the following seems to be slower, even if no default constructor is supplied and it could be better?!
+	//SlimArray(EXUstd::Dummy init= EXUstd::Dummy()) {};
 
     //! constructor with a single scalar value used for all vector components.
     SlimArray(T scalarValue)

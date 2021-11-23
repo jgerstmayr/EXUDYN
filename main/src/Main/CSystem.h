@@ -30,44 +30,11 @@
 
 #include "Graphics/PostProcessData.h"
 #include "Pymodules/PythonUserFunctions.h"
+#include "Main/TemporaryComputationData.h"
+#include "System/CContact.h"
 
 class System;
 
-
-//! @brief class for temporary data during computation (time integration, static solver, etc.)
-//! use multiple instances for parallelization
-//! only contains resizable data structures for reuse in different objects
-class TemporaryComputationData
-{
-public:
-	//ResizableMatrix localMass;          //!< body mass matrix
-	EXUmath::MatrixContainer massMatrix; //!< DENSE: body mass matrix, SPARSE: (linked) system mass matrix
-	ResizableVector localODE2LHS;       //!< body ODE2LHS vector
-	ResizableVector localODE1RHS;       //!< body ODE1LHS vector
-	ResizableVector localAE;			//!< object (local) algebraic equations evaluation
-
-	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical/automatic differentiation
-	ResizableMatrix localJacobian_t;    //!< local velocity (object)-jacobian during numerical/automatic differentiation
-
-	JacobianTemp jacobianTemp;          //!< additional temporary data needed for jacobian computation
-	ResizableVector jacobianForce;      //!< for computation of jacobian derivative
-	EXUmath::MatrixContainer jacobianODE2Container;  //!< DENSE: local object jacobian matrix, SPARSE: (linked) system jacobian
-
-	ResizableVector generalizedLoad;    //!< generalized load vector added to ODE2 right-hand-side
-	ResizableMatrix loadJacobian;       //!< Jacobian for application of load
-	ResizableMatrix localJacobianAE_ODE1;//!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
-	ResizableMatrix localJacobianAE_ODE2;    //!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
-	ResizableMatrix localJacobianAE_ODE2_t;  //!< local constraint Jacobian (w.r.t. ODE2_t part) during constraint jacobian computation
-	ResizableMatrix localJacobianAE_AE; //!< local constraint Jacobian w.r.t. algebraic variables; during constraint jacobian computation
-	//ResizableMatrix localJacobianODE2;  //!< local (object) Jacobian during jacobian computation
-
-	ResizableVector numericalJacobianf0;	//!< temporary vector for numerical differentiation
-	ResizableVector numericalJacobianf1;	//!< temporary vector for numerical differentiation
-
-	ArrayIndex ltg;						//!< local to global coordinate mapping; ArrayIndex is also resizable
-
-	MarkerDataStructure markerDataStructure;
-};
 
 
 //! @brief data which is updated during different computation tasks, e.g. load factor, load steps, time steps, solver accuracy, ...
@@ -76,6 +43,8 @@ class SolverData
 public:
 	Real loadFactor;			//!< load factor, mainly used for static computation; should be set to 1, otherwise all loads are reduced by this factor
 	bool signalJacobianUpdate;  //!< false: default, do nothing; true: jacobian (of static computation or time integration) shall be updated, e.g. due to system change - if constraints are turned off, ...; this flag is regularly reset within a jacobian computation
+
+	bool doPostNewtonIteration; //!< default=true; set false for explicit solvers to deactivate Post Newton step e.g. for contact, which directly compute contact conditions
 
 	SolverData()
 	{
@@ -87,6 +56,7 @@ public:
 	{
 		loadFactor = 1;
 		signalJacobianUpdate = false;
+		doPostNewtonIteration = true;
 	}
 };
 
@@ -101,11 +71,16 @@ protected:
 	PostProcessData postProcessData;	//!< data needed for post-processing
 	SolverData solverData;				//!< data updated by specific solvers 
 	PythonUserFunctions pythonUserFunctions; //!< user functions and MainSystem
+	//Index numberOfThreads;				//!< multithreading information set by solver
 
 	bool systemIsConsistent;				//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
+	ResizableArray<GeneralContact*> generalContacts;	//!< array of general contacts, that are not objects
 
 public:
-	~CSystem() {} //added for correct deletion of derived classes
+	~CSystem() 
+	{ 
+		ResetGeneralContacts(); 
+	} //added for correct deletion of derived classes
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ACCESS FUNCTIONS for member variables
@@ -113,14 +88,30 @@ public:
 	CSystemData& GetSystemData() { return cSystemData; }
 	const CSystemData& GetSystemData() const { return cSystemData; }
 
-	PythonUserFunctions& GetPythonUserFunctions() { return pythonUserFunctions; }
-	const PythonUserFunctions& GetPythonUserFunctions() const { return pythonUserFunctions; }
-
 	//! return pointer to data in order to be linked to visualization class
 	PostProcessData* GetPostProcessData() { return &postProcessData; }
-
 	//! return pointer to data in order to be linked to visualization class
 	const PostProcessData* GetPostProcessData() const { return &postProcessData; }
+
+	//! write access to encapsulated Python user functions (e.g., preStepUserFunction)
+	PythonUserFunctions& GetPythonUserFunctions() { return pythonUserFunctions; }
+	//! read access to encapsulated Python user functions (e.g., preStepUserFunction)
+	const PythonUserFunctions& GetPythonUserFunctions() const { return pythonUserFunctions; }
+
+	//! write access to general contacts
+	ResizableArray<GeneralContact*>& GetGeneralContacts() { return generalContacts; }
+	//! read access to general contacts
+	const ResizableArray<GeneralContact*>& GetGeneralContacts() const { return generalContacts; }
+
+	//! reset general contacts
+	void ResetGeneralContacts()
+	{
+		for (GeneralContact* item : generalContacts)
+		{
+			delete item; //calls Reset() first
+		}
+		generalContacts.Flush();
+	}
 
 	//! this function is used to copy the current state to the visualization state and to send a signal that the PostProcessData has been updated
 	void UpdatePostProcessData(bool recordImage = false);
@@ -152,12 +143,22 @@ public:
 	void Initialize() 
 	{
 		SetSystemIsConsistent(false);
+		//numberOfThreads = 1; //per default, if not otherwise set by solver
+
 		//postProcessData.postProcessDataReady = false;
 		//postProcessData.simulationFinished = false;
 
 		//postProcessData.updateCounter = 1; //done synchronized with visualizationSystem.graphicsData.visualizationCounter
 	}
 
+//	Index GetNumberOfThreads() const
+//	{
+//#ifdef USE_NGSOLVE_TASKMANAGER
+//		return ngstd::TaskManager::GetNumThreads();
+//#else
+//		return 1;
+//#endif
+//	}
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // CSystem computational functions
@@ -206,13 +207,16 @@ public:
 	bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs, Index objectNumber);
 
 	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'systemODE2Rhs' for ODE2 part
-	void ComputeSystemODE2RHS(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+	void ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs);
 
 	//! compute system right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'systemODE1Rhs' for ODE1 part
 	void ComputeSystemODE1RHS(TemporaryComputationData& temp, Vector& systemODE1Rhs);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
-	void ComputeODE2Loads(TemporaryComputationData& temp, Vector& systemODE2Rhs);
+	void ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs);
+
+	//! compute part of load for 'ode2rhs' or to sparsevector; if fillSparseVector, values are added to temp.sparseVector; otherwise, filled directly into systemODE2Rhs
+	void ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& temp, Real currentTime, Vector& systemODE2Rhs, bool fillSparseVector);
 
 	//! compute system right-hand-side (RHS) due to loads and add them to 'ode2rhs' for ODE2 part
 	void ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE1Rhs);
@@ -231,7 +235,7 @@ public:
 
 	//! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity; returns an error (residual)
 	//! recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason
-	Real PostNewtonStep(TemporaryComputationData& temp, Real& recommendedStepSize);
+	Real PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& recommendedStepSize);
 
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
 	void PostDiscontinuousIterationStep();
@@ -251,7 +255,7 @@ public:
 	//! compute numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2_t quantities; 
 	//! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 	//! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	void JacobianODE2RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+	void JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0.);
 
 	////! compute numerical differentiation of ODE2RHS; result is a jacobian;  multiply the added entries with scalarFactor

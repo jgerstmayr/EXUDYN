@@ -54,6 +54,8 @@ class VNodePoint:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodePoint:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -72,6 +74,8 @@ class NodePoint:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Point = NodePoint
 VPoint = VNodePoint
@@ -87,6 +91,8 @@ class VNodePoint2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodePoint2D:
     def __init__(self, name = '', referenceCoordinates = [0.,0.], initialCoordinates = [0.,0.], initialVelocities = [0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -105,6 +111,8 @@ class NodePoint2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Point2D = NodePoint2D
 VPoint2D = VNodePoint2D
@@ -120,6 +128,8 @@ class VNodeRigidBodyEP:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeRigidBodyEP:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.,0.], addConstraintEquation = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -140,6 +150,8 @@ class NodeRigidBodyEP:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RigidEP = NodeRigidBodyEP
 VRigidEP = VNodeRigidBodyEP
@@ -155,6 +167,8 @@ class VNodeRigidBodyRxyz:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeRigidBodyRxyz:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -173,6 +187,8 @@ class NodeRigidBodyRxyz:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RigidRxyz = NodeRigidBodyRxyz
 VRigidRxyz = VNodeRigidBodyRxyz
@@ -188,6 +204,8 @@ class VNodeRigidBodyRotVecLG:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeRigidBodyRotVecLG:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -206,6 +224,8 @@ class NodeRigidBodyRotVecLG:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RigidRotVecLG = NodeRigidBodyRotVecLG
 VRigidRotVecLG = VNodeRigidBodyRotVecLG
@@ -221,6 +241,8 @@ class VNodeRigidBody2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeRigidBody2D:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], initialCoordinates = [0.,0.,0.], initialVelocities = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -239,6 +261,8 @@ class NodeRigidBody2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Rigid2D = NodeRigidBody2D
 VRigid2D = VNodeRigidBody2D
@@ -250,6 +274,8 @@ class VNode1D:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class Node1D:
     def __init__(self, name = '', referenceCoordinates = [0.], initialCoordinates = [0.], initialVelocities = [0.], visualization = {'show': False}):
         self.name = name
@@ -266,6 +292,8 @@ class Node1D:
         yield 'initialVelocities', self.initialVelocities
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VNodePoint2DSlope1:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -277,6 +305,8 @@ class VNodePoint2DSlope1:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodePoint2DSlope1:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -295,6 +325,8 @@ class NodePoint2DSlope1:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Point2DS1 = NodePoint2DSlope1
 VPoint2DS1 = VNodePoint2DSlope1
@@ -306,6 +338,8 @@ class VNodeGenericODE2:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeGenericODE2:
     def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], initialCoordinates_t = [], numberOfODE2Coordinates = 0, visualization = {'show': False}):
         self.name = name
@@ -324,6 +358,8 @@ class NodeGenericODE2:
         yield 'numberOfODE2Coordinates', self.numberOfODE2Coordinates
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VNodeGenericODE1:
     def __init__(self, show = False):
         self.show = show
@@ -331,6 +367,8 @@ class VNodeGenericODE1:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeGenericODE1:
     def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = {'show': False}):
         self.name = name
@@ -347,6 +385,8 @@ class NodeGenericODE1:
         yield 'numberOfODE1Coordinates', self.numberOfODE1Coordinates
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VNodeGenericData:
     def __init__(self, show = False):
         self.show = show
@@ -354,6 +394,8 @@ class VNodeGenericData:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class NodeGenericData:
     def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = {'show': False}):
         self.name = name
@@ -368,6 +410,8 @@ class NodeGenericData:
         yield 'numberOfDataCoordinates', self.numberOfDataCoordinates
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VNodePointGround:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -379,6 +423,8 @@ class VNodePointGround:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class NodePointGround:
     def __init__(self, name = '', referenceCoordinates = [0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -393,6 +439,8 @@ class NodePointGround:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 PointGround = NodePointGround
 VPointGround = VNodePointGround
@@ -412,6 +460,8 @@ class VObjectGround:
         yield 'color', self.color
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectGround:
     def __init__(self, name = '', referencePosition = [0.,0.,0.], visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
         self.name = name
@@ -427,6 +477,8 @@ class ObjectGround:
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectMassPoint:
     def __init__(self, show = True, graphicsData = []):
         self.show = show
@@ -436,6 +488,8 @@ class VObjectMassPoint:
         yield 'show', self.show
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectMassPoint:
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
@@ -451,6 +505,8 @@ class ObjectMassPoint:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 MassPoint = ObjectMassPoint
 VMassPoint = VObjectMassPoint
@@ -464,6 +520,8 @@ class VObjectMassPoint2D:
         yield 'show', self.show
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectMassPoint2D:
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
@@ -479,6 +537,8 @@ class ObjectMassPoint2D:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 MassPoint2D = ObjectMassPoint2D
 VMassPoint2D = VObjectMassPoint2D
@@ -492,6 +552,8 @@ class VObjectMass1D:
         yield 'show', self.show
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectMass1D:
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
@@ -511,6 +573,8 @@ class ObjectMass1D:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Mass1D = ObjectMass1D
 VMass1D = VObjectMass1D
@@ -524,6 +588,8 @@ class VObjectRotationalMass1D:
         yield 'show', self.show
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectRotationalMass1D:
     def __init__(self, name = '', physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
@@ -543,6 +609,8 @@ class ObjectRotationalMass1D:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Rotor1D = ObjectRotationalMass1D
 VRotor1D = VObjectRotationalMass1D
@@ -558,6 +626,8 @@ class VObjectRigidBody:
         yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectRigidBody:
     def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
@@ -578,6 +648,8 @@ class ObjectRigidBody:
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RigidBody = ObjectRigidBody
 VRigidBody = VObjectRigidBody
@@ -593,6 +665,8 @@ class VObjectRigidBody2D:
         yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
         yield 'graphicsData', self.graphicsData
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectRigidBody2D:
     def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
@@ -611,6 +685,8 @@ class ObjectRigidBody2D:
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RigidBody2D = ObjectRigidBody2D
 VRigidBody2D = VObjectRigidBody2D
@@ -630,6 +706,8 @@ class VObjectGenericODE2:
         yield 'showNodes', self.showNodes
         yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectGenericODE2:
     def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, jacobianUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
         self.name = name
@@ -660,6 +738,8 @@ class ObjectGenericODE2:
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectGenericODE1:
     def __init__(self, show = True):
         self.show = show
@@ -667,6 +747,8 @@ class VObjectGenericODE1:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectGenericODE1:
     def __init__(self, name = '', nodeNumbers = [], systemMatrix = [], rhsVector = [], rhsUserFunction = 0, visualization = {'show': True}):
         self.name = name
@@ -685,6 +767,8 @@ class ObjectGenericODE1:
         yield 'rhsUserFunction', self.rhsUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectFFRF:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
         self.show = show
@@ -698,6 +782,8 @@ class VObjectFFRF:
         yield 'triangleMesh', self.triangleMesh
         yield 'showNodes', self.showNodes
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectFFRF:
     def __init__(self, name = '', nodeNumbers = [], massMatrixFF = [], stiffnessMatrixFF = [], dampingMatrixFF = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, objectIsInitialized = False, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
@@ -729,6 +815,8 @@ class ObjectFFRF:
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectFFRFreducedOrder:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
         self.show = show
@@ -742,6 +830,8 @@ class VObjectFFRFreducedOrder:
         yield 'triangleMesh', self.triangleMesh
         yield 'showNodes', self.showNodes
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectFFRFreducedOrder:
     def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = [], stiffnessMatrixReduced = [], dampingMatrixReduced = [], forceUserFunction = 0, massMatrixUserFunction = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], physicsCenterOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
@@ -799,6 +889,8 @@ class ObjectFFRFreducedOrder:
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 CMSobject = ObjectFFRFreducedOrder
 VCMSobject = VObjectFFRFreducedOrder
@@ -814,6 +906,8 @@ class VObjectANCFCable2D:
         yield 'drawHeight', self.drawHeight
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectANCFCable2D:
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -846,6 +940,8 @@ class ObjectANCFCable2D:
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Cable2D = ObjectANCFCable2D
 VCable2D = VObjectANCFCable2D
@@ -861,6 +957,8 @@ class VObjectALEANCFCable2D:
         yield 'drawHeight', self.drawHeight
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectALEANCFCable2D:
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -897,6 +995,8 @@ class ObjectALEANCFCable2D:
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 ALECable2D = ObjectALEANCFCable2D
 VALECable2D = VObjectALEANCFCable2D
@@ -912,6 +1012,8 @@ class VObjectBeamGeometricallyExact2D:
         yield 'drawHeight', self.drawHeight
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectBeamGeometricallyExact2D:
     def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., physicsMassPerLength = 0., physicsCrossSectionInertia = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsShearStiffness = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -938,6 +1040,8 @@ class ObjectBeamGeometricallyExact2D:
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Beam2D = ObjectBeamGeometricallyExact2D
 VBeam2D = VObjectBeamGeometricallyExact2D
@@ -953,6 +1057,8 @@ class VObjectConnectorSpringDamper:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -979,6 +1085,8 @@ class ObjectConnectorSpringDamper:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 SpringDamper = ObjectConnectorSpringDamper
 VSpringDamper = VObjectConnectorSpringDamper
@@ -994,6 +1102,8 @@ class VObjectConnectorCartesianSpringDamper:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorCartesianSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1018,6 +1128,8 @@ class ObjectConnectorCartesianSpringDamper:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 CartesianSpringDamper = ObjectConnectorCartesianSpringDamper
 VCartesianSpringDamper = VObjectConnectorCartesianSpringDamper
@@ -1033,6 +1145,8 @@ class VObjectConnectorRigidBodySpringDamper:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorRigidBodySpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], activeConnector = True, springForceTorqueUserFunction = 0, postNewtonStepUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1065,6 +1179,8 @@ class ObjectConnectorRigidBodySpringDamper:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RigidBodySpringDamper = ObjectConnectorRigidBodySpringDamper
 VRigidBodySpringDamper = VObjectConnectorRigidBodySpringDamper
@@ -1080,6 +1196,8 @@ class VObjectConnectorTorsionalSpringDamper:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorTorsionalSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., torque = 0., activeConnector = True, springTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1112,6 +1230,8 @@ class ObjectConnectorTorsionalSpringDamper:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 TorsionalSpringDamper = ObjectConnectorTorsionalSpringDamper
 VTorsionalSpringDamper = VObjectConnectorTorsionalSpringDamper
@@ -1127,6 +1247,8 @@ class VObjectConnectorCoordinateSpringDamper:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorCoordinateSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., dryFriction = 0., dryFrictionProportionalZone = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1155,6 +1277,8 @@ class ObjectConnectorCoordinateSpringDamper:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 CoordinateSpringDamper = ObjectConnectorCoordinateSpringDamper
 VCoordinateSpringDamper = VObjectConnectorCoordinateSpringDamper
@@ -1170,6 +1294,8 @@ class VObjectConnectorDistance:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorDistance:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1188,6 +1314,8 @@ class ObjectConnectorDistance:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 DistanceConstraint = ObjectConnectorDistance
 VDistanceConstraint = VObjectConnectorDistance
@@ -1203,6 +1331,8 @@ class VObjectConnectorCoordinate:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorCoordinate:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction = 0, offsetUserFunction_t = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1229,6 +1359,8 @@ class ObjectConnectorCoordinate:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 CoordinateConstraint = ObjectConnectorCoordinate
 VCoordinateConstraint = VObjectConnectorCoordinate
@@ -1242,6 +1374,8 @@ class VObjectConnectorCoordinateVector:
         yield 'show', self.show
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorCoordinateVector:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1269,6 +1403,8 @@ class ObjectConnectorCoordinateVector:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 CoordinateVectorConstraint = ObjectConnectorCoordinateVector
 VCoordinateVectorConstraint = VObjectConnectorCoordinateVector
@@ -1284,6 +1420,8 @@ class VObjectConnectorRollingDiscPenalty:
         yield 'discWidth', self.discWidth
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectConnectorRollingDiscPenalty:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1318,6 +1456,8 @@ class ObjectConnectorRollingDiscPenalty:
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RollingDiscPenalty = ObjectConnectorRollingDiscPenalty
 VRollingDiscPenalty = VObjectConnectorRollingDiscPenalty
@@ -1331,6 +1471,8 @@ class VObjectContactConvexRoll:
         yield 'show', self.show
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectContactConvexRoll:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., dynamicFriction = 0., staticFrictionOffset = 0., viscousFriction = 0., exponentialDecayStatic = 1e-3, frictionProportionalZone = 1e-3, rollLength = 0., coefficientsHull =  [], rBoundingSphere = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1368,6 +1510,8 @@ class ObjectContactConvexRoll:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectContactCoordinate:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1379,6 +1523,8 @@ class VObjectContactCoordinate:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectContactCoordinate:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1403,6 +1549,8 @@ class ObjectContactCoordinate:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectContactCircleCable2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1414,6 +1562,8 @@ class VObjectContactCircleCable2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectContactCircleCable2D:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1442,6 +1592,8 @@ class ObjectContactCircleCable2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectContactFrictionCircleCable2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1453,6 +1605,8 @@ class VObjectContactFrictionCircleCable2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectContactFrictionCircleCable2D:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1487,6 +1641,8 @@ class ObjectContactFrictionCircleCable2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VObjectJointGeneric:
     def __init__(self, show = True, axesRadius = 0.1, axesLength = 0.4, color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1500,6 +1656,8 @@ class VObjectJointGeneric:
         yield 'axesLength', self.axesLength
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointGeneric:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1,1,1,1], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, offsetUserFunctionParameters = [0.,0.,0.,0.,0.,0.], offsetUserFunction = 0, offsetUserFunction_t = 0, visualization = {'show': True, 'axesRadius': 0.1, 'axesLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1529,6 +1687,8 @@ class ObjectJointGeneric:
         yield 'VaxesLength', dict(self.visualization)["axesLength"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 GenericJoint = ObjectJointGeneric
 VGenericJoint = VObjectJointGeneric
@@ -1546,6 +1706,8 @@ class VObjectJointRevoluteZ:
         yield 'axisLength', self.axisLength
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointRevoluteZ:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = {'show': True, 'axisRadius': 0.1, 'axisLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1567,6 +1729,8 @@ class ObjectJointRevoluteZ:
         yield 'VaxisLength', dict(self.visualization)["axisLength"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RevoluteJointZ = ObjectJointRevoluteZ
 VRevoluteJointZ = VObjectJointRevoluteZ
@@ -1584,6 +1748,8 @@ class VObjectJointPrismaticX:
         yield 'axisLength', self.axisLength
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointPrismaticX:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), activeConnector = True, visualization = {'show': True, 'axisRadius': 0.1, 'axisLength': 0.4, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1605,6 +1771,8 @@ class ObjectJointPrismaticX:
         yield 'VaxisLength', dict(self.visualization)["axisLength"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 PrismaticJointX = ObjectJointPrismaticX
 VPrismaticJointX = VObjectJointPrismaticX
@@ -1620,6 +1788,8 @@ class VObjectJointSpherical:
         yield 'jointRadius', self.jointRadius
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointSpherical:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, visualization = {'show': True, 'jointRadius': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1638,6 +1808,8 @@ class ObjectJointSpherical:
         yield 'VjointRadius', dict(self.visualization)["jointRadius"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 SphericalJoint = ObjectJointSpherical
 VSphericalJoint = VObjectJointSpherical
@@ -1653,6 +1825,8 @@ class VObjectJointRollingDisc:
         yield 'discWidth', self.discWidth
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointRollingDisc:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1675,6 +1849,8 @@ class ObjectJointRollingDisc:
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RollingDiscJoint = ObjectJointRollingDisc
 VRollingDiscJoint = VObjectJointRollingDisc
@@ -1690,6 +1866,8 @@ class VObjectJointRevolute2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointRevolute2D:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1706,6 +1884,8 @@ class ObjectJointRevolute2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 RevoluteJoint2D = ObjectJointRevolute2D
 VRevoluteJoint2D = VObjectJointRevolute2D
@@ -1721,6 +1901,8 @@ class VObjectJointPrismatic2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointPrismatic2D:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], axisMarker0 = [1.,0.,0.], normalMarker1 = [0.,1.,0.], constrainRotation = True, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1743,6 +1925,8 @@ class ObjectJointPrismatic2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 PrismaticJoint2D = ObjectJointPrismatic2D
 VPrismaticJoint2D = VObjectJointPrismatic2D
@@ -1758,6 +1942,8 @@ class VObjectJointSliding2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointSliding2D:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), classicalFormulation = True, constrainRotation = False, axialForce = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1786,6 +1972,8 @@ class ObjectJointSliding2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 SlidingJoint2D = ObjectJointSliding2D
 VSlidingJoint2D = VObjectJointSliding2D
@@ -1801,6 +1989,8 @@ class VObjectJointALEMoving2D:
         yield 'drawSize', self.drawSize
         yield 'color', self.color
 
+    def __repr__(self):
+        return str(dict(self))
 class ObjectJointALEMoving2D:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], slidingOffset = 0., nodeNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], usePenaltyFormulation = False, penaltyStiffness = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
@@ -1829,6 +2019,8 @@ class ObjectJointALEMoving2D:
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 ALEMovingJoint2D = ObjectJointALEMoving2D
 VALEMovingJoint2D = VObjectJointALEMoving2D
@@ -1842,6 +2034,8 @@ class VMarkerBodyMass:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerBodyMass:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -1854,6 +2048,8 @@ class MarkerBodyMass:
         yield 'bodyNumber', self.bodyNumber
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerBodyPosition:
     def __init__(self, show = True):
         self.show = show
@@ -1861,6 +2057,8 @@ class VMarkerBodyPosition:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerBodyPosition:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
@@ -1875,6 +2073,8 @@ class MarkerBodyPosition:
         yield 'localPosition', self.localPosition
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerBodyRigid:
     def __init__(self, show = True):
         self.show = show
@@ -1882,6 +2082,8 @@ class VMarkerBodyRigid:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerBodyRigid:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
@@ -1896,6 +2098,8 @@ class MarkerBodyRigid:
         yield 'localPosition', self.localPosition
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerNodePosition:
     def __init__(self, show = True):
         self.show = show
@@ -1903,6 +2107,8 @@ class VMarkerNodePosition:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerNodePosition:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -1915,6 +2121,8 @@ class MarkerNodePosition:
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerNodeRigid:
     def __init__(self, show = True):
         self.show = show
@@ -1922,6 +2130,8 @@ class VMarkerNodeRigid:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerNodeRigid:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -1934,6 +2144,8 @@ class MarkerNodeRigid:
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerNodeCoordinate:
     def __init__(self, show = True):
         self.show = show
@@ -1941,6 +2153,8 @@ class VMarkerNodeCoordinate:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerNodeCoordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -1955,6 +2169,8 @@ class MarkerNodeCoordinate:
         yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerNodeCoordinates:
     def __init__(self, show = True):
         self.show = show
@@ -1962,6 +2178,8 @@ class VMarkerNodeCoordinates:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerNodeCoordinates:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -1974,6 +2192,8 @@ class MarkerNodeCoordinates:
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerNodeODE1Coordinate:
     def __init__(self, show = False):
         self.show = show
@@ -1981,6 +2201,8 @@ class VMarkerNodeODE1Coordinate:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerNodeODE1Coordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': False}):
         self.name = name
@@ -1995,6 +2217,8 @@ class MarkerNodeODE1Coordinate:
         yield 'coordinate', self.coordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerNodeRotationCoordinate:
     def __init__(self, show = True):
         self.show = show
@@ -2002,6 +2226,8 @@ class VMarkerNodeRotationCoordinate:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerNodeRotationCoordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -2016,6 +2242,8 @@ class MarkerNodeRotationCoordinate:
         yield 'rotationCoordinate', self.rotationCoordinate
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerSuperElementPosition:
     def __init__(self, show = True, showMarkerNodes = True):
         self.show = show
@@ -2025,6 +2253,8 @@ class VMarkerSuperElementPosition:
         yield 'show', self.show
         yield 'showMarkerNodes', self.showMarkerNodes
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerSuperElementPosition:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumbers = [], weightingFactors = [], visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
@@ -2042,6 +2272,8 @@ class MarkerSuperElementPosition:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerSuperElementRigid:
     def __init__(self, show = True, showMarkerNodes = True):
         self.show = show
@@ -2051,6 +2283,8 @@ class VMarkerSuperElementRigid:
         yield 'show', self.show
         yield 'showMarkerNodes', self.showMarkerNodes
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerSuperElementRigid:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
@@ -2072,6 +2306,8 @@ class MarkerSuperElementRigid:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerObjectODE2Coordinates:
     def __init__(self, show = True):
         self.show = show
@@ -2079,6 +2315,8 @@ class VMarkerObjectODE2Coordinates:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerObjectODE2Coordinates:
     def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -2091,6 +2329,8 @@ class MarkerObjectODE2Coordinates:
         yield 'objectNumber', self.objectNumber
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerBodyCable2DShape:
     def __init__(self, show = True):
         self.show = show
@@ -2098,6 +2338,8 @@ class VMarkerBodyCable2DShape:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerBodyCable2DShape:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), numberOfSegments = 3, visualization = {'show': True}):
         self.name = name
@@ -2112,6 +2354,8 @@ class MarkerBodyCable2DShape:
         yield 'numberOfSegments', self.numberOfSegments
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VMarkerBodyCable2DCoordinates:
     def __init__(self, show = True):
         self.show = show
@@ -2119,6 +2363,8 @@ class VMarkerBodyCable2DCoordinates:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class MarkerBodyCable2DCoordinates:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
@@ -2131,6 +2377,8 @@ class MarkerBodyCable2DCoordinates:
         yield 'bodyNumber', self.bodyNumber
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 #+++++++++++++++++++++++++++++++
 #LOAD
 class VLoadForceVector:
@@ -2140,6 +2388,8 @@ class VLoadForceVector:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class LoadForceVector:
     def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
@@ -2158,6 +2408,8 @@ class LoadForceVector:
         yield 'loadVectorUserFunction', self.loadVectorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Force = LoadForceVector
 VForce = VLoadForceVector
@@ -2169,6 +2421,8 @@ class VLoadTorqueVector:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class LoadTorqueVector:
     def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], bodyFixed = False, loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
@@ -2187,6 +2441,8 @@ class LoadTorqueVector:
         yield 'loadVectorUserFunction', self.loadVectorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Torque = LoadTorqueVector
 VTorque = VLoadTorqueVector
@@ -2198,6 +2454,8 @@ class VLoadMassProportional:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class LoadMassProportional:
     def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), loadVector = [0.,0.,0.], loadVectorUserFunction = 0, visualization = {'show': True}):
         self.name = name
@@ -2214,6 +2472,8 @@ class LoadMassProportional:
         yield 'loadVectorUserFunction', self.loadVectorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 #add typedef for short usage:
 Gravity = LoadMassProportional
 VGravity = VLoadMassProportional
@@ -2225,6 +2485,8 @@ class VLoadCoordinate:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class LoadCoordinate:
     def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction = 0, visualization = {'show': True}):
         self.name = name
@@ -2241,6 +2503,8 @@ class LoadCoordinate:
         yield 'loadUserFunction', self.loadUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 #+++++++++++++++++++++++++++++++
 #SENSOR
 class VSensorNode:
@@ -2250,6 +2514,8 @@ class VSensorNode:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorNode:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
@@ -2268,6 +2534,8 @@ class SensorNode:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VSensorObject:
     def __init__(self, show = True):
         self.show = show
@@ -2275,6 +2543,8 @@ class VSensorObject:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorObject:
     def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
@@ -2293,6 +2563,8 @@ class SensorObject:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VSensorBody:
     def __init__(self, show = True):
         self.show = show
@@ -2300,6 +2572,8 @@ class VSensorBody:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorBody:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
@@ -2320,6 +2594,8 @@ class SensorBody:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VSensorSuperElement:
     def __init__(self, show = True):
         self.show = show
@@ -2327,6 +2603,8 @@ class VSensorSuperElement:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorSuperElement:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
@@ -2347,6 +2625,8 @@ class SensorSuperElement:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VSensorMarker:
     def __init__(self, show = True):
         self.show = show
@@ -2354,6 +2634,8 @@ class VSensorMarker:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorMarker:
     def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, visualization = {'show': True}):
         self.name = name
@@ -2372,6 +2654,8 @@ class SensorMarker:
         yield 'outputVariableType', self.outputVariableType
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VSensorLoad:
     def __init__(self, show = True):
         self.show = show
@@ -2379,6 +2663,8 @@ class VSensorLoad:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorLoad:
     def __init__(self, name = '', loadNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', visualization = {'show': True}):
         self.name = name
@@ -2395,6 +2681,8 @@ class SensorLoad:
         yield 'fileName', self.fileName
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))
 class VSensorUserFunction:
     def __init__(self, show = True):
         self.show = show
@@ -2402,6 +2690,8 @@ class VSensorUserFunction:
     def __iter__(self):
         yield 'show', self.show
 
+    def __repr__(self):
+        return str(dict(self))
 class SensorUserFunction:
     def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction = 0, visualization = {'show': True}):
         self.name = name
@@ -2422,3 +2712,5 @@ class SensorUserFunction:
         yield 'sensorUserFunction', self.sensorUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
 
+    def __repr__(self):
+        return str(dict(self))

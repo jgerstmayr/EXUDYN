@@ -206,6 +206,7 @@ ext_modules = [
                  'src/Solver/CSolverStatic.cpp',
                  'src/Solver/MainSolver.cpp',
                  'src/Solver/MainSolverBase.cpp',
+                 'src/System/CContact.cpp',
                  'src/System/CLoad.cpp',
                  'src/System/CNode.cpp',
                  'src/System/CObjectBody.cpp',
@@ -214,6 +215,13 @@ ext_modules = [
                  'src/System/MainObject.cpp',
                  'src/Tests/UnitTestBase.cpp',
                  'src/Utilities/BasicFunctions.cpp',
+                 'include/ngs-core-master/bitarray.cpp',
+                 'include/ngs-core-master/exception.cpp',
+                 'include/ngs-core-master/localheap.cpp',
+                 'include/ngs-core-master/paje_interface.cpp',
+                 'include/ngs-core-master/profiler.cpp',
+                 'include/ngs-core-master/table.cpp',
+                 'include/ngs-core-master/taskmanager.cpp',
 
 		],
         include_dirs=[
@@ -321,6 +329,8 @@ class BuildExt(build_ext):
             ]+msvcCppGLFWflag+commonCopts,
         'unix': [
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
+         '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
+         '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
  		 '-Wall',
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
@@ -407,8 +417,7 @@ For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=['exudyn'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
     ext_modules=ext_modules,
-    #setup_requires=['pybind11>=2.5.0'],
-    setup_requires=['pybind11==2.6.0'],
+    setup_requires=['pybind11==2.6.0'], #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
     license = 'BSD',

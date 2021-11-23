@@ -64,3 +64,9 @@ void CMarkerBodyCable2DCoordinates::ComputeMarkerData(const CSystemData& cSystem
 
 }
 
+//! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
+void CMarkerBodyCable2DCoordinates::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const
+{
+	markerData.positionJacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency!
+}
+

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:39 (last modfied)
+* @date         2021-11-14  14:40:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,7 +44,7 @@ public: // AUTO:
     virtual void CallUserFunction(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber) override;
 
     //! AUTO:  return true, if object has a user function to be called during redraw
-    virtual bool HasUserFunction() override
+    virtual bool HasUserFunction() const override
     {
         return graphicsDataUserFunction!=0;
     }

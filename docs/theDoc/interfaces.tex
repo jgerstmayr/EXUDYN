@@ -165,10 +165,11 @@ TimeIntegrationSettings has the following items:
     relativeTolerance &     UReal &      &     1e-8 &     $r_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r_{tol} \ge 0$; see \refSection{sec:ExplicitSolver}\\ \hline
     stepSizeSafety &     UReal &      &     0.90 &     $r_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.\\ \hline
     stepSizeMaxIncrease &     UReal &      &     2 &     $f_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but $> 1$) if too many rejected steps\\ \hline
+    reuseConstantMassMatrix &     bool &      &     True &     True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)\\ \hline
     preStepPyExecute &     String &      &     '' &     DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing\\ \hline
     simulateInRealtime &     bool &      &     False &     True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues\\ \hline
     realtimeFactor &     PReal &      &     1 &     if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)\\ \hline
-    verboseMode &     UInt &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (error), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
+    verboseMode &     UInt &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
     verboseModeFile &     UInt &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
     stepInformation &     UInt &      &     2 &     0 ... only current step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step, 3 ... show discontinuous iterations (Dit) and newton jacobians (jac) per step\\ \hline
     generalizedAlpha &     GeneralizedAlphaSettings &      &      &     parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)\\ \hline
@@ -245,6 +246,7 @@ SimulationSettings has the following items:
     cleanUpMemory &     bool &      &     False &     True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance\\ \hline
     displayStatistics &     bool &      &     False &     display general computation information at end of time step (steps, iterations, function calls, step rejections, ...\\ \hline
     displayComputationTime &     bool &      &     False &     display computation time statistics at end of solving\\ \hline
+    displayGlobalTimers &     bool &      &     False &     display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)\\ \hline
     pauseAfterEachStep &     bool &      &     False &     pause after every time step or static load step(user press SPACE)\\ \hline
     outputPrecision &     UInt &      &     6 &     precision for floating point numbers written to console; e.g. values written by solver\\ \hline
     numberOfThreads &     PInt &      &     1 &     number of threads used for parallel computation (1 == scalar processing); not yet implemented (status: Nov 2019)\\ \hline
@@ -336,7 +338,7 @@ VSettingsNodes has the following items:
     basisSize &     float &      &     0.2 &     size of basis for nodes\\ \hline
     tiling &     PInt &      &     4 &     tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4\\ \hline
     defaultSize &     float &      &     -1. &     global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize\\ \hline
-    defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB olor for nodes; 4th value is alpha-transparency\\ \hline
+    defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB color for nodes; 4th value is alpha-transparency\\ \hline
     showNodalSlopes &     UInt &      &     False &     draw nodal slope vectors, e.g. in ANCF beam finite elements\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -370,7 +372,7 @@ VSettingsBodies has the following items:
     show &     bool &      &     True &     flag to decide, whether the bodies are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the body(=object) number is shown\\ \hline
     defaultSize &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline global body size of xyz-cube\\ \hline
-    defaultColor &     Float4 &     4 &     [0.3,0.3,1.,1.] &     \tabnewline default cRGB olor for bodies; 4th value is \\ \hline
+    defaultColor &     Float4 &     4 &     [0.3,0.3,1.,1.] &     \tabnewline default cRGB color for bodies; 4th value is \\ \hline
     deformationScaleFactor &     float &      &     1 &     global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.\\ \hline
     beams &     VSettingsBeams &      &      &     visualization settings for beams (e.g. ANCFCable or other beam elements)\\ \hline
 	  \end{longtable}
@@ -396,7 +398,7 @@ VSettingsConnectors has the following items:
     showContact &     bool &      &     False &     flag to decide, whether contact points, lines, etc. are shown\\ \hline
     springNumberOfWindings &     PInt &      &     8 &     number of windings for springs drawn as helical spring\\ \hline
     contactPointsDefaultSize &     float &      &     0.02 &     global contact points size; if -1.f, connector size is relative to maxSceneSize\\ \hline
-    defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB olor for connectors; 4th value is alpha-transparency\\ \hline
+    defaultColor &     Float4 &     4 &     [0.2,0.2,1.,1.] &     \tabnewline default cRGB color for connectors; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -415,7 +417,7 @@ VSettingsMarkers has the following items:
     showNumbers &     bool &      &     False &     flag to decide, whether the marker numbers are shown\\ \hline
     drawSimplified &     bool &      &     True &     draw markers with simplified symbols\\ \hline
     defaultSize &     float &      &     -1. &     global marker size; if -1.f, marker size is relative to maxSceneSize\\ \hline
-    defaultColor &     Float4 &     4 &     [0.1,0.5,0.1,1.] &     \tabnewline default cRGB olor for markers; 4th value is alpha-transparency\\ \hline
+    defaultColor &     Float4 &     4 &     [0.1,0.5,0.1,1.] &     \tabnewline default cRGB color for markers; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -437,7 +439,7 @@ VSettingsLoads has the following items:
     fixedLoadSize &     bool &      &     True &     if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size\\ \hline
     drawSimplified &     bool &      &     True &     draw markers with simplified symbols\\ \hline
     loadSizeFactor &     float &      &     0.1 &     if fixedLoadSize=false, then this scaling factor is used to draw the load vector\\ \hline
-    defaultColor &     Float4 &     4 &     [0.7,0.1,0.1,1.] &     \tabnewline default cRGB olor for loads; 4th value is alpha-transparency\\ \hline
+    defaultColor &     Float4 &     4 &     [0.7,0.1,0.1,1.] &     \tabnewline default cRGB color for loads; 4th value is alpha-transparency\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -456,7 +458,25 @@ VSettingsSensors has the following items:
     showNumbers &     bool &      &     False &     flag to decide, whether the sensor numbers are shown\\ \hline
     drawSimplified &     bool &      &     True &     draw sensors with simplified symbols\\ \hline
     defaultSize &     float &      &     -1. &     global sensor size; if -1.f, sensor size is relative to maxSceneSize\\ \hline
-    defaultColor &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline default cRGB olor for sensors; 4th value is alpha-transparency\\ \hline
+    defaultColor &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline default cRGB color for sensors; 4th value is alpha-transparency\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsContact} \label{sec:VSettingsContact}
+Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization. \\ 
+%
+VSettingsContact has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    showSearchTree &     bool &      &     True &     show search tree of all GeneralContacts\\ \hline
+    showBoundingBoxes &     bool &      &     True &     show bounding boxes of all GeneralContacts\\ \hline
+    colorSearchTree &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline cRGB color\\ \hline
+    colorBoundingBoxes &     Float4 &     4 &     [0.6,0.6,0.1,1.] &     \tabnewline cRGB color\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -598,6 +618,7 @@ VisualizationSettings has the following items:
     markers &     VSettingsMarkers &      &      &     marker visualization settings\\ \hline
     loads &     VSettingsLoads &      &      &     load visualization settings\\ \hline
     sensors &     VSettingsSensors &      &      &     sensor visualization settings\\ \hline
+    contact &     VSettingsContact &      &      &     contact visualization settings\\ \hline
     window &     VSettingsWindow &      &      &     visualization window and interaction settings\\ \hline
     openGL &     VSettingsOpenGL &      &      &     OpenGL rendering settings\\ \hline
     interactive &     VSettingsInteractive &      &      &     Settings for interaction with renderer\\ \hline

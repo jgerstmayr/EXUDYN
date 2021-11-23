@@ -1,7 +1,7 @@
 #Exudyn implicit second order time integration sensor output file
 #measure Node number = 3
 #OutputVariableType = Coordinates
-#simulation started = 2021-10-15,12:01:30
+#simulation started = 2021-11-23,10:38:17
 #columns contain: time, comma separated sensor values (e.g, x,y,z position coordinates)
 #number of sensor values = 7
 #

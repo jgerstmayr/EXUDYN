@@ -142,7 +142,7 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 
 	//now compute the new residual with updated system vectors:
 	STARTTIMER(timer.ODE2RHS);
-	computationalSystem.ComputeSystemODE2RHS(data.tempCompData, ode2Residual); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
+	computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, ode2Residual); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 	STOPTIMER(timer.ODE2RHS);
 
 	STARTTIMER(timer.AERHS);
@@ -212,7 +212,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 	//compute jacobian (w.r.t. U ==> also add V); jacobianAE used as temporary matrix
 	STARTTIMER(timer.jacobianODE2);
 	//computationalSystem.NumericalJacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, data.tempODE2F0, data.tempODE2F1, *(data.systemJacobian));
-	computationalSystem.JacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, *(data.systemJacobian)); //only ODE2 part computed!
+	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian)); //only ODE2 part computed!
 	STOPTIMER(timer.jacobianODE2);
 
 	STARTTIMER(timer.jacobianAE);
