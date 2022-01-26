@@ -1,3 +1,5 @@
+If you like Exudyn, please add a *star*, and send an email to \ ``reply.exudyn@gmail.com``\ such that we can add you to our newsletter. Let us know, which features you are using or which features you are missing!
+
 ======
 Exudyn
 ======
